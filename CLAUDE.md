@@ -19,7 +19,6 @@ tests/perf-test.mjs                         ← factory-figure verification harn
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
 tools/embed-sims.mjs                        ← re-embeds the six sim files into index.html (run after editing a sim)
 vendor/trystero-nostr.min.js                ← bundled Trystero (ESM); vendor/peerjs.min.js ← PeerJS fallback
-.github/workflows/pages.yml                 ← publishes index.html to GitHub Pages
 ```
 
 **IMPORTANT:** after editing ANY simulator HTML, run
@@ -141,6 +140,8 @@ online-mode rules, and the full race-control (grid/lights/release) flow.
 
 ## Publishing
 
-GitHub Pages via `.github/workflows/pages.yml` (deploys repo root; URL:
-`https://richardjiangs.github.io/multi-user-racecar-simulator/`). Push to
-`main` (or the working branch) redeploys.
+GitHub Pages is already enabled on this repo in classic branch mode (source:
+`main`, repo root) — every merge/push to `main` republishes automatically at
+`https://richardjiangs.github.io/multi-user-racecar-simulator/`.
+No Actions workflow needed (the auto-created `github-pages` environment
+rejects deploys from non-main branches anyway).
