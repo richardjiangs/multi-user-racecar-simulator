@@ -1658,10 +1658,25 @@ const SPEC = {
   function roadCorner(Xr, Zr) { const phi = state.headingRel, n0 = state.laneOffset; const dX = Xr - n0, dZ = Zr; return { rgt: dX * Math.cos(phi) - dZ * Math.sin(phi), fwd: dX * Math.sin(phi) + dZ * Math.cos(phi) }; }
   function projPoint(p) { const s = FOCAL / p.fwd; return { x: innerWidth / 2 + p.rgt * s, y: horizonY + CAM_H * s }; }
 
+  let gPrevSpeed = 0, gPrevT = -1, gLong = 0, gLatVis = 0;
   function drawWorld() {
     const w = innerWidth, h = innerHeight; horizonY = h * 0.46; const pal = envColors(); rebuildRoadTable();
+    // ---- G-FEEL (render only): read the accelerations the physics already produced
+    // and move the CAMERA — brake dive, launch squat, cornering roll & head-sway.
+    if (gPrevT < 0) { gPrevT = state.time; gPrevSpeed = state.speedMps; }
+    const dtF = state.time - gPrevT;
+    if (dtF > 0) {
+      const rawLong = ((state.speedMps - gPrevSpeed) / dtF) / 9.81;
+      const k = Math.min(1, dtF * 7);
+      gLong += (clamp(rawLong, -1.8, 1.8) - gLong) * k;
+      gPrevSpeed = state.speedMps; gPrevT = state.time;
+    }
+    gLatVis += (clamp(state.lateralG, -2.4, 2.4) - gLatVis) * 0.09;
+    const pitchPx = gLong * 9;                    // accelerate: squat (view down) · brake: dive (view up)
+    const swayPx = -gLatVis * 8;                  // head pushed OUT of the corner
+    const rollRad = gLatVis * 0.013;              // horizon leans with the chassis
     ctx.save();
-    ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
+    ctx.translate(w / 2 + state.shake.x + swayPx, h / 2 + state.shake.y + pitchPx); ctx.rotate(state.shake.rot + rollRad); ctx.translate(-w / 2, -h / 2);
     drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
     drawCabinFrame(w, h, pal);
     if (pal.night) drawHeadlights(w, h);
@@ -1669,44 +1684,187 @@ const SPEC = {
     if (state.hazards && state.blinkOn) { ctx.fillStyle = "rgba(255,120,40,0.10)"; ctx.fillRect(0, horizonY, w, h - horizonY); }
     ctx.restore();
   }
-
   function drawSky(w, h, pal) {
     const sky = ctx.createLinearGradient(0, 0, 0, horizonY + 40);
-    if (pal.night) { sky.addColorStop(0, "#05101f"); sky.addColorStop(0.6, "#0a1622"); sky.addColorStop(1, "#0d1a22"); }
-    else { const dusk = state.dayPhase > 0.66; sky.addColorStop(0, dusk ? "#39506e" : "#6ea7cf"); sky.addColorStop(0.55, dusk ? "#9c6f5a" : "#a9c4d4"); sky.addColorStop(1, dusk ? "#caa07e" : "#d3dee0"); }
+    if (pal.night) { sky.addColorStop(0, "#040d1c"); sky.addColorStop(0.55, "#0a1622"); sky.addColorStop(1, "#101c26"); }
+    else { const dusk = state.dayPhase > 0.66; sky.addColorStop(0, dusk ? "#39506e" : "#5f9dcb"); sky.addColorStop(0.55, dusk ? "#9c6f5a" : "#a3c2d6"); sky.addColorStop(1, dusk ? "#d8a87e" : "#dbe6e6"); }
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, horizonY + 40);
-    ctx.fillStyle = pal.night ? "rgba(220,228,240,0.85)" : "rgba(255,244,210,0.9)"; ctx.beginPath(); ctx.arc(w * 0.72, horizonY * 0.4, pal.night ? 16 : 24, 0, Math.PI * 2); ctx.fill();
-    if (pal.night) { ctx.fillStyle = "rgba(255,255,255,0.8)"; for (let i = 0; i < 40; i++) { const sx = (i * 137.5) % w, sy = (i * 53.3) % (horizonY * 0.8); ctx.fillRect(sx, sy, 1.5, 1.5); } }
+    // sun / moon with a real glow
+    const sx = w * 0.72, sy = horizonY * 0.4, sr = pal.night ? 15 : 23;
+    const glow = ctx.createRadialGradient(sx, sy, 2, sx, sy, sr * (pal.night ? 4 : 7));
+    glow.addColorStop(0, pal.night ? "rgba(215,228,245,0.55)" : "rgba(255,245,205,0.75)");
+    glow.addColorStop(1, "rgba(255,245,205,0)");
+    ctx.fillStyle = glow; ctx.fillRect(sx - sr * 8, sy - sr * 8, sr * 16, sr * 16);
+    ctx.fillStyle = pal.night ? "rgba(224,232,244,0.92)" : "rgba(255,248,222,0.96)"; ctx.beginPath(); ctx.arc(sx, sy, sr, 0, Math.PI * 2); ctx.fill();
+    if (pal.night) { ctx.fillStyle = "rgba(4,13,28,0.55)"; ctx.beginPath(); ctx.arc(sx - sr * 0.42, sy - sr * 0.2, sr * 0.82, 0, Math.PI * 2); ctx.fill(); }
+    // slow clouds, parallax-drifting with distance driven
+    const drift = (state.distanceM * 0.13) % (w + 560);
+    for (let i = 0; i < 4; i++) {
+      const cx = ((i * 397 + 130 - drift * (0.35 + i * 0.16)) % (w + 560) + (w + 560)) % (w + 560) - 280;
+      const cy = horizonY * (0.16 + (i % 3) * 0.13), cs = 60 + (i % 3) * 34;
+      ctx.fillStyle = pal.night ? "rgba(150,168,192,0.08)" : "rgba(255,255,255,0.5)";
+      ctx.beginPath();
+      ctx.ellipse(cx, cy, cs, cs * 0.30, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx + cs * 0.55, cy - cs * 0.14, cs * 0.62, cs * 0.24, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx - cs * 0.5, cy + cs * 0.03, cs * 0.5, cs * 0.2, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    // horizon haze so the far road melts into distance instead of hard-stopping
+    const hz = ctx.createLinearGradient(0, horizonY - 26, 0, horizonY + 12);
+    hz.addColorStop(0, "rgba(0,0,0,0)");
+    hz.addColorStop(1, pal.night ? "rgba(16,26,36,0.55)" : "rgba(205,218,222,0.5)");
+    ctx.fillStyle = hz; ctx.fillRect(0, horizonY - 26, w, 38);
+    if (pal.night) { ctx.fillStyle = "rgba(255,255,255,0.8)"; for (let i = 0; i < 40; i++) { const stx = (i * 137.5) % w, sty = (i * 53.3) % (horizonY * 0.8); ctx.fillRect(stx, sty, 1.5, 1.5); } }
   }
   function drawScenery(w, h, pal) {
+    // distant hill band gives every environment a second depth layer
+    ctx.fillStyle = pal.night ? "rgba(14,22,20,0.9)" : (pal.env === "street" ? "rgba(88,102,116,0.45)" : "rgba(52,78,60,0.5)");
+    ctx.beginPath(); ctx.moveTo(0, horizonY);
+    for (let x = 0; x <= w; x += 24) { const u = (x + state.distanceM * 0.04) * 0.008; ctx.lineTo(x, horizonY - 14 - Math.abs(Math.sin(u) * 16 + Math.sin(u * 2.7) * 7)); }
+    ctx.lineTo(w, horizonY); ctx.closePath(); ctx.fill();
     for (const b of state.scenery) {
       let z = ((b.z - state.distanceM * 0.5) % 3000 + 3000) % 3000; if (z < 6) continue;
       const p = projectAhead(z + 30, b.side * (halfAt(z + 30) + 8 + z * 0.04)); const scale = p.scale; if (scale < 0.12 || scale > 6) continue;
       const bw = b.width * scale * 0.5, bh = b.height * scale * 0.5, x = p.x, y = horizonY - bh;
       if (pal.env === "coast" && b.side === 1 && b.height > 150) continue;
-      if (pal.env === "mountain" || pal.env === "nords") { ctx.fillStyle = pal.night ? "#16210f" : "#23401b"; ctx.beginPath(); ctx.moveTo(x - bw, horizonY); ctx.lineTo(x, y); ctx.lineTo(x + bw, horizonY); ctx.closePath(); ctx.fill(); continue; }
-      ctx.fillStyle = pal.night ? `hsl(${b.hue},18%,${b.lit ? 16 : 11}%)` : `hsl(${b.hue},20%,${b.lit ? 58 : 46}%)`;
+      if (pal.env === "mountain" || pal.env === "nords") {
+        // layered pine stands instead of one flat triangle
+        const trunkC = pal.night ? "#101c0a" : "#233c18";
+        for (let t = 0; t < 3; t++) {
+          const tx = x + (t - 1) * bw * 0.34, th = bh * (0.94 - t * 0.16), tw2 = bw * (0.5 - t * 0.1);
+          ctx.fillStyle = t === 1 ? (pal.night ? "#142610" : "#2c5220") : trunkC;
+          ctx.beginPath(); ctx.moveTo(tx - tw2, horizonY); ctx.lineTo(tx, horizonY - th); ctx.lineTo(tx + tw2, horizonY); ctx.closePath(); ctx.fill();
+          ctx.beginPath(); ctx.moveTo(tx - tw2 * 0.7, horizonY - th * 0.36); ctx.lineTo(tx, horizonY - th * 1.1); ctx.lineTo(tx + tw2 * 0.7, horizonY - th * 0.36); ctx.closePath(); ctx.fill();
+        }
+        continue;
+      }
+      if (pal.env === "track" || pal.env === "ring") {
+        if (b.lit) {   // GRANDSTAND: roof, stepped rows, crowd speckle
+          const gw = bw * 1.15, gh = Math.min(bh, 90 * scale);
+          ctx.fillStyle = pal.night ? "#141a20" : "#3d4750"; ctx.fillRect(x - gw / 2, horizonY - gh, gw, gh);
+          ctx.fillStyle = pal.night ? "#1c242c" : "#59646e";
+          ctx.beginPath(); ctx.moveTo(x - gw / 2 - 4 * scale, horizonY - gh); ctx.lineTo(x, horizonY - gh - 10 * scale); ctx.lineTo(x + gw / 2 + 4 * scale, horizonY - gh); ctx.closePath(); ctx.fill();
+          for (let r = 1; r <= 4; r++) {
+            const ry = horizonY - (gh * r) / 5;
+            ctx.fillStyle = "rgba(0,0,0,0.3)"; ctx.fillRect(x - gw / 2, ry, gw, Math.max(1, gh * 0.045));
+            for (let cSeat = 0; cSeat < 9; cSeat++) {
+              ctx.fillStyle = `hsl(${(cSeat * 47 + r * 89) % 360},46%,${pal.night ? 34 : 58}%)`;
+              ctx.fillRect(x - gw / 2 + (cSeat + 0.25) * gw / 9, ry + gh * 0.05, gw / 22, Math.max(1, gh * 0.08));
+            }
+          }
+        } else {       // sponsor hoarding
+          const gw = bw, gh = Math.min(bh * 0.4, 26 * scale);
+          ctx.fillStyle = ["#0e3f8c", "#b3121f", "#0a7a4a", "#c07a12"][Math.floor(b.hue) % 4];
+          ctx.fillRect(x - gw / 2, horizonY - gh, gw, gh);
+          ctx.fillStyle = "rgba(255,255,255,0.85)"; ctx.fillRect(x - gw / 2, horizonY - gh, gw, Math.max(1, gh * 0.16));
+        }
+        continue;
+      }
+      // street towers: body + window grid + rooftop clutter
+      ctx.fillStyle = pal.night ? `hsl(${b.hue},16%,12%)` : `hsl(${b.hue},14%,${b.lit ? 52 : 42}%)`;
       ctx.fillRect(x - bw / 2, y, bw, bh + 2);
+      ctx.fillStyle = pal.night ? `hsl(${b.hue},14%,8%)` : `hsl(${b.hue},16%,${b.lit ? 44 : 36}%)`;
+      ctx.fillRect(x + bw * 0.26, y, bw * 0.24, bh + 2);
+      const cols = Math.max(2, Math.floor(bw / (9 * scale))), rows = Math.max(3, Math.floor(bh / (11 * scale)));
+      for (let wy = 0; wy < rows; wy++) for (let wx = 0; wx < cols; wx++) {
+        const litWin = ((wx * 7 + wy * 13 + Math.floor(b.z)) % 9) < (pal.night ? 3 : 1);
+        ctx.fillStyle = pal.night ? (litWin ? "rgba(255,214,140,0.85)" : "rgba(90,110,130,0.18)") : (litWin ? "rgba(240,246,252,0.8)" : "rgba(20,30,40,0.35)");
+        ctx.fillRect(x - bw / 2 + (wx + 0.24) * bw / cols, y + (wy + 0.24) * bh / rows, bw / cols * 0.5, bh / rows * 0.44);
+      }
+      if (b.height > 200) { ctx.strokeStyle = "rgba(160,170,180,0.7)"; ctx.lineWidth = Math.max(1, scale); ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - 12 * scale); ctx.stroke(); ctx.fillStyle = "rgba(255,60,60,0.9)"; ctx.beginPath(); ctx.arc(x, y - 12 * scale, Math.max(1.2, 1.6 * scale), 0, Math.PI * 2); ctx.fill(); }
     }
   }
   function drawRoad(w, h, pal) {
+    // grass with MOWED STRIPES sweeping past
     ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY);
+    ctx.fillStyle = "rgba(255,255,255,0.045)";
+    let sPrevL = null, sPrevR = null, sPrevOn = false;
+    for (let i = 0; i < ROAD_OFFS.length; i += 2) {
+      const off = ROAD_OFFS[i]; const c = centerlineAt(off); const cs = Math.cos(c.psi), sn = Math.sin(c.psi);
+      const on = ((((state.distanceM + off) / 14) | 0) % 2) === 0;
+      const L2 = roadCorner(c.X - 220 * cs, c.Z + 220 * sn); const R2 = roadCorner(c.X + 220 * cs, c.Z - 220 * sn);
+      if (sPrevL && sPrevOn) fillClippedQuad([sPrevL, sPrevR, R2, L2]);
+      sPrevL = L2; sPrevR = R2; sPrevOn = on;
+    }
     const rg = ctx.createLinearGradient(0, horizonY, 0, h); rg.addColorStop(0, pal.road); rg.addColorStop(1, pal.night ? "#14171c" : "#2a2e34"); ctx.fillStyle = rg;
     let prevL = null, prevR = null;
     for (let i = 0; i < ROAD_OFFS.length; i++) { const off = ROAD_OFFS[i], H = halfAt(off); const c = centerlineAt(off); const cs = Math.cos(c.psi), sn = Math.sin(c.psi); const L = roadCorner(c.X - H * cs, c.Z + H * sn); const R = roadCorner(c.X + H * cs, c.Z - H * sn); if (prevL) fillClippedQuad([prevL, prevR, R, L]); prevL = L; prevR = R; }
+    drawRubberGroove();
     if (pal.kerb) drawKerbs();
     drawStartFinishLine();
+    drawStartGantry();
+    drawBrakeMarkers(pal);
     ctx.strokeStyle = "rgba(236,232,220,0.5)"; drawEdge(-1, 0.3, 2); drawEdge(1, 0.3, 2);
     ctx.strokeStyle = "rgba(245,240,225,0.28)"; drawRoadLine(0, true, 1.6);   // faint centre
     if (state.dataHud) drawRacingLine();                                      // the line to aim at (toggle with HUD)
   }
-  // a teal racing line that swings to the apex of the corner ahead, with an aim dot ~55 m out
+  // where the ideal line sits at distance d ahead — shared by the groove and the guide line
+  function racingOffAt(d) { const k = curvatureAt(state.distanceM + d); return clamp(-Math.sign(k) * Math.min(Math.abs(k) * 1100, 1) * (halfAt(d) - 1.6), -8, 8); }
+  // years of rubber laid into the racing groove — a dark band that follows the ideal line
+  function drawRubberGroove() {
+    if (!state.route.active) return;
+    ctx.strokeStyle = "rgba(8,9,11,0.34)"; ctx.lineCap = "round";
+    let prev = null;
+    for (let d2 = 2; d2 <= 190; d2 += 6) {
+      const c = centerlineAt(d2); const lat = racingOffAt(d2);
+      const pc = roadCorner(c.X + lat * Math.cos(c.psi), c.Z - lat * Math.sin(c.psi));
+      if (prev && prev.fwd >= NEAR_PLANE && pc.fwd >= NEAR_PLANE) {
+        const pa = projPoint(prev), pb = projPoint(pc);
+        ctx.lineWidth = clamp(2.4 * (FOCAL / Math.max(prev.fwd, pc.fwd)) * 0.5, 1.5, 34);
+        ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke();
+      }
+      prev = pc;
+    }
+  }
+  // 100 / 50 m BRAKE BOARDS on the outside of every corner ahead
+  function drawBrakeMarkers(pal) {
+    const r = state.route; if (!r.active || !r.trackCorners || !r.totalM) return;
+    const L = r.totalM, phase = ((state.distanceM % L) + L) % L;
+    for (const cc of r.trackCorners) {
+      for (const dist of [100, 50]) {
+        let off = cc.at - dist - phase;
+        if (off < -L / 2) off += L;
+        if (off < 8 || off > ROAD.AHEAD - 6) continue;
+        const side = -cc.dir;                                    // boards sit on the braking (outside) edge
+        const lat = side * (halfAt(off) + 1.6);
+        const p = projectAhead(off, lat); if (p.fwd < 1 || p.scale < 0.5) continue;
+        const sc = Math.min(p.scale, 8);
+        ctx.fillStyle = "rgba(90,96,104,0.9)"; ctx.fillRect(p.x - 0.7 * sc, p.y - 12 * sc, 1.4 * sc, 12 * sc);
+        ctx.fillStyle = "rgba(245,246,248,0.95)"; ctx.fillRect(p.x - 4.2 * sc, p.y - 20 * sc, 8.4 * sc, 8.6 * sc);
+        ctx.strokeStyle = "rgba(20,22,26,0.8)"; ctx.lineWidth = Math.max(1, 0.3 * sc); ctx.strokeRect(p.x - 4.2 * sc, p.y - 20 * sc, 8.4 * sc, 8.6 * sc);
+        const stripes = dist / 50;                               // 100 m -> ||, 50 m -> |
+        ctx.fillStyle = "rgba(200,24,32,0.95)";
+        for (let st = 0; st < stripes; st++) ctx.fillRect(p.x - 3.2 * sc + st * 3.4 * sc, p.y - 19 * sc, 2.2 * sc, 6.6 * sc);
+      }
+    }
+  }
+  // overhead GANTRY across the start/finish line, checkered banner and all
+  function drawStartGantry() {
+    const r = state.route; if (!r.active || !r.loop || !r.totalM) return;
+    const L = r.totalM, phase = ((state.distanceM % L) + L) % L;
+    let off = L - phase; if (off > ROAD.AHEAD - 6) { if (phase < 3) off = -phase; else return; }
+    if (off < 2) return;
+    const H = halfAt(off) + 1.2;
+    const pl = projectAhead(off, -H), pr = projectAhead(off, H);
+    if (pl.fwd < 0.8 || pr.fwd < 0.8) return;
+    const sc = Math.min((pl.scale + pr.scale) / 2, 10);
+    const beamY = Math.min(pl.y, pr.y) - 16 * sc;
+    ctx.fillStyle = "rgba(28,32,38,0.96)";
+    ctx.fillRect(pl.x - 1.1 * sc, beamY, 2.2 * sc, pl.y - beamY);
+    ctx.fillRect(pr.x - 1.1 * sc, beamY, 2.2 * sc, pr.y - beamY);
+    const bw2 = pr.x - pl.x;
+    ctx.fillStyle = "rgba(20,23,28,0.96)"; ctx.fillRect(pl.x, beamY - 5 * sc, bw2, 5.4 * sc);
+    const cells2 = 16, cw2 = bw2 / cells2;
+    for (let i = 0; i < cells2; i++) { ctx.fillStyle = i % 2 ? "#eef1f4" : "#0c0e12"; ctx.fillRect(pl.x + i * cw2, beamY - 4.2 * sc, cw2, 2.2 * sc); }
+    ctx.fillStyle = "rgba(238,241,244,0.9)"; ctx.font = `700 ${Math.max(7, 2.6 * sc)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillText(state.lap.bestMs ? "FINISH" : "START · FINISH", (pl.x + pr.x) / 2, beamY - 0.9 * sc);
+  }
+  // a teal racing line that swings to the apex  // a teal racing line that swings to the apex of the corner ahead, with an aim dot ~55 m out
   function drawRacingLine() {
-    const racingOff = (d) => { const k = curvatureAt(state.distanceM + d); return clamp(-Math.sign(k) * Math.min(Math.abs(k) * 1100, 1) * (halfAt(d) - 1.6), -8, 8); };
     const pts = [];
-    for (let d = 8; d <= 130; d += 7) { const p = projectAhead(d, racingOff(d)); if (p.fwd > 0.6) pts.push(p); }
+    for (let d = 8; d <= 130; d += 7) { const p = projectAhead(d, racingOffAt(d)); if (p.fwd > 0.6) pts.push(p); }
     if (pts.length > 1) { ctx.strokeStyle = "rgba(156,198,255,0.55)"; ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); }
-    const ap = projectAhead(55, racingOff(55));
+    const ap = projectAhead(55, racingOffAt(55));
     if (ap.fwd > 1) { ctx.fillStyle = "rgba(156,198,255,0.95)"; ctx.beginPath(); ctx.arc(ap.x, ap.y, clamp(6 * ap.scale, 2.6, 8), 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.lineWidth = 1.4; ctx.stroke(); }
   }
   // a line that follows the (varying) track edge: sign -1 = left edge, +1 = right edge, inset metres in
@@ -1797,28 +1955,62 @@ const SPEC = {
   }
   function drawCarSprite(x, y, sc, car, brake, pal, label, laneSide) {
     const cw = 5.0 * sc, ch = 3.0 * sc;
+    const dark = shade(car.body, -0.45), mid = shade(car.body, -0.16), lite = shade(car.body, 0.24);
     ctx.save(); ctx.translate(x, y);
-    ctx.fillStyle = "rgba(0,0,0,0.34)"; ctx.beginPath(); ctx.ellipse(0, 0, cw * 0.62, ch * 0.16, 0, 0, Math.PI * 2); ctx.fill();
-    // body in the car's livery colour
-    ctx.fillStyle = car.body; roundRect(ctx, -cw / 2, -ch * 0.82, cw, ch * 0.72, Math.max(2, 3 * sc)); ctx.fill();
-    // livery centre stripe (so you can tell them apart at a glance)
-    ctx.fillStyle = car.stripe; roundRect(ctx, -cw * 0.10, -ch * 0.82, cw * 0.20, ch * 0.72, Math.max(1, 1.4 * sc)); ctx.fill();
-    ctx.fillStyle = "rgba(0,0,0,0.32)"; ctx.fillRect(-cw / 2, -ch * 0.2, cw, ch * 0.1);   // lower valance shadow
-    // tapered greenhouse
-    ctx.fillStyle = pal.night ? "rgba(36,42,50,0.95)" : "rgba(26,30,36,0.95)";
-    ctx.beginPath(); ctx.moveTo(-cw * 0.34, -ch * 0.82); ctx.lineTo(-cw * 0.22, -ch * 1.2); ctx.lineTo(cw * 0.22, -ch * 1.2); ctx.lineTo(cw * 0.34, -ch * 0.82); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = pal.night ? "rgba(120,150,170,0.4)" : "rgba(170,200,218,0.7)";
-    ctx.beginPath(); ctx.moveTo(-cw * 0.24, -ch * 0.86); ctx.lineTo(-cw * 0.16, -ch * 1.14); ctx.lineTo(cw * 0.16, -ch * 1.14); ctx.lineTo(cw * 0.24, -ch * 0.86); ctx.closePath(); ctx.fill();
-    // rear wing on swan-neck end plates
-    ctx.fillStyle = "rgba(12,14,17,0.96)"; ctx.fillRect(-cw * 0.48, -ch * 1.04, cw * 0.96, ch * 0.10);
-    [-1, 1].forEach(s => ctx.fillRect(s * cw * 0.34 - 1.5 * sc, -ch * 1.04, 3 * sc, ch * 0.24));
-    // brake lights (glow under braking)
-    ctx.fillStyle = brake ? "rgba(255,46,46,1)" : "rgba(150,32,32,0.85)";
-    ctx.fillRect(-cw * 0.45, -ch * 0.52, cw * 0.17, ch * 0.16); ctx.fillRect(cw * 0.28, -ch * 0.52, cw * 0.17, ch * 0.16);
-    if (brake) { ctx.shadowColor = "rgba(255,46,46,0.9)"; ctx.shadowBlur = 9 * Math.min(sc, 2.2); ctx.fillRect(-cw * 0.45, -ch * 0.52, cw * 0.17, ch * 0.16); ctx.fillRect(cw * 0.28, -ch * 0.52, cw * 0.17, ch * 0.16); ctx.shadowBlur = 0; }
-    // diffuser + tyres
-    ctx.fillStyle = "rgba(8,9,12,0.95)"; ctx.fillRect(-cw * 0.4, -ch * 0.12, cw * 0.8, ch * 0.12);
-    ctx.fillStyle = "rgba(10,10,12,0.95)"; ctx.fillRect(-cw * 0.54, -ch * 0.4, cw * 0.1, ch * 0.36); ctx.fillRect(cw * 0.44, -ch * 0.4, cw * 0.1, ch * 0.36);
+    // soft ground shadow
+    const sh = ctx.createRadialGradient(0, 0, cw * 0.1, 0, 0, cw * 0.72);
+    sh.addColorStop(0, "rgba(0,0,0,0.5)"); sh.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = sh; ctx.beginPath(); ctx.ellipse(0, ch * 0.02, cw * 0.72, ch * 0.2, 0, 0, Math.PI * 2); ctx.fill();
+    // rear tyres with tread shoulder
+    ctx.fillStyle = "#0b0c0f";
+    roundRect(ctx, -cw * 0.56, -ch * 0.46, cw * 0.15, ch * 0.44, 2.4 * sc); ctx.fill();
+    roundRect(ctx, cw * 0.41, -ch * 0.46, cw * 0.15, ch * 0.44, 2.4 * sc); ctx.fill();
+    ctx.fillStyle = "rgba(255,255,255,0.10)";
+    ctx.fillRect(-cw * 0.545, -ch * 0.44, cw * 0.03, ch * 0.4); ctx.fillRect(cw * 0.515, -ch * 0.44, cw * 0.03, ch * 0.4);
+    // wide rear haunches: a real shoulder line, not a box
+    const bodyG = ctx.createLinearGradient(0, -ch * 1.0, 0, 0);
+    bodyG.addColorStop(0, lite); bodyG.addColorStop(0.45, car.body); bodyG.addColorStop(1, dark);
+    ctx.fillStyle = bodyG;
+    ctx.beginPath();
+    ctx.moveTo(-cw * 0.5, -ch * 0.1);
+    ctx.bezierCurveTo(-cw * 0.56, -ch * 0.62, -cw * 0.46, -ch * 0.86, -cw * 0.3, -ch * 0.9);
+    ctx.lineTo(cw * 0.3, -ch * 0.9);
+    ctx.bezierCurveTo(cw * 0.46, -ch * 0.86, cw * 0.56, -ch * 0.62, cw * 0.5, -ch * 0.1);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "rgba(0,0,0,0.35)"; ctx.lineWidth = Math.max(0.6, 0.16 * sc); ctx.stroke();
+    // livery centre stripe following the deck
+    ctx.fillStyle = car.stripe;
+    ctx.beginPath(); ctx.moveTo(-cw * 0.09, -ch * 0.9); ctx.lineTo(cw * 0.09, -ch * 0.9); ctx.lineTo(cw * 0.07, -ch * 0.12); ctx.lineTo(-cw * 0.07, -ch * 0.12); ctx.closePath(); ctx.fill();
+    // canopy: tapered glasshouse with a sky reflection
+    const glass = ctx.createLinearGradient(0, -ch * 1.34, 0, -ch * 0.86);
+    glass.addColorStop(0, pal.night ? "rgba(96,126,152,0.9)" : "rgba(176,206,226,0.95)");
+    glass.addColorStop(1, pal.night ? "rgba(14,18,24,0.95)" : "rgba(22,28,36,0.95)");
+    ctx.fillStyle = glass;
+    ctx.beginPath();
+    ctx.moveTo(-cw * 0.32, -ch * 0.88);
+    ctx.bezierCurveTo(-cw * 0.26, -ch * 1.24, -cw * 0.14, -ch * 1.34, 0, -ch * 1.34);
+    ctx.bezierCurveTo(cw * 0.14, -ch * 1.34, cw * 0.26, -ch * 1.24, cw * 0.32, -ch * 0.88);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "rgba(0,0,0,0.4)"; ctx.lineWidth = Math.max(0.5, 0.12 * sc); ctx.stroke();
+    ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.beginPath(); ctx.moveTo(-cw * 0.2, -ch * 1.16); ctx.quadraticCurveTo(0, -ch * 1.3, cw * 0.2, -ch * 1.16); ctx.stroke();
+    // rear wing on end plates
+    ctx.fillStyle = "rgba(10,12,15,0.97)";
+    ctx.fillRect(-cw * 0.46, -ch * 1.1, cw * 0.92, ch * 0.09);
+    ctx.fillStyle = "rgba(22,25,30,0.97)";
+    ctx.fillRect(-cw * 0.47, -ch * 1.12, cw * 0.1, ch * 0.3); ctx.fillRect(cw * 0.37, -ch * 1.12, cw * 0.1, ch * 0.3);
+    // LED light bar + round tails, glowing under braking
+    const tail = brake ? "rgba(255,42,42,1)" : "rgba(165,30,30,0.9)";
+    if (brake) { ctx.shadowColor = "rgba(255,40,40,0.95)"; ctx.shadowBlur = 10 * Math.min(sc, 2.4); }
+    ctx.fillStyle = tail;
+    ctx.fillRect(-cw * 0.4, -ch * 0.62, cw * 0.8, Math.max(1, ch * 0.05));
+    ctx.beginPath(); ctx.arc(-cw * 0.36, -ch * 0.48, ch * 0.06, 0, Math.PI * 2); ctx.arc(cw * 0.36, -ch * 0.48, ch * 0.06, 0, Math.PI * 2); ctx.fill();
+    ctx.shadowBlur = 0;
+    // diffuser with strakes + centre exhaust glow
+    ctx.fillStyle = "rgba(7,8,10,0.97)"; ctx.fillRect(-cw * 0.44, -ch * 0.14, cw * 0.88, ch * 0.14);
+    ctx.fillStyle = "rgba(60,66,74,0.8)";
+    for (let d3 = -2; d3 <= 2; d3++) ctx.fillRect(d3 * cw * 0.14 - cw * 0.012, -ch * 0.14, cw * 0.024, ch * 0.13);
+    ctx.fillStyle = pal.night ? "rgba(255,140,60,0.65)" : "rgba(120,126,134,0.8)";
+    ctx.beginPath(); ctx.arc(-cw * 0.06, -ch * 0.2, ch * 0.045, 0, Math.PI * 2); ctx.arc(cw * 0.06, -ch * 0.2, ch * 0.045, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
     // floating name tag, always readable
     if (label && sc > 0.42) {
@@ -1829,23 +2021,60 @@ const SPEC = {
       ctx.fillStyle = "rgba(238,241,244,0.96)"; ctx.fillText(label, x, ty - 2);
     }
   }
+  // lighten/darken a #rrggbb colour (render helper for the car sprites)
+  function shade(hex, f) {
+    const n = parseInt(String(hex).replace("#", ""), 16);
+    if (isNaN(n)) return hex;
+    const ch2 = (v) => clamp(Math.round(f >= 0 ? v + (255 - v) * f : v * (1 + f)), 0, 255);
+    return `rgb(${ch2((n >> 16) & 255)},${ch2((n >> 8) & 255)},${ch2(n & 255)})`;
+  }
 
   /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
   function drawCabinFrame(w, h, pal) {
     const sway = state.bodyRoll * 1.4;
-    ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
+    // windscreen: top tint band + a soft diagonal reflection streak
+    const tint = ctx.createLinearGradient(0, 0, 0, h * 0.2);
+    tint.addColorStop(0, "rgba(4,8,14,0.78)"); tint.addColorStop(1, "rgba(4,8,14,0)");
+    ctx.fillStyle = tint; ctx.fillRect(0, 0, w, h * 0.2);
+    ctx.save(); ctx.globalAlpha = pal.night ? 0.05 : 0.09;
+    const refl = ctx.createLinearGradient(0, 0, w * 0.4, h * 0.5);
+    refl.addColorStop(0, "rgba(255,255,255,0)"); refl.addColorStop(0.5, "rgba(255,255,255,0.9)"); refl.addColorStop(1, "rgba(255,255,255,0)");
+    ctx.fillStyle = refl;
+    ctx.beginPath(); ctx.moveTo(w * 0.16, 0); ctx.lineTo(w * 0.3, 0); ctx.lineTo(w * 0.62, h * 0.62); ctx.lineTo(w * 0.5, h * 0.62); ctx.closePath(); ctx.fill();
+    ctx.restore();
+    // A-pillars with real thickness: dark face + lit inner edge
+    const pillar = (sx0, sx1, ex0, ex1) => {
+      ctx.fillStyle = pal.night ? "#07090c" : "#0c0e12";
+      ctx.beginPath(); ctx.moveTo(sx0, 0); ctx.lineTo(sx1, 0); ctx.lineTo(ex1, h * 0.62); ctx.lineTo(ex0, h * 0.66); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = pal.night ? "#101319" : "#181c22";
+      ctx.beginPath(); ctx.moveTo(sx1, 0); ctx.lineTo(sx1 + (sx1 > w / 2 ? -1 : 1) * w * 0.012, 0); ctx.lineTo(ex1 + (sx1 > w / 2 ? -1 : 1) * w * 0.008, h * 0.62); ctx.lineTo(ex1, h * 0.62); ctx.closePath(); ctx.fill();
+    };
+    pillar(0, w * 0.18, 0, w * 0.08);
+    pillar(w, w * 0.82, w, w * 0.92);
+    // headliner + rear-view mirror (sky in the glass)
     ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
+    const mx = w / 2 + sway * 0.4, my = h * 0.075, mw = w * 0.085, mh = h * 0.035;
+    ctx.fillStyle = "#0a0c10"; roundRect(ctx, mx - mw / 2 - 3, my - mh / 2 - 3, mw + 6, mh + 6, 6); ctx.fill();
+    const mg = ctx.createLinearGradient(0, my - mh / 2, 0, my + mh / 2);
+    mg.addColorStop(0, pal.night ? "#0e1a28" : "#7fa8c8"); mg.addColorStop(0.55, pal.night ? "#0a1218" : "#b8ccd8"); mg.addColorStop(1, pal.night ? "#1a2028" : "#3c454e");
+    ctx.fillStyle = mg; roundRect(ctx, mx - mw / 2, my - mh / 2, mw, mh, 4); ctx.fill();
+    ctx.fillRect(mx - 2, my - mh / 2 - 8, 4, 6);
     // carbon dash cowl
     const dashY = h * 0.66 + sway * 0.2;
     const dg = ctx.createLinearGradient(0, dashY, 0, h);
     dg.addColorStop(0, "#15181d"); dg.addColorStop(0.5, "#0c0e12"); dg.addColorStop(1, "#080a0d");
     ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY); ctx.lineTo(w * 0.98 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
+    // cowl edge catches the light
+    ctx.strokeStyle = "rgba(190,205,220,0.14)"; ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY + 1); ctx.lineTo(w * 0.98 + sway, dashY + 1); ctx.stroke();
     // carbon weave hint on the dash
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
+    // cockpit vignette pulls the eye to the road
+    const vg = ctx.createRadialGradient(w / 2, h * 0.44, h * 0.3, w / 2, h * 0.5, h * 0.85);
+    vg.addColorStop(0, "rgba(0,0,0,0)"); vg.addColorStop(1, "rgba(0,0,0,0.34)");
+    ctx.fillStyle = vg; ctx.fillRect(0, 0, w, h);
     // ---- Chiron instrument binnacle: a big central analogue SPEEDOMETER to 500 km/h,
     // flanked by an instantaneous power gauge (PS) and the rev counter ----
     const R = Math.min(w, h) * 0.118;
