@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Bugatti Chiron Super Sport 300+ — Pur Sang</title>
+  <title>Koenigsegg Jesko — Spöket</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,12 +16,12 @@
       --line: rgba(180,194,208,0.14);
       --alu: #c9cfd6;
       --alu-d: #828a93;
-      --teal: #2f7be0;          /* Bugatti French-blue accent */
-      --teal-b: #9cc6ff;
-      --amber: #f0a23c;         /* power/tachometer amber */
-      --amber-b: #ffd28a;
-      --cognac: #5a3a1c;        /* Bugatti Beluga/tan bicolour leather */
-      --cognac2: #a6742f;
+      --teal: #e86a1c;          /* Koenigsegg tang orange accent */
+      --teal-b: #ffc296;
+      --amber: #f0d43c;         /* swedish gold tachometer */
+      --amber-b: #fae9a0;
+      --cognac: #23272c;        /* charcoal Alcantara, orange stitching */
+      --cognac2: #c96a2a;
       --green: #5fe08c;
       --red: #ff6060;
       --shadow: rgba(0,0,0,0.55);
@@ -231,9 +231,11 @@
       box-shadow: inset 0 0 8px rgba(0,0,0,0.7); }
     .turbo::after { content:""; position:absolute; inset:11px; border-radius:50%;
       background: conic-gradient(from var(--turbo-rot,0deg), #aab3bc 0 18deg, #2a2f37 18deg 36deg); }
-    /* four turbochargers — the W16's quad-turbo signature */
-    .turbo.left  { left:7%;  top:24%; } .turbo.right  { right:7%;  top:24%; }
-    .turbo.left2 { left:7%;  top:60%; } .turbo.right2 { right:7%;  top:60%; }
+    /* twin turbos fed by the 400L compressed-air anti-lag tank */
+    .turbo.left  { left:9%;  top:34%; } .turbo.right  { right:9%;  top:34%; }
+    .emotor { position:absolute; left:30%; right:30%; bottom:58px; height:34px; border-radius:17px;
+      background: linear-gradient(180deg,#3a2c1c,#1c1208); border:1px solid rgba(232,106,28,0.55);
+      display:grid; place-items:center; color:#ffc296; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(232,106,28,0.25); }
     .bay-exhaust { position:absolute; left:42%; right:42%; bottom:18px; height:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
     .bay-exhaust i { border-radius:4px 4px 2px 2px; background: linear-gradient(180deg,#3a3f47,#1a1d22); border:1px solid rgba(150,160,170,0.3); transition: box-shadow 120ms; }
     .engine-bay.glow .bay-exhaust i { box-shadow: 0 0 14px rgba(255,110,40,0.85); }
@@ -248,7 +250,7 @@
     .drivetrain { min-height:256px; position:relative; border:1px solid rgba(255,255,255,0.1); border-radius:7px; overflow:hidden;
       background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)); }
     .gear-stack { position:absolute; left:18px; top:30px; width:78px; bottom:30px; border:1px solid rgba(255,255,255,0.14); border-radius:6px;
-      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(7,1fr); gap:2px; padding:6px; }
+      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(9,1fr); gap:2px; padding:6px; }
     .gear-stack i { display:grid; place-items:center; border-radius:3px; background:rgba(255,255,255,0.07); color:var(--muted); font-size:11px; font-style:normal; }
     .gear-stack i.active { background:rgba(240,162,60,0.4); color:#fff1da; }
     .shifter-link { position:absolute; left:104px; top:50%; width:60px; height:8px; background:linear-gradient(90deg, rgba(200,210,220,0.5), rgba(156,198,255,0.7));
@@ -344,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Bugatti Chiron Super Sport 300+ driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Koenigsegg Jesko driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">EB</div>
-        <h1>Bugatti Chiron Super Sport 300+</h1>
-        <p>8.0L quad-turbo W16 · 7-speed dual-clutch (DSG) · all-wheel drive · active rear wing · carbon-fibre monocoque.</p>
+        <div class="mark">KG</div>
+        <h1>Koenigsegg Jesko</h1>
+        <p>5.0L twin-turbo V8 · 9-speed Light Speed Transmission · rear-wheel drive · Triplex dampers · boomerang wing · Attack aero.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -365,7 +367,7 @@
 
       <section class="quick" aria-label="Quick controls">
         <button id="aeroBtn" class="active" title="Active rear wing / airbrake">Aero</button>
-        <button id="doorAllBtn" title="Dihedral doors">Doors</button>
+        <button id="doorAllBtn" title="Autoskin dihedral synchro-helix doors">Doors</button>
         <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
         <button id="liftBtn" title="Front axle lift">Lift</button>
         <button id="lightsBtn" class="active" title="Headlamps">Lights</button>
@@ -395,7 +397,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the Chiron is yours.</div>
+        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the Jesko is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -408,8 +410,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Two-Tone Carbon Coachwork</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Bleu de France over exposed carbon, C-line signature</span></span>
+          <h2>Exterior — Attack Aero Package</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">Arctic White over carbon, tang-orange accents, boomerang wing, Autoskin body</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -436,9 +438,9 @@
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>dihedral doors</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>synchro-helix doors</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
-          <div class="readout"><b>285 / 355</b><span>Michelin Pilot Sport Cup 2</span></div>
+          <div class="readout"><b>265 / 325</b><span>Michelin Pilot Sport Cup 2 R</span></div>
           <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
         </div>
       </section>
@@ -447,7 +449,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Bicolour leather, milled aluminium centre spine, C-bar</span>
+          <span class="small" id="cockpitStatus">SmartCluster on the column — it turns with the wheel — SmartCenter touchscreen</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -467,7 +469,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="speedKeyBtn" class="race" title="Insert the second key to unlock Top Speed mode (380 → 490.5 km/h)">Speed Key</button>
+          <button id="fuelBtn" class="race" title="Switch to E85 biofuel: 1,280 hp on petrol becomes 1,600 hp, torque rises to 1,500 Nm">E85 Fuel</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -479,16 +481,15 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — 8.0L Quad-Turbo W16</h2>
-          <span class="small" id="engineStatus">8.0L W16 quad-turbo · 1,177 kW (1,600 PS / 1,578 hp) @ 7,000 · 1,600 Nm @ 2,250–7,000 · 380 km/h limited, 490.5 km/h with Speed Key · 0–100 in 2.4 s · 1,995 kg</span>
+          <h2>Engine Bay — 5.0L Twin-Turbo V8</h2>
+          <span class="small" id="engineStatus">5.0L twin-turbo V8, flat-plane 180° crank · 1,280 hp @ 7,800 on petrol, 1,600 hp / 1,500 Nm @ 5,100 on E85 · 8,500 rpm · 9-speed LST · 0–100 in 2.5 s · 1,420 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL"></div>
           <div class="turbo right" id="turboR"></div>
-          <div class="turbo left2" id="turboL2"></div>
-          <div class="turbo right2" id="turboR2"></div>
           <div class="v12"></div>
+          <div class="emotor" id="airTankArt">400L CARBON AIR TANK · ANTI-LAG</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
@@ -498,7 +499,7 @@
           <button id="fansBtn" class="active">Cooling Fans</button>
           <button id="blipBtn">Blip Throttle</button>
           <button id="coldStartBtn">Cold Start Flair</button>
-          <button id="antiLagBtn">Anti-Lag (Race)</button>
+          <button id="antiLagBtn">Air-Tank Anti-Lag</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
@@ -509,20 +510,20 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Chiron W16 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real W16 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised quad-turbo W16</span>
+          <button id="engineLoadBtn" title="Load a real Jesko V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
+          <span class="small now" id="engineSoundStatus">Engine voice: synthesised flat-plane twin-turbo V8</span>
         </div>
       </section>
 
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — Dual-Clutch · Active Wing · AWD</h2>
-          <span class="small" id="dynStatus">Race mode: dampers firm, ESC trail, wing hunting downforce</span>
+          <h2>Dynamics — 9-Speed LST · Triplex · RWD</h2>
+          <span class="small" id="dynStatus">Race mode: Triplex dampers firm, ESC trail, boomerang wing hunting downforce</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
-            <div class="gear-stack" id="gearStack"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i></div>
+            <div class="gear-stack" id="gearStack"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></div>
             <div class="shifter-link" id="shifterLink"></div>
             <div class="aero-diagram">
               <div class="arrow" id="aeroArrow"></div>
@@ -562,7 +563,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Bugatti Grand Épreuve">Grand Épreuve</button>
+              <button data-circuit="Koenigsegg Owners Rally">Owners Rally</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -576,7 +577,7 @@
             <button id="testDriverBtn">Hand to Test Driver</button>
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <div class="voice">
-              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “open the doors”">
+              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “switch to E85”">
               <button id="voiceBtn">Tell Co-Pilot</button>
             </div>
             <div class="status-list">
@@ -643,29 +644,30 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">EB</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">KG</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">EB</div>
-      <h1>Chiron Super Sport 300+</h1>
-      <p>Settle into the carbon monocoque. The quad-turbo W16 will catch with a flare, the dihedral doors draw shut, and the exhaust will clear its throat. Drive it yourself, or hand it to the test driver.</p>
+      <div class="pmark">KG</div>
+      <h1>Jesko</h1>
+      <p>The Autoskin sweeps the synchro-helix doors shut around you. The flat-plane V8 catches with a snarl, the air tank hisses the turbos awake, and the boomerang wing settles. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">Ettore Bugatti · Molsheim, France</div>
+      <div class="ring">Jesko von Koenigsegg · Ängelholm, Sweden</div>
     </div>
   </div>
 
   <script type="module">
 /* ===========================================================================
-   BUGATTI CHIRON SUPER SPORT 300+ — "Pur Sang" (browser hypercar simulator)
-   Real Web-Audio quad-turbo W16, factory-matched physics (0–100 km/h 2.4 s,
-   440 km/h governed, 1,177 kW / 1,600 PS, 1,600 Nm, 1,995 kg), an active rear
-   wing / airbrake, a 7-speed dual-clutch you actually shift, and a test driver
+   KOENIGSEGG JESKO — "Spöket" (browser megacar simulator)
+   Real Web-Audio flat-plane twin-turbo V8, factory-matched physics (0–100 km/h
+   2.5 s; 1,280 hp @ 7,800 on petrol, 1,600 hp / 1,500 Nm @ 5,100 on E85;
+   8,500 rpm; 1,420 kg; Attack aero — top speed is genuinely drag-limited),
+   a 9-speed Light Speed Transmission with jump-shifts, and a test driver
    who can lap for you.
-   Performances are researched, not copied — see chiron-ss300-perf-test.mjs.
+   Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
 /* ===== data: circuits =====================================================
@@ -761,9 +763,9 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Bugatti Grand Épreuve": {
+  "Koenigsegg Owners Rally": {
     dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "Bugatti's Grand Épreuve track day, modelled at Monza",
+    blurb: "the Koenigsegg Owners Rally track day, modelled at Monza",
     bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
     track: [
       c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
@@ -781,56 +783,66 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 2.5;
 
-/* ===== data: vehicle spec — EXACT Bugatti Chiron Super Sport 300+ figures =====
-   Power 1,177 kW (1,600 PS / 1,578 hp) @ 7,000 rpm; torque 1,600 Nm @ 2,250–7,000 rpm;
-   kerb weight 1,995 kg; top speed 440 km/h (273 mph, electronically limited — the
-   pre-production 300+ set the record at 490.484 km/h / 304.773 mph); 0–100 km/h 2.4 s;
-   0–200 km/h 5.8 s; 0–300 km/h 12.1 s; 7-speed dual-clutch (DSG), all-wheel drive;
-   Bugatti 8.0 L (7,993 cc) quad-turbocharged W16. */
+/* ===== data: vehicle spec — EXACT Koenigsegg Jesko (Attack) figures =====
+   Koenigsegg 5.0 L twin-turbo V8, flat-plane 180° crank: 954 kW (1,280 hp) @ 7,800 rpm
+   on standard petrol; 1,193 kW (1,600 hp) and 1,500 Nm @ 5,100 rpm on E85 biofuel;
+   8,500 rpm rev limit; kerb weight 1,420 kg; 9-speed Light Speed Transmission;
+   0–100 km/h 2.5 s; up to 1,400 kg of downforce (Attack). Koenigsegg publishes no
+   Attack top speed — in this aero configuration it is genuinely drag-limited
+   (the low-drag Absolut is the 500+ km/h car). */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
-  name: "Bugatti Chiron Super Sport 300+",
-  engineLabel: "Bugatti 8.0 L quad-turbo W16",
-  displacementCc: 7993,
-  massKg: 1995,                 // kerb weight (manufacturer)
+  name: "Koenigsegg Jesko",
+  engineLabel: "Koenigsegg 5.0 L twin-turbo flat-plane V8",
+  displacementCc: 5032,
+  massKg: 1420,                 // kerb weight (manufacturer)
   rotInertia: 1.04,
-  peakPowerW: 1177000,          // 1,177 kW = 1,600 PS = 1,578 hp @ 7,000 rpm
-  peakPowerPS: 1600,
-  peakPowerHp: 1578,
-  peakPowerKw: 1177,
-  peakPowerRpm: 7000,
-  peakTorqueNm: 1600,           // @ 2,250–7,000 rpm
-  torqueLoRpm: 2250,
-  torqueHiRpm: 7000,
-  idleRpm: 950,
-  redlineRpm: 7100,
-  finalDrive: 3.19,
-  gearRatios: [2.77, 1.92, 1.45, 1.13, 0.92, 0.77, 0.58],   // tall 7th so 490.5 km/h sits below the 7,100 redline
-  reverseRatio: 2.90,
-  wheelRadiusM: 0.355,          // 355/25 ZR21 rear
-  dragCd: 0.35,                 // normal low-drag config; active wing adds drag/downforce
-  dragCdTopSpeed: 0.31,         // Speed-Key "Top Speed" mode: wing flat, air curtains shut, long-tail slippery
-  frontalAreaM2: 2.07,
+  peakPowerW: 954000,           // 954 kW = 1,280 hp @ 7,800 rpm on standard petrol
+  peakPowerPS: 1298,
+  peakPowerHp: 1280,
+  peakPowerKw: 954,
+  peakPowerRpm: 7800,
+  peakTorqueNm: 1200,           // petrol plateau (from the published power; E85 raises it to the official 1,500 Nm @ 5,100)
+  torqueLoRpm: 2700,
+  torqueHiRpm: 6170,
+  idleRpm: 900,
+  redlineRpm: 8500,             // manufacturer rev limit
+  finalDrive: 3.0,
+  gearRatios: [3.30, 2.44, 1.93, 1.58, 1.32, 1.12, 0.96, 0.83, 0.72],   // 9-speed LST
+  reverseRatio: 3.10,
+  wheelRadiusM: 0.364,          // 325/30 R21 rear
+  dragCd: 0.55,                 // Attack configuration: the fixed boomerang wing + dive planes carry real drag
+  frontalAreaM2: 1.88,
   rollingResistance: 0.012,
   airDensity: 1.225,
-  drivelineEff: 0.94,
-  tractionCoeff: 1.247088,      // calibrated -> 0–100 km/h = 2.4000 s ±0.0001 with AWD launch control (see tests/perf-test.mjs)
-  topSpeedKmh: 490.5,           // the Speed-Key top speed / record (490.484 km/h, Andy Wallace 2019)
-  topSpeedMps: 490.5 * KMH,
-  topSpeedLimitedKmh: 380,      // everyday limiter WITHOUT the Speed Key inserted
-  topSpeedLimitedMps: 380 * KMH,
-  topSpeedRecordKmh: 490.5,     // 490.484 km/h, rounded
-  topSpeedRecordMps: 490.5 * KMH,
-  zeroTo100Kmh: 2.4,            // s (manufacturer)
-  zeroTo200Kmh: 5.8,            // s (manufacturer)
-  zeroTo300Kmh: 12.1,           // s (manufacturer)
-  brakeMaxMps2: 12.3000,        // carbon-ceramic; calibrated to 31.0 m 100-0 km/h (aero adds grip with speed)
-  brakeDist100to0M: 31,         // target 100-0 km/h braking distance (Chiron)
-  shiftTimeS: 0.08,             // dual-clutch, sharp
-  launchRpm: 4200,
-  aeroClA: 2.9,                 // downforce coefficient*area (lumped)
-  aeroDragAdd: 0.55             // fraction added to CdA when the wing is fully deployed
+  drivelineEff: 0.90,
+  tractionCoeff: 1.202528,      // calibrated -> 0–100 km/h = 2.5000 s ±0.0001 with launch control (see tests/perf-test.mjs)
+  topSpeedKmh: 500,             // safety ceiling only (Absolut-programme bound) — the Attack is drag-limited well below
+  topSpeedMps: 500 * KMH,
+  topSpeedLimitedKmh: 500,
+  topSpeedLimitedMps: 500 * KMH,
+  topSpeedRecordKmh: 500,
+  topSpeedRecordMps: 500 * KMH,
+  zeroTo100Kmh: 2.5,            // s (Koenigsegg)
+  e85: {                        // E85 biofuel map: the official megacar numbers
+    peakPowerW: 1193000,        // 1,193 kW = 1,600 hp
+    peakPowerPS: 1622,
+    peakPowerHp: 1600,
+    peakTorqueNm: 1500          // @ 5,100 rpm (manufacturer)
+  },
+  petrol: {                     // standard-fuel map (defaults)
+    peakPowerW: 954000,
+    peakPowerPS: 1298,
+    peakPowerHp: 1280,
+    peakTorqueNm: 1200
+  },
+  brakeMaxMps2: 12.8502,        // carbon-ceramic; calibrated to 29.0 m 100-0 km/h (aero adds grip with speed)
+  brakeDist100to0M: 29,         // target 100-0 km/h braking distance
+  shiftTimeS: 0.03,             // Light Speed Transmission — seamless multi-clutch
+  launchRpm: 4000,
+  aeroClA: 3.6,                 // downforce coefficient*area (lumped) — up to ~1,400 kg (Attack)
+  aeroDragAdd: 0.45             // extra CdA as the active wing element trims fully
 };
 
 /* ===== shared context ===== */
@@ -855,8 +867,8 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    speedKey: false,               // the Bugatti "Speed Key": unlocks Top Speed mode past 380 km/h up to 490.5 km/h
-    speedKeyVis: 0,                // animated ride-height drop when Top Speed mode engages
+    e85: false,                    // running E85 biofuel: 1,280 hp becomes 1,600 hp, torque 1,500 Nm
+    e85Vis: 0,                     // fuel-map swap glow on the cluster
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -902,12 +914,12 @@ const SPEC = {
     state.toastTimer = 3.0;
   }
 
-  window.BugattiApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
+  window.KoenigseggApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
 }
 
 /* ===== media status helpers ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const studioNowPlaying = document.getElementById("studioNowPlaying");
   const engineSoundStatus = document.getElementById("engineSoundStatus");
   function setNowPlaying(text, live) { if (!studioNowPlaying) return; studioNowPlaying.textContent = text; studioNowPlaying.classList.toggle("live", !!live); }
@@ -915,9 +927,9 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised quad-turbo W16, turbo spool, blow-off, exhaust crackle ===== */
+/* ===== audio: synthesised flat-plane twin-turbo V8, air-tank hiss, blow-off, crackle ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { SPEC, clamp } = app;
 
   const audio = {
@@ -944,15 +956,15 @@ const SPEC = {
 
       const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Quad-turbo W16: a deep, dense, turbine-smooth wall of sound — strong low sine
-      // fundamental with layered saws for the 16-cylinder density, softer top harmonics
+      // Flat-plane 180° V8: raw, race-car-hard, with a vicious rising edge and
+      // turbo pressure always hissing underneath
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.50, toShaper: false },
-        { type: "sine",     mul: 1.0,  gain: 0.30, toShaper: false },
-        { type: "sawtooth", mul: 1.0,  gain: 0.52, toShaper: true  },
-        { type: "sawtooth", mul: 1.006,gain: 0.32, toShaper: true  },
-        { type: "sawtooth", mul: 2.0,  gain: 0.18, toShaper: true  },
-        { type: "square",   mul: 3.0,  gain: 0.06, toShaper: true  }
+        { type: "sine",     mul: 0.5,  gain: 0.34, toShaper: false },
+        { type: "sawtooth", mul: 1.0,  gain: 0.56, toShaper: true  },
+        { type: "sawtooth", mul: 1.009,gain: 0.36, toShaper: true  },
+        { type: "sawtooth", mul: 2.0,  gain: 0.26, toShaper: true  },
+        { type: "square",   mul: 3.0,  gain: 0.12, toShaper: true  },
+        { type: "square",   mul: 4.0,  gain: 0.05, toShaper: true  }
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -985,7 +997,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 8);   // W16: 8 firing pulses / rev
+      const firing = Math.max(20, (s.rpm / 60) * 4);   // V8: 4 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
@@ -1046,7 +1058,7 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // W16 catch + rev flare on ignition
+    startupFlair() { // flat-plane V8 catch + rev flare on ignition
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
       const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
       o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
@@ -1109,9 +1121,9 @@ const SPEC = {
   app.audio = audio;
 }
 
-/* ===== physics: engine, dual-clutch box, aero, launch, world, test driver ===== */
+/* ===== physics: engine (petrol/E85 maps), 9-speed LST, aero, launch, world, test driver ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
   const audio = app.audio;
   const showToast = app.showToast;
@@ -1121,9 +1133,9 @@ const SPEC = {
   function engineTorque(rpm) {
     const omega = rpm * Math.PI * 2 / 60;
     const plateau = rpm <= SPEC.torqueLoRpm
-      ? 700 + 900 * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
+      ? 520 + (SPEC.peakTorqueNm - 520) * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
       : SPEC.peakTorqueNm;
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at exactly 1,177 kW
+    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at the active fuel map (954 kW petrol / 1,193 kW E85)
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1133,19 +1145,19 @@ const SPEC = {
   }
 
   const modeMap = {
-    wet:   { upRpm: 3800, downRpm: 1500, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 5200, downRpm: 1900, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 6100, downRpm: 2200, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+    wet:   { upRpm: 4600, downRpm: 1700, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 6600, downRpm: 2200, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 8100, downRpm: 2600, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
-  /* --- the dual-clutch 7-speed: auto-shifts for you, but the paddles always win --- */
+  /* --- the 9-speed Light Speed Transmission: auto-shifts for you, but the paddles always win --- */
   function manualShift(dir) {
     if (state.gearMode !== "G") {
       if (dir > 0) { app.setGear("G", 1); return; }
       return;
     }
-    const next = clamp(state.curGear + dir, 1, 7);
+    const next = clamp(state.curGear + dir, 1, 9);
     if (next === state.curGear) return;
     state.shiftFrom = state.curGear; state.curGear = next; state.shiftTimer = SPEC.shiftTimeS;
     state.manualHold = 1.4;
@@ -1163,7 +1175,7 @@ const SPEC = {
     const upRpm = state.throttle > 0.6 ? m.upRpm : (m.downRpm + 1400 + state.throttle * 1200);
     const downRpm = m.downRpm + (kickdown ? 700 : 0);
     if (state.manualHold > 0) return;          // respect a just-made manual shift
-    if (!holdForCorner && rpm > upRpm && state.curGear < 7) {
+    if (!holdForCorner && rpm > upRpm && state.curGear < 9) {
       state.shiftFrom = state.curGear; state.curGear++; state.shiftTimer = SPEC.shiftTimeS; audio.clunk(240);
     } else if (rpm < downRpm && state.curGear > 1) {
       state.shiftFrom = state.curGear; state.curGear--; state.shiftTimer = SPEC.shiftTimeS; audio.blip(0.7);
@@ -1172,18 +1184,18 @@ const SPEC = {
     }
   }
 
-  /* --- active aerodynamics: the hydraulic rear wing + front trim, real drag/downforce ---
-     Under braking the REAR wing stands fully up as an AIRBRAKE — the Chiron's calling card —
-     shedding speed AND keeping the now-light rear axle planted (weight has pitched forward);
-     the FRONT trim barely moves, or the forward-loaded nose would dig in and the tail would
-     come around. So the two HUD bars deliberately read differently on the brakes. */
+  /* --- active aerodynamics: the boomerang wing's active element + front trim ---
+     Under braking the WING element stands fully up as an AIRBRAKE — shedding speed AND
+     keeping the now-light rear axle planted (weight has pitched forward); the FRONT trim
+     barely moves, or the forward-loaded nose would dig in and the tail would come around.
+     So the two HUD bars deliberately read differently on the brakes. */
   function updateAero(dt) {
     const spd = Math.abs(state.speedMps);
     let frontT, rearT;
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
-      // Standing downforce rises through mid-speed, then TRIMS FLAT toward Vmax — the Chiron
-      // drops its wing in Top-Speed mode, which is exactly how it keeps 440 km/h on the table.
+      // Standing downforce rises through mid-speed — the Attack package holds its trim
+      // (this is the downforce car; the low-drag record car is the Absolut).
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -1193,9 +1205,8 @@ const SPEC = {
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
-    // Speed Key / Top Speed mode overrides everything: the wing lies flat for minimum drag
-    // (it still pops up as an airbrake only under heavy braking).
-    if (state.speedKey) { rearT = state.brake > 0.5 ? state.brake : 0; frontT = 0; }
+    // (No low-drag override here: the Attack wing is fixed hardware. Fuel choice — E85 —
+    // changes the engine maps instead; see toggleFuel.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
@@ -1280,7 +1291,7 @@ const SPEC = {
     { name: "McLaren 765LT",           body: "#ff6a13", stripe: "#0a2a55", top: 330, latG: 1.55, accel: 11.8 },
     { name: "Porsche 911 Turbo S",     body: "#e9edf0", stripe: "#d0202f", top: 330, latG: 1.25, accel: 11.5 },
     { name: "Lamborghini Huracán STO", body: "#46b14a", stripe: "#ff7a1a", top: 310, latG: 1.55, accel: 11.0 },
-    { name: "Koenigsegg Jesko",        body: "#d2d6da", stripe: "#e23b2e", top: 480, latG: 1.60, accel: 13.2 },
+    { name: "Koenigsegg Regera",       body: "#d2d6da", stripe: "#e23b2e", top: 400, latG: 1.45, accel: 13.4 },
     { name: "Rimac Nevera",            body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
     { name: "Aston Martin Valkyrie",   body: "#0d5c63", stripe: "#c0c4c8", top: 350, latG: 2.00, accel: 12.9 },
     { name: "Ferrari LaFerrari",       body: "#cc1417", stripe: "#0a0c10", top: 350, latG: 1.55, accel: 12.6 },
@@ -1291,28 +1302,28 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-  /* The Grand Épreuve is a Bugatti-only programme — so its grid is Bugattis, with their
-     real (or, where limited, best-known) top speeds and grip. */
-  const BUGATTI_GRID = [
-    { name: "Bugatti Veyron 16.4",            body: "#1c1f24", stripe: "#a6742f", top: 407, latG: 1.10, accel: 11.0 },
-    { name: "Bugatti Veyron Super Sport",     body: "#15181d", stripe: "#8a1f1f", top: 431, latG: 1.15, accel: 11.6 },
-    { name: "Bugatti Veyron Grand Sport Vitesse", body: "#20263a", stripe: "#c9cfd6", top: 408, latG: 1.12, accel: 11.3 },
-    { name: "Bugatti EB110 Super Sport",      body: "#1c4f9c", stripe: "#0a0c10", top: 351, latG: 1.20, accel: 10.6 },
-    { name: "Bugatti Chiron",                 body: "#10357f", stripe: "#0a0c10", top: 420, latG: 1.40, accel: 12.5 },
-    { name: "Bugatti Chiron Sport",           body: "#0e2a5e", stripe: "#c9cfd6", top: 420, latG: 1.45, accel: 12.6 },
-    { name: "Bugatti Chiron Pur Sport",       body: "#e9edf0", stripe: "#f47a1a", top: 350, latG: 1.62, accel: 12.8 },
-    { name: "Bugatti Divo",                   body: "#2f6fe0", stripe: "#0a0c10", top: 380, latG: 1.60, accel: 12.6 },
-    { name: "Bugatti Centodieci",             body: "#e6e9ec", stripe: "#10357f", top: 380, latG: 1.52, accel: 12.7 },
-    { name: "Bugatti La Voiture Noire",       body: "#0a0c10", stripe: "#2f6fe0", top: 420, latG: 1.42, accel: 12.4 },
-    { name: "Bugatti Mistral W16",            body: "#1c3a6e", stripe: "#c0a062", top: 420, latG: 1.45, accel: 12.5 },
-    { name: "Bugatti Bolide",                 body: "#2f7be0", stripe: "#0a0c10", top: 380, latG: 2.20, accel: 13.4 },
-    { name: "Bugatti Veyron Grand Sport",     body: "#586069", stripe: "#7a1f1f", top: 407, latG: 1.10, accel: 11.0 }
+  /* The Owners Rally is a Koenigsegg-only event — so its grid is Koenigseggs, with
+     their real (or, where limited, best-known) top speeds and grip. */
+  const KOENIGSEGG_GRID = [
+    { name: "Koenigsegg CC8S",             body: "#b8312f", stripe: "#c9cfd6", top: 365, latG: 1.10, accel: 10.2 },
+    { name: "Koenigsegg CCR",              body: "#d9d9d9", stripe: "#b8312f", top: 388, latG: 1.15, accel: 10.8 },
+    { name: "Koenigsegg CCX",              body: "#e9edf0", stripe: "#0a0c10", top: 395, latG: 1.20, accel: 11.0 },
+    { name: "Koenigsegg CCXR",             body: "#1c4f9c", stripe: "#c9cfd6", top: 400, latG: 1.22, accel: 11.4 },
+    { name: "Koenigsegg Agera",            body: "#15181d", stripe: "#e86a1c", top: 400, latG: 1.30, accel: 11.8 },
+    { name: "Koenigsegg Agera R",          body: "#e9edf0", stripe: "#e86a1c", top: 418, latG: 1.35, accel: 12.2 },
+    { name: "Koenigsegg Agera S",          body: "#20263a", stripe: "#f0d43c", top: 415, latG: 1.35, accel: 12.2 },
+    { name: "Koenigsegg Agera RS",         body: "#d2d6da", stripe: "#e23b2e", top: 447, latG: 1.45, accel: 12.8 },
+    { name: "Koenigsegg One:1",            body: "#0a0c10", stripe: "#f0d43c", top: 440, latG: 1.60, accel: 13.0 },
+    { name: "Koenigsegg Regera",           body: "#7a1f2e", stripe: "#c0a062", top: 400, latG: 1.45, accel: 13.4 },
+    { name: "Koenigsegg Gemera",           body: "#16604f", stripe: "#c9cfd6", top: 400, latG: 1.30, accel: 12.6 },
+    { name: "Koenigsegg CC850",            body: "#c8d0d6", stripe: "#0a0c10", top: 400, latG: 1.50, accel: 12.8 },
+    { name: "Koenigsegg Jesko Absolut",    body: "#2b3a4a", stripe: "#e86a1c", top: 500, latG: 1.40, accel: 13.2 }
   ];
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Bugatti Grand Épreuve") ? BUGATTI_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Koenigsegg Owners Rally") ? KOENIGSEGG_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1372,7 +1383,7 @@ const SPEC = {
   function laneScan() { const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } }; for (const car of state.traffic) { if (car.oncoming) continue; const e = r[car.lane]; if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; } } return r; }
   function chooseLaneOffset() { const lanes = laneScan(); const cur = clamp(Math.round(state.laneOffset / 3), -1, 1); const follow = followDist(); const spd = Math.abs(state.speedMps); const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5; if (!blocked) { if (cur !== 0 && lanes["0"].gap > follow + 10) return 0; return cur * 3; } let best = cur, bestGap = lanes[cur].gap + 12; for (let l = -1; l <= 1; l++) { if (Math.abs(l - cur) > 1) continue; if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; } } return best * 3; }
 
-  const STEERING = { wheelbase: 2.711, frontTrack: 1.674, maxAngle: 0.58 };
+  const STEERING = { wheelbase: 2.700, frontTrack: 1.678, maxAngle: 0.58 };
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
   function steerForYaw(desiredYaw, v) { const vAbs = Math.max(2.2, Math.abs(v)); const ang = Math.atan((desiredYaw * STEERING.wheelbase) / vAbs); return clamp(ang / (STEERING.maxAngle * steerFactorOf(Math.abs(v))), -1, 1); }
   function pathSteer(gain, targetOffset) { const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
@@ -1480,8 +1491,8 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction;
 
-    // Speed Key "Top Speed" mode drops the drag coefficient (wing flat, air curtains shut).
-    const baseCd = state.speedKey ? SPEC.dragCdTopSpeed : SPEC.dragCd;
+    // Attack aero: the boomerang wing is fixed hardware — its drag is always in the baseline.
+    const baseCd = SPEC.dragCd;
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
@@ -1492,8 +1503,8 @@ const SPEC = {
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Electronic top-speed governor: 380 km/h everyday, raised to 490.5 km/h with the Speed Key.
-    const govMps = state.speedKey ? SPEC.topSpeedRecordMps : SPEC.topSpeedLimitedMps;
+    // Safety ceiling only — the Attack is drag-limited far below this in practice.
+    const govMps = SPEC.topSpeedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -1536,7 +1547,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Front axle lowered to ride height.", "Chiron SS"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Jesko"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1550,7 +1561,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the Chiron sits dead still.
+    // on smooth tarmac through a fast corner the Jesko sits dead still.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -1604,7 +1615,7 @@ const SPEC = {
 
 /* ===== render: the driving world ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, canvas, ctx, clamp, lerp } = app;
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
@@ -1846,23 +1857,25 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Chiron instrument binnacle: a big central analogue SPEEDOMETER to 500 km/h,
-    // flanked by an instantaneous power gauge (PS) and the rev counter ----
+    // ---- Jesko SmartCluster: ONE round display mounted on the steering column, so it
+    // turns with the wheel (the Koenigsegg signature); hp and boost pods beside it ----
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
     const cx = w / 2 + sway;
-    drawSideGauge(cx - R * 2.0, cy + R * 0.18, R * 0.60, powerPS(), SPEC.peakPowerPS, "PS", true);
-    drawSideGauge(cx + R * 2.0, cy + R * 0.18, R * 0.60, state.rpm, SPEC.redlineRpm, "1/min", false);
+    drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "HK", true);
+    drawSideGauge(cx + R * 2.3, cy + R * 0.18, R * 0.55, state.boostBar * 1000, 1400, "MBAR", false);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9); ctx.translate(-cx, -cy);   // column-mounted: turns with the rim
     drawSpeedo(cx, cy, R);
-    // exposed Bugatti wheel
+    ctx.restore();
+    // Koenigsegg wheel around the SmartCluster
     drawWheel(w, h);
   }
-  // instantaneous power output (PS) for the left-hand gauge — the Chiron's power dial
+  // instantaneous output (hp) for the left-hand pod — reads to 1,600 on E85
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // the Chiron's signature central speedometer, graduated to 500 km/h with a Speed-Key zone
+  // the SmartCluster: speed arc to 500 km/h (megacar graduation) with the E85 zone
   function drawSpeedo(cx, cy, R) {
     const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 500;
     ctx.save(); ctx.translate(cx, cy);
@@ -1873,22 +1886,22 @@ const SPEC = {
     const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (let v = 0; v <= MAX; v += 20) {
-      const f = v / MAX, a = lerp(startA, endA, f), major = v % 100 === 0, on = v <= kmhNow, zone = v >= 380;
+      const f = v / MAX, a = lerp(startA, endA, f), major = v % 100 === 0, on = v <= kmhNow, zone = v >= 400;
       ctx.strokeStyle = on ? (zone ? "#9cc6ff" : "#e6edf5") : (zone ? "rgba(120,160,220,0.35)" : "rgba(120,130,140,0.3)");
       ctx.lineWidth = major ? 2.4 : 1.1; const r1 = R * (major ? 0.74 : 0.83), r2 = R * 0.95;
       ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
       if (major) { ctx.fillStyle = "rgba(210,224,240,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(String(v), Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); }
     }
-    // Speed-Key zone arc (380 → 490.5), lit when the key is in
-    ctx.strokeStyle = state.speedKey ? "rgba(156,198,255,0.6)" : "rgba(120,160,220,0.22)"; ctx.lineWidth = R * 0.045;
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, 380 / MAX), lerp(startA, endA, 490.5 / MAX)); ctx.stroke();
+    // E85 arc — lit tang-orange when the biofuel map (1,600 hp) is active
+    ctx.strokeStyle = state.e85 ? "rgba(255,194,150,0.8)" : "rgba(232,106,28,0.22)"; ctx.lineWidth = R * 0.045;
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, 400 / MAX), lerp(startA, endA, 500 / MAX)); ctx.stroke();
     // needle
     const na = lerp(startA, endA, clamp(kmhNow / MAX, 0, 1));
     ctx.strokeStyle = "#9cc6ff"; ctx.lineWidth = 3; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.12, -Math.sin(na) * R * 0.12); ctx.lineTo(Math.cos(na) * R * 0.82, Math.sin(na) * R * 0.82); ctx.stroke();
     ctx.fillStyle = "#cfe4ff"; ctx.beginPath(); ctx.arc(0, 0, R * 0.07, 0, Math.PI * 2); ctx.fill();
     // gear badge (top), digital km/h (bottom)
-    ctx.fillStyle = state.speedKey ? "#9cc6ff" : "#f0a23c"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.4);
+    ctx.fillStyle = state.e85 ? "#ffc296" : "#f0d43c"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.4);
     ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.32)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmhNow)), 0, R * 0.36);
     ctx.fillStyle = "rgba(150,166,180,0.9)"; ctx.font = `600 ${Math.round(R * 0.095)}px ui-sans-serif`; ctx.fillText("KM/H", 0, R * 0.54);
     ctx.restore();
@@ -1900,35 +1913,36 @@ const SPEC = {
     ctx.strokeStyle = "rgba(120,160,220,0.4)"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
     const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
     for (let i = 0; i <= 40; i++) {
-      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 1350 : v > 5600;
+      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 1450 : v > 1200;
       ctx.strokeStyle = on ? (red ? "#ff5b5b" : (isPower ? "#9cc6ff" : "#f0a23c")) : "rgba(120,130,140,0.3)";
       ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.lineTo(Math.cos(a) * R * 0.94, Math.sin(a) * R * 0.94); ctx.stroke();
     }
     const na = lerp(startA, endA, clamp(val / max, 0, 1)); ctx.strokeStyle = "#dfe9ee"; ctx.lineWidth = 2;
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.7, Math.sin(na) * R * 0.7); ctx.stroke();
     ctx.fillStyle = "rgba(160,176,190,0.9)"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = `700 ${Math.round(R * 0.34)}px ui-sans-serif`; ctx.fillText(isPower ? String(Math.round(val)) : (val / 1000).toFixed(1), 0, R * 0.02);
+    ctx.font = `700 ${Math.round(R * 0.34)}px ui-sans-serif`; ctx.fillText(String(Math.round(val)), 0, R * 0.02);
     ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
     ctx.restore();
   }
-  // two-tone Bugatti wheel: horizontal-spoke hub, blue crown accent, EB roundel centre
+  // Koenigsegg SmartWheel: squircle rim with touch pads on the two horizontal spokes
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#0c0e12"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // blue crown accent at the top of the rim
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(90,138,230,0.85)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.16, Math.PI * 1.84); ctx.stroke();
+    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+    // tang-orange centring mark
+    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(232,106,28,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.45, Math.PI * 1.55); ctx.stroke();
     ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
     // flat bottom
     ctx.fillStyle = "#08090c"; ctx.fillRect(-R * 0.52, R * 0.82, R * 1.04, R * 0.4);
-    // horizontal two-spoke + lower spoke
+    // horizontal spokes carrying the SmartWheel TOUCH PADS
     ctx.strokeStyle = "#14171d"; ctx.lineWidth = R * 0.1;
     [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.03); ctx.stroke(); });
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
-    // hub + EB roundel
-    ctx.fillStyle = "#0c0e12"; ctx.beginPath(); ctx.arc(0, 0, R * 0.25, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#b3121f"; ctx.strokeStyle = "#e8e2c8"; ctx.lineWidth = R * 0.018; ctx.beginPath(); ctx.arc(0, 0, R * 0.17, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#f4efdc"; ctx.font = `700 ${Math.round(R * 0.14)}px Georgia, serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("EB", 0, 0);
+    [-1, 1].forEach(s => { ctx.fillStyle = "#0e1116"; ctx.strokeStyle = "rgba(232,106,28,0.5)"; ctx.lineWidth = R * 0.014;
+      const px = s * R * 0.56; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2, R * 0.03) : ctx.rect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2); ctx.fill(); ctx.stroke(); });
+    // hub kept open — the SmartCluster sits on the column behind it
+    ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, R * 0.24, 0, Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = "#ffc296"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("KOENIGSEGG", 0, R * 0.99 - R * 0.99 + R * 0.34);
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
@@ -1977,96 +1991,93 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Bugatti exterior — Chiron Super Sport 300+ side profile (two-tone coachwork, the C-line,
-     horseshoe grille, low fastback, adjustable rear wing, stacked central exhaust) */
+  /* Koenigsegg exterior — Jesko Attack side profile (arctic white over carbon, deep
+     splitter, dive planes, the huge top-mounted BOOMERANG wing on central pylons) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bugatti Chiron Super Sport 300+ side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Koenigsegg Jesko side">
       <defs>
-        <linearGradient id="bcBlueG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f8ae6"/><stop offset="0.5" stop-color="#2a5fbf"/><stop offset="1" stop-color="#12336f"/></linearGradient>
-        <linearGradient id="bcBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="bcGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aecbe6"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
-        <radialGradient id="bcHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
-        <filter id="bcExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="kgWhiteG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7fa"/><stop offset="0.5" stop-color="#ccd4dc"/><stop offset="1" stop-color="#7e8892"/></linearGradient>
+        <linearGradient id="kgBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
+        <linearGradient id="kgGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aecbe6"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
+        <radialGradient id="kgHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
+        <filter id="kgExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         <style>
-          .bcWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:86% 100%;transform:rotate(calc(var(--wing-deg,12deg) * -0.5));transition:transform .42s ease;}
+          .kgWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.35));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:92% 6%;transition:transform .6s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-40deg) translateY(-6px);}
+          #doorArt{transform-box:fill-box;transform-origin:8% 90%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(24deg) translate(26px,-34px);}
           #quadExhaustArt circle{fill:#8b929b;}
-          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#bcExhGlow);}
+          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#kgExhGlow);}
         </style>
       </defs>
       <ellipse cx="500" cy="300" rx="392" ry="20" fill="rgba(0,0,0,0.5)"/>
 
-      <!-- rear wing on its uprights (deploys as speed / brake demand rises) -->
-      <path d="M170,150 q10,-40 66,-50" fill="none" stroke="#20242b" stroke-width="8"/>
-      <path d="M262,150 q8,-40 40,-50" fill="none" stroke="#20242b" stroke-width="8"/>
+      <!-- BOOMERANG wing on twin top-mounted central pylons -->
+      <path d="M180,150 L210,102" fill="none" stroke="#20242b" stroke-width="9"/>
+      <path d="M262,146 L262,102" fill="none" stroke="#20242b" stroke-width="9"/>
       <g id="rearWingArt">
-        <rect x="120" y="96" width="200" height="12" rx="5" fill="#15181d" stroke="#5c636c"/>
-        <rect x="120" y="96" width="200" height="4" rx="2" fill="rgba(156,198,255,0.55)"/>
+        <path d="M108,86 Q220,104 336,86 L332,100 Q220,116 112,100 Z" fill="#15181d" stroke="#5c636c"/>
+        <path d="M108,86 Q220,104 336,86" fill="none" stroke="rgba(232,106,28,0.75)" stroke-width="3"/>
+        <rect x="104" y="82" width="7" height="24" rx="2" fill="#101216"/>
+        <rect x="331" y="82" width="7" height="24" rx="2" fill="#101216"/>
       </g>
 
       <g id="bcBody">
-        <!-- lower carbon body silhouette (long, low, wide fastback) -->
-        <path d="M120,258 L120,214 Q140,206 210,202 Q300,196 380,190 Q430,184 470,168
-                 Q520,132 590,124 L660,124 Q744,132 800,150 Q860,166 902,196
-                 Q920,208 916,226 L902,240 Q840,230 760,230 L300,236 Q190,240 150,250 Z"
-              fill="url(#bcBodyG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- upper two-tone body panel (Bleu de France over carbon) -->
-        <path d="M300,196 Q430,184 470,168 Q520,132 590,124 L660,124 Q744,132 800,150 Q844,166 872,188
-                 L840,192 Q760,178 660,176 L470,182 Q380,186 300,196 Z"
-              fill="url(#bcBlueG)" stroke="rgba(120,160,220,0.5)" stroke-width="1"/>
-        <!-- fastback greenhouse -->
-        <path d="M486,166 Q520,134 588,126 L654,126 Q712,134 748,158 Q612,150 486,166 Z" fill="url(#bcGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <!-- the C-line: Bugatti's signature side sweep, roof down and around the intake -->
-        <path d="M600,128 Q560,150 512,178 Q470,200 440,236" fill="none" stroke="#9cc6ff" stroke-width="6" stroke-linecap="round" opacity="0.92"/>
-        <path d="M600,128 Q560,150 512,178 Q470,200 440,236" fill="none" stroke="#12336f" stroke-width="2" stroke-linecap="round"/>
-        <!-- side air intake fed by the C-line -->
-        <path d="M430,206 Q470,196 510,196 L500,224 L430,226 Z" fill="#06080b" stroke="rgba(156,198,255,0.25)"/>
-        <!-- dihedral door cut (front-hinged, swings up and out) -->
+        <!-- carbon lower hull -->
+        <path d="M110,254 L110,212 Q140,204 214,200 Q314,194 392,186 Q442,178 478,162
+                 Q524,130 598,122 L664,122 Q748,130 804,150 Q862,168 900,196
+                 Q920,208 914,226 L900,240 Q838,232 758,232 L292,238 Q184,242 146,250 Z"
+              fill="url(#kgBodyG)" stroke="#4a5058" stroke-width="1.5"/>
+        <!-- arctic-white upper body -->
+        <path d="M292,196 Q392,186 442,176 Q480,166 478,162 Q524,130 598,122 L664,122 Q748,130 804,150 Q850,166 878,188
+                 L844,192 Q758,178 664,176 L478,182 Q382,188 292,196 Z"
+              fill="url(#kgWhiteG)" stroke="rgba(210,220,230,0.6)" stroke-width="1"/>
+        <!-- wraparound canopy -->
+        <path d="M494,160 Q528,130 596,124 L660,124 Q716,132 750,154 Q614,146 494,160 Z" fill="url(#kgGlassG)" stroke="#6c757e" stroke-width="1.5"/>
+        <!-- tang-orange Attack accent sweep -->
+        <path d="M292,196 Q460,180 760,186" fill="none" stroke="rgba(232,106,28,0.8)" stroke-width="4" stroke-linecap="round"/>
+        <!-- big side intake -->
+        <path d="M430,204 Q474,194 514,196 L504,226 L432,226 Z" fill="#06080b" stroke="rgba(232,106,28,0.3)"/>
+        <!-- dihedral synchro-helix door (rotates out and forward — the Koenigsegg move) -->
         <g id="doorArt">
-          <path d="M506,178 Q560,150 640,150 L720,168 L720,226 L512,230 Z" fill="rgba(60,86,132,0.30)" stroke="#6c757e" stroke-width="1.4"/>
-          <path d="M540,168 Q600,152 690,158" fill="none" stroke="rgba(160,200,240,0.4)" stroke-width="2"/>
+          <path d="M514,170 Q568,142 648,144 L718,164 L716,226 L520,228 Z" fill="rgba(150,160,172,0.30)" stroke="#6c757e" stroke-width="1.4"/>
+          <path d="M546,160 Q606,148 692,154" fill="none" stroke="rgba(220,230,240,0.4)" stroke-width="2"/>
         </g>
-        <!-- horseshoe grille + LED headlamp at the nose -->
-        <ellipse cx="892" cy="206" rx="15" ry="22" fill="#0a0c10" stroke="#c9cfd6" stroke-width="2"/>
-        <ellipse cx="892" cy="206" rx="8" ry="14" fill="none" stroke="rgba(156,198,255,0.5)" stroke-width="1.4"/>
-        <path d="M852,178 q34,-4 52,2" fill="none" stroke="#dfe9ee" stroke-width="4" stroke-linecap="round"/>
-        <path d="M852,178 q34,-4 52,2" fill="none" stroke="#9cc6ff" stroke-width="1.6" stroke-linecap="round"/>
-        <!-- front splitter + adjustable front flap -->
-        <rect x="828" y="242" width="86" height="7" rx="3" fill="#05070a"/>
-        <g id="frontFlapArt"><rect x="792" y="214" width="42" height="6" rx="3" fill="#15181d" stroke="rgba(156,198,255,0.3)"/></g>
-        <!-- SS300+ stacked central exhaust at the tail -->
+        <!-- slim headlamp + splitter + dive plane -->
+        <path d="M868,182 q24,-2 38,6" fill="none" stroke="#dfe9ee" stroke-width="3.6" stroke-linecap="round"/>
+        <rect x="822" y="242" width="94" height="8" rx="3" fill="#05070a"/>
+        <path d="M872,218 l40,-4 l-2,8 l-38,2 Z" fill="#101216" stroke="rgba(232,106,28,0.5)"/>
+        <g id="frontFlapArt"><rect x="788" y="214" width="42" height="6" rx="3" fill="#15181d" stroke="rgba(232,106,28,0.4)"/></g>
+        <!-- single central round exhaust high in the tail -->
         <g id="quadExhaustArt">
-          <circle cx="132" cy="212" r="7"/><circle cx="150" cy="212" r="7"/>
-          <circle cx="132" cy="230" r="7"/><circle cx="150" cy="230" r="7"/>
+          <circle cx="136" cy="212" r="10"/>
         </g>
-        <!-- diffuser fins -->
+        <!-- diffuser strakes -->
         <g stroke="#05070a" stroke-width="3">
-          <path d="M120,250 l0,12"/><path d="M140,250 l0,12"/><path d="M160,250 l0,12"/><path d="M180,250 l0,12"/>
+          <path d="M114,246 l0,12"/><path d="M136,246 l0,12"/><path d="M158,246 l0,12"/><path d="M180,246 l0,12"/>
         </g>
-        <!-- BUGATTI script + EB roundel -->
-        <text x="600" y="216" font-family="Georgia, serif" font-size="12" fill="#c9cfd6" letter-spacing="2">BUGATTI</text>
-        <circle cx="470" cy="214" r="9" fill="#b3121f" stroke="#e8e2c8" stroke-width="1.4"/>
-        <text x="470" y="217" text-anchor="middle" font-family="Georgia, serif" font-size="7" fill="#f4efdc">EB</text>
+        <!-- JESKO script + KG shield -->
+        <text x="600" y="214" font-family="ui-sans-serif" font-size="12" fill="#5e6670" letter-spacing="3">JESKO</text>
+        <rect x="462" y="204" width="15" height="19" rx="3" fill="#f0d43c" stroke="#0a0c10"/>
+        <path d="M465,208 l4,5 l-4,5 M471,208 l4,5 l-4,5" fill="none" stroke="#0a0c10" stroke-width="1.2"/>
       </g>
 
-      <!-- wheels (stay grounded; front-axle lift tilts the body above them) -->
+      <!-- wheels: Aircore carbon centre-lock -->
       <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#2f7be0" stroke-width="2"/>
-        <g class="bcWeave"><g transform="translate(255,250)">
+        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#e86a1c" stroke-width="2"/>
+        <g class="kgWeave"><g transform="translate(255,250)">
           ${turbine()}
         </g></g>
-        <circle cx="255" cy="250" r="15" fill="url(#bcHub)"/>
+        <circle cx="255" cy="250" r="12" fill="url(#kgHub)"/>
       </g>
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/><circle cx="745" cy="250" r="52" fill="none" stroke="#2f7be0" stroke-width="2"/>
-        <g class="bcWeave"><g transform="translate(745,250)">
+        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/><circle cx="745" cy="250" r="52" fill="none" stroke="#e86a1c" stroke-width="2"/>
+        <g class="kgWeave"><g transform="translate(745,250)">
           ${turbine()}
         </g></g>
-        <circle cx="745" cy="250" r="15" fill="url(#bcHub)"/>
+        <circle cx="745" cy="250" r="12" fill="url(#kgHub)"/>
       </g>
     </svg>`;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
@@ -2074,56 +2085,55 @@ const SPEC = {
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
   }
-  function turbine() { let s = ""; for (let a = 0; a < 360; a += 30) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+14)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+14)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* Bugatti cockpit SVG — bicolour leather, milled aluminium centre spine, EB wheel */
+  /* Koenigsegg cockpit SVG — SmartCluster on the column, SmartCenter portrait screen */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Bugatti Chiron Super Sport 300+ cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Koenigsegg Jesko cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="leatherG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#a6742f"/><stop offset="1" stop-color="#5a3a1c"/></linearGradient>
-        <linearGradient id="blueTrimG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4f8ae6"/><stop offset="1" stop-color="#12336f"/></linearGradient>
-        <radialGradient id="tachG" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#f0a23c"/><stop offset="1" stop-color="#10141a"/></radialGradient>
+        <linearGradient id="alcSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="1" stop-color="#15181d"/></linearGradient>
+        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1c10"/><stop offset="1" stop-color="#0d0805"/></linearGradient>
       </defs>
       <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
       <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- aluminium binnacle: large central analogue dial (the Chiron's signature), flanked gauges -->
-      <rect x="120" y="40" width="760" height="120" rx="18" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-      <circle cx="500" cy="100" r="48" fill="url(#tachG)" stroke="url(#aluG)" stroke-width="3" id="tachArt"/>
-      <text x="500" y="106" text-anchor="middle" font-size="22" font-weight="700" fill="#0a0c10" id="tachGearArt">N</text>
-      <circle cx="356" cy="100" r="30" fill="#0a0e14" stroke="url(#aluG)" stroke-width="2"/>
-      <circle cx="644" cy="100" r="30" fill="#0a0e14" stroke="url(#aluG)" stroke-width="2"/>
-      <circle cx="246" cy="104" r="22" fill="#0a0e14" stroke="url(#aluG)"/>
-      <circle cx="754" cy="104" r="22" fill="#0a0e14" stroke="url(#aluG)"/>
-      <text x="356" y="148" text-anchor="middle" font-size="9" fill="#9aa2ab">BAR</text>
-      <text x="500" y="150" text-anchor="middle" font-size="9" fill="#9aa2ab" letter-spacing="1">PS ×100</text>
-      <text x="644" y="148" text-anchor="middle" font-size="9" fill="#9aa2ab">KM/H</text>
-      <!-- milled aluminium centre spine with drive-mode keys -->
-      <g id="shifterArt" transform="translate(500,300)">
-        <rect x="-26" y="-40" width="52" height="118" rx="14" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-        <g fill="url(#aluG)">
-          <circle cx="0" cy="-20" r="7"/><circle cx="0" cy="2" r="7"/><circle cx="0" cy="24" r="7"/>
-        </g>
-        <line x1="0" y1="52" x2="0" y2="6" stroke="url(#aluG)" stroke-width="6" id="leverArt"/>
-        <circle cx="0" cy="58" r="11" fill="url(#aluG)"/>
+      <!-- low carbon cowl -->
+      <rect x="120" y="46" width="760" height="20" rx="10" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.4"/>
+      <!-- SmartCluster: single round display ON THE COLUMN behind the wheel -->
+      <g transform="translate(360,120)">
+        <rect x="-14" y="34" width="28" height="60" rx="8" fill="#101318" stroke="rgba(232,106,28,0.4)"/>
+        <circle r="56" fill="url(#screenG)" stroke="rgba(232,106,28,0.7)" stroke-width="2.4" id="tachArt"/>
+        <text x="0" y="-16" text-anchor="middle" font-size="9" fill="#ffc296" letter-spacing="2">SMARTCLUSTER</text>
+        <text x="0" y="12" text-anchor="middle" font-size="26" font-weight="700" fill="#faf2e8" id="tachGearArt">N</text>
+        <text x="0" y="34" text-anchor="middle" font-size="8" fill="#c98a5a">TURNS WITH THE WHEEL</text>
       </g>
-      <!-- EB start switch (jewelled) -->
-      <g transform="translate(700,250)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="11" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="7" fill="#ffd7d7">START</text></g>
-      <!-- bicolour leather bolsters with blue stitch -->
-      <g transform="translate(148,250)"><rect x="-44" y="-30" width="88" height="120" rx="20" fill="url(#leatherG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-18 L30,-18 M-30,6 L30,6 M-30,30 L30,30" stroke="rgba(80,138,230,0.5)"/></g>
-      <g transform="translate(852,250)"><rect x="-44" y="-30" width="88" height="120" rx="20" fill="url(#leatherG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-18 L30,-18 M-30,6 L30,6 M-30,30 L30,30" stroke="rgba(80,138,230,0.5)"/></g>
-      <!-- two-tone four-spoke wheel with EB roundel -->
-      <g id="cabinWheelG" transform="translate(500,300)">
-        <circle r="56" fill="none" stroke="#0e1014" stroke-width="15"/>
-        <circle r="56" fill="none" stroke="url(#blueTrimG)" stroke-width="3"/>
-        <line x1="0" y1="0" x2="-52" y2="-8" stroke="#15181d" stroke-width="8"/>
-        <line x1="0" y1="0" x2="52" y2="-8" stroke="#15181d" stroke-width="8"/>
-        <line x1="0" y1="0" x2="-40" y2="20" stroke="#15181d" stroke-width="8"/>
-        <line x1="0" y1="0" x2="40" y2="20" stroke="#15181d" stroke-width="8"/>
-        <circle r="15" fill="#b3121f" stroke="#e8e2c8" stroke-width="1.6"/><text x="0" y="4" text-anchor="middle" font-family="Georgia" font-size="11" fill="#f4efdc">EB</text>
+      <!-- SmartCenter: portrait 9" touchscreen on the spine -->
+      <rect x="466" y="120" width="68" height="118" rx="10" fill="url(#screenG)" stroke="rgba(232,106,28,0.55)"/>
+      <text x="500" y="252" text-anchor="middle" font-size="8" fill="#9aa2ab" letter-spacing="1">SMARTCENTER</text>
+      <!-- seats: carbon buckets, orange stitch -->
+      <g transform="translate(252,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(232,106,28,0.55)"/></g>
+      <g transform="translate(748,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(232,106,28,0.55)"/></g>
+      <!-- milled shift keys + START on the spine -->
+      <g id="shifterArt" transform="translate(500,296)">
+        <rect x="-26" y="-34" width="52" height="96" rx="14" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
+        <g fill="url(#aluG)"><circle cx="0" cy="-14" r="7"/><circle cx="0" cy="8" r="7"/><circle cx="0" cy="30" r="7"/></g>
+        <line x1="0" y1="52" x2="0" y2="12" stroke="url(#aluG)" stroke-width="6" id="leverArt"/>
+        <circle cx="0" cy="56" r="10" fill="url(#aluG)"/>
+      </g>
+      <g transform="translate(640,262)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="11" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="7" fill="#ffd7d7">START</text></g>
+      <!-- SmartWheel with touch pads -->
+      <g id="cabinWheelG" transform="translate(360,300)">
+        <circle r="56" fill="none" stroke="#101216" stroke-width="15"/>
+        <circle r="56" fill="none" stroke="rgba(232,106,28,0.8)" stroke-width="3"/>
+        <line x1="0" y1="0" x2="-52" y2="-4" stroke="#171a20" stroke-width="8"/>
+        <line x1="0" y1="0" x2="52" y2="-4" stroke="#171a20" stroke-width="8"/>
+        <line x1="0" y1="0" x2="0" y2="48" stroke="#171a20" stroke-width="8"/>
+        <rect x="-44" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(232,106,28,0.6)"/>
+        <rect x="24" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(232,106,28,0.6)"/>
+        <circle r="12" fill="none" stroke="#1a1e24" stroke-width="4"/>
       </g>
     </svg>`;
   }
@@ -2134,7 +2144,7 @@ const SPEC = {
 
 /* ===== UI actions ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, el, CIRCUITS, SPEC, clamp, kmh, audio } = app;
   const showToast = app.showToast;
 
@@ -2146,8 +2156,8 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors drawn shut to drive.", "Chiron SS"); }
-    if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, 7); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Autoskin sweeps the doors shut to drive.", "Jesko"); }
+    if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, 9); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
     if (mode !== "G") state.adaptiveCruise = false;
@@ -2177,38 +2187,37 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: dampers firm, ESC trail, exhaust open, aero hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Chiron SS");
+    showToast(m === "race" ? "Race: Triplex dampers firm, ESC trail, exhaust open, wing hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Jesko");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
-  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Active rear wing: AUTO — deploying for downforce and airbraking." : "Rear wing fixed (Top-Speed / manual)."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full W16 voice." : "Exhaust flap closed — muted."); }
-  // The Bugatti "Speed Key": a second key inserted by the sill. Above 380 km/h you need it —
-  // it runs a systems check, lowers the ride height, lies the wing flat and shuts the air
-  // curtains, and raises the limiter from 380 to the 490.5 km/h record.
-  function toggleSpeedKey() {
-    const next = !state.speedKey;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Insert the Speed Key below 50 km/h, then build up.", "Chiron SS"); return; }
-    state.speedKey = next; setActive("speedKeyBtn", next);
+  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full V8 voice." : "Exhaust flap closed — muted."); }
+  // E85 flex-fuel: the same engine, hotter map. On E85 biofuel the Jesko runs
+  // 1,600 hp and 1,500 Nm @ 5,100 rpm; on standard petrol it makes 1,280 hp.
+  function toggleFuel() {
+    const next = !state.e85;
+    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Switch fuel maps below 50 km/h — the ECU wants a quiet moment.", "Jesko"); return; }
+    state.e85 = next; setActive("fuelBtn", next);
+    const map = next ? SPEC.e85 : SPEC.petrol;
+    SPEC.peakPowerW = map.peakPowerW; SPEC.peakPowerPS = map.peakPowerPS;
+    SPEC.peakPowerHp = map.peakPowerHp; SPEC.peakTorqueNm = map.peakTorqueNm;
     if (next) {
       if (state.driveMode !== "race") setMode("race");
-      state.rideHeight = -1;            // Top Speed mode drops the car
-      state.aeroAuto = true;            // wing managed (flat) by the Top-Speed logic
-      audio.motor(1.0); audio.chime([392, 523, 659, 784]);
-      showToast("Speed Key engaged — Top Speed mode. Ride lowered, wing flat, limiter raised to 490.5 km/h. Clear road only.", "Chiron SS");
+      audio.motor(0.8); audio.chime([392, 523, 659, 784]);
+      showToast("E85 biofuel map — 1,600 hp, 1,500 Nm @ 5,100. The full megacar.", "Jesko");
     } else {
-      state.rideHeight = 0;
-      audio.motor(0.6);
-      showToast("Speed Key removed — limiter back to 380 km/h.", "Chiron SS");
+      audio.motor(0.5);
+      showToast("Standard petrol map — 1,280 hp @ 7,800.", "Jesko");
     }
   }
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
-  function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Front axle raised for the ramp." : "Front axle lowered to ride height."); }
+  function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Nose raised for the ramp." : "Nose lowered to ride height."); }
   function armLaunch() {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — full throttle on the brake, then release." : "Launch control off.", "Chiron SS");
+    showToast(state.launchArmed ? "Launch control armed — air tank charged. Full throttle on the brake, then release." : "Launch control off.", "Jesko");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2233,11 +2242,12 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Chiron SS"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Jesko"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, speedKey: false, rideHeight: 0 });
-    setActive("speedKeyBtn", false);
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
+    if (state.e85) { state.e85 = false; SPEC.peakPowerW = SPEC.petrol.peakPowerW; SPEC.peakPowerPS = SPEC.petrol.peakPowerPS; SPEC.peakPowerHp = SPEC.petrol.peakPowerHp; SPEC.peakTorqueNm = SPEC.petrol.peakTorqueNm; }
+    setActive("fuelBtn", false);
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2246,15 +2256,15 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Chiron SS");
+    showToast("Back in the pit lane.", "Jesko");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleSpeedKey, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2267,17 +2277,17 @@ const SPEC = {
       case "shifterLight": showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
-      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "Engine cover raised — the W16 on show." : "Engine cover closed."); break;
-      case "antiLag": showToast(on ? "Anti-lag armed — keeps the turbos spooled, bangs on the overrun (Race)." : "Anti-lag off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
+      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "Autoskin raises the cover — the twin-turbo V8 on show." : "Engine cover closed."); break;
+      case "antiLag": showToast(on ? "Air-tank anti-lag armed — 20 bar pre-spools the turbos, bangs on the overrun (Race)." : "Air-tank anti-lag off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
       case "ignition": break;
     }
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — all sixteen cylinders clearing their throats."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the W16 barks to 3,000 and settles."); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the flat-plane V8 snaps like a race engine."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V8 barks to 3,000 with an air-tank hiss."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — W16 lit.", "Chiron SS"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V8 lit.", "Jesko"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2285,23 +2295,23 @@ const SPEC = {
 
 /* ===== Co-Pilot voice ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, el, audio } = app;
   const showToast = app.showToast;
   function processVoice() {
     const text = el.voiceInput.value.trim().toLowerCase(); if (!text) return; el.voiceInput.value = "";
     const has = (...w) => w.some(x => text.includes(x)); const reply = (m) => showToast(m, "Co-Pilot");
     const numberFrom = (v) => { const m = v.match(/(\d{1,3})/); return m ? parseInt(m[1], 10) : null; };
-    if (/^(hi|hello|hey|salut|bonjour)/.test(text)) { reply("À vos ordres. Which circuit?"); return; }
-    if (has("thank", "merci")) { reply("Je vous en prie."); return; }
+    if (/^(hi|hello|hey|hej)/.test(text)) { reply("Hej! Which circuit?"); return; }
+    if (has("thank", "tack")) { reply("Varsågod."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Bugatti Grand Épreuve", ["arte", "pista", "monza", "epreuve", "épreuve", "grand"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Koenigsegg Owners Rally", ["owners", "rally", "monza", "ghost", "angelholm", "ängelholm"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("speed key", "top speed", "300 plus", "300+", "unlock", "record run")) { app.toggleSpeedKey(); acted = true; }
+    if (has("e85", "biofuel", "flex fuel", "1600", "megacar")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2313,14 +2323,14 @@ const SPEC = {
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “open the doors”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “switch to E85”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
 
 /* ===== HUD (per frame) ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, el, SPEC, clamp, lerp, kmh } = app;
   function setActive(id, on) { const n = document.getElementById(id); if (n) n.classList.toggle("active", !!on); }
 
@@ -2350,11 +2360,11 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.speedKey) warn.push("TOP SPEED · 490.5 km/h unlocked");
+    if (state.e85) warn.push("E85 MAP · 1,600 hp / 1,500 Nm");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.speedKey && speed >= 360) warn.push("380 km/h limiter — insert Speed Key for more");
+    if (!state.e85 && speed >= 320) warn.push("petrol map (1,280 hp) — switch to E85 for the full 1,600");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -2402,15 +2412,13 @@ const SPEC = {
     document.documentElement.style.setProperty("--wheel-rot", `${state.wheelRotation}deg`);
     if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
-    state.speedKeyVis = lerp(state.speedKeyVis, state.speedKey ? 1 : 0, 0.1);            // Top-Speed ride drop
-    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 ${(state.speedKeyVis * 7).toFixed(1)}) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
+    state.e85Vis = lerp(state.e85Vis, state.e85 ? 1 : 0, 0.1);                          // fuel-map indicator
+    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 0) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
 
     // engine art
-    const turboRot = (state.time * (200 + state.boostBar * 2600)) % 360;
+    const turboRot = (state.time * (260 + state.boostBar * 3000)) % 360;   // air-tank pre-spool keeps them turning
     if (el.turboL) el.turboL.style.setProperty("--turbo-rot", turboRot + "deg");
     if (el.turboR) el.turboR.style.setProperty("--turbo-rot", -turboRot + "deg");
-    if (el.turboL2) el.turboL2.style.setProperty("--turbo-rot", -turboRot + "deg");
-    if (el.turboR2) el.turboR2.style.setProperty("--turbo-rot", turboRot + "deg");
     el.engineBay.style.setProperty("--haze", clamp((state.egtC - 360) / 600, 0, 0.9));
 
     // dynamics art
@@ -2428,7 +2436,7 @@ const SPEC = {
 
     // cabin svg
     const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(500,300) rotate(${(state.steer * 90).toFixed(1)})`);
+    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(360,300) rotate(${(state.steer * 90).toFixed(1)})`);
     const leverArt = document.getElementById("leverArt"); if (leverArt) leverArt.setAttribute("transform", `rotate(${state.shiftTimer > 0 ? 10 : 0})`);
     const startArt = document.getElementById("startArt"); if (startArt) startArt.setAttribute("fill", state.ignition ? "#1f7a3a" : "#7a1f1f");
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
@@ -2439,7 +2447,7 @@ const SPEC = {
     setActive("exhaustBtn", state.exhaustValve); setActive("exhaustBtn2", state.exhaustValve); setActive("exhaustBtn3", state.exhaustValve);
     setActive("lightsBtn", state.lights); setActive("lightsBtn2", state.lights);
     setActive("liftBtn", state.rideHeight === 1);
-    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("speedKeyBtn", state.speedKey);
+    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("fuelBtn", state.e85);
     setActive("testDriverBtn", state.testDriver);
     setActive("heatBtn", state.heat); setActive("coolBtn", state.cool); setActive("ambientBtn", state.ambient);
     setActive("audioBtn", state.audioCabin); setActive("shifterLightBtn", state.shifterLight); setActive("startSwitchBtn", state.ignition);
@@ -2456,7 +2464,7 @@ const SPEC = {
 
 /* ===== events ===== */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2514,7 +2522,7 @@ const SPEC = {
     document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
-    document.getElementById("speedKeyBtn").addEventListener("click", () => app.toggleSpeedKey());
+    document.getElementById("fuelBtn").addEventListener("click", () => app.toggleFuel());
   }
 
   function bindMedia() {
@@ -2532,7 +2540,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Chiron SS"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real W16 recording loaded — pitched with the revs.", "Chiron SS"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the W16 works best.", "Chiron SS"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Jesko"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Jesko"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Jesko"); }); });
   }
 
   function setupPedals() {
@@ -2599,7 +2607,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Chiron SS"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Jesko"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -2619,7 +2627,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Chiron SS");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Jesko");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -2638,7 +2646,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Chiron SS");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Jesko");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -2681,7 +2689,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Chiron SS");
+        showToast("Trackpad steering hold cancelled.", "Jesko");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -2691,7 +2699,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Chiron SS");
+          showToast("Trackpad steering off.", "Jesko");
         }
       }
     });
@@ -2699,7 +2707,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("W16 lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Chiron SS"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V8 lit, air tank charged. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Jesko"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
@@ -2709,10 +2717,10 @@ const SPEC = {
    FIXED-TIMESTEP physics: the sim advances the physics in constant 1/120 s steps and only
    renders after catching up. This makes every performance figure frame-rate INDEPENDENT —
    0–100 km/h is 2.400 s on a 60 Hz laptop, a 120 Hz monitor, or a throttled tab alike — and
-   it is exactly the step the verification harness integrates at (chiron-ss300-perf-test.mjs),
+   it is exactly the step the verification harness integrates at (tests/perf-test.mjs),
    so what the test proves is literally what the car does. */
 {
-  const app = window.BugattiApp;
+  const app = window.KoenigseggApp;
   const { state, clamp, audio } = app;
   const FIXED_DT = 1 / 120;         // 120 Hz physics — same step the perf test calibrates at
   let accumulator = 0;

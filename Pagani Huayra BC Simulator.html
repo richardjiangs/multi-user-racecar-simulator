@@ -805,11 +805,11 @@ const SPEC = {
   rollingResistance: 0.013,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 1.124,         // calibrated -> 0–100 km/h = 2.80 s with launch control
+  tractionCoeff: 1.078408,      // calibrated -> 0–100 km/h = 2.8000 s ±0.0001 with launch control (see tests/perf-test.mjs)
   topSpeedKmh: 350,             // governed (217 mph)
   topSpeedMps: 350 * KMH,
   zeroTo100Kmh: 2.8,            // s (manufacturer)
-  brakeMaxMps2: 12.8,           // Brembo CCM + Corsa; calibrated to ~30 m 100-0 km/h (aero adds grip with speed)
+  brakeMaxMps2: 12.6345,        // Brembo CCM + Corsa; calibrated to 30.0 m 100-0 km/h (aero adds grip with speed)
   brakeDist100to0M: 30,         // target 100-0 km/h braking distance (Huayra family)
   shiftTimeS: 0.10,             // single-clutch sequential, sharp
   launchRpm: 5200,
@@ -1665,6 +1665,7 @@ const SPEC = {
     let prevL = null, prevR = null;
     for (let i = 0; i < ROAD_OFFS.length; i++) { const off = ROAD_OFFS[i], H = halfAt(off); const c = centerlineAt(off); const cs = Math.cos(c.psi), sn = Math.sin(c.psi); const L = roadCorner(c.X - H * cs, c.Z + H * sn); const R = roadCorner(c.X + H * cs, c.Z - H * sn); if (prevL) fillClippedQuad([prevL, prevR, R, L]); prevL = L; prevR = R; }
     if (pal.kerb) drawKerbs();
+    drawStartFinishLine();
     ctx.strokeStyle = "rgba(236,232,220,0.5)"; drawEdge(-1, 0.3, 2); drawEdge(1, 0.3, 2);
     ctx.strokeStyle = "rgba(245,240,225,0.28)"; drawRoadLine(0, true, 1.6);   // faint centre
     if (state.dataHud) drawRacingLine();                                      // the line to aim at (toggle with HUD)
@@ -1690,6 +1691,28 @@ const SPEC = {
       for (let i = 0; i < ROAD_OFFS.length; i++) { const off = ROAD_OFFS[i]; const lateral = sign * (halfAt(off) + 0.5); const c = centerlineAt(off); const pc = roadCorner(c.X + lateral * Math.cos(c.psi), c.Z - lateral * Math.sin(c.psi)); if (prev && (prev.fwd >= NEAR_PLANE || pc.fwd >= NEAR_PLANE)) { let a = prev, b = pc; if (a.fwd < NEAR_PLANE) { const t = (NEAR_PLANE - a.fwd) / (b.fwd - a.fwd); a = { rgt: a.rgt + (b.rgt - a.rgt) * t, fwd: NEAR_PLANE }; } else if (b.fwd < NEAR_PLANE) { const t = (NEAR_PLANE - a.fwd) / (b.fwd - a.fwd); b = { rgt: a.rgt + (b.rgt - a.rgt) * t, fwd: NEAR_PLANE }; } const pa = projPoint(a), pb = projPoint(b); const red = (((state.distanceM + off) % 8) + 8) % 8 < 4; ctx.strokeStyle = red ? "rgba(220,70,70,0.85)" : "rgba(240,240,240,0.85)"; ctx.lineWidth = clamp(6 * (FOCAL / Math.max(a.fwd, b.fwd)) * 0.04, 1.5, 12); ctx.beginPath(); ctx.moveTo(pa.x, pa.y); ctx.lineTo(pb.x, pb.y); ctx.stroke(); } prev = pc; }
     };
     draw(-1); draw(1);
+  }
+  // checkered START/FINISH strip across the full track width at lap phase 0 (loop circuits)
+  function drawStartFinishLine() {
+    const r = state.route; if (!r.active || !r.loop || !r.totalM) return;
+    const L = r.totalM, phase = ((state.distanceM % L) + L) % L;
+    let off = L - phase;
+    if (off > ROAD.AHEAD - 8) { if (phase <= ROAD.BEHIND - 8) off = -phase; else return; }
+    const H = halfAt(off), cells = 12, rows = 2, cw = (H * 2) / cells, rh = 0.9;
+    for (let row = 0; row < rows; row++) {
+      const c0 = centerlineAt(off + row * rh), c1 = centerlineAt(off + (row + 1) * rh);
+      for (let i = 0; i < cells; i++) {
+        const la = -H + i * cw, lb = la + cw;
+        const q = [
+          roadCorner(c0.X + la * Math.cos(c0.psi), c0.Z - la * Math.sin(c0.psi)),
+          roadCorner(c0.X + lb * Math.cos(c0.psi), c0.Z - lb * Math.sin(c0.psi)),
+          roadCorner(c1.X + lb * Math.cos(c1.psi), c1.Z - lb * Math.sin(c1.psi)),
+          roadCorner(c1.X + la * Math.cos(c1.psi), c1.Z - la * Math.sin(c1.psi))
+        ];
+        ctx.fillStyle = (i + row) % 2 ? "rgba(240,243,246,0.92)" : "rgba(14,16,20,0.92)";
+        fillClippedQuad(q);
+      }
+    }
   }
   function fillClippedQuad(poly) {
     const out = [];
