@@ -144,20 +144,23 @@ check("joiner circuit buttons locked (host sets the track)", res);
 console.log("▶ race control");
 await page.evaluate(() => {
   const M = window.__mucs;
-  M.applyCfg({ type: "cfg", hostId: "host-1", track: "Suzuka Circuit", phase: "lobby", at: Date.now() }, "host-1");
+  M.hostId = "";
+  M.hostNetId = "";
+  M.applyCfg({ type: "cfg", hostId: "host-1", track: "Suzuka Circuit", phase: "lobby", at: Date.now() }, "relay-host");
+  M.applyCfg({ type: "cfg", hostId: "host-1", track: "Silverstone Circuit", phase: "lobby", at: Date.now() }, "relay-host");
   M.enforceOnline();
 });
 await page.waitForTimeout(700);
 res = await page.evaluate(() => {
   const app = window.__mucs.getSimApp();
-  return { route: app.state.route.name, active: app.state.route.active };
+  return { route: app.state.route.name, active: app.state.route.active, hostNetId: window.__mucs.hostNetId };
 });
-check("host's track applied to joiner", res.active && res.route === "Suzuka Circuit", res.route);
+check("host's later track applied even when host network id differs", res.active && res.route === "Silverstone Circuit" && res.hostNetId === "relay-host", res.route);
 
 await page.evaluate(() => {
   const M = window.__mucs;
   M.applyCfg({ type: "cfg", hostId: "host-1", track: "Suzuka Circuit", phase: "countdown",
-    goAt: Date.now() + 6800, grid: ["host-1", "me", "p2"], at: Date.now() }, "host-1");
+    goAt: Date.now() + 6800, grid: ["host-1", "me", "p2"], at: Date.now() }, "relay-host");
 });
 await page.waitForTimeout(1200);
 res = await page.evaluate(() => {
