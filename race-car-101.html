@@ -1,0 +1,392 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Race Car 101</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #080a0e;
+      --panel: #11161d;
+      --panel-2: #151c24;
+      --ink: #f3f6f8;
+      --muted: #aab4bf;
+      --line: rgba(215,225,235,0.16);
+      --blue: #4d8dff;
+      --teal: #39d3c9;
+      --orange: #ff8a36;
+      --green: #5de08b;
+      --red: #ff5f6a;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.025), transparent 220px),
+        #080a0e;
+      color: var(--ink);
+      letter-spacing: 0;
+    }
+    a { color: inherit; }
+    .shell {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 22px 0 42px;
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: 22px;
+    }
+    .sidebar {
+      position: sticky;
+      top: 22px;
+      align-self: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(17,22,29,0.86);
+      padding: 14px;
+    }
+    .brand {
+      display: grid;
+      gap: 5px;
+      padding-bottom: 13px;
+      border-bottom: 1px solid var(--line);
+    }
+    .brand b { font-size: 22px; line-height: 1; }
+    .brand span { color: var(--muted); font-size: 12px; line-height: 1.45; }
+    .nav {
+      display: grid;
+      gap: 7px;
+      margin-top: 13px;
+    }
+    .nav a, .back {
+      min-height: 36px;
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      border: 1px solid transparent;
+      border-radius: 6px;
+      padding: 8px 10px;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 13px;
+    }
+    .nav a:hover, .back:hover {
+      color: var(--ink);
+      background: rgba(255,255,255,0.055);
+      border-color: var(--line);
+    }
+    .dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--teal);
+      flex: 0 0 auto;
+    }
+    .back {
+      margin-top: 14px;
+      justify-content: center;
+      border-color: rgba(57,211,201,0.45);
+      color: var(--ink);
+      background: rgba(57,211,201,0.12);
+      font-weight: 750;
+    }
+    main { min-width: 0; }
+    .hero {
+      min-height: 330px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
+      gap: 22px;
+      align-items: stretch;
+      padding: 26px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(77,141,255,0.14), transparent 42%),
+        linear-gradient(180deg, #151c24, #0d1117);
+    }
+    h1 {
+      margin: 0;
+      font-size: clamp(42px, 7vw, 82px);
+      line-height: 0.9;
+      max-width: 690px;
+      letter-spacing: 0;
+    }
+    .hero p {
+      margin: 16px 0 0;
+      max-width: 660px;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.55;
+    }
+    .cockpit {
+      min-height: 260px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(190,220,235,0.18), transparent 42%),
+        linear-gradient(90deg, rgba(0,0,0,0.66) 0 13%, transparent 13% 87%, rgba(0,0,0,0.66) 87%),
+        linear-gradient(180deg, #2f4a56 0 50%, #20252b 50% 100%);
+      position: relative;
+      overflow: hidden;
+    }
+    .road {
+      position: absolute;
+      left: 50%;
+      bottom: -18px;
+      width: 76%;
+      height: 56%;
+      transform: translateX(-50%);
+      clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
+      background:
+        linear-gradient(90deg, transparent 48%, rgba(255,255,255,0.72) 48% 52%, transparent 52%),
+        #181c22;
+    }
+    .car {
+      position: absolute;
+      left: 50%;
+      bottom: 34%;
+      width: 92px;
+      height: 48px;
+      transform: translateX(-50%);
+      border-radius: 22px 22px 8px 8px;
+      background: linear-gradient(180deg, #5ba2ff, #173a83);
+      box-shadow: 0 14px 30px rgba(0,0,0,0.42);
+    }
+    .car::before {
+      content: "";
+      position: absolute;
+      left: 24px;
+      right: 24px;
+      top: -16px;
+      height: 26px;
+      border-radius: 22px 22px 2px 2px;
+      background: linear-gradient(180deg, #b9d6e7, #0d141b);
+    }
+    .car::after {
+      content: "";
+      position: absolute;
+      left: 7px;
+      right: 7px;
+      bottom: 7px;
+      height: 5px;
+      border-radius: 999px;
+      background: var(--orange);
+    }
+    .wheel {
+      position: absolute;
+      bottom: -8px;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: #030406;
+      box-shadow: inset 0 0 0 4px #222a32;
+    }
+    .wheel.left { left: 9px; }
+    .wheel.right { right: 9px; }
+    .hud-card {
+      position: absolute;
+      left: 18px;
+      bottom: 18px;
+      min-width: 130px;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 10px;
+      background: rgba(8,10,14,0.72);
+    }
+    .hud-card b { display: block; font-size: 30px; line-height: 1; }
+    .hud-card span { color: var(--muted); font-size: 11px; }
+    .section {
+      margin-top: 18px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(17,22,29,0.78);
+      padding: 22px;
+    }
+    .section h2 {
+      margin: 0 0 12px;
+      font-size: clamp(24px, 3vw, 36px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+    .section p, .section li {
+      color: var(--muted);
+      line-height: 1.55;
+      font-size: 15px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .tile {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(255,255,255,0.04);
+      padding: 14px;
+    }
+    .tile b { display: block; margin-bottom: 6px; }
+    .tile small { color: var(--muted); line-height: 1.45; display: block; }
+    .steps {
+      display: grid;
+      gap: 10px;
+      counter-reset: step;
+      margin-top: 12px;
+    }
+    .step {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 12px;
+      align-items: start;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: rgba(255,255,255,0.035);
+    }
+    .step::before {
+      counter-increment: step;
+      content: counter(step);
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(57,211,201,0.16);
+      color: var(--ink);
+      font-weight: 800;
+    }
+    kbd {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      padding: 1px 5px;
+      background: rgba(255,255,255,0.08);
+      color: var(--ink);
+      font: 700 12px ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: nowrap;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+      overflow: hidden;
+      border-radius: 8px;
+    }
+    th, td {
+      border: 1px solid var(--line);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+      color: var(--muted);
+    }
+    th { color: var(--ink); background: rgba(255,255,255,0.055); }
+    @media (max-width: 920px) {
+      .shell { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      .hero { grid-template-columns: 1fr; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <b>Race Car 101</b>
+        <span>A practical guide to driving the simulator smoothly, quickly, and fairly online.</span>
+      </div>
+      <nav class="nav" aria-label="Guide sections">
+        <a href="#start"><span class="dot"></span>First Drive</a>
+        <a href="#controls"><span class="dot"></span>Controls</a>
+        <a href="#cornering"><span class="dot"></span>Cornering</a>
+        <a href="#online"><span class="dot"></span>Online Race</a>
+        <a href="#tracks"><span class="dot"></span>Tracks</a>
+        <a href="#trouble"><span class="dot"></span>Troubleshooting</a>
+      </nav>
+      <a class="back" href="index.html">Open Simulator</a>
+    </aside>
+
+    <main>
+      <section class="hero">
+        <div>
+          <h1>Drive the simulator like a racer.</h1>
+          <p>Start gently, brake in a straight line, look through the corner, and let the car unwind before full throttle. This guide teaches the habits that make the six hypercars easier to control in practice and online rooms.</p>
+        </div>
+        <div class="cockpit" aria-label="Race car visual">
+          <div class="road"></div>
+          <div class="car"><span class="wheel left"></span><span class="wheel right"></span></div>
+          <div class="hud-card"><b>101</b><span>km/h, clean line</span></div>
+        </div>
+      </section>
+
+      <section class="section" id="start">
+        <h2>First Drive</h2>
+        <div class="steps">
+          <div class="step"><div><b>Pick a car.</b><p>Start with private practice. Learn one car before switching, because each one has a different acceleration curve and braking feel.</p></div></div>
+          <div class="step"><div><b>Power it up.</b><p>Press the simulator's start button, select a drive gear, then use small throttle inputs before trying full launch control.</p></div></div>
+          <div class="step"><div><b>Choose a track.</b><p>Use Circuit mode to pick a route. Smooth circuits are better for learning; long tracks reward patience and rhythm.</p></div></div>
+          <div class="step"><div><b>Build speed slowly.</b><p>One clean lap at 70 percent teaches more than five crashed laps at 100 percent.</p></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="controls">
+        <h2>Controls</h2>
+        <table>
+          <tr><th>Action</th><th>Keyboard</th><th>Driving note</th></tr>
+          <tr><td>Throttle</td><td><kbd>W</kbd> or <kbd>Arrow Up</kbd></td><td>Squeeze it on as the wheel straightens.</td></tr>
+          <tr><td>Brake</td><td><kbd>Space</kbd> or <kbd>Arrow Down</kbd></td><td>Brake hard while straight, then ease off before turning.</td></tr>
+          <tr><td>Steer</td><td><kbd>A</kbd>/<kbd>D</kbd> or arrows</td><td>Use one smooth input instead of many sharp taps.</td></tr>
+          <tr><td>Paddles</td><td><kbd>Q</kbd>/<kbd>E</kbd></td><td>Shift before the limiter when running manual modes.</td></tr>
+          <tr><td>Neutral / Reverse</td><td><kbd>N</kbd> / <kbd>R</kbd></td><td>Reset your direction calmly after a spin.</td></tr>
+          <tr><td>Horn</td><td><kbd>H</kbd></td><td>Use it for fun, not as a braking marker.</td></tr>
+        </table>
+      </section>
+
+      <section class="section" id="cornering">
+        <h2>Cornering</h2>
+        <div class="grid">
+          <div class="tile"><b>Brake</b><small>Finish most braking before turn-in. If the car will not rotate, you are probably still asking too much from the front tires.</small></div>
+          <div class="tile"><b>Apex</b><small>Aim for the inside middle of the corner. Touch it once, then let the car drift back outward naturally.</small></div>
+          <div class="tile"><b>Exit</b><small>Throttle comes back as steering comes off. Full throttle with full steering is how fast cars become slow cars.</small></div>
+        </div>
+      </section>
+
+      <section class="section" id="online">
+        <h2>Online Race</h2>
+        <p>The host controls the track and race start. Joiners should wait for the host's selection, line up during the five red lights, and launch only when the lights go out.</p>
+        <div class="steps">
+          <div class="step"><div><b>Host creates the room.</b><p>Share the short room code. Keep the host tab open so the room stays alive.</p></div></div>
+          <div class="step"><div><b>Everyone joins.</b><p>Online mode replaces AI rivals with connected human racers only.</p></div></div>
+          <div class="step"><div><b>Host sets the track.</b><p>The selected circuit syncs to every joined racer.</p></div></div>
+          <div class="step"><div><b>Start clean.</b><p>Hold position during the countdown. The first corner is won by patience, not panic.</p></div></div>
+        </div>
+      </section>
+
+      <section class="section" id="tracks">
+        <h2>Track Choice</h2>
+        <div class="grid">
+          <div class="tile"><b>Silverstone</b><small>Best learning track. Wide, readable, and good for braking practice.</small></div>
+          <div class="tile"><b>Suzuka</b><small>Good for rhythm. Respect the esses and wait before full throttle.</small></div>
+          <div class="tile"><b>Monaco</b><small>Slow hands, early braking, no hero moves. Walls punish impatience.</small></div>
+          <div class="tile"><b>Nardo</b><small>Use it to understand top speed, stability, and high-speed steering.</small></div>
+          <div class="tile"><b>Nurburgring GP</b><small>Great for learning heavy braking zones and exits.</small></div>
+          <div class="tile"><b>Nordschleife</b><small>Long, fast, and unforgiving. Learn it in sections.</small></div>
+        </div>
+      </section>
+
+      <section class="section" id="trouble">
+        <h2>Troubleshooting</h2>
+        <div class="grid">
+          <div class="tile"><b>Car spins on exit</b><small>Use less throttle until the steering wheel is straighter.</small></div>
+          <div class="tile"><b>Missed the corner</b><small>Brake earlier. Late braking is only useful if you still make the apex.</small></div>
+          <div class="tile"><b>Cannot join a room</b><small>Check the room code, keep the host page open, and retry if the relay path is slow.</small></div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+</html>

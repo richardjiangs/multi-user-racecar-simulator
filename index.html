@@ -112,6 +112,22 @@
       line-height: 1.45;
     }
     .connection-note b { color: var(--ink); }
+    .guide-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 34px;
+      margin-top: 10px;
+      padding: 7px 11px;
+      border: 1px solid rgba(57,211,201,0.55);
+      border-radius: 6px;
+      background: linear-gradient(180deg, rgba(57,211,201,0.20), rgba(16,76,74,0.24));
+      color: var(--ink);
+      text-decoration: none;
+      font-weight: 750;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.18);
+    }
+    .guide-button:hover { border-color: rgba(57,211,201,0.9); }
 
     .cars {
       display: grid;
@@ -669,6 +685,7 @@
         </section>
         <aside class="connection-note">
           <b>Online mode:</b> free browser-to-browser WebRTC, signalled over a mesh of public relays (with the PeerJS cloud as automatic fallback) — no server of ours, and no single broker to die mid-race. Works worldwide once the page is hosted (GitHub Pages).
+          <a class="guide-button" href="race-car-101.html" target="_blank" rel="noopener">Race Car 101</a>
         </aside>
       </header>
 
