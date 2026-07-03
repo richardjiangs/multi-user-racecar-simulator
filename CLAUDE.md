@@ -15,9 +15,10 @@ McLaren Speedtail simulator.html
 Ferrari F80 simulator.html
 Koenigsegg Jesko simulator.html
 Tesla Model S Plaid simulator.html
-tests/perf-test.mjs                         ← performance verification harness (node tests/perf-test.mjs)
-tests/browser-test.mjs                      ← loads each sim in headless Chromium and smoke-drives it
+tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
+tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
 tools/embed-sims.mjs                        ← re-embeds the six sim files into index.html (run after editing a sim)
+vendor/trystero-nostr.min.js                ← bundled Trystero (ESM); vendor/peerjs.min.js ← PeerJS fallback
 .github/workflows/pages.yml                 ← publishes index.html to GitHub Pages
 ```
 
@@ -127,14 +128,16 @@ with backoff on drop; heartbeats keep NAT bindings warm.
 
 ## Verification — the performance tests
 
-`node tests/perf-test.mjs` (needs no browser): extracts each sim's `SPEC` +
-`modeMap` + torque ramp straight out of the HTML (single source of truth) and
-integrates the exact same fixed-step physics (launch → 0-100/0-200/0-300,
-governed top speed, 100-0 braking). Asserts 0-100 within ±0.0001 s of the
-`SPEC.zeroTo100Kmh` target and the other marks within their documented bands.
-`node tests/browser-test.mjs` additionally loads each real HTML file in
-headless Chromium and re-runs the launch through `app.updatePhysics` to prove
-the in-page code path matches (and smoke-tests views/tracks/test driver).
+`node tests/perf-test.mjs`: loads each sim in headless Chromium and drives the
+REAL exported `app.updatePhysics` at the sim's own fixed 1/120 s step (launch
+control → 0-100/0-200/0-300, governed/drag-limited top speed, 100-0 braking).
+Asserts 0-100 within ±0.0001 s of `SPEC.zeroTo100Kmh` (Tesla marks are
+rollout-subtracted — Tesla's own convention) and the other marks within their
+documented bands. `--calibrate <car>` binary-searches `tractionCoeff` /
+`brakeMaxMps2` / `drivelineEff` against the factory targets.
+`node tests/browser-test.mjs` serves the repo over localhost and checks the
+garage, private-practice AI grid survival, all six sims booting in the shell,
+online-mode rules, and the full race-control (grid/lights/release) flow.
 
 ## Publishing
 
