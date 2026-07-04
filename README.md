@@ -38,7 +38,7 @@ Need a driving guide? Open **Race Car 101** from the garage or visit:
 
 https://richardjiangs.github.io/multi-user-racecar-simulator/race-car-101.html
 
-The guide covers racing line, braking references, apex choice, overtaking, defending, pit strategy, race starts, track-specific notes, and online etiquette.
+The guide covers racing line, braking references, apex choice, overtaking, defending, pit strategy, race starts, track-specific corner tables, and visual PNG/MP4 lessons.
 
 ## Project Files
 

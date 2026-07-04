@@ -351,6 +351,56 @@
       font-weight: 700;
     }
     .track ul { margin-top: 8px; }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 18px 0;
+    }
+    figure.lesson-media {
+      margin: 18px 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+    }
+    figure.lesson-media img,
+    figure.lesson-media video {
+      display: block;
+      width: 100%;
+      height: auto;
+      background: #f6f7f8;
+    }
+    figure.lesson-media figcaption {
+      border-top: 1px solid var(--line);
+      padding: 12px 14px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.45;
+    }
+    .track-map-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+      margin: 18px 0;
+    }
+    .track-map-grid figure { margin: 0; }
+    .apex-table td:first-child { color: var(--ink); font-weight: 760; }
+    .apex-table td:nth-child(2) { color: var(--ink); font-weight: 700; }
+    .apex-table td:nth-child(3) { min-width: 220px; }
+    .apex-table td:nth-child(4) { min-width: 220px; }
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 2px 9px;
+      background: var(--soft);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
     table {
       width: 100%;
       border-collapse: collapse;
@@ -404,6 +454,7 @@
         padding-top: 12px;
       }
       .support img { width: 150px; }
+      .media-grid, .track-map-grid { grid-template-columns: 1fr; }
     }
     @media (max-width: 720px) {
       .topbar-inner { align-items: flex-start; flex-direction: column; padding: 14px 0; }
@@ -414,11 +465,22 @@
       .number { width: 36px; height: 36px; }
       .track h3 { display: block; }
       .track h3 span { display: block; margin-top: 4px; }
+      .track {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: auto;
+      }
       .qr-large { grid-template-columns: 1fr; }
       table {
         display: block;
+        width: 100%;
+        max-width: 100%;
         overflow-x: auto;
         white-space: normal;
+      }
+      table.apex-table tbody {
+        display: table;
+        min-width: 760px;
       }
     }
   </style>
@@ -458,7 +520,7 @@
         <dl class="facts">
           <div class="fact"><dt>Level</dt><dd><strong>Beginner to club racer</strong></dd></div>
           <div class="fact"><dt>Format</dt><dd><strong>Read, practice, repeat</strong></dd></div>
-          <div class="fact"><dt>Lessons</dt><dd><strong>10 modules</strong></dd></div>
+          <div class="fact"><dt>Lessons</dt><dd><strong>12 modules + media</strong></dd></div>
           <div class="fact"><dt>Focus</dt><dd><strong>Racecraft, not keybinds</strong></dd></div>
           <div class="fact"><dt>Tracks</dt><dd><strong>6 simulator routes</strong></dd></div>
         </dl>
@@ -472,6 +534,7 @@
         <a href="#about">About this course</a>
         <a href="#objectives">Learning objectives</a>
         <a href="#prerequisites">Before you begin</a>
+        <a href="#visuals">Pictures and videos</a>
         <a href="#curriculum">Curriculum</a>
         <a href="#foundation">Driving foundation</a>
         <a href="#racecraft">Racecraft</a>
@@ -514,6 +577,37 @@
         <div class="callout">
           <p><strong>Driver mindset:</strong> speed is the result, not the input. Your inputs are brake pressure, steering angle, throttle timing, and where you place the car.</p>
         </div>
+      </section>
+
+      <section id="visuals">
+        <h2>Pictures and videos</h2>
+        <p>Use these first. Apex choice is easier to understand when you see the path, the mistake, and the exit shape. The images and videos below are raster PNG/MP4 teaching assets generated for this simulator guide.</p>
+
+        <figure class="lesson-media">
+          <img src="assets/teaching/apex-choice-types.png" alt="Three apex choices for the same U-turn: early apex, geometric apex, and late apex">
+          <figcaption><strong>Early, geometric, and late apex are three different tools.</strong> A U-turn is not automatically late apex; the correct choice depends on exit priority, the next corner, and whether another driver is attacking.</figcaption>
+        </figure>
+
+        <div class="media-grid">
+          <figure class="lesson-media">
+            <video controls muted loop playsinline poster="assets/teaching/late-apex-hairpin-poster.png">
+              <source src="assets/teaching/late-apex-hairpin.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Late apex timing.</strong> Brake straight, wait before turning, rotate the car, clip the late apex, then unwind steering before full throttle.</figcaption>
+          </figure>
+
+          <figure class="lesson-media">
+            <video controls muted loop playsinline poster="assets/teaching/overtake-cutback-defense-poster.png">
+              <source src="assets/teaching/overtake-cutback-defense.mp4" type="video/mp4">
+            </video>
+            <figcaption><strong>Clean overtake and cutback.</strong> The attacker does not dive from too far back; they pressure the defender, wait for the defensive line to slow, then win the exit.</figcaption>
+          </figure>
+        </div>
+
+        <figure class="lesson-media">
+          <img src="assets/teaching/defending-apex-choice.png" alt="Normal late apex compared with defensive inside apex when another car is behind">
+          <figcaption><strong>When someone is behind you, your apex can change.</strong> If they are not alongside, take the normal line. If they are close enough to attack, cover inside early and brake earlier. If they overlap before turn-in, leave room.</figcaption>
+        </figure>
       </section>
 
       <section id="curriculum">
@@ -564,25 +658,34 @@
 
       <section id="foundation">
         <h2>Driving foundation</h2>
-        <h3>The corner has four phases</h3>
+        <h3>The corner has five reference points</h3>
         <ol>
-          <li><strong>Approach:</strong> place the car at the edge that opens the corner. Look past the apex to the exit, not at the front bumper.</li>
-          <li><strong>Braking:</strong> apply the strongest pressure while the car is straight. If the car refuses to turn, you are still asking the front tires to brake too much.</li>
-          <li><strong>Rotation:</strong> release brake pressure as you turn. This keeps weight on the front tires but frees them to steer.</li>
-          <li><strong>Exit:</strong> wait until the car points toward the exit before full throttle. The fastest exit is usually the calmest one.</li>
+          <li><strong>Braking marker:</strong> the point where you start slowing. Move it later only after you can hit the apex three times in a row.</li>
+          <li><strong>Turn-in point:</strong> the point where you first ask the car to rotate. Early turn-in creates early apex; late turn-in creates late apex.</li>
+          <li><strong>Apex:</strong> the closest point to the inside kerb or wall. It is not always the middle of the corner.</li>
+          <li><strong>Exit point:</strong> where the car reaches the outside of the track. Good exits feel boring because the steering is already unwinding.</li>
+          <li><strong>Recovery point:</strong> where the car is straight enough for full throttle and the next braking marker becomes visible.</li>
         </ol>
 
-        <h3>Apex choice</h3>
-        <table>
-          <tr><th>Apex type</th><th>Use it when</th><th>Driver habit</th></tr>
-          <tr><td>Late apex</td><td>The corner leads to a long straight or another acceleration zone.</td><td>Brake a little earlier, turn later, rotate more, and get the car straight sooner.</td></tr>
-          <tr><td>Geometric apex</td><td>The corner is a balanced medium-speed bend with no big exit priority.</td><td>Use a smooth arc and avoid sawing at the steering.</td></tr>
-          <tr><td>Early apex</td><td>You must position the car for a following corner, chicane, or narrow street section.</td><td>Accept a slower exit so the next corner becomes easier.</td></tr>
-          <tr><td>Double apex</td><td>The corner is long, such as Suzuka Spoon or wide high-speed bends.</td><td>Touch inside once, let the car breathe mid-corner, then return to the second apex for exit.</td></tr>
+        <h3>How to run each apex</h3>
+        <table class="apex-table">
+          <tr><th>Apex type</th><th>Use it when</th><th>How to drive it</th><th>Common mistake</th></tr>
+          <tr><td>Late apex</td><td>Slow corner before a straight, or any corner where exit speed matters more than entry speed.</td><td>Brake a little earlier in a straight line. Stay wider longer. Turn later and sharper. Clip the inside after the middle of the corner, then open the wheel and go to throttle.</td><td>Turning in early but calling it late apex. If you reach the inside too soon, you are early-apexing.</td></tr>
+          <tr><td>Geometric apex</td><td>Medium or fast single corner where entry and exit have similar value.</td><td>Use one smooth arc. Apex near the natural middle of the corner. Keep steering angle stable and avoid a big brake/throttle change mid-corner.</td><td>Over-slowing for a corner that only needed a lift or small brake.</td></tr>
+          <tr><td>Early apex</td><td>Defending the inside, preparing for an immediate opposite corner, or entering a narrow section where track position matters.</td><td>Turn in sooner and accept that exit speed will be worse. Keep the car tight enough to block the inside or place it for the next corner.</td><td>Using early apex in a corner before a straight. You will run wide and lose speed all the way down the straight.</td></tr>
+          <tr><td>Double apex</td><td>Long corners that keep turning, such as Suzuka Spoon, Silverstone Luffield, Karussell-style bends, or long banked arcs.</td><td>Touch inside once, release the car slightly mid-corner, then return to a second later apex for the exit. Do not pinch the car all the way around.</td><td>Holding the inside too long. That scrubs speed and makes throttle late.</td></tr>
+          <tr><td>Sacrifice apex</td><td>Esses and chicanes where the last exit matters most.</td><td>Do not try to win the first apex. Use the first corner to place the car for the second or third corner, then late-apex the final exit.</td><td>Being fastest in the first part and slowest out of the sequence.</td></tr>
         </table>
 
+        <figure class="lesson-media">
+          <img src="assets/teaching/corner-apex-matrix.png" alt="Matrix showing which apex to use for hairpins, chicanes, esses, sweepers, and street corners">
+          <figcaption>The apex decision starts with the next piece of track. Exit straight, following opposite corner, traffic, and walls all change the answer.</figcaption>
+        </figure>
+
+        <h3>Does a U-turn always use late apex?</h3>
+        <p>No. A U-turn usually wants a late apex only when the exit opens onto a straight or acceleration zone. If the U-turn is followed immediately by the opposite direction, you may need an earlier or sacrifice apex to place the car. If someone is attacking your inside, you may need a defensive earlier/tighter apex. If the turn is very long, you may need a double apex instead of one late point.</p>
         <div class="rule">
-          <p><strong>Simple rule:</strong> slow corner before long straight equals late apex. Fast flowing sequence equals rhythm and patience. Narrow street corner equals survival first.</p>
+          <p><strong>Better rule:</strong> late apex is for exit speed. Early apex is for position. Geometric apex is for flow. Double apex is for long corners. Sacrifice apex is for sequences.</p>
         </div>
       </section>
 
@@ -591,25 +694,37 @@
         <h3>Race starts</h3>
         <p>At the lights, your first job is traction, not hero speed. Launch straight, keep the steering tiny until the car is settled, and expect everyone ahead to brake earlier than they did in practice. In online races, leave more space than you think on lap one because small lag and cold-driver mistakes create accordion braking.</p>
 
-        <h3>When to overtake</h3>
-        <ul>
-          <li><strong>Best time:</strong> after you get a better exit and are already closing before the braking zone.</li>
-          <li><strong>Safe zones:</strong> heavy braking corners after long straights, slow hairpins, and chicanes with clear inside overlap.</li>
-          <li><strong>Bad zones:</strong> high-speed esses, blind crests, Monaco Swimming Pool, Suzuka 130R, and the narrow Nordschleife rhythm sections.</li>
-          <li><strong>Pressure pass:</strong> follow closely for two corners, force the car ahead to defend, then take the faster exit while they are compromised.</li>
-        </ul>
+        <h3>If someone is chasing you</h3>
+        <table class="apex-table">
+          <tr><th>Situation</th><th>Your line</th><th>How to drive</th><th>Risk</th></tr>
+          <tr><td>They are behind but not close enough to attack</td><td>Normal racing line</td><td>Keep the late/geometric apex you would use alone. Your best defense is a strong exit.</td><td>Defending too early slows you down and invites a pass.</td></tr>
+          <tr><td>They are close before a heavy braking zone</td><td>Defensive inside line</td><td>Move inside before braking, one move only. Brake 5-10 meters earlier because the inside line has a tighter radius. Apex earlier/tighter, then get back to throttle without parking.</td><td>If you stop at the apex, they cut back under you.</td></tr>
+          <tr><td>They are alongside before turn-in</td><td>Leave racing room</td><td>Hold your lane. Inside car must make the apex; outside car must be given track on exit if overlap remains.</td><td>Turning like the other car is not there causes contact.</td></tr>
+          <tr><td>They attack from too far back</td><td>Brake normally, leave emergency space</td><td>Do not turn down late if they are already locked inside. Let them overshoot, then cross back to the exit.</td><td>Panic turning creates avoidable contact.</td></tr>
+        </table>
 
-        <h3>How to overtake</h3>
+        <h3>Overtaking is built one corner earlier</h3>
+        <p>A correct pass starts before the braking zone. You pressure the driver ahead, make them defend, get a better exit, then arrive alongside before turn-in. If you only appear at the apex, it is usually a divebomb, not racecraft.</p>
         <ol>
-          <li>Plan one corner early. If you only decide at the braking marker, it is probably a dive.</li>
-          <li>Show the car early enough that the other driver can see you.</li>
-          <li>Brake on the inside in a straight line. Do not slide past the apex and use the other car as your brake.</li>
-          <li>If your front axle is significantly alongside before turn-in, both cars should leave racing room.</li>
-          <li>Finish the pass by making the exit, not by pushing the other car off the road.</li>
+          <li><strong>Exit setup:</strong> stay close through the previous corner without hitting. Sacrifice entry if it gives you a straighter throttle exit.</li>
+          <li><strong>Choose the side early:</strong> show inside before the braking zone so the defender can react. Do not weave side to side.</li>
+          <li><strong>Brake on your line:</strong> inside line means tighter radius, so brake earlier than the normal marker. Outside line means you need more overlap before turn-in.</li>
+          <li><strong>Hit your apex:</strong> the inside car must still make the corner. If you miss the apex by a car width, the move was too late.</li>
+          <li><strong>Leave exit space:</strong> if another car remains alongside, you cannot use the whole road like a qualifying lap.</li>
+          <li><strong>Use the cutback:</strong> if the defender takes a tight early apex, do not force inside. Turn later, cross under, and beat them on exit.</li>
         </ol>
 
+        <h3>Good and bad passing zones</h3>
+        <table class="apex-table">
+          <tr><th>Move type</th><th>Where it works</th><th>How to do it</th><th>Do not do it</th></tr>
+          <tr><td>Inside braking pass</td><td>Silverstone Vale, Suzuka Hairpin, Monaco Nouvelle Chicane, Nurburgring GP T1, Bugatti Rettifilo.</td><td>Be at least partly alongside before braking. Brake straight, make the apex, leave exit room.</td><td>Late lunge from two car lengths back.</td></tr>
+          <tr><td>Cutback</td><td>Any slow corner where defender protects inside: Loop, Fairmont, Hairpin, T1, Rascasse.</td><td>Brake a touch earlier, turn later than the defender, let them run tight, then straighten sooner and accelerate underneath.</td><td>Following their tight line and losing the same exit speed.</td></tr>
+          <tr><td>Outside pass</td><td>Wide corners with grip and clear overlap, such as some Silverstone or Nardo situations.</td><td>Only commit if you are already alongside and can stay there without running out of track.</td><td>Trying outside at Monaco walls or fast esses.</td></tr>
+          <tr><td>Slipstream pass</td><td>Long straights: Hangar Straight, Suzuka back straight, Dottinger Hohe, Nardo.</td><td>Pull out before braking, clear the car, then return to the braking line safely.</td><td>Moving across the other car's nose at top speed.</td></tr>
+        </table>
+
         <h3>Defending</h3>
-        <p>Defend before the braking zone, not inside it. Move once, cover the inside, and then drive the corner. If you defend too hard, you ruin your exit and the attacker crosses back under you. A clean defense is early, predictable, and still fast enough to matter.</p>
+        <p>Defend before the braking zone, not inside it. Move once, cover the inside, and then drive the corner. The defensive apex is usually earlier and tighter than the ideal late apex, so you must brake earlier. The hard part is not covering the inside; the hard part is still getting enough exit speed that the attacker cannot cut back.</p>
 
         <h3>Traffic and lapping</h3>
         <p>When approaching slower traffic, pass where the track is straight and the other driver can hold a predictable line. If you are being lapped, do not suddenly brake or jump off-line. Stay predictable, lift slightly on a straight, and let the faster car choose the side.</p>
@@ -617,77 +732,159 @@
 
       <section id="tracks">
         <h2>Track guide</h2>
-        <p>These notes match the simulator's route choices and teach where to place the car. Use them as a first racing line, then refine your braking points based on your car and speed.</p>
+        <p>These notes match the simulator's named route corners. The apex choice is the first plan; your exact braking marker still changes by car, fuel-style settings, speed, traffic, and whether you are using assist/test driver features.</p>
+
+        <div class="track-map-grid">
+          <figure class="lesson-media">
+            <img src="assets/teaching/silverstone-apex-map.png" alt="Silverstone corner apex map">
+            <figcaption>Silverstone: flow, sacrifice sequences, and late exits onto the long straights.</figcaption>
+          </figure>
+          <figure class="lesson-media">
+            <img src="assets/teaching/suzuka-apex-map.png" alt="Suzuka corner apex map">
+            <figcaption>Suzuka: rhythm first, final-exit priority through esses and chicanes.</figcaption>
+          </figure>
+          <figure class="lesson-media">
+            <img src="assets/teaching/monaco-apex-map.png" alt="Monaco corner apex map">
+            <figcaption>Monaco: late exits when clear, defensive lines when attacked, and no panic near walls.</figcaption>
+          </figure>
+        </div>
 
         <div class="track-guide">
           <div class="track">
             <h3>Silverstone Circuit <span>fast flow, wide racing surface</span></h3>
-            <ul>
-              <li><strong>Abbey and Farm:</strong> use a smooth geometric line. Do not over-brake; a lift or brush can be enough when the car is settled.</li>
-              <li><strong>Village and Loop:</strong> choose a late apex. The corner is slow and the exit matters more than entry speed.</li>
-              <li><strong>Copse:</strong> commit only when the car is straight and stable. Clip the inside once and let the car run wide on exit.</li>
-              <li><strong>Maggotts, Becketts, Chapel:</strong> sacrifice the first direction change so the final Chapel exit is open onto Hangar Straight.</li>
-              <li><strong>Stowe:</strong> late apex. Overtakes work here if you are alongside before braking; otherwise prepare a better exit for Vale.</li>
-              <li><strong>Vale and Club:</strong> heavy braking into Vale is a real passing zone. Do not overshoot; the Club exit decides the next straight.</li>
-            </ul>
+            <table class="apex-table">
+              <tr><th>Turn</th><th>Apex plan</th><th>How to run it</th><th>If someone is behind</th></tr>
+              <tr><td>Abbey</td><td><span class="tag">slight late</span></td><td>Small brake or lift, turn once, clip a little after the middle, let the car breathe to the outside.</td><td>Do not defend unless they are already alongside; a defensive line ruins Farm.</td></tr>
+              <tr><td>Farm</td><td><span class="tag">geometric</span></td><td>Smooth arc. Keep the car stable and prepare for the Village braking zone.</td><td>Hold predictable line; the real attack is into Village.</td></tr>
+              <tr><td>Village</td><td><span class="tag">late</span></td><td>Brake straight, stay wide, turn late, aim to rotate before The Loop.</td><td>Cover inside early if attacked, but brake earlier or you will overshoot.</td></tr>
+              <tr><td>The Loop</td><td><span class="tag">very late</span></td><td>Slowest corner in this section. Wait, rotate, and prioritize Aintree exit.</td><td>Inside defense is valid; watch for cutback on exit.</td></tr>
+              <tr><td>Aintree</td><td><span class="tag">late exit</span></td><td>Use all exit road onto the straight. Throttle only when the car is pointed.</td><td>Exit matters more than blocking; a bad exit loses the straight.</td></tr>
+              <tr><td>Brooklands</td><td><span class="tag">late</span></td><td>Brake while straight, turn late, avoid drifting into Luffield too early.</td><td>Common passing spot. If defending, take inside but expect a cutback.</td></tr>
+              <tr><td>Luffield</td><td><span class="tag">double late</span></td><td>First touch inside, release slightly mid-corner, then second late apex for Woodcote.</td><td>Do not hug inside forever; that invites a faster exit from the attacker.</td></tr>
+              <tr><td>Woodcote</td><td><span class="tag">geometric</span></td><td>Gentle steering, full throttle only when the car is settled.</td><td>Hold line; side-by-side here is risky unless overlap is already clear.</td></tr>
+              <tr><td>Copse</td><td><span class="tag">slight late</span></td><td>High-speed commitment. Turn once, clip after center, avoid lifting mid-corner.</td><td>Do not defend late. If they are not alongside before turn-in, take your line.</td></tr>
+              <tr><td>Maggotts</td><td><span class="tag">sacrifice</span></td><td>Do not use all road too early. Place the car for Becketts and Chapel.</td><td>No overtake. Give space only if overlap is already real.</td></tr>
+              <tr><td>Becketts</td><td><span class="tag">sacrifice</span></td><td>Accept less speed so the car is on the correct side for Chapel.</td><td>Stay predictable; defending destroys the sequence.</td></tr>
+              <tr><td>Chapel</td><td><span class="tag">late exit</span></td><td>Final apex is the money corner. Straighten early for Hangar Straight.</td><td>Best defense is exit speed; do not pinch the car.</td></tr>
+              <tr><td>Stowe</td><td><span class="tag">late</span></td><td>Heavy brake, late apex, strong exit toward Vale.</td><td>Inside pass zone. If defending, move early and brake earlier.</td></tr>
+              <tr><td>Vale</td><td><span class="tag">late</span></td><td>Brake straight. Make the first apex without overshooting, then prepare Club.</td><td>Leave room if overlap exists; many passes happen here.</td></tr>
+              <tr><td>Club</td><td><span class="tag">late exit</span></td><td>Prioritize the final right-hand exit onto the start/finish straight.</td><td>Cutback works if defender parks at Vale; protect exit more than apex.</td></tr>
+            </table>
           </div>
 
           <div class="track">
             <h3>Suzuka Circuit <span>rhythm and patience</span></h3>
-            <ul>
-              <li><strong>Turn 1 and Turn 2:</strong> treat Turn 1 as the entry and Turn 2 as the corner that matters. Brake straight, turn in cleanly, and late-apex Turn 2.</li>
-              <li><strong>Esses:</strong> no forced overtakes. Each apex prepares the next one; if you attack one too hard, the whole sequence collapses.</li>
-              <li><strong>Degner 1 and 2:</strong> Degner 1 is a fast clip, Degner 2 is the exit corner. Prioritize the second apex.</li>
-              <li><strong>Hairpin:</strong> strong overtaking spot. Show inside early, brake straight, rotate late, and avoid pushing wide on exit.</li>
-              <li><strong>Spoon:</strong> double apex. Be patient between the two apexes and wait for the car to face the back straight before full throttle.</li>
-              <li><strong>130R and Casio Triangle:</strong> 130R is not a dive zone. Set up the pass into Casio, where braking is heavy and the line is clearer.</li>
-            </ul>
+            <table class="apex-table">
+              <tr><th>Turn</th><th>Apex plan</th><th>How to run it</th><th>If someone is behind</th></tr>
+              <tr><td>Turn 1</td><td><span class="tag">entry brake</span></td><td>Brake straight and treat this as the setup for Turn 2. Do not chase the first inside too hard.</td><td>Defend only if they are alongside; otherwise prioritize Turn 2 exit.</td></tr>
+              <tr><td>Turn 2</td><td><span class="tag">late</span></td><td>Rotate late and open the wheel toward the Esses.</td><td>Inside defense compromises the whole first sector; use it only when necessary.</td></tr>
+              <tr><td>S Curves L</td><td><span class="tag">sacrifice</span></td><td>First left is not the hero corner. Keep enough road to change direction.</td><td>No overtake. Back out if side-by-side.</td></tr>
+              <tr><td>S Curves R</td><td><span class="tag">flow</span></td><td>Smooth weight transfer; avoid throttle stabs.</td><td>Hold rhythm and leave space only for established overlap.</td></tr>
+              <tr><td>S Curves L2</td><td><span class="tag">flow</span></td><td>Use a clean arc and keep the car ready for R2.</td><td>Do not block; a mistake here ruins Dunlop.</td></tr>
+              <tr><td>S Curves R2</td><td><span class="tag">late exit</span></td><td>Last part matters most. Straighten for Dunlop.</td><td>Exit speed defends better than a tight apex.</td></tr>
+              <tr><td>Dunlop</td><td><span class="tag">geometric</span></td><td>Long uphill bend. Hold a smooth radius and keep speed alive.</td><td>Side-by-side is dangerous; stay predictable.</td></tr>
+              <tr><td>Degner 1</td><td><span class="tag">clip</span></td><td>Fast clip; do not over-slow. The car must be settled for Degner 2.</td><td>No late move. If attacked, leave room and win Degner 2 exit.</td></tr>
+              <tr><td>Degner 2</td><td><span class="tag">late</span></td><td>Brake, rotate late, and get the exit clean.</td><td>Inside defense is possible but invites cutback.</td></tr>
+              <tr><td>Hairpin</td><td><span class="tag">very late</span></td><td>Classic U-turn before acceleration. Brake straight, turn late, clip late, throttle early.</td><td>If attacked, defend inside with earlier apex, then watch for cutback.</td></tr>
+              <tr><td>Spoon 1</td><td><span class="tag">first apex</span></td><td>Touch inside once but do not stay pinned to the inside.</td><td>Do not fight side-by-side through both apexes unless overlap is huge.</td></tr>
+              <tr><td>Spoon 2</td><td><span class="tag">late exit</span></td><td>Second apex opens the back straight. This exit is more important than Spoon 1 entry.</td><td>Defend exit, not entry. Bad exit loses the straight.</td></tr>
+              <tr><td>130R</td><td><span class="tag">geometric</span></td><td>High-speed arc. Minimal steering and no panic lift.</td><td>Not a dive zone. Only stay side-by-side if overlap exists before entry.</td></tr>
+              <tr><td>Casio R</td><td><span class="tag">sacrifice</span></td><td>Brake straight, take enough first apex to open the left.</td><td>Inside pass zone, but the attacker must slow enough for the second part.</td></tr>
+              <tr><td>Casio L</td><td><span class="tag">late exit</span></td><td>Final left decides the main straight. Turn late and launch out.</td><td>Cutback is strong if defender over-protects Casio R.</td></tr>
+            </table>
           </div>
 
           <div class="track">
             <h3>Circuit de Monaco <span>restraint, exits, and walls</span></h3>
-            <ul>
-              <li><strong>Sainte Devote:</strong> brake straight and late-apex. The uphill exit is more important than entering wide open.</li>
-              <li><strong>Casino to Mirabeau:</strong> use controlled speed and avoid side-by-side racing. Track position matters more than bravery.</li>
-              <li><strong>Grand Hotel Hairpin:</strong> very slow, very late apex. Wait, rotate, then unwind. Do not rush throttle.</li>
-              <li><strong>Portier:</strong> late apex for tunnel speed. A poor Portier exit ruins the best passing chance at Nouvelle Chicane.</li>
-              <li><strong>Nouvelle Chicane:</strong> main overtaking zone after the tunnel. Be alongside before braking and leave room through both parts.</li>
-              <li><strong>Swimming Pool and Rascasse:</strong> single-file discipline. Touch the line, avoid panic corrections, and prepare the final corner exit.</li>
-            </ul>
-          </div>
-
-          <div class="track">
-            <h3>Nardo Ring <span>speed discipline</span></h3>
-            <ul>
-              <li><strong>Main line:</strong> use tiny steering inputs. At high speed, a small correction becomes a big weight transfer.</li>
-              <li><strong>Apex idea:</strong> think of the whole ring as one long corner. Hold a stable radius rather than stabbing at the inside.</li>
-              <li><strong>Overtaking:</strong> pass with a clear speed difference. Avoid drifting across another car's nose at top speed.</li>
-              <li><strong>Practice goal:</strong> learn how each hypercar behaves near top speed and how long it takes to slow down from extreme pace.</li>
-            </ul>
+            <table class="apex-table">
+              <tr><th>Turn</th><th>Apex plan</th><th>How to run it</th><th>If someone is behind</th></tr>
+              <tr><td>Sainte Dévote</td><td><span class="tag">late</span></td><td>Brake straight, turn late, use uphill exit. Do not attack the inside too early.</td><td>Inside defense is valid; brake earlier and avoid blocking the exit wall.</td></tr>
+              <tr><td>Massenet</td><td><span class="tag">geometric</span></td><td>Long left. Smooth steering and stable throttle.</td><td>No late defense; hold line.</td></tr>
+              <tr><td>Casino</td><td><span class="tag">late</span></td><td>Clip late enough to open the downhill run.</td><td>Single-file. Avoid sudden braking.</td></tr>
+              <tr><td>Mirabeau</td><td><span class="tag">late / defend</span></td><td>When clear, late apex. When attacked, cover inside early and accept slower exit.</td><td>Prime defense corner. Do not move under braking.</td></tr>
+              <tr><td>Fairmont Hairpin</td><td><span class="tag">very late</span></td><td>Very slow U-turn. Wait, rotate, and unwind before throttle.</td><td>Track position matters. Tight inside defense is okay, but cutback risk is high.</td></tr>
+              <tr><td>Mirabeau Bas</td><td><span class="tag">late</span></td><td>Short braking, late apex, do not hit the wall on exit.</td><td>Do not force a pass; prepare Portier.</td></tr>
+              <tr><td>Portier</td><td><span class="tag">late exit</span></td><td>This corner controls tunnel speed. Slow in, late apex, early throttle.</td><td>Best defense is exit. A tight defensive entry loses the tunnel.</td></tr>
+              <tr><td>Tunnel</td><td><span class="tag">steady</span></td><td>Hold a stable radius and avoid steering corrections.</td><td>Slipstream may start here; choose side before the chicane braking zone.</td></tr>
+              <tr><td>Nouvelle Chicane R</td><td><span class="tag">sacrifice</span></td><td>Brake straight. Do not overshoot the first right; it sets up the left.</td><td>Main pass zone. If inside, make the apex. If outside, leave room only for overlap.</td></tr>
+              <tr><td>Nouvelle Chicane L</td><td><span class="tag">late</span></td><td>Second apex matters for exit. Avoid cutting back too early across another car.</td><td>Cutback works if defender misses the first part.</td></tr>
+              <tr><td>Tabac</td><td><span class="tag">geometric</span></td><td>Commit with one smooth input. Do not add steering late.</td><td>Not an overtake corner.</td></tr>
+              <tr><td>Piscine 1</td><td><span class="tag">commit</span></td><td>Clip accurately, keep the car straight enough for the direction change.</td><td>No side-by-side unless already overlapping.</td></tr>
+              <tr><td>Piscine 2</td><td><span class="tag">place car</span></td><td>Use this to set up the next pair, not to gain one meter.</td><td>Back out rather than hit the wall.</td></tr>
+              <tr><td>Piscine 3</td><td><span class="tag">sacrifice</span></td><td>Prepare the final exit. Less entry speed can be faster.</td><td>Defending here is usually a mistake.</td></tr>
+              <tr><td>Piscine 4</td><td><span class="tag">exit</span></td><td>Open steering early and breathe the car out.</td><td>Exit cleanly; contact here blocks the track.</td></tr>
+              <tr><td>La Rascasse</td><td><span class="tag">late</span></td><td>Slow, late, patient. Rotate before throttle.</td><td>Common defense corner. Protect inside but do not park.</td></tr>
+              <tr><td>Anthony Noghès</td><td><span class="tag">late exit</span></td><td>Final exit matters for the main straight. Late apex and use all road.</td><td>Cutback is better than a desperate inside lunge.</td></tr>
+            </table>
           </div>
 
           <div class="track">
             <h3>Nurburgring GP <span>braking zones and exits</span></h3>
-            <ul>
-              <li><strong>Turn 1:</strong> heavy braking and late apex. This is a strong passing zone, but only if you can still make the inside curb.</li>
-              <li><strong>Mercedes Arena:</strong> slow sequence. Sacrifice the first part for a clean exit from the last part.</li>
-              <li><strong>Schumacher S:</strong> high-speed confidence corner. Do not force a pass unless the other car makes a clear mistake.</li>
-              <li><strong>Chicane:</strong> overtaking is possible under braking. Keep the car straight over the first part and do not cut back across too early.</li>
-              <li><strong>Final corner:</strong> late apex to maximize the start-finish straight. A tidy exit beats a dramatic entry.</li>
-            </ul>
+            <table class="apex-table">
+              <tr><th>Turn</th><th>Apex plan</th><th>How to run it</th><th>If someone is behind</th></tr>
+              <tr><td>T1 Castrol-S</td><td><span class="tag">late</span></td><td>Heavy braking. Late apex and square the car for the short exit.</td><td>Major passing zone. Defend inside early, brake earlier, avoid cutback.</td></tr>
+              <tr><td>Mercedes Arena</td><td><span class="tag">sacrifice</span></td><td>Do not maximize entry. Place the car for the final Arena exit.</td><td>Side-by-side is slow; prioritize clean sequence.</td></tr>
+              <tr><td>Arena R</td><td><span class="tag">late exit</span></td><td>Rotate late, open steering, and leave the slow section cleanly.</td><td>Exit speed prevents the next attack.</td></tr>
+              <tr><td>Yokohama-S</td><td><span class="tag">late</span></td><td>Brake in a straight line, turn late, do not wash out.</td><td>Inside defense works if overlap is close.</td></tr>
+              <tr><td>Valvoline</td><td><span class="tag">geometric / slight late</span></td><td>Medium-speed bend. Smooth arc and stable throttle.</td><td>Not a strong passing corner.</td></tr>
+              <tr><td>Ford chicane</td><td><span class="tag">sacrifice</span></td><td>First part opens the second. Do not attack the first apex too greedily.</td><td>Defender must leave room if overlap exists before braking.</td></tr>
+              <tr><td>Dunlop-Kehre</td><td><span class="tag">late</span></td><td>Slow bend. Late apex for exit up the hill.</td><td>Watch for cutback if you defend tight.</td></tr>
+              <tr><td>Coca-Cola</td><td><span class="tag">late exit</span></td><td>Final corner type. Get the car straight for start/finish.</td><td>Bad defensive apex loses the straight.</td></tr>
+              <tr><td>NGK</td><td><span class="tag">sacrifice</span></td><td>Brake straight and prioritize the second part.</td><td>Inside pass only if clear before braking.</td></tr>
+            </table>
           </div>
 
           <div class="track">
             <h3>Nordschleife <span>memory, survival, and respect</span></h3>
-            <ul>
-              <li><strong>Hatzenbach:</strong> rhythm first. Avoid overtaking unless the other car clearly gives room.</li>
-              <li><strong>Flugplatz and Schwedenkreuz:</strong> settle the car before crests and fast bends. Lift early if the car feels light.</li>
-              <li><strong>Aremberg to Fuchsrohre:</strong> late apex Aremberg for the downhill run; keep inputs smooth through compression.</li>
-              <li><strong>Adenauer Forst:</strong> brake earlier than pride wants. Many laps die from arriving too fast here.</li>
-              <li><strong>Karussell:</strong> slow entry, patient middle, clean exit. Do not fight the steering while the car is loaded.</li>
-              <li><strong>Pflanzgarten:</strong> no side-by-side hero moves. Give the car time to land and settle.</li>
-              <li><strong>Dottinger Hohe:</strong> safest slipstream passing zone. Plan the pass before Tiergarten, then brake in a straight line.</li>
-            </ul>
+            <table class="apex-table">
+              <tr><th>Turn / section</th><th>Apex plan</th><th>How to run it</th><th>If someone is behind</th></tr>
+              <tr><td>Hatzenbach L/R/esses</td><td><span class="tag">sacrifice sequence</span></td><td>Think of the section as one rhythm. Do not win one apex and lose the next three.</td><td>No forced overtake; wait for a straight.</td></tr>
+              <tr><td>Flugplatz</td><td><span class="tag">geometric</span></td><td>Settle the car before the crest. Small inputs only.</td><td>Do not defend across a crest.</td></tr>
+              <tr><td>Schwedenkreuz</td><td><span class="tag">geometric / lift</span></td><td>Fast left. A small lift before turn-in is better than a panic lift mid-corner.</td><td>No side-by-side unless fully alongside before entry.</td></tr>
+              <tr><td>Aremberg</td><td><span class="tag">late</span></td><td>Heavy brake, late apex, clean downhill exit.</td><td>Possible pass zone; defend inside early.</td></tr>
+              <tr><td>Fuchsröhre</td><td><span class="tag">flow</span></td><td>Hold smooth line through compression. Avoid sudden steering.</td><td>Do not fight for position here.</td></tr>
+              <tr><td>Adenauer Forst</td><td><span class="tag">late / survival</span></td><td>Brake earlier than pride wants. Make the apex, then exit clean.</td><td>Let divebombs overshoot; cut back under them.</td></tr>
+              <tr><td>Metzgesfeld</td><td><span class="tag">geometric</span></td><td>Medium corner. Stable car beats extra entry speed.</td><td>Hold line; pass later.</td></tr>
+              <tr><td>Kallenhard</td><td><span class="tag">late</span></td><td>Slow enough to rotate, then exit strongly.</td><td>Defend only if attack is already visible.</td></tr>
+              <tr><td>Wehrseifen</td><td><span class="tag">very late</span></td><td>Tight and slow. Wait, rotate, and do not rush throttle.</td><td>Inside defense creates cutback risk.</td></tr>
+              <tr><td>Ex-Mühle</td><td><span class="tag">late exit</span></td><td>Exit up the hill matters. Sacrifice entry.</td><td>Exit speed is your defense.</td></tr>
+              <tr><td>Bergwerk</td><td><span class="tag">late exit</span></td><td>Important exit onto a long fast section. Brake enough, late apex, full throttle only when straight.</td><td>Do not defend so hard you lose the long run after it.</td></tr>
+              <tr><td>Karussell</td><td><span class="tag">double / patient</span></td><td>Slow entry, settle, hold patient line, then exit without fighting the wheel.</td><td>Single file. Passing here is usually a mistake.</td></tr>
+              <tr><td>Hohe Acht</td><td><span class="tag">geometric</span></td><td>Keep the car balanced over the rise.</td><td>No late defense.</td></tr>
+              <tr><td>Wippermann</td><td><span class="tag">sacrifice</span></td><td>Use the first part to prepare the second. Rhythm beats aggression.</td><td>Let faster car pass on a safer straight.</td></tr>
+              <tr><td>Eschbach</td><td><span class="tag">late</span></td><td>Rotate late and use exit road.</td><td>Inside defense possible but risky.</td></tr>
+              <tr><td>Brünnchen</td><td><span class="tag">late</span></td><td>Brake straight, late apex, avoid running wide.</td><td>Common mistake zone; give space if overlap exists.</td></tr>
+              <tr><td>Pflanzgarten</td><td><span class="tag">commit / settle</span></td><td>Let the car land and settle before asking for more steering.</td><td>No side-by-side hero move.</td></tr>
+              <tr><td>Schwalbenschwanz</td><td><span class="tag">late</span></td><td>Slow enough to make the late point cleanly.</td><td>Do not pinch the exit wall.</td></tr>
+              <tr><td>Kleines Karussell</td><td><span class="tag">patient</span></td><td>Short carousel style. Do not fight the car mid-corner.</td><td>Single file.</td></tr>
+              <tr><td>Galgenkopf</td><td><span class="tag">late exit</span></td><td>One of the most important exits. It leads to the long straight.</td><td>Never over-defend here; exit speed decides the straight.</td></tr>
+            </table>
+          </div>
+
+          <div class="track">
+            <h3>Bugatti Grand Épreuve <span>Monza-style speed and chicanes</span></h3>
+            <table class="apex-table">
+              <tr><th>Turn</th><th>Apex plan</th><th>How to run it</th><th>If someone is behind</th></tr>
+              <tr><td>Rettifilo R</td><td><span class="tag">sacrifice</span></td><td>Brake straight and do not overshoot the first right.</td><td>Main passing zone; inside car must make the second part.</td></tr>
+              <tr><td>Rettifilo L</td><td><span class="tag">late exit</span></td><td>Second part matters for the launch down the straight.</td><td>Cutback is strong if defender misses the right.</td></tr>
+              <tr><td>Curva Grande</td><td><span class="tag">geometric</span></td><td>Fast sweeping line. Tiny steering corrections only.</td><td>Slipstream pass should happen before braking, not mid-corner.</td></tr>
+              <tr><td>Roggia L</td><td><span class="tag">sacrifice</span></td><td>First part opens the right. Brake straight and keep the car under you.</td><td>Inside dive must still leave room through the right.</td></tr>
+              <tr><td>Roggia R</td><td><span class="tag">late exit</span></td><td>Exit speed matters. Do not cross back across another car too early.</td><td>Watch for cutback.</td></tr>
+              <tr><td>Lesmo 1</td><td><span class="tag">late</span></td><td>Brake enough, late apex, do not run wide.</td><td>Not a great passing zone unless clear overlap.</td></tr>
+              <tr><td>Lesmo 2</td><td><span class="tag">late exit</span></td><td>More important than Lesmo 1 because of the following straight.</td><td>Exit speed beats defense.</td></tr>
+              <tr><td>Ascari L</td><td><span class="tag">sacrifice</span></td><td>Set the car for the middle right, not for ego.</td><td>No late lunge.</td></tr>
+              <tr><td>Ascari R</td><td><span class="tag">flow</span></td><td>Balanced middle; keep the car loaded smoothly.</td><td>Hold line.</td></tr>
+              <tr><td>Ascari L2</td><td><span class="tag">late exit</span></td><td>Final exit opens the straight. Prioritize throttle timing.</td><td>Do not defend so much that you lose the straight.</td></tr>
+              <tr><td>Parabolica</td><td><span class="tag">double late</span></td><td>Long corner. Enter controlled, release mid-corner, second late apex for the straight.</td><td>Outside pass possible only with real overlap and room.</td></tr>
+            </table>
+          </div>
+
+          <div class="track">
+            <h3>Nardo Ring <span>speed discipline</span></h3>
+            <table class="apex-table">
+              <tr><th>Section</th><th>Apex plan</th><th>How to run it</th><th>If someone is behind</th></tr>
+              <tr><td>Banked circle</td><td><span class="tag">steady radius</span></td><td>There is no normal apex like a road-course hairpin. Hold a lane, use tiny steering, and make speed changes slowly.</td><td>Pass only with a clear speed difference. Do not drift across another car at top speed.</td></tr>
+            </table>
           </div>
         </div>
       </section>
