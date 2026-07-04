@@ -3,390 +3,736 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Race Car 101</title>
+  <title>Race Car Simulator 101</title>
   <style>
     :root {
-      color-scheme: dark;
-      --bg: #080a0e;
-      --panel: #11161d;
-      --panel-2: #151c24;
-      --ink: #f3f6f8;
-      --muted: #aab4bf;
-      --line: rgba(215,225,235,0.16);
-      --blue: #4d8dff;
-      --teal: #39d3c9;
-      --orange: #ff8a36;
-      --green: #5de08b;
-      --red: #ff5f6a;
+      color-scheme: light;
+      --page: #f6f7f8;
+      --paper: #ffffff;
+      --ink: #1f252d;
+      --muted: #65707c;
+      --soft: #eef1f4;
+      --line: #d9dee4;
+      --red: #c23b32;
+      --blue: #255c99;
+      --teal: #137d78;
+      --gold: #b56d18;
+      --green: #167349;
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
     * { box-sizing: border-box; }
     html { scroll-behavior: smooth; }
     body {
       margin: 0;
-      min-height: 100vh;
-      background:
-        linear-gradient(180deg, rgba(255,255,255,0.025), transparent 220px),
-        #080a0e;
+      background: var(--page);
       color: var(--ink);
       letter-spacing: 0;
     }
     a { color: inherit; }
-    .shell {
-      width: min(1180px, calc(100vw - 32px));
-      margin: 0 auto;
-      padding: 22px 0 42px;
-      display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
-      gap: 22px;
-    }
-    .sidebar {
+    .topbar {
       position: sticky;
-      top: 22px;
-      align-self: start;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(17,22,29,0.86);
-      padding: 14px;
-    }
-    .brand {
-      display: grid;
-      gap: 5px;
-      padding-bottom: 13px;
+      top: 0;
+      z-index: 20;
       border-bottom: 1px solid var(--line);
+      background: rgba(255,255,255,0.94);
+      backdrop-filter: blur(14px);
     }
-    .brand b { font-size: 22px; line-height: 1; }
-    .brand span { color: var(--muted); font-size: 12px; line-height: 1.45; }
-    .nav {
-      display: grid;
-      gap: 7px;
-      margin-top: 13px;
-    }
-    .nav a, .back {
-      min-height: 36px;
+    .topbar-inner {
+      width: min(1180px, calc(100vw - 32px));
+      min-height: 64px;
+      margin: 0 auto;
       display: flex;
       align-items: center;
-      gap: 9px;
-      border: 1px solid transparent;
-      border-radius: 6px;
-      padding: 8px 10px;
-      color: var(--muted);
-      text-decoration: none;
-      font-size: 13px;
+      justify-content: space-between;
+      gap: 18px;
     }
-    .nav a:hover, .back:hover {
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 7px;
+      display: grid;
+      place-items: center;
+      background: var(--ink);
+      color: #fff;
+      font-size: 14px;
+      letter-spacing: 0;
+    }
+    .topnav {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .topnav a {
+      text-decoration: none;
+      white-space: nowrap;
+    }
+    .topnav a:hover { color: var(--ink); }
+    .button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      border: 1px solid var(--ink);
+      border-radius: 7px;
+      padding: 8px 14px;
+      background: var(--ink);
+      color: #fff;
+      font-weight: 760;
+      text-decoration: none;
+    }
+    .button.secondary {
+      background: #fff;
       color: var(--ink);
-      background: rgba(255,255,255,0.055);
       border-color: var(--line);
     }
-    .dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--teal);
-      flex: 0 0 auto;
-    }
-    .back {
-      margin-top: 14px;
-      justify-content: center;
-      border-color: rgba(57,211,201,0.45);
-      color: var(--ink);
-      background: rgba(57,211,201,0.12);
-      font-weight: 750;
-    }
-    main { min-width: 0; }
     .hero {
-      min-height: 330px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.1fr) minmax(260px, 0.9fr);
-      gap: 22px;
-      align-items: stretch;
-      padding: 26px;
-      border: 1px solid var(--line);
-      border-radius: 8px;
+      border-bottom: 1px solid var(--line);
       background:
-        linear-gradient(135deg, rgba(77,141,255,0.14), transparent 42%),
-        linear-gradient(180deg, #151c24, #0d1117);
+        linear-gradient(120deg, rgba(194,59,50,0.09), transparent 38%),
+        linear-gradient(180deg, #fff, #f8fafb);
+    }
+    .hero-inner {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 54px 0 42px;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 340px;
+      gap: 34px;
+      align-items: start;
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
     }
     h1 {
       margin: 0;
-      font-size: clamp(42px, 7vw, 82px);
-      line-height: 0.9;
-      max-width: 690px;
+      max-width: 760px;
+      font-size: clamp(46px, 7vw, 82px);
+      line-height: 0.94;
       letter-spacing: 0;
     }
-    .hero p {
-      margin: 16px 0 0;
-      max-width: 660px;
+    .lead {
+      max-width: 760px;
+      margin: 22px 0 0;
       color: var(--muted);
-      font-size: 17px;
+      font-size: 20px;
       line-height: 1.55;
     }
-    .cockpit {
-      min-height: 260px;
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+    .course-card {
       border: 1px solid var(--line);
       border-radius: 8px;
-      background:
-        linear-gradient(180deg, rgba(190,220,235,0.18), transparent 42%),
-        linear-gradient(90deg, rgba(0,0,0,0.66) 0 13%, transparent 13% 87%, rgba(0,0,0,0.66) 87%),
-        linear-gradient(180deg, #2f4a56 0 50%, #20252b 50% 100%);
-      position: relative;
+      background: var(--paper);
+      box-shadow: 0 14px 34px rgba(31,37,45,0.08);
       overflow: hidden;
     }
-    .road {
-      position: absolute;
-      left: 50%;
-      bottom: -18px;
-      width: 76%;
-      height: 56%;
-      transform: translateX(-50%);
-      clip-path: polygon(44% 0, 56% 0, 100% 100%, 0 100%);
-      background:
-        linear-gradient(90deg, transparent 48%, rgba(255,255,255,0.72) 48% 52%, transparent 52%),
-        #181c22;
+    .course-card h2 {
+      margin: 0;
+      padding: 18px 18px 12px;
+      font-size: 20px;
     }
-    .car {
-      position: absolute;
-      left: 50%;
-      bottom: 34%;
-      width: 92px;
-      height: 48px;
-      transform: translateX(-50%);
-      border-radius: 22px 22px 8px 8px;
-      background: linear-gradient(180deg, #5ba2ff, #173a83);
-      box-shadow: 0 14px 30px rgba(0,0,0,0.42);
+    .facts {
+      margin: 0;
+      padding: 0 18px 18px;
+      display: grid;
+      gap: 10px;
     }
-    .car::before {
-      content: "";
-      position: absolute;
-      left: 24px;
-      right: 24px;
-      top: -16px;
-      height: 26px;
-      border-radius: 22px 22px 2px 2px;
-      background: linear-gradient(180deg, #b9d6e7, #0d141b);
+    .fact {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      border-top: 1px solid var(--soft);
+      padding-top: 10px;
+      color: var(--muted);
+      font-size: 14px;
     }
-    .car::after {
-      content: "";
-      position: absolute;
-      left: 7px;
-      right: 7px;
-      bottom: 7px;
-      height: 5px;
-      border-radius: 999px;
-      background: var(--orange);
+    .fact strong { color: var(--ink); text-align: right; }
+    .page {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 250px minmax(0, 1fr);
+      gap: 40px;
+      padding: 34px 0 54px;
     }
-    .wheel {
-      position: absolute;
-      bottom: -8px;
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: #030406;
-      box-shadow: inset 0 0 0 4px #222a32;
+    .sidebar {
+      position: sticky;
+      top: 86px;
+      align-self: start;
+      display: grid;
+      gap: 18px;
     }
-    .wheel.left { left: 9px; }
-    .wheel.right { right: 9px; }
-    .hud-card {
-      position: absolute;
-      left: 18px;
-      bottom: 18px;
-      min-width: 130px;
-      border: 1px solid var(--line);
-      border-radius: 6px;
-      padding: 10px;
-      background: rgba(8,10,14,0.72);
+    .menu {
+      border-left: 2px solid var(--line);
+      display: grid;
+      gap: 2px;
+      padding-left: 14px;
     }
-    .hud-card b { display: block; font-size: 30px; line-height: 1; }
-    .hud-card span { color: var(--muted); font-size: 11px; }
-    .section {
-      margin-top: 18px;
+    .menu a {
+      padding: 7px 0;
+      color: var(--muted);
+      text-decoration: none;
+      font-size: 14px;
+      line-height: 1.3;
+    }
+    .menu a:hover { color: var(--ink); }
+    .support {
       border: 1px solid var(--line);
       border-radius: 8px;
-      background: rgba(17,22,29,0.78);
-      padding: 22px;
+      background: var(--paper);
+      padding: 14px;
     }
-    .section h2 {
-      margin: 0 0 12px;
-      font-size: clamp(24px, 3vw, 36px);
+    .support b { display: block; margin-bottom: 8px; }
+    .support p {
+      margin: 0 0 10px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+    .support img {
+      display: block;
+      width: min(100%, 170px);
+      height: auto;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: #fff;
+    }
+    .address {
+      display: block;
+      margin-top: 10px;
+      padding: 8px;
+      border-radius: 6px;
+      background: var(--soft);
+      color: var(--ink);
+      font: 700 11px ui-monospace, SFMono-Regular, Menlo, monospace;
+      overflow-wrap: anywhere;
+    }
+    article {
+      min-width: 0;
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 34px;
+    }
+    section {
+      padding: 0 0 34px;
+      margin: 0 0 34px;
+      border-bottom: 1px solid var(--line);
+    }
+    section:last-child {
+      padding-bottom: 0;
+      margin-bottom: 0;
+      border-bottom: 0;
+    }
+    h2 {
+      margin: 0 0 14px;
+      font-size: clamp(28px, 4vw, 42px);
       line-height: 1;
       letter-spacing: 0;
     }
-    .section p, .section li {
+    h3 {
+      margin: 26px 0 10px;
+      font-size: 22px;
+      line-height: 1.2;
+      letter-spacing: 0;
+    }
+    p, li {
       color: var(--muted);
-      line-height: 1.55;
-      font-size: 15px;
+      font-size: 16px;
+      line-height: 1.62;
     }
-    .grid {
+    p { margin: 0 0 14px; }
+    ul, ol { margin: 12px 0 0; padding-left: 24px; }
+    li + li { margin-top: 8px; }
+    .plain-list {
+      list-style: none;
+      padding: 0;
+      margin: 16px 0 0;
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      margin-top: 14px;
+      gap: 11px;
     }
-    .tile {
-      min-width: 0;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      background: rgba(255,255,255,0.04);
-      padding: 14px;
+    .plain-list li {
+      padding-left: 20px;
+      position: relative;
     }
-    .tile b { display: block; margin-bottom: 6px; }
-    .tile small { color: var(--muted); line-height: 1.45; display: block; }
-    .steps {
+    .plain-list li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0.72em;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--red);
+    }
+    .curriculum {
+      margin-top: 18px;
+      border-top: 1px solid var(--line);
+    }
+    .lesson-row {
       display: grid;
-      gap: 10px;
-      counter-reset: step;
-      margin-top: 12px;
+      grid-template-columns: 48px minmax(0, 1fr);
+      gap: 18px;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--line);
     }
-    .step {
-      display: grid;
-      grid-template-columns: 34px minmax(0, 1fr);
-      gap: 12px;
-      align-items: start;
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px;
-      background: rgba(255,255,255,0.035);
-    }
-    .step::before {
-      counter-increment: step;
-      content: counter(step);
-      width: 34px;
-      height: 34px;
+    .lesson-row:last-child { border-bottom: 0; }
+    .number {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
       display: grid;
       place-items: center;
-      border-radius: 50%;
-      background: rgba(57,211,201,0.16);
-      color: var(--ink);
-      font-weight: 800;
-    }
-    kbd {
       border: 1px solid var(--line);
-      border-radius: 4px;
-      padding: 1px 5px;
-      background: rgba(255,255,255,0.08);
+      background: var(--soft);
       color: var(--ink);
-      font: 700 12px ui-monospace, SFMono-Regular, Menlo, monospace;
-      white-space: nowrap;
+      font-weight: 850;
     }
+    .lesson-row h3 {
+      margin: 0 0 4px;
+      font-size: 19px;
+    }
+    .lesson-row p { margin: 0; }
+    .callout {
+      margin: 18px 0;
+      border-left: 4px solid var(--blue);
+      background: #f4f7fb;
+      padding: 15px 16px;
+    }
+    .callout strong { color: var(--ink); }
+    .rule {
+      margin-top: 14px;
+      padding: 15px 16px;
+      border-left: 4px solid var(--red);
+      background: #fbf5f4;
+    }
+    .rule p { margin: 0; }
+    .track-guide {
+      margin-top: 18px;
+      display: grid;
+      gap: 18px;
+    }
+    .track {
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+    .track:last-child { border-bottom: 0; padding-bottom: 0; }
+    .track h3 {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 0;
+    }
+    .track h3 span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
+    }
+    .track ul { margin-top: 8px; }
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 12px;
-      overflow: hidden;
-      border-radius: 8px;
+      margin-top: 14px;
+      font-size: 15px;
     }
     th, td {
       border: 1px solid var(--line);
-      padding: 10px;
+      padding: 11px;
       text-align: left;
       vertical-align: top;
-      color: var(--muted);
     }
-    th { color: var(--ink); background: rgba(255,255,255,0.055); }
-    @media (max-width: 920px) {
-      .shell { grid-template-columns: 1fr; }
+    th {
+      color: var(--ink);
+      background: var(--soft);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    td { color: var(--muted); line-height: 1.5; }
+    code {
+      border-radius: 5px;
+      padding: 2px 5px;
+      background: var(--soft);
+      color: var(--ink);
+      font: 700 0.9em ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+    .qr-large {
+      display: grid;
+      grid-template-columns: 180px minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      margin-top: 16px;
+    }
+    .qr-large img {
+      width: 180px;
+      height: 180px;
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+    }
+    @media (max-width: 980px) {
+      .hero-inner { grid-template-columns: 1fr; }
+      .page { grid-template-columns: 1fr; gap: 22px; }
       .sidebar { position: static; }
-      .hero { grid-template-columns: 1fr; }
-      .grid { grid-template-columns: 1fr; }
+      .menu {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        border-left: 0;
+        padding-left: 0;
+        border-top: 1px solid var(--line);
+        padding-top: 12px;
+      }
+      .support img { width: 150px; }
+    }
+    @media (max-width: 720px) {
+      .topbar-inner { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      .topnav { width: 100%; overflow-x: auto; justify-content: flex-start; padding-bottom: 2px; }
+      .hero-inner { padding-top: 34px; }
+      article { padding: 22px; }
+      .lesson-row { grid-template-columns: 40px minmax(0, 1fr); gap: 12px; }
+      .number { width: 36px; height: 36px; }
+      .track h3 { display: block; }
+      .track h3 span { display: block; margin-top: 4px; }
+      .qr-large { grid-template-columns: 1fr; }
+      table {
+        display: block;
+        overflow-x: auto;
+        white-space: normal;
+      }
     }
   </style>
 </head>
 <body>
-  <div class="shell">
-    <aside class="sidebar">
-      <div class="brand">
-        <b>Race Car 101</b>
-        <span>A practical guide to driving the simulator smoothly, quickly, and fairly online.</span>
-      </div>
-      <nav class="nav" aria-label="Guide sections">
-        <a href="#start"><span class="dot"></span>First Drive</a>
-        <a href="#controls"><span class="dot"></span>Controls</a>
-        <a href="#cornering"><span class="dot"></span>Cornering</a>
-        <a href="#online"><span class="dot"></span>Online Race</a>
-        <a href="#tracks"><span class="dot"></span>Tracks</a>
-        <a href="#trouble"><span class="dot"></span>Troubleshooting</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <a class="brand" href="race-car-101.html" aria-label="Race Car Simulator 101">
+        <span class="mark">101</span>
+        <span>Race Car Simulator 101</span>
+      </a>
+      <nav class="topnav" aria-label="Course navigation">
+        <a href="#about">About</a>
+        <a href="#curriculum">Curriculum</a>
+        <a href="#racecraft">Racecraft</a>
+        <a href="#tracks">Tracks</a>
+        <a href="#support">Support</a>
+        <a class="button secondary" href="index.html">Open Simulator</a>
       </nav>
-      <a class="back" href="index.html">Open Simulator</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-inner">
+      <div>
+        <p class="eyebrow">Free self-paced racing course</p>
+        <h1>Drive the simulator like a race driver.</h1>
+        <p class="lead">This course teaches the real decisions behind a quick lap: braking references, rotation, apex choice, throttle timing, traffic, overtaking, defending, pit strategy, and how to race cleanly online.</p>
+        <div class="hero-actions">
+          <a class="button" href="#curriculum">Start Course</a>
+          <a class="button secondary" href="index.html">Open Simulator</a>
+        </div>
+      </div>
+
+      <aside class="course-card" aria-label="Course summary">
+        <h2>Course Details</h2>
+        <dl class="facts">
+          <div class="fact"><dt>Level</dt><dd><strong>Beginner to club racer</strong></dd></div>
+          <div class="fact"><dt>Format</dt><dd><strong>Read, practice, repeat</strong></dd></div>
+          <div class="fact"><dt>Lessons</dt><dd><strong>10 modules</strong></dd></div>
+          <div class="fact"><dt>Focus</dt><dd><strong>Racecraft, not keybinds</strong></dd></div>
+          <div class="fact"><dt>Tracks</dt><dd><strong>6 simulator routes</strong></dd></div>
+        </dl>
+      </aside>
+    </div>
+  </section>
+
+  <div class="page">
+    <aside class="sidebar">
+      <nav class="menu" aria-label="Course sections">
+        <a href="#about">About this course</a>
+        <a href="#objectives">Learning objectives</a>
+        <a href="#prerequisites">Before you begin</a>
+        <a href="#curriculum">Curriculum</a>
+        <a href="#foundation">Driving foundation</a>
+        <a href="#racecraft">Racecraft</a>
+        <a href="#tracks">Track guide</a>
+        <a href="#pitstops">Pit strategy</a>
+        <a href="#practice">Practice plan</a>
+      </nav>
+
+      <div class="support">
+        <b>Support with Bitcoin</b>
+        <p>No Buy Me a Coffee account is needed.</p>
+        <img src="assets/bitcoin-qr.png" alt="Bitcoin QR code for 1G3owA2kPUuYS45XGyj8p8M3kgdHQzePBs">
+        <code class="address">1G3owA2kPUuYS45XGyj8p8M3kgdHQzePBs</code>
+      </div>
     </aside>
 
-    <main>
-      <section class="hero">
-        <div>
-          <h1>Drive the simulator like a racer.</h1>
-          <p>Start gently, brake in a straight line, look through the corner, and let the car unwind before full throttle. This guide teaches the habits that make the six hypercars easier to control in practice and online rooms.</p>
-        </div>
-        <div class="cockpit" aria-label="Race car visual">
-          <div class="road"></div>
-          <div class="car"><span class="wheel left"></span><span class="wheel right"></span></div>
-          <div class="hud-card"><b>101</b><span>km/h, clean line</span></div>
+    <article>
+      <section id="about">
+        <h2>About this course</h2>
+        <p>Race Car Simulator 101 is for drivers who want to stop guessing and start building laps deliberately. The simulator is fast enough that small mistakes matter: braking too late overloads the front tires, early throttle pushes the car wide, and a careless overtake can ruin two races at once.</p>
+        <p>The goal is not to memorize one perfect lap. The goal is to understand what the car needs at each phase of a corner so you can adapt to different cars, tracks, traffic, and online race pressure.</p>
+      </section>
+
+      <section id="objectives">
+        <h2>Learning objectives</h2>
+        <ul class="plain-list">
+          <li>Build a lap from reference points: braking marker, turn-in, apex, exit, and recovery point.</li>
+          <li>Choose early, geometric, or late apexes based on the corner that follows.</li>
+          <li>Use trail braking and throttle release to rotate the car without sliding it.</li>
+          <li>Identify safe overtaking zones, set up a pass before the braking zone, and leave racing room.</li>
+          <li>Defend without weaving, blocking late, or destroying your own exit speed.</li>
+          <li>Plan pit timing for online races that use agreed mandatory stops or endurance rules.</li>
+          <li>Drive the simulator's tracks with specific race-line notes instead of treating every corner the same.</li>
+        </ul>
+      </section>
+
+      <section id="prerequisites">
+        <h2>Before you begin</h2>
+        <p>You only need one car, one track, and enough patience to repeat the same corner several times. Start in private practice, choose a medium-speed circuit such as Silverstone or Suzuka, and drive at 70 percent until you can complete clean laps without correction.</p>
+        <div class="callout">
+          <p><strong>Driver mindset:</strong> speed is the result, not the input. Your inputs are brake pressure, steering angle, throttle timing, and where you place the car.</p>
         </div>
       </section>
 
-      <section class="section" id="start">
-        <h2>First Drive</h2>
-        <div class="steps">
-          <div class="step"><div><b>Pick a car.</b><p>Start with private practice. Learn one car before switching, because each one has a different acceleration curve and braking feel.</p></div></div>
-          <div class="step"><div><b>Power it up.</b><p>Press the simulator's start button, select a drive gear, then use small throttle inputs before trying full launch control.</p></div></div>
-          <div class="step"><div><b>Choose a track.</b><p>Use Circuit mode to pick a route. Smooth circuits are better for learning; long tracks reward patience and rhythm.</p></div></div>
-          <div class="step"><div><b>Build speed slowly.</b><p>One clean lap at 70 percent teaches more than five crashed laps at 100 percent.</p></div></div>
+      <section id="curriculum">
+        <h2>Curriculum</h2>
+        <div class="curriculum">
+          <div class="lesson-row">
+            <span class="number">1</span>
+            <div><h3>Build the lap map</h3><p>Mark braking, turn-in, apex, exit, and the next straight. A corner is never isolated; it is a setup for the next piece of track.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">2</span>
+            <div><h3>Brake like a driver</h3><p>Brake hard while straight, then release pressure as steering increases. The release is what lets the nose bite.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">3</span>
+            <div><h3>Pick the right apex</h3><p>Use late apexes for slow exits and long straights, geometric apexes for balanced sweepers, and early apexes only when the next corner demands track position.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">4</span>
+            <div><h3>Control throttle and rotation</h3><p>Throttle should return as the steering unwinds. If you add power before the car is pointed, you create understeer or a slide.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">5</span>
+            <div><h3>Race starts and first laps</h3><p>Launch cleanly, hold your lane, brake early in traffic, and survive lap one before attacking.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">6</span>
+            <div><h3>Overtake with a plan</h3><p>Pressure, force a compromised exit, draw alongside before braking, and finish the pass without relying on contact.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">7</span>
+            <div><h3>Defend cleanly</h3><p>Choose the inside early, make one move, brake in control, and leave room when the other car has overlap.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">8</span>
+            <div><h3>Use pit strategy</h3><p>For online rooms with mandatory stops, decide whether to undercut, overcut, or stay out based on traffic and pace.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">9</span>
+            <div><h3>Learn track personality</h3><p>Silverstone rewards flow, Suzuka rewards rhythm, Monaco rewards restraint, Nardo rewards tiny inputs, and the Nurburgring rewards memory.</p></div>
+          </div>
+          <div class="lesson-row">
+            <span class="number">10</span>
+            <div><h3>Practice with purpose</h3><p>Run focused stints: five laps for braking, five laps for exits, five laps in traffic, then compare consistency rather than one lucky lap.</p></div>
+          </div>
         </div>
       </section>
 
-      <section class="section" id="controls">
-        <h2>Controls</h2>
+      <section id="foundation">
+        <h2>Driving foundation</h2>
+        <h3>The corner has four phases</h3>
+        <ol>
+          <li><strong>Approach:</strong> place the car at the edge that opens the corner. Look past the apex to the exit, not at the front bumper.</li>
+          <li><strong>Braking:</strong> apply the strongest pressure while the car is straight. If the car refuses to turn, you are still asking the front tires to brake too much.</li>
+          <li><strong>Rotation:</strong> release brake pressure as you turn. This keeps weight on the front tires but frees them to steer.</li>
+          <li><strong>Exit:</strong> wait until the car points toward the exit before full throttle. The fastest exit is usually the calmest one.</li>
+        </ol>
+
+        <h3>Apex choice</h3>
         <table>
-          <tr><th>Action</th><th>Keyboard</th><th>Driving note</th></tr>
-          <tr><td>Throttle</td><td><kbd>W</kbd> or <kbd>Arrow Up</kbd></td><td>Squeeze it on as the wheel straightens.</td></tr>
-          <tr><td>Brake</td><td><kbd>Space</kbd> or <kbd>Arrow Down</kbd></td><td>Brake hard while straight, then ease off before turning.</td></tr>
-          <tr><td>Steer</td><td><kbd>A</kbd>/<kbd>D</kbd> or arrows</td><td>Use one smooth input instead of many sharp taps.</td></tr>
-          <tr><td>Paddles</td><td><kbd>Q</kbd>/<kbd>E</kbd></td><td>Shift before the limiter when running manual modes.</td></tr>
-          <tr><td>Neutral / Reverse</td><td><kbd>N</kbd> / <kbd>R</kbd></td><td>Reset your direction calmly after a spin.</td></tr>
-          <tr><td>Horn</td><td><kbd>H</kbd></td><td>Use it for fun, not as a braking marker.</td></tr>
+          <tr><th>Apex type</th><th>Use it when</th><th>Driver habit</th></tr>
+          <tr><td>Late apex</td><td>The corner leads to a long straight or another acceleration zone.</td><td>Brake a little earlier, turn later, rotate more, and get the car straight sooner.</td></tr>
+          <tr><td>Geometric apex</td><td>The corner is a balanced medium-speed bend with no big exit priority.</td><td>Use a smooth arc and avoid sawing at the steering.</td></tr>
+          <tr><td>Early apex</td><td>You must position the car for a following corner, chicane, or narrow street section.</td><td>Accept a slower exit so the next corner becomes easier.</td></tr>
+          <tr><td>Double apex</td><td>The corner is long, such as Suzuka Spoon or wide high-speed bends.</td><td>Touch inside once, let the car breathe mid-corner, then return to the second apex for exit.</td></tr>
         </table>
-      </section>
 
-      <section class="section" id="cornering">
-        <h2>Cornering</h2>
-        <div class="grid">
-          <div class="tile"><b>Brake</b><small>Finish most braking before turn-in. If the car will not rotate, you are probably still asking too much from the front tires.</small></div>
-          <div class="tile"><b>Apex</b><small>Aim for the inside middle of the corner. Touch it once, then let the car drift back outward naturally.</small></div>
-          <div class="tile"><b>Exit</b><small>Throttle comes back as steering comes off. Full throttle with full steering is how fast cars become slow cars.</small></div>
+        <div class="rule">
+          <p><strong>Simple rule:</strong> slow corner before long straight equals late apex. Fast flowing sequence equals rhythm and patience. Narrow street corner equals survival first.</p>
         </div>
       </section>
 
-      <section class="section" id="online">
-        <h2>Online Race</h2>
-        <p>The host controls the track and race start. Joiners should wait for the host's selection, line up during the five red lights, and launch only when the lights go out.</p>
-        <div class="steps">
-          <div class="step"><div><b>Host creates the room.</b><p>Share the short room code. Keep the host tab open so the room stays alive.</p></div></div>
-          <div class="step"><div><b>Everyone joins.</b><p>Online mode replaces AI rivals with connected human racers only.</p></div></div>
-          <div class="step"><div><b>Host sets the track.</b><p>The selected circuit syncs to every joined racer.</p></div></div>
-          <div class="step"><div><b>Start clean.</b><p>Hold position during the countdown. The first corner is won by patience, not panic.</p></div></div>
+      <section id="racecraft">
+        <h2>Racecraft</h2>
+        <h3>Race starts</h3>
+        <p>At the lights, your first job is traction, not hero speed. Launch straight, keep the steering tiny until the car is settled, and expect everyone ahead to brake earlier than they did in practice. In online races, leave more space than you think on lap one because small lag and cold-driver mistakes create accordion braking.</p>
+
+        <h3>When to overtake</h3>
+        <ul>
+          <li><strong>Best time:</strong> after you get a better exit and are already closing before the braking zone.</li>
+          <li><strong>Safe zones:</strong> heavy braking corners after long straights, slow hairpins, and chicanes with clear inside overlap.</li>
+          <li><strong>Bad zones:</strong> high-speed esses, blind crests, Monaco Swimming Pool, Suzuka 130R, and the narrow Nordschleife rhythm sections.</li>
+          <li><strong>Pressure pass:</strong> follow closely for two corners, force the car ahead to defend, then take the faster exit while they are compromised.</li>
+        </ul>
+
+        <h3>How to overtake</h3>
+        <ol>
+          <li>Plan one corner early. If you only decide at the braking marker, it is probably a dive.</li>
+          <li>Show the car early enough that the other driver can see you.</li>
+          <li>Brake on the inside in a straight line. Do not slide past the apex and use the other car as your brake.</li>
+          <li>If your front axle is significantly alongside before turn-in, both cars should leave racing room.</li>
+          <li>Finish the pass by making the exit, not by pushing the other car off the road.</li>
+        </ol>
+
+        <h3>Defending</h3>
+        <p>Defend before the braking zone, not inside it. Move once, cover the inside, and then drive the corner. If you defend too hard, you ruin your exit and the attacker crosses back under you. A clean defense is early, predictable, and still fast enough to matter.</p>
+
+        <h3>Traffic and lapping</h3>
+        <p>When approaching slower traffic, pass where the track is straight and the other driver can hold a predictable line. If you are being lapped, do not suddenly brake or jump off-line. Stay predictable, lift slightly on a straight, and let the faster car choose the side.</p>
+      </section>
+
+      <section id="tracks">
+        <h2>Track guide</h2>
+        <p>These notes match the simulator's route choices and teach where to place the car. Use them as a first racing line, then refine your braking points based on your car and speed.</p>
+
+        <div class="track-guide">
+          <div class="track">
+            <h3>Silverstone Circuit <span>fast flow, wide racing surface</span></h3>
+            <ul>
+              <li><strong>Abbey and Farm:</strong> use a smooth geometric line. Do not over-brake; a lift or brush can be enough when the car is settled.</li>
+              <li><strong>Village and Loop:</strong> choose a late apex. The corner is slow and the exit matters more than entry speed.</li>
+              <li><strong>Copse:</strong> commit only when the car is straight and stable. Clip the inside once and let the car run wide on exit.</li>
+              <li><strong>Maggotts, Becketts, Chapel:</strong> sacrifice the first direction change so the final Chapel exit is open onto Hangar Straight.</li>
+              <li><strong>Stowe:</strong> late apex. Overtakes work here if you are alongside before braking; otherwise prepare a better exit for Vale.</li>
+              <li><strong>Vale and Club:</strong> heavy braking into Vale is a real passing zone. Do not overshoot; the Club exit decides the next straight.</li>
+            </ul>
+          </div>
+
+          <div class="track">
+            <h3>Suzuka Circuit <span>rhythm and patience</span></h3>
+            <ul>
+              <li><strong>Turn 1 and Turn 2:</strong> treat Turn 1 as the entry and Turn 2 as the corner that matters. Brake straight, turn in cleanly, and late-apex Turn 2.</li>
+              <li><strong>Esses:</strong> no forced overtakes. Each apex prepares the next one; if you attack one too hard, the whole sequence collapses.</li>
+              <li><strong>Degner 1 and 2:</strong> Degner 1 is a fast clip, Degner 2 is the exit corner. Prioritize the second apex.</li>
+              <li><strong>Hairpin:</strong> strong overtaking spot. Show inside early, brake straight, rotate late, and avoid pushing wide on exit.</li>
+              <li><strong>Spoon:</strong> double apex. Be patient between the two apexes and wait for the car to face the back straight before full throttle.</li>
+              <li><strong>130R and Casio Triangle:</strong> 130R is not a dive zone. Set up the pass into Casio, where braking is heavy and the line is clearer.</li>
+            </ul>
+          </div>
+
+          <div class="track">
+            <h3>Circuit de Monaco <span>restraint, exits, and walls</span></h3>
+            <ul>
+              <li><strong>Sainte Devote:</strong> brake straight and late-apex. The uphill exit is more important than entering wide open.</li>
+              <li><strong>Casino to Mirabeau:</strong> use controlled speed and avoid side-by-side racing. Track position matters more than bravery.</li>
+              <li><strong>Grand Hotel Hairpin:</strong> very slow, very late apex. Wait, rotate, then unwind. Do not rush throttle.</li>
+              <li><strong>Portier:</strong> late apex for tunnel speed. A poor Portier exit ruins the best passing chance at Nouvelle Chicane.</li>
+              <li><strong>Nouvelle Chicane:</strong> main overtaking zone after the tunnel. Be alongside before braking and leave room through both parts.</li>
+              <li><strong>Swimming Pool and Rascasse:</strong> single-file discipline. Touch the line, avoid panic corrections, and prepare the final corner exit.</li>
+            </ul>
+          </div>
+
+          <div class="track">
+            <h3>Nardo Ring <span>speed discipline</span></h3>
+            <ul>
+              <li><strong>Main line:</strong> use tiny steering inputs. At high speed, a small correction becomes a big weight transfer.</li>
+              <li><strong>Apex idea:</strong> think of the whole ring as one long corner. Hold a stable radius rather than stabbing at the inside.</li>
+              <li><strong>Overtaking:</strong> pass with a clear speed difference. Avoid drifting across another car's nose at top speed.</li>
+              <li><strong>Practice goal:</strong> learn how each hypercar behaves near top speed and how long it takes to slow down from extreme pace.</li>
+            </ul>
+          </div>
+
+          <div class="track">
+            <h3>Nurburgring GP <span>braking zones and exits</span></h3>
+            <ul>
+              <li><strong>Turn 1:</strong> heavy braking and late apex. This is a strong passing zone, but only if you can still make the inside curb.</li>
+              <li><strong>Mercedes Arena:</strong> slow sequence. Sacrifice the first part for a clean exit from the last part.</li>
+              <li><strong>Schumacher S:</strong> high-speed confidence corner. Do not force a pass unless the other car makes a clear mistake.</li>
+              <li><strong>Chicane:</strong> overtaking is possible under braking. Keep the car straight over the first part and do not cut back across too early.</li>
+              <li><strong>Final corner:</strong> late apex to maximize the start-finish straight. A tidy exit beats a dramatic entry.</li>
+            </ul>
+          </div>
+
+          <div class="track">
+            <h3>Nordschleife <span>memory, survival, and respect</span></h3>
+            <ul>
+              <li><strong>Hatzenbach:</strong> rhythm first. Avoid overtaking unless the other car clearly gives room.</li>
+              <li><strong>Flugplatz and Schwedenkreuz:</strong> settle the car before crests and fast bends. Lift early if the car feels light.</li>
+              <li><strong>Aremberg to Fuchsrohre:</strong> late apex Aremberg for the downhill run; keep inputs smooth through compression.</li>
+              <li><strong>Adenauer Forst:</strong> brake earlier than pride wants. Many laps die from arriving too fast here.</li>
+              <li><strong>Karussell:</strong> slow entry, patient middle, clean exit. Do not fight the steering while the car is loaded.</li>
+              <li><strong>Pflanzgarten:</strong> no side-by-side hero moves. Give the car time to land and settle.</li>
+              <li><strong>Dottinger Hohe:</strong> safest slipstream passing zone. Plan the pass before Tiergarten, then brake in a straight line.</li>
+            </ul>
+          </div>
         </div>
       </section>
 
-      <section class="section" id="tracks">
-        <h2>Track Choice</h2>
-        <div class="grid">
-          <div class="tile"><b>Silverstone</b><small>Best learning track. Wide, readable, and good for braking practice.</small></div>
-          <div class="tile"><b>Suzuka</b><small>Good for rhythm. Respect the esses and wait before full throttle.</small></div>
-          <div class="tile"><b>Monaco</b><small>Slow hands, early braking, no hero moves. Walls punish impatience.</small></div>
-          <div class="tile"><b>Nardo</b><small>Use it to understand top speed, stability, and high-speed steering.</small></div>
-          <div class="tile"><b>Nurburgring GP</b><small>Great for learning heavy braking zones and exits.</small></div>
-          <div class="tile"><b>Nordschleife</b><small>Long, fast, and unforgiving. Learn it in sections.</small></div>
-        </div>
+      <section id="pitstops">
+        <h2>Pit strategy</h2>
+        <p>The simulator includes a pit limiter, but it does not currently model a complete tire, fuel, and repair pit-stop system. For online races, treat pit stops as agreed race rules: for example, every driver must slow with the pit limiter through a chosen pit window, or complete one reset/pit-lane visit between two lap numbers.</p>
+
+        <h3>When to pit</h3>
+        <ul>
+          <li><strong>Undercut:</strong> pit earlier when you are stuck in traffic and have clear space behind. The goal is clean laps while the other driver loses time defending.</li>
+          <li><strong>Overcut:</strong> stay out when your pace is strong and the car ahead may rejoin into traffic. This works best when you can lap consistently without mistakes.</li>
+          <li><strong>Safety stop:</strong> pit after damage, repeated spins, or a mental reset moment. In long online races, a calm reset can save more time than one desperate lap.</li>
+          <li><strong>Monaco rule:</strong> track position is king. Do not pit into traffic unless the race rule forces it.</li>
+          <li><strong>Nordschleife rule:</strong> avoid pitting from panic. Finish the sector safely first, then decide on the straight.</li>
+        </ul>
+
+        <h3>How to set pit rules for friends</h3>
+        <p>Before the host starts the race, agree on the pit window, lap count, and penalty. Keep it simple: one mandatory pit-limiter pass between laps 2 and 5, no pitting on the final lap, and a 10-second hold if someone forgets.</p>
       </section>
 
-      <section class="section" id="trouble">
-        <h2>Troubleshooting</h2>
-        <div class="grid">
-          <div class="tile"><b>Car spins on exit</b><small>Use less throttle until the steering wheel is straighter.</small></div>
-          <div class="tile"><b>Missed the corner</b><small>Brake earlier. Late braking is only useful if you still make the apex.</small></div>
-          <div class="tile"><b>Cannot join a room</b><small>Check the room code, keep the host page open, and retry if the relay path is slow.</small></div>
+      <section id="practice">
+        <h2>Practice plan</h2>
+        <ol>
+          <li><strong>Five clean laps:</strong> no overtakes, no experiments, just finish each lap without leaving the track.</li>
+          <li><strong>Brake marker drill:</strong> pick one braking point and move it five meters later only after three clean attempts.</li>
+          <li><strong>Apex drill:</strong> run the same corner with early, middle, and late apexes. Watch which one gives the best exit speed.</li>
+          <li><strong>Traffic drill:</strong> follow a rival for a lap without passing. Learn where you are faster before attacking.</li>
+          <li><strong>Race stint:</strong> run ten laps and judge consistency. A driver who is 0.5 seconds slower but never crashes often wins online.</li>
+        </ol>
+      </section>
+
+      <section id="support">
+        <h2>Support the simulator</h2>
+        <p>If you want to support more tracks, better visuals, and deeper racing features, you can send Bitcoin directly to this address.</p>
+        <div class="qr-large">
+          <img src="assets/bitcoin-qr.png" alt="Bitcoin QR code for 1G3owA2kPUuYS45XGyj8p8M3kgdHQzePBs">
+          <div>
+            <code class="address">1G3owA2kPUuYS45XGyj8p8M3kgdHQzePBs</code>
+            <p>Please double-check the address before sending. Bitcoin transactions cannot be reversed.</p>
+            <p><a class="button secondary" href="bitcoin:1G3owA2kPUuYS45XGyj8p8M3kgdHQzePBs">Open in Bitcoin Wallet</a></p>
+          </div>
         </div>
       </section>
-    </main>
+    </article>
   </div>
 </body>
 </html>

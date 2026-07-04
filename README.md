@@ -38,7 +38,7 @@ Need a driving guide? Open **Race Car 101** from the garage or visit:
 
 https://richardjiangs.github.io/multi-user-racecar-simulator/race-car-101.html
 
-The guide covers first launch, braking, cornering, track choice, online race flow, and common troubleshooting.
+The guide covers racing line, braking references, apex choice, overtaking, defending, pit strategy, race starts, track-specific notes, and online etiquette.
 
 ## Project Files
 
@@ -47,14 +47,14 @@ The guide covers first launch, braking, cornering, track choice, online race flo
 - `vendor/` - local fallback libraries used by the online mode.
 - `tests/` - browser and performance smoke tests.
 
-## Support Button
+## Support With Bitcoin
 
-To add a "Buy me a coffee" button, create an account on a donation platform such as Buy Me a Coffee, Ko-fi, or GitHub Sponsors, then add the public donation link to `README.md` and optionally to the website header.
+No Buy Me a Coffee account is needed. You can support the simulator directly with Bitcoin:
 
-Example Markdown:
-
-```md
-[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20me%20a%20coffee-support-yellow)](https://www.buymeacoffee.com/YOUR_NAME)
+```text
+1G3owA2kPUuYS45XGyj8p8M3kgdHQzePBs
 ```
 
-Replace `YOUR_NAME` with your real donation page name.
+![Bitcoin QR code](assets/bitcoin-qr.png)
+
+Please double-check the address before sending. Bitcoin transactions cannot be reversed.
