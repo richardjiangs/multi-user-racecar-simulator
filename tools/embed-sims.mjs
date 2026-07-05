@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-/* Re-embeds the six simulator HTML files into index.html as base64, replacing
+/* Re-embeds the eight simulator HTML files into index.html as base64, replacing
    the single line between the EMBED markers. Run after editing ANY simulator:
      node tools/embed-sims.mjs
 */
@@ -15,6 +15,8 @@ const FILES = {
   ferrari: "Ferrari F80 simulator.html",
   koenigsegg: "Koenigsegg Jesko simulator.html",
   tesla: "Tesla Model S Plaid simulator.html",
+  amg: "Mercedes-AMG GT Black Series simulator.html",
+  aston: "Aston Martin Valkyrie simulator.html",
 };
 
 const enc = {};

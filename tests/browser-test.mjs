@@ -45,8 +45,8 @@ const check = (label, ok, detail) => {
   if (!ok) failures++;
 };
 
-const CAR_KEYS = ["pagani", "bugatti", "mclaren", "ferrari", "koenigsegg", "tesla"];
-const APPS = { pagani: "PaganiApp", bugatti: "BugattiApp", mclaren: "McLarenApp", ferrari: "FerrariApp", koenigsegg: "KoenigseggApp", tesla: "TeslaApp" };
+const CAR_KEYS = ["pagani", "bugatti", "mclaren", "ferrari", "koenigsegg", "tesla", "amg", "aston"];
+const APPS = { pagani: "PaganiApp", bugatti: "BugattiApp", mclaren: "McLarenApp", ferrari: "FerrariApp", koenigsegg: "KoenigseggApp", tesla: "TeslaApp", amg: "AmgApp", aston: "AstonApp" };
 
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -55,7 +55,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("six car cards render", await page.locator(".car-card").count() === 6);
+check("eight car cards render", await page.locator(".car-card").count() === 8);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- private practice: AI rivals must survive ---------- */
