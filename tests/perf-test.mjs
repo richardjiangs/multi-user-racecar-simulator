@@ -86,6 +86,22 @@ const CARS = {
     topSpeed: { kmh: 322, setup: "trackPack", minT: 60 },
     brake100: { target: 33, tol: 1.0 },
   },
+  amg: {
+    file: "Mercedes-AMG GT Black Series simulator.html",
+    app: "AmgApp",
+    label: "Mercedes-AMG GT Black Series",
+    marks: { 100: { target: 3.2, tol: 1e-4 } },
+    topSpeed: { kmh: 325, minT: 55 },     // electronically governed
+    brake100: { target: 30, tol: 1.0 },
+  },
+  aston: {
+    file: "Aston Martin Valkyrie simulator.html",
+    app: "AstonApp",
+    label: "Aston Martin Valkyrie",
+    marks: { 100: { target: 2.5, tol: 1e-4 } },
+    topSpeed: { kmh: 350, minT: 70 },
+    brake100: { target: 28, tol: 1.0 },
+  },
 };
 
 /* Runs inside the page. Everything below drives the sim's own exported code. */

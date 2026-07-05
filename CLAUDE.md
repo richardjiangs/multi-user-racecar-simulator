@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of six hypercar simulators — each a **single self-contained HTML file** —
-plus `index.html`, which bundles all six together with real photos/performance
+A garage of eight hypercar simulators — each a **single self-contained HTML file** —
+plus `index.html`, which bundles all eight together with real photos/performance
 cards, a **Private Practice** mode (the untouched simulator) and an **Online
 Race** mode (browser-to-browser WebRTC, no paid server).
 
@@ -15,9 +15,11 @@ McLaren Speedtail simulator.html
 Ferrari F80 simulator.html
 Koenigsegg Jesko simulator.html
 Tesla Model S Plaid simulator.html
+Mercedes-AMG GT Black Series simulator.html
+Aston Martin Valkyrie simulator.html
 tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
-tools/embed-sims.mjs                        ← re-embeds the six sim files into index.html (run after editing a sim)
+tools/embed-sims.mjs                        ← re-embeds the eight sim files into index.html (run after editing a sim)
 vendor/trystero-nostr.min.js                ← bundled Trystero (ESM); vendor/peerjs.min.js ← PeerJS fallback
 ```
 
@@ -45,7 +47,7 @@ is part of the contract):
      and 100-0 figures exactly (see tests/perf-test.mjs).
    - **shared context** — `state` + `el` lookup + helpers, exported on
      `window.<Brand>App` (`BugattiApp`, `PaganiApp`, `McLarenApp`, `FerrariApp`,
-     `KoenigseggApp`, `TeslaApp`). index.html reaches into the iframe through
+     `KoenigseggApp`, `TeslaApp`, `AmgApp`, `AstonApp`). index.html reaches into the iframe through
      this global.
    - **audio** — synthesised engine (osc stack + firing frequency = rpm/60 ×
      pulses-per-rev; W16=8, V12=6, V8=4, V6=3, EV=inverter whine), turbo,
@@ -78,7 +80,7 @@ rival grid · exterior SVG · cockpit SVG · `drawCabinFrame` dashboard (real
 cluster per car) · steering-wheel drawing (roundel/shape; Tesla = yoke) ·
 engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 
-### The six cars — factory figures encoded in `SPEC`
+### The eight cars — factory figures encoded in `SPEC`
 
 | Car | Power | Torque | 0-100 | Top speed | Box | Mass |
 |---|---|---|---|---|---|---|
@@ -88,11 +90,13 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Ferrari F80 | 883 kW / 1,200 cv (900 ICE + 300 e) | 850 Nm @ 5,550 + e-fill | 2.15 s (0-200 5.75) | 350 | 8-DCT | 1,525 kg (dry) |
 | Koenigsegg Jesko | 954 kW / 1,280 hp @ 7,800 (E85: 1,193 kW / 1,600 hp) | 1,000 Nm @ 2,700–6,170 (E85 1,500 @ 5,100) | 2.5 s | drag-limited (Attack aero) | 9-LST | 1,420 kg |
 | Tesla Model S Plaid | 760 kW / 1,020 hp tri-motor | ~1,420 Nm combined | 2.1 s (w/ 1-ft rollout: 0-60 1.99 s) | 262 governed / 322 Track Pack | 1-speed | 2,162 kg |
+| Mercedes-AMG GT Black Series | 537 kW / 730 PS / 720 hp @ 6,900 (flat-plane V8) | 800 Nm @ 2,000–6,000 | 3.2 s | 325 governed | 7-DCT | 1,615 kg |
+| Aston Martin Valkyrie | 853 kW / 1,160 PS combined (1,000 hp V12 @ 10,500 + ~160 hp KERS) | 900 Nm combined | 2.5 s | 350 | 7-seq | 1,030 kg (dry) |
 
 ## index.html — garage + online race shell
 
 - Six `car-card`s with real photos + spec chips; buttons `data-practice` /
-  `data-online` per car key (`pagani, bugatti, mclaren, ferrari, koenigsegg, tesla`).
+  `data-online` per car key (`pagani, bugatti, mclaren, ferrari, koenigsegg, tesla, amg, aston`).
 - `EMBEDDED_SIM_BASE64 = {…}` — every sim base64-embedded on ONE line between
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers. `tools/embed-sims.mjs`
   regenerates that line from the six files. Sims load into the `simFrame`
