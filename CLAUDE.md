@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of eight hypercar simulators — each a **single self-contained HTML file** —
-plus `index.html`, which bundles all eight together with real photos/performance
+A garage of twelve hypercar simulators — each a **single self-contained HTML file** —
+plus `index.html`, which bundles all twelve together with real photos/performance
 cards, a **Private Practice** mode (the untouched simulator) and an **Online
 Race** mode (browser-to-browser WebRTC, no paid server).
 
@@ -17,9 +17,13 @@ Koenigsegg Jesko simulator.html
 Tesla Model S Plaid simulator.html
 Mercedes-AMG GT Black Series simulator.html
 Aston Martin Valkyrie simulator.html
+Ferrari 250 GTO simulator.html
+Lamborghini Revuelto simulator.html
+Porsche 918 Spyder simulator.html
+Porsche Taycan Turbo GT simulator.html
 tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
-tools/embed-sims.mjs                        ← re-embeds the eight sim files into index.html (run after editing a sim)
+tools/embed-sims.mjs                        ← re-embeds the twelve sim files into index.html (run after editing a sim)
 vendor/trystero-nostr.min.js                ← bundled Trystero (ESM); vendor/peerjs.min.js ← PeerJS fallback
 ```
 
@@ -47,7 +51,8 @@ is part of the contract):
      and 100-0 figures exactly (see tests/perf-test.mjs).
    - **shared context** — `state` + `el` lookup + helpers, exported on
      `window.<Brand>App` (`BugattiApp`, `PaganiApp`, `McLarenApp`, `FerrariApp`,
-     `KoenigseggApp`, `TeslaApp`, `AmgApp`, `AstonApp`). index.html reaches into the iframe through
+     `KoenigseggApp`, `TeslaApp`, `AmgApp`, `AstonApp`, `GtoApp`, `RevueltoApp`,
+     `Porsche918App`, `TaycanApp`). index.html reaches into the iframe through
      this global.
    - **audio** — synthesised engine (osc stack + firing frequency = rpm/60 ×
      pulses-per-rev; W16=8, V12=6, V8=4, V6=3, EV=inverter whine), turbo,
@@ -80,7 +85,7 @@ rival grid · exterior SVG · cockpit SVG · `drawCabinFrame` dashboard (real
 cluster per car) · steering-wheel drawing (roundel/shape; Tesla = yoke) ·
 engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 
-### The eight cars — factory figures encoded in `SPEC`
+### The twelve cars — factory figures encoded in `SPEC`
 
 | Car | Power | Torque | 0-100 | Top speed | Box | Mass |
 |---|---|---|---|---|---|---|
@@ -92,14 +97,18 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Tesla Model S Plaid | 760 kW / 1,020 hp tri-motor | ~1,420 Nm combined | 2.1 s (w/ 1-ft rollout: 0-60 1.99 s) | 262 governed / 322 Track Pack | 1-speed | 2,162 kg |
 | Mercedes-AMG GT Black Series | 537 kW / 730 PS / 720 hp @ 6,900 (flat-plane V8) | 800 Nm @ 2,000–6,000 | 3.2 s | 325 governed | 7-DCT | 1,615 kg |
 | Aston Martin Valkyrie | 853 kW / 1,160 PS combined (1,000 hp V12 @ 10,500 + ~160 hp KERS) | 900 Nm combined | 2.5 s | 350 | 7-seq | 1,030 kg (dry) |
+| Ferrari 250 GTO | 221 kW / 300 PS @ 7,500 (Colombo V12, six Webers) | 294 Nm @ 5,500 | 6.1 s | ~280 | 5-manual | 880 kg (dry) |
+| Lamborghini Revuelto | 747 kW / 1,015 CV combined (825 CV V12 @ 9,250 + 3 e-motors) | ~1,100 Nm combined | 2.5 s | 350 | 8-DCT | 1,772 kg (dry) |
+| Porsche 918 Spyder | 652 kW / 887 PS combined (608 PS V8 @ 8,700 + 2 e-motors) | ~1,280 Nm combined | 2.6 s | 345 | 7-PDK | 1,674 kg |
+| Porsche Taycan Turbo GT | 815 kW / 1,108 PS overboost (dual PSM, 2-speed rear) | ~1,340 Nm | 2.2 s | 305 | 2-speed | 2,220 kg |
 
 ## index.html — garage + online race shell
 
-- Six `car-card`s with real photos + spec chips; buttons `data-practice` /
-  `data-online` per car key (`pagani, bugatti, mclaren, ferrari, koenigsegg, tesla, amg, aston`).
+- Twelve `car-card`s with real photos + spec chips; buttons `data-practice` /
+  `data-online` per car key (`pagani, bugatti, mclaren, ferrari, koenigsegg, tesla, amg, aston, gto, revuelto, porsche918, taycan`).
 - `EMBEDDED_SIM_BASE64 = {…}` — every sim base64-embedded on ONE line between
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers. `tools/embed-sims.mjs`
-  regenerates that line from the six files. Sims load into the `simFrame`
+  regenerates that line from the twelve files. Sims load into the `simFrame`
   iframe via `srcdoc`, so everything works from `file://` AND hosted.
 - **Private Practice** = untouched sim in the iframe. The shell must NOT touch
   `state.rivals`/`raceGrid` in practice (that was the "no AI cars" bug: a

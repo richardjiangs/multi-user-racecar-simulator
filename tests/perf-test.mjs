@@ -102,6 +102,38 @@ const CARS = {
     topSpeed: { kmh: 350, minT: 70 },
     brake100: { target: 28, tol: 1.0 },
   },
+  gto: {
+    file: "Ferrari 250 GTO simulator.html",
+    app: "GtoApp",
+    label: "Ferrari 250 GTO",
+    marks: { 100: { target: 6.1, tol: 1e-4 } },
+    topSpeed: { kmh: 280, minT: 60 },
+    brake100: { target: 44, tol: 1.0 },
+  },
+  revuelto: {
+    file: "Lamborghini Revuelto simulator.html",
+    app: "RevueltoApp",
+    label: "Lamborghini Revuelto",
+    marks: { 100: { target: 2.5, tol: 1e-4 } },
+    topSpeed: { kmh: 350, minT: 70 },
+    brake100: { target: 30, tol: 1.0 },
+  },
+  porsche918: {
+    file: "Porsche 918 Spyder simulator.html",
+    app: "Porsche918App",
+    label: "Porsche 918 Spyder",
+    marks: { 100: { target: 2.6, tol: 1e-4 } },
+    topSpeed: { kmh: 345, minT: 70 },
+    brake100: { target: 30, tol: 1.0 },
+  },
+  taycan: {
+    file: "Porsche Taycan Turbo GT simulator.html",
+    app: "TaycanApp",
+    label: "Porsche Taycan Turbo GT",
+    marks: { 100: { target: 2.2, tol: 1e-4 } },
+    topSpeed: { kmh: 305, minT: 60 },
+    brake100: { target: 31, tol: 1.0 },
+  },
 };
 
 /* Runs inside the page. Everything below drives the sim's own exported code. */
@@ -274,7 +306,7 @@ async function calibrateCar(browser, key) {
       console.log(`   drivelineEff  = ${eff.value.toFixed(6)}   -> 0-${kmh} = ${eff.measured.toFixed(5)} s (target ${m.target})`);
     }
     const grip = await page.evaluate(PAGE_FNS.calibrate, {
-      appName: car.app, field: "tractionCoeff", target: t100, mode: "launch", lo: 0.6, hi: 2.6, rollout: !!car.rollout,
+      appName: car.app, field: "tractionCoeff", target: t100, mode: "launch", lo: 0.3, hi: 2.6, rollout: !!car.rollout,
     });
     console.log(`   tractionCoeff = ${grip.value.toFixed(6)}   -> 0-100 = ${grip.measured.toFixed(5)} s (target ${t100})`);
   }
