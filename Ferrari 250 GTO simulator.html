@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Mercedes-AMG GT Black Series — flat-plane V8</title>
+  <title>Ferrari 250 GTO — Colombo V12</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,12 +16,12 @@
       --line: rgba(180,194,208,0.14);
       --alu: #c9cfd6;
       --alu-d: #828a93;
-      --teal: #f5c518;          /* AMG signature yellow accent */
-      --teal-b: #ffe488;
-      --amber: #ffcf2e;         /* AMG amber tachometer */
+      --teal: #c81417;          /* Ferrari Rosso Corsa accent */
+      --teal-b: #ff6a5a;
+      --amber: #f5d400;         /* Modena yellow tachometer */
       --amber-b: #fae9a0;
-      --cognac: #23272c;        /* black Nappa / Dinamica, yellow stitching */
-      --cognac2: #c8a11e;
+      --cognac: #3a2a20;        /* tan leather, cream piping */
+      --cognac2: #b58a3a;
       --green: #5fe08c;
       --red: #ff6060;
       --shadow: rgba(0,0,0,0.55);
@@ -250,7 +250,7 @@
     .drivetrain { min-height:256px; position:relative; border:1px solid rgba(255,255,255,0.1); border-radius:7px; overflow:hidden;
       background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)); }
     .gear-stack { position:absolute; left:18px; top:30px; width:78px; bottom:30px; border:1px solid rgba(255,255,255,0.14); border-radius:6px;
-      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(7,1fr); gap:2px; padding:6px; }
+      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(5,1fr); gap:2px; padding:6px; }
     .gear-stack i { display:grid; place-items:center; border-radius:3px; background:rgba(255,255,255,0.07); color:var(--muted); font-size:11px; font-style:normal; }
     .gear-stack i.active { background:rgba(240,162,60,0.4); color:#fff1da; }
     .shifter-link { position:absolute; left:104px; top:50%; width:60px; height:8px; background:linear-gradient(90deg, rgba(200,210,220,0.5), rgba(156,198,255,0.7));
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Mercedes-AMG GT Black Series driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Ferrari 250 GTO driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">AMG</div>
-        <h1>Mercedes-AMG GT Black Series</h1>
-        <p>4.0L twin-turbo flat-plane V8 · 7-speed AMG SPEEDSHIFT DCT · rear-wheel drive · coil-over suspension · manually adjustable aero.</p>
+        <div class="mark">GTO</div>
+        <h1>Ferrari 250 GTO</h1>
+        <p>3.0L naturally-aspirated Colombo V12 · six Weber carburettors · 5-speed manual · rear-wheel drive · Rosso Corsa over aluminium.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -367,7 +367,7 @@
 
       <section class="quick" aria-label="Quick controls">
         <button id="aeroBtn" class="active" title="Active rear wing / airbrake">Aero</button>
-        <button id="doorAllBtn" title="Front-hinged doors">Doors</button>
+        <button id="doorAllBtn" title="Doors">Doors</button>
         <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
         <button id="liftBtn" title="Front axle lift">Lift</button>
         <button id="lightsBtn" class="active" title="Headlamps">Lights</button>
@@ -386,7 +386,7 @@
         </div>
         <div class="meter-grid">
           <div class="meter"><label><span>Engine</span><span id="rpmText">850 rpm</span></label><div class="bar rpm"><i id="rpmBar"></i></div></div>
-          <div class="meter"><label><span>Boost</span><span id="boostText">0.0 bar</span></label><div class="bar boost"><i id="boostBar"></i></div></div>
+          <div class="meter"><label><span>Load</span><span id="boostText">0%</span></label><div class="bar boost"><i id="boostBar"></i></div></div>
           <div class="meter"><label><span>Throttle</span><span id="throttleText">0%</span></label><div class="bar"><i id="throttleBar"></i></div></div>
           <div class="meter"><label><span>Brake</span><span id="brakeText">0%</span></label><div class="bar brake"><i id="brakeBar"></i></div></div>
         </div>
@@ -397,7 +397,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the GT Black Series is yours.</div>
+        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the 250 GTO is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -410,8 +410,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Black Series Aero</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Magma Beam over exposed carbon, AMG-yellow accents, two-plane swan-neck wing</span></span>
+          <h2>Exterior — Scaglietti Berlinetta</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">Rosso Corsa over hand-formed aluminium, Kamm tail, wire wheels, competition roundel</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -438,9 +438,9 @@
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>front-hinged doors</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>aluminium doors</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
-          <div class="readout"><b>285 / 335</b><span>Michelin Pilot Sport Cup 2 R MO</span></div>
+          <div class="readout"><b>600 / 700</b><span>Dunlop Racing on Borrani wires</span></div>
           <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
         </div>
       </section>
@@ -449,7 +449,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">12.3-inch AMG cluster with the Supersport display · MBUX portrait touchscreen</span>
+          <span class="small" id="cockpitStatus">Wood-rim Nardi wheel · open-gate 5-speed · Veglia Borletti dials</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -469,7 +469,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="raceAeroBtn" class="race" title="Set the manually adjustable aero to Race — the two-plane wing and front splitter dialled to maximum downforce">Race Aero</button>
+          <button id="corsaBtn" class="race" title="Competizione trim — race jetting and open exhaust for sharper response (does not change peak output)">Corsa Trim</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -481,15 +481,15 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — 4.0L Twin-Turbo Flat-Plane V8</h2>
-          <span class="small" id="engineStatus">4.0L twin-turbo V8, flat-plane 180° crank (M178 LS2) · 730 PS / 720 hp @ 6,900 · 800 Nm @ 2,000–6,000 · 7,200 rpm · 7-speed AMG SPEEDSHIFT DCT · 0–100 in 3.2 s · 325 km/h · 1,615 kg</span>
+          <h2>Engine Bay — 3.0L Colombo V12</h2>
+          <span class="small" id="engineStatus">3.0L naturally-aspirated Colombo V12, six Weber 38 DCN carbs · 300 PS @ 7,500 · 294 Nm @ 5,500 · 7,600 rpm · 5-speed manual · 0–100 in 6.1 s · ~280 km/h · 880 kg dry</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL"></div>
           <div class="turbo right" id="turboR"></div>
           <div class="v12"></div>
-          <div class="emotor" id="airTankArt">HOT-INSIDE-V · TWIN-SCROLL TURBOS</div>
+          <div class="emotor" id="airTankArt">SIX WEBER 38 DCN CARBURETTORS</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
@@ -499,31 +499,31 @@
           <button id="fansBtn" class="active">Cooling Fans</button>
           <button id="blipBtn">Blip Throttle</button>
           <button id="coldStartBtn">Cold Start Flair</button>
-          <button id="antiLagBtn">Overrun Crackle</button>
+          <button id="antiLagBtn">Cammy Idle</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
           <div class="readout"><b id="oilTempRead">90&deg;C</b><span>oil temperature</span></div>
           <div class="readout"><b id="waterTempRead">88&deg;C</b><span>coolant</span></div>
-          <div class="readout"><b id="boostRead">0.0 bar</b><span>manifold boost</span></div>
+          <div class="readout"><b id="boostRead">0%</b><span>engine load</span></div>
           <div class="readout"><b id="egtRead">320&deg;C</b><span>exhaust gas</span></div>
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real AMG flat-plane V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised flat-plane twin-turbo V8</span>
+          <button id="engineLoadBtn" title="Load a real 250 GTO V12 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
+          <span class="small now" id="engineSoundStatus">Engine voice: synthesised carburetted Colombo V12</span>
         </div>
       </section>
 
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — 7-Speed DCT · Coil-over · RWD</h2>
-          <span class="small" id="dynStatus">Race mode: coil-overs firm, ESC trail, two-plane wing at maximum downforce</span>
+          <h2>Dynamics — 5-Speed Manual · Live Axle · RWD</h2>
+          <span class="small" id="dynStatus">Race mode: stiff period springs, no ESC, skinny tyres working hard</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
-            <div class="gear-stack" id="gearStack"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i></div>
+            <div class="gear-stack" id="gearStack"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i></div>
             <div class="shifter-link" id="shifterLink"></div>
             <div class="aero-diagram">
               <div class="arrow" id="aeroArrow"></div>
@@ -563,7 +563,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="AMG Track Experience">AMG Track Day</button>
+              <button data-circuit="Ferrari Owners Meet">Ferrari Meet</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -577,7 +577,7 @@
             <button id="testDriverBtn">Hand to Test Driver</button>
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <div class="voice">
-              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “race aero”">
+              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “corsa trim”">
               <button id="voiceBtn">Tell Co-Pilot</button>
             </div>
             <div class="status-list">
@@ -644,28 +644,28 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">AMG</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">GTO</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">AMG</div>
-      <h1>GT Black Series</h1>
-      <p>The doors thunk shut, the flat-plane V8 catches with a hard metallic bark, the twin-scroll turbos spool, and the big rear wing settles. Drive it yourself, or hand it to the test driver.</p>
+      <div class="pmark">GTO</div>
+      <h1>250 GTO</h1>
+      <p>The light aluminium door thunks shut, the carburetted Colombo V12 catches with a hard bark and a cammy idle, and the wire wheels settle. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">AMG · Affalterbach, Germany</div>
+      <div class="ring">Ferrari · Maranello, Italy · 1962</div>
     </div>
   </div>
 
   <script type="module">
 /* ===========================================================================
-      MERCEDES-AMG GT BLACK SERIES (browser flat-plane V8 simulator)
-   Real Web-Audio flat-plane twin-turbo V8, factory-matched physics (0–100 km/h
-   3.2 s; 730 PS / 720 hp @ 6,900; 800 Nm @ 2,000–6,000; 7,200 rpm; 1,615 kg;
-   325 km/h governed; ~400 kg of downforce on the Race aero setting),
-   a 7-speed AMG SPEEDSHIFT DCT with paddle shifts, and a test driver
+         FERRARI 250 GTO (browser 1962 Colombo V12 simulator)
+   Real Web-Audio 3.0 L naturally-aspirated Colombo V12 on six Weber carbs,
+   factory-matched physics (0–100 km/h 6.1 s; 300 PS @ 7,500; 294 Nm @ 5,500;
+   7,600 rpm; 880 kg dry; ~280 km/h), a 5-speed open-gate manual, and a test
+   driver
    who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
@@ -763,9 +763,9 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "AMG Track Experience": {
+  "Ferrari Owners Meet": {
     dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "the AMG Track Experience track day, modelled at Monza",
+    blurb: "the Ferrari Owners Meet track day, modelled at Monza",
     bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
     track: [
       c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
@@ -783,54 +783,53 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 2.5;
 
-/* ===== data: vehicle spec — EXACT Mercedes-AMG GT Black Series figures =====
-   AMG 4.0 L (3,982 cc) M178 LS2 twin-turbo V8 with a unique flat-plane 180° crank:
-   537 kW (730 PS / 720 hp) @ 6,700–6,900 rpm; 800 Nm @ 2,000–6,000 rpm; 7,200 rpm
-   rev limit; DIN kerb weight 1,615 kg; 7-speed AMG SPEEDSHIFT DCT, rear-wheel drive.
-   0–100 km/h 3.2 s; electronically governed top speed 325 km/h; manually adjustable
-   two-plane rear wing and front splitter (Street ↔ Race), up to ~400 kg of downforce. */
+/* ===== data: vehicle spec — EXACT Ferrari 250 GTO figures =====
+   Ferrari Tipo 168/62 3.0 L (2,953 cc) naturally-aspirated Colombo V12 on six
+   Weber 38 DCN carburettors: 300 PS (296 hp / 221 kW) @ 7,500 rpm; 294 Nm @ 5,500;
+   ~7,600 rpm limit; dry weight ~880 kg. 5-speed manual, rear-wheel drive, Dunlop
+   discs. 0–100 km/h ~6.1 s; top speed ~280 km/h. The most valuable car in the world. */
 
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
-  name: "Mercedes-AMG GT Black Series",
-  engineLabel: "AMG 4.0 L twin-turbo flat-plane V8 (M178 LS2)",
-  displacementCc: 3982,
-  massKg: 1615,                 // DIN kerb weight (manufacturer)
-  rotInertia: 1.05,
-  peakPowerW: 537000,           // 537 kW = 730 PS / 720 hp @ 6,700–6,900 rpm
-  peakPowerPS: 730,
-  peakPowerHp: 720,
-  peakPowerKw: 537,
-  peakPowerRpm: 6900,
-  peakTorqueNm: 800,            // 800 Nm @ 2,000–6,000 rpm (manufacturer)
-  torqueLoRpm: 2000,
-  torqueHiRpm: 6000,
-  idleRpm: 800,
-  redlineRpm: 7200,             // flat-plane crank rev limit
-  finalDrive: 3.15,
-  gearRatios: [3.40, 2.24, 1.58, 1.19, 1.00, 0.83, 0.67],   // 7-speed AMG SPEEDSHIFT DCT
-  reverseRatio: 3.20,
-  wheelRadiusM: 0.354,          // 335/30 ZR20 rear
-  dragCd: 0.42,                 // adjustable aero; the big two-plane wing carries real drag
-  frontalAreaM2: 2.05,
-  rollingResistance: 0.013,
+  name: "Ferrari 250 GTO",
+  engineLabel: "Ferrari Tipo 168/62 3.0 L Colombo V12",
+  displacementCc: 2953,
+  massKg: 880,                  // dry weight (period figure)
+  rotInertia: 1.06,
+  peakPowerW: 221000,           // 221 kW = 300 PS / 296 hp @ 7,500 rpm
+  peakPowerPS: 300,
+  peakPowerHp: 296,
+  peakPowerKw: 221,
+  peakPowerRpm: 7500,
+  peakTorqueNm: 294,            // 294 Nm @ 5,500 rpm (six Weber carburettors)
+  torqueLoRpm: 4000,
+  torqueHiRpm: 6500,
+  idleRpm: 900,
+  redlineRpm: 7600,             // period Colombo V12 limit
+  finalDrive: 3.55,
+  gearRatios: [2.54, 1.70, 1.25, 1.00, 0.83],   // 5-speed manual
+  reverseRatio: 3.00,
+  wheelRadiusM: 0.330,          // period 600-15 Borrani wire wheels
+  dragCd: 0.34,                 // slippery-for-its-era GTO body (drag-limited vmax stays above the governor)
+  frontalAreaM2: 1.70,
+  rollingResistance: 0.014,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 0.950267,      // calibrated -> 0–100 km/h = 3.2000 s ±0.0001 with launch control (see tests/perf-test.mjs)
-  topSpeedKmh: 325,             // manufacturer-governed top speed
-  topSpeedMps: 325 * KMH,
-  topSpeedLimitedKmh: 325,
-  topSpeedLimitedMps: 325 * KMH,
-  topSpeedRecordKmh: 325,
-  topSpeedRecordMps: 325 * KMH,
-  zeroTo100Kmh: 3.2,            // s (Mercedes-AMG)
-  brakeMaxMps2: 12.6689,        // AMG carbon-ceramic; calibrated to 30.0 m 100-0 km/h (aero adds grip with speed)
-  brakeDist100to0M: 30,         // target 100-0 km/h braking distance
-  shiftTimeS: 0.04,             // AMG SPEEDSHIFT DCT wet-clutch
-  launchRpm: 3400,
-  aeroClA: 3.2,                 // downforce coefficient*area (lumped) — up to ~400 kg at the two-plane wing's Race setting
-  aeroDragAdd: 0.42             // extra CdA as the manually adjustable wing element trims fully
+  tractionCoeff: 0.516440,      // period crossplies: calibrated -> 0–100 km/h = 6.1000 s ±0.0001 (see tests/perf-test.mjs)
+  topSpeedKmh: 280,             // ~174 mph
+  topSpeedMps: 280 * KMH,
+  topSpeedLimitedKmh: 280,
+  topSpeedLimitedMps: 280 * KMH,
+  topSpeedRecordKmh: 280,
+  topSpeedRecordMps: 280 * KMH,
+  zeroTo100Kmh: 6.1,            // s (period road tests)
+  brakeMaxMps2: 8.8670,         // Dunlop four-wheel discs; calibrated to 44.0 m 100-0 km/h
+  brakeDist100to0M: 44,         // target 100-0 km/h braking distance (period tyres/brakes)
+  shiftTimeS: 0.28,             // open-gate 5-speed manual
+  launchRpm: 4200,
+  aeroClA: 0.6,                 // minimal downforce — the ducktail is all it has
+  aeroDragAdd: 0.10
 };
 
 /* ===== shared context ===== */
@@ -855,8 +854,8 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    raceAero: false,               // manually adjustable aero set to Race (maximum downforce)
-    raceAeroVis: 0,                // aero-setting indicator
+    corsa: false,                  // period competition trim (sharper throttle, open exhaust)
+    corsaVis: 0,                   // Corsa-trim indicator
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -902,12 +901,12 @@ const SPEC = {
     state.toastTimer = 3.0;
   }
 
-  window.AmgApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
+  window.GtoApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
 }
 
 /* ===== media status helpers ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const studioNowPlaying = document.getElementById("studioNowPlaying");
   const engineSoundStatus = document.getElementById("engineSoundStatus");
   function setNowPlaying(text, live) { if (!studioNowPlaying) return; studioNowPlaying.textContent = text; studioNowPlaying.classList.toggle("live", !!live); }
@@ -915,9 +914,9 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised flat-plane twin-turbo V8, spool, blow-off, crackle ===== */
+/* ===== audio: synthesised carburetted Colombo V12, induction roar, crackle ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { SPEC, clamp } = app;
 
   const audio = {
@@ -942,17 +941,17 @@ const SPEC = {
       this.synthGain = c.createGain(); this.synthGain.gain.value = 1.0; this.synthGain.connect(this.engFilter);
       this.recGain = c.createGain(); this.recGain.gain.value = 0.0; this.recGain.connect(this.engFilter);
 
-      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
+      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(4.6);   // hard vintage-carb rasp shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Flat-plane 180° V8: raw, race-car-hard, with a vicious rising edge and
-      // turbo pressure always hissing underneath
+      // Carburetted Colombo V12: a hard, brassy period wail that sharpens
+      // all the way to the 7,600 rpm limit
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.46, toShaper: false },
-        { type: "sawtooth", mul: 1.0,  gain: 0.58, toShaper: true  },
-        { type: "sawtooth", mul: 1.012,gain: 0.38, toShaper: true  },
-        { type: "square",   mul: 1.5,  gain: 0.15, toShaper: true  },
-        { type: "sawtooth", mul: 2.0,  gain: 0.22, toShaper: true  },
-        { type: "square",   mul: 3.0,  gain: 0.08, toShaper: true  }
+        { type: "sine",     mul: 0.5,  gain: 0.30, toShaper: false },
+        { type: "sawtooth", mul: 1.0,  gain: 0.60, toShaper: true  },
+        { type: "sawtooth", mul: 1.014,gain: 0.42, toShaper: true  },
+        { type: "square",   mul: 1.5,  gain: 0.18, toShaper: true  },
+        { type: "sawtooth", mul: 2.0,  gain: 0.28, toShaper: true  },
+        { type: "square",   mul: 3.0,  gain: 0.10, toShaper: true  }
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -971,7 +970,7 @@ const SPEC = {
       };
       this.windNode = mkNoise("lowpass", 520);  this.windGain = this.windNode.g;
       this.roadNode = mkNoise("bandpass", 190, 0.8); this.roadGain = this.roadNode.g;
-      this.turboNode = mkNoise("bandpass", 2400, 5); this.turboGain = this.turboNode.g;  // turbo whistle
+      this.turboNode = mkNoise("bandpass", 2400, 5); this.turboGain = this.turboNode.g;  // induction / velocity-stack roar
 
       this.musicGain = c.createGain(); this.musicGain.gain.value = 0; this.musicGain.connect(this.master);
       this.ready = true;
@@ -985,7 +984,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 4);   // V8: 4 firing pulses / rev
+      const firing = Math.max(20, (s.rpm / 60) * 6);   // V12: 6 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
@@ -995,7 +994,7 @@ const SPEC = {
       const modeGain = s.driveMode === "race" ? 1.0 : s.driveMode === "sport" ? 0.82 : 0.62;
 
       const engLevel = (0.05 + load * 0.5 + rpmN * 0.22) * valve * modeGain;
-      const cutoff = 360 + s.rpm * 0.24 + load * 3200 + (s.exhaustValve ? 900 : 0);
+      const cutoff = 300 + s.rpm * 0.22 + load * 2500 + (s.exhaustValve ? 700 : 0);   // darker period voice
       const turbo = clamp(s.boostBar, 0, 1.4) * (0.10 + rpmN * 0.42) * (s.exhaustValve ? 1 : 0.8);
       const turboFreq = 1200 + rpmN * 3200 + s.boostBar * 900;
       const wind = clamp((spd - 6) / 70, 0, 1) * (s.windowsOpen ? 0.22 : 0.12);
@@ -1020,7 +1019,7 @@ const SPEC = {
       }
 
       // turbo blow-off on a quick lift
-      if (this.lastThrottle - load > 0.25 && s.rpm > 2600 && t - this.blowoffAt > 0.4) { this.blowoffAt = t; this.blowoff(); }
+      if (this.lastThrottle - load > 0.25 && s.rpm > 2600 && t - this.blowoffAt > 0.4) { this.blowoffAt = t; }   // NA V12: no turbo blow-off
       // exhaust crackle/overrun on trailing throttle at revs (Race + Sport)
       const overrun = load < 0.12 && s.rpm > 3200 && s.driveMode !== "wet" && (s.exhaustValve || s.antiLag);
       if ((overrun || (s.antiLag && load > 0.5 && s.rpm > 4500)) && t - this.crackleAt > 0.05 + Math.random()*0.12) {
@@ -1046,7 +1045,7 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // flat-plane V8 catch + rev flare on ignition
+    startupFlair() { // V12 catch + rev flare on ignition
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
       const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
       o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
@@ -1109,9 +1108,9 @@ const SPEC = {
   app.audio = audio;
 }
 
-/* ===== physics: engine, 7-speed DCT, active aero, launch, world, test driver ===== */
+/* ===== physics: engine, 5-speed manual, aero, launch, world, test driver ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
   const audio = app.audio;
   const showToast = app.showToast;
@@ -1123,7 +1122,7 @@ const SPEC = {
     const plateau = rpm <= SPEC.torqueLoRpm
       ? 520 + (SPEC.peakTorqueNm - 520) * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
       : SPEC.peakTorqueNm;
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at the engine peak (537 kW)
+    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at the engine peak (221 kW)
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1133,19 +1132,19 @@ const SPEC = {
   }
 
   const modeMap = {
-    wet:   { upRpm: 4200, downRpm: 1600, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 6000, downRpm: 2000, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 6950, downRpm: 2400, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+    wet:   { upRpm: 4200, downRpm: 1700, throttleRate: 0.0026, tc: 0.80, exhaust: 0.6, damp: 0.5 },
+    sport: { upRpm: 6200, downRpm: 2300, throttleRate: 0.0018, tc: 0.94, exhaust: 0.82, damp: 0.8 },
+    race:  { upRpm: 7300, downRpm: 2700, throttleRate: 0.0012, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
-  /* --- the 7-speed AMG SPEEDSHIFT DCT: auto-shifts for you, but the paddles always win --- */
+  /* --- the 5-speed open-gate manual: auto-shifts for you here, but the paddles always win --- */
   function manualShift(dir) {
     if (state.gearMode !== "G") {
       if (dir > 0) { app.setGear("G", 1); return; }
       return;
     }
-    const next = clamp(state.curGear + dir, 1, 7);
+    const next = clamp(state.curGear + dir, 1, 5);
     if (next === state.curGear) return;
     state.shiftFrom = state.curGear; state.curGear = next; state.shiftTimer = SPEC.shiftTimeS;
     state.manualHold = 1.4;
@@ -1163,7 +1162,7 @@ const SPEC = {
     const upRpm = state.throttle > 0.6 ? m.upRpm : (m.downRpm + 1400 + state.throttle * 1200);
     const downRpm = m.downRpm + (kickdown ? 700 : 0);
     if (state.manualHold > 0) return;          // respect a just-made manual shift
-    if (!holdForCorner && rpm > upRpm && state.curGear < 7) {
+    if (!holdForCorner && rpm > upRpm && state.curGear < 5) {
       state.shiftFrom = state.curGear; state.curGear++; state.shiftTimer = SPEC.shiftTimeS; audio.clunk(240);
     } else if (rpm < downRpm && state.curGear > 1) {
       state.shiftFrom = state.curGear; state.curGear--; state.shiftTimer = SPEC.shiftTimeS; audio.blip(0.7);
@@ -1172,7 +1171,7 @@ const SPEC = {
     }
   }
 
-    /* --- active aerodynamics: the two-plane rear wing element + front trim ---
+    /* --- active aerodynamics: the rear wing element + front trim ---
      Under braking the WING element stands fully up as an AIRBRAKE — shedding speed AND
      keeping the now-light rear axle planted (weight has pitched forward); the FRONT trim
      barely moves, or the forward-loaded nose would dig in and the tail would come around.
@@ -1193,8 +1192,7 @@ const SPEC = {
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
-    // (Race Aero raises the downforce coefficient rather than the engine output;
-    // see toggleRaceAero.)
+    // (Corsa trim changes throttle/exhaust feel, not peak output; see toggleFuel.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
@@ -1270,7 +1268,7 @@ const SPEC = {
   /* Rivals carry real figures: top = real top speed (km/h), latG = real max lateral grip
      (g), accel = how hard they gather speed out of a corner (m/s^2). Corner speed is then
      pure physics: v = sqrt(latG * 9.81 / curvature), so each car slows to a DIFFERENT,
-     real speed for each bend, and the big-top-speed cars (Bugatti-class) rule the straights
+     real speed for each bend, and the big-top-speed cars rule the straights
      while the high-grip cars (AMG ONE) rule the corners. */
   const GRID_CARS = [
     { name: "Bugatti Veyron Super Sport", body: "#1b1d22", stripe: "#8a1f1f", top: 431, latG: 1.15, accel: 11.6 },
@@ -1290,28 +1288,29 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-    /* The AMG Track Experience is an AMG-only event — so its grid is Mercedes-AMG cars,
-     with their real (or, where limited, best-known) top speeds and grip. */
-  const AMG_GRID = [
-    { name: "Mercedes-AMG ONE",              body: "#c8d0d6", stripe: "#16b3a6", top: 352, latG: 1.95, accel: 12.8 },
-    { name: "Mercedes-AMG GT R Pro",         body: "#7bbf3a", stripe: "#0a0c10", top: 318, latG: 1.42, accel: 11.6 },
-    { name: "Mercedes-AMG GT R",             body: "#c8d0d6", stripe: "#7bbf3a", top: 318, latG: 1.32, accel: 11.4 },
-    { name: "Mercedes-AMG GT3",              body: "#d9d9d9", stripe: "#00a3e0", top: 300, latG: 1.90, accel: 12.2 },
-    { name: "Mercedes-AMG GT 63 S E",        body: "#1b1d22", stripe: "#c9cfd6", top: 315, latG: 1.18, accel: 11.9 },
-    { name: "Mercedes-AMG GT 63 S 4-Door",   body: "#20263a", stripe: "#c0a062", top: 315, latG: 1.15, accel: 11.6 },
-    { name: "Mercedes-AMG SL 63",            body: "#7a1f2e", stripe: "#c9cfd6", top: 315, latG: 1.12, accel: 11.2 },
-    { name: "Mercedes-AMG SLS AMG",          body: "#f0d43c", stripe: "#0a0c10", top: 317, latG: 1.20, accel: 11.4 },
-    { name: "Mercedes-AMG C 63 S",           body: "#d81e22", stripe: "#0a0c10", top: 290, latG: 1.12, accel: 10.9 },
-    { name: "Mercedes-AMG A 45 S",           body: "#e9edf0", stripe: "#c53a2a", top: 270, latG: 1.16, accel: 11.0 },
-    { name: "Mercedes-AMG GT Black Series",  body: "#15181d", stripe: "#f5c518", top: 325, latG: 1.55, accel: 12.4 },
-    { name: "Mercedes-AMG SLR McLaren",      body: "#c0c4c8", stripe: "#1b1d22", top: 334, latG: 1.10, accel: 11.0 }
+      /* The Ferrari owners meet is a Ferrari-only event — so its grid is Ferraris,
+     across the eras, with their real (or best-known) top speeds and grip. */
+  const FERRARI250_GRID = [
+    { name: "Ferrari 250 GTO",           body: "#c81417", stripe: "#f5d400", top: 280, latG: 0.95, accel: 8.0 },
+    { name: "Ferrari 250 Testa Rossa",   body: "#b81015", stripe: "#0a0c10", top: 270, latG: 0.92, accel: 7.8 },
+    { name: "Ferrari 250 LM",            body: "#c81417", stripe: "#ffffff", top: 293, latG: 1.00, accel: 8.4 },
+    { name: "Ferrari 275 GTB",           body: "#8a1010", stripe: "#c9cfd6", top: 265, latG: 0.98, accel: 8.2 },
+    { name: "Ferrari 330 P4",            body: "#c81417", stripe: "#f5d400", top: 320, latG: 1.15, accel: 9.6 },
+    { name: "Ferrari Daytona 365",       body: "#7a1010", stripe: "#c0a062", top: 280, latG: 1.00, accel: 8.6 },
+    { name: "Ferrari F40",               body: "#d81e22", stripe: "#0a0c10", top: 324, latG: 1.15, accel: 10.6 },
+    { name: "Ferrari F50",               body: "#d81e22", stripe: "#f5d400", top: 325, latG: 1.20, accel: 10.8 },
+    { name: "Ferrari Enzo",              body: "#c81417", stripe: "#0a0c10", top: 350, latG: 1.35, accel: 11.6 },
+    { name: "Ferrari LaFerrari",         body: "#cc1417", stripe: "#0a0c10", top: 350, latG: 1.55, accel: 12.6 },
+    { name: "Ferrari F80",               body: "#e0242a", stripe: "#ffd23c", top: 350, latG: 1.75, accel: 13.0 },
+    { name: "Ferrari 250 GT SWB",        body: "#b81015", stripe: "#c9cfd6", top: 250, latG: 0.90, accel: 7.6 }
   ];
+
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "AMG Track Experience") ? AMG_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Ferrari Owners Meet") ? FERRARI250_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1371,7 +1370,7 @@ const SPEC = {
   function laneScan() { const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } }; for (const car of state.traffic) { if (car.oncoming) continue; const e = r[car.lane]; if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; } } return r; }
   function chooseLaneOffset() { const lanes = laneScan(); const cur = clamp(Math.round(state.laneOffset / 3), -1, 1); const follow = followDist(); const spd = Math.abs(state.speedMps); const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5; if (!blocked) { if (cur !== 0 && lanes["0"].gap > follow + 10) return 0; return cur * 3; } let best = cur, bestGap = lanes[cur].gap + 12; for (let l = -1; l <= 1; l++) { if (Math.abs(l - cur) > 1) continue; if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; } } return best * 3; }
 
-  const STEERING = { wheelbase: 2.630, frontTrack: 1.664, maxAngle: 0.58 };
+  const STEERING = { wheelbase: 2.400, frontTrack: 1.354, maxAngle: 0.58 };
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
   function steerForYaw(desiredYaw, v) { const vAbs = Math.max(2.2, Math.abs(v)); const ang = Math.atan((desiredYaw * STEERING.wheelbase) / vAbs); return clamp(ang / (STEERING.maxAngle * steerFactorOf(Math.abs(v))), -1, 1); }
   function pathSteer(gain, targetOffset) { const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
@@ -1479,7 +1478,7 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction;
 
-    // The big two-plane wing is fixed hardware — its drag is always in the baseline.
+    // The GTO body is fixed hardware — its modest drag is always in the baseline.
     const baseCd = SPEC.dragCd;
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
@@ -1535,7 +1534,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "AMG"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "250 GTO"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1549,7 +1548,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the GT sits dead still.
+    // on smooth tarmac through a fast corner the GTO sits planted.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -1603,7 +1602,7 @@ const SPEC = {
 
 /* ===== render: the driving world ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, canvas, ctx, clamp, lerp } = app;
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
@@ -1976,25 +1975,27 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- AMG 12.3-inch cluster: a fixed landscape display behind the wheel, with a
-    // Supersport round tacho and power / boost pods flanking it ----
+    // ---- Ferrari 250 GTO cluster: big central Veglia tacho, chrome bezel, on the painted dash
+    // with power and load pods flanking it ----
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
     const cx = w / 2 + sway;
-    drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "PS", true);
-    drawSideGauge(cx + R * 2.3, cy + R * 0.18, R * 0.55, state.boostBar * 1000, 1400, "MBAR", false);
-    drawSpeedo(cx, cy, R);   // dash-fixed AMG cluster
-    // AMG wheel around the cluster
+    drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "CV", true);
+    drawSideGauge(cx + R * 2.3, cy + R * 0.18, R * 0.55, state.boostBar / 1.35 * 100, 100, "LOAD", false);
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9); ctx.translate(-cx, -cy);   // column-mounted: turns with the rim
+    drawSpeedo(cx, cy, R);
+    ctx.restore();
+    // Ferrari wheel around the dial
     drawWheel(w, h);
   }
-  // instantaneous output (PS) for the left-hand pod — reads to 730 at peak
+  // instantaneous output (CV) for the left-hand pod — reads to 300 at peak
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // the cluster: speed arc to 340 km/h with the 325 km/h governor zone
+  // the tacho: speed arc to 300 km/h with the 280 km/h zone
   function drawSpeedo(cx, cy, R) {
-    const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 340;
+    const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 300;
     ctx.save(); ctx.translate(cx, cy);
     const bz = ctx.createRadialGradient(0, -R * 0.3, R * 0.2, 0, 0, R * 1.15); bz.addColorStop(0, "#222732"); bz.addColorStop(1, "#0a0c10");
     ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.13, 0, Math.PI * 2); ctx.fill();
@@ -2003,22 +2004,22 @@ const SPEC = {
     const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (let v = 0; v <= MAX; v += 20) {
-      const f = v / MAX, a = lerp(startA, endA, f), major = v % 100 === 0, on = v <= kmhNow, zone = v >= 300;
+      const f = v / MAX, a = lerp(startA, endA, f), major = v % 100 === 0, on = v <= kmhNow, zone = v >= 240;
       ctx.strokeStyle = on ? (zone ? "#9cc6ff" : "#e6edf5") : (zone ? "rgba(120,160,220,0.35)" : "rgba(120,130,140,0.3)");
       ctx.lineWidth = major ? 2.4 : 1.1; const r1 = R * (major ? 0.74 : 0.83), r2 = R * 0.95;
       ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
       if (major) { ctx.fillStyle = "rgba(210,224,240,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(String(v), Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); }
     }
-    // governor zone (325 km/h) marked in AMG yellow
-    ctx.strokeStyle = "rgba(245,197,24,0.55)"; ctx.lineWidth = R * 0.045;
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, 300 / MAX), lerp(startA, endA, 325 / MAX)); ctx.stroke();
+    // ~280 km/h top-speed zone marked in yellow
+    ctx.strokeStyle = "rgba(245,212,0,0.6)"; ctx.lineWidth = R * 0.045;
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, 240 / MAX), lerp(startA, endA, 280 / MAX)); ctx.stroke();
     // needle
     const na = lerp(startA, endA, clamp(kmhNow / MAX, 0, 1));
     ctx.strokeStyle = "#9cc6ff"; ctx.lineWidth = 3; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.12, -Math.sin(na) * R * 0.12); ctx.lineTo(Math.cos(na) * R * 0.82, Math.sin(na) * R * 0.82); ctx.stroke();
     ctx.fillStyle = "#cfe4ff"; ctx.beginPath(); ctx.arc(0, 0, R * 0.07, 0, Math.PI * 2); ctx.fill();
     // gear badge (top), digital km/h (bottom)
-    ctx.fillStyle = "#f5c518"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.4);
+    ctx.fillStyle = "#f5d400"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.4);
     ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.32)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmhNow)), 0, R * 0.36);
     ctx.fillStyle = "rgba(150,166,180,0.9)"; ctx.font = `600 ${Math.round(R * 0.095)}px ui-sans-serif`; ctx.fillText("KM/H", 0, R * 0.54);
     ctx.restore();
@@ -2030,7 +2031,7 @@ const SPEC = {
     ctx.strokeStyle = "rgba(120,160,220,0.4)"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
     const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
     for (let i = 0; i <= 40; i++) {
-      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 680 : v > 1300;
+      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 280 : v > 85;
       ctx.strokeStyle = on ? (red ? "#ff5b5b" : (isPower ? "#9cc6ff" : "#f0a23c")) : "rgba(120,130,140,0.3)";
       ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.lineTo(Math.cos(a) * R * 0.94, Math.sin(a) * R * 0.94); ctx.stroke();
     }
@@ -2041,28 +2042,25 @@ const SPEC = {
     ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
     ctx.restore();
   }
-  // AMG Performance wheel: round rim, flat bottom, two control dials and metal paddles
+  // Ferrari 250 GTO wheel: thin wood rim, three chromed spokes, Cavallino boss
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // tang-orange centring mark
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(245,197,24,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.45, Math.PI * 1.55); ctx.stroke();
-    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // flat bottom
-    ctx.fillStyle = "#08090c"; ctx.fillRect(-R * 0.52, R * 0.82, R * 1.04, R * 0.4);
-    // horizontal spokes carrying the SmartWheel TOUCH PADS
-    ctx.strokeStyle = "#14171d"; ctx.lineWidth = R * 0.1;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.03); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
-    [-1, 1].forEach(s => { ctx.fillStyle = "#0e1116"; ctx.strokeStyle = "rgba(245,197,24,0.5)"; ctx.lineWidth = R * 0.014;
-      const px = s * R * 0.56; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2, R * 0.03) : ctx.rect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2); ctx.fill(); ctx.stroke(); });
-    // hub kept open — the digital cluster sits on the dash behind it
-    ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, R * 0.24, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = "#ffe488"; ctx.font = `700 ${Math.round(R * 0.12)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("AMG", 0, R * 0.34);
+    ctx.lineWidth = R * 0.08; ctx.strokeStyle = "#7a4a24"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(210,160,90,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = R * 0.02; ctx.strokeStyle = "rgba(245,212,0,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.47, Math.PI * 1.53); ctx.stroke();
+    // three chromed spokes
+    ctx.strokeStyle = "#cfd6dd"; ctx.lineWidth = R * 0.05;
+    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.9, R * 0.34); ctx.stroke(); });
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -R * 0.9); ctx.stroke();
+    // chrome boss with yellow shield
+    ctx.fillStyle = "#1a0a08"; ctx.beginPath(); ctx.arc(0, 0, R * 0.2, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "#cfd6dd"; ctx.lineWidth = R * 0.02; ctx.stroke();
+    ctx.fillStyle = "#f5d400"; ctx.font = `700 ${Math.round(R * 0.11)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("Ferrari", 0, R * 0.02);
     ctx.restore();
   }
-  function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
+
+    function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
     ctx.fillStyle = "rgba(156,198,255,0.85)"; ctx.font = "11px ui-monospace, monospace"; ctx.textAlign = "left";
@@ -2108,96 +2106,79 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Mercedes-AMG GT Black Series exterior — side profile (long louvered bonnet, Panamericana
-     grille, fastback roof, side quad exhaust, and the big two-plane swan-neck rear wing) */
+  /* Ferrari 250 GTO exterior — 1962 Scaglietti berlinetta side profile (long curved bonnet,
+     three nose vents, small greenhouse, Kamm tail with ducktail, Borrani wire wheels) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mercedes-AMG GT Black Series side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ferrari 250 GTO side">
       <defs>
-        <linearGradient id="amgSilverG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e6ebef"/><stop offset="0.5" stop-color="#b3bcc4"/><stop offset="1" stop-color="#6e767f"/></linearGradient>
-        <linearGradient id="amgBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="amgGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aecbe6"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
-        <radialGradient id="amgHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
-        <filter id="amgExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="gtoRedG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0403a"/><stop offset="0.5" stop-color="#c81417"/><stop offset="1" stop-color="#7a0c0e"/></linearGradient>
+        <linearGradient id="gtoDarkG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1010"/><stop offset="1" stop-color="#120404"/></linearGradient>
+        <linearGradient id="gtoGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#bcd6ea"/><stop offset="1" stop-color="#20343f"/></linearGradient>
+        <radialGradient id="gtoHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f2f5f8"/><stop offset="1" stop-color="#6a7079"/></radialGradient>
+        <filter id="gtoExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         <style>
-          .amgWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.5));transition:transform .42s ease;}
+          .gtoWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.15));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:20% 90%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-16deg) translate(-6px,-30px);}
-          #quadExhaustArt rect{fill:#8b929b;}
-          #quadExhaustArt.hot rect{fill:#ff8a3c;filter:url(#amgExhGlow);}
+          #doorArt{transform-box:fill-box;transform-origin:32% 92%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-30deg) translate(-8px,-20px);}
+          #quadExhaustArt circle{fill:#8b929b;}
+          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#gtoExhGlow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="300" rx="404" ry="20" fill="rgba(0,0,0,0.5)"/>
+      <ellipse cx="500" cy="298" rx="392" ry="20" fill="rgba(0,0,0,0.5)"/>
 
-      <!-- swan-neck two-plane rear wing on decklid-mounted uprights -->
-      <path d="M150,132 L150,96" fill="none" stroke="#20242b" stroke-width="7"/>
-      <path d="M232,130 L232,96" fill="none" stroke="#20242b" stroke-width="7"/>
-      <g id="rearWingArt">
-        <path d="M96,92 L300,92 L300,104 L96,104 Z" fill="#15181d" stroke="#5c636c"/>
-        <path d="M96,92 L300,92" fill="none" stroke="rgba(245,197,24,0.8)" stroke-width="3"/>
-        <path d="M120,80 L280,80 L280,88 L120,88 Z" fill="#101216" stroke="#4a5058"/>
-      </g>
+      <!-- ducktail Kamm spoiler lip (rear, left) -->
+      <g id="rearWingArt"><path d="M104,196 Q150,186 196,190 L196,200 Q150,196 104,206 Z" fill="#8a0c0e" stroke="#4a5058"/></g>
 
       <g id="bcBody">
-        <!-- lower carbon hull with long bonnet to the right (front) -->
-        <path d="M108,250 L108,214 Q150,206 236,204 Q360,202 470,196 Q600,190 700,182
-                 Q812,172 892,190 Q916,196 918,214 L910,236 Q840,244 720,246 L300,250 Q170,252 130,250 Z"
-              fill="url(#amgBodyG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- silver upper body: cabin set back, long bonnet -->
-        <path d="M300,196 Q380,190 470,182 Q560,172 596,150 Q636,120 706,120 L742,124
-                 Q812,136 872,176 Q900,192 906,206 L866,204 Q760,190 636,190 L470,196 Q380,196 300,204 Z"
-              fill="url(#amgSilverG)" stroke="rgba(210,220,230,0.6)" stroke-width="1"/>
-        <!-- fastback greenhouse -->
-        <path d="M470,182 Q560,172 596,150 Q636,120 706,120 L742,124 Q788,132 820,158 Q700,150 560,164 Q510,170 470,182 Z" fill="url(#amgGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <!-- AMG yellow accent stripe -->
-        <path d="M150,214 Q460,196 880,206" fill="none" stroke="rgba(245,197,24,0.8)" stroke-width="4" stroke-linecap="round"/>
-        <!-- long bonnet louvres -->
-        <g stroke="#05070a" stroke-width="2.4">
-          <path d="M792,176 l30,-6"/><path d="M812,182 l30,-6"/><path d="M832,188 l30,-6"/>
-        </g>
-        <!-- Panamericana vertical-slat grille at the nose -->
-        <path d="M884,190 L916,196 L912,222 L888,222 Z" fill="#06080b" stroke="rgba(245,197,24,0.35)"/>
-        <g stroke="#3a4048" stroke-width="2"><path d="M892,192 L890,220"/><path d="M898,193 L896,221"/><path d="M904,194 L902,221"/><path d="M910,195 L908,221"/></g>
-        <!-- slim LED headlamp -->
-        <path d="M872,182 q22,-2 34,4" fill="none" stroke="#dfe9ee" stroke-width="3.6" stroke-linecap="round"/>
-        <!-- front splitter + adjustable canard -->
-        <rect x="836" y="240" width="82" height="8" rx="3" fill="#05070a"/>
-        <g id="frontFlapArt"><rect x="806" y="226" width="40" height="6" rx="3" fill="#15181d" stroke="rgba(245,197,24,0.4)"/></g>
-        <!-- door + side sill -->
+        <!-- long curvaceous GTO body: high front fenders, low cabin, Kamm tail -->
+        <path d="M104,238 L104,206 Q118,176 168,168 Q214,160 250,164
+                 Q300,150 360,150 Q420,150 452,138 Q500,120 560,120 Q636,122 700,150
+                 Q770,178 812,182 Q872,190 902,214 Q918,226 900,240
+                 L860,244 Q700,248 500,248 L200,248 Q140,248 104,238 Z"
+              fill="url(#gtoRedG)" stroke="#5a0c0e" stroke-width="1.5"/>
+        <!-- front fender crown highlight -->
+        <path d="M700,150 Q770,178 812,182 Q862,188 892,208" fill="none" stroke="rgba(255,200,200,0.5)" stroke-width="2"/>
+        <!-- cabin greenhouse: small, upright, wraparound screen -->
+        <path d="M360,150 Q420,150 452,138 Q500,120 560,120 Q616,122 660,140
+                 Q600,132 520,134 Q440,138 380,150 Z" fill="url(#gtoGlassG)" stroke="#6c757e" stroke-width="1.4"/>
+        <path d="M360,150 L372,120 Q436,108 520,110 L540,120" fill="none" stroke="#7a0c0e" stroke-width="3"/>
+        <!-- roundel with race number -->
+        <circle cx="300" cy="196" r="20" fill="#f2f2f2" stroke="#7a0c0e" stroke-width="2"/>
+        <text x="300" y="203" text-anchor="middle" font-family="ui-sans-serif" font-size="18" font-weight="700" fill="#111">24</text>
+        <!-- three nose cooling vents ahead of the front wheel -->
+        <g fill="#1a0606"><ellipse cx="826" cy="206" rx="9" ry="4"/><ellipse cx="826" cy="216" rx="9" ry="4"/><ellipse cx="826" cy="226" rx="9" ry="4"/></g>
+        <!-- eggcrate grille + round headlamp under plexi -->
+        <path d="M884,204 Q906,206 912,220 L890,226 Q878,214 884,204 Z" fill="#2a0a0a" stroke="#c9cfd6"/>
+        <ellipse cx="852" cy="192" rx="12" ry="9" fill="#d9e2ea" stroke="#7a0c0e" stroke-width="1.4"/>
+        <g id="frontFlapArt"><path d="M812,200 l30,-3 l0,6 l-30,3 Z" fill="#8a0c0e"/></g>
+        <!-- door with chrome handle -->
         <g id="doorArt">
-          <path d="M470,186 Q540,176 616,178 L688,196 L686,238 L474,240 Z" fill="rgba(150,160,172,0.30)" stroke="#6c757e" stroke-width="1.4"/>
-          <path d="M498,196 Q566,186 654,190" fill="none" stroke="rgba(220,230,240,0.4)" stroke-width="2"/>
+          <path d="M372,166 Q440,150 520,152 L590,172 L586,232 L376,234 Z" fill="rgba(220,40,44,0.22)" stroke="#7a0c0e" stroke-width="1.2"/>
+          <rect x="470" y="182" width="18" height="4" rx="2" fill="#d9e2ea"/>
         </g>
-        <!-- side quad exhaust exits ahead of the rear wheel -->
+        <!-- four side/rear exhaust tips -->
         <g id="quadExhaustArt">
-          <rect x="322" y="228" width="9" height="9" rx="2"/><rect x="334" y="228" width="9" height="9" rx="2"/>
-          <rect x="322" y="240" width="9" height="9" rx="2"/><rect x="334" y="240" width="9" height="9" rx="2"/>
+          <circle cx="120" cy="228" r="5"/><circle cx="132" cy="228" r="5"/><circle cx="144" cy="228" r="5"/><circle cx="156" cy="228" r="5"/>
         </g>
-        <!-- rear diffuser strakes -->
-        <g stroke="#05070a" stroke-width="3">
-          <path d="M116,240 l0,12"/><path d="M138,240 l0,12"/><path d="M160,240 l0,12"/><path d="M182,240 l0,12"/>
-        </g>
-        <!-- AMG script + three-pointed-star badge -->
-        <text x="560" y="222" font-family="ui-sans-serif" font-size="12" fill="#5e6670" letter-spacing="3">AMG</text>
-        <g transform="translate(452,214)"><circle r="11" fill="#0a0c10" stroke="#c9cfd6" stroke-width="1.4"/><path d="M0,-9 L0,0 M0,0 L7.8,4.5 M0,0 L-7.8,4.5" stroke="#c9cfd6" stroke-width="1.6"/><circle r="11" fill="none" stroke="#c9cfd6" stroke-width="1"/></g>
+        <!-- Ferrari script + Cavallino shield -->
+        <text x="540" y="212" font-family="ui-sans-serif" font-size="12" fill="#f5d400" letter-spacing="2">Ferrari</text>
+        <rect x="486" y="176" width="16" height="20" rx="2" fill="#f5d400" stroke="#0a0c10"/>
+        <path d="M494,180 q3,4 0,12 M491,184 q3,-1 6,0" fill="none" stroke="#0a0c10" stroke-width="1.2"/>
       </g>
 
-      <!-- wheels: AMG multi-spoke forged -->
+      <!-- Borrani wire wheels with knock-off spinners -->
       <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#f5c518" stroke-width="2"/>
-        <g class="amgWeave"><g transform="translate(255,250)">
-          ${turbine()}
-        </g></g>
-        <circle cx="255" cy="250" r="12" fill="url(#amgHub)"/>
+        <circle cx="255" cy="250" r="48" fill="#0a0b0e"/><circle cx="255" cy="250" r="48" fill="none" stroke="#d9e2ea" stroke-width="2"/>
+        <g class="gtoWeave"><g transform="translate(255,250)">${wire()}</g></g>
+        <circle cx="255" cy="250" r="10" fill="url(#gtoHub)"/>
       </g>
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/><circle cx="745" cy="250" r="52" fill="none" stroke="#f5c518" stroke-width="2"/>
-        <g class="amgWeave"><g transform="translate(745,250)">
-          ${turbine()}
-        </g></g>
-        <circle cx="745" cy="250" r="12" fill="url(#amgHub)"/>
+        <circle cx="745" cy="250" r="48" fill="#0a0b0e"/><circle cx="745" cy="250" r="48" fill="none" stroke="#d9e2ea" stroke-width="2"/>
+        <g class="gtoWeave"><g transform="translate(745,250)">${wire()}</g></g>
+        <circle cx="745" cy="250" r="10" fill="url(#gtoHub)"/>
       </g>
     </svg>
     `;
@@ -2208,62 +2189,47 @@ const SPEC = {
   }
   function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* Mercedes-AMG cockpit SVG — wide digital cluster, round AMG wheel, MBUX portrait screen */
-  function injectArt() {
+  function wire() { let s = '<circle r="40" fill="none" stroke="#cfd6dd" stroke-width="2"/><circle r="24" fill="none" stroke="#aab2bb" stroke-width="1.4"/>'; for (let a = 0; a < 360; a += 12) s += `<line x1="0" y1="0" x2="${(38*Math.cos(a*Math.PI/180)).toFixed(1)}" y2="${(38*Math.sin(a*Math.PI/180)).toFixed(1)}" stroke="#cfd6dd" stroke-width="1"/>`; return s; }
+
+  /* Ferrari 250 GTO cockpit SVG — painted metal dash, wood-rim Nardi wheel, open-gate shifter */
+    function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Mercedes-AMG GT Black Series cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Ferrari 250 GTO cockpit">
       <defs>
-        <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="alcSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2d33"/><stop offset="1" stop-color="#101216"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#05080d"/></linearGradient>
+        <linearGradient id="dashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a1114"/><stop offset="1" stop-color="#2a0708"/></linearGradient>
+        <linearGradient id="chromeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f5f8"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
+        <linearGradient id="seatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a20"/><stop offset="1" stop-color="#1a120c"/></linearGradient>
+        <radialGradient id="dialG" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#20242a"/><stop offset="1" stop-color="#07090c"/></radialGradient>
       </defs>
-      <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- carbon dash cowl with alu trim strip -->
-      <rect x="120" y="44" width="760" height="22" rx="11" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.4"/>
-      <!-- 12.3in landscape digital instrument cluster behind the wheel -->
-      <g transform="translate(360,120)">
-        <rect x="-118" y="-42" width="236" height="84" rx="12" fill="url(#screenG)" stroke="rgba(245,197,24,0.55)" stroke-width="2" id="tachArt"/>
-        <!-- round Supersport tacho on the left of the screen -->
-        <circle cx="-72" cy="0" r="34" fill="none" stroke="rgba(245,197,24,0.7)" stroke-width="2.2"/>
-        <text x="-72" y="6" text-anchor="middle" font-size="18" font-weight="700" fill="#faf2e8" id="tachGearArt">N</text>
-        <!-- digital speed block on the right -->
-        <text x="60" y="-6" text-anchor="middle" font-size="26" font-weight="700" fill="#eef2f7">AMG</text>
-        <text x="60" y="24" text-anchor="middle" font-size="9" fill="#9aa2ab" letter-spacing="2">GT BLACK SERIES</text>
+      <rect x="0" y="0" width="1000" height="360" fill="#120404"/>
+      <!-- body-colour painted metal dash -->
+      <rect x="90" y="40" width="820" height="150" rx="14" fill="url(#dashG)" stroke="#7a0c0e" stroke-width="1.4"/>
+      <!-- big central Veglia tacho + speedo, chrome bezels -->
+      <g transform="translate(430,118)"><circle r="66" fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="4" id="tachArt"/><text x="0" y="-30" text-anchor="middle" font-size="9" fill="#d9c07a">giri/min x100</text><text x="0" y="12" text-anchor="middle" font-size="24" font-weight="700" fill="#f2ead2" id="tachGearArt">N</text></g>
+      <g transform="translate(568,120)"><circle r="52" fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="4"/><text x="0" y="4" text-anchor="middle" font-size="9" fill="#9aa2ab" letter-spacing="1">km/h</text></g>
+      <!-- row of minor gauges -->
+      <g fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="2"><circle cx="150" cy="120" r="22"/><circle cx="210" cy="120" r="22"/><circle cx="800" cy="120" r="22"/><circle cx="860" cy="120" r="22"/></g>
+      <!-- bucket seats, leather -->
+      <g transform="translate(250,272)"><rect x="-42" y="-28" width="84" height="112" rx="14" fill="url(#seatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-28,-12 L28,-12 M-28,12 L28,12 M-28,36 L28,36" stroke="rgba(180,150,110,0.45)"/></g>
+      <g transform="translate(750,272)"><rect x="-42" y="-28" width="84" height="112" rx="14" fill="url(#seatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-28,-12 L28,-12 M-28,12 L28,12 M-28,36 L28,36" stroke="rgba(180,150,110,0.45)"/></g>
+      <!-- exposed open-gate shifter with chrome ball -->
+      <g id="shifterArt" transform="translate(500,296)">
+        <rect x="-30" y="-30" width="60" height="80" rx="6" fill="#1a0a08" stroke="url(#chromeG)" stroke-width="1.6"/>
+        <g stroke="url(#chromeG)" stroke-width="1.4"><path d="M-16,-20 L16,-20 M-16,0 L16,0 M-16,20 L16,20 M-16,-20 L-16,20 M16,-20 L16,20 M0,-20 L0,20"/></g>
+        <line x1="0" y1="46" x2="0" y2="6" stroke="url(#chromeG)" stroke-width="5" id="leverArt"/>
+        <circle cx="0" cy="50" r="9" fill="url(#chromeG)"/>
       </g>
-      <!-- MBUX portrait centre touchscreen on the console spine -->
-      <rect x="466" y="118" width="68" height="122" rx="10" fill="url(#screenG)" stroke="rgba(245,197,24,0.5)"/>
-      <text x="500" y="254" text-anchor="middle" font-size="8" fill="#9aa2ab" letter-spacing="1">MBUX</text>
-      <!-- AMG Performance seats: black Nappa/Dinamica, yellow stitch -->
-      <g transform="translate(240,270)"><rect x="-46" y="-32" width="92" height="120" rx="18" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,10 L30,10 M0,-30 L0,84" stroke="rgba(245,197,24,0.55)"/></g>
-      <g transform="translate(760,270)"><rect x="-46" y="-32" width="92" height="120" rx="18" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,10 L30,10 M0,-30 L0,84" stroke="rgba(245,197,24,0.55)"/></g>
-      <!-- centre console: drive-mode buttons + START on the spine -->
-      <g id="shifterArt" transform="translate(500,300)">
-        <rect x="-28" y="-36" width="56" height="98" rx="12" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-        <g fill="url(#aluG)"><rect x="-16" y="-24" width="32" height="10" rx="3"/><rect x="-16" y="-6" width="32" height="10" rx="3"/><rect x="-16" y="12" width="32" height="10" rx="3"/></g>
-        <line x1="0" y1="54" x2="0" y2="30" stroke="url(#aluG)" stroke-width="6" id="leverArt"/>
-        <circle cx="0" cy="58" r="9" fill="url(#aluG)"/>
-      </g>
-      <g transform="translate(636,262)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="11" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="7" fill="#ffd7d7">START</text></g>
-      <!-- round AMG Performance flat-bottom wheel with two control dials + paddles -->
-      <g id="cabinWheelG" transform="translate(360,300)">
-        <circle r="58" fill="none" stroke="#101216" stroke-width="15"/>
-        <circle r="58" fill="none" stroke="rgba(245,197,24,0.55)" stroke-width="2.4"/>
-        <path d="M-40,44 L40,44 L34,58 L-34,58 Z" fill="#0c0f14"/>
-        <line x1="0" y1="0" x2="-52" y2="-6" stroke="#171a20" stroke-width="9"/>
-        <line x1="0" y1="0" x2="52" y2="-6" stroke="#171a20" stroke-width="9"/>
-        <line x1="0" y1="0" x2="0" y2="46" stroke="#171a20" stroke-width="9"/>
-        <!-- AMG round control dials on the lower spokes -->
-        <circle cx="-30" cy="30" r="12" fill="#0e1116" stroke="rgba(245,197,24,0.75)" stroke-width="2.2"/>
-        <circle cx="30" cy="30" r="12" fill="#0e1116" stroke="#c53a2a" stroke-width="2.2"/>
-        <text x="30" y="34" text-anchor="middle" font-size="8" fill="#ff7a6a">AMG</text>
-        <!-- metal shift paddles -->
-        <path d="M-70,-8 L-50,-14 L-50,4 L-70,10 Z" fill="url(#aluG)" opacity="0.9"/>
-        <path d="M70,-8 L50,-14 L50,4 L70,10 Z" fill="url(#aluG)" opacity="0.9"/>
-        <circle r="14" fill="#0e1116" stroke="#1a1e24" stroke-width="4"/>
-        <g transform="translate(0,0)"><circle r="7" fill="#0a0c10" stroke="#c9cfd6" stroke-width="1"/><path d="M0,-5 L0,0 M0,0 L4.3,2.5 M0,0 L-4.3,2.5" stroke="#c9cfd6" stroke-width="1.1"/></g>
+      <g transform="translate(640,262)"><rect x="-24" y="-16" width="48" height="32" rx="4" fill="#1a0a08" stroke="url(#chromeG)"/><circle cx="0" cy="0" r="10" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6" fill="#ffd7d7">AVV</text></g>
+      <!-- thin wood-rim three-spoke Nardi wheel -->
+      <g id="cabinWheelG" transform="translate(430,300)">
+        <circle r="60" fill="none" stroke="#7a4a24" stroke-width="9"/>
+        <circle r="60" fill="none" stroke="rgba(210,160,90,0.5)" stroke-width="2"/>
+        <line x1="0" y1="0" x2="-52" y2="20" stroke="url(#chromeG)" stroke-width="5"/>
+        <line x1="0" y1="0" x2="52" y2="20" stroke="url(#chromeG)" stroke-width="5"/>
+        <line x1="0" y1="0" x2="0" y2="-58" stroke="url(#chromeG)" stroke-width="5"/>
+        <circle r="14" fill="#1a0a08" stroke="url(#chromeG)" stroke-width="2"/>
+        <g transform="translate(0,0)"><rect x="-6" y="-6" width="12" height="15" rx="2" fill="#f5d400" stroke="#0a0c10" stroke-width="0.6"/></g>
       </g>
     </svg>
     `;
@@ -2275,7 +2241,7 @@ const SPEC = {
 
 /* ===== UI actions ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, el, CIRCUITS, SPEC, clamp, kmh, audio } = app;
   const showToast = app.showToast;
 
@@ -2287,8 +2253,8 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors close to drive.", "AMG"); }
-    if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, 7); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors shut to drive.", "250 GTO"); }
+    if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, 5); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
     if (mode !== "G") state.adaptiveCruise = false;
@@ -2318,26 +2284,25 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: coil-overs firm, ESC trail, exhaust open, wing loaded." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "AMG");
+    showToast(m === "race" ? "Race: stiff springs, no nannies, the tail is yours to manage." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "250 GTO");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full V8 voice." : "Exhaust flap closed — muted."); }
-    // AMG's aero is manually adjustable between a Street setting and a Race setting. Race
-  // dials the two-plane rear wing and the front splitter to maximum downforce — more grip
-  // and high-speed stability for a touch more drag. It does not change engine output.
-  function toggleRaceAero() {
-    const next = !state.raceAero;
-    state.raceAero = next; setActive("raceAeroBtn", next);
-    SPEC.aeroClA = next ? 4.4 : 3.2;
+      // Period competition trim: the GTO ran different Weber jetting and cams for the
+  // track. Corsa sharpens throttle response and opens the exhaust; it does not
+  // change the peak output — this is a 1962 racer, not a flex-fuel car.
+  function toggleFuel() {
+    const next = !state.corsa;
+    state.corsa = next; setActive("corsaBtn", next);
+    state.exhaustValve = next ? true : state.exhaustValve;
     if (next) {
       if (state.driveMode !== "race") setMode("race");
-      audio.motor(0.7); audio.chime([392, 523, 659, 784]);
-      showToast("Race aero — two-plane wing and splitter at maximum downforce (~400 kg).", "AMG");
+      audio.blip(0.9);
+      showToast("Corsa trim — sharper throttle, open exhaust, race jetting.", "250 GTO");
     } else {
-      audio.motor(0.5);
-      showToast("Street aero — wing and splitter trimmed for low drag.", "AMG");
+      showToast("Stradale trim — road jetting.", "250 GTO");
     }
   }
 
@@ -2347,7 +2312,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — build the revs on the brake, then release." : "Launch control off.", "AMG");
+    showToast(state.launchArmed ? "Side-step it — build the revs on the brake, then drop the clutch." : "Launch off.", "250 GTO");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2372,12 +2337,12 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "AMG"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "250 GTO"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
-    if (state.raceAero) { state.raceAero = false; SPEC.aeroClA = 3.2; }
-    setActive("raceAeroBtn", false);
+    if (state.corsa) { state.corsa = false; }
+    setActive("corsaBtn", false);
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2386,15 +2351,15 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "AMG");
+    showToast("Back in the pit lane.", "250 GTO");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleRaceAero, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2407,17 +2372,17 @@ const SPEC = {
       case "shifterLight": showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
-      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "The cover lifts — the twin-turbo flat-plane V8 on show." : "Engine cover closed."); break;
-      case "antiLag": showToast(on ? "Overrun map armed — the flat-plane V8 bangs and crackles on a trailing throttle (Race)." : "Overrun map off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
+      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "The bonnet lifts — the Colombo V12 and its six Webers on show." : "Bonnet closed."); break;
+      case "antiLag": showToast(on ? "Cammy idle — the race cam lopes at rest and pops on the overrun (Race)." : "Cammy idle off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
       case "ignition": break;
     }
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the flat-plane V8 snaps like a race engine."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the flat-plane V8 barks to 3,000 with a hard metallic rasp."); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the carburetted V12 flares hard and brassy."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the Colombo V12 barks to 3,500 on the carbs."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V8 lit.", "AMG"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — Colombo V12 lit.", "250 GTO"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2425,23 +2390,23 @@ const SPEC = {
 
 /* ===== Co-Pilot voice ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, el, audio } = app;
   const showToast = app.showToast;
   function processVoice() {
     const text = el.voiceInput.value.trim().toLowerCase(); if (!text) return; el.voiceInput.value = "";
     const has = (...w) => w.some(x => text.includes(x)); const reply = (m) => showToast(m, "Co-Pilot");
     const numberFrom = (v) => { const m = v.match(/(\d{1,3})/); return m ? parseInt(m[1], 10) : null; };
-    if (/^(hi|hello|hey|hallo)/.test(text)) { reply("Hallo! Which circuit?"); return; }
-    if (has("thank", "danke")) { reply("Gern geschehen."); return; }
+    if (/^(hi|hello|hey)/.test(text)) { reply("Hello. Which circuit?"); return; }
+    if (has("thank", "grazie")) { reply("Prego."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["AMG Track Experience", ["amg track", "track experience", "affalterbach", "monza", "track day"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Ferrari Owners Meet", ["ferrari", "owners", "meet", "monza", "maranello"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("race aero", "aero race", "splitter", "race wing")) { app.toggleRaceAero(); acted = true; }
+    if (has("corsa", "competizione", "race trim", "race jetting")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2453,14 +2418,14 @@ const SPEC = {
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “race aero”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “corsa trim”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
 
 /* ===== HUD (per frame) ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, el, SPEC, clamp, lerp, kmh } = app;
   function setActive(id, on) { const n = document.getElementById(id); if (n) n.classList.toggle("active", !!on); }
 
@@ -2468,10 +2433,10 @@ const SPEC = {
     const speed = Math.round(Math.abs(kmh(state.speedMps)));
     el.speedReadout.textContent = String(speed);
     el.gearReadout.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    el.gearReadout.classList.toggle("limit", state.gearMode === "G" && state.rpm > 6900);
+    el.gearReadout.classList.toggle("limit", state.gearMode === "G" && state.rpm > 7100);
     el.rpmText.textContent = `${Math.round(state.rpm)} rpm`;
     el.rpmBar.style.width = clamp(state.rpm / SPEC.redlineRpm * 100, 0, 100) + "%";
-    el.boostText.textContent = `${state.boostBar.toFixed(1)} bar`;
+    el.boostText.textContent = `${Math.round(state.boostBar / 1.35 * 100)}%`;
     el.boostBar.style.width = clamp(state.boostBar / 1.35 * 100, 0, 100) + "%";
     el.throttleText.textContent = Math.round(state.throttle * 100) + "%";
     el.throttleBar.style.width = Math.round(state.throttle * 100) + "%";
@@ -2490,11 +2455,11 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.raceAero) warn.push("RACE AERO · maximum downforce");
+    if (state.corsa) warn.push("CORSA TRIM");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (speed >= 320) warn.push("approaching the 325 km/h limiter");
+    if (speed >= 260) warn.push("nearing the GTO's ~280 km/h ceiling");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -2522,7 +2487,7 @@ const SPEC = {
     el.brakeTempRead.textContent = `${Math.round(state.brakeTempC)}°C`;
     el.oilTempRead.textContent = `${Math.round(state.oilTempC)}°C`;
     el.waterTempRead.textContent = `${Math.round(state.waterTempC)}°C`;
-    el.boostRead.textContent = `${state.boostBar.toFixed(1)} bar`;
+    el.boostRead.textContent = `${Math.round(state.boostBar / 1.35 * 100)}%`;
     el.egtRead.textContent = `${Math.round(state.egtC)}°C`;
     el.navRead.textContent = state.route.active ? state.route.name : "Free run";
     el.lapRead.textContent = state.lap.bestMs ? `${app.fmtLap(state.lap.curMs)} / ${app.fmtLap(state.lap.bestMs)}` : (state.lap.curMs > 0 ? app.fmtLap(state.lap.curMs) : "—");
@@ -2542,11 +2507,11 @@ const SPEC = {
     document.documentElement.style.setProperty("--wheel-rot", `${state.wheelRotation}deg`);
     if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
-    state.raceAeroVis = lerp(state.raceAeroVis, state.raceAero ? 1 : 0, 0.1);                          // fuel-map indicator
+    state.corsaVis = lerp(state.corsaVis, state.corsa ? 1 : 0, 0.1);                          // fuel-map indicator
     if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 0) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
 
     // engine art
-    const turboRot = (state.time * (260 + state.boostBar * 3000)) % 360;   // twin-scroll spool speed
+    const turboRot = (state.time * (260 + state.boostBar * 3000)) % 360;   // fan / ancillary spin
     if (el.turboL) el.turboL.style.setProperty("--turbo-rot", turboRot + "deg");
     if (el.turboR) el.turboR.style.setProperty("--turbo-rot", -turboRot + "deg");
     el.engineBay.style.setProperty("--haze", clamp((state.egtC - 360) / 600, 0, 0.9));
@@ -2577,7 +2542,7 @@ const SPEC = {
     setActive("exhaustBtn", state.exhaustValve); setActive("exhaustBtn2", state.exhaustValve); setActive("exhaustBtn3", state.exhaustValve);
     setActive("lightsBtn", state.lights); setActive("lightsBtn2", state.lights);
     setActive("liftBtn", state.rideHeight === 1);
-    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("raceAeroBtn", state.raceAero);
+    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("corsaBtn", state.corsa);
     setActive("testDriverBtn", state.testDriver);
     setActive("heatBtn", state.heat); setActive("coolBtn", state.cool); setActive("ambientBtn", state.ambient);
     setActive("audioBtn", state.audioCabin); setActive("shifterLightBtn", state.shifterLight); setActive("startSwitchBtn", state.ignition);
@@ -2594,7 +2559,7 @@ const SPEC = {
 
 /* ===== events ===== */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2652,7 +2617,7 @@ const SPEC = {
     document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
-    document.getElementById("raceAeroBtn").addEventListener("click", () => app.toggleRaceAero());
+    document.getElementById("corsaBtn").addEventListener("click", () => app.toggleFuel());
   }
 
   function bindMedia() {
@@ -2670,7 +2635,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "AMG"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "AMG"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "AMG"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "250 GTO"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "250 GTO"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "250 GTO"); }); });
   }
 
   function setupPedals() {
@@ -2737,7 +2702,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "AMG"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "250 GTO"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -2757,7 +2722,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "AMG");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "250 GTO");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -2776,7 +2741,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "AMG");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "250 GTO");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -2819,7 +2784,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "AMG");
+        showToast("Trackpad steering hold cancelled.", "250 GTO");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -2829,7 +2794,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "AMG");
+          showToast("Trackpad steering off.", "250 GTO");
         }
       }
     });
@@ -2837,7 +2802,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V8 lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "AMG"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V12 lit on the carbs. Pull the right paddle for 1st, or open Circuit for a hot lap.", "250 GTO"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
@@ -2850,7 +2815,7 @@ const SPEC = {
    it is exactly the step the verification harness integrates at (tests/perf-test.mjs),
    so what the test proves is literally what the car does. */
 {
-  const app = window.AmgApp;
+  const app = window.GtoApp;
   const { state, clamp, audio } = app;
   const FIXED_DT = 1 / 120;         // 120 Hz physics — same step the perf test calibrates at
   let accumulator = 0;
