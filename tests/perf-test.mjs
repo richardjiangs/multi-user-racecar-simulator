@@ -134,7 +134,41 @@ const CARS = {
     topSpeed: { kmh: 305, minT: 60 },
     brake100: { target: 31, tol: 1.0 },
   },
+  supra: {
+    file: "Toyota GR Supra simulator.html",
+    app: "SupraApp",
+    label: "Toyota GR Supra",
+    marks: { 100: { target: 4.1, tol: 1e-4 } },
+    topSpeed: { kmh: 250, minT: 55 },     // electronically governed
+    brake100: { target: 34, tol: 1.0 },
+  },
 };
+
+/* 2026 Formula 1 grid — eleven teams built from one shared chassis SPEC (identical
+   physics), so a single calibration certifies all eleven. Each is still verified so a
+   later per-team SPEC edit can't drift unnoticed. No fixed top-speed governor: F1 top
+   speed is drag-limited and varies with the active-aero mode, so assert a plausible band. */
+const F1_TEAMS = [
+  ["f1mercedes",   "Mercedes F1 2026 simulator.html",     "MercedesF1App",   "Mercedes-AMG F1 W17"],
+  ["f1redbull",    "Red Bull F1 2026 simulator.html",     "RedbullF1App",    "Oracle Red Bull RB22"],
+  ["f1ferrari",    "Ferrari F1 2026 simulator.html",      "FerrariF1App",    "Scuderia Ferrari SF-26"],
+  ["f1mclaren",    "McLaren F1 2026 simulator.html",      "MclarenF1App",    "McLaren MCL40"],
+  ["f1aston",      "Aston Martin F1 2026 simulator.html", "AstonF1App",      "Aston Martin AMR26"],
+  ["f1alpine",     "Alpine F1 2026 simulator.html",       "AlpineF1App",     "BWT Alpine A526"],
+  ["f1williams",   "Williams F1 2026 simulator.html",     "WilliamsF1App",   "Atlassian Williams FW48"],
+  ["f1racingbulls","Racing Bulls F1 2026 simulator.html", "RacingbullsF1App","Racing Bulls VCARB03"],
+  ["f1haas",       "Haas F1 2026 simulator.html",         "HaasF1App",       "MoneyGram Haas VF-26"],
+  ["f1audi",       "Audi F1 2026 simulator.html",         "AudiF1App",       "Audi F1 A26"],
+  ["f1cadillac",   "Cadillac F1 2026 simulator.html",     "CadillacF1App",   "Cadillac F1"],
+];
+for (const [key, file, app, label] of F1_TEAMS) {
+  CARS[key] = {
+    file, app, label,
+    marks: { 100: { target: 2.6, tol: 1e-4 } },
+    topSpeed: { minKmh: 330, maxKmh: 362, minT: 80 },   // drag-limited (active aero)
+    brake100: { target: 17, tol: 1.5 },
+  };
+}
 
 /* Runs inside the page. Everything below drives the sim's own exported code. */
 const PAGE_FNS = {

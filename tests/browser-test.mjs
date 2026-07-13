@@ -45,8 +45,8 @@ const check = (label, ok, detail) => {
   if (!ok) failures++;
 };
 
-const CAR_KEYS = ["pagani", "bugatti", "mclaren", "ferrari", "koenigsegg", "tesla", "amg", "aston", "gto", "revuelto", "porsche918", "taycan"];
-const APPS = { pagani: "PaganiApp", bugatti: "BugattiApp", mclaren: "McLarenApp", ferrari: "FerrariApp", koenigsegg: "KoenigseggApp", tesla: "TeslaApp", amg: "AmgApp", aston: "AstonApp", gto: "GtoApp", revuelto: "RevueltoApp", porsche918: "Porsche918App", taycan: "TaycanApp" };
+const CAR_KEYS = ["pagani", "bugatti", "mclaren", "ferrari", "koenigsegg", "tesla", "amg", "aston", "gto", "revuelto", "porsche918", "taycan", "supra", "f1mercedes", "f1redbull", "f1ferrari", "f1mclaren", "f1aston", "f1alpine", "f1williams", "f1racingbulls", "f1haas", "f1audi", "f1cadillac"];
+const APPS = { pagani: "PaganiApp", bugatti: "BugattiApp", mclaren: "McLarenApp", ferrari: "FerrariApp", koenigsegg: "KoenigseggApp", tesla: "TeslaApp", amg: "AmgApp", aston: "AstonApp", gto: "GtoApp", revuelto: "RevueltoApp", porsche918: "Porsche918App", taycan: "TaycanApp", supra: "SupraApp", f1mercedes: "MercedesF1App", f1redbull: "RedbullF1App", f1ferrari: "FerrariF1App", f1mclaren: "MclarenF1App", f1aston: "AstonF1App", f1alpine: "AlpineF1App", f1williams: "WilliamsF1App", f1racingbulls: "RacingbullsF1App", f1haas: "HaasF1App", f1audi: "AudiF1App", f1cadillac: "CadillacF1App" };
 
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -55,7 +55,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("twelve car cards render", await page.locator(".car-card").count() === 12);
+check("twenty-four car cards render", await page.locator(".car-card").count() === 24);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- private practice: AI rivals must survive ---------- */
@@ -79,7 +79,7 @@ for (const key of ["bugatti", "tesla"]) {
 }
 
 /* ---------- every sim boots inside the shell ---------- */
-console.log("▶ all six sims boot in the shell");
+console.log("▶ all sims boot in the shell");
 for (const key of CAR_KEYS) {
   await page.click(`[data-practice="${key}"]`);
   await page.waitForFunction((app) => {

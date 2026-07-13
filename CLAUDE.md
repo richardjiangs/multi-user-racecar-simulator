@@ -1,9 +1,11 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of twelve hypercar simulators — each a **single self-contained HTML file** —
-plus `index.html`, which bundles all twelve together with real photos/performance
-cards, a **Private Practice** mode (the untouched simulator) and an **Online
-Race** mode (browser-to-browser WebRTC, no paid server).
+A garage of twenty-four simulators — each a **single self-contained HTML file** —
+thirteen road cars/hypercars (incl. the Toyota GR Supra) plus the full **2026
+Formula 1 grid** (eleven teams). `index.html` bundles all of them together with
+real photos / liveried cards / performance cards, a **Private Practice** mode
+(the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
+no paid server).
 
 ## Repository layout
 
@@ -21,9 +23,21 @@ Ferrari 250 GTO simulator.html
 Lamborghini Revuelto simulator.html
 Porsche 918 Spyder simulator.html
 Porsche Taycan Turbo GT simulator.html
+Toyota GR Supra simulator.html
+Mercedes F1 2026 simulator.html             ← 2026 F1 grid (11 teams, one shared chassis SPEC):
+Red Bull F1 2026 simulator.html                Mercedes · Red Bull · Ferrari · McLaren · Aston Martin ·
+Ferrari F1 2026 simulator.html                 Alpine · Williams · Racing Bulls · Haas · Audi · Cadillac.
+McLaren F1 2026 simulator.html                 Each: unique livery (var(--f1body)/var(--teal)), number,
+Aston Martin F1 2026 simulator.html            and per-engine _satCurve; V6 turbo-hybrid, halo, active aero.
+Alpine F1 2026 simulator.html
+Williams F1 2026 simulator.html
+Racing Bulls F1 2026 simulator.html
+Haas F1 2026 simulator.html
+Audi F1 2026 simulator.html
+Cadillac F1 2026 simulator.html
 tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
-tools/embed-sims.mjs                        ← re-embeds the twelve sim files into index.html (run after editing a sim)
+tools/embed-sims.mjs                        ← re-embeds all sim files into index.html (run after editing a sim)
 vendor/trystero-nostr.min.js                ← bundled Trystero (ESM); vendor/peerjs.min.js ← PeerJS fallback
 ```
 
@@ -52,8 +66,10 @@ is part of the contract):
    - **shared context** — `state` + `el` lookup + helpers, exported on
      `window.<Brand>App` (`BugattiApp`, `PaganiApp`, `McLarenApp`, `FerrariApp`,
      `KoenigseggApp`, `TeslaApp`, `AmgApp`, `AstonApp`, `GtoApp`, `RevueltoApp`,
-     `Porsche918App`, `TaycanApp`). index.html reaches into the iframe through
-     this global.
+     `Porsche918App`, `TaycanApp`, `SupraApp`; and the F1 grid `MercedesF1App`,
+     `RedbullF1App`, `FerrariF1App`, `MclarenF1App`, `AstonF1App`, `AlpineF1App`,
+     `WilliamsF1App`, `RacingbullsF1App`, `HaasF1App`, `AudiF1App`,
+     `CadillacF1App`). index.html reaches into the iframe through this global.
    - **audio** — synthesised engine (osc stack + firing frequency = rpm/60 ×
      pulses-per-rev; W16=8, V12=6, V8=4, V6=3, EV=inverter whine), turbo,
      blow-off, crackle, horn, chimes.
@@ -85,7 +101,7 @@ rival grid · exterior SVG · cockpit SVG · `drawCabinFrame` dashboard (real
 cluster per car) · steering-wheel drawing (roundel/shape; Tesla = yoke) ·
 engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 
-### The twelve cars — factory figures encoded in `SPEC`
+### The cars — factory figures encoded in `SPEC`
 
 | Car | Power | Torque | 0-100 | Top speed | Box | Mass |
 |---|---|---|---|---|---|---|
@@ -101,11 +117,23 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Lamborghini Revuelto | 747 kW / 1,015 CV combined (825 CV V12 @ 9,250 + 3 e-motors) | ~1,100 Nm combined | 2.5 s | 350 | 8-DCT | 1,772 kg (dry) |
 | Porsche 918 Spyder | 652 kW / 887 PS combined (608 PS V8 @ 8,700 + 2 e-motors) | ~1,280 Nm combined | 2.6 s | 345 | 7-PDK | 1,674 kg |
 | Porsche Taycan Turbo GT | 815 kW / 1,108 PS overboost (dual PSM, 2-speed rear) | ~1,340 Nm | 2.2 s | 305 | 2-speed | 2,220 kg |
+| Toyota GR Supra | 285 kW / 387 PS @ 5,800–6,500 (B58 twin-scroll turbo I6) | 500 Nm @ 1,800–5,000 | 4.1 s | 250 governed | 8-ZF auto | 1,520 kg |
+| 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
+
+The eleven F1 cars share **one calibrated chassis SPEC** (identical physics), so a
+single `--calibrate f1mercedes` certifies all eleven; they differ only in livery
+(`var(--f1body)` body + `var(--teal)` accent), race number, engine badge and a
+per-engine `_satCurve` timbre. Feature set is F1-specific: ERS **Override** boost
+(not a road-car special), e-Deploy gauge, halo + survival cell, active aero (X/Z),
+detachable F1 wheel, slicks.
 
 ## index.html — garage + online race shell
 
-- Twelve `car-card`s with real photos + spec chips; buttons `data-practice` /
-  `data-online` per car key (`pagani, bugatti, mclaren, ferrari, koenigsegg, tesla, amg, aston, gto, revuelto, porsche918, taycan`).
+- Twenty-four `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1)
+  + spec chips; buttons `data-practice` / `data-online` per car key (`pagani, bugatti,
+  mclaren, ferrari, koenigsegg, tesla, amg, aston, gto, revuelto, porsche918, taycan,
+  supra, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine, f1williams,
+  f1racingbulls, f1haas, f1audi, f1cadillac`).
 - `EMBEDDED_SIM_BASE64 = {…}` — every sim base64-embedded on ONE line between
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers. `tools/embed-sims.mjs`
   regenerates that line from the twelve files. Sims load into the `simFrame`
