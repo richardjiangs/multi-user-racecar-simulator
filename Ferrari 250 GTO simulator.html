@@ -563,7 +563,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Ferrari Owners Meet">Ferrari Meet</button>
+              <button data-circuit="Circuit de la Sarthe">Le Mans (Sarthe)</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -763,15 +763,15 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Ferrari Owners Meet": {
-    dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "the Ferrari Owners Meet track day, modelled at Monza",
-    bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
+  "Circuit de la Sarthe": {
+    dist: 13626, env: "track", limitKmh: 340, loop: true, widthM: 14, corners: 10,
+    blurb: "the 13.626 km Circuit de la Sarthe at Le Mans",
+    bumps: [{ from: 4200, to: 4600, r: 0.3 }, { from: 8600, to: 9000, r: 0.3 }],
     track: [
-      c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
-      c(1880, -1, 75, 26, "Roggia L"), c(1912, 1, 75, 26, "Roggia R"), c(2300, 1, 90, 60, "Lesmo 1"),
-      c(2500, 1, 80, 55, "Lesmo 2"), c(3680, -1, 70, 28, "Ascari L"), c(3712, 1, 80, 36, "Ascari R"),
-      c(3748, -1, 70, 30, "Ascari L2"), c(5050, 1, 150, 185, "Parabolica")
+      c(400, 1, 80, 60, "Dunlop Curve"), c(900, -1, 70, 70, "Esses"), c(1400, 1, 120, 45, "Tertre Rouge"),
+      c(4300, 1, 55, 90, "Mulsanne chicane 1"), c(6300, -1, 55, 90, "Mulsanne chicane 2"), c(8600, 1, 150, 36, "Mulsanne Corner"),
+      c(10200, -1, 80, 60, "Indianapolis"), c(10500, 1, 120, 42, "Arnage"), c(12000, -1, 70, 80, "Porsche Curves"),
+      c(13100, 1, 150, 34, "Ford Chicane")
     ]
   },
   "Nardò Ring": {
@@ -1310,7 +1310,7 @@ const SPEC = {
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Ferrari Owners Meet") ? FERRARI250_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Circuit de la Sarthe") ? FERRARI250_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -2398,7 +2398,7 @@ const SPEC = {
     if (/^(hi|hello|hey)/.test(text)) { reply("Hello. Which circuit?"); return; }
     if (has("thank", "grazie")) { reply("Prego."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Ferrari Owners Meet", ["ferrari", "owners", "meet", "monza", "maranello"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Circuit de la Sarthe", ["le mans", "sarthe", "la sarthe", "24 hours"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }

@@ -57,8 +57,14 @@ is part of the contract):
    gearbox + pedals, telemetry pad) · touch wheel · key overlay.
 3. `<script type="module">` with these blocks, in order:
    - **data: circuits** — `CIRCUITS`: Monaco, Nürburgring 24h/Nordschleife/GP,
-     Suzuka, Silverstone, one brand-special track, Nardò Ring. Corner lists are
-     shared across all cars. **Never change track geometry.**
+     Suzuka, Silverstone, Nardò Ring (these seven are shared, real, and identical
+     across all cars — **never change their geometry**), plus **one brand-special
+     track that is a DISTINCT real circuit per car** (Fiorano, Fuji, Laguna Seca,
+     Le Mans, Hockenheim, Imola, Mugello, Zandvoort, …; the F1 grid gets real GP
+     circuits — Spa, Red Bull Ring, Monza, COTA, Bahrain, Paul Ricard, Interlagos,
+     Baku, Miami, Hungaroring, Las Vegas). It sits between the brand key and
+     `"Nardò Ring"`; changing it also updates the circuit button, the brand-grid
+     `state.route.name === …` check, and the voice alias.
    - **data: vehicle spec** — `SPEC` object: THE real manufacturer figures.
      Comments cite the exact numbers. `tractionCoeff` / `brakeMaxMps2` are
      *calibrated* so the fixed-step integrator reproduces the official 0-100

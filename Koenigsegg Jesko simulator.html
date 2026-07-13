@@ -563,7 +563,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Koenigsegg Owners Rally">Owners Rally</button>
+              <button data-circuit="Gotland Ring">Gotland Ring</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -763,15 +763,14 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Koenigsegg Owners Rally": {
-    dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "the Koenigsegg Owners Rally track day, modelled at Monza",
-    bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
+  "Gotland Ring": {
+    dist: 4150, env: "track", limitKmh: 300, loop: true, widthM: 13, corners: 8,
+    blurb: "the 4.15 km Gotland Ring on the Swedish island of Gotland",
+    bumps: [{ from: 1600, to: 1900, r: 0.35 }],
     track: [
-      c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
-      c(1880, -1, 75, 26, "Roggia L"), c(1912, 1, 75, 26, "Roggia R"), c(2300, 1, 90, 60, "Lesmo 1"),
-      c(2500, 1, 80, 55, "Lesmo 2"), c(3680, -1, 70, 28, "Ascari L"), c(3712, 1, 80, 36, "Ascari R"),
-      c(3748, -1, 70, 30, "Ascari L2"), c(5050, 1, 150, 185, "Parabolica")
+      c(500, 1, 90, 55, "Turn 1"), c(900, -1, 80, 60, "Turn 2"), c(1400, 1, 120, 42, "Ocean hairpin"),
+      c(1900, -1, 70, 70, "Turn 4 crest"), c(2400, 1, 90, 50, "Turn 5"), c(2900, -1, 100, 48, "Turn 6"),
+      c(3400, 1, 80, 60, "Turn 7"), c(3800, -1, 110, 45, "Turn 8")
     ]
   },
   "Nardò Ring": {
@@ -1323,7 +1322,7 @@ const SPEC = {
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Koenigsegg Owners Rally") ? KOENIGSEGG_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Gotland Ring") ? KOENIGSEGG_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -2436,7 +2435,7 @@ const SPEC = {
     if (/^(hi|hello|hey|hej)/.test(text)) { reply("Hej! Which circuit?"); return; }
     if (has("thank", "tack")) { reply("Varsågod."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Koenigsegg Owners Rally", ["owners", "rally", "monza", "ghost", "angelholm", "ängelholm"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Gotland Ring", ["gotland", "gotland ring", "sweden", "ängelholm"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
