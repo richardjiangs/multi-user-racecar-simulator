@@ -439,9 +439,9 @@
         <div class="divider"></div>
         <div class="readout-grid">
           <div class="readout"><b id="doorState">Closed</b><span>aluminium doors</span></div>
-          <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
+          <div class="readout"><b id="rideHeightRead">Standard</b><span>ride height</span></div>
           <div class="readout"><b>600 / 700</b><span>Dunlop Racing on Borrani wires</span></div>
-          <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
+          <div class="readout"><b id="lightState">On</b><span>covered round headlamps</span></div>
         </div>
       </section>
 
@@ -1534,7 +1534,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "250 GTO"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Ride height settled.", "250 GTO"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1982,9 +1982,7 @@ const SPEC = {
     const cx = w / 2 + sway;
     drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "CV", true);
     drawSideGauge(cx + R * 2.3, cy + R * 0.18, R * 0.55, state.boostBar / 1.35 * 100, 100, "LOAD", false);
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9); ctx.translate(-cx, -cy);   // column-mounted: turns with the rim
-    drawSpeedo(cx, cy, R);
-    ctx.restore();
+    drawSpeedo(cx, cy, R);   // dash-fixed cluster (does not turn with the wheel)
     // Ferrari wheel around the dial
     drawWheel(w, h);
   }
@@ -2307,7 +2305,7 @@ const SPEC = {
   }
 
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
-  function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Nose raised for the ramp." : "Nose lowered to ride height."); }
+  function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Ride height raised." : "Ride height lowered."); }
   function armLaunch() {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
