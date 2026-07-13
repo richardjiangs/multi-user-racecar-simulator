@@ -488,8 +488,7 @@
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL"></div>
           <div class="turbo right" id="turboR"></div>
-          <div class="v12"></div>
-          <div class="emotor" id="packArt">105 kWh PERFORMANCE BATTERY PLUS · 2 × PSM MOTORS</div>
+          <div class="emotor" id="packArt">FRONT + REAR PSM MOTORS · 105 kWh BATTERY</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">FRUNK CLOSED</div>
         </div>
@@ -2030,7 +2029,7 @@ const SPEC = {
     ctx.fillStyle = "rgba(220,228,236,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(Math.round(soc * 100) + "%", 0, -H * 0.1);
     // dual-motor tiles light with throttle
-    for (let i = 0; i < 3; i++) { const on = state.throttle > 0.04 + i * 0.3; ctx.fillStyle = on ? "rgba(232,33,39,0.8)" : "rgba(255,255,255,0.1)"; roundRect(ctx, -W * 0.36 + i * W * 0.26, H * 0.04, W * 0.2, R * 0.16, 3); ctx.fill(); }
+    for (let i = 0; i < 2; i++) { const on = state.throttle > 0.04 + i * 0.4; ctx.fillStyle = on ? "rgba(0,169,181,0.85)" : "rgba(255,255,255,0.1)"; roundRect(ctx, -W * 0.24 + i * W * 0.28, H * 0.04, W * 0.2, R * 0.16, 3); ctx.fill(); }
     ctx.fillStyle = "rgba(150,160,170,0.85)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
     ctx.fillText((state.driveMode === "race" ? "SPORT+" : state.driveMode === "sport" ? "SPORT" : "NORMAL") + " · 2 MOTORS", 0, H * 0.34);
     ctx.restore();

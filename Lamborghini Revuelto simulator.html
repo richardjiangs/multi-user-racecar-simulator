@@ -1995,9 +1995,7 @@ const SPEC = {
     const cx = w / 2 + sway;
     drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "CV", true);
     drawSideGauge(cx + R * 2.3, cy + R * 0.18, R * 0.55, state.boostBar / 1.35 * 100, 100, "e%", false);
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9); ctx.translate(-cx, -cy);   // column-mounted: turns with the rim
-    drawSpeedo(cx, cy, R);
-    ctx.restore();
+    drawSpeedo(cx, cy, R);   // dash-fixed cluster (does not turn with the wheel)
     // Lamborghini wheel around the display
     drawWheel(w, h);
   }
