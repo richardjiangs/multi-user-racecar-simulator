@@ -563,7 +563,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Pure McLaren Track Day">Pure McLaren</button>
+              <button data-circuit="Algarve Circuit">Algarve (Portimão)</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -762,15 +762,15 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Pure McLaren Track Day": {
-    dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "the Pure McLaren track day, modelled at Monza",
-    bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
+  "Algarve Circuit": {
+    dist: 4653, env: "track", limitKmh: 300, loop: true, widthM: 14, corners: 10,
+    blurb: "the 4.653 km Autódromo Internacional do Algarve at Portimão",
+    bumps: [{ from: 1200, to: 1400, r: 0.3 }, { from: 3000, to: 3200, r: 0.35 }],
     track: [
-      c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
-      c(1880, -1, 75, 26, "Roggia L"), c(1912, 1, 75, 26, "Roggia R"), c(2300, 1, 90, 60, "Lesmo 1"),
-      c(2500, 1, 80, 55, "Lesmo 2"), c(3680, -1, 70, 28, "Ascari L"), c(3712, 1, 80, 36, "Ascari R"),
-      c(3748, -1, 70, 30, "Ascari L2"), c(5050, 1, 150, 185, "Parabolica")
+      c(600, 1, 90, 55, "Turn 1"), c(1050, -1, 70, 80, "Turn 2 crest"), c(1500, 1, 100, 50, "Turn 3"),
+      c(1950, -1, 80, 60, "Turn 4"), c(2350, 1, 60, 90, "Turn 5"), c(2900, -1, 120, 45, "Turn 6"),
+      c(3300, 1, 90, 55, "Turn 7"), c(3700, -1, 70, 70, "Turn 8"), c(4050, 1, 110, 45, "Turn 13"),
+      c(4400, -1, 80, 60, "Turn 15")
     ]
   },
   "Nardò Ring": {
@@ -1312,7 +1312,7 @@ const SPEC = {
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Pure McLaren Track Day") ? MCLAREN_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Algarve Circuit") ? MCLAREN_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -2421,7 +2421,7 @@ const SPEC = {
     if (/^(hi|hello|hey)/.test(text)) { reply("Right then. Which circuit?"); return; }
     if (has("thank", "cheers")) { reply("My pleasure."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Pure McLaren Track Day", ["pure", "mclaren", "monza", "track day", "woking"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Algarve Circuit", ["algarve", "portimao", "portimão", "portugal"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }

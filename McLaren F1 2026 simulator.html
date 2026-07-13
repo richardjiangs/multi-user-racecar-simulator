@@ -564,7 +564,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Formula 1 Grand Prix">Grand Prix</button>
+              <button data-circuit="Circuit of the Americas">COTA (Austin)</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -764,15 +764,15 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Formula 1 Grand Prix": {
-    dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "the Formula 1 Grand Prix track day, modelled at Monza",
-    bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
+  "Circuit of the Americas": {
+    dist: 5513, env: "track", limitKmh: 320, loop: true, widthM: 15, corners: 10,
+    blurb: "the 5.513 km Circuit of the Americas in Austin, Texas",
+    bumps: [],
     track: [
-      c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
-      c(1880, -1, 75, 26, "Roggia L"), c(1912, 1, 75, 26, "Roggia R"), c(2300, 1, 90, 60, "Lesmo 1"),
-      c(2500, 1, 80, 55, "Lesmo 2"), c(3680, -1, 70, 28, "Ascari L"), c(3712, 1, 80, 36, "Ascari R"),
-      c(3748, -1, 70, 30, "Ascari L2"), c(5050, 1, 150, 185, "Parabolica")
+      c(500, -1, 120, 45, "Turn 1"), c(900, 1, 70, 70, "Esses 2"), c(1050, -1, 70, 70, "Esses 3"),
+      c(1200, 1, 70, 70, "Esses 5"), c(2000, -1, 90, 55, "Turn 11"), c(2600, 1, 150, 36, "Turn 12 hairpin"),
+      c(3300, -1, 60, 90, "Turn 15"), c(3900, 1, 110, 48, "Turn 16"), c(4200, -1, 90, 52, "Turn 18"),
+      c(4700, 1, 90, 50, "Turn 19")
     ]
   },
   "Nardò Ring": {
@@ -1324,7 +1324,7 @@ const SPEC = {
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Formula 1 Grand Prix") ? F1_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Circuit of the Americas") ? F1_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1976,10 +1976,12 @@ const SPEC = {
   /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
   function drawCabinFrame(w, h, pal) {
     const sway = state.bodyRoll * 1.4;
+    const ACC = (getComputedStyle(document.documentElement).getPropertyValue('--teal').trim() || '#7ad0ff');
+    // Open-cockpit F1: NO roof and NO A-pillars — the sky and track fill the top of the
+    // view. Only the raised survival-cell shoulders, the dash cowl and the halo frame it.
     ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
+    ctx.beginPath(); ctx.moveTo(0, h); ctx.lineTo(0, h * 0.52); ctx.quadraticCurveTo(w * 0.10, h * 0.46, w * 0.19, h * 0.64); ctx.lineTo(w * 0.15, h); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w, h); ctx.lineTo(w, h * 0.52); ctx.quadraticCurveTo(w * 0.90, h * 0.46, w * 0.81, h * 0.64); ctx.lineTo(w * 0.85, h); ctx.closePath(); ctx.fill();
     // carbon dash cowl
     const dashY = h * 0.66 + sway * 0.2;
     const dg = ctx.createLinearGradient(0, dashY, 0, h);
@@ -1988,6 +1990,27 @@ const SPEC = {
     // carbon weave hint on the dash
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
+    ctx.restore();
+    // ---- the FIA halo, drawn where it really sits: a titanium hoop sweeping across the
+    // top of the view from behind each shoulder to a single central front pillar that
+    // rises through the driver's sightline. Correct place — not exaggerated, not hidden. ----
+    const cxc = w / 2 + sway * 0.6, apexY = h * 0.13;
+    ctx.save(); ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(-w * 0.03 + sway, h * 0.64);
+    ctx.quadraticCurveTo(w * 0.14 + sway, apexY - h * 0.02, cxc, apexY);
+    ctx.quadraticCurveTo(w * 0.86 + sway, apexY - h * 0.02, w * 1.03 + sway, h * 0.64);
+    ctx.strokeStyle = "#070809"; ctx.lineWidth = h * 0.052; ctx.stroke();          // carbon hoop body
+    ctx.strokeStyle = "#23272d"; ctx.lineWidth = h * 0.024; ctx.stroke();          // titanium sheen
+    ctx.globalAlpha = 0.4; ctx.strokeStyle = ACC; ctx.lineWidth = h * 0.006; ctx.stroke(); ctx.globalAlpha = 1;
+    // central front pillar: a thin tapered strut from the hoop apex down to the dash
+    const pw = h * 0.016;
+    ctx.beginPath();
+    ctx.moveTo(cxc - pw, apexY + h * 0.008); ctx.lineTo(cxc + pw, apexY + h * 0.008);
+    ctx.lineTo(cxc + pw * 1.6, dashY); ctx.lineTo(cxc - pw * 1.6, dashY); ctx.closePath();
+    ctx.fillStyle = "#0a0c10"; ctx.fill();
+    ctx.strokeStyle = "#2a2f37"; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.globalAlpha = 0.35; ctx.strokeStyle = ACC; ctx.lineWidth = 1; ctx.stroke(); ctx.globalAlpha = 1;
     ctx.restore();
     // ---- F1 wheel display: the colour screen is ON the wheel, so it turns with the
     // rim; power and deploy pods flank it ----
@@ -2162,9 +2185,10 @@ const SPEC = {
         <!-- engine cover shark-fin + airbox intake above the driver -->
         <path d="M300,178 Q340,120 386,124 L392,178 Z" fill="var(--teal)" stroke="#0a0c10"/>
         <path d="M360,132 Q374,120 392,128 L392,150 L364,150 Z" fill="#06080b"/>
-        <!-- halo over the cockpit -->
+        <!-- halo over the cockpit: hoop + the single central pillar at its FRONT (real place) -->
         <path d="M392,150 Q470,96 548,150" fill="none" stroke="#0a0c10" stroke-width="9"/>
-        <path d="M470,150 L470,110" stroke="#0a0c10" stroke-width="7"/>
+        <path d="M392,150 Q470,96 548,150" fill="none" stroke="#23272d" stroke-width="4"/>
+        <path d="M523,148 L508,110" stroke="#0a0c10" stroke-width="7"/>
         <!-- cockpit opening -->
         <path d="M398,160 Q470,146 542,160 L540,178 L400,178 Z" fill="#05070a"/>
         <!-- sidepod with radiator inlet -->
@@ -2405,7 +2429,7 @@ const SPEC = {
     if (/^(hi|hello|hey)/.test(text)) { reply("Hello. Which circuit?"); return; }
     if (has("thank", "cheers")) { reply("Copy that."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Formula 1 Grand Prix", ["grand prix", "gp", "qualifying", "monza", "race"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Circuit of the Americas", ["cota", "circuit of the americas", "austin", "united states", "us gp"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }

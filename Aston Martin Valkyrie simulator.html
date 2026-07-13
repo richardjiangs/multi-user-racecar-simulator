@@ -563,7 +563,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Aston Martin Owners Track">Owners Track</button>
+              <button data-circuit="Brands Hatch GP">Brands Hatch</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -763,15 +763,14 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Aston Martin Owners Track": {
-    dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "the Aston Martin Owners Track track day, modelled at Monza",
-    bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
+  "Brands Hatch GP": {
+    dist: 3908, env: "track", limitKmh: 280, loop: true, widthM: 13, corners: 9,
+    blurb: "the 3.908 km Brands Hatch Grand Prix circuit",
+    bumps: [{ from: 400, to: 600, r: 0.35 }],
     track: [
-      c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
-      c(1880, -1, 75, 26, "Roggia L"), c(1912, 1, 75, 26, "Roggia R"), c(2300, 1, 90, 60, "Lesmo 1"),
-      c(2500, 1, 80, 55, "Lesmo 2"), c(3680, -1, 70, 28, "Ascari L"), c(3712, 1, 80, 36, "Ascari R"),
-      c(3748, -1, 70, 30, "Ascari L2"), c(5050, 1, 150, 185, "Parabolica")
+      c(300, 1, 80, 55, "Paddock Hill Bend"), c(700, 1, 60, 70, "Druids hairpin approach"), c(760, 1, 150, 30, "Druids"),
+      c(1100, -1, 70, 65, "Graham Hill Bend"), c(1900, 1, 60, 90, "Surtees"), c(2300, -1, 80, 55, "Hawthorn"),
+      c(2800, 1, 90, 50, "Westfield"), c(3200, -1, 70, 65, "Sheene"), c(3600, 1, 80, 55, "Clearways")
     ]
   },
   "Nardò Ring": {
@@ -1323,7 +1322,7 @@ const SPEC = {
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Aston Martin Owners Track") ? ASTON_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Brands Hatch GP") ? ASTON_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -2441,7 +2440,7 @@ const SPEC = {
     if (/^(hi|hello|hey)/.test(text)) { reply("Hello. Which circuit?"); return; }
     if (has("thank", "cheers")) { reply("Any time."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Aston Martin Owners Track", ["aston", "owners", "track day", "monza", "gaydon"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Brands Hatch GP", ["brands hatch", "brands", "kent", "gp circuit"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }

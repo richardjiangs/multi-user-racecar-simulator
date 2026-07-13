@@ -563,7 +563,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="GR Supra Track Day">GR Supra Track Day</button>
+              <button data-circuit="Fuji Speedway">Fuji Speedway</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -763,15 +763,14 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "GR Supra Track Day": {
-    dist: 5793, env: "track", limitKmh: 300, loop: true, widthM: 14.0, corners: 11,
-    blurb: "the Toyota Gazoo Racing track day, modelled at Monza",
-    bumps: [{ from: 600, to: 700, r: 0.4 }, { from: 1850, to: 1980, r: 0.4 }, { from: 3650, to: 3800, r: 0.4 }],
+  "Fuji Speedway": {
+    dist: 4563, env: "track", limitKmh: 300, loop: true, widthM: 15, corners: 9,
+    blurb: "the 4.563 km Fuji Speedway beneath Mt. Fuji, Toyota's home circuit",
+    bumps: [],
     track: [
-      c(600, 1, 70, 26, "Rettifilo R"), c(632, -1, 70, 26, "Rettifilo L"), c(1100, 1, 70, 160, "Curva Grande"),
-      c(1880, -1, 75, 26, "Roggia L"), c(1912, 1, 75, 26, "Roggia R"), c(2300, 1, 90, 60, "Lesmo 1"),
-      c(2500, 1, 80, 55, "Lesmo 2"), c(3680, -1, 70, 28, "Ascari L"), c(3712, 1, 80, 36, "Ascari R"),
-      c(3748, -1, 70, 30, "Ascari L2"), c(5050, 1, 150, 185, "Parabolica")
+      c(1500, 1, 90, 55, "Turn 1"), c(1900, -1, 70, 65, "Turn 2"), c(2300, 1, 80, 55, "Coca-Cola"),
+      c(2700, -1, 60, 80, "100R"), c(3100, 1, 150, 32, "Hairpin"), c(3500, -1, 70, 60, "Netz"),
+      c(3800, 1, 80, 55, "Dunlop"), c(4100, -1, 90, 50, "Panasonic"), c(4350, 1, 110, 42, "Turn 16")
     ]
   },
   "Nardò Ring": {
@@ -1290,7 +1289,7 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-    /* The GR Supra Track Day is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
+    /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
   const SUPRA_GRID = [
     { name: "Toyota GR010 Hybrid",           body: "#d81e2c", stripe: "#0a0c10", top: 340, latG: 1.95, accel: 12.8 },
@@ -1311,7 +1310,7 @@ const SPEC = {
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "GR Supra Track Day") ? SUPRA_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Fuji Speedway") ? SUPRA_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -2436,7 +2435,7 @@ const SPEC = {
     if (/^(hi|hello|hey|hallo)/.test(text)) { reply("Hallo! Which circuit?"); return; }
     if (has("thank", "danke")) { reply("Gern geschehen."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["GR Supra Track Day", ["gr track", "supra track", "gazoo", "monza", "track day"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Fuji Speedway", ["fuji", "fuji speedway", "toyota", "japan"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
