@@ -286,6 +286,16 @@
     .voice { display:grid; grid-template-columns:1fr auto; gap:7px; }
     .voice input { min-width:0; border:1px solid rgba(255,255,255,0.12); background:rgba(255,255,255,0.06); color:var(--ink); border-radius:5px; padding:8px 9px; }
 
+    .pit-menu { position:fixed; left:50%; top:42%; transform:translate(-50%,-50%); z-index:120; width:min(360px, 92vw);
+      padding:16px 18px; background:rgba(10,14,20,0.97); border:1.5px solid var(--teal); border-radius:12px;
+      box-shadow:0 14px 46px rgba(0,0,0,0.65); text-align:center; }
+    .pit-menu .pm-title { font-weight:800; letter-spacing:1px; color:var(--teal-b); margin-bottom:12px; font-size:14px; }
+    .pit-menu .pm-row { margin:10px 0; display:flex; gap:8px; align-items:center; justify-content:center; font-size:13px; color:#c4d0dd; }
+    .pit-menu .pm-row span { min-width:64px; text-align:right; }
+    .pit-menu button { padding:8px 12px; border-radius:7px; border:1px solid var(--line); background:#141922; color:#e8eef5; cursor:pointer; font-size:13px; }
+    .pit-menu button.on { border-color:var(--teal); background:rgba(120,208,255,0.18); color:#fff; }
+    .pit-menu #pmFuel { min-width:66px; font-weight:700; color:#fff; }
+    .pit-menu .pm-go { margin-top:12px; width:100%; padding:11px; background:var(--teal); color:#04121a; font-weight:800; border:none; }
     .toast { position:fixed; left:50%; bottom:122px; transform:translateX(-50%) translateY(20px); min-width:min(440px, calc(100vw - 24px)); max-width:min(680px, calc(100vw - 24px));
       padding:11px 14px; border-radius:7px; border:1px solid rgba(156,198,255,0.34); background:rgba(8,10,13,0.92); backdrop-filter:blur(15px);
       box-shadow:0 24px 60px rgba(0,0,0,0.5); color:var(--ink); opacity:0; pointer-events:none; transition:opacity 200ms ease, transform 200ms ease; font-size:13px; z-index:40; }
@@ -578,7 +588,7 @@
             <button id="testDriverBtn">Hand to Test Driver</button>
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <button id="realBtn" class="race">Real Race Mode: Off</button>
-            <button id="boxBtn">Box — Pit Stop</button>
+            <button id="boxBtn">Pit In / Out</button>
             <div class="voice">
               <input id="voiceInput" autocomplete="off" placeholder="“take me to Monaco”, “qualifying”, “launch”, “override”">
               <button id="voiceBtn">Tell Co-Pilot</button>
@@ -662,6 +672,18 @@
     </div>
   </div>
 
+  <div id="pitMenu" class="pit-menu" style="display:none">
+    <div class="pm-title">PIT STOP — choose your tyres &amp; fuel</div>
+    <div class="pm-row"><span>Tyres</span>
+      <button id="pmSoft" data-tire="soft">Soft</button>
+      <button id="pmMed" data-tire="medium" class="on">Medium</button>
+      <button id="pmHard" data-tire="hard">Hard</button>
+    </div>
+    <div class="pm-row"><span>Add fuel</span>
+      <button id="pmFuelDn">&minus;5</button><b id="pmFuel">+0 kg</b><button id="pmFuelUp">+5</button>
+    </div>
+    <button id="pmGo" class="pm-go">Confirm — release the car</button>
+  </div>
   <script type="module">
 /* ===========================================================================
          Mercedes-AMG F1 W17 (browser 2026 Formula 1 simulator)
@@ -874,7 +896,7 @@ const SPEC = {
     hybrid: true,                  // MGU-K override engaged (full ~1,013 PS combined) — default on
     hybridVis: 0,                  // deploy indicator
     testDriver: false,
-    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0,
+    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
@@ -1360,36 +1382,80 @@ const SPEC = {
       showToast("Real Race Mode off — back to a clear practice lap.", "Pit Wall");
     }
   }
-  function boxPit() {
-    if (!state.realMode) { showToast("Pit stops are part of Real Race Mode — switch it on in the Circuit tab.", "Pit Wall"); return; }
+  function pitInOut() {
+    if (!state.realMode) { showToast("Pit stops are part of Real Race Mode — turn it on first.", "Pit Wall"); return; }
     if (state.retired) { showToast("You're out of the race.", "Pit Wall"); return; }
-    if (state.inPit) return;
-    state.inPit = true;
-    const under = state.safetyCar ? 0.5 : 1;                    // a stop under the safety car costs far less
-    state.pitTimer = TEAM.pitCrew + 18 * under;                 // ~2-3 s stationary + the pit-lane time loss
-    state.tyreComp = state.tyreComp === "soft" ? "medium" : state.tyreComp === "medium" ? "hard" : "soft";
-    showToast("In the pit lane — " + TEAM.pitCrew.toFixed(1) + " s stop, fresh " + state.tyreComp + "s" + (state.damage > 0.1 ? " + front-wing repair" : "") + ".", TEAM.name);
+    if (state.inPitLane) { showToast("You're already in the pit lane.", "Pit Wall"); return; }
+    state.pitArmed = !state.pitArmed;
+    showToast(state.pitArmed ? "Box this lap — peel into the pit lane at the line; the 80 km/h limiter comes on for you." : "Pit call cancelled — stay out.", "Pit Wall");
+  }
+  function pitTire(c) { if (state.pitStage === "box") state.pitTireSel = c; }
+  function pitFuel(d) { if (state.pitStage === "box") state.pitFuelAdd = clamp(state.pitFuelAdd + d, 0, 50); }
+  function pitConfirm() {
+    if (state.pitStage !== "box") return;
+    state.pitService = TEAM.pitCrew + state.pitFuelAdd * 0.35 + (state.damage > 0.1 ? 3.0 : 0);
+    state.pitStage = "service"; state.pitMenuOpen = false;
+    showToast("Stationary — " + state.pitService.toFixed(1) + " s: fresh " + state.pitTireSel + " tyres" + (state.pitFuelAdd ? ", +" + state.pitFuelAdd + " kg" : "") + (state.damage > 0.1 ? ", front-wing change" : "") + ".", TEAM.name);
+  }
+  function checkContact(dt) {
+    state.contactCool = Math.max(0, (state.contactCool || 0) - dt);
+    if (!state.realMode || state.inPitLane || state.retired || !state.rivals.length || state.contactCool > 0) return;
+    const L = lapLen();
+    for (const r of state.rivals) {
+      if (r.dns || r.out) continue;
+      let gap = ((r.distM - state.distanceM) % L + L) % L; if (gap > L * 0.5) gap -= L;
+      if (Math.abs(gap) < 5.0 && Math.abs(state.laneOffset - r.lane) < 2.0) {
+        state.contactCool = 1.0;
+        state.speedMps *= 0.82; state.headingRel += (Math.random() - 0.5) * 0.28;   // knocked offline
+        state.damage = clamp(state.damage + 0.12 + Math.random() * 0.13, 0, 1);
+        if (Math.random() < 0.30) state.tyreWear = clamp(state.tyreWear + 0.35, 0, 1); // possible puncture
+        r.speedMps *= 0.78;
+        let msg = "Contact with " + r.name + "!";
+        if (Math.random() < 0.26) { r.out = true; r.retLap = state.raceLap; triggerSC(r.name + " spun off"); msg += " They're out."; }
+        showToast(msg + " Damage now " + Math.round(state.damage * 100) + "%.", TEAM.name);
+        if (state.damage >= 1) { state.retired = true; showToast("The car's broken — retired.", TEAM.name); triggerSC("a car stopped"); }
+        break;
+      }
+    }
+  }
+  function onRaceLap() {
+    if (!state.realMode) return;
+    state.raceLap++;
+    if (!state.retired && Math.random() < state.failRisk) { state.retired = true; showToast("Mechanical failure — the power unit's done. You're out.", TEAM.name); triggerSC("your car stopped"); state.failRisk = 0; }
+    for (const r of state.rivals) { if (!r.out && !r.dns && Math.random() < (r.rmDnf || 0.06) / 55) { r.out = true; r.retLap = state.raceLap; if (Math.random() < 0.5) triggerSC(r.name + " stopped"); } }
   }
   function realStep(dt, dsdt) {
     if (!state.realMode) return;
     const spd = Math.abs(state.speedMps), moving = spd > 1;
+    const L = lapLen(), ph = ((state.distanceM % L) + L) % L;
+    state.pitLimitKmh = /Monaco/.test(state.route.name || "") ? 60 : 80;
+    state.tlCool = Math.max(0, state.tlCool - dt);
+    // fuel burns off (car lightens); tyres wear with load — softer rubber wears faster
     state.fuelKg = Math.max(0, state.fuelKg - dt * (0.11 + state.throttle * 0.28) * (moving ? 1 : 0.15));
     const load = clamp(Math.abs(state.lateralG) * 0.5 + state.throttle * 0.35 + spd / 140, 0, 2);
     const compDeg = state.tyreComp === "soft" ? 1.6 : state.tyreComp === "hard" ? 0.65 : 1.0;
-    if (moving && !state.inPit) state.tyreWear = clamp(state.tyreWear + dt * load * 0.0075 * compDeg * TEAM.tyreDeg, 0, 1);
-    if (state.offTrack > 0 && spd > 18) { const hit = dt * (state.route.env === "street" ? 0.12 : 0.008) * clamp(spd / 70, 0, 2); state.damage = clamp(state.damage + hit, 0, 1); if (state.damage >= 1 && !state.retired) { state.retired = true; showToast("Heavy damage — the car is undriveable. Retired.", TEAM.name); triggerSC("a car stopped on track"); } }
+    if (moving && !state.inPitLane) state.tyreWear = clamp(state.tyreWear + dt * load * 0.0075 * compDeg * TEAM.tyreDeg, 0, 1);
+    // reliability risk builds with running, high revs and damage — teams differ a lot
     const revStress = clamp(state.rpm / SPEC.redlineRpm - 0.9, 0, 0.1) * 6;
-    state.failRisk += dt * (TEAM.dnf / 2400 + revStress / 2600 + state.damage * 0.00008) * (state.safetyCar ? 0.3 : 1);
-    if (state.inPit) { state.speedMps = Math.min(state.speedMps, 60 * KMH); state.pitTimer -= dt; if (state.pitTimer <= 0) { state.inPit = false; state.tyreWear = 0; state.damage = Math.max(0, state.damage - 0.9); state.pitStops++; showToast("Stop complete — green light, GO!", TEAM.name); } }
-    if (state.safetyCar) { state.scTimer -= dt; const scMax = 130 * KMH; if (state.speedMps > scMax) state.speedMps = approach(state.speedMps, scMax, 0.03, dt); if (state.scTimer <= 0) { state.safetyCar = false; showToast("Safety car in this lap — GREEN, GREEN, GREEN!", "Race Control"); } }
-    if (state.retired) { state.throttle = 0; state.brake = Math.max(state.brake, 0.4); }
-    state._rmAcc = (state._rmAcc || 0) + Math.max(0, dsdt) * dt;
-    const L = lapLen();
-    if (state._rmAcc >= L) {
-      state._rmAcc -= L; state.raceLap++;
-      if (!state.retired && Math.random() < state.failRisk) { state.retired = true; showToast("Mechanical failure — the power unit is done. You're out.", TEAM.name); triggerSC("your car stopped"); state.failRisk = 0; }
-      for (const r of state.rivals) { if (!r.out && !r.dns && Math.random() < (r.rmDnf || 0.06) / 55) { r.out = true; r.retLap = state.raceLap; if (Math.random() < 0.5) triggerSC(r.name + " stopped"); } }
+    state.failRisk += dt * (TEAM.dnf / 2400 + revStress / 2600 + state.damage * 0.00010) * (state.safetyCar ? 0.3 : 1);
+    // ---- pit lane: drive in, auto pit limiter, stop in the box, choose tyres+fuel, release ----
+    if (state.pitArmed && !state.inPitLane && !state.retired && (ph > L - 240 || ph < 200)) {
+      state.inPitLane = true; state.pitStage = "enter";
+      showToast("Pit entry — pit limiter engaged, " + state.pitLimitKmh + " km/h. Into your box.", "Pit Wall");
     }
+    if (state.inPitLane) {
+      const pl = state.pitLimitKmh * KMH, boxZone = ph > L - 45 || ph < 45;
+      state.laneOffset = approach(state.laneOffset, -(halfWidthAt(state.distanceM) + 5.5), 0.05, dt); // onto the pit apron
+      if (state.pitStage === "enter") {
+        if (boxZone) state.speedMps = Math.max(0, state.speedMps - 30 * dt); else if (state.speedMps > pl) state.speedMps = pl;
+        if (boxZone && Math.abs(state.speedMps) < 1.5) { state.pitStage = "box"; state.pitMenuOpen = true; state.speedMps = 0; state.pitFuelAdd = 0; state.pitTireSel = state.tyreComp === "soft" ? "medium" : "soft"; }
+      } else if (state.pitStage === "box") { state.speedMps = 0; }
+      else if (state.pitStage === "service") { state.speedMps = 0; state.pitService -= dt; if (state.pitService <= 0) { state.tyreWear = 0; state.tyreComp = state.pitTireSel; state.fuelKg = clamp(state.fuelKg + state.pitFuelAdd, 0, 110); state.damage = Math.max(0, state.damage - 0.95); state.pitStops++; state.pitStage = "exit"; showToast("Job done — GO GO GO!", TEAM.name); } }
+      else if (state.pitStage === "exit") { if (state.speedMps > pl) state.speedMps = pl; if (ph > 130 && ph < L - 300) { state.inPitLane = false; state.pitStage = ""; state.pitArmed = false; state.laneOffset = -halfWidthAt(state.distanceM) * 0.4; showToast("Pit exit — back on track, mind the blend line.", "Pit Wall"); } }
+    }
+    // safety car neutralises the field
+    if (state.safetyCar) { state.scTimer -= dt; const scMax = 130 * KMH; if (!state.inPitLane && state.speedMps > scMax) state.speedMps = approach(state.speedMps, scMax, 0.03, dt); if (state.scTimer <= 0) { state.safetyCar = false; showToast("Safety car in this lap — GREEN, GREEN, GREEN!", "Race Control"); } }
+    if (state.retired) { state.throttle = 0; state.brake = Math.max(state.brake, 0.4); }
   }
   function racePosition() {
     if (!state.realMode) return 0;
@@ -1545,6 +1611,7 @@ const SPEC = {
     updateTransmission(dt);
     updateAero(dt);
     updateRivals(dt);
+    checkContact(dt);
 
     const speedAbs = Math.abs(state.speedMps);
     let driven = false, ratio = 0, direction = 1;
@@ -1621,12 +1688,22 @@ const SPEC = {
     // slow the car. Assist/test-driver modes can yaw-correct back toward the line.
     const halfW = halfWidthAt(state.distanceM);
     const overrun = Math.abs(state.laneOffset) - halfW;
-    if (overrun > 0.3) {
+    if (overrun > 0.3 && !state.inPitLane) {
       const street = state.route.env === "street";
       const edge = (halfW + (street ? 0.7 : 3.4)) * Math.sign(state.laneOffset);   // wall hard, grass has a margin
       if (Math.abs(state.laneOffset) > Math.abs(edge)) state.laneOffset = edge;
       if (street) state.speedMps = Math.max(0, state.speedMps - 16 * Math.min(1.5, overrun) * dt);
       if (state.assist || state.testDriver) state.headingRel *= (1 - 3 * dt);  // assisted line recovery
+      if (state.realMode) {
+        const spd2 = Math.abs(state.speedMps);
+        state.damage = clamp(state.damage + dt * (street ? 0.10 : 0.012) * clamp(spd2 / 60, 0, 2), 0, 1);  // kerbs/gravel chip; walls hurt
+        if (overrun > 0.9 && state.tlCool <= 0) {   // all four wheels beyond the line
+          state.tlCool = 2.5; state.lapInvalid = true;
+          if (street) { state.damage = clamp(state.damage + 0.25 + Math.min(1, overrun) * 0.3, 0, 1); state.speedMps *= 0.55; showToast("Into the barrier — heavy damage!", "Race Control"); }
+          else { state.tlWarnings++; if (state.tlWarnings >= 4) { state.penaltyS += 5; showToast("+5 s penalty — repeated track limits.", "Race Control"); } else if (state.tlWarnings === 3) showToast("Black-and-white flag — final track-limits warning.", "Race Control"); else showToast("Track limits — this lap won't count (warning " + state.tlWarnings + "/3).", "Race Control"); }
+        }
+        if (state.damage >= 1 && !state.retired) { state.retired = true; showToast("The car's had enough — retired.", TEAM.name); triggerSC("a car stopped on track"); }
+      }
       state.offTrack = 1;
     } else state.offTrack = Math.max(0, state.offTrack - dt * 3);
 
@@ -1683,10 +1760,14 @@ const SPEC = {
       const lapMs = state.lap.curMs;
       if (isLoop()) {
         state.lap.lastMs = lapMs;
-        if (!state.lap.bestMs || lapMs < state.lap.bestMs) state.lap.bestMs = lapMs;
+        const invalid = state.realMode && state.lapInvalid;
+        if (!invalid && (!state.lap.bestMs || lapMs < state.lap.bestMs)) state.lap.bestMs = lapMs;
         state.lap.curMs = 0;
         state.route.remainingM = state.route.totalM;   // next lap
-        showToast(`Lap complete — ${fmtLap(lapMs)}${state.lap.bestMs === lapMs ? " · new best" : ""}.`, "Co-Pilot");
+        if (invalid) showToast(`Lap deleted — track limits (${fmtLap(lapMs)} doesn't count).`, "Race Control");
+        else showToast(`Lap complete — ${fmtLap(lapMs)}${state.lap.bestMs === lapMs ? " · new best" : ""}.`, "Co-Pilot");
+        state.lapInvalid = false;
+        onRaceLap();
         audio.chime([659, 988, 1319]);
       } else if (!state.route.arrived && Math.abs(state.speedMps) < 1.2) {
         onArrival();
@@ -1701,7 +1782,7 @@ const SPEC = {
   }
 
   Object.assign(app, {
-    engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN, toggleRealMode, boxPit, racePosition, fieldSize,
+    engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN, toggleRealMode, pitInOut, pitTire, pitFuel, pitConfirm, checkContact, onRaceLap, racePosition, fieldSize,
     buildCornersForRoute, curvatureAt, halfWidthAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING
   });
 }
@@ -2209,7 +2290,7 @@ const SPEC = {
         ctx.fillStyle = "rgba(8,12,18,0.74)"; roundRect(ctx, px, py, pw, ph, 10); ctx.fill();
         ctx.strokeStyle = state.safetyCar ? "rgba(255,210,74,0.95)" : "rgba(120,180,255,0.4)"; ctx.lineWidth = 1.5; roundRect(ctx, px, py, pw, ph, 10); ctx.stroke();
         ctx.fillStyle = state.safetyCar ? "#ffd24a" : state.retired ? "#ff6a6a" : "#8fe0ff"; ctx.font = "bold 12px ui-sans-serif";
-        ctx.fillText("REAL RACE" + (state.safetyCar ? " · SAFETY CAR" : state.retired ? " · RETIRED" : state.inPit ? " · IN PIT" : ""), px + 12, py + 20);
+        ctx.fillText("REAL RACE" + (state.safetyCar ? " · SAFETY CAR" : state.retired ? " · RETIRED" : state.inPitLane ? " · PIT LANE" : state.lapInvalid ? " · LAP INVALID" : ""), px + 12, py + 20);
         const pos = app.racePosition();
         ctx.fillStyle = "#eef2f7"; ctx.font = "800 16px ui-sans-serif";
         ctx.fillText("P" + (pos > 0 ? pos : "—") + " / " + app.fieldSize(), px + 12, py + 43);
@@ -2224,8 +2305,8 @@ const SPEC = {
         bar(py + 54, 1 - tw, tw > 0.8 ? "#ff5b5b" : tw > 0.55 ? "#ffb020" : "#7ce07c", "TYRE " + state.tyreComp.charAt(0).toUpperCase());
         bar(py + 72, state.fuelKg / 100, "#6fb8ff", "FUEL");
         bar(py + 90, state.damage, state.damage > 0.4 ? "#ff6a4a" : "#ff9a5b", "DMG");
-        ctx.fillStyle = "rgba(150,170,190,0.85)"; ctx.font = "10px ui-sans-serif";
-        ctx.fillText(state.inPit ? "in the pit lane…" : tw > 0.85 ? "tyres gone — BOX!" : state.retired ? "out of the race" : "Box button to pit", px + 12, py + 114);
+        ctx.fillStyle = state.lapInvalid ? "#ff8a5b" : "rgba(150,170,190,0.85)"; ctx.font = "10px ui-sans-serif";
+        ctx.fillText(state.inPitLane ? ("PIT LANE · limiter " + state.pitLimitKmh + (state.pitStage === "box" ? " · choose tyres" : state.pitStage === "service" ? " · servicing " + state.pitService.toFixed(1) + "s" : "")) : state.pitArmed ? "pit armed — into the lane at the line" : state.penaltyS ? ("+" + state.penaltyS + "s penalty · warn " + state.tlWarnings + "/3") : tw > 0.85 ? "tyres gone — Pit In!" : state.retired ? "out of the race" : "Pit In to box · warn " + state.tlWarnings + "/3", px + 12, py + 114);
       }
     ctx.restore();
   }
@@ -2486,7 +2567,7 @@ const SPEC = {
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Pit Wall"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0 });
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0 });
     if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
     setActive("hybridBtn", true);
     document.documentElement.classList.remove("trackpad-steer");
@@ -2637,6 +2718,10 @@ const SPEC = {
     el.egtRead.textContent = `${Math.round(state.egtC)}°C`;
     el.navRead.textContent = state.route.active ? state.route.name : "Free run";
     el.lapRead.textContent = state.lap.bestMs ? `${app.fmtLap(state.lap.curMs)} / ${app.fmtLap(state.lap.bestMs)}` : (state.lap.curMs > 0 ? app.fmtLap(state.lap.curMs) : "—");
+    { const pm = document.getElementById("pitMenu"); if (pm) pm.style.display = state.pitMenuOpen ? "block" : "none";
+      const pmf = document.getElementById("pmFuel"); if (pmf) pmf.textContent = "+" + state.pitFuelAdd + " kg";
+      const hl = (id, on) => { const b = document.getElementById(id); if (b) b.classList.toggle("on", on); };
+      hl("pmSoft", state.pitTireSel === "soft"); hl("pmMed", state.pitTireSel === "medium"); hl("pmHard", state.pitTireSel === "hard"); }
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
     el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetKmh)} km/h` : "Off";
     el.tcRead.textContent = state.esc ? (state.tractionControl ? "On" : "ESC only") : "Off";
@@ -2732,7 +2817,10 @@ const SPEC = {
     document.getElementById("launchBtn").addEventListener("click", app.armLaunch);
     document.getElementById("pitBtn").addEventListener("click", app.togglePit);
     document.getElementById("testDriverBtn").addEventListener("click", () => app.toggleTestDriver());
-    { const rb = document.getElementById("realBtn"); if (rb) rb.addEventListener("click", () => app.toggleRealMode()); const bb = document.getElementById("boxBtn"); if (bb) bb.addEventListener("click", () => app.boxPit()); }
+    { const rb = document.getElementById("realBtn"); if (rb) rb.addEventListener("click", () => app.toggleRealMode()); const bb = document.getElementById("boxBtn"); if (bb) bb.addEventListener("click", () => app.pitInOut());
+      const pmc = (id, fn) => { const b = document.getElementById(id); if (b) b.addEventListener("click", fn); };
+      pmc("pmSoft", () => app.pitTire("soft")); pmc("pmMed", () => app.pitTire("medium")); pmc("pmHard", () => app.pitTire("hard"));
+      pmc("pmFuelDn", () => app.pitFuel(-5)); pmc("pmFuelUp", () => app.pitFuel(5)); pmc("pmGo", () => app.pitConfirm()); }
     document.getElementById("upPaddle").addEventListener("click", app.paddleUp);
     document.getElementById("downPaddle").addEventListener("click", app.paddleDown);
     document.getElementById("voiceBtn").addEventListener("click", app.processVoice);
