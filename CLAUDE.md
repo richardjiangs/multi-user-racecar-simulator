@@ -126,12 +126,24 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Toyota GR Supra | 285 kW / 387 PS @ 5,800–6,500 (B58 twin-scroll turbo I6) | 500 Nm @ 1,800–5,000 | 4.1 s | 250 governed | 8-ZF auto | 1,520 kg |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 
-The eleven F1 cars share **one calibrated chassis SPEC** (identical physics), so a
-single `--calibrate f1mercedes` certifies all eleven; they differ only in livery
-(`var(--f1body)` body + `var(--teal)` accent), race number, engine badge and a
-per-engine `_satCurve` timbre. Feature set is F1-specific: ERS **Override** boost
-(not a road-car special), e-Deploy gauge, halo + survival cell, active aero (X/Z),
-detachable F1 wheel, slicks.
+The eleven F1 cars share **one calibrated chassis SPEC** so a single
+`--calibrate f1mercedes` certifies all eleven at the same exact 0-100; they differ
+in livery (`var(--f1body)` body + `var(--teal)` accent), race number, engine badge,
+a per-engine `_satCurve` timbre, and a per-team `TEAM = {pace,top,corner,tyreDeg,
+pitCrew,dnf,dns}` object (real pecking order + reliability). Feature set is
+F1-specific: ERS **Override** boost (not a road-car special), e-Deploy gauge, halo
++ survival cell, active aero (X/Z), detachable F1 wheel, slicks.
+
+**Real Race Mode** (Circuit tab toggle, F1 only, OFF by default so the certified
+0-100 stays exact): flips assists off + the full 2026 grid on and runs every team
+to its own `TEAM` pace/reliability. `realPower()`/`realTop()`/`realGrip()` (all `1`
+when off) fold in tyre wear (grip fades over a stint), fuel burn (car lightens),
+and damage; `realStep(dt,dsdt)` runs tyre/fuel/damage/pit-timer/safety-car each step
+and rolls a per-lap mechanical DNF (yours and the rivals', per-team `dnf`); some
+rivals `dns` (don't start). `boxPit()` = tyre change + repair + pit-lane time loss
+(cheaper under the safety car). A rival stop or a crash can `triggerSC()` a safety
+car that bunches the field. Everything (P, lap, stops, tyre/fuel/damage bars, SC/PIT)
+draws in `drawTelemetry`. All state is real-mode-gated, so perf-test is unaffected.
 
 ## index.html — garage + online race shell
 
