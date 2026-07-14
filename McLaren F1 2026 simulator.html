@@ -1991,22 +1991,23 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- the FIA halo, drawn where it really sits: a titanium hoop sweeping across the
-    // top of the view from behind each shoulder to a single central front pillar that
-    // rises through the driver's sightline. Correct place — not exaggerated, not hidden. ----
-    const cxc = w / 2 + sway * 0.6, apexY = h * 0.13;
+    // ---- the FIA halo from the driver's seat: a single central pillar rises from the
+    // chassis directly ahead and splits into the titanium ring, whose front dips down to
+    // meet the pillar while its two arms sweep UP and outward over the shoulders (a
+    // wishbone — pillar standing up, ring opening upward; NOT an arch with a hanging strut). ----
+    const cxc = w / 2 + sway * 0.6, junc = h * 0.27;
     ctx.save(); ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.beginPath();
-    ctx.moveTo(-w * 0.03 + sway, h * 0.64);
-    ctx.quadraticCurveTo(w * 0.14 + sway, apexY - h * 0.02, cxc, apexY);
-    ctx.quadraticCurveTo(w * 0.86 + sway, apexY - h * 0.02, w * 1.03 + sway, h * 0.64);
-    ctx.strokeStyle = "#070809"; ctx.lineWidth = h * 0.052; ctx.stroke();          // carbon hoop body
+    ctx.moveTo(w * 0.03 + sway, -h * 0.02);
+    ctx.quadraticCurveTo(w * 0.26 + sway, h * 0.12, cxc, junc);
+    ctx.quadraticCurveTo(w * 0.74 + sway, h * 0.12, w * 0.97 + sway, -h * 0.02);
+    ctx.strokeStyle = "#070809"; ctx.lineWidth = h * 0.05; ctx.stroke();           // carbon ring body
     ctx.strokeStyle = "#23272d"; ctx.lineWidth = h * 0.024; ctx.stroke();          // titanium sheen
     ctx.globalAlpha = 0.4; ctx.strokeStyle = ACC; ctx.lineWidth = h * 0.006; ctx.stroke(); ctx.globalAlpha = 1;
-    // central front pillar: a thin tapered strut from the hoop apex down to the dash
+    // central front pillar: a thin tapered strut rising from the dash up to the ring's dip
     const pw = h * 0.016;
     ctx.beginPath();
-    ctx.moveTo(cxc - pw, apexY + h * 0.008); ctx.lineTo(cxc + pw, apexY + h * 0.008);
+    ctx.moveTo(cxc - pw, junc - h * 0.006); ctx.lineTo(cxc + pw, junc - h * 0.006);
     ctx.lineTo(cxc + pw * 1.6, dashY); ctx.lineTo(cxc - pw * 1.6, dashY); ctx.closePath();
     ctx.fillStyle = "#0a0c10"; ctx.fill();
     ctx.strokeStyle = "#2a2f37"; ctx.lineWidth = 1.2; ctx.stroke();
