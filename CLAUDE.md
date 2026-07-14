@@ -137,13 +137,22 @@ F1-specific: ERS **Override** boost (not a road-car special), e-Deploy gauge, ha
 **Real Race Mode** (Circuit tab toggle, F1 only, OFF by default so the certified
 0-100 stays exact): flips assists off + the full 2026 grid on and runs every team
 to its own `TEAM` pace/reliability. `realPower()`/`realTop()`/`realGrip()` (all `1`
-when off) fold in tyre wear (grip fades over a stint), fuel burn (car lightens),
-and damage; `realStep(dt,dsdt)` runs tyre/fuel/damage/pit-timer/safety-car each step
-and rolls a per-lap mechanical DNF (yours and the rivals', per-team `dnf`); some
-rivals `dns` (don't start). `boxPit()` = tyre change + repair + pit-lane time loss
-(cheaper under the safety car). A rival stop or a crash can `triggerSC()` a safety
-car that bunches the field. Everything (P, lap, stops, tyre/fuel/damage bars, SC/PIT)
-draws in `drawTelemetry`. All state is real-mode-gated, so perf-test is unaffected.
+when off) fold in tyre wear (grip fades over a stint; soft/med/hard degrade
+differently), fuel burn (car lightens) and damage. `realStep(dt,dsdt)` runs the
+per-step sim: tyre/fuel/damage, per-team failure-risk build-up, the **pit-lane
+state machine** and the safety car. `onRaceLap()` (called from `updateLap`) rolls a
+per-lap mechanical DNF for you and the rivals (per-team `dnf`); some `dns`.
+**Pit lane** (`pitInOut` arms it): you peel in at the line, the 80 km/h limiter
+(60 at Monaco) auto-engages, the car stops in its box and the `#pitMenu` overlay
+lets you choose compound (`pitTire`) and fuel (`pitFuel`); `pitConfirm` sets a
+service time that scales with fuel + repairs, then you rejoin. **Collisions**
+(`checkContact`) with a rival cost damage + speed + possible puncture/spin.
+**Track limits**: all four wheels over the line invalidates the lap (`lapInvalid`,
+deleted in `updateLap`), with race warnings → black-and-white flag → `penaltyS`;
+walls on street circuits crash you. Enough damage retires the car. A rival stop or
+a crash can `triggerSC()` a safety car that bunches the field. HUD panel (position,
+lap, stops, tyre/fuel/damage bars, PIT LANE/limiter/LAP INVALID) draws in
+`drawTelemetry`. All state is real-mode-gated, so perf-test is unaffected.
 
 ## index.html — garage + online race shell
 
