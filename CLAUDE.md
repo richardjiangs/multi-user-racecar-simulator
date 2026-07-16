@@ -154,6 +154,35 @@ retire per race, most-fragile teams most often), plus per-team `dns`. This runs 
 **private practice too** (F1 cars always race the full 11-car grid with reliability).
 `onRaceLap()` just advances `raceLap`.
 
+**Rivals live real races (v5)** — every rival tracks tyre `wear` and pits at **its
+own garage** (`boxPhAt(slot,L)`; `slot` = 2025 WCC garage order from pit entry:
+McLaren, Mercedes, Red Bull, Ferrari, Williams, RB, Aston, Audi, Haas, Alpine,
+Cadillac last) for `rm.pit` seconds (+repairs × `rm.fix`); contact sets `needsFix`
+so they call in for a wing. When the pre-rolled DNF fires: `crashy` cars spin and
+park **off the road** as a wreck (75% SC), tyre/nose failures **limp to the pits
+and vanish into the garage** (`gone`), engine-type failures coast off-line and park.
+**DNS cars never appear on track** (`gone: true` at seed). `gone` cars are skipped by
+rendering, the minimap, `racePosition`, `fieldSize` (which also no longer counts the
+safety car) and the gap HUD. TEAM/RM_GRID/ERS constants encode the **real July-2026
+season** (researched): WCC Mercedes > Ferrari > McLaren > Red Bull > Alpine > RB >
+Haas > Williams > Audi > Aston (1 pt) > Cadillac; Mercedes fastest but battery-module
+failures (its `causeEng`/`cause` strings say so, also for customers McLaren, Alpine,
+Williams); crews Ferrari 2.0 s > McLaren 2.15 > Mercedes 2.2 > RB 2.25 (2026 DHL
+data). `realTop()` returns `TEAM.top` in **every** mode (top-speed spread, launch
+untouched). The 2026 **MOM rule** gates ERS Override in real mode: only within ~1 s
+of the car ahead. The player boxes at **their own team's slot** too, and `drawPitLane`
+labels it "YOUR BOX" (`GARAGE_COLS`/`TEAM_SLOT`).
+
+**F1-correct cockpit (v5)** — no road-car controls in the F1 sims: quick bar has
+**Strat** (`cycleStrat`: Standard/Push/Lean — ±2% power, ×2.2/×0.6 engine wear,
+fuel burn; default Standard so certification is untouched), **B-Bias** (`cycleBias`:
+Std/Fwd/Rear — braking-only yaw feel), **Rain Light** (no headlamps on an F1 car);
+bottombar **Radio** (was Horn; `teamRadio()` plays per-team `RADIO_LINES` pit-wall
+calls; key H) and **Diff** (was ESC). Cockpit tab: pedal-box reach, cockpit temp,
+Drinks Pump, Helmet Airflow, Dash Bright, Team Radio, Shift Lights (no seat
+recline/climate/cabin-audio); "doors" are Steering Wheel / Headrest. The pit menu
+has **no refuelling** (banned since 2010) — tyres + repairs only.
+
 **Drive-in pit (v3/v4, no button)** — the pit is a real place you steer into: cross
 to the pit side (`laneOffset < -halfWidth*0.72`) in the entry window (`ph ∈ [L-260,
 L-20]`) and `inPitLane`/`pitStage:"enter"` arm automatically, the 80 km/h limiter

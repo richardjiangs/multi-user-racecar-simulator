@@ -380,9 +380,9 @@
       <section class="quick" aria-label="Quick controls">
         <button id="aeroBtn" class="active" title="Active rear wing / airbrake">Aero</button>
         <button id="doorAllBtn" title="No doors — open cockpit">Cockpit</button>
-        <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
-        <button id="liftBtn" title="Front axle lift">Lift</button>
-        <button id="lightsBtn" class="active" title="Headlamps">Lights</button>
+        <button id="exhaustBtn" title="Engine strat — Standard / Push / Lean">Strat</button>
+        <button id="liftBtn" title="Brake bias — Standard / Forward / Rearward">B-Bias</button>
+        <button id="lightsBtn" class="active" title="FIA rain light — flashes at the rear">Rain Light</button>
         <button id="resetBtn" title="Reset to pit lane">Reset</button>
       </section>
     </header>
@@ -415,7 +415,7 @@
 
       <aside class="drive-help">
         <strong>Drive it yourself</strong><br>
-        <kbd>W</kbd>/<kbd>&uarr;</kbd> throttle · <kbd>S</kbd>/<kbd>&darr;</kbd>/<kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>E</kbd>/<kbd>Q</kbd> shift up/down · <kbd>R</kbd> reverse · <kbd>N</kbd> neutral · <kbd>L</kbd> launch · <kbd>H</kbd> horn · <kbd>X</kbd> hold: X-mode (low drag) · <kbd>V</kbd> hold: ERS override boost.<br>
+        <kbd>W</kbd>/<kbd>&uarr;</kbd> throttle · <kbd>S</kbd>/<kbd>&darr;</kbd>/<kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>E</kbd>/<kbd>Q</kbd> shift up/down · <kbd>R</kbd> reverse · <kbd>N</kbd> neutral · <kbd>L</kbd> launch · <kbd>H</kbd> team radio · <kbd>X</kbd> hold: X-mode (low drag) · <kbd>V</kbd> hold: ERS override boost.<br>
         Or open <strong>Circuit</strong>, pick a track, and hand it to the test driver for a hot lap.
       </aside>
 
@@ -441,19 +441,19 @@
           </div>
         </div>
         <div class="control-grid">
-          <button data-door="driver">Driver Door</button>
-          <button data-door="passenger">Passenger Door</button>
-          <button data-door="all">Both Doors</button>
+          <button data-door="driver">Steering Wheel</button>
+          <button data-door="passenger">Headrest</button>
+          <button data-door="all">Wheel + Headrest</button>
           <button id="wingBtn" class="active">Rear Wing</button>
-          <button id="exhaustBtn2" class="active">Exhaust Flap</button>
-          <button id="lightsBtn2" class="active">Headlamps</button>
+          <button id="exhaustBtn2">Strat Mode</button>
+          <button id="lightsBtn2" class="active">Rain Light</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Open</b><span>open cockpit + halo</span></div>
-          <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
+          <div class="readout"><b id="doorState">Open</b><span>wheel &amp; headrest</span></div>
+          <div class="readout"><b id="rideHeightRead">Standard</b><span>brake bias</span></div>
           <div class="readout"><b>Pirelli</b><span>18-inch slicks</span></div>
-          <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
+          <div class="readout"><b id="lightState">Auto</b><span>FIA rain light</span></div>
         </div>
       </section>
 
@@ -465,28 +465,28 @@
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
-          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat recline</span></div>
-          <div class="readout"><b id="climateRead">22&deg;C</b><span>cabin climate</span></div>
+          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>pedal-box reach</span></div>
+          <div class="readout"><b id="climateRead">22&deg;C</b><span>cockpit temp</span></div>
           <div class="readout"><b id="beltRead">Open</b><span>safety harness</span></div>
           <div class="readout"><b id="modeReadCab">Sport</b><span>drive mode</span></div>
         </div>
         <div class="divider"></div>
         <div class="control-grid">
-          <button id="frontForward">Recline +</button>
-          <button id="frontBack">Recline -</button>
+          <button id="frontForward">Pedal Box +</button>
+          <button id="frontBack">Pedal Box -</button>
           <button id="harnessBtn">Harness</button>
-          <button id="heatBtn">Seat Heat</button>
-          <button id="coolBtn">Climate A/C</button>
-          <button id="ambientBtn" class="active">Ambient Light</button>
-          <button id="audioBtn">Cabin Audio</button>
-          <button id="shifterLightBtn" class="active">Spine Light</button>
+          <button id="heatBtn">Drinks Pump</button>
+          <button id="coolBtn">Helmet Airflow</button>
+          <button id="ambientBtn" class="active">Dash Bright</button>
+          <button id="audioBtn">Team Radio</button>
+          <button id="shifterLightBtn" class="active">Shift Lights</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
           <button id="hybridBtn" class="race active" title="Override — full MGU-K electric deploy for the complete ~1,013 PS combined; off runs the V6 alone">Override</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
-          <button id="studioUploadBtn" title="Upload an MP3 — or drop in an MP4/MOV and we lift the soundtrack out">&#9835; Upload your music</button>
-          <span class="small now" id="studioNowPlaying">Cabin silent — engine only</span>
+          <button id="studioUploadBtn" title="Garage playlist — upload an MP3, or an MP4/MOV and we lift the soundtrack out">&#9835; Garage playlist</button>
+          <span class="small now" id="studioNowPlaying">Radio silent — engine only</span>
         </div>
       </section>
 
@@ -609,10 +609,10 @@
     <footer class="bottombar">
       <section class="console" aria-label="Vehicle functions">
         <button id="modeBtn" class="race active">Race</button>
-        <button id="escBtn" class="active toggle">ESC</button>
+        <button id="escBtn" class="active toggle" title="Differential — locked stabilises the rear, open lets it rotate">Diff</button>
         <button id="launchBtn">Launch</button>
         <button id="pitBtn" class="toggle">Pit Limit</button>
-        <button id="hornBtn">Horn</button>
+        <button id="hornBtn">Radio</button>
       </section>
 
       <section class="gearbox" aria-label="Gears and pedals">
@@ -701,9 +701,7 @@
       <button id="pmMed" data-tire="medium" class="on">Medium</button>
       <button id="pmHard" data-tire="hard">Hard</button>
     </div>
-    <div class="pm-row"><span>Add fuel</span>
-      <button id="pmFuelDn">&minus;5</button><b id="pmFuel">+0 kg</b><button id="pmFuelUp">+5</button>
-    </div>
+    <div class="pm-row"><span>Fuel</span><span style="font-size:11px;color:#9fb2c6">race fuel to the flag — refuelling banned since 2010</span></div>
     <button id="pmGo" class="pm-go">Confirm — release the car</button>
   </div>
   <script type="module">
@@ -917,7 +915,7 @@ const SPEC = {
     hybrid: true,                  // MGU-K override engaged (full ~1,013 PS combined) — default on
     hybridVis: 0,                  // deploy indicator
     testDriver: false,
-    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
+    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, strat: "standard", bbias: "std", rainLight: false, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
@@ -1372,23 +1370,34 @@ const SPEC = {
      lightens), contact and offs damage the car, power units can fail (yours and the
      rivals'), some cars don't even start, you pit for fresh tyres + repairs, and a safety
      car can neutralise the race and hand it to someone else. Everything shows on the HUD. */
-  const TEAM = { name: "Cadillac", pace: 0.98, top: 0.988, corner: 0.978, tyreDeg: 1.12, pitCrew: 3.2, rel: 0.62, dnf: 0.06, dns: 0.045 };
+  const TEAM = { name: "Cadillac", pace: 0.974, top: 0.984, corner: 0.973, tyreDeg: 1.12, pitCrew: 3.1, rel: 0.65, dnf: 0.14, dns: 0.05, slot: 10, fix: 1.25, causeEng: "a power-unit failure" };
+  const RADIO_LINES = ["Year one — every lap is data, keep it on the island.","Ferrari customer power — the punch is there when you need it.","Store's small, pick your override moments.","Box box — crew's still learning, give them room.","Detroit's watching. Make history."];
   const ERS = { storeS: 5, regen: 0.024, boost: 1.11, xShed: 0.28, blurb: "Ferrari customer power in year one — the smallest store on the grid." };   // this team's 2026 power-unit character
   // grid reliability/pace table: [name, body, pace, corner, dnf/race, dns prob]
+  // July 2026 form, 9 rounds in (real): Mercedes lead but the battery module keeps failing;
+  // Ferrari P2 with the fastest crew (2.00 s, Suzuka); McLaren quick but fragile (double DNS,
+  // Shanghai); Red Bull DNF-riddled; Alpine/Racing Bulls best of the rest; Aston on 1 point;
+  // Audi and Cadillac at the back. slot = 2025 WCC garage order from the pit entry.
   const RM_GRID = [
-    ["Mercedes-AMG","#00d2be",0.996,0.994,0.06,0.015,1.05],["Red Bull","#1e2a6e",0.999,0.997,0.05,0.010,1.30],
-    ["Ferrari","#e10600",0.998,0.996,0.06,0.012,1.10],["McLaren","#ff8000",1.000,1.000,0.05,0.010,1.35],
-    ["Aston Martin","#00594f",0.990,0.988,0.08,0.020,0.95],["Alpine","#0a4bb0",0.987,0.985,0.10,0.025,0.85],
-    ["Williams","#1868d6",0.986,0.982,0.11,0.030,0.85],["Racing Bulls","#1a2b6b",0.988,0.986,0.09,0.020,0.90],
-    ["Haas","#b6babd",0.985,0.983,0.10,0.025,0.85],["Audi","#0a0c10",0.983,0.980,0.12,0.030,0.75],
-    ["Cadillac","#0b1c3a",0.980,0.978,0.14,0.040,0.62]
+    { n:"Mercedes-AMG", c:"#00d2be", pace:1.000, corner:0.997, dnf:0.10, dns:0.010, rel:0.90, slot:1,  deg:1.00, pit:2.2,  fix:0.90, cause:"a battery-module failure" },
+    { n:"Red Bull",     c:"#1e2a6e", pace:0.992, corner:0.992, dnf:0.12, dns:0.015, rel:0.80, slot:2,  deg:1.00, pit:2.3,  fix:0.95, cause:"a power-unit failure" },
+    { n:"Ferrari",      c:"#e10600", pace:0.997, corner:0.996, dnf:0.05, dns:0.008, rel:1.15, slot:3,  deg:1.02, pit:2.0,  fix:0.85, cause:"an ERS deployment fault" },
+    { n:"McLaren",      c:"#ff8000", pace:0.995, corner:0.995, dnf:0.11, dns:0.030, rel:0.85, slot:0,  deg:0.96, pit:2.15, fix:0.90, cause:"a battery-module failure" },
+    { n:"Aston Martin", c:"#00594f", pace:0.976, corner:0.980, dnf:0.12, dns:0.030, rel:0.75, slot:6,  deg:1.08, pit:2.7,  fix:1.10, cause:"a hybrid deployment failure" },
+    { n:"Alpine",       c:"#0a4bb0", pace:0.986, corner:0.984, dnf:0.06, dns:0.012, rel:1.00, slot:9,  deg:1.04, pit:2.5,  fix:1.00, cause:"a battery-module failure" },
+    { n:"Williams",     c:"#1868d6", pace:0.980, corner:0.978, dnf:0.08, dns:0.020, rel:0.90, slot:4,  deg:1.06, pit:2.55, fix:1.05, cause:"a battery-module failure" },
+    { n:"Racing Bulls", c:"#1a2b6b", pace:0.986, corner:0.985, dnf:0.05, dns:0.010, rel:1.05, slot:5,  deg:1.03, pit:2.25, fix:0.95, cause:"a power-unit failure" },
+    { n:"Haas",         c:"#b6babd", pace:0.982, corner:0.981, dnf:0.07, dns:0.015, rel:0.95, slot:8,  deg:1.08, pit:2.6,  fix:1.05, cause:"a power-unit failure" },
+    { n:"Audi",         c:"#0a0c10", pace:0.978, corner:0.976, dnf:0.13, dns:0.050, rel:0.70, slot:7,  deg:1.10, pit:2.9,  fix:1.15, cause:"a power-unit failure" },
+    { n:"Cadillac",     c:"#0b1c3a", pace:0.974, corner:0.973, dnf:0.14, dns:0.050, rel:0.65, slot:10, deg:1.12, pit:3.1,  fix:1.25, cause:"a power-unit failure" }
   ];
+  const boxPhAt = (slot, L) => L - 235 + slot * 18;      // garages run champion-first from the pit entry
   // named car systems and how a per-team reliability 'rel' turns into a growing failure probability
   const SYS_KEYS = ["engine","gearbox","hydraulics","brakes","tyre","nose"];
   function newSys() { return { engine:0, gearbox:0, hydraulics:0, brakes:0, tyre:0, nose:0 }; }
   const CAUSE = { engine:"a power-unit failure", gearbox:"a gearbox failure", hydraulics:"a hydraulics failure", brakes:"brake failure", tyre:"a puncture", nose:"terminal front-wing damage" };
   function realPower() { if (!state.realMode) return 1; if (state.retired) return 0; const dmg = 1 - state.damage * 0.35, fuel = 1 + (100 - state.fuelKg) / 100 * 0.03, tyre = 1 - state.tyreWear * 0.10; return TEAM.pace * dmg * fuel * tyre; }
-  function realTop() { return state.realMode ? TEAM.top : 1; }
+  function realTop() { return TEAM.top; }   // per-team straight-line speed, every mode (launch is unaffected)
   function realGrip() { if (!state.realMode) return 1; return TEAM.corner * (1 - state.tyreWear * 0.28) * (1 - state.damage * 0.20); }
   function triggerSC(why) {
     if (state.safetyCar) return;
@@ -1423,13 +1432,13 @@ const SPEC = {
   function pitTire(c) { if (state.pitStage === "box") state.pitTireSel = c; }
   function pitFuel(d) { if (state.pitStage === "box") state.pitFuelAdd = clamp(state.pitFuelAdd + d, 0, 50); }
   function pitPlan() {                                    // what the crew will do, and how long it takes
-    const s = state.sys, items = ["4 × " + state.pitTireSel];
-    let t = TEAM.pitCrew + state.pitFuelAdd * 0.35;
-    if (s.nose > 0.12) { t += 3.5 + s.nose * 6; items.push("front wing"); }
-    if (s.gearbox > 0.2) { t += 5 + s.gearbox * 9; items.push("gearbox"); }
-    if (s.hydraulics > 0.2) { t += 3 + s.hydraulics * 6; items.push("hydraulics"); }
-    if (s.brakes > 0.2) { t += 3.5 + s.brakes * 6; items.push("brakes"); }
-    if (s.engine > 0.25) { t += 6 + s.engine * 10; items.push("PU de-rate fix"); }
+    const s = state.sys, items = ["4 × " + state.pitTireSel], fx = TEAM.fix || 1;
+    let t = TEAM.pitCrew;                                    // refuelling has been banned since 2010 — tyres + repairs only
+    if (s.nose > 0.12) { t += (3.5 + s.nose * 6) * fx; items.push("front wing"); }
+    if (s.gearbox > 0.2) { t += (5 + s.gearbox * 9) * fx; items.push("gearbox"); }
+    if (s.hydraulics > 0.2) { t += (3 + s.hydraulics * 6) * fx; items.push("hydraulics"); }
+    if (s.brakes > 0.2) { t += (3.5 + s.brakes * 6) * fx; items.push("brakes"); }
+    if (s.engine > 0.25) { t += (6 + s.engine * 10) * fx; items.push("PU de-rate fix"); }
     return { t, items, text: items.join(" · ") + " — ~" + t.toFixed(1) + " s" };
   }
   function pitConfirm() {
@@ -1437,7 +1446,7 @@ const SPEC = {
     const plan = pitPlan();
     state.pitService = plan.t;
     state.pitStage = "service"; state.pitMenuOpen = false;
-    showToast("Stationary " + plan.t.toFixed(1) + " s — " + plan.items.join(", ") + (state.pitFuelAdd ? ", +" + state.pitFuelAdd + " kg fuel" : "") + ".", TEAM.name);
+    showToast("Stationary " + plan.t.toFixed(1) + " s — " + plan.items.join(", ") + ".", TEAM.name);
   }
   function checkContact(dt) {
     state.contactCool = Math.max(0, (state.contactCool || 0) - dt);
@@ -1454,7 +1463,7 @@ const SPEC = {
         if (Math.random() < 0.08) state.sys.gearbox = clamp(state.sys.gearbox + 0.12, 0, 1);
         state.damage = clamp(Math.max(state.sys.nose, state.sys.tyre), 0, 1);
         if (Math.random() < 0.30) state.tyreWear = clamp(state.tyreWear + 0.35, 0, 1);
-        r.speedMps *= 0.72; r.hurtT = 5 + Math.random() * 5;                     // their wing's bent — slower for a stretch
+        r.speedMps *= 0.72; r.hurtT = 5 + Math.random() * 5; r.needsFix = true;  // their wing's bent — they'll have to pit for it
         if (Math.random() < 0.35) { r.willDnf = true; r.dnfAtT = Math.min(r.dnfAtT || 1e9, state.time + 30 + Math.random() * 300); r.failCause = Math.random() < 0.6 ? "nose" : "tyre"; }
         let msg = "Contact with " + r.name + " — both cars damaged!";
         if (Math.random() < 0.26) { r.out = true; r.retLap = state.raceLap; triggerSC(r.name + " spun off"); msg += " They're out."; }
@@ -1471,7 +1480,7 @@ const SPEC = {
     state.pitLimitKmh = /Monaco/.test(state.route.name || "") ? 60 : 80;
     state.tlCool = Math.max(0, state.tlCool - dt);
     // fuel burns off (car lightens); tyres wear with load — softer rubber wears faster
-    state.fuelKg = Math.max(0, state.fuelKg - dt * (0.11 + state.throttle * 0.28) * (moving ? 1 : 0.15));
+    state.fuelKg = Math.max(0, state.fuelKg - dt * (0.11 + state.throttle * 0.28) * (moving ? 1 : 0.15) * (state.strat === "push" ? 1.12 : state.strat === "lean" ? 0.85 : 1));
     const load = clamp(Math.abs(state.lateralG) * 0.5 + state.throttle * 0.35 + spd / 140, 0, 2);
     const compDeg = state.tyreComp === "soft" ? 1.6 : state.tyreComp === "hard" ? 0.65 : 1.0;
     if (moving && !state.inPitLane) state.tyreWear = clamp(state.tyreWear + dt * load * 0.0016 * compDeg * TEAM.tyreDeg, 0, 1);
@@ -1479,14 +1488,14 @@ const SPEC = {
     const revStress = clamp(state.rpm / SPEC.redlineRpm - 0.9, 0, 0.1) * 6;
     // per-system reliability — each grows on its own stress; reach 100% and it fails for real
     const relF = (state.safetyCar ? 0.3 : 1) / TEAM.rel;
-    state.sys.engine = clamp(state.sys.engine + dt * (0.00010 + revStress * 0.0018) * relF, 0, 1);
+    state.sys.engine = clamp(state.sys.engine + dt * ((0.00010 + revStress * 0.0018) * (state.strat === "push" ? 2.2 : state.strat === "lean" ? 0.6 : 1) + (state.ersBoost ? 0.0006 : 0)) * relF, 0, 1);
     state.sys.gearbox = clamp(state.sys.gearbox + dt * (0.00009 + (state.shiftTimer > 0 ? 0.0002 : 0)) * relF, 0, 1);
     state.sys.hydraulics = clamp(state.sys.hydraulics + dt * 0.00008 * relF, 0, 1);
     state.sys.brakes = clamp(state.sys.brakes + dt * (0.00008 + state.brake * 0.0004) * relF, 0, 1);
     state.sys.tyre = clamp(state.sys.tyre + dt * state.tyreWear * state.tyreWear * 0.0011, 0, 1);   // worn rubber risks a puncture
     state.damage = Math.max(state.sys.nose, state.sys.tyre);
     if (!state.retired && !state.inPitLane) {
-      for (const k of ["engine", "gearbox", "hydraulics", "brakes"]) if (state.sys[k] >= 1) { state.retired = true; showToast("You're out — " + CAUSE[k] + ".", TEAM.name); triggerSC("your car stopped"); break; }
+      for (const k of ["engine", "gearbox", "hydraulics", "brakes"]) if (state.sys[k] >= 1) { state.retired = true; showToast("You're out — " + (k === "engine" ? TEAM.causeEng : CAUSE[k]) + ".", TEAM.name); triggerSC("your car stopped"); break; }
       if (!state.retired && state.sys.nose >= 1) { state.retired = true; showToast("Front wing failed under the car — retired.", TEAM.name); triggerSC("your car stopped"); }
       if (!state.retired && state.sys.tyre >= 0.999) { state.tyreWear = 1; state.sys.tyre = 0.9; state.speedMps *= 0.7; showToast("PUNCTURE — limp to the pits!", TEAM.name); }
     }
@@ -1496,7 +1505,7 @@ const SPEC = {
       showToast("Into the pit lane — pit limiter on at " + state.pitLimitKmh + " km/h.", "Pit Wall");
     }
     if (state.inPitLane) {
-      const pl = state.pitLimitKmh * KMH, boxZone = ph > L - 45 || ph < 45;
+      const pl = state.pitLimitKmh * KMH, _myBox = boxPhAt(TEAM.slot, L), _dBox = ph - _myBox, boxZone = _dBox > -14 && _dBox < 12;
       state.laneOffset = approach(state.laneOffset, -(halfWidthAt(state.distanceM) + 5.5), 0.05, dt); // onto the pit apron
       if (state.pitStage === "enter") {
         if (boxZone) state.speedMps = Math.max(0, state.speedMps - 30 * dt); else if (state.speedMps > pl) state.speedMps = pl;
@@ -1524,10 +1533,10 @@ const SPEC = {
     if (!state.realMode) return 0;
     if (state.retired) return 0;
     let ahead = 0; const L = lapLen();
-    for (const r of state.rivals) { if (r.out || r.dns) continue; let d = ((r.distM - state.distanceM) % L + L) % L; if (d > 4 && d < L * 0.5) ahead++; }
+    for (const r of state.rivals) { if (r.out || r.dns || r.isSC || r.gone) continue; let d = ((r.distM - state.distanceM) % L + L) % L; if (d > 4 && d < L * 0.5) ahead++; }
     return ahead + 1;
   }
-  function fieldSize() { return 1 + state.rivals.filter(r => !r.dns).length; }
+  function fieldSize() { return 1 + state.rivals.filter(r => !r.dns && !r.isSC).length; }
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
@@ -1537,15 +1546,17 @@ const SPEC = {
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => {
       const rm = RM_GRID[i % RM_GRID.length];
-      const dns = Math.random() < rm[5];                                    // some cars fail to start (any mode)
+      const dns = Math.random() < rm.dns;                                   // some cars fail to start (any mode)
       state.rivals.push({
-        name: g.name, body: g.body, stripe: g.stripe,
-        topMps: g.top / 3.6 * (rm ? (0.94 + rm[2] * 0.06) : 1),
-        latG: g.latG * (rm ? rm[3] : 1), accel: g.accel * (rm ? rm[2] : 1),
-        rmDnf: rm[4], rel: rm[6], fail: 0,
-        willDnf: Math.random() < clamp(rm[4] * 1.4, 0, 0.32),         // this car's chance of a race-ending fault
+        name: g.name, body: g.body, stripe: g.stripe,   // gone => in the garage (never rendered)
+        topMps: g.top / 3.6 * (0.94 + rm.pace * 0.06),
+        latG: g.latG * rm.corner, accel: g.accel * rm.pace,
+        rmDnf: rm.dnf, rel: rm.rel, fail: 0, slot: rm.slot, deg: rm.deg, pitS: rm.pit, fixS: rm.fix, causeStr: rm.cause,
+        willDnf: Math.random() < clamp(rm.dnf * 1.4, 0, 0.32),        // this car's chance of a race-ending fault
+        crashy: Math.random() < 0.30,                                 // if it breaks, does it break ON the track?
         dnfAtT: state.time + 90 + Math.random() * 1500,               // ...and when it would strike (spread across the race)
-        failCause: SYS_KEYS[Math.floor(Math.random() * 4)], dns, out: false, retLap: 0,
+        failCause: SYS_KEYS[Math.floor(Math.random() * 4)], dns, out: false, retLap: 0, gone: dns,
+        wear: 0, wantPit: false, pitState: "", pitT: 0, needsFix: false, limp: false, hurtT: 0,
         distM: dns ? state.distanceM - 60 - i * 5 : state.distanceM + (loop ? 30 + i * 22 : 50 + (i - 2) * 95),
         lane: (i % 2 ? 1 : -1) * 2.4, speedMps: dns ? 0 : 45, brake: 0
       });
@@ -1556,8 +1567,44 @@ const SPEC = {
     if (!state.raceGrid || !state.rivals.length) return;
     for (const r of state.rivals) {
       if (r.isSC) { r.speedMps = approach(r.speedMps, (state.scTimer > 4 ? 130 : 220) * KMH, 0.03, dt); r.distM += r.speedMps * dt; r.lane = approach(r.lane, 0, 0.05, dt); r.brake = 0; continue; }
-      if (r.dns) { r.speedMps = 0; continue; }                            // never started — sits on the grid
-      if (r.out) { r.speedMps = Math.max(0, r.speedMps - 9 * dt); r.distM += r.speedMps * dt; r.lane = approach(r.lane, r.lane >= 0 ? 3.6 : -3.6, 0.03, dt); continue; }  // retired — coasts off line
+      if (r.gone || r.dns) { r.speedMps = 0; continue; }                  // in the garage
+      const Lr = lapLen(), phr = ((r.distM % Lr) + Lr) % Lr;
+      const plR = (/Monaco/.test(state.route.name || "") ? 60 : 80) * KMH;
+      if (r.out) {                                                            // retired: limp to the pits, or park where it broke
+        if (r.limp) {
+          if (!r.pitState && phr > Lr - 262 && phr < Lr - 30) r.pitState = "in";
+          r.speedMps = Math.min(r.speedMps + 6 * dt, r.pitState ? plR : 40);
+          if (r.pitState) { r.lane = approach(r.lane, -(halfWidthAt(r.distM) + 7), 0.04, dt);
+            if (Math.abs(phr - boxPhAt(r.slot || 0, Lr)) < 8) { r.gone = true; r.speedMps = 0; showToast(r.name + " has crawled into the garage — retired.", "Race Control"); } }
+          r.distM += r.speedMps * dt; continue;
+        }
+        r.speedMps = Math.max(0, r.speedMps - 22 * dt); r.distM += r.speedMps * dt;
+        r.lane = approach(r.lane, (r.lane >= 0 ? 1 : -1) * (halfWidthAt(r.distM) + 4.5), 0.05, dt);   // a dead car parks OFF the road
+        continue;
+      }
+      // tyres wear with running; a worn or wounded car calls at its own garage
+      r.wear = clamp((r.wear || 0) + dt * (r.speedMps / 78) * 0.0016 * (r.deg || 1), 0, 1);
+      if (!r.wantPit && (r.wear > 0.78 || r.needsFix) && !state.safetyCar) r.wantPit = true;
+      if (r.pitState === "" && r.wantPit && phr > Lr - 262 && phr < Lr - 30) r.pitState = "in";
+      if (r.pitState) {                                                       // their own pit stop, at their own garage
+        if (r.pitState === "in") {
+          r.lane = approach(r.lane, -(halfWidthAt(r.distM) + 7), 0.04, dt);
+          if (r.speedMps > plR) r.speedMps = Math.max(plR, r.speedMps - 26 * dt);
+          const dBox = phr - boxPhAt(r.slot || 0, Lr);
+          if (dBox > -16 && dBox < 2) r.speedMps = Math.min(r.speedMps, Math.max(2, -dBox * 1.3));
+          if (Math.abs(dBox) < 2.5) { r.pitState = "box"; r.speedMps = 0; r.pitT = (r.pitS || 2.6) + (r.needsFix ? 5.5 * (r.fixS || 1) : 0); }
+          else r.distM += r.speedMps * dt;
+        } else if (r.pitState === "box") {
+          r.speedMps = 0; r.pitT -= dt;
+          if (r.pitT <= 0) { r.wear = 0; r.needsFix = false; r.hurtT = 0; r.wantPit = false; r.pitState = "out"; }
+        } else {                                                              // "out" — released, blend back in
+          r.speedMps = Math.min(r.speedMps + 9 * dt, plR);
+          r.lane = approach(r.lane, -(halfWidthAt(r.distM) + 7), 0.08, dt);
+          r.distM += r.speedMps * dt;
+          if (phr > 100 && phr < Lr - 300) r.pitState = "";
+        }
+        r.brake = 0; continue;
+      }
       const v = r.speedMps;
       // look ahead a real braking distance and slow to the tightest corner in that window,
       // at this car's own grip: v_corner = sqrt(latG * g / curvature)
@@ -1570,8 +1617,14 @@ const SPEC = {
       if (r.hurtT > 0) r.hurtT -= dt;
       if (!state.safetyCar && !r.isSC && r.willDnf && state.time >= r.dnfAtT) {   // the pre-rolled fault finally bites
         r.out = true; r.retLap = state.raceLap; r.fail = 1;
-        showToast(r.name + " is out — " + CAUSE[r.failCause] + ".", "Race Control");
-        if (Math.random() < 0.5) triggerSC(r.name + " stopped on track");
+        const kk = r.failCause, why = r.causeStr || CAUSE[kk];
+        if (r.crashy) { r.limp = false; r.lane += (Math.random() < 0.5 ? -1 : 1) * 2.2; r.speedMps *= 0.5;
+          showToast(r.name + " has crashed out — " + why + " at speed.", "Race Control");
+          if (Math.random() < 0.75) triggerSC(r.name + " is in the barrier"); }
+        else if (kk === "tyre" || kk === "nose") { r.limp = true;
+          showToast(r.name + " is limping back to the pits — " + CAUSE[kk] + ". Their race is over.", "Race Control"); }
+        else { r.limp = false; showToast(r.name + " is out — " + why + ".", "Race Control");
+          if (Math.random() < 0.5) triggerSC(r.name + " stopped on track"); }
       }
       if (state.safetyCar || state.scCar) {
         if (r.speedMps > 130 * KMH) r.speedMps = 130 * KMH;                       // bunch up behind the SC
@@ -1590,7 +1643,7 @@ const SPEC = {
   // nearest rival ahead and behind, in metres, for the HUD gap readout
   function rivalGaps() {
     let ahead = Infinity, behind = Infinity;
-    if (state.raceGrid) for (const r of state.rivals) { const d = rivalAhead(r); if (d >= 0) ahead = Math.min(ahead, d); else behind = Math.min(behind, -d); }
+    if (state.raceGrid) for (const r of state.rivals) { if (r.gone || r.out || r.dns || r.isSC) continue; const d = rivalAhead(r); if (d >= 0) ahead = Math.min(ahead, d); else behind = Math.min(behind, -d); }
     return { ahead, behind };
   }
 
@@ -1716,7 +1769,12 @@ const SPEC = {
     // ---- 2026 racing controls: X-mode active aero (hold X) + ERS Manual Override (hold V) ----
     const _spdc = Math.abs(state.speedMps);
     state.xMode = !!state.keys.KeyX && _spdc > 28 && state.brake < 0.2 && Math.abs(state.lateralG) < 1.7 && !state.inPitLane && !state.retired;
-    state.ersBoost = !!state.keys.KeyV && state.ersStore > 0.02 && state.throttle > 0.2 && !state.inPitLane && !state.retired;
+    const momOk = () => { if (!state.realMode) return true; const Lm = lapLen(); let best = 1e9;
+      for (const rr of state.rivals) { if (rr.out || rr.dns || rr.gone || rr.isSC) continue; let d2 = ((rr.distM - state.distanceM) % Lm + Lm) % Lm; if (d2 > 2 && d2 < best) best = d2; }
+      return best < Math.max(35, Math.abs(state.speedMps)); };          // ~1 s behind the car ahead, like the real MOM
+    state.ersBoost = !!state.keys.KeyV && state.ersStore > 0.02 && state.throttle > 0.2 && !state.inPitLane && !state.retired && momOk();
+    if (state.keys.KeyV && !state.ersBoost && state.realMode && state.ersStore > 0.3 && !state._vBlock) { state._vBlock = true; showToast("Override arms within a second of the car ahead — that's the 2026 MOM rule.", "Pit Wall"); }
+    if (!state.keys.KeyV) state._vBlock = false;
     state.ersStore = clamp(state.ersStore + dt * (state.ersBoost ? -1 / ERS.storeS : state.brake > 0.2 ? ERS.regen * 3.5 : _spdc > 8 ? ERS.regen : 0), 0, 1);
     if (state.xMode && !state._xTold) { state._xTold = true; showToast("X-mode — the wings shed drag down the straight, and snap back to Z under braking or cornering load. " + ERS.blurb, "Pit Wall"); }
     if (state.ersBoost && !state._vTold) { state._vTold = true; showToast("ERS Manual Override — full deploy past the taper. The store drains fast and recharges under braking.", "Pit Wall"); }
@@ -1727,7 +1785,7 @@ const SPEC = {
     const torqueAvail = engineTorque(state.rpm) * boostFactor;
     state.torqueNm = canMove ? engineTorque(state.rpm) * state.throttle * shiftCut : 0;  // display = crank torque
 
-    const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff * realPower() * (state.ersBoost ? ERS.boost : 1) / SPEC.wheelRadiusM;
+    const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff * realPower() * (state.ersBoost ? ERS.boost : 1) * (state.strat === "push" ? 1.02 : state.strat === "lean" ? 0.98 : 1) / SPEC.wheelRadiusM;
     const cap = tractionCapN();
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
@@ -1768,6 +1826,10 @@ const SPEC = {
     state.headingRel += (yawRate - k0 * dsdt) * dt;
     if (state.headingRel > Math.PI) state.headingRel -= 2 * Math.PI; else if (state.headingRel < -Math.PI) state.headingRel += 2 * Math.PI;
     state.laneOffset = clamp(state.laneOffset + dndt * dt, -60, 60);
+    if (state.brake > 0.3 && state.bbias && state.bbias !== "std") {
+      if (state.bbias === "fwd") state.headingRel *= (1 - 1.2 * dt);                     // forward bias: stable, pushes on
+      else state.headingRel += state.steer * 0.10 * dt * Math.min(1, speedAbs / 40);     // rearward: rotates on the brakes
+    }
 
     // off-track: grass/run-off no longer scrubs speed; only street-circuit barriers
     // slow the car. Assist/test-driver modes can yaw-correct back toward the line.
@@ -1872,7 +1934,7 @@ const SPEC = {
 
   Object.assign(app, {
     engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN, toggleRealMode, pitInOut, pitTire, pitFuel, pitConfirm, pitPlan, checkContact, onRaceLap, racePosition, fieldSize,
-    buildCornersForRoute, curvatureAt, halfWidthAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING
+    buildCornersForRoute, curvatureAt, halfWidthAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING, TEAM, RADIO_LINES
   });
 }
 
@@ -1976,7 +2038,9 @@ const SPEC = {
     if (state.dataHud) drawRacingLine();                                      // the line to aim at (toggle with HUD)
   }
   // ---- Real-mode pit lane: an apron + garages alongside the start/finish straight ----
-  const PIT_COLS = ["#00d2be","#1e2a6e","#e10600","#ff8000","#00594f","#0a4bb0","#1868d6","#1a2b6b","#b6babd","#0a0c10","#0b1c3a"];
+  // garage order = 2025 constructors: McLaren, Mercedes, Red Bull, Ferrari, Williams, Racing Bulls, Aston, Audi, Haas, Alpine, Cadillac
+  const GARAGE_COLS = ["#ff8000","#00d2be","#1e2a6e","#e10600","#1868d6","#1a2b6b","#00594f","#0a0c10","#b6babd","#0a4bb0","#0b1c3a"];
+  const TEAM_SLOT = 10;
   function drawPitLane(pal) {
     if (!(state.route.active && state.route.loop)) return;
     const L = state.route.totalM || 4000;
@@ -2008,16 +2072,19 @@ const SPEC = {
       }
       prev = pc;
     }
-    // team garages behind the pit wall (draw far -> near so nearer boxes overpaint)
-    for (let d = 240; d >= 6; d -= 13) {
-      const ph = (((state.distanceM + d) % L) + L) % L; if (!inSpan(ph)) continue;
-      const H = halfAt(d), base = projectAhead(d, -(H + 12));
+    // team garages at their real slots (2025 championship order from the pit entry); yours is called out
+    for (let slot = 10; slot >= 0; slot--) {
+      const gPh = ((L - 235 + slot * 18) % L + L) % L;
+      let dAhead = ((gPh - (((state.distanceM % L) + L) % L)) % L + L) % L; if (dAhead > L * 0.5) dAhead -= L;
+      if (dAhead < 4 || dAhead > 240) continue;
+      const H = halfAt(dAhead), base = projectAhead(dAhead, -(H + 12));
       if (base.fwd < 0.5 || base.scale < 0.04) continue;
-      const bw = clamp(58 * base.scale, 3, 260), bh = clamp(70 * base.scale, 3, 320);
-      const gi = Math.floor(ph / 22) % PIT_COLS.length;
+      const bw = clamp(64 * base.scale, 3, 280), bh = clamp(72 * base.scale, 3, 330);
+      const mine = (typeof TEAM_SLOT !== "undefined") && slot === TEAM_SLOT;
       ctx.fillStyle = pal.night ? "#0e1218" : "#1c2027"; ctx.fillRect(base.x - bw / 2, base.y - bh, bw, bh);
-      ctx.fillStyle = PIT_COLS[gi]; ctx.fillRect(base.x - bw / 2, base.y - bh, bw, clamp(bh * 0.2, 1.5, 46));
-      ctx.strokeStyle = "rgba(0,0,0,0.35)"; ctx.lineWidth = 1; ctx.strokeRect(base.x - bw / 2, base.y - bh, bw, bh);
+      ctx.fillStyle = GARAGE_COLS[slot]; ctx.fillRect(base.x - bw / 2, base.y - bh, bw, clamp(bh * 0.22, 1.5, 48));
+      ctx.strokeStyle = mine ? "rgba(120,220,190,0.95)" : "rgba(0,0,0,0.35)"; ctx.lineWidth = mine ? 2 : 1; ctx.strokeRect(base.x - bw / 2, base.y - bh, bw, bh);
+      if (mine && base.scale > 0.09) { ctx.fillStyle = "#7ce0c0"; ctx.font = "bold " + clamp(11 * base.scale * 3, 8, 22) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText("YOUR BOX", base.x, base.y - bh - 4); }
     }
     // green PIT board at the entry mouth
     const entAhead = (((L - 250) - state.distanceM) % L + L) % L;
@@ -2118,7 +2185,7 @@ const SPEC = {
   /* rival grid — proper car bodies seen from behind, kept on screen as you draw alongside */
   function drawRivals(w, h, pal) {
     if (!state.raceGrid || !state.rivals || !state.rivals.length) return;
-    const list = state.rivals.map(r => ({ r, ahead: app.rivalAhead(r) })).filter(o => o.ahead > -180 && o.ahead < 280).sort((a, b) => b.ahead - a.ahead);
+    const list = state.rivals.map(r => ({ r, ahead: app.rivalAhead(r) })).filter(o => !o.r.gone && o.ahead > -180 && o.ahead < 280).sort((a, b) => b.ahead - a.ahead);
     for (const o of list) {
       const r = o.r, p = projectAhead(Math.max(0.6, o.ahead), r.lane);
       if (p.fwd <= 0.4) continue;
@@ -2507,7 +2574,7 @@ const SPEC = {
       g.fillStyle = "rgba(150,205,255,0.95)"; g.font = "bold 9px sans-serif"; g.textAlign = "center"; g.fillText("PIT", mid.x, mid.y - 5);
     }
 
-    if (state.raceGrid) for (const r of state.rivals) { const p = at(r.distM); g.fillStyle = r.body; g.strokeStyle = "rgba(0,0,0,0.55)"; g.lineWidth = 1; g.beginPath(); g.arc(p.x, p.y, 3.4, 0, Math.PI * 2); g.fill(); g.stroke(); }
+    if (state.raceGrid) for (const r of state.rivals) { if (r.gone) continue; const p = at(r.distM); g.fillStyle = r.body; g.strokeStyle = "rgba(0,0,0,0.55)"; g.lineWidth = 1; g.beginPath(); g.arc(p.x, p.y, 3.4, 0, Math.PI * 2); g.fill(); g.stroke(); }
     const cp = at(state.distanceM);
     g.fillStyle = "rgba(47,123,224,0.22)"; g.beginPath(); g.arc(cp.x, cp.y, 11, 0, Math.PI * 2); g.fill();
     g.fillStyle = "#eef1f4"; g.strokeStyle = "#2f7be0"; g.lineWidth = 2.5; g.beginPath(); g.arc(cp.x, cp.y, 5, 0, Math.PI * 2); g.fill(); g.stroke();
@@ -2682,7 +2749,26 @@ const SPEC = {
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full V8 voice." : "Exhaust flap closed — muted."); }
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); }
+  function cycleStrat() {
+    state.strat = state.strat === "standard" ? "push" : state.strat === "push" ? "lean" : "standard";
+    audio.click(1200);
+    showToast(state.strat === "push" ? "Strat: PUSH — +2% deploy, the PU wears twice as fast and drinks more fuel."
+      : state.strat === "lean" ? "Strat: LEAN — saving fuel and the engine, down ~2%."
+      : "Strat: STANDARD — balanced power, wear and fuel.", "Pit Wall");
+  }
+  function cycleBias() {
+    state.bbias = state.bbias === "std" ? "fwd" : state.bbias === "fwd" ? "rear" : "std";
+    audio.click(900);
+    showToast(state.bbias === "fwd" ? "Brake bias forward — stable, but it'll push on entry."
+      : state.bbias === "rear" ? "Brake bias rearward — it rotates on the brakes. Careful."
+      : "Brake bias standard.", "Pit Wall");
+  }
+  function teamRadio() {
+    const lines = app.RADIO_LINES || ["Copy — keep pushing."];
+    showToast(lines[Math.floor(Math.random() * lines.length)], (app.TEAM ? app.TEAM.name : "") + " pit wall");
+    audio.chime && audio.chime([740, 988]);
+  }
       // 2026 power unit: the MGU-K delivers up to ~350 kW of electric alongside the ~400 kW V6.
   // Override (default ON) unleashes full combined ~1,013 PS deploy; switching it off runs the
   // combustion V6 alone (~544 PS) while the battery harvests.
@@ -2701,7 +2787,7 @@ const SPEC = {
     }
   }
 
-  function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
+  function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Rain light on — flashing at the rear." : "Rain light off."); }
   function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Nose raised for the ramp." : "Nose lowered to ride height."); }
   function armLaunch() {
     if (state.driveMode !== "race") setMode("race");
@@ -2709,7 +2795,7 @@ const SPEC = {
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
     showToast(state.launchArmed ? "Clutch to bite point, revs up, lights out you go." : "Launch off.", "Pit Wall");
   }
-  function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
+  function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "Differential locked — stable drive off the corner." : "Diff open — the rear rotates freer. Mind it.", "Pit Wall"); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
 
   function isNords(n) { return n === "Nürburgring 24h" || n === "Nordschleife" || n === "Nürburgring GP"; }
@@ -2735,7 +2821,7 @@ const SPEC = {
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Pit Wall"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0, xMode: false, ersBoost: false, ersStore: 1 });
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0, xMode: false, ersBoost: false, ersStore: 1, strat: "standard", bbias: "std" });
     state.rivals = state.rivals.filter(r => !r.isSC);
     if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
     setActive("hybridBtn", true);
@@ -2750,7 +2836,7 @@ const SPEC = {
     showToast("Back in the pit lane.", "Pit Wall");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, cycleStrat, cycleBias, teamRadio, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
@@ -2872,7 +2958,7 @@ const SPEC = {
 
     el.beltRead.textContent = state.harness ? "Latched" : "Open";
     el.doorState.textContent = app.anyDoorOpen() ? "Open" : "Closed";
-    el.rideHeightRead.textContent = state.rideHeight === 1 ? "Lifted" : state.rideHeight === -1 ? "Lowered" : "Standard";
+    el.rideHeightRead.textContent = state.bbias === "fwd" ? "Forward" : state.bbias === "rear" ? "Rearward" : "Standard";
     el.lightState.textContent = state.lights ? "Active" : "Off";
     el.frontSeatRead.textContent = `${state.frontRecline}°`;
     el.climateRead.textContent = `${Math.round(state.seatTempC)}°C`;
@@ -2897,7 +2983,6 @@ const SPEC = {
       const hyt = document.getElementById("xrHydT"); if (hyt) { hyt.textContent = "HYD " + Math.round(state.sys.hydraulics * 100) + "%"; hyt.setAttribute("fill", xcol(state.sys.hydraulics)); }
       const brt = document.getElementById("xrBrkT"); if (brt) { brt.textContent = "BRK " + Math.round(state.sys.brakes * 100) + "%"; brt.setAttribute("fill", xcol(state.sys.brakes)); }
       const fx = document.getElementById("pmFix"); if (fx && app.pitPlan) fx.textContent = "Crew will fix: " + app.pitPlan().text;
-      const pmf = document.getElementById("pmFuel"); if (pmf) pmf.textContent = "+" + state.pitFuelAdd + " kg";
       const hl = (id, on) => { const b = document.getElementById(id); if (b) b.classList.toggle("on", on); };
       hl("pmSoft", state.pitTireSel === "soft"); hl("pmMed", state.pitTireSel === "medium"); hl("pmHard", state.pitTireSel === "hard"); } }
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
@@ -2948,13 +3033,14 @@ const SPEC = {
     // button states
     setActive("aeroBtn", state.aeroAuto); setActive("wingBtn", state.aeroAuto);
     setActive("doorAllBtn", app.anyDoorOpen());
-    setActive("exhaustBtn", state.exhaustValve); setActive("exhaustBtn2", state.exhaustValve); setActive("exhaustBtn3", state.exhaustValve);
+    { const st = state.strat || "standard", on = st !== "standard", lbl = st === "push" ? "Strat: Push" : st === "lean" ? "Strat: Lean" : "Strat";
+      for (const id of ["exhaustBtn", "exhaustBtn2", "exhaustBtn3"]) { const b = document.getElementById(id); if (b) { b.classList.toggle("active", on); if (id === "exhaustBtn") b.textContent = lbl; else b.textContent = st === "standard" ? "Strat Mode" : lbl; } } }
     setActive("lightsBtn", state.lights); setActive("lightsBtn2", state.lights);
-    setActive("liftBtn", state.rideHeight === 1);
+    { const bb = state.bbias || "std"; const b = document.getElementById("liftBtn"); if (b) { b.classList.toggle("active", bb !== "std"); b.textContent = bb === "fwd" ? "Bias: Fwd" : bb === "rear" ? "Bias: Rear" : "B-Bias"; } }
     setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("hybridBtn", state.hybrid);
     setActive("testDriverBtn", state.testDriver);
     setActive("heatBtn", state.heat); setActive("coolBtn", state.cool); setActive("ambientBtn", state.ambient);
-    setActive("audioBtn", state.audioCabin); setActive("shifterLightBtn", state.shifterLight); setActive("startSwitchBtn", state.ignition);
+    setActive("shifterLightBtn", state.shifterLight); setActive("startSwitchBtn", state.ignition);
     setActive("coverBtn", state.engineCoverOpen); setActive("fansBtn", state.coolingFans); setActive("antiLagBtn", state.antiLag);
     setActive("dataBtn", state.dataHud); setActive("assistBtn", state.assist);
     setActive("wetBtn", state.driveMode === "wet"); setActive("raceBtn", state.driveMode === "race");
@@ -2983,9 +3069,9 @@ const SPEC = {
     document.getElementById("aeroBtn").addEventListener("click", app.toggleAero);
     document.getElementById("wingBtn").addEventListener("click", app.toggleAero);
     document.getElementById("doorAllBtn").addEventListener("click", () => app.toggleDoor("all"));
-    document.getElementById("liftBtn").addEventListener("click", app.toggleLift);
+    document.getElementById("liftBtn").addEventListener("click", app.cycleBias);
     document.getElementById("resetBtn").addEventListener("click", app.resetCar);
-    ["exhaustBtn", "exhaustBtn2", "exhaustBtn3"].forEach(id => document.getElementById(id).addEventListener("click", app.toggleExhaust));
+    ["exhaustBtn", "exhaustBtn2", "exhaustBtn3"].forEach(id => document.getElementById(id).addEventListener("click", app.cycleStrat));
     ["lightsBtn", "lightsBtn2"].forEach(id => document.getElementById(id).addEventListener("click", app.toggleLights));
 
     document.getElementById("modeBtn").addEventListener("click", app.cycleMode);
@@ -2998,7 +3084,7 @@ const SPEC = {
     { const rb = document.getElementById("realBtn"); if (rb) rb.addEventListener("click", () => app.toggleRealMode());
       const pmc = (id, fn) => { const b = document.getElementById(id); if (b) b.addEventListener("click", fn); };
       pmc("pmSoft", () => app.pitTire("soft")); pmc("pmMed", () => app.pitTire("medium")); pmc("pmHard", () => app.pitTire("hard"));
-      pmc("pmFuelDn", () => app.pitFuel(-5)); pmc("pmFuelUp", () => app.pitFuel(5)); pmc("pmGo", () => app.pitConfirm()); }
+      pmc("pmGo", () => app.pitConfirm()); }
     document.getElementById("upPaddle").addEventListener("click", app.paddleUp);
     document.getElementById("downPaddle").addEventListener("click", app.paddleDown);
     document.getElementById("voiceBtn").addEventListener("click", app.processVoice);
@@ -3021,7 +3107,8 @@ const SPEC = {
 
   function bindCockpit() {
     const t = (id, key) => document.getElementById(id).addEventListener("click", () => app.setToggle(key));
-    t("heatBtn", "heat"); t("coolBtn", "cool"); t("ambientBtn", "ambient"); t("audioBtn", "audioCabin"); t("shifterLightBtn", "shifterLight");
+    t("heatBtn", "heat"); t("coolBtn", "cool"); t("ambientBtn", "ambient"); t("shifterLightBtn", "shifterLight");
+    { const rb2 = document.getElementById("audioBtn"); if (rb2) rb2.addEventListener("click", () => app.teamRadio()); }
     t("fansBtn", "coolingFans"); t("antiLagBtn", "antiLag");
     document.getElementById("coverBtn").addEventListener("click", () => app.setToggle("engineCoverOpen"));
     document.getElementById("blipBtn").addEventListener("click", app.blipThrottle);
@@ -3060,7 +3147,7 @@ const SPEC = {
     };
     bind(throttle, "padThrottle", "padBrake", brake); bind(brake, "padBrake", "padThrottle", throttle);
   }
-  function bindHorn() { const b = document.getElementById("hornBtn"); const on = () => { state.horn = true; audio.horn(true); }; const off = () => { state.horn = false; audio.horn(false); }; b.addEventListener("pointerdown", e => { e.preventDefault(); on(); }); b.addEventListener("pointerup", off); b.addEventListener("pointerleave", off); app.hornOn = on; app.hornOff = off; }
+  function bindHorn() { const b = document.getElementById("hornBtn"); const on = () => app.teamRadio(); const off = () => {}; b.addEventListener("pointerdown", e => { e.preventDefault(); on(); }); app.hornOn = on; app.hornOff = off; }
   function bindKeyboard() {
     window.addEventListener("keydown", e => {
       state.keys[e.code] = true;
