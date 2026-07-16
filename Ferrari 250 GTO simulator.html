@@ -116,7 +116,7 @@
     .mode-panel { position:absolute; right:12px; bottom:10px; width:min(600px, calc(100vw - 24px)); max-height:min(66vh,648px); overflow:auto; padding:14px; display:none; border-radius:8px;
       border:1px solid var(--line); background:rgba(8,9,12,0.88); backdrop-filter:blur(20px); box-shadow:0 25px 70px rgba(0,0,0,0.5); }
     body.view-exterior .panel-exterior, body.view-cockpit .panel-cockpit, body.view-engine .panel-engine,
-    body.view-dynamics .panel-dynamics, body.view-circuit .panel-circuit { display:block; }
+    body.view-dynamics .panel-dynamics, body.view-circuit .panel-circuit, body.view-learn .panel-learn { display:block; }
 
     .panel-title { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
     h2 { margin:0; font-size:14.5px; font-weight:700; letter-spacing:0.4px; }
@@ -363,6 +363,7 @@
         <button data-view="engine">Engine</button>
         <button data-view="dynamics">Dynamics</button>
         <button data-view="circuit">Circuit</button>
+        <button data-view="learn">Race Car 101</button>
       </nav>
 
       <section class="quick" aria-label="Quick controls">
@@ -550,6 +551,20 @@
       </section>
 
       <!-- CIRCUIT -->
+      <section class="mode-panel panel-learn">
+        <div class="panel-title"><h2>Race Car 101</h2><span class="small">Driving school — the racing line, braking and the late apex</span></div>
+        <div style="font-size:13px; line-height:1.6; color:#c8d2dd">
+          <p><b>The racing line.</b> Enter wide, clip the inside, exit wide — outside-inside-outside. It straightens the corner so you carry the highest possible minimum speed.</p>
+          <p><b>Braking.</b> Brake hard in a straight line, then ease off as you turn. Use the boards: 150 — 100 — 50, brake, then look for the turn-in point.</p>
+          <p><b>The late apex.</b> Turn in a touch later and clip the inside <i>past</i> the middle of the corner. The car is already pointing straight for the exit, so you're on power sooner and faster all the way down the next straight. Slow in, fast out.</p>
+          <p><b>Trail braking.</b> Carry a little brake into the entry — it keeps the nose loaded and the front tyres biting while you turn.</p>
+          <p><b>Vision.</b> Look through the corner at the exit, not at the tarmac in front of the nose. The car goes where your eyes go.</p>
+          <p><b>Launch.</b> Arm launch control (<kbd>L</kbd>), hold full throttle from a standstill and let the electronics manage wheelspin and weight transfer.</p>
+        </div>
+        <div class="divider"></div>
+        <div class="control-grid"><button id="learnBtn">Learning Mode: Off</button></div>
+        <p class="small" style="margin-top:8px">Learning Mode paints it on the road: 150/100/50 brake boards, a TURN IN board, a LATE APEX cone on the inside kerb and an EXIT board — and the teal racing line stays on. Open <b>Circuit</b> to see the full racing line drawn around the lap map.</p>
+      </section>
       <section class="mode-panel panel-circuit">
         <div class="panel-title">
           <h2>Circuit &amp; Telemetry</h2>
@@ -1696,9 +1711,38 @@ const SPEC = {
     drawStartFinishLine();
     ctx.strokeStyle = "rgba(236,232,220,0.5)"; drawEdge(-1, 0.3, 2); drawEdge(1, 0.3, 2);
     ctx.strokeStyle = "rgba(245,240,225,0.28)"; drawRoadLine(0, true, 1.6);   // faint centre
-    if (state.dataHud) drawRacingLine();                                      // the line to aim at (toggle with HUD)
+    if (state.dataHud || state.learnMode) drawRacingLine();
+    if (state.learnMode) drawLearningMarks();                                      // the line to aim at (toggle with HUD)
   }
   // a teal racing line that swings to the apex of the corner ahead, with an aim dot ~55 m out
+  function drawLearningMarks() {
+    // find the next corner ahead of the car
+    let cStart = null, dir = 0;
+    for (let d = 25; d <= 520; d += 10) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.006) { cStart = d; dir = Math.sign(k); break; } }
+    if (cStart === null) return;
+    let cEnd = cStart;
+    for (let d = cStart; d <= cStart + 420; d += 10) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.006) cEnd = d; else if (d > cStart + 30) break; }
+    const apexD = cStart + (cEnd - cStart) * 0.6;                        // the LATE apex — past the geometric middle
+    const board = (d, txt, col) => {
+      if (d < 8) return;
+      const p = projectAhead(d, dir * (halfAt(d) + 2.4));                // boards on the outside of the corner
+      if (p.fwd < 1 || p.scale < 0.05) return;
+      const s2 = clamp(15 * p.scale, 4, 42), bw2 = s2 * 2.3, bh2 = s2 * 1.25;
+      ctx.fillStyle = col; ctx.fillRect(p.x - bw2 / 2, p.y - s2 * 2.3, bw2, bh2);
+      ctx.strokeStyle = "rgba(255,255,255,0.85)"; ctx.lineWidth = 1; ctx.strokeRect(p.x - bw2 / 2, p.y - s2 * 2.3, bw2, bh2);
+      ctx.fillStyle = "#fff"; ctx.font = "bold " + clamp(s2 * 0.62, 5, 20) + "px sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(txt, p.x, p.y - s2 * 2.3 + bh2 * 0.72);
+      ctx.strokeStyle = "rgba(200,200,200,0.6)"; ctx.beginPath(); ctx.moveTo(p.x, p.y - s2 * 1.05); ctx.lineTo(p.x, p.y); ctx.stroke();
+    };
+    board(cStart - 150, "150", "#c73030"); board(cStart - 100, "100", "#c73030"); board(cStart - 50, "BRAKE", "#c73030");
+    board(cStart - 6, "TURN IN", "#e0a020");
+    { const p = projectAhead(apexD, -dir * (halfAt(apexD) - 1.0));       // apex cone on the inside kerb
+      if (p.fwd > 1 && p.scale > 0.05) { const s2 = clamp(9 * p.scale, 3, 26);
+        ctx.fillStyle = "#ffb020"; ctx.beginPath(); ctx.moveTo(p.x, p.y - s2 * 1.7); ctx.lineTo(p.x - s2 * 0.55, p.y); ctx.lineTo(p.x + s2 * 0.55, p.y); ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = "rgba(0,0,0,0.4)"; ctx.stroke();
+        ctx.fillStyle = "#ffd27a"; ctx.font = "bold " + clamp(s2 * 0.85, 5, 15) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText("LATE APEX", p.x, p.y - s2 * 2.1); } }
+    board(cEnd + 34, "EXIT — POWER", "#1f9d55");
+  }
   function drawRacingLine() {
     const racingOff = (d) => { const k = curvatureAt(state.distanceM + d); return clamp(-Math.sign(k) * Math.min(Math.abs(k) * 1100, 1) * (halfAt(d) - 1.6), -8, 8); };
     const pts = [];
@@ -2096,6 +2140,23 @@ const SPEC = {
     g.strokeStyle = state.route.active ? "rgba(165,175,185,0.92)" : "rgba(120,130,140,0.55)"; g.lineWidth = 5; g.lineCap = "round"; g.lineJoin = "round";
     g.beginPath(); for (let i = 0; i <= N; i++) { const x = TX(X[i]), y = TY(Y[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); } if (loop) g.closePath(); g.stroke();
     const s0 = at(0); g.strokeStyle = "rgba(245,245,245,0.95)"; g.lineWidth = 3; g.beginPath(); g.moveTo(s0.x - 6, s0.y); g.lineTo(s0.x + 6, s0.y); g.stroke();
+    if (state.learnMode) {                                   // learning: the racing line, drawn around the whole lap
+      g.strokeStyle = "rgba(120,230,190,0.9)"; g.lineWidth = 1.8; g.beginPath();
+      const M2 = 260;
+      for (let i2 = 0; i2 <= M2; i2++) {
+        const dd = i2 * L / M2;
+        let d2 = ((dd % L) + L) % L; const f2 = d2 / step; const j0 = Math.floor(f2) % N, j1 = (j0 + 1) % (N + 1), t2 = f2 - Math.floor(f2);
+        const ax = lerp(X[j0], X[j1], t2), ay = lerp(Y[j0], Y[j1], t2);
+        const bx = lerp(X[j1], X[(j1 + 1) % (N + 1)], t2), by = lerp(Y[j1], Y[(j1 + 1) % (N + 1)], t2);
+        let nx2 = -(by - ay), ny2 = (bx - ax); const ln2 = Math.hypot(nx2, ny2) || 1; nx2 /= ln2; ny2 /= ln2;
+        const k2 = curvatureAt(dd), roff = Math.max(-8, Math.min(8, -Math.sign(k2) * Math.min(Math.abs(k2) * 1100, 1) * 8));
+        const px2 = TX(ax + nx2 * roff), py2 = TY(ay + ny2 * roff);
+        i2 ? g.lineTo(px2, py2) : g.moveTo(px2, py2);
+      }
+      if (loop) g.closePath(); g.stroke();
+      g.fillStyle = "rgba(120,230,190,0.92)"; g.font = "9px sans-serif"; g.textAlign = "left"; g.fillText("racing line — learning mode", 10, 14);
+    }
+
 
     if (state.raceGrid) for (const r of state.rivals) { const p = at(r.distM); g.fillStyle = r.body; g.strokeStyle = "rgba(0,0,0,0.55)"; g.lineWidth = 1; g.beginPath(); g.arc(p.x, p.y, 3.4, 0, Math.PI * 2); g.fill(); g.stroke(); }
     const cp = at(state.distanceM);
@@ -2592,6 +2653,9 @@ const SPEC = {
     document.getElementById("cruiseDown").addEventListener("click", () => app.setCruiseSpeed(state.cruiseSetKmh - 10, true));
     document.getElementById("lapResetBtn").addEventListener("click", () => { state.lap = { running: state.route.active, startDist: state.distanceM, lastMs: 0, bestMs: state.lap.bestMs, curMs: 0 }; showToast("Lap timer reset."); });
     document.getElementById("dataBtn").addEventListener("click", () => { state.dataHud = !state.dataHud; showToast(state.dataHud ? "Telemetry overlay on." : "Telemetry overlay off."); });
+    { const lb = document.getElementById("learnBtn"); if (lb) lb.addEventListener("click", () => {
+        state.learnMode = !state.learnMode; lb.textContent = "Learning Mode: " + (state.learnMode ? "On" : "Off"); lb.classList.toggle("active", state.learnMode);
+        showToast(state.learnMode ? "Learning Mode — brake boards, turn-in, LATE APEX cone and exit boards are on the road; the racing line stays on. The Circuit map shows the full line." : "Learning Mode off.", "Driving School"); }); }
     document.getElementById("assistBtn").addEventListener("click", () => {
       state.assist = !state.assist;
       if (!state.assist) {

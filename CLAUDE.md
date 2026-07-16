@@ -186,6 +186,24 @@ the Cockpit "Team Radio" button route through it. `drawPitLane` draws a **pit wa
 (dark barrier + white top) and real **garage buildings** (roof band, team-colour
 strip, dark open door, `GARAGE_NAMES` over the door, tyre stacks, crew at your box).
 
+**v7** — **Live radio**: H / the Radio buttons now TOGGLE `state.radioLive`; a
+scheduler in updatePhysics fires `radioCall(true)` every ~25–40 s (muting cancels
+speech). **Drivable safety car**: the AMG sim has SAFETY CAR MODE (`toggleScMode`,
+`scBtn` in Circuit tab) — `seedScRace()` grids 11 F1 cars (July-2026 pace) behind
+you, `scStep`/`updateScRace` run the researched FIA procedure: formation lap →
+peel into the pits → GREEN; on a crash you're deployed (spoken auto-reminders),
+the field bunches in queue slots behind you (hard no-pass clamp), the wreck is
+craned away after `scT`, "in this lap" → box → GREEN and the next incident is
+pre-rolled. A race-control board (name/status/health per car) draws in
+`drawTelemetry`; map dots get status rings. The index.html AMG card is now the
+**FIA F1 Safety Car** (inline SVG livery: silver, green stripe, light bar).
+**Learning mode (all 24 sims)**: a `data-view="learn"` tab AFTER Circuit — road
+cars "Race Car 101", AMG "Safety Car 101", F1 "Formula 1 101" — with a curriculum
+panel + `learnBtn` toggling `state.learnMode`: `drawLearningMarks()` paints
+150/100/BRAKE boards, TURN IN, a LATE APEX cone (60% through the corner) and an
+EXIT—POWER board around the next corner; the teal racing line stays on and
+`drawMap` overlays the full racing line. All opt-in → certification untouched.
+
 **F1-correct cockpit (v5)** — no road-car controls in the F1 sims: quick bar has
 **Strat** (`cycleStrat`: Standard/Push/Lean — ±2% power, ×2.2/×0.6 engine wear,
 fuel burn; default Standard so certification is untouched), **B-Bias** (`cycleBias`:
