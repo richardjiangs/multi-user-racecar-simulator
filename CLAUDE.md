@@ -154,26 +154,41 @@ retire per race, most-fragile teams most often), plus per-team `dns`. This runs 
 **private practice too** (F1 cars always race the full 11-car grid with reliability).
 `onRaceLap()` just advances `raceLap`.
 
-**Drive-in pit (v3, no button)** — the pit is a real place you steer into: cross to
-the pit side (`laneOffset < -halfWidth*0.72`) in the entry window (`ph ∈ [L-260,
+**Drive-in pit (v3/v4, no button)** — the pit is a real place you steer into: cross
+to the pit side (`laneOffset < -halfWidth*0.72`) in the entry window (`ph ∈ [L-260,
 L-20]`) and `inPitLane`/`pitStage:"enter"` arm automatically, the 80 km/h limiter
 (60 at Monaco) engages, the car stops in its box → `#pitMenu` opens. The menu shows
-an **X-ray of the car** (`#xrNose/#xrEng/#xrGbx/#xrFL/#xrFR/#xrRL/#xrRR`, coloured
-green→red by each `sys`) — red parts cost repair time. You pick compound (`pitTire`)
-and fuel (`pitFuel`); `pitConfirm` sets a service time = `TEAM.pitCrew` (per-team:
-Red Bull 2.0 … Cadillac 3.2 s) + fuel + repairs, then `"exit"` rejoins. The pit apron
-+ team garages + a green PIT board are drawn in the world (`drawPitLane`, real-mode
-only) and a **PIT branch shows on the minimap** (`drawMap`).
+a **car-shaped X-ray** (`#xrNose/#xrEng/#xrGbx/#xrFL…` rects + `#xr*T` % labels,
+coloured green→red per `sys`) and a live repair plan (`pitPlan()` → `#pmFix`). The
+crew fixes **every** damaged system, each costing time: wing/hyd/brakes/gearbox
+reset to 0.05, the engine is only *nursed* (`max(0.2, eng*0.45)` — a PU can't be
+swapped). Service = `TEAM.pitCrew` (Red Bull 2.0 … Cadillac 3.2 s) + fuel + repairs;
+the car is **released in 1st gear** (`gearMode="G", curGear=1` — never stuck in N),
+then `"exit"` rejoins at ph>100. Pit apron + team garages + green PIT board drawn in
+the world (`drawPitLane`, real-mode only); **PIT branch on the minimap** (`drawMap`).
 
-**Collisions** (`checkContact`, 1 s cooldown) bend the front wing (`sys.nose`) and
-threaten a puncture/gearbox hit — survivable (one tap ≠ out; repeated banging is).
+**Collisions** (`checkContact`, 1 s cooldown) damage **both cars**: your wing takes
+0.09–0.20 `sys.nose`, the rival gets `hurtT` 5–10 s slow-down and a 35% chance its
+pre-rolled DNF is pulled forward — survivable either way (one tap ≠ out).
 **Track limits**: all four wheels over the line invalidates the lap (`lapInvalid`),
 race warnings → black-and-white flag → `penaltyS`; walls on street circuits crash
 you. **Safety car** = a **Mercedes-AMG GT Black Series** (`isSC` rival, silver body
-/ green stripe) deployed by `triggerSC()` on a stoppage; it paces the field and
-**overtaking it 3× black-flags you out**. HUD panel (position, lap, stops,
+/ green stripe) deployed by `triggerSC()` on a stoppage; it paces the field,
+**no rival may pass it** (updateRivals clamps them 14 m behind), and **you
+overtaking it 3× black-flags you out**. HUD panel (position, lap, stops,
 tyre/fuel/damage bars, PIT LANE/limiter/LAP INVALID) draws in `drawTelemetry`. All
 state is real-mode-gated, so perf-test is unaffected.
+
+**2026 racing controls (v4, all modes, certification-safe because opt-in)** —
+**hold X = X-mode**: active aero sheds drag (`ERS.xShed` off `cdA`) and 45% of
+downforce-grip; auto-snaps back to Z under braking, >1.7 lateral g, or <~100 km/h.
+**Hold V = ERS Manual Override**: `ERS.boost` power multiplier draining `ersStore`
+(`ERS.storeS` seconds full-boost; recharges at `ERS.regen`, 3.5× under braking).
+Each team has its own `const ERS = {storeS, regen, boost, xShed, blurb}` — real
+2026 PU pecking order (Ferrari hits hardest 1.14, Aston/Honda biggest store 7.2 s,
+Audi fastest recharge, Red Bull slipperiest X-mode 0.34, Cadillac smallest store).
+ERS bar + X-MODE/OVERRIDE flags draw in `drawTelemetry`; keys listed in the help
+panel. Perf-test never holds X/V, so the certified figures are untouched.
 
 ## index.html — garage + online race shell
 

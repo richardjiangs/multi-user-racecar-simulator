@@ -415,7 +415,7 @@
 
       <aside class="drive-help">
         <strong>Drive it yourself</strong><br>
-        <kbd>W</kbd>/<kbd>&uarr;</kbd> throttle · <kbd>S</kbd>/<kbd>&darr;</kbd>/<kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>E</kbd>/<kbd>Q</kbd> shift up/down · <kbd>R</kbd> reverse · <kbd>N</kbd> neutral · <kbd>L</kbd> launch · <kbd>H</kbd> horn.<br>
+        <kbd>W</kbd>/<kbd>&uarr;</kbd> throttle · <kbd>S</kbd>/<kbd>&darr;</kbd>/<kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>E</kbd>/<kbd>Q</kbd> shift up/down · <kbd>R</kbd> reverse · <kbd>N</kbd> neutral · <kbd>L</kbd> launch · <kbd>H</kbd> horn · <kbd>X</kbd> hold: X-mode (low drag) · <kbd>V</kbd> hold: ERS override boost.<br>
         Or open <strong>Circuit</strong>, pick a track, and hand it to the test driver for a hot lap.
       </aside>
 
@@ -674,17 +674,28 @@
 
   <div id="pitMenu" class="pit-menu" style="display:none">
     <div class="pm-title">PIT STOP — repairs, tyres &amp; fuel</div>
-    <div class="pm-xray"><svg viewBox="0 0 220 96" style="width:206px;height:90px">
-      <rect x="96" y="12" width="28" height="66" rx="7" fill="#1b2029" stroke="#38424e"/>
-      <rect id="xrNose" x="102" y="2" width="16" height="13" rx="3" fill="#2ecc71"/>
-      <rect id="xrEng" x="99" y="40" width="22" height="20" rx="3" fill="#2ecc71"/>
-      <rect id="xrGbx" x="102" y="63" width="16" height="12" rx="2" fill="#2ecc71"/>
-      <rect id="xrFL" x="77" y="16" width="13" height="18" rx="3" fill="#2ecc71"/>
-      <rect id="xrFR" x="130" y="16" width="13" height="18" rx="3" fill="#2ecc71"/>
-      <rect id="xrRL" x="75" y="56" width="14" height="20" rx="3" fill="#2ecc71"/>
-      <rect id="xrRR" x="131" y="56" width="14" height="20" rx="3" fill="#2ecc71"/>
-      <text x="110" y="92" text-anchor="middle" font-size="8" fill="#8fa0b4">damage X-ray — red parts cost repair time</text>
+    <div class="pm-xray"><svg viewBox="0 0 300 170" style="width:290px;height:164px">
+      <text x="104" y="15" text-anchor="end" font-size="9" fill="#8fa0b4">WING <tspan id="xrNoseT" font-weight="700" fill="#2ecc71">0%</tspan></text>
+      <text x="92" y="46" text-anchor="end" font-size="9"><tspan id="xrFLT" font-weight="700" fill="#2ecc71">0%</tspan></text>
+      <text x="90" y="118" text-anchor="end" font-size="9"><tspan id="xrRLT" font-weight="700" fill="#2ecc71">0%</tspan></text>
+      <text x="208" y="46" font-size="9"><tspan id="xrFRT" font-weight="700" fill="#2ecc71">0%</tspan></text>
+      <text x="208" y="98" font-size="9" fill="#8fa0b4">ENG <tspan id="xrEngT" font-weight="700" fill="#2ecc71">0%</tspan></text>
+      <text x="208" y="116" font-size="9" fill="#8fa0b4">GBX <tspan id="xrGbxT" font-weight="700" fill="#2ecc71">0%</tspan></text>
+      <text x="208" y="132" font-size="9"><tspan id="xrRRT" font-weight="700" fill="#2ecc71">0%</tspan></text>
+      <rect id="xrNose" x="112" y="8" width="76" height="9" rx="2" fill="#2ecc71"/>
+      <polygon points="150,17 142,46 158,46" fill="#1b2029" stroke="#38424e"/>
+      <rect x="136" y="44" width="28" height="78" rx="8" fill="#1b2029" stroke="#38424e"/>
+      <circle cx="150" cy="62" r="8" fill="none" stroke="#55606e" stroke-width="2.4"/>
+      <rect id="xrEng" x="139" y="88" width="22" height="18" rx="3" fill="#2ecc71"/>
+      <rect id="xrGbx" x="142" y="108" width="16" height="12" rx="2" fill="#2ecc71"/>
+      <rect x="116" y="140" width="68" height="9" rx="2" fill="#1b2029" stroke="#38424e"/>
+      <rect id="xrFL" x="98" y="28" width="18" height="28" rx="5" fill="#2ecc71"/>
+      <rect id="xrFR" x="184" y="28" width="18" height="28" rx="5" fill="#2ecc71"/>
+      <rect id="xrRL" x="96" y="100" width="20" height="30" rx="5" fill="#2ecc71"/>
+      <rect id="xrRR" x="184" y="100" width="20" height="30" rx="5" fill="#2ecc71"/>
+      <text x="150" y="164" text-anchor="middle" font-size="9"><tspan id="xrHydT" fill="#2ecc71">HYD 0%</tspan>  ·  <tspan id="xrBrkT" fill="#2ecc71">BRK 0%</tspan></text>
     </svg></div>
+    <div id="pmFix" style="font-size:11px;color:#9fb2c6;margin:2px 0 8px;min-height:14px">—</div>
     <div class="pm-row"><span>Tyres</span>
       <button id="pmSoft" data-tire="soft">Soft</button>
       <button id="pmMed" data-tire="medium" class="on">Medium</button>
@@ -906,7 +917,7 @@ const SPEC = {
     hybrid: true,                  // MGU-K override engaged (full ~1,013 PS combined) — default on
     hybridVis: 0,                  // deploy indicator
     testDriver: false,
-    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
+    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
@@ -1252,7 +1263,7 @@ const SPEC = {
   }
 
   function tractionCapN() {
-    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9) * realGrip();
+    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9 * (state.xMode ? 0.55 : 1)) * realGrip();
     return grip;
   }
 
@@ -1362,6 +1373,7 @@ const SPEC = {
      rivals'), some cars don't even start, you pit for fresh tyres + repairs, and a safety
      car can neutralise the race and hand it to someone else. Everything shows on the HUD. */
   const TEAM = { name: "Alpine", pace: 0.987, top: 0.99, corner: 0.985, tyreDeg: 1.08, pitCrew: 2.8, rel: 0.85, dnf: 0.06, dns: 0.025 };
+  const ERS = { storeS: 5.6, regen: 0.028, boost: 1.11, xShed: 0.29, blurb: "New customer Mercedes PU — solid deploy, middling drag." };   // this team's 2026 power-unit character
   // grid reliability/pace table: [name, body, pace, corner, dnf/race, dns prob]
   const RM_GRID = [
     ["Mercedes-AMG","#00d2be",0.996,0.994,0.06,0.015,1.05],["Red Bull","#1e2a6e",0.999,0.997,0.05,0.010,1.30],
@@ -1395,7 +1407,7 @@ const SPEC = {
       state.tyreWear = 0; state.tyreComp = "soft"; state.fuelKg = 100; state.damage = 0; state.failRisk = 0;
       state.retired = false; state.inPit = false; state.pitTimer = 0; state.pitStops = 0; state.safetyCar = false; state.scTimer = 0; state.raceLap = 0; state._rmAcc = 0;
       seedRivals();
-      showToast("REAL RACE MODE — assists off, the full 2026 grid, real per-team pace. Tyres wear, fuel burns, reliability bites. Box for fresh tyres, and watch for the safety car.", TEAM.name);
+      showToast("REAL RACE MODE — assists off, the full 2026 grid, real per-team pace. Tyres wear, fuel burns, reliability bites. Drive into the pit lane to box. Hold X for X-mode, V for ERS override. " + ERS.blurb, TEAM.name);
     } else {
       state.retired = false; state.safetyCar = false; state.inPit = false;
       showToast("Real Race Mode off — back to a clear practice lap.", "Pit Wall");
@@ -1410,11 +1422,22 @@ const SPEC = {
   }
   function pitTire(c) { if (state.pitStage === "box") state.pitTireSel = c; }
   function pitFuel(d) { if (state.pitStage === "box") state.pitFuelAdd = clamp(state.pitFuelAdd + d, 0, 50); }
+  function pitPlan() {                                    // what the crew will do, and how long it takes
+    const s = state.sys, items = ["4 × " + state.pitTireSel];
+    let t = TEAM.pitCrew + state.pitFuelAdd * 0.35;
+    if (s.nose > 0.12) { t += 3.5 + s.nose * 6; items.push("front wing"); }
+    if (s.gearbox > 0.2) { t += 5 + s.gearbox * 9; items.push("gearbox"); }
+    if (s.hydraulics > 0.2) { t += 3 + s.hydraulics * 6; items.push("hydraulics"); }
+    if (s.brakes > 0.2) { t += 3.5 + s.brakes * 6; items.push("brakes"); }
+    if (s.engine > 0.25) { t += 6 + s.engine * 10; items.push("PU de-rate fix"); }
+    return { t, items, text: items.join(" · ") + " — ~" + t.toFixed(1) + " s" };
+  }
   function pitConfirm() {
     if (state.pitStage !== "box") return;
-    state.pitService = TEAM.pitCrew + state.pitFuelAdd * 0.35 + (state.sys.nose > 0.15 ? 4 + state.sys.nose * 7 : 0) + (state.sys.gearbox > 0.4 ? 6 : 0);
+    const plan = pitPlan();
+    state.pitService = plan.t;
     state.pitStage = "service"; state.pitMenuOpen = false;
-    showToast("Stationary — " + state.pitService.toFixed(1) + " s: fresh " + state.pitTireSel + " tyres" + (state.pitFuelAdd ? ", +" + state.pitFuelAdd + " kg" : "") + (state.sys.nose > 0.15 ? ", new front wing" : "") + ".", TEAM.name);
+    showToast("Stationary " + plan.t.toFixed(1) + " s — " + plan.items.join(", ") + (state.pitFuelAdd ? ", +" + state.pitFuelAdd + " kg fuel" : "") + ".", TEAM.name);
   }
   function checkContact(dt) {
     state.contactCool = Math.max(0, (state.contactCool || 0) - dt);
@@ -1431,8 +1454,9 @@ const SPEC = {
         if (Math.random() < 0.08) state.sys.gearbox = clamp(state.sys.gearbox + 0.12, 0, 1);
         state.damage = clamp(Math.max(state.sys.nose, state.sys.tyre), 0, 1);
         if (Math.random() < 0.30) state.tyreWear = clamp(state.tyreWear + 0.35, 0, 1);
-        r.speedMps *= 0.78;
-        let msg = "Contact with " + r.name + "!";
+        r.speedMps *= 0.72; r.hurtT = 5 + Math.random() * 5;                     // their wing's bent — slower for a stretch
+        if (Math.random() < 0.35) { r.willDnf = true; r.dnfAtT = Math.min(r.dnfAtT || 1e9, state.time + 30 + Math.random() * 300); r.failCause = Math.random() < 0.6 ? "nose" : "tyre"; }
+        let msg = "Contact with " + r.name + " — both cars damaged!";
         if (Math.random() < 0.26) { r.out = true; r.retLap = state.raceLap; triggerSC(r.name + " spun off"); msg += " They're out."; }
         showToast(msg + " Front wing " + Math.round(state.sys.nose * 100) + "%.", TEAM.name);
         break;
@@ -1478,8 +1502,12 @@ const SPEC = {
         if (boxZone) state.speedMps = Math.max(0, state.speedMps - 30 * dt); else if (state.speedMps > pl) state.speedMps = pl;
         if (boxZone && Math.abs(state.speedMps) < 1.5) { state.pitStage = "box"; state.pitMenuOpen = true; state.speedMps = 0; state.pitFuelAdd = 0; state.pitTireSel = state.tyreComp === "soft" ? "medium" : "soft"; }
       } else if (state.pitStage === "box") { state.speedMps = 0; }
-      else if (state.pitStage === "service") { state.speedMps = 0; state.pitService -= dt; if (state.pitService <= 0) { state.tyreWear = 0; state.sys.tyre = 0; state.sys.nose = 0; state.tyreComp = state.pitTireSel; state.fuelKg = clamp(state.fuelKg + state.pitFuelAdd, 0, 110); state.damage = 0; state.pitStops++; state.pitStage = "exit"; showToast("Job done — GO GO GO!", TEAM.name); } }
-      else if (state.pitStage === "exit") { if (state.speedMps > pl) state.speedMps = pl; if (ph > 130 && ph < L - 300) { state.inPitLane = false; state.pitStage = ""; state.pitArmed = false; state.laneOffset = -halfWidthAt(state.distanceM) * 0.4; showToast("Pit exit — back on track, mind the blend line.", "Pit Wall"); } }
+      else if (state.pitStage === "service") { state.speedMps = 0; state.pitService -= dt; if (state.pitService <= 0) {
+        const s = state.sys; state.tyreWear = 0; s.tyre = 0; s.nose = 0;
+        if (s.gearbox > 0.2) s.gearbox = 0.05; if (s.hydraulics > 0.2) s.hydraulics = 0.05; if (s.brakes > 0.2) s.brakes = 0.05;
+        if (s.engine > 0.25) s.engine = Math.max(0.2, s.engine * 0.45);   // a PU can be nursed back, not swapped
+        state.tyreComp = state.pitTireSel; state.fuelKg = clamp(state.fuelKg + state.pitFuelAdd, 0, 110); state.damage = 0; state.pitStops++; state.gearMode = "G"; state.curGear = 1; state.pitStage = "exit"; showToast("Job done — GO GO GO! Released in 1st — drive out under the limiter.", TEAM.name); } }
+      else if (state.pitStage === "exit") { if (state.speedMps > pl) state.speedMps = pl; if (ph > 100 && ph < L - 300) { state.inPitLane = false; state.pitStage = ""; state.pitArmed = false; state.laneOffset = -halfWidthAt(state.distanceM) * 0.4; showToast("Pit exit — back on track, mind the blend line.", "Pit Wall"); } }
     }
     // safety car neutralises the field
     state.scCool = Math.max(0, state.scCool - dt);
@@ -1538,13 +1566,19 @@ const SPEC = {
       for (let d = 6; d <= Lb; d += 7) { const k = Math.abs(curvatureAt(r.distM + d)); if (k > 0.0008) cornerV = Math.min(cornerV, Math.sqrt(r.latG * 9.81 / k)); }
       const target = Math.min(r.topMps, cornerV);          // real top speed on the straight
       if (target < v) r.speedMps = Math.max(target, v - 12 * dt);   // brake for the corner
-      else r.speedMps = Math.min(target, v + r.accel * dt);         // power out onto the straight
+      else r.speedMps = Math.min(target * (r.hurtT > 0 ? 0.93 : 1), v + r.accel * (r.hurtT > 0 ? 0.7 : 1) * dt);   // power out (gingerly if hurt)
+      if (r.hurtT > 0) r.hurtT -= dt;
       if (!state.safetyCar && !r.isSC && r.willDnf && state.time >= r.dnfAtT) {   // the pre-rolled fault finally bites
         r.out = true; r.retLap = state.raceLap; r.fail = 1;
         showToast(r.name + " is out — " + CAUSE[r.failCause] + ".", "Race Control");
         if (Math.random() < 0.5) triggerSC(r.name + " stopped on track");
       }
-      if ((state.safetyCar || state.scCar) && r.speedMps > 130 * KMH) r.speedMps = 130 * KMH;   // bunch up behind the SC
+      if (state.safetyCar || state.scCar) {
+        if (r.speedMps > 130 * KMH) r.speedMps = 130 * KMH;                       // bunch up behind the SC
+        const sc2 = state.rivals.find(x => x.isSC);
+        if (sc2) { const Ls = lapLen(); let gs = ((sc2.distM - r.distM) % Ls + Ls) % Ls; if (gs > Ls * 0.5) gs -= Ls;
+          if (gs < 14 && gs > -30) { r.distM = sc2.distM - 14; r.speedMps = Math.min(r.speedMps, sc2.speedMps); } }   // nobody passes the safety car
+      }
       r.brake = (v - r.speedMps) > 0.04 ? 1 : 0;
       r.distM += r.speedMps * dt;
       const kc = curvatureAt(r.distM + 12);
@@ -1679,6 +1713,13 @@ const SPEC = {
     const boostTarget = state.ignition ? clamp(state.throttle * (0.5 + clamp(state.rpm / 4200, 0, 1)) * 1.35, 0, 1.35) : 0;
     state.boostBar = approach(state.boostBar, boostTarget, state.antiLag ? 0.002 : 0.02, dt);
 
+    // ---- 2026 racing controls: X-mode active aero (hold X) + ERS Manual Override (hold V) ----
+    const _spdc = Math.abs(state.speedMps);
+    state.xMode = !!state.keys.KeyX && _spdc > 28 && state.brake < 0.2 && Math.abs(state.lateralG) < 1.7 && !state.inPitLane && !state.retired;
+    state.ersBoost = !!state.keys.KeyV && state.ersStore > 0.02 && state.throttle > 0.2 && !state.inPitLane && !state.retired;
+    state.ersStore = clamp(state.ersStore + dt * (state.ersBoost ? -1 / ERS.storeS : state.brake > 0.2 ? ERS.regen * 3.5 : _spdc > 8 ? ERS.regen : 0), 0, 1);
+    if (state.xMode && !state._xTold) { state._xTold = true; showToast("X-mode — the wings shed drag down the straight, and snap back to Z under braking or cornering load. " + ERS.blurb, "Pit Wall"); }
+    if (state.ersBoost && !state._vTold) { state._vTold = true; showToast("ERS Manual Override — full deploy past the taper. The store drains fast and recharges under braking.", "Pit Wall"); }
     const shiftCut = state.shiftTimer > 0 ? 0.12 : 1;
     const canMove = driven && state.ignition && !anyDoorOpen();
     const harnessLimiter = state.harness ? 1 : 0.32;
@@ -1686,7 +1727,7 @@ const SPEC = {
     const torqueAvail = engineTorque(state.rpm) * boostFactor;
     state.torqueNm = canMove ? engineTorque(state.rpm) * state.throttle * shiftCut : 0;  // display = crank torque
 
-    const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff * realPower() / SPEC.wheelRadiusM;
+    const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff * realPower() * (state.ersBoost ? ERS.boost : 1) / SPEC.wheelRadiusM;
     const cap = tractionCapN();
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
@@ -1696,7 +1737,7 @@ const SPEC = {
 
     // The wings and floor make colossal downforce — their drag is always in the baseline.
     const baseCd = SPEC.dragCd;
-    const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
+    const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd) * (state.xMode ? 1 - ERS.xShed : 1);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
     const brakeGrip = 1 + (state.downforceN / (SPEC.massKg * 9.81)) * 0.6;   // aero helps the carbon-ceramics
@@ -1830,7 +1871,7 @@ const SPEC = {
   }
 
   Object.assign(app, {
-    engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN, toggleRealMode, pitInOut, pitTire, pitFuel, pitConfirm, checkContact, onRaceLap, racePosition, fieldSize,
+    engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN, toggleRealMode, pitInOut, pitTire, pitFuel, pitConfirm, pitPlan, checkContact, onRaceLap, racePosition, fieldSize,
     buildCornersForRoute, curvatureAt, halfWidthAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING
   });
 }
@@ -2389,6 +2430,13 @@ const SPEC = {
     ctx.fillText(`${Math.round(app.kmh(state.speedMps))} km/h   ${Math.round(state.rpm)} rpm`, x, y);
     ctx.fillText(`G ${state.lateralG.toFixed(2)}  DF ${Math.round(state.downforceN / 9.81)} kg  ${app.SPEC.gearRatios && state.gearMode === "G" ? "gear " + state.curGear : state.gearMode}`, x, y + 14);
     if (state.lap.curMs > 0) ctx.fillText(`lap ${app.fmtLap(state.lap.curMs)}${state.lap.bestMs ? "  best " + app.fmtLap(state.lap.bestMs) : ""}`, x, y + 28);
+    { // 2026 controls: ERS energy store + live flags
+      ctx.fillStyle = "rgba(255,255,255,0.14)"; ctx.fillRect(x, y + 36, 96, 7);
+      ctx.fillStyle = state.ersBoost ? "#ffd24a" : "#5fd0a0"; ctx.fillRect(x, y + 36, 96 * clamp(state.ersStore || 0, 0, 1), 7);
+      ctx.fillStyle = "rgba(200,214,230,0.92)"; ctx.font = "10px ui-sans-serif";
+      ctx.fillText("ERS" + (state.ersBoost ? " · OVERRIDE" : "") + (state.xMode ? " · X-MODE OPEN" : ""), x + 102, y + 43);
+      ctx.font = "11px ui-monospace, monospace";
+    }
       if (state.realMode) {
         const pw = 214, px = 14, py = h * 0.52, ph = 122;
         ctx.textAlign = "left";
@@ -2687,7 +2735,7 @@ const SPEC = {
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Pit Wall"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0 });
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0, xMode: false, ersBoost: false, ersStore: 1 });
     state.rivals = state.rivals.filter(r => !r.isSC);
     if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
     setActive("hybridBtn", true);
@@ -2840,14 +2888,18 @@ const SPEC = {
     el.navRead.textContent = state.route.active ? state.route.name : "Free run";
     el.lapRead.textContent = state.lap.bestMs ? `${app.fmtLap(state.lap.curMs)} / ${app.fmtLap(state.lap.bestMs)}` : (state.lap.curMs > 0 ? app.fmtLap(state.lap.curMs) : "—");
     { const pm = document.getElementById("pitMenu"); if (pm) pm.style.display = state.pitMenuOpen ? "block" : "none";
+      if (state.pitMenuOpen) {
       const xcol = (v) => v > 0.66 ? "#e74c3c" : v > 0.33 ? "#f1c40f" : "#2ecc71";
-      const xset = (id, v) => { const e = document.getElementById(id); if (e) e.setAttribute("fill", xcol(v)); };
+      const xset = (id, v) => { const e = document.getElementById(id); if (e) e.setAttribute("fill", xcol(v)); const tl = document.getElementById(id + "T"); if (tl) { tl.textContent = Math.round(v * 100) + "%"; tl.setAttribute("fill", xcol(v)); } };
       const tyv = Math.max(state.sys.tyre, state.tyreWear);
       xset("xrNose", state.sys.nose); xset("xrEng", state.sys.engine); xset("xrGbx", state.sys.gearbox);
       xset("xrFL", tyv); xset("xrFR", tyv); xset("xrRL", tyv); xset("xrRR", tyv);
+      const hyt = document.getElementById("xrHydT"); if (hyt) { hyt.textContent = "HYD " + Math.round(state.sys.hydraulics * 100) + "%"; hyt.setAttribute("fill", xcol(state.sys.hydraulics)); }
+      const brt = document.getElementById("xrBrkT"); if (brt) { brt.textContent = "BRK " + Math.round(state.sys.brakes * 100) + "%"; brt.setAttribute("fill", xcol(state.sys.brakes)); }
+      const fx = document.getElementById("pmFix"); if (fx && app.pitPlan) fx.textContent = "Crew will fix: " + app.pitPlan().text;
       const pmf = document.getElementById("pmFuel"); if (pmf) pmf.textContent = "+" + state.pitFuelAdd + " kg";
       const hl = (id, on) => { const b = document.getElementById(id); if (b) b.classList.toggle("on", on); };
-      hl("pmSoft", state.pitTireSel === "soft"); hl("pmMed", state.pitTireSel === "medium"); hl("pmHard", state.pitTireSel === "hard"); }
+      hl("pmSoft", state.pitTireSel === "soft"); hl("pmMed", state.pitTireSel === "medium"); hl("pmHard", state.pitTireSel === "hard"); } }
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
     el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetKmh)} km/h` : "Off";
     el.tcRead.textContent = state.esc ? (state.tractionControl ? "On" : "ESC only") : "Off";
