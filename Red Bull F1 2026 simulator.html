@@ -375,7 +375,7 @@
         <button data-view="engine">Engine</button>
         <button data-view="dynamics">Dynamics</button>
         <button data-view="circuit">Circuit</button>
-        <button data-view="learn">Formula 1 101</button>
+        <button data-view="learn" style="display:none">Formula 1 101</button>
       </nav>
 
       <section class="quick" aria-label="Quick controls">
@@ -564,23 +564,50 @@
 
       <!-- CIRCUIT -->
       <section class="mode-panel panel-learn">
-        <div class="panel-title"><h2>Formula 1 101</h2><span class="small">Driving school — 2026 regulations edition</span></div>
-        <div style="font-size:13px; line-height:1.6; color:#c8d2dd">
-          <p><b>The racing line.</b> Enter wide, clip the inside, exit wide — outside-inside-outside. It straightens the corner so you carry the highest possible minimum speed.</p>
-          <p><b>Braking.</b> Brake hard in a straight line, then ease off as you turn. Use the boards: 150 — 100 — 50, brake, then look for the turn-in point.</p>
-          <p><b>The late apex.</b> Turn in a touch later and clip the inside <i>past</i> the middle of the corner. The car is already pointing straight for the exit, so you're on power sooner and faster all the way down the next straight. Slow in, fast out.</p>
-          <p><b>Trail braking.</b> Carry a little brake into the entry — it keeps the nose loaded and the front tyres biting while you turn.</p>
-          <p><b>Vision.</b> Look through the corner at the exit, not at the tarmac in front of the nose. The car goes where your eyes go.</p>
-          <p><b>Downforce.</b> Grip rises with speed — an F1 car corners harder the faster it goes. Trust the wings in fast corners; they can't help you in slow ones.</p>
-          <p><b>2026 active aero.</b> Hold <kbd>X</kbd> on the straights: X-mode opens the wings and sheds drag; it snaps back to Z-mode the instant you brake or load the car.</p>
-          <p><b>ERS.</b> Hold <kbd>V</kbd> for the Manual Override — in a race it only arms within a second of the car ahead (the MOM rule). The store recharges under braking.</p>
-          <p><b>Strat &amp; bias.</b> Push mode buys ~2% power at double engine wear; Lean saves fuel and the PU. Rearward brake bias rotates the car on entry, forward is stable.</p>
-          <p><b>Tyres &amp; the pit.</b> Softs grip and die, hards last. When the wall calls "box box", drive LEFT into the pit lane in the last 260 m — the limiter engages itself; stop at YOUR team's garage and the crew fixes what the X-ray shows. No refuelling — it's been banned since 2010.</p>
-          <p><b>Race rules.</b> Safety car: no overtaking, bunch up. Track limits: all four wheels over the line deletes the lap; three warnings is a penalty.</p>
+        <div class="panel-title"><h2>Formula 1 101</h2><span class="small">a real course — pick a chapter, read, then press Demo and watch it done</span></div>
+        <div style="display:flex; gap:12px; align-items:flex-start">
+          <nav style="min-width:132px; font-size:11.5px; line-height:1.95">
+          <b style="color:#7ce0c0">CONTENTS</b>
+          <a data-goto="ls0" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">1. The racing line</a>
+          <a data-goto="ls1" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">2. Apex types — and when each is right</a>
+          <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">3. Racecraft — the line changes in real time</a>
+          <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">4. Braking — the countdown boards</a>
+          <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">5. Vision</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. Downforce — grip that grows with speed</a>
+          <a data-goto="ls6" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">7. 2026 active aero — X-mode & Z-mode</a>
+          <a data-goto="ls7" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">8. ERS & the Manual Override (MOM)</a>
+          <a data-goto="ls8" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">9. Strat, brake bias, and the pit</a>
+          <a data-goto="ls9" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">10. The rulebook that bites</a>
+          <a data-goto="ls10" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">11. This team: Red Bull in 2026</a>
+          </nav>
+          <div style="flex:1; font-size:13px; line-height:1.6; color:#c8d2dd; min-width:0">
+        <h3 id="ls0" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">1. The racing line</h3><p style="margin:4px 0">Outside–inside–outside. Enter from the far edge, cut across the yellow apex dot, release the car to the exit kerb. This maximises the corner radius, so your minimum speed — and everything that follows it — is higher. <svg viewBox="0 0 300 150" style="width:100%;max-width:300px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
+<path d="M20 30 L200 30 Q250 30 250 80 L250 130" stroke="#3a434e" stroke-width="34" fill="none" stroke-linejoin="round"/>
+<path d="M20 18 L38 44 M60 18 L78 44 M100 18 L118 44" stroke="#c73030" stroke-width="5"/>
+<path d="M20 22 L190 22 Q235 24 240 60 L242 130" stroke="#5abeff" stroke-width="3" fill="none" stroke-dasharray="6 3"/>
+<circle cx="239" cy="68" r="6" fill="#ffd21e" stroke="#111"/>
+<text x="30" y="14" font-size="9" fill="#ff9a8a">BRAKE (boards)</text><text x="150" y="14" font-size="9" fill="#e0a020">TURN IN wide</text>
+<text x="196" y="72" font-size="9" fill="#ffd21e" text-anchor="end">APEX</text><text x="246" y="145" font-size="9" fill="#7ce07c" text-anchor="end">EXIT wide, full power</text></svg> In Learning Mode the blue line is painted on the road and the zoom map (Circuit tab) shows the exact route ahead.</p><button data-demo style="padding:5px 10px;border-radius:6px;border:1px solid #2f8f6b;background:#12241d;color:#7ce0c0;cursor:pointer;font-size:12px">▶ Demo — watch the car take the line</button>
+        <h3 id="ls1" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">2. Apex types — and when each is right</h3><p style="margin:4px 0">There is no single correct apex. <svg viewBox="0 0 330 120" style="width:100%;max-width:330px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
+<path d="M10 20 L70 20 Q100 20 100 50 L100 105" stroke="#3a434e" stroke-width="22" fill="none"/><path d="M120 20 L180 20 Q210 20 210 50 L210 105" stroke="#3a434e" stroke-width="22" fill="none"/><path d="M230 20 L290 20 Q320 20 320 50 L320 105" stroke="#3a434e" stroke-width="22" fill="none"/>
+<path d="M10 15 L62 15 Q84 18 86 42 L84 105" stroke="#5abeff" stroke-width="2.5" fill="none"/><circle cx="84" cy="34" r="4.5" fill="#ffd21e"/>
+<path d="M120 15 L176 15 Q196 22 197 52 L194 105" stroke="#5abeff" stroke-width="2.5" fill="none"/><circle cx="196" cy="50" r="4.5" fill="#ffd21e"/>
+<path d="M230 15 L292 16 Q308 28 306 62 L303 105" stroke="#5abeff" stroke-width="2.5" fill="none"/><circle cx="306" cy="64" r="4.5" fill="#ffd21e"/>
+<text x="46" y="114" font-size="9" fill="#9fb2c6" text-anchor="middle">EARLY — defend / double</text><text x="163" y="114" font-size="9" fill="#9fb2c6" text-anchor="middle">MID — S-complex</text><text x="272" y="114" font-size="9" fill="#9fb2c6" text-anchor="middle">LATE — straight follows</text></svg> <b>Straight after the corner?</b> LATE apex — turn in a beat later, clip past the middle, get on power early ("slow in, fast out"). <b>Hairpin/U-turn onto a straight?</b> Same idea, exaggerated: a V-line with a very late apex. <b>Double-apex same-direction sweeps?</b> An EARLY first apex flows better. <b>S-complex (left-right)?</b> A MID apex that sacrifices this corner to be on line for the next. The boards in Learning Mode read the corner geometry and tell you which one applies — this is the same logic real coaches teach.</p><button data-demo style="padding:5px 10px;border-radius:6px;border:1px solid #2f8f6b;background:#12241d;color:#7ce0c0;cursor:pointer;font-size:12px">▶ Demo — watch the car take the line</button>
+        <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
+        <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
+        <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. Downforce — grip that grows with speed</h3><p style="margin:4px 0">An F1 car corners harder the faster it goes: at 250 km/h the wings press it into the road with more than its own weight. Trust the car in fast corners; in slow ones the wings can't help — it's all mechanical grip and traction.</p>
+        <h3 id="ls6" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">7. 2026 active aero — X-mode & Z-mode</h3><p style="margin:4px 0">Hold <kbd>X</kbd> on the straights: the wings flatten (X-mode) and shed drag. Brake or load the car and it snaps back to high-downforce Z-mode automatically. It replaced DRS in 2026 and works every lap.</p>
+        <h3 id="ls7" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">8. ERS & the Manual Override (MOM)</h3><p style="margin:4px 0">Hold <kbd>V</kbd> for full electric deploy past the 290 km/h taper. In a race it only arms within ~1 s of the car ahead — the 2026 overtaking rule. The store drains in seconds and recharges under braking.</p>
+        <h3 id="ls8" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">9. Strat, brake bias, and the pit</h3><p style="margin:4px 0">Strat Push buys ~2% power at double PU wear; Lean saves fuel and engine. Rearward brake bias rotates the car into slow corners. When the wall calls "box box": drive LEFT into the pit lane in the last 260 m — the limiter is automatic — and stop at YOUR team's garage. The garages run in 2025 championship order from the pit entry (McLaren first, Cadillac last), so driving past other teams' boxes to reach yours is exactly how real F1 works. The crew fixes everything the X-ray shows; refuelling has been banned since 2010.</p>
+        <h3 id="ls9" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">10. The rulebook that bites</h3><p style="margin:4px 0">Track limits: all four wheels over the white line deletes the lap; three race warnings is a penalty. Contact damages both cars. The safety car bunches the field — never pass it. Reliability is probabilistic per team: nurse the PU with short-shifts when the engineer warns you.</p>
+        <h3 id="ls10" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">11. This team: Red Bull in 2026</h3><p style="margin:4px 0">A DNF-riddled season (three retirements for the lead car already). The RBPT package is the slipperiest in X-mode (34% drag shed) — win it on the straights, and short-shift to survive. Crew 2.3 s; garage 3rd from entry.</p>
+          </div>
         </div>
         <div class="divider"></div>
-        <div class="control-grid"><button id="learnBtn">Learning Mode: Off</button></div>
-        <p class="small" style="margin-top:8px">Learning Mode paints it on the road: brake boards, TURN IN, a LATE APEX cone and an EXIT board — racing line always on. Open <b>Circuit</b> to see the full line around the lap map.</p>
+        <div class="control-grid"><button id="learnBtn">Learning Mode: Off</button><button id="demoBtn">▶ Demo — the ideal line, driven</button></div>
+        <p class="small" style="margin-top:8px">Learning Mode paints the countdown boards (300→50 to the apex), TURN IN, the yellow apex dot with live apex advice, and EXIT boards — plus the exaggerated racing line and a zoomed "line ahead" inset on the Circuit map.</p>
       </section>
       <section class="mode-panel panel-circuit">
         <div class="panel-title">
@@ -1428,7 +1455,9 @@ const SPEC = {
       const vs = speechSynthesis.getVoices();
       const v = vs.find(x => /en[-_]GB/i.test(x.lang)) || vs.find(x => /^en/i.test(x.lang));
       if (v) u.voice = v;
-      speechSynthesis.cancel(); speechSynthesis.speak(u);
+      speechSynthesis.cancel();
+      setTimeout(() => { try { speechSynthesis.resume(); speechSynthesis.speak(u); } catch (e) {} }, 60);
+      if (!window._radioKA) window._radioKA = setInterval(() => { try { if (speechSynthesis.speaking) speechSynthesis.resume(); } catch (e) {} }, 4000);
     } catch (e) {}
   }
   const ORD = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh"];
@@ -1563,7 +1592,7 @@ const SPEC = {
     // ---- pit lane: drive in, auto pit limiter, stop in the box, choose tyres+fuel, release ----
     if (!state.inPitLane && !state.retired && state.laneOffset < -(halfWidthAt(state.distanceM) * 0.72) && ph > L - 260 && ph < L - 20) {
       state.inPitLane = true; state.pitStage = "enter"; state.pitArmed = true;
-      showToast("Into the pit lane — pit limiter on at " + state.pitLimitKmh + " km/h.", "Pit Wall");
+      showToast("Into the pit lane — limiter on at " + state.pitLimitKmh + " km/h. Your box is the " + ORD[TEAM.slot] + " garage from the entry (2025 championship order).", "Pit Wall"); radioSay("Limiter on. Your box is the " + ORD[TEAM.slot] + " garage — the crew is out.");
     }
     if (state.inPitLane) {
       const pl = state.pitLimitKmh * KMH, _myBox = boxPhAt(TEAM.slot, L), _dBox = ph - _myBox, boxZone = _dBox > -14 && _dBox < 12;
@@ -2197,33 +2226,58 @@ const SPEC = {
     }
   }
   // a teal racing line that swings to the apex of the corner ahead, with an aim dot ~55 m out
+  // corner analysis with a CACHED target (stable boards — no re-scan jitter) and a real
+  // apex model: geometry picks the apex type; the race situation overrides it in real time
+  function analyseCorner() {
+    const c = state._lc;
+    if (c && state.distanceM < c.end + 40 && c.start - state.distanceM < 660) return c;
+    let s0 = null, dir = 0;
+    for (let d = 30; d <= 680; d += 2) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.006) { s0 = state.distanceM + d; dir = Math.sign(k); break; } }
+    if (s0 === null) { state._lc = null; return null; }
+    let e0 = s0, ang = 0;
+    for (let d = 0; d <= 520; d += 2) { const k = curvatureAt(s0 + d); if (Math.abs(k) > 0.006) { e0 = s0 + d; ang += Math.abs(k) * 2; } else if (s0 + d > e0 + 36) break; }
+    let nxt = 0, nd = 1e9;
+    for (let d = 12; d <= 240; d += 4) { const k = curvatureAt(e0 + 20 + d); if (Math.abs(k) > 0.006) { nxt = Math.sign(k); nd = d; break; } }
+    const hairpin = ang > 1.9;                                        // ~110°+ of rotation: a true hairpin/U-turn
+    let type, frac;
+    if (nd < 150 && nxt !== 0 && nxt !== dir) { type = "MID APEX — set up the next"; frac = 0.50; }   // S-complex: sacrifice this one
+    else if (nd < 150 && nxt === dir) { type = "EARLY APEX — double apex"; frac = 0.38; }             // long double-apex corner
+    else if (hairpin) { type = "V-LINE · LATE APEX"; frac = 0.62; }                                    // hairpin onto a straight
+    else { type = "LATE APEX"; frac = 0.58; }                                                          // classic: exit speed wins
+    state._lc = { start: s0, end: e0, dir, ang, type, frac };
+    return state._lc;
+  }
   function drawLearningMarks() {
-    // find the next corner ahead of the car
-    let cStart = null, dir = 0;
-    for (let d = 25; d <= 520; d += 10) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.006) { cStart = d; dir = Math.sign(k); break; } }
-    if (cStart === null) return;
-    let cEnd = cStart;
-    for (let d = cStart; d <= cStart + 420; d += 10) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.006) cEnd = d; else if (d > cStart + 30) break; }
-    const apexD = cStart + (cEnd - cStart) * 0.6;                        // the LATE apex — past the geometric middle
-    const board = (d, txt, col) => {
-      if (d < 8) return;
-      const p = projectAhead(d, dir * (halfAt(d) + 2.4));                // boards on the outside of the corner
-      if (p.fwd < 1 || p.scale < 0.05) return;
-      const s2 = clamp(15 * p.scale, 4, 42), bw2 = s2 * 2.3, bh2 = s2 * 1.25;
+    const c = analyseCorner(); if (!c) return;
+    let typ = c.type, frac = c.frac;
+    // racecraft, live: defending pulls the apex early to own the inside; attacking runs it late for the exit run
+    const spd2 = Math.max(20, Math.abs(state.speedMps));
+    const gg = app.rivalGaps ? app.rivalGaps() : { ahead: 1e9, behind: 1e9 };
+    if (gg.behind < spd2 * 1.4) { typ = "DEFEND · EARLY APEX — own the inside"; frac = Math.min(frac, 0.35); }
+    else if (gg.ahead < spd2 * 1.1) { typ = "ATTACK · LATE APEX — get the run"; frac = Math.max(frac, 0.62); }
+    const apexAt = c.start + (c.end - c.start) * frac, apexD = apexAt - state.distanceM;
+    const board = (dd, txt, col, big) => {
+      if (dd < 10 || dd > 430) return;
+      const p = projectAhead(dd, c.dir * (halfAt(dd) + 2.6));
+      if (p.fwd < 1 || p.scale < 0.045) return;
+      const s2 = clamp((big ? 13 : 11) * p.scale, 2.5, big ? 26 : 20), bw2 = Math.max(s2 * 2.1, s2 * 0.62 * (txt.length * 0.62)), bh2 = s2 * 1.18;
+      ctx.globalAlpha = clamp(1.3 - dd / 360, 0.3, 1);
       ctx.fillStyle = col; ctx.fillRect(p.x - bw2 / 2, p.y - s2 * 2.3, bw2, bh2);
       ctx.strokeStyle = "rgba(255,255,255,0.85)"; ctx.lineWidth = 1; ctx.strokeRect(p.x - bw2 / 2, p.y - s2 * 2.3, bw2, bh2);
-      ctx.fillStyle = "#fff"; ctx.font = "bold " + clamp(s2 * 0.62, 5, 20) + "px sans-serif"; ctx.textAlign = "center";
-      ctx.fillText(txt, p.x, p.y - s2 * 2.3 + bh2 * 0.72);
-      ctx.strokeStyle = "rgba(200,200,200,0.6)"; ctx.beginPath(); ctx.moveTo(p.x, p.y - s2 * 1.05); ctx.lineTo(p.x, p.y); ctx.stroke();
+      ctx.fillStyle = "#fff"; ctx.font = "bold " + clamp(s2 * 0.72, 5, 15) + "px sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(txt, p.x, p.y - s2 * 2.3 + bh2 * 0.76);
+      ctx.strokeStyle = "rgba(200,200,200,0.5)"; ctx.beginPath(); ctx.moveTo(p.x, p.y - s2 * 1.1); ctx.lineTo(p.x, p.y); ctx.stroke();
+      ctx.globalAlpha = 1;
     };
-    board(cStart - 150, "150", "#c73030"); board(cStart - 100, "100", "#c73030"); board(cStart - 50, "BRAKE", "#c73030");
-    board(cStart - 6, "TURN IN", "#e0a020");
-    { const p = projectAhead(apexD, -dir * (halfAt(apexD) - 1.0));       // apex cone on the inside kerb
-      if (p.fwd > 1 && p.scale > 0.05) { const s2 = clamp(9 * p.scale, 3, 26);
-        ctx.fillStyle = "#ffb020"; ctx.beginPath(); ctx.moveTo(p.x, p.y - s2 * 1.7); ctx.lineTo(p.x - s2 * 0.55, p.y); ctx.lineTo(p.x + s2 * 0.55, p.y); ctx.closePath(); ctx.fill();
-        ctx.strokeStyle = "rgba(0,0,0,0.4)"; ctx.stroke();
-        ctx.fillStyle = "#ffd27a"; ctx.font = "bold " + clamp(s2 * 0.85, 5, 15) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText("LATE APEX", p.x, p.y - s2 * 2.1); } }
-    board(cEnd + 34, "EXIT — POWER", "#1f9d55");
+    for (const m of [300, 200, 150, 100, 50]) board(apexD - m, String(m), "#c73030");   // countdown TO THE APEX
+    board(c.start - state.distanceM - 4, "TURN IN", "#e0a020");
+    { const p = projectAhead(apexD, -c.dir * (halfAt(apexD) - 1.6));                    // the apex: a big yellow dot on the line
+      if (apexD > 4 && p.fwd > 1 && p.scale > 0.04) { const rr = clamp(7 * p.scale, 3.5, 20);
+        ctx.fillStyle = "#ffd21e"; ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#1c2027"; ctx.lineWidth = 2; ctx.stroke();
+        ctx.fillStyle = "#ffe27a"; ctx.font = "bold " + clamp(rr * 0.9, 6, 15) + "px sans-serif"; ctx.textAlign = "center";
+        ctx.fillText(typ, p.x, p.y - rr - 5); } }
+    board(c.end - state.distanceM + 40, "EXIT — POWER", "#1f9d55", true);
   }
   function drawRacingLine() {
     const racingOff = (d) => { const k = curvatureAt(state.distanceM + d); return clamp(-Math.sign(k) * Math.min(Math.abs(k) * 1100, 1) * (halfAt(d) - 1.6), -8, 8); };
@@ -2684,21 +2738,53 @@ const SPEC = {
     g.strokeStyle = state.route.active ? "rgba(165,175,185,0.92)" : "rgba(120,130,140,0.55)"; g.lineWidth = 5; g.lineCap = "round"; g.lineJoin = "round";
     g.beginPath(); for (let i = 0; i <= N; i++) { const x = TX(X[i]), y = TY(Y[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); } if (loop) g.closePath(); g.stroke();
     const s0 = at(0); g.strokeStyle = "rgba(245,245,245,0.95)"; g.lineWidth = 3; g.beginPath(); g.moveTo(s0.x - 6, s0.y); g.lineTo(s0.x + 6, s0.y); g.stroke();
-    if (state.learnMode) {                                   // learning: the racing line, drawn around the whole lap
-      g.strokeStyle = "rgba(120,230,190,0.9)"; g.lineWidth = 1.8; g.beginPath();
-      const M2 = 260;
+    if (state.learnMode) {   // learning: exaggerated racing line around the lap + a ZOOMED live inset with the precise route
+      g.strokeStyle = "rgba(120,230,190,0.85)"; g.lineWidth = 1.6; g.beginPath();
+      const M2 = 260, swing = Math.max(3.2, sc * 7);
       for (let i2 = 0; i2 <= M2; i2++) {
         const dd = i2 * L / M2;
         let d2 = ((dd % L) + L) % L; const f2 = d2 / step; const j0 = Math.floor(f2) % N, j1 = (j0 + 1) % (N + 1), t2 = f2 - Math.floor(f2);
         const ax = lerp(X[j0], X[j1], t2), ay = lerp(Y[j0], Y[j1], t2);
         const bx = lerp(X[j1], X[(j1 + 1) % (N + 1)], t2), by = lerp(Y[j1], Y[(j1 + 1) % (N + 1)], t2);
         let nx2 = -(by - ay), ny2 = (bx - ax); const ln2 = Math.hypot(nx2, ny2) || 1; nx2 /= ln2; ny2 /= ln2;
-        const k2 = curvatureAt(dd), roff = Math.max(-8, Math.min(8, -Math.sign(k2) * Math.min(Math.abs(k2) * 1100, 1) * 8));
-        const px2 = TX(ax + nx2 * roff), py2 = TY(ay + ny2 * roff);
+        const k2 = curvatureAt(dd), rn = Math.max(-1, Math.min(1, -Math.sign(k2) * Math.min(Math.abs(k2) * 1100, 1)));
+        const px2 = TX(ax) + nx2 * rn * swing, py2 = TY(ay) + ny2 * rn * swing;
         i2 ? g.lineTo(px2, py2) : g.moveTo(px2, py2);
       }
-      if (loop) g.closePath(); g.stroke();
-      g.fillStyle = "rgba(120,230,190,0.92)"; g.font = "9px sans-serif"; g.textAlign = "left"; g.fillText("racing line — learning mode", 10, 14);
+      g.stroke();
+      { // zoomed inset: track edges, the exact line, and the apex for the next ~450 m
+        const zw = Math.min(rw - 16, 200), zh = 138, zx = rw - zw - 8, zy = rh - zh - 24;
+        g.save();
+        g.fillStyle = "rgba(6,10,14,0.94)"; g.fillRect(zx, zy, zw, zh);
+        g.strokeStyle = "rgba(120,230,190,0.65)"; g.lineWidth = 1; g.strokeRect(zx, zy, zw, zh);
+        g.beginPath(); g.rect(zx + 1, zy + 1, zw - 2, zh - 2); g.clip();
+        const back = 70, span = 460, stepZ = 6, c0 = state.distanceM;
+        let hd = 0, wx = 0, wy = 0; const pts = [];
+        for (let d = -back; d <= span - back; d += stepZ) {
+          const k = curvatureAt(c0 + d); hd += k * stepZ; wx += Math.cos(hd) * stepZ; wy += Math.sin(hd) * stepZ;
+          pts.push({ d, x: wx, y: wy, hd });
+        }
+        let mnx = 1e9, mxx = -1e9, mny = 1e9, mxy = -1e9;
+        for (const p of pts) { mnx = Math.min(mnx, p.x); mxx = Math.max(mxx, p.x); mny = Math.min(mny, p.y); mxy = Math.max(mxy, p.y); }
+        const zsc = Math.min((zw - 34) / Math.max(1, mxx - mnx), (zh - 34) / Math.max(1, mxy - mny), 0.9);
+        const ox2 = zx + 17 - mnx * zsc + ((zw - 34) - (mxx - mnx) * zsc) / 2, oy2 = zy + 17 - mny * zsc + ((zh - 34) - (mxy - mny) * zsc) / 2;
+        const P = (p, lat) => ({ x: ox2 + (p.x - Math.sin(p.hd) * lat) * zsc, y: oy2 + (p.y + Math.cos(p.hd) * lat) * zsc });
+        for (const sgn of [-1, 1]) { g.strokeStyle = "rgba(170,180,190,0.8)"; g.lineWidth = 1.2; g.beginPath();
+          pts.forEach((p, i3) => { const q = P(p, sgn * (app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke(); }
+        g.strokeStyle = "rgba(90,190,255,0.95)"; g.lineWidth = 2; g.beginPath();     // the precise line, in blue
+        pts.forEach((p, i3) => { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, -Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
+          const q = P(p, rn * ((app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8) - 1.6)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke();
+        const lc = state._lc;                                                          // the apex dot
+        if (lc) { const ad = lc.start + (lc.end - lc.start) * lc.frac - c0;
+          if (ad > -back && ad < span - back) { const p = pts[Math.round((ad + back) / stepZ)];
+            if (p) { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, -Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
+              const q = P(p, rn * ((app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8) - 1.6));
+              g.fillStyle = "#ffd21e"; g.beginPath(); g.arc(q.x, q.y, 4.5, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#101418"; g.stroke(); } } }
+        { const p0 = pts[Math.round(back / stepZ)]; if (p0) { const q = P(p0, state.laneOffset);   // you
+            g.fillStyle = "#fff"; g.beginPath(); g.arc(q.x, q.y, 3.4, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#2f7be0"; g.lineWidth = 2; g.stroke(); } }
+        g.fillStyle = "rgba(120,230,190,0.9)"; g.font = "8px sans-serif"; g.textAlign = "left"; g.fillText("zoom — the line ahead", zx + 5, zy + 11);
+        g.restore();
+      }
     }
 
     // pit lane on the map (real mode): a service road hung off the start straight, with garages
@@ -3240,7 +3326,25 @@ const SPEC = {
     document.getElementById("dataBtn").addEventListener("click", () => { state.dataHud = !state.dataHud; showToast(state.dataHud ? "Telemetry overlay on." : "Telemetry overlay off."); });
     { const lb = document.getElementById("learnBtn"); if (lb) lb.addEventListener("click", () => {
         state.learnMode = !state.learnMode; lb.textContent = "Learning Mode: " + (state.learnMode ? "On" : "Off"); lb.classList.toggle("active", state.learnMode);
-        showToast(state.learnMode ? "Learning Mode — brake boards, turn-in, LATE APEX cone and exit boards are on the road; the racing line stays on. The Circuit map shows the full line." : "Learning Mode off.", "Driving School"); }); }
+        showToast(state.learnMode ? "Learning Mode — countdown boards to the apex, live apex advice, the line on the road and the zoom map." : "Learning Mode off.", "Driving School"); }); }
+    app.enterLearning = () => {                                        // the garage's Learning button lands here
+      const tb = document.querySelector('[data-view="learn"]'); if (tb) tb.style.display = "";
+      if (!state.learnMode) { const lb2 = document.getElementById("learnBtn"); if (lb2) lb2.click(); else state.learnMode = true; }
+      if (app.setView) app.setView("learn");
+    };
+    app.learnDemo = () => {                                            // lead the car to a corner and drive the line
+      if (!(state.route.active && state.route.loop) && app.selectCircuit) app.selectCircuit("Suzuka Circuit");
+      const tb = document.querySelector('[data-view="learn"]'); if (tb) tb.style.display = "";
+      if (!state.learnMode) { const lb2 = document.getElementById("learnBtn"); if (lb2) lb2.click(); else state.learnMode = true; }
+      state.ignition = true; state.started = true; state.testDriver = true;
+      state.gearMode = "G"; state.curGear = 1;
+      if (app.setView) app.setView("drive");
+      app.showToast("Demo — the test driver takes the corners on the ideal line. Watch the boards count down to the yellow apex dot; open Circuit for the zoom map.", "Driving School");
+    };
+    { const pnl = document.querySelector(".panel-learn"); if (pnl) {
+        pnl.querySelectorAll("[data-goto]").forEach(aEl => aEl.addEventListener("click", () => { const t2 = document.getElementById(aEl.dataset.goto); if (t2) t2.scrollIntoView({ behavior: "smooth", block: "start" }); }));
+        pnl.querySelectorAll("[data-demo]").forEach(bEl => bEl.addEventListener("click", () => app.learnDemo()));
+        const db = document.getElementById("demoBtn"); if (db) db.addEventListener("click", () => app.learnDemo()); } }
     document.getElementById("assistBtn").addEventListener("click", () => {
       state.assist = !state.assist;
       if (!state.assist) {

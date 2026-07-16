@@ -204,6 +204,23 @@ panel + `learnBtn` toggling `state.learnMode`: `drawLearningMarks()` paints
 EXIT—POWER board around the next corner; the teal racing line stays on and
 `drawMap` overlays the full racing line. All opt-in → certification untouched.
 
+**v8** — width 3.75 in ALL 24 sims. `radioSay` uses cancel → setTimeout(60 ms) →
+resume+speak plus a 4 s resume keepalive (Chrome silently drops queued utterances
+otherwise). Learning is a **launch mode**: the learn tab is `display:none` until the
+garage card's **Learning** button calls `app.enterLearning()` (index.html
+`openLearning` polls `getSimApp()`). Each 101 is a real course: CONTENTS quick-nav,
+two inline SVG diagrams, a per-car feature lesson (all 24 differ) and **Demo**
+buttons → `app.learnDemo()` (Suzuka, test driver, gear engaged, markers on).
+`analyseCorner()` CACHES the corner target (no board jitter) and classifies the
+apex: straight after → LATE (frac .58), hairpin → V-LINE (.62), same-direction
+double → EARLY (.38), S-complex → MID (.5); live racecraft overrides via
+`rivalGaps()`: defending → EARLY .35 "own the inside", attacking → LATE .62 "get
+the run". Boards count 300→50 **to the apex** with distance fade; a big yellow
+apex dot carries the advice. The map draws an exaggerated line (no closePath
+chord) plus a ZOOMED inset (track edges, exact blue line, apex dot, car). Pit-entry
+radio names your garage (`ORD[TEAM.slot]`). DNS odds audited over 600 seeds
+(McLaren 3.0%, Audi 5.5%, Cadillac 5.2% — all tracking their constants).
+
 **F1-correct cockpit (v5)** — no road-car controls in the F1 sims: quick bar has
 **Strat** (`cycleStrat`: Standard/Push/Lean — ±2% power, ×2.2/×0.6 engine wear,
 fuel burn; default Standard so certification is untouched), **B-Bias** (`cycleBias`:
