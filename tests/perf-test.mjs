@@ -179,6 +179,7 @@ const PAGE_FNS = {
     const dt = 1 / 120, KMH = 1 / 3.6;
     for (const k in state.keys) state.keys[k] = false;
     app.resetCar();
+    state.rivals = [];                                  // certification runs on a clear track
     state.ignition = true; state.started = true;
     if (assistOff) state.assist = false;
     if (setup === "speedKey" && app.toggleSpeedKey) app.toggleSpeedKey();
@@ -218,6 +219,7 @@ const PAGE_FNS = {
     const dt = 1 / 120, KMH = 1 / 3.6;
     for (const k in state.keys) state.keys[k] = false;
     app.resetCar();
+    state.rivals = [];                                  // certification runs on a clear track
     state.ignition = true; state.started = true;
     app.setGear("G", 4);
     state.speedMps = 100 * KMH;
@@ -236,6 +238,8 @@ const PAGE_FNS = {
     const runLaunch = () => {
       for (const k in state.keys) state.keys[k] = false;
       app.resetCar();
+      state.rivals = [];
+    state.rivals = [];                                  // certification runs on a clear track
       state.ignition = true; state.started = true;
       if (setup === "e85" && app.toggleFuel && !state.e85) app.toggleFuel();
       app.armLaunch(); state.keys.KeyW = true;
@@ -254,6 +258,8 @@ const PAGE_FNS = {
     const runBrake = () => {
       for (const k in state.keys) state.keys[k] = false;
       app.resetCar();
+      state.rivals = [];
+    state.rivals = [];                                  // certification runs on a clear track
       state.ignition = true; state.started = true;
       app.setGear("G", 4); state.speedMps = 100 * KMH; state.keys.ArrowDown = true; state.brake = 1;
       const d0 = state.distanceM; let t = 0;

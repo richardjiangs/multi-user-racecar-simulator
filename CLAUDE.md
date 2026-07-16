@@ -173,6 +173,19 @@ untouched). The 2026 **MOM rule** gates ERS Override in real mode: only within ~
 of the car ahead. The player boxes at **their own team's slot** too, and `drawPitLane`
 labels it "YOUR BOX" (`GARAGE_COLS`/`TEAM_SLOT`).
 
+**v6** — `TRACK_WIDTH_SCALE` is **3.75** in the F1 sims (×1.5 wider). `checkContact`
+runs in **every mode** (practice contact is real; `triggerSC` itself is real-mode-only
+since an SC could never be recalled in practice) — so `tests/perf-test.mjs` clears
+`state.rivals` after every `resetCar()` (certification = clear track; keep this when
+adding PAGE_FNS). **Team radio speaks**: `radioCall(auto)` builds real engineer
+content (box calls with your garage position, deg %, wing damage, fuel li-co, next
+corner + apex advice via `curvatureAt`, gaps with MOM hint, position) and `radioSay`
+voices it via **browser speechSynthesis** (en-GB preferred, no API). Auto-calls: tyre
+wear crossing 0.75 (`_boxCalled`), SC deploy, pit release. The Radio button/H key +
+the Cockpit "Team Radio" button route through it. `drawPitLane` draws a **pit wall**
+(dark barrier + white top) and real **garage buildings** (roof band, team-colour
+strip, dark open door, `GARAGE_NAMES` over the door, tyre stacks, crew at your box).
+
 **F1-correct cockpit (v5)** — no road-car controls in the F1 sims: quick bar has
 **Strat** (`cycleStrat`: Standard/Push/Lean — ±2% power, ×2.2/×0.6 engine wear,
 fuel burn; default Standard so certification is untouched), **B-Bias** (`cycleBias`:

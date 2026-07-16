@@ -826,7 +826,7 @@ const CIRCUITS = {
     track: [c(0, 1, 360, 12600, "Banked circle")]
   }
 };
-const TRACK_WIDTH_SCALE = 2.5;
+const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — the circuits read properly wide
 
 /* ===== data: vehicle spec — 2026 Formula 1 figures (spec formula) =====
    1.6 L V6 single-turbo hybrid to the 2026 regulations: ~400 kW combustion +
@@ -1400,11 +1400,50 @@ const SPEC = {
   function realPower() { if (!state.realMode) return 1; if (state.retired) return 0; const dmg = 1 - state.damage * 0.35, fuel = 1 + (100 - state.fuelKg) / 100 * 0.03, tyre = 1 - state.tyreWear * 0.10; return TEAM.pace * dmg * fuel * tyre; }
   function realTop() { return TEAM.top; }   // per-team straight-line speed, every mode (launch is unaffected)
   function realGrip() { if (!state.realMode) return 1; return TEAM.corner * (1 - state.tyreWear * 0.28) * (1 - state.damage * 0.20); }
+  // ---- team radio: real engineer content (box calls, deg, gaps, corner guidance), spoken aloud ----
+  function radioSay(text) {
+    try {
+      if (!("speechSynthesis" in window)) return;
+      const u = new SpeechSynthesisUtterance(text.replace(/·/g, ","));
+      u.rate = 1.08; u.pitch = 0.9; u.volume = 0.95;
+      const vs = speechSynthesis.getVoices();
+      const v = vs.find(x => /en[-_]GB/i.test(x.lang)) || vs.find(x => /^en/i.test(x.lang));
+      if (v) u.voice = v;
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+    } catch (e) {}
+  }
+  const ORD = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh"];
+  function radioCall(auto) {
+    const msgs = [], tw = state.tyreWear, spd = Math.max(20, Math.abs(state.speedMps));
+    if (state.retired) msgs.push("That's it, I'm afraid. Switch off — we'll look at the data.");
+    else {
+      if (state.safetyCar) msgs.push("Safety car, safety car. Hold position behind the AMG, no overtaking.");
+      if (tw > 0.72) msgs.push("Box, box. Box this lap — the " + (state.tyreComp === "soft" ? "softs are dead" : "tyres are done") + ". We're the " + ORD[TEAM.slot] + " garage from the pit entry; mind the limiter at the line.");
+      else if (tw > 0.45) msgs.push("Deg is coming — wear at " + Math.round(tw * 100) + " percent. Two more laps, then we look at the stop.");
+      if (state.sys.nose > 0.25) msgs.push("We can see front wing damage, " + Math.round(state.sys.nose * 100) + " percent. New nose at the stop.");
+      if (state.sys.engine > 0.5) msgs.push("PU temps are marginal — short-shift and lift and coast, please.");
+      if (state.fuelKg < 18) msgs.push("Fuel is tight. Li-co into the heavy braking zones.");
+      if (!msgs.length || !auto) {
+        let corner = null;
+        for (let d = 70; d <= 430; d += 30) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.0045) { corner = { d, dir: k > 0 ? "left" : "right", tight: Math.abs(k) > 0.013 }; break; } }
+        if (corner) msgs.push((corner.tight ? "Tight " : "") + corner.dir + "-hander in " + Math.round(corner.d / 10) * 10 + " — " + (corner.tight ? "brake deep, late apex, use every bit of exit kerb." : "carry the speed and clip the apex."));
+        const g = rivalGaps();
+        if (g.ahead < 1e9) { const gs = g.ahead / spd; msgs.push("Gap ahead " + gs.toFixed(1) + (gs < 1.05 ? " — override is live, use it." : " — take three tenths a lap, no risks.")); }
+        else if (g.behind < 1e9) msgs.push("Gap behind " + (g.behind / spd).toFixed(1) + " — manage the pace.");
+        if (state.realMode) { const p = racePosition(); if (p > 0) msgs.push("P" + p + ".") }
+      }
+    }
+    if (!msgs.length) msgs.push(RADIO_LINES[Math.floor(Math.random() * RADIO_LINES.length)]);
+    const text = msgs.slice(0, 2).join(" ");
+    showToast(text, TEAM.name + " pit wall");
+    radioSay(text);
+  }
   function triggerSC(why) {
-    if (state.safetyCar) return;
+    if (!state.realMode || state.safetyCar) return;
     state.safetyCar = true; state.scTimer = 26 + Math.random() * 20; state.scWarns = 0;
     if (!state.rivals.some(r => r.isSC)) state.rivals.push({ isSC: true, name: "SAFETY CAR · AMG GT", body: "#c9d1d6", stripe: "#16a34a", distM: state.distanceM + 55, lane: 0, speedMps: 40, topMps: 150 / 3.6, latG: 2.2, accel: 9, brake: 0, out: false, dns: false, fail: 0, rel: 99, rmDnf: 0 });
     showToast("Safety car deployed — the Mercedes-AMG GT is out (" + why + "). No overtaking; bunch up behind it.", "Race Control");
+    radioSay("Safety car, safety car. The AMG is out — no overtaking, bunch up behind it.");
   }
   function toggleRealMode() {
     const on = !state.realMode; state.realMode = on;
@@ -1451,7 +1490,7 @@ const SPEC = {
   }
   function checkContact(dt) {
     state.contactCool = Math.max(0, (state.contactCool || 0) - dt);
-    if (!state.realMode || state.inPitLane || state.retired || !state.rivals.length || state.contactCool > 0) return;
+    if (state.inPitLane || state.retired || !state.rivals.length || state.contactCool > 0) return;
     const L = lapLen();
     for (const r of state.rivals) {
       if (r.dns || r.out) continue;
@@ -1485,6 +1524,8 @@ const SPEC = {
     const load = clamp(Math.abs(state.lateralG) * 0.5 + state.throttle * 0.35 + spd / 140, 0, 2);
     const compDeg = state.tyreComp === "soft" ? 1.6 : state.tyreComp === "hard" ? 0.65 : 1.0;
     if (moving && !state.inPitLane) state.tyreWear = clamp(state.tyreWear + dt * load * 0.0016 * compDeg * TEAM.tyreDeg, 0, 1);
+    if (state.tyreWear > 0.75 && !state._boxCalled) { state._boxCalled = true; radioCall(true); }
+    if (state.tyreWear < 0.2) state._boxCalled = false;
     // reliability risk builds with running, high revs and damage — teams differ a lot
     const revStress = clamp(state.rpm / SPEC.redlineRpm - 0.9, 0, 0.1) * 6;
     // per-system reliability — each grows on its own stress; reach 100% and it fails for real
@@ -1516,7 +1557,7 @@ const SPEC = {
         const s = state.sys; state.tyreWear = 0; s.tyre = 0; s.nose = 0;
         if (s.gearbox > 0.2) s.gearbox = 0.05; if (s.hydraulics > 0.2) s.hydraulics = 0.05; if (s.brakes > 0.2) s.brakes = 0.05;
         if (s.engine > 0.25) s.engine = Math.max(0.2, s.engine * 0.45);   // a PU can be nursed back, not swapped
-        state.tyreComp = state.pitTireSel; state.fuelKg = clamp(state.fuelKg + state.pitFuelAdd, 0, 110); state.damage = 0; state.pitStops++; state.gearMode = "G"; state.curGear = 1; state.pitStage = "exit"; showToast("Job done — GO GO GO! Released in 1st — drive out under the limiter.", TEAM.name); } }
+        state.tyreComp = state.pitTireSel; state.fuelKg = clamp(state.fuelKg + state.pitFuelAdd, 0, 110); state.damage = 0; state.pitStops++; state.gearMode = "G"; state.curGear = 1; state.pitStage = "exit"; showToast("Job done — GO GO GO! Released in 1st — drive out under the limiter.", TEAM.name); radioSay("Job done — go go go! Released in first, hold the limiter to the line."); } }
       else if (state.pitStage === "exit") { if (state.speedMps > pl) state.speedMps = pl; if (ph > 100 && ph < L - 300) { state.inPitLane = false; state.pitStage = ""; state.pitArmed = false; state.laneOffset = -halfWidthAt(state.distanceM) * 0.4; showToast("Pit exit — back on track, mind the blend line.", "Pit Wall"); } }
     }
     // safety car neutralises the field
@@ -1935,7 +1976,7 @@ const SPEC = {
 
   Object.assign(app, {
     engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN, toggleRealMode, pitInOut, pitTire, pitFuel, pitConfirm, pitPlan, checkContact, onRaceLap, racePosition, fieldSize,
-    buildCornersForRoute, curvatureAt, halfWidthAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING, TEAM, RADIO_LINES
+    buildCornersForRoute, curvatureAt, halfWidthAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING, TEAM, RADIO_LINES, radioCall, radioSay
   });
 }
 
@@ -2073,19 +2114,51 @@ const SPEC = {
       }
       prev = pc;
     }
+    // pit wall: a low barrier with a white top between the racing line and the pit lane
+    { let prevW = null;
+      for (let i = 0; i < ROAD_OFFS.length; i++) {
+        const off = ROAD_OFFS[i], phw = (((state.distanceM + off) % L) + L) % L;
+        if (!inSpan(phw)) { prevW = null; continue; }
+        const Hw = halfAt(off), cw2 = centerlineAt(off), latw = -(Hw + 0.9);
+        const pcw = roadCorner(cw2.X + latw * Math.cos(cw2.psi), cw2.Z - latw * Math.sin(cw2.psi));
+        if (prevW && (prevW.fwd >= NEAR_PLANE || pcw.fwd >= NEAR_PLANE)) {
+          let a = prevW, b = pcw;
+          if (a.fwd < NEAR_PLANE) { const t = (NEAR_PLANE - a.fwd) / (b.fwd - a.fwd); a = { rgt: a.rgt + (b.rgt - a.rgt) * t, fwd: NEAR_PLANE }; }
+          else if (b.fwd < NEAR_PLANE) { const t = (NEAR_PLANE - a.fwd) / (b.fwd - a.fwd); b = { rgt: a.rgt + (b.rgt - a.rgt) * t, fwd: NEAR_PLANE }; }
+          const pa = projPoint(a), pb = projPoint(b), lw = clamp(FOCAL / Math.max(a.fwd, b.fwd) * 0.55, 1.5, 16);
+          ctx.strokeStyle = "#3d444e"; ctx.lineWidth = lw; ctx.beginPath(); ctx.moveTo(pa.x, pa.y - lw * 0.4); ctx.lineTo(pb.x, pb.y - lw * 0.4); ctx.stroke();
+          ctx.strokeStyle = "rgba(235,238,242,0.9)"; ctx.lineWidth = Math.max(1, lw * 0.22); ctx.beginPath(); ctx.moveTo(pa.x, pa.y - lw * 0.85); ctx.lineTo(pb.x, pb.y - lw * 0.85); ctx.stroke();
+        }
+        prevW = pcw;
+      } }
     // team garages at their real slots (2025 championship order from the pit entry); yours is called out
+    const GARAGE_NAMES = ["McLAREN","MERCEDES","RED BULL","FERRARI","WILLIAMS","RACING BULLS","ASTON MARTIN","AUDI","HAAS","ALPINE","CADILLAC"];
     for (let slot = 10; slot >= 0; slot--) {
       const gPh = ((L - 235 + slot * 18) % L + L) % L;
       let dAhead = ((gPh - (((state.distanceM % L) + L) % L)) % L + L) % L; if (dAhead > L * 0.5) dAhead -= L;
       if (dAhead < 4 || dAhead > 240) continue;
-      const H = halfAt(dAhead), base = projectAhead(dAhead, -(H + 12));
+      const H = halfAt(dAhead), base = projectAhead(dAhead, -(H + 13.5));
       if (base.fwd < 0.5 || base.scale < 0.04) continue;
-      const bw = clamp(64 * base.scale, 3, 280), bh = clamp(72 * base.scale, 3, 330);
+      const bw = clamp(84 * base.scale, 3, 340), bh = clamp(78 * base.scale, 3, 340);
       const mine = (typeof TEAM_SLOT !== "undefined") && slot === TEAM_SLOT;
-      ctx.fillStyle = pal.night ? "#0e1218" : "#1c2027"; ctx.fillRect(base.x - bw / 2, base.y - bh, bw, bh);
-      ctx.fillStyle = GARAGE_COLS[slot]; ctx.fillRect(base.x - bw / 2, base.y - bh, bw, clamp(bh * 0.22, 1.5, 48));
-      ctx.strokeStyle = mine ? "rgba(120,220,190,0.95)" : "rgba(0,0,0,0.35)"; ctx.lineWidth = mine ? 2 : 1; ctx.strokeRect(base.x - bw / 2, base.y - bh, bw, bh);
-      if (mine && base.scale > 0.09) { ctx.fillStyle = "#7ce0c0"; ctx.font = "bold " + clamp(11 * base.scale * 3, 8, 22) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText("YOUR BOX", base.x, base.y - bh - 4); }
+      const x0 = base.x - bw / 2, y0 = base.y - bh;
+      ctx.fillStyle = pal.night ? "#12161d" : "#262c35"; ctx.fillRect(x0, y0, bw, bh);                      // building
+      ctx.fillStyle = pal.night ? "#1a2029" : "#39414d"; ctx.fillRect(x0, y0, bw, Math.max(1.5, bh * 0.12)); // roof band
+      ctx.fillStyle = GARAGE_COLS[slot]; ctx.fillRect(x0, y0 + bh * 0.13, bw, Math.max(1.5, bh * 0.14));     // team strip
+      ctx.fillStyle = "#07090c"; ctx.fillRect(x0 + bw * 0.12, y0 + bh * 0.32, bw * 0.76, bh * 0.62);         // open garage door
+      ctx.fillStyle = GARAGE_COLS[slot]; ctx.fillRect(x0 + bw * 0.15, y0 + bh * 0.62, bw * 0.24, bh * 0.3);  // car nose in the dark
+      if (base.scale > 0.10) {                                                                               // team name over the door
+        ctx.fillStyle = "rgba(240,244,248,0.92)"; ctx.font = "bold " + clamp(7.5 * base.scale * 3.2, 6, 18) + "px sans-serif";
+        ctx.textAlign = "center"; ctx.fillText(GARAGE_NAMES[slot], base.x, y0 + bh * 0.28);
+      }
+      if (base.scale > 0.08) {                                                                               // tyre stacks + crew out front
+        const ty = base.y, tr = Math.max(1.2, 2.6 * base.scale * 2.4);
+        ctx.fillStyle = "#0c0e11";
+        for (let tsx = 0; tsx < 3; tsx++) { ctx.beginPath(); ctx.arc(x0 + bw * 0.08 + tsx * tr * 2.4, ty - tr, tr, 0, Math.PI * 2); ctx.fill(); }
+        if (mine) { ctx.fillStyle = GARAGE_COLS[slot]; for (let cwx = 0; cwx < 3; cwx++) ctx.fillRect(base.x - bw * 0.2 + cwx * bw * 0.16, ty - tr * 3.4, Math.max(1.2, tr * 0.9), tr * 3); }
+      }
+      ctx.strokeStyle = mine ? "rgba(120,220,190,0.95)" : "rgba(0,0,0,0.35)"; ctx.lineWidth = mine ? 2 : 1; ctx.strokeRect(x0, y0, bw, bh);
+      if (mine && base.scale > 0.09) { ctx.fillStyle = "#7ce0c0"; ctx.font = "bold " + clamp(11 * base.scale * 3, 8, 22) + "px sans-serif"; ctx.textAlign = "center"; ctx.fillText("YOUR BOX", base.x, y0 - 4); }
     }
     // green PIT board at the entry mouth
     const entAhead = (((L - 250) - state.distanceM) % L + L) % L;
@@ -2766,9 +2839,10 @@ const SPEC = {
       : "Brake bias standard.", "Pit Wall");
   }
   function teamRadio() {
+    audio.chime && audio.chime([740, 988]);
+    if (app.radioCall) { app.radioCall(false); return; }
     const lines = app.RADIO_LINES || ["Copy — keep pushing."];
     showToast(lines[Math.floor(Math.random() * lines.length)], (app.TEAM ? app.TEAM.name : "") + " pit wall");
-    audio.chime && audio.chime([740, 988]);
   }
       // 2026 power unit: the MGU-K delivers up to ~350 kW of electric alongside the ~400 kW V6.
   // Override (default ON) unleashes full combined ~1,013 PS deploy; switching it off runs the
