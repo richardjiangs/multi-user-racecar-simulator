@@ -139,20 +139,41 @@ F1-specific: ERS **Override** boost (not a road-car special), e-Deploy gauge, ha
 to its own `TEAM` pace/reliability. `realPower()`/`realTop()`/`realGrip()` (all `1`
 when off) fold in tyre wear (grip fades over a stint; soft/med/hard degrade
 differently), fuel burn (car lightens) and damage. `realStep(dt,dsdt)` runs the
-per-step sim: tyre/fuel/damage, per-team failure-risk build-up, the **pit-lane
-state machine** and the safety car. `onRaceLap()` (called from `updateLap`) rolls a
-per-lap mechanical DNF for you and the rivals (per-team `dnf`); some `dns`.
-**Pit lane** (`pitInOut` arms it): you peel in at the line, the 80 km/h limiter
-(60 at Monaco) auto-engages, the car stops in its box and the `#pitMenu` overlay
-lets you choose compound (`pitTire`) and fuel (`pitFuel`); `pitConfirm` sets a
-service time that scales with fuel + repairs, then you rejoin. **Collisions**
-(`checkContact`) with a rival cost damage + speed + possible puncture/spin.
-**Track limits**: all four wheels over the line invalidates the lap (`lapInvalid`,
-deleted in `updateLap`), with race warnings → black-and-white flag → `penaltyS`;
-walls on street circuits crash you. Enough damage retires the car. A rival stop or
-a crash can `triggerSC()` a safety car that bunches the field. HUD panel (position,
-lap, stops, tyre/fuel/damage bars, PIT LANE/limiter/LAP INVALID) draws in
-`drawTelemetry`. All state is real-mode-gated, so perf-test is unaffected.
+per-step sim: tyre/fuel, **probabilistic per-system reliability**, the **drive-in
+pit-lane state machine** and the safety car.
+
+**Probabilistic damage (v3)** — no abstract "damage number." Both you and every
+rival carry named systems `sys = {engine, gearbox, hydraulics, brakes, tyre, nose}`
+(0..1). **Yours grow** each step from real stress (revs → engine, shifts → gearbox,
+braking → brakes, tyre-wear² → puncture risk) scaled by `(safetyCar?0.3:1)/TEAM.rel`
+so a fragile team wears ~2× faster; a system hitting 1.0 is a *real* failure (retire,
+or a puncture that limps you to the pits). A clean race finishes; a thrashed or
+contact-heavy one breaks — per team. **Rivals** pre-roll a mechanical DNF at seed:
+`willDnf = rand < clamp(rm.dnf*1.4, .32)` firing at a spread `dnfAtT` (so ~0–4 cars
+retire per race, most-fragile teams most often), plus per-team `dns`. This runs in
+**private practice too** (F1 cars always race the full 11-car grid with reliability).
+`onRaceLap()` just advances `raceLap`.
+
+**Drive-in pit (v3, no button)** — the pit is a real place you steer into: cross to
+the pit side (`laneOffset < -halfWidth*0.72`) in the entry window (`ph ∈ [L-260,
+L-20]`) and `inPitLane`/`pitStage:"enter"` arm automatically, the 80 km/h limiter
+(60 at Monaco) engages, the car stops in its box → `#pitMenu` opens. The menu shows
+an **X-ray of the car** (`#xrNose/#xrEng/#xrGbx/#xrFL/#xrFR/#xrRL/#xrRR`, coloured
+green→red by each `sys`) — red parts cost repair time. You pick compound (`pitTire`)
+and fuel (`pitFuel`); `pitConfirm` sets a service time = `TEAM.pitCrew` (per-team:
+Red Bull 2.0 … Cadillac 3.2 s) + fuel + repairs, then `"exit"` rejoins. The pit apron
++ team garages + a green PIT board are drawn in the world (`drawPitLane`, real-mode
+only) and a **PIT branch shows on the minimap** (`drawMap`).
+
+**Collisions** (`checkContact`, 1 s cooldown) bend the front wing (`sys.nose`) and
+threaten a puncture/gearbox hit — survivable (one tap ≠ out; repeated banging is).
+**Track limits**: all four wheels over the line invalidates the lap (`lapInvalid`),
+race warnings → black-and-white flag → `penaltyS`; walls on street circuits crash
+you. **Safety car** = a **Mercedes-AMG GT Black Series** (`isSC` rival, silver body
+/ green stripe) deployed by `triggerSC()` on a stoppage; it paces the field and
+**overtaking it 3× black-flags you out**. HUD panel (position, lap, stops,
+tyre/fuel/damage bars, PIT LANE/limiter/LAP INVALID) draws in `drawTelemetry`. All
+state is real-mode-gated, so perf-test is unaffected.
 
 ## index.html — garage + online race shell
 
