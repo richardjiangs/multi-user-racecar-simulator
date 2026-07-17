@@ -95,6 +95,39 @@ for (const key of CAR_KEYS) {
     return a.state.speedMps;
   }, APPS[key]);
   check(`${key}: physics advance (2 s -> ${(moved * 3.6).toFixed(0)} km/h)`, moved > 5);
+
+  // modifier-key paddle shifting: Shift wired to paddleUp, Ctrl/Cmd to paddleDown
+  // (spy on the paddles so this is drivetrain-agnostic — 1-speed EVs have nothing to
+  // shift TO, but the wiring must still fire). Real chords stay free; a focused text
+  // field is left alone so Shift still capitalises.
+  const gk = await frame.evaluate((app) => {
+    const a = window[app], s = a.state;
+    s.ignition = true; s.started = true;
+    let up = 0, dn = 0; const ou = a.paddleUp, od = a.paddleDown;
+    a.paddleUp = function () { up++; return ou.apply(a, arguments); };
+    a.paddleDown = function () { dn++; return od.apply(a, arguments); };
+    const fire = (k, opts = {}) => {
+      const ev = new KeyboardEvent("keydown", Object.assign({ key: k, bubbles: true, cancelable: true }, opts));
+      (opts._target || window).dispatchEvent(ev); return ev.defaultPrevented;
+    };
+    const shiftPrev = fire("Shift");  const u1 = up, d1 = dn;
+    const ctrlPrev = fire("Control"); const d2 = dn;
+    fire("Meta");                     const d3 = dn;
+    // chord: 'c' held with Ctrl must NOT be cancelled and must trigger no paddle
+    const uB = up, dB = dn; const cPrev = fire("c", { ctrlKey: true }); const uC = up, dC = dn;
+    // typing: Shift in a focused text field must not shift and must not be cancelled
+    const inp = document.createElement("input"); document.body.appendChild(inp); inp.focus();
+    const uT0 = up; const typePrev = fire("Shift", { _target: inp }); const uT1 = up; inp.remove();
+    a.paddleUp = ou; a.paddleDown = od;
+    return { shiftPrev, ctrlPrev, u1, d1, d2, d3, uB, dB, cPrev, uC, dC, uT0, uT1, typePrev };
+  }, APPS[key]);
+  check(`${key}: Shift→paddleUp, Ctrl/Cmd→paddleDown (wired + key cancelled)`,
+    gk.u1 === 1 && gk.d1 === 0 && gk.shiftPrev === true && gk.d2 === 1 && gk.ctrlPrev === true && gk.d3 === 2);
+  check(`${key}: Ctrl+C not swallowed, 'c' triggers no shift`,
+    gk.cPrev === false && gk.uC === gk.uB && gk.dC === gk.dB);
+  check(`${key}: Shift in a text field is ignored (capitals safe)`,
+    gk.uT1 === gk.uT0 && gk.typePrev === false);
+
   await page.click("#practiceBackBtn");
 }
 

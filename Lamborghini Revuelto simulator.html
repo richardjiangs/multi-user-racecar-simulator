@@ -404,7 +404,7 @@
 
       <aside class="drive-help">
         <strong>Drive it yourself</strong><br>
-        <kbd>W</kbd>/<kbd>&uarr;</kbd> throttle · <kbd>S</kbd>/<kbd>&darr;</kbd>/<kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>E</kbd>/<kbd>Q</kbd> shift up/down · <kbd>R</kbd> reverse · <kbd>N</kbd> neutral · <kbd>L</kbd> launch · <kbd>H</kbd> horn.<br>
+        <kbd>W</kbd>/<kbd>&uarr;</kbd> throttle · <kbd>S</kbd>/<kbd>&darr;</kbd>/<kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>E</kbd>/<kbd>Shift</kbd> up · <kbd>Q</kbd>/<kbd>Ctrl</kbd>/<kbd>Cmd</kbd> down · <kbd>R</kbd> reverse · <kbd>N</kbd> neutral · <kbd>L</kbd> launch · <kbd>H</kbd> horn.<br>
         Or open <strong>Circuit</strong>, pick a track, and hand it to the test driver for a hot lap.
       </aside>
 
@@ -643,8 +643,8 @@
         <div class="cluster">
           <button data-gear="R">R</button>
           <button data-gear="N" class="active">N</button>
-          <button class="paddle" id="downPaddle" title="Downshift (Q)">&minus;</button>
-          <button class="paddle" id="upPaddle" title="Upshift (E)">+</button>
+          <button class="paddle" id="downPaddle" title="Downshift (Q / Ctrl / Cmd)">&minus;</button>
+          <button class="paddle" id="upPaddle" title="Upshift (E / Shift)">+</button>
         </div>
         <div class="pedals">
           <div class="pedal">
@@ -2835,6 +2835,14 @@ const SPEC = {
     window.addEventListener("keydown", e => {
       state.keys[e.code] = true;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
+      // Shift = shift UP a gear · Ctrl / Cmd (/ Fn where the OS exposes it) = shift DOWN a gear.
+      // These are also OS/browser modifiers, so act ONLY on the bare modifier key itself and cancel
+      // just that keydown — real chords (Ctrl+C, Cmd+R, …) arrive as a different e.key and pass
+      // through untouched. Skipped while typing so Shift still capitalises in a text field.
+      if (!(e.target && (e.target.tagName === "INPUT" || e.target.tagName === "TEXTAREA" || e.target.isContentEditable))) {
+        if (e.key === "Shift") { if (!e.repeat) app.paddleUp(); e.preventDefault(); return; }
+        if (e.key === "Control" || e.key === "Meta" || e.key === "Fn") { if (!e.repeat) app.paddleDown(); e.preventDefault(); return; }
+      }
       if (e.metaKey || e.ctrlKey) return;
       if (e.code === "KeyN") app.setGear("N");
       if (e.code === "KeyR" && !e.repeat) app.setGear("R");

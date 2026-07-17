@@ -98,6 +98,23 @@ Keyboard A/D, the mobile touch wheel, and trackpad steering (hold Space+T or
 long-press) are identical in every car. Only `STEERING = { wheelbase,
 frontTrack, maxAngle }` carries real per-car geometry.
 
+### Gear keys — modifier paddles (all 24 sims)
+
+Alongside `E`/`Q`, **`Shift` = upshift** (`paddleUp`) and **`Ctrl`/`Cmd` (Meta)
+= downshift** (`paddleDown`); `Fn` is matched too but almost all hardware
+intercepts it below the browser, so it never reaches a web page — Ctrl/Cmd
+cover the intent. In `bindKeyboard`, these are handled BEFORE the
+`if (e.metaKey || e.ctrlKey) return;` shortcut guard, and only ever fire on the
+**bare** modifier (`e.key === "Shift"/"Control"/"Meta"/"Fn"`, once per press via
+`!e.repeat`), cancelling just that one keydown with `preventDefault`. Real
+chords (Ctrl+C, Cmd+R, …) arrive as a *different* `e.key` and pass straight
+through untouched, so no browser/OS shortcut is swallowed; the block is skipped
+while an `INPUT`/`TEXTAREA`/`contenteditable` is focused so Shift still
+capitalises in the co-pilot text box. `tests/browser-test.mjs` spies on
+`paddleUp`/`paddleDown` per sim (drivetrain-agnostic — a 1-speed Tesla has
+nothing to shift *to*, but the wiring must still fire) and asserts the chord and
+typing guards hold.
+
 ### Per-car deltas (what you change when cloning a sim)
 
 brand/title/colours · `SPEC` + `modeMap` shift points · engine audio osc stack
