@@ -1758,7 +1758,7 @@ const SPEC = {
     const r = state.route, hw = halfWidthAt(d);
     if (!(r.active && r.trackCorners && r.totalM)) {
       const k = curvatureAt(d); const sI = Math.max(-1, Math.min(1, k * 420));
-      return -sI * (hw - 2.4);
+      return sI * (hw - 2.4);   // cut to the inside of the bend (+dir side, screen-verified)
     }
     const L = r.totalM, ph = ((d % L) + L) % L;
     let off = 0, wsum = 0;
@@ -1770,7 +1770,7 @@ const SPEC = {
         if (ph < a0 || ph > a1) continue;
         const u = (ph - a0) / (a1 - a0);
         const val = Math.cos(u * 2 * Math.PI) * 0.5 + 0.5;                    // 1 at the ends, 0 at the middle apex
-        const lat = cc.dir * ((val * 2 - 1) >= 0 ? (val * 2 - 1) * (hw - 3.4) : (val * 2 - 1) * (hw - 2.2));
+        const lat = -cc.dir * ((val * 2 - 1) >= 0 ? (val * 2 - 1) * (hw - 3.4) : (val * 2 - 1) * (hw - 2.2));   // wide (-dir) at the ends, INSIDE (+dir) through the apex — screen-verified
         const w = 0.5 + Math.abs(val * 2 - 1) * 0.5;
         off += lat * w; wsum += w;
       }
@@ -2297,7 +2297,7 @@ const SPEC = {
     if (gg.behind < spd2 * 1.4) { typ = "DEFEND · EARLY APEX — own the inside"; frac = Math.min(frac, 0.35); }
     else if (gg.ahead < spd2 * 1.1) { typ = "ATTACK · LATE APEX — get the run"; frac = Math.max(frac, 0.62); }
     state._advice = typ + " in " + Math.max(0, Math.round((c.start - state.distanceM) / 10) * 10) + " metres";
-    const apexAt = c.start + (c.end - c.start) * 0.5, apexD = apexAt - state.distanceM;   // the dot marks the MIDDLE apex, on the line
+    const apexAt = c.start + (c.end - c.start) * frac, apexD = apexAt - state.distanceM;  // the apex tracks the LIVE frac — early/mid/late, defend/attack
     const board = (dd, txt, col, big) => {
       if (dd < 10 || dd > 430) return;
       const p = projectAhead(dd, c.dir * (halfAt(dd) + 2.6));
@@ -2313,7 +2313,9 @@ const SPEC = {
     };
     for (const m of [300, 200, 150, 100, 50]) board(apexD - m, String(m), "#c73030");   // countdown TO THE APEX
     board(c.start - state.distanceM - 4, "TURN IN", "#e0a020");
-    { const p = projectAhead(apexD, clamp(app.raceLineOffAt(state.distanceM + apexD), -(halfAt(apexD) - 1.4), halfAt(apexD) - 1.4));   // the apex, ON the line
+    const dotLat = c.dir * (halfAt(apexD) - 1.4);                                       // +dir = the INSIDE kerb, locked empirically on screen (tests/learn-test.mjs)
+    state._learnLive = { typ, frac, apexAt, apexD, dotLat };                            // live advice — the map inset and the tests read this
+    { const p = projectAhead(apexD, dotLat);   // the apex dot, pinned to the inside kerb
       if (apexD > 4 && p.fwd > 1 && p.scale > 0.04) { const rr = clamp(7 * p.scale, 3.5, 20);
         ctx.fillStyle = "#ffd21e"; ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "#1c2027"; ctx.lineWidth = 2; ctx.stroke();
@@ -2789,7 +2791,7 @@ const SPEC = {
         const ax = lerp(X[j0], X[j1], t2), ay = lerp(Y[j0], Y[j1], t2);
         const bx = lerp(X[j1], X[(j1 + 1) % (N + 1)], t2), by = lerp(Y[j1], Y[(j1 + 1) % (N + 1)], t2);
         let nx2 = -(by - ay), ny2 = (bx - ax); const ln2 = Math.hypot(nx2, ny2) || 1; nx2 /= ln2; ny2 /= ln2;
-        const rn = Math.max(-1, Math.min(1, -app.raceLineOffAt(dd) / 8));
+        const rn = Math.max(-1, Math.min(1, app.raceLineOffAt(dd) / 8));
         const px2 = TX(ax) + nx2 * rn * swing, py2 = TY(ay) + ny2 * rn * swing;
         i2 ? g.lineTo(px2, py2) : g.moveTo(px2, py2);
       }
@@ -2814,14 +2816,14 @@ const SPEC = {
         for (const sgn of [-1, 1]) { g.strokeStyle = "rgba(170,180,190,0.8)"; g.lineWidth = 1.2; g.beginPath();
           pts.forEach((p, i3) => { const q = P(p, sgn * (app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke(); }
         g.strokeStyle = "rgba(90,190,255,0.95)"; g.lineWidth = 2.4; g.beginPath();   // the precise line, in blue
-        pts.forEach((p, i3) => { const q = P(p, -app.raceLineOffAt(c0 + p.d)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke();
-        const lc = state._lc;                                                          // the apex dot
-        if (lc) { const ad = lc.start + (lc.end - lc.start) * lc.frac - c0;
+        pts.forEach((p, i3) => { const q = P(p, app.raceLineOffAt(c0 + p.d)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke();
+        const lc = state._lc, live = state._learnLive;                                 // the apex dot — live frac, on the inside kerb
+        if (lc) { const ad = lc.start + (lc.end - lc.start) * (live ? live.frac : lc.frac) - c0;
           if (ad > -back && ad < span - back) { const p = pts[Math.round((ad + back) / stepZ)];
-            if (p) { const q = P(p, -app.raceLineOffAt(c0 + p.d));
+            if (p) { const q = P(p, lc.dir * ((app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8) - 1.4));
               g.fillStyle = "#ffd21e"; g.beginPath(); g.arc(q.x, q.y, 6.5, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#101418"; g.lineWidth = 2; g.stroke();
               g.fillStyle = "#ffe27a"; g.font = "bold 10px sans-serif"; g.textAlign = "center"; g.fillText("APEX", q.x, q.y - 10); } } }
-        { const p0 = pts[Math.round(back / stepZ)]; if (p0) { const q = P(p0, -state.laneOffset);  // you (world lateral is mirrored here)
+        { const p0 = pts[Math.round(back / stepZ)]; if (p0) { const q = P(p0, state.laneOffset);  // you — same side as in the world view (screen-verified)
             g.fillStyle = "#fff"; g.beginPath(); g.arc(q.x, q.y, 3.4, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#2f7be0"; g.lineWidth = 2; g.stroke(); } }
         g.fillStyle = "rgba(120,230,190,0.95)"; g.font = "bold 9px sans-serif"; g.textAlign = "left"; g.fillText("ZOOM — the line ahead · yellow dot = apex (inside kerb)", zx + 6, zy + 12);
         g.restore();

@@ -37,6 +37,7 @@ Audi F1 2026 simulator.html
 Cadillac F1 2026 simulator.html
 tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
+tests/learn-test.mjs                        ← learning mode: apex dot on the drawn inside kerb, live frac, label/frac audit
 tools/embed-sims.mjs                        ← re-embeds all sim files into index.html (run after editing a sim)
 vendor/trystero-nostr.min.js                ← bundled Trystero (ESM); vendor/peerjs.min.js ← PeerJS fallback
 ```
@@ -221,6 +222,33 @@ chord) plus a ZOOMED inset (track edges, exact blue line, apex dot, car). Pit-en
 radio names your garage (`ORD[TEAM.slot]`). DNS odds audited over 600 seeds
 (McLaren 3.0%, Audi 5.5%, Cadillac 5.2% — all tracking their constants).
 
+**v12 — apex dot on the real inside kerb, live frac, un-mirrored map** (all 24
+sims). The apex dot is pinned to the inside kerb: lateral `+c.dir *
+(halfAt(apexD) - 1.4)` — the sign is EMPIRICAL, locked by rendering both ±dir
+candidates headless and measuring them against the drawn kerb chains on screen
+(`+dir` hits the inside kerb for both corner directions; do NOT re-derive it
+from conventions, rerun the test). The dot and the countdown boards now sit at
+the **live** frac (`apexAt = start + span * frac` after the defend/attack
+overrides — was hard-coded 0.5), so DEFEND pulls everything to 0.35 and ATTACK
+pushes it to 0.62 in real time while TURN IN/EXIT stay cached (no jitter).
+`drawLearningMarks` publishes `state._learnLive = {typ, frac, apexAt, apexD,
+dotLat}`; the map inset reads it. `raceLineOffAt` had its sign inverted on
+screen (the teal line ran in-out-in, apexing on the OUTSIDE kerb — the old dot
+rode it there): corner-table lat is now `-cc.dir * …` and the free-run branch
+`+sI`, so the drawn line is genuinely wide-in / inside-apex / wide-out, and the
+test driver / learnDemo drive that corrected line. The map used to negate
+`raceLineOffAt` and `laneOffset` ("mirrored"), which drew the blue line right
+for the wrong reason and put the map car dot on the WRONG side of the track —
+all three inset marks (car, blue line, apex dot) now use world laterals
+directly, and the inset apex dot follows the live frac onto the inside kerb.
+`tests/learn-test.mjs` locks all of it: a static audit of every sim (labels ↔
+fracs: DEFEND .35 ≤ EARLY .38 < MID .50 < LATE .58 ≤ V-LINE/ATTACK .62, locked
+signs present) plus screen-space runtime checks on Suzuka's Turn 1 (right) and
+Spoon (left) in a road car, an F1 car and the AMG: kerb chains are rebuilt from
+real canvas calls, the bend side is read off the drawn road, and the dot must
+hug the inside chain; defend/attack are stubbed via `app.rivalGaps` and the
+"50" board must track the live apex while TURN IN holds still.
+
 **F1-correct cockpit (v5)** — no road-car controls in the F1 sims: quick bar has
 **Strat** (`cycleStrat`: Standard/Push/Lean — ±2% power, ×2.2/×0.6 engine wear,
 fuel burn; default Standard so certification is untouched), **B-Bias** (`cycleBias`:
@@ -318,6 +346,11 @@ documented bands. `--calibrate <car>` binary-searches `tractionCoeff` /
 `node tests/browser-test.mjs` serves the repo over localhost and checks the
 garage, private-practice AI grid survival, all six sims booting in the shell,
 online-mode rules, and the full race-control (grid/lights/release) flow.
+`node tests/learn-test.mjs` audits every sim's apex labels ↔ fracs statically,
+then renders Suzuka corners in three sims and asserts — from the real canvas
+calls — that the apex dot hugs the DRAWN inside kerb (both corner directions),
+the teal line runs the inside, the dot/boards track the live defend/attack
+frac, and the zoom-map inset agrees with the world on every side.
 
 ## Publishing
 
