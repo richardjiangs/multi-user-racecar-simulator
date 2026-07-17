@@ -1398,13 +1398,30 @@ const SPEC = {
   // the real racing line: wide on entry, one clean arc to the inside apex, open exit.
   // Averaged curvature + linear saturation = smooth, no sign-flip zigzag.
   function raceLineOffAt(d) {
-    let kNow = 0; for (let q = -12; q <= 24; q += 6) kNow += curvatureAt(d + q); kNow /= 7;
-    let kAhead = 0; for (let q = 34; q <= 114; q += 10) kAhead += curvatureAt(d + q); kAhead /= 9;
-    const hw = halfWidthAt(d);
-    const sIn = Math.max(-1, Math.min(1, kNow * 420));       // in the corner: hug the inside
-    const sOut = Math.max(-1, Math.min(1, kAhead * 420));    // corner coming: set up WIDE on the outside
-    const off = -sIn * (hw - 2.4) + sOut * (1 - Math.abs(sIn)) * (hw - 3.2) * 0.85;
-    return Math.max(-(hw - 2), Math.min(hw - 2, off));
+    // built from the REAL corner table: an arc that is wide at turn-in, cuts THROUGH the
+    // middle apex on the inside, and opens wide again at the exit (out-in-out, per corner)
+    const r = state.route, hw = halfWidthAt(d);
+    if (!(r.active && r.trackCorners && r.totalM)) {
+      const k = curvatureAt(d); const sI = Math.max(-1, Math.min(1, k * 420));
+      return -sI * (hw - 2.4);
+    }
+    const L = r.totalM, ph = ((d % L) + L) % L;
+    let off = 0, wsum = 0;
+    for (const cc of r.trackCorners) {
+      if (cc.len >= L * 0.8) continue;
+      const lead = Math.min(120, 45 + cc.len * 0.55), tail = Math.min(120, 45 + cc.len * 0.55);
+      for (const o of [0, L, -L]) {
+        const a0 = cc.at + o - lead, a1 = cc.at + o + cc.len + tail;
+        if (ph < a0 || ph > a1) continue;
+        const u = (ph - a0) / (a1 - a0);
+        const val = Math.cos(u * 2 * Math.PI) * 0.5 + 0.5;                    // 1 at the ends, 0 at the middle apex
+        const lat = cc.dir * ((val * 2 - 1) >= 0 ? (val * 2 - 1) * (hw - 3.4) : (val * 2 - 1) * (hw - 2.2));
+        const w = 0.5 + Math.abs(val * 2 - 1) * 0.5;
+        off += lat * w; wsum += w;
+      }
+    }
+    if (!wsum) return 0;
+    return Math.max(-(hw - 2), Math.min(hw - 2, off / wsum));
   }
   function targetSpeedMps() {
     let limit;
@@ -1791,7 +1808,7 @@ const SPEC = {
     if (gg.behind < spd2 * 1.4) { typ = "DEFEND · EARLY APEX — own the inside"; frac = Math.min(frac, 0.35); }
     else if (gg.ahead < spd2 * 1.1) { typ = "ATTACK · LATE APEX — get the run"; frac = Math.max(frac, 0.62); }
     state._advice = typ + " in " + Math.max(0, Math.round((c.start - state.distanceM) / 10) * 10) + " metres";
-    const apexAt = c.start + (c.end - c.start) * frac, apexD = apexAt - state.distanceM;
+    const apexAt = c.start + (c.end - c.start) * 0.5, apexD = apexAt - state.distanceM;   // the dot marks the MIDDLE apex, on the line
     const board = (dd, txt, col, big) => {
       if (dd < 10 || dd > 430) return;
       const p = projectAhead(dd, c.dir * (halfAt(dd) + 2.6));
