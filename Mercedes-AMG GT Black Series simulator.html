@@ -1494,6 +1494,17 @@ const SPEC = {
   }
 
   /* --- cruise / test-driver targets --- */
+  // the real racing line: wide on entry, one clean arc to the inside apex, open exit.
+  // Averaged curvature + linear saturation = smooth, no sign-flip zigzag.
+  function raceLineOffAt(d) {
+    let kNow = 0; for (let q = -12; q <= 24; q += 6) kNow += curvatureAt(d + q); kNow /= 7;
+    let kAhead = 0; for (let q = 34; q <= 114; q += 10) kAhead += curvatureAt(d + q); kAhead /= 9;
+    const hw = halfWidthAt(d);
+    const sIn = Math.max(-1, Math.min(1, kNow * 420));       // in the corner: hug the inside
+    const sOut = Math.max(-1, Math.min(1, kAhead * 420));    // corner coming: set up WIDE on the outside
+    const off = -sIn * (hw - 2.4) + sOut * (1 - Math.abs(sIn)) * (hw - 3.2) * 0.85;
+    return Math.max(-(hw - 2), Math.min(hw - 2, off));
+  }
   function targetSpeedMps() {
     let limit;
     if (state.pitLimiter) return 60 * KMH;
@@ -1522,8 +1533,7 @@ const SPEC = {
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
   function steerForYaw(desiredYaw, v) { const vAbs = Math.max(2.2, Math.abs(v)); const ang = Math.atan((desiredYaw * STEERING.wheelbase) / vAbs); return clamp(ang / (STEERING.maxAngle * steerFactorOf(Math.abs(v))), -1, 1); }
   function pathSteer(gain, targetOffset) { const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
-  function autopilotControls() { const target = targetSpeedMps(); const err = target - state.speedMps; let demand = clamp(err * 0.5, -1, 1); if (Math.abs(err) < 0.5) demand *= 0.7; let throttle = demand > 0 ? clamp(demand, 0, 1) : 0; let brake = demand < 0 ? clamp(-demand * 0.85, 0, 0.9) : 0; if (brake < 0.05) brake = 0; const learnTgt = () => { const la = clamp(Math.abs(state.speedMps) * 0.85, 12, 38); const k = curvatureAt(state.distanceM + la);
-      return clamp(-Math.sign(k) * Math.min(Math.abs(k) * 1100, 1) * (halfWidthAt(state.distanceM + la) - 2.2), -24, 24); };
+  function autopilotControls() { const target = targetSpeedMps(); const err = target - state.speedMps; let demand = clamp(err * 0.5, -1, 1); if (Math.abs(err) < 0.5) demand *= 0.7; let throttle = demand > 0 ? clamp(demand, 0, 1) : 0; let brake = demand < 0 ? clamp(-demand * 0.85, 0, 0.9) : 0; if (brake < 0.05) brake = 0; const learnTgt = () => { const la = clamp(Math.abs(state.speedMps) * 0.85, 12, 38); return clamp(raceLineOffAt(state.distanceM + la), -26, 26); };
     return { throttle, brake, steerTarget: pathSteer(1, state.learnMode ? learnTgt() : chooseLaneOffset()) }; }
 
   function updateInputs(dt) {
@@ -1747,7 +1757,7 @@ const SPEC = {
 
   Object.assign(app, {
     engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN,
-    buildCornersForRoute, curvatureAt, halfWidthAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING, toggleScMode, radioSay
+    buildCornersForRoute, curvatureAt, halfWidthAt, raceLineOffAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING, toggleScMode, radioSay
   });
 }
 
@@ -1897,7 +1907,7 @@ const SPEC = {
     };
     for (const m of [300, 200, 150, 100, 50]) board(apexD - m, String(m), "#c73030");   // countdown TO THE APEX
     board(c.start - state.distanceM - 4, "TURN IN", "#e0a020");
-    { const p = projectAhead(apexD, -c.dir * (halfAt(apexD) - 1.6));                    // the apex: a big yellow dot on the line
+    { const p = projectAhead(apexD, clamp(app.raceLineOffAt(state.distanceM + apexD), -(halfAt(apexD) - 1.4), halfAt(apexD) - 1.4));   // the apex, ON the line
       if (apexD > 4 && p.fwd > 1 && p.scale > 0.04) { const rr = clamp(7 * p.scale, 3.5, 20);
         ctx.fillStyle = "#ffd21e"; ctx.beginPath(); ctx.arc(p.x, p.y, rr, 0, Math.PI * 2); ctx.fill();
         ctx.strokeStyle = "#1c2027"; ctx.lineWidth = 2; ctx.stroke();
@@ -1906,7 +1916,7 @@ const SPEC = {
     board(c.end - state.distanceM + 40, "EXIT — POWER", "#1f9d55", true);
   }
   function drawRacingLine() {
-    const racingOff = (d) => { const k = curvatureAt(state.distanceM + d); return clamp(-Math.sign(k) * Math.min(Math.abs(k) * 1100, 1) * (halfAt(d) - 1.6), -8, 8); };
+    const racingOff = (d) => clamp(app.raceLineOffAt(state.distanceM + d), -(halfAt(d) - 1.6), halfAt(d) - 1.6);
     const pts = [];
     for (let d = 8; d <= 130; d += 7) { const p = projectAhead(d, racingOff(d)); if (p.fwd > 0.6) pts.push(p); }
     if (pts.length > 1) { ctx.strokeStyle = "rgba(156,198,255,0.55)"; ctx.lineWidth = 2.6; ctx.lineCap = "round"; ctx.beginPath(); pts.forEach((p, i) => i ? ctx.lineTo(p.x, p.y) : ctx.moveTo(p.x, p.y)); ctx.stroke(); }
@@ -2332,7 +2342,7 @@ const SPEC = {
         const ax = lerp(X[j0], X[j1], t2), ay = lerp(Y[j0], Y[j1], t2);
         const bx = lerp(X[j1], X[(j1 + 1) % (N + 1)], t2), by = lerp(Y[j1], Y[(j1 + 1) % (N + 1)], t2);
         let nx2 = -(by - ay), ny2 = (bx - ax); const ln2 = Math.hypot(nx2, ny2) || 1; nx2 /= ln2; ny2 /= ln2;
-        const k2 = curvatureAt(dd), rn = Math.max(-1, Math.min(1, Math.sign(k2) * Math.min(Math.abs(k2) * 1100, 1)));
+        const rn = Math.max(-1, Math.min(1, -app.raceLineOffAt(dd) / 8));
         const px2 = TX(ax) + nx2 * rn * swing, py2 = TY(ay) + ny2 * rn * swing;
         i2 ? g.lineTo(px2, py2) : g.moveTo(px2, py2);
       }
@@ -2357,13 +2367,11 @@ const SPEC = {
         for (const sgn of [-1, 1]) { g.strokeStyle = "rgba(170,180,190,0.8)"; g.lineWidth = 1.2; g.beginPath();
           pts.forEach((p, i3) => { const q = P(p, sgn * (app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke(); }
         g.strokeStyle = "rgba(90,190,255,0.95)"; g.lineWidth = 2.4; g.beginPath();   // the precise line, in blue
-        pts.forEach((p, i3) => { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
-          const q = P(p, rn * ((app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8) - 1.6)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke();
+        pts.forEach((p, i3) => { const q = P(p, -app.raceLineOffAt(c0 + p.d)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke();
         const lc = state._lc;                                                          // the apex dot
         if (lc) { const ad = lc.start + (lc.end - lc.start) * lc.frac - c0;
           if (ad > -back && ad < span - back) { const p = pts[Math.round((ad + back) / stepZ)];
-            if (p) { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
-              const q = P(p, rn * ((app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8) - 1.6));
+            if (p) { const q = P(p, -app.raceLineOffAt(c0 + p.d));
               g.fillStyle = "#ffd21e"; g.beginPath(); g.arc(q.x, q.y, 6.5, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#101418"; g.lineWidth = 2; g.stroke();
               g.fillStyle = "#ffe27a"; g.font = "bold 10px sans-serif"; g.textAlign = "center"; g.fillText("APEX", q.x, q.y - 10); } } }
         { const p0 = pts[Math.round(back / stepZ)]; if (p0) { const q = P(p0, -state.laneOffset);  // you (world lateral is mirrored here)
