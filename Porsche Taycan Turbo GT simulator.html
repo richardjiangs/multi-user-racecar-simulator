@@ -2827,6 +2827,17 @@ const SPEC = {
     window.addEventListener("keydown", e => {
       state.keys[e.code] = true;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
+      const gearUpKey = e.key === "Shift" || e.code === "ShiftLeft" || e.code === "ShiftRight";
+      const gearDownKey = ["Control", "Meta", "Fn", "FnLock", "Globe"].includes(e.key) ||
+        ["ControlLeft", "ControlRight", "MetaLeft", "MetaRight", "Fn"].includes(e.code);
+      if (gearUpKey || gearDownKey) {
+        e.preventDefault();
+        if (!e.repeat) {
+          if (gearUpKey) app.paddleUp();
+          else app.paddleDown();
+        }
+        return;
+      }
       if (e.metaKey || e.ctrlKey) return;
       if (e.code === "KeyN") app.setGear("N");
       if (e.code === "KeyR" && !e.repeat) app.setGear("R");
