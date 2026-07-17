@@ -7,6 +7,12 @@ real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
 
+> **Extending the garage?** Read **`docs/ADDING_CARS.md`** — the step-by-step playbook for
+> adding a new car (normal vs special-racing), the ordering rules (new **normal** cars go at the
+> end of the road block **before** the F1 cars, never last; new **racing** cars get a **Real Mode**
+> and go after the racing block), the calibration/verification pipeline, the hard warnings, and the
+> current known open bug (learning-mode apex side + real-time apex marks).
+
 ## Repository layout
 
 ```
