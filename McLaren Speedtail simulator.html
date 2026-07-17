@@ -568,7 +568,7 @@
 <path d="M20 30 L200 30 Q250 30 250 80 L250 130" stroke="#3a434e" stroke-width="34" fill="none" stroke-linejoin="round"/>
 <path d="M20 18 L38 44 M60 18 L78 44 M100 18 L118 44" stroke="#c73030" stroke-width="5"/>
 <path d="M20 22 L190 22 Q235 24 240 60 L242 130" stroke="#5abeff" stroke-width="3" fill="none" stroke-dasharray="6 3"/>
-<circle cx="239" cy="68" r="6" fill="#ffd21e" stroke="#111"/>
+<circle cx="230" cy="60" r="6" fill="#ffd21e" stroke="#111"/>
 <text x="30" y="14" font-size="9" fill="#ff9a8a">BRAKE (boards)</text><text x="150" y="14" font-size="9" fill="#e0a020">TURN IN wide</text>
 <text x="196" y="72" font-size="9" fill="#ffd21e" text-anchor="end">APEX</text><text x="246" y="145" font-size="9" fill="#7ce07c" text-anchor="end">EXIT wide, full power</text></svg> In Learning Mode the blue line is painted on the road and the zoom map (Circuit tab) shows the exact route ahead.</p><button data-demo style="padding:5px 10px;border-radius:6px;border:1px solid #2f8f6b;background:#12241d;color:#7ce0c0;cursor:pointer;font-size:12px">▶ Demo — watch the car take the line</button>
         <h3 id="ls1" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">2. Apex types — and when each is right</h3><p style="margin:4px 0">There is no single correct apex. <svg viewBox="0 0 330 120" style="width:100%;max-width:330px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
@@ -1413,7 +1413,9 @@ const SPEC = {
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
   function steerForYaw(desiredYaw, v) { const vAbs = Math.max(2.2, Math.abs(v)); const ang = Math.atan((desiredYaw * STEERING.wheelbase) / vAbs); return clamp(ang / (STEERING.maxAngle * steerFactorOf(Math.abs(v))), -1, 1); }
   function pathSteer(gain, targetOffset) { const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
-  function autopilotControls() { const target = targetSpeedMps(); const err = target - state.speedMps; let demand = clamp(err * 0.5, -1, 1); if (Math.abs(err) < 0.5) demand *= 0.7; let throttle = demand > 0 ? clamp(demand, 0, 1) : 0; let brake = demand < 0 ? clamp(-demand * 0.85, 0, 0.9) : 0; if (brake < 0.05) brake = 0; return { throttle, brake, steerTarget: pathSteer(1, chooseLaneOffset()) }; }
+  function autopilotControls() { const target = targetSpeedMps(); const err = target - state.speedMps; let demand = clamp(err * 0.5, -1, 1); if (Math.abs(err) < 0.5) demand *= 0.7; let throttle = demand > 0 ? clamp(demand, 0, 1) : 0; let brake = demand < 0 ? clamp(-demand * 0.85, 0, 0.9) : 0; if (brake < 0.05) brake = 0; const learnTgt = () => { const la = clamp(Math.abs(state.speedMps) * 0.85, 12, 38); const k = curvatureAt(state.distanceM + la);
+      return clamp(-Math.sign(k) * Math.min(Math.abs(k) * 1100, 1) * (halfWidthAt(state.distanceM + la) - 2.2), -24, 24); };
+    return { throttle, brake, steerTarget: pathSteer(1, state.learnMode ? learnTgt() : chooseLaneOffset()) }; }
 
   function updateInputs(dt) {
     const keyThrottle = (state.keys.KeyW || state.keys.ArrowUp) ? 1 : 0;
@@ -1768,6 +1770,7 @@ const SPEC = {
     const gg = app.rivalGaps ? app.rivalGaps() : { ahead: 1e9, behind: 1e9 };
     if (gg.behind < spd2 * 1.4) { typ = "DEFEND · EARLY APEX — own the inside"; frac = Math.min(frac, 0.35); }
     else if (gg.ahead < spd2 * 1.1) { typ = "ATTACK · LATE APEX — get the run"; frac = Math.max(frac, 0.62); }
+    state._advice = typ + " in " + Math.max(0, Math.round((c.start - state.distanceM) / 10) * 10) + " metres";
     const apexAt = c.start + (c.end - c.start) * frac, apexD = apexAt - state.distanceM;
     const board = (dd, txt, col, big) => {
       if (dd < 10 || dd > 430) return;
@@ -2198,18 +2201,18 @@ const SPEC = {
         const ax = lerp(X[j0], X[j1], t2), ay = lerp(Y[j0], Y[j1], t2);
         const bx = lerp(X[j1], X[(j1 + 1) % (N + 1)], t2), by = lerp(Y[j1], Y[(j1 + 1) % (N + 1)], t2);
         let nx2 = -(by - ay), ny2 = (bx - ax); const ln2 = Math.hypot(nx2, ny2) || 1; nx2 /= ln2; ny2 /= ln2;
-        const k2 = curvatureAt(dd), rn = Math.max(-1, Math.min(1, -Math.sign(k2) * Math.min(Math.abs(k2) * 1100, 1)));
+        const k2 = curvatureAt(dd), rn = Math.max(-1, Math.min(1, Math.sign(k2) * Math.min(Math.abs(k2) * 1100, 1)));
         const px2 = TX(ax) + nx2 * rn * swing, py2 = TY(ay) + ny2 * rn * swing;
         i2 ? g.lineTo(px2, py2) : g.moveTo(px2, py2);
       }
       g.stroke();
       { // zoomed inset: track edges, the exact line, and the apex for the next ~450 m
-        const zw = Math.min(rw - 16, 200), zh = 138, zx = rw - zw - 8, zy = rh - zh - 24;
+        const zw = rw - 12, zh = rh - 34, zx = 6, zy = 6;                       // learning: the map IS the zoom view
         g.save();
         g.fillStyle = "rgba(6,10,14,0.94)"; g.fillRect(zx, zy, zw, zh);
         g.strokeStyle = "rgba(120,230,190,0.65)"; g.lineWidth = 1; g.strokeRect(zx, zy, zw, zh);
         g.beginPath(); g.rect(zx + 1, zy + 1, zw - 2, zh - 2); g.clip();
-        const back = 70, span = 460, stepZ = 6, c0 = state.distanceM;
+        const back = 90, span = 640, stepZ = 6, c0 = state.distanceM;
         let hd = 0, wx = 0, wy = 0; const pts = [];
         for (let d = -back; d <= span - back; d += stepZ) {
           const k = curvatureAt(c0 + d); hd += k * stepZ; wx += Math.cos(hd) * stepZ; wy += Math.sin(hd) * stepZ;
@@ -2222,18 +2225,19 @@ const SPEC = {
         const P = (p, lat) => ({ x: ox2 + (p.x - Math.sin(p.hd) * lat) * zsc, y: oy2 + (p.y + Math.cos(p.hd) * lat) * zsc });
         for (const sgn of [-1, 1]) { g.strokeStyle = "rgba(170,180,190,0.8)"; g.lineWidth = 1.2; g.beginPath();
           pts.forEach((p, i3) => { const q = P(p, sgn * (app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke(); }
-        g.strokeStyle = "rgba(90,190,255,0.95)"; g.lineWidth = 2; g.beginPath();     // the precise line, in blue
-        pts.forEach((p, i3) => { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, -Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
+        g.strokeStyle = "rgba(90,190,255,0.95)"; g.lineWidth = 2.4; g.beginPath();   // the precise line, in blue
+        pts.forEach((p, i3) => { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
           const q = P(p, rn * ((app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8) - 1.6)); i3 ? g.lineTo(q.x, q.y) : g.moveTo(q.x, q.y); }); g.stroke();
         const lc = state._lc;                                                          // the apex dot
         if (lc) { const ad = lc.start + (lc.end - lc.start) * lc.frac - c0;
           if (ad > -back && ad < span - back) { const p = pts[Math.round((ad + back) / stepZ)];
-            if (p) { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, -Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
+            if (p) { const k = curvatureAt(c0 + p.d), rn = Math.max(-1, Math.min(1, Math.sign(k) * Math.min(Math.abs(k) * 1100, 1)));
               const q = P(p, rn * ((app.halfWidthAt ? app.halfWidthAt(c0 + p.d) : 8) - 1.6));
-              g.fillStyle = "#ffd21e"; g.beginPath(); g.arc(q.x, q.y, 4.5, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#101418"; g.stroke(); } } }
-        { const p0 = pts[Math.round(back / stepZ)]; if (p0) { const q = P(p0, state.laneOffset);   // you
+              g.fillStyle = "#ffd21e"; g.beginPath(); g.arc(q.x, q.y, 6.5, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#101418"; g.lineWidth = 2; g.stroke();
+              g.fillStyle = "#ffe27a"; g.font = "bold 10px sans-serif"; g.textAlign = "center"; g.fillText("APEX", q.x, q.y - 10); } } }
+        { const p0 = pts[Math.round(back / stepZ)]; if (p0) { const q = P(p0, -state.laneOffset);  // you (world lateral is mirrored here)
             g.fillStyle = "#fff"; g.beginPath(); g.arc(q.x, q.y, 3.4, 0, Math.PI * 2); g.fill(); g.strokeStyle = "#2f7be0"; g.lineWidth = 2; g.stroke(); } }
-        g.fillStyle = "rgba(120,230,190,0.9)"; g.font = "8px sans-serif"; g.textAlign = "left"; g.fillText("zoom — the line ahead", zx + 5, zy + 11);
+        g.fillStyle = "rgba(120,230,190,0.95)"; g.font = "bold 9px sans-serif"; g.textAlign = "left"; g.fillText("ZOOM — the line ahead · yellow dot = apex (inside kerb)", zx + 6, zy + 12);
         g.restore();
       }
     }
