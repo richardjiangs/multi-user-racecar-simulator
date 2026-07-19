@@ -136,6 +136,27 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Porsche Taycan Turbo GT | 815 kW / 1,108 PS overboost (dual PSM, 2-speed rear) | ~1,340 Nm | 2.2 s | 305 | 2-speed | 2,220 kg |
 | Toyota GR Supra | 285 kW / 387 PS @ 5,800–6,500 (B58 twin-scroll turbo I6) | 500 Nm @ 1,800–5,000 | 4.1 s | 250 governed | 8-ZF auto | 1,520 kg |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
+| 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
+
+The four **2026 Dakar** cars share **one calibrated chassis SPEC** (like the F1 grid — a single
+`--calibrate dacia` certifies all four at 0-100 = 5.3 s; the FIA air-restrictor equalises T1+ power,
+so raw straight-line performance is real *because* it's near-identical). They differ in livery
+(`var(--f1body)`/`var(--teal)`), engine + **unique sound** (Ford = 5.0 NA V8, 4 pulses/rev, no turbo;
+the three V6s differ by `_satCurve`/turbo), one unique special stage each, and a per-car
+`TEAM = {pace,top,corner,tyreDeg,pitCrew,rel,dnf,dns,fix,slot,causeEng}` encoding the **real July-2026
+Dakar result** — so **performance, tyre deg and damage/reliability differ per car** (top speed via
+`realTop()` shows in every mode; `TEAM.rel`/`tyreDeg`/`pitCrew` drive damage growth `1/rel`, wear and
+service time in Rally Stage Mode):
+
+| Car | pace | top | corner | tyreDeg | rel | dnf | signature failure |
+|---|---|---|---|---|---|---|---|
+| Dacia Sandrider | 1.000 | 1.000 | 0.996 | 0.97 | **0.94** | 0.05 | an engine issue (won 2026 — most reliable) |
+| Ford Raptor T1+ | 0.996 | 0.999 | 0.988 | 1.02 | 0.80 | 0.11 | a broken front axle (fast but fragile; Sainz barely finished) |
+| Toyota GR DKR Hilux | 0.994 | 0.996 | 0.994 | 1.00 | 0.77 | 0.13 | a mechanical failure (all-new car; Al-Rajhi's stage-4 DNF) |
+| Prodrive Hunter | 0.976 | 0.992 | 0.978 | 1.06 | **0.72** | 0.15 | engine trouble (privateer — least reliable) |
+
+The shared `RM_GRID` rival field encodes the same real 2026 form (Al-Rajhi retires ~stage 4, Sainz
+breaks an axle, Dacia runs clean), so rival retirements track the actual race.
 
 The eleven F1 cars share **one calibrated chassis SPEC** so a single
 `--calibrate f1mercedes` certifies all eleven at the same exact 0-100; they differ
