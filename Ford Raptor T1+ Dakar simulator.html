@@ -1453,7 +1453,7 @@ const SPEC = {
      lightens), contact and offs damage the car, power units can fail (yours and the
      rivals'), some cars don't even start, you pit for fresh tyres + repairs, and a safety
      car can neutralise the race and hand it to someone else. Everything shows on the HUD. */
-  const TEAM = { name: "Ford Raptor T1+", pace: 0.996, top: 1.000, corner: 0.990, tyreDeg: 1.02, pitCrew: 2.4, rel: 0.85, dnf: 0.09, dns: 0.015, slot: 3, fix: 1.00, causeEng: "a suspension failure" };
+  const TEAM = { name: "Ford Raptor T1+", pace: 0.996, top: 0.999, corner: 0.988, tyreDeg: 1.02, pitCrew: 2.4, rel: 0.80, dnf: 0.11, dns: 0.020, slot: 3, fix: 1.00, causeEng: "a broken front axle" };   // P2/P3 2026 — fast but fragile (Sainz broke a front axle and barely finished)
   const RADIO_LINES = ["Roadbook: fast right in 300, then soft sand — carry the momentum.","Caution, camel grass on the crest — cut to the left.","Danger, danger — big dune drop, brake now!","Stony piste three kilometres, then we turn into the sun.","Smooth now — tyres to the finish, it's a long way to the bivouac."];
   const ERS = { storeS: 6, regen: 0.03, boost: 1.0, xShed: 0.10, blurb: "Sand Mode softens the throttle and floats the car over soft ground — momentum is everything in the dunes." };   // repurposed: X = Sand Mode
   // grid reliability/pace table: [name, body, pace, corner, dnf/race, dns prob]
@@ -1462,17 +1462,17 @@ const SPEC = {
   // Shanghai); Red Bull DNF-riddled; Alpine/Racing Bulls best of the rest; Aston on 1 point;
   // Audi and Cadillac at the back. slot = 2025 WCC garage order from the pit entry.
   const RM_GRID = [
-    { n:"Al-Attiyah · Dacia",   c:"#c9b78c", pace:1.000, corner:0.995, dnf:0.05, dns:0.010, rel:0.95, slot:0,  deg:0.98, pit:2.3, fix:0.90, cause:"an engine issue" },
-    { n:"Loeb · Dacia",         c:"#c9b78c", pace:1.003, corner:0.998, dnf:0.14, dns:0.020, rel:0.75, slot:1,  deg:1.00, pit:2.3, fix:0.95, cause:"a heavy dune landing" },
-    { n:"Al-Rajhi · Toyota",    c:"#e6e7ea", pace:0.998, corner:0.992, dnf:0.08, dns:0.012, rel:0.88, slot:2,  deg:1.00, pit:2.5, fix:1.00, cause:"a run of punctures" },
-    { n:"Sainz · Ford",         c:"#1b3a8f", pace:0.996, corner:0.990, dnf:0.09, dns:0.015, rel:0.85, slot:3,  deg:1.02, pit:2.4, fix:1.00, cause:"a suspension failure" },
-    { n:"Ekström · Ford",       c:"#1b3a8f", pace:0.990, corner:0.986, dnf:0.09, dns:0.020, rel:0.85, slot:4,  deg:1.02, pit:2.4, fix:1.00, cause:"a driveshaft failure" },
-    { n:"Quintero · Toyota",    c:"#e6e7ea", pace:0.990, corner:0.988, dnf:0.08, dns:0.020, rel:0.86, slot:5,  deg:1.02, pit:2.5, fix:1.00, cause:"engine trouble" },
-    { n:"Lategan · Toyota",     c:"#e6e7ea", pace:0.986, corner:0.984, dnf:0.09, dns:0.020, rel:0.84, slot:6,  deg:1.03, pit:2.5, fix:1.05, cause:"a broken wheel" },
-    { n:"Moraes · Toyota",      c:"#e6e7ea", pace:0.984, corner:0.982, dnf:0.09, dns:0.020, rel:0.83, slot:7,  deg:1.03, pit:2.5, fix:1.05, cause:"a navigation error" },
-    { n:"Roma · Prodrive",      c:"#14171c", pace:0.980, corner:0.980, dnf:0.12, dns:0.030, rel:0.78, slot:8,  deg:1.05, pit:2.7, fix:1.10, cause:"engine trouble" },
-    { n:"Baragwanath · X-raid", c:"#8a1a2a", pace:0.972, corner:0.972, dnf:0.13, dns:0.040, rel:0.72, slot:9,  deg:1.08, pit:2.9, fix:1.15, cause:"a car stuck in the dunes" },
-    { n:"Serradori · Century",  c:"#4a5a2a", pace:0.968, corner:0.970, dnf:0.14, dns:0.050, rel:0.70, slot:10, deg:1.10, pit:3.0, fix:1.20, cause:"a gearbox failure" }
+    { n:"Al-Attiyah · Dacia",   c:"#c9b78c", pace:1.000, corner:0.996, dnf:0.05, dns:0.010, rel:0.94, slot:0,  deg:0.97, pit:2.2, fix:0.88, cause:"an engine issue" },
+    { n:"Loeb · Dacia",         c:"#c9b78c", pace:1.002, corner:0.997, dnf:0.10, dns:0.015, rel:0.85, slot:1,  deg:0.99, pit:2.2, fix:0.90, cause:"a heavy dune landing" },
+    { n:"Al-Rajhi · Toyota",    c:"#e6e7ea", pace:0.998, corner:0.992, dnf:0.18, dns:0.015, rel:0.72, slot:2,  deg:1.00, pit:2.4, fix:1.00, cause:"a stage-4 mechanical failure" },
+    { n:"Sainz · Ford",         c:"#1b3a8f", pace:0.996, corner:0.990, dnf:0.12, dns:0.018, rel:0.80, slot:3,  deg:1.02, pit:2.4, fix:1.00, cause:"a broken front axle" },
+    { n:"Ekström · Ford",       c:"#1b3a8f", pace:0.992, corner:0.987, dnf:0.11, dns:0.020, rel:0.80, slot:4,  deg:1.02, pit:2.4, fix:1.00, cause:"a suspension failure" },
+    { n:"Quintero · Toyota",    c:"#e6e7ea", pace:0.992, corner:0.989, dnf:0.14, dns:0.020, rel:0.76, slot:5,  deg:1.02, pit:2.4, fix:1.00, cause:"mechanical trouble" },
+    { n:"Lategan · Toyota",     c:"#e6e7ea", pace:0.988, corner:0.985, dnf:0.12, dns:0.020, rel:0.77, slot:6,  deg:1.03, pit:2.5, fix:1.05, cause:"a broken wheel" },
+    { n:"Moraes · Toyota",      c:"#e6e7ea", pace:0.986, corner:0.984, dnf:0.10, dns:0.020, rel:0.80, slot:7,  deg:1.03, pit:2.5, fix:1.05, cause:"a navigation error" },
+    { n:"Roma · Prodrive",      c:"#14171c", pace:0.978, corner:0.980, dnf:0.14, dns:0.030, rel:0.72, slot:8,  deg:1.05, pit:2.7, fix:1.10, cause:"engine trouble" },
+    { n:"Baragwanath · X-raid", c:"#8a1a2a", pace:0.972, corner:0.972, dnf:0.15, dns:0.040, rel:0.70, slot:9,  deg:1.08, pit:2.9, fix:1.15, cause:"a car stuck in the dunes" },
+    { n:"Serradori · Century",  c:"#4a5a2a", pace:0.968, corner:0.970, dnf:0.15, dns:0.050, rel:0.68, slot:10, deg:1.10, pit:3.0, fix:1.20, cause:"a gearbox failure" }
   ];
   const boxPhAt = (slot, L) => L - 235 + slot * 18;      // garages run champion-first from the pit entry
   // named car systems and how a per-team reliability 'rel' turns into a growing failure probability
