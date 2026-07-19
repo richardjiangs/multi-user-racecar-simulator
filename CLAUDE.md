@@ -1,8 +1,9 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of twenty-four simulators — each a **single self-contained HTML file** —
-thirteen road cars/hypercars (incl. the Toyota GR Supra) plus the full **2026
-Formula 1 grid** (eleven teams). `index.html` bundles all of them together with
+A garage of twenty-eight simulators — each a **single self-contained HTML file** —
+thirteen road cars/hypercars (incl. the Toyota GR Supra), the full **2026
+Formula 1 grid** (eleven teams), and four **2026 Dakar Rally** raid cars (Dacia
+Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter). `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
@@ -41,6 +42,10 @@ Racing Bulls F1 2026 simulator.html
 Haas F1 2026 simulator.html
 Audi F1 2026 simulator.html
 Cadillac F1 2026 simulator.html
+Dacia Sandrider Dakar simulator.html        ← 2026 Dakar Rally raid cars (4, one shared T1+ Ultimate chassis SPEC):
+Ford Raptor T1+ Dakar simulator.html           Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter.
+Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound (Ford = 5.0 NA V8; the rest twin-turbo V6),
+Prodrive Hunter Dakar simulator.html           real 2026 Dakar stages with terrain/dune/bump physics, Rally Stage (Real) Mode, Dakar Rally 101.
 tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
 tools/embed-sims.mjs                        ← re-embeds all sim files into index.html (run after editing a sim)
