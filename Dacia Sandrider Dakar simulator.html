@@ -1513,7 +1513,7 @@ const SPEC = {
       if (!msgs.length || !auto) {
         if (state.learnMode && state._advice) msgs.push("Coaching: " + state._advice + ". Brake with the boards, clip the yellow dot, full power at the exit board.");
         let corner = null;
-        for (let d = 70; d <= 430; d += 30) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.0045) { corner = { d, dir: k > 0 ? "left" : "right", tight: Math.abs(k) > 0.013 }; break; } }
+        for (let d = 70; d <= 430; d += 30) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.0045) { corner = { d, dir: k > 0 ? "right" : "left", tight: Math.abs(k) > 0.013 }; break; } }
         if (corner) msgs.push((corner.tight ? "Tight " : "") + corner.dir + "-hander in " + Math.round(corner.d / 10) * 10 + " — " + (corner.tight ? "brake deep, late apex, use every bit of exit kerb." : "carry the speed and clip the apex."));
         const g = rivalGaps();
         if (g.ahead < 1e9) { const gs = g.ahead / spd; msgs.push("Gap ahead " + gs.toFixed(1) + (gs < 1.05 ? " — override is live, use it." : " — take three tenths a lap, no risks.")); }
@@ -1796,7 +1796,7 @@ const SPEC = {
     const r = state.route, hw = halfWidthAt(d);
     if (!(r.active && r.trackCorners && r.totalM)) {
       const k = curvatureAt(d); const sI = Math.max(-1, Math.min(1, k * 420));
-      return -sI * (hw - 2.4);
+      return sI * (hw - 2.4);
     }
     const L = r.totalM, ph = ((d % L) + L) % L;
     let off = 0, wsum = 0;
@@ -1808,7 +1808,7 @@ const SPEC = {
         if (ph < a0 || ph > a1) continue;
         const u = (ph - a0) / (a1 - a0);
         const val = Math.cos(u * 2 * Math.PI) * 0.5 + 0.5;                    // 1 at the ends, 0 at the middle apex
-        const lat = cc.dir * ((val * 2 - 1) >= 0 ? (val * 2 - 1) * (hw - 3.4) : (val * 2 - 1) * (hw - 2.2));
+        const lat = -cc.dir * ((val * 2 - 1) >= 0 ? (val * 2 - 1) * (hw - 3.4) : (val * 2 - 1) * (hw - 2.2));   // inside = +lat for k>0 (right); was mirrored
         const w = 0.5 + Math.abs(val * 2 - 1) * 0.5;
         off += lat * w; wsum += w;
       }
@@ -2345,7 +2345,7 @@ const SPEC = {
     const apexAt = c.start + (c.end - c.start) * 0.5, apexD = apexAt - state.distanceM;   // the dot marks the MIDDLE apex, on the line
     const board = (dd, txt, col, big) => {
       if (dd < 10 || dd > 430) return;
-      const p = projectAhead(dd, c.dir * (halfAt(dd) + 2.6));
+      const p = projectAhead(dd, -c.dir * (halfAt(dd) + 2.6));   // boards on the outside of the corner
       if (p.fwd < 1 || p.scale < 0.045) return;
       const s2 = clamp((big ? 13 : 11) * p.scale, 2.5, big ? 26 : 20), bw2 = Math.max(s2 * 2.1, s2 * 0.62 * (txt.length * 0.62)), bh2 = s2 * 1.18;
       ctx.globalAlpha = clamp(1.3 - dd / 360, 0.3, 1);
@@ -2678,7 +2678,7 @@ const SPEC = {
     ctx.fillStyle = "#ded7c2"; ctx.fillRect(0, 0, bw, bh);                                     // paper roll
     ctx.fillStyle = "rgba(0,0,0,0.18)"; ctx.fillRect(0, 0, bw, bh * 0.03); ctx.fillRect(0, bh * 0.97, bw, bh * 0.03);
     let dir = 0, dist = 0;
-    for (let d = 40; d <= 400; d += 15) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.004) { dir = k > 0 ? -1 : 1; dist = d; break; } }   // k>0 = left -> arrow left
+    for (let d = 40; d <= 400; d += 15) { const k = curvatureAt(state.distanceM + d); if (Math.abs(k) > 0.004) { dir = k > 0 ? 1 : -1; dist = d; break; } }   // k>0 = right turn in the world -> arrow right
     const cx = bw * 0.5, cy = bh * 0.30;
     ctx.strokeStyle = "#20201a"; ctx.lineWidth = Math.max(2, s * 0.03); ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(cx, cy + bh * 0.14); ctx.lineTo(cx, cy - bh * 0.02); ctx.stroke();
