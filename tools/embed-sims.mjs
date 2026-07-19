@@ -33,6 +33,10 @@ const FILES = {
   f1haas: "Haas F1 2026 simulator.html",
   f1audi: "Audi F1 2026 simulator.html",
   f1cadillac: "Cadillac F1 2026 simulator.html",
+  dacia: "Dacia Sandrider Dakar simulator.html",
+  fordraptor: "Ford Raptor T1+ Dakar simulator.html",
+  grhilux: "Toyota GR DKR Hilux simulator.html",
+  hunter: "Prodrive Hunter Dakar simulator.html",
 };
 
 const enc = {};

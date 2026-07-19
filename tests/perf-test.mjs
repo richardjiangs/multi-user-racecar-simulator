@@ -170,6 +170,26 @@ for (const [key, file, app, label] of F1_TEAMS) {
   };
 }
 
+/* 2026 Dakar Rally — four T1+ Ultimate cars on ONE calibrated chassis SPEC (like the F1 grid):
+   ~360 hp restricted, ~2,000 kg, 6-speed sequential, permanent 4WD, 37" tyres, 350 mm travel.
+   Certification runs in Free run (no stage loaded), so the terrain/dune/bog physics — which are
+   route-gated — never touch the launch, brake or top-speed runs. Top speed is the Dakar 170 km/h
+   governor (× the car's tiny TEAM.top factor), so assert a tight band. */
+const DAKAR_CARS = [
+  ["dacia",    "Dacia Sandrider Dakar simulator.html", "DaciaDakarApp",    "Dacia Sandrider (T1+)"],
+  ["fordraptor","Ford Raptor T1+ Dakar simulator.html","FordDakarApp",     "Ford Raptor T1+"],
+  ["grhilux",  "Toyota GR DKR Hilux simulator.html",   "ToyotaDakarApp",   "Toyota GR DKR Hilux (T1+)"],
+  ["hunter",   "Prodrive Hunter Dakar simulator.html", "ProdriveDakarApp", "Prodrive Hunter (BRX, T1+)"],
+];
+for (const [key, file, app, label] of DAKAR_CARS) {
+  CARS[key] = {
+    file, app, label,
+    marks: { 100: { target: 5.3, tol: 1e-4 } },
+    topSpeed: { minKmh: 165, maxKmh: 172, minT: 30 },   // Dakar 170 km/h governor
+    brake100: { target: 40, tol: 1.5 },
+  };
+}
+
 /* Runs inside the page. Everything below drives the sim's own exported code. */
 const PAGE_FNS = {
   /* standing-start launch; returns interpolated mark times, top speed, 1/4 mile */
