@@ -166,6 +166,16 @@ slick-shod, ground-effect cars (Valkyrie, F80, AMG Black, Speedtail, Huayra BC, 
 left tarmac-only. Terrain is route-gated, so each road car's certified 0-100/top/braking is untouched;
 they keep their own cockpit/dashboard and simply gain the stages in the Circuit tab.
 
+**Road-car Real Mode (light)** — all **13 road cars** now have a Circuit-tab **Real Mode** toggle
+(`realBtn`, `toggleRealMode`). ON: `realStep(dt)` grows real per-system damage `sys = {engine, gearbox,
+brakes, tyre, susp, body}` from real stress (revs→engine, shifts→gearbox, braking→brakes, tyre-wear²→
+tyre, `roughnessAt`·speed + airborne→susp, offs→body) scaled by `1/REL` (a per-car reliability — Tesla
+0.95/Supra 0.94 tough … Valkyrie 0.72/250 GTO 0.70 fragile), so **damage grows far faster on the rough
+Dakar stages**; a system at 1.0 is a retirement. Tyre wear + damage fade grip via `realGrip()` and power
+via `realPower()` (both `1` when OFF, so certification is untouched — perf-test never toggles it). The
+telemetry overlay shows `REAL tyre% dmg%`. This is the lighter cousin of the F1/Dakar Real Mode (no
+drive-in pit / rival-DNF layer).
+
 The eleven F1 cars share **one calibrated chassis SPEC** so a single
 `--calibrate f1mercedes` certifies all eleven at the same exact 0-100; they differ
 in livery (`var(--f1body)` body + `var(--teal)` accent), race number, engine badge,

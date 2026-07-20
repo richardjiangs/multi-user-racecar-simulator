@@ -613,6 +613,7 @@
             </div>
             <button id="testDriverBtn">Hand to Test Driver</button>
             <button id="gridBtn" class="active">Rival Grid: On</button>
+            <button id="realBtn" class="race" title="Real Mode — real tyre wear, damage and reliability; a failed system retires you">Real Mode: Off</button>
             <div class="voice">
               <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “switch to E85”">
               <button id="voiceBtn">Tell Co-Pilot</button>
@@ -913,7 +914,7 @@ const SPEC = {
     heat: false, cool: false, ambient: true, audioCabin: false, shifterLight: true,
     frontRecline: 0, seatTempC: 22,
     oilTempC: 90, waterTempC: 88, brakeTempC: 120, egtC: 320,
-    downforceN: 0, roadInputG: 0, cabinHeaveG: 0,
+    downforceN: 0, roadInputG: 0, cabinHeaveG: 0, realMode: false, retired: false, tyreWear: 0, damage: 0, failCause: "", sys: { engine: 0, gearbox: 0, brakes: 0, tyre: 0, susp: 0, body: 0 },
     shake: { x: 0, y: 0, rot: 0 },
     blinker: 0, blinkPhase: 0, blinkOn: false,
     toastTimer: 0,
@@ -1251,8 +1252,39 @@ const SPEC = {
     state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;
   }
 
+  // ---- Real Mode (opt-in): real per-system damage + reliability. OFF by default; realPower/realGrip
+  // return 1 when off, so the certified 0-100 / top speed / braking never see it. Damage grows with
+  // real stress and far faster on the rough Dakar stages (roughnessAt); a system at 1.0 = retirement. ----
+  const REL = 0.80;   // this car's reliability (higher = tougher)
+  function realPower() { if (!state.realMode || state.retired) return 1; return clamp(1 - state.sys.engine * 0.45, 0.2, 1); }
+  function realGrip() { if (!state.realMode) return 1; if (state.retired) return 0.35; return clamp((1 - state.tyreWear * 0.30) * (1 - state.sys.tyre * 0.4) * (1 - state.sys.susp * 0.15), 0.25, 1); }
+  function realStep(dt) {
+    if (!state.realMode || !state.started) return;
+    if (state.retired) { state.speedMps = Math.max(0, state.speedMps - dt * 3); return; }
+    const spd = Math.abs(state.speedMps), load = state.throttle, rpmN = clamp(state.rpm / SPEC.redlineRpm, 0, 1);
+    const rough = (typeof roughnessAt === "function") ? roughnessAt(state.distanceM) : 0.1;
+    const sc = dt / REL;
+    state.tyreWear = clamp(state.tyreWear + dt * (0.0015 * load + 0.0008 * (spd / 80)) * (1 + rough * 1.4) * (1 + Math.abs(state.lateralG) * 0.3), 0, 1);
+    const y = state.sys;
+    y.engine = clamp(y.engine + sc * (0.00005 + rpmN * rpmN * 0.00040 + (state.oilTempC > 120 ? 0.00030 : 0)), 0, 1);
+    y.gearbox = clamp(y.gearbox + sc * (state.shiftTimer > 0 ? 0.0016 : 0.00002), 0, 1);
+    y.brakes = clamp(y.brakes + sc * (state.brake * 0.00055 + (state.brakeTempC > 500 ? 0.00040 : 0)), 0, 1);
+    y.tyre = clamp(y.tyre + sc * (state.tyreWear * state.tyreWear * 0.0016 + Math.abs(state.lateralG) * 0.00014), 0, 1);
+    y.susp = clamp(y.susp + sc * (rough * (spd / 60) * 0.0022 + (state.airborne ? 0.006 : 0) + state.offTrack * 0.0006), 0, 1);
+    y.body = clamp(y.body + sc * (state.offTrack * 0.0009), 0, 1);
+    state.damage = Math.max(y.engine, y.gearbox, y.brakes, y.tyre, y.susp, y.body);
+    const CAUSE = { engine: "engine failure", gearbox: "a gearbox failure", brakes: "brake failure", tyre: "a blown tyre", susp: "suspension failure", body: "terminal damage" };
+    for (const k in CAUSE) if (y[k] >= 1) { state.retired = true; state.failCause = CAUSE[k]; showToast("You're out — " + CAUSE[k] + ". Nurse it next time.", "Race Control"); break; }
+  }
+  function toggleRealMode() {
+    state.realMode = !state.realMode;
+    if (state.realMode) { state.retired = false; state.tyreWear = 0; state.damage = 0; state.failCause = ""; state.sys = { engine: 0, gearbox: 0, brakes: 0, tyre: 0, susp: 0, body: 0 }; if (app.setMode) app.setMode("race"); }
+    const rb = document.getElementById("realBtn"); if (rb) { rb.textContent = "Real Mode: " + (state.realMode ? "On" : "Off"); rb.classList.toggle("active", state.realMode); }
+    showToast(state.realMode ? "Real Mode — real tyre wear, damage and reliability grow with how hard you push (and how rough the stage). Nurse it to the finish." : "Real Mode off.", "Race Control");
+  }
+  Object.assign(app, { toggleRealMode, realStep });
   function tractionCapN() {
-    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9);
+    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9) * realGrip();
     return grip;
   }
 
@@ -1554,7 +1586,7 @@ const SPEC = {
     let usable;
     if (state.tractionControl || state.esc) usable = Math.min(rawForce, cap * mode().tc);
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
-    const engineForce = usable * direction;
+    const engineForce = usable * direction * realPower();
 
     // Attack aero: the boomerang wing is fixed hardware — its drag is always in the baseline.
     const baseCd = SPEC.dragCd;
@@ -1609,6 +1641,7 @@ const SPEC = {
     state.wheelRotation = (state.wheelRotation + v * dt / SPEC.wheelRadiusM * 57.2958) % 360;
 
     // lap timing & route progress
+    realStep(dt);
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
@@ -2204,6 +2237,7 @@ const SPEC = {
     ctx.fillText(`${Math.round(app.kmh(state.speedMps))} km/h   ${Math.round(state.rpm)} rpm`, x, y);
     ctx.fillText(`G ${state.lateralG.toFixed(2)}  DF ${Math.round(state.downforceN / 9.81)} kg  ${app.SPEC.gearRatios && state.gearMode === "G" ? "gear " + state.curGear : state.gearMode}`, x, y + 14);
     if (state.lap.curMs > 0) ctx.fillText(`lap ${app.fmtLap(state.lap.curMs)}${state.lap.bestMs ? "  best " + app.fmtLap(state.lap.bestMs) : ""}`, x, y + 28);
+    if (state.realMode) { ctx.fillStyle = state.retired ? "#ff6b6b" : "#ffd27a"; ctx.fillText(state.retired ? ("OUT \u2014 " + state.failCause) : ("REAL  tyre " + Math.round((state.tyreWear || 0) * 100) + "%  dmg " + Math.round((state.damage || 0) * 100) + "%"), x, y + 42); }
     ctx.restore();
   }
   function roundRect(c, x, y, ww, hh, r) { r = Math.min(r, ww / 2, hh / 2); c.beginPath(); c.moveTo(x + r, y); c.arcTo(x + ww, y, x + ww, y + hh, r); c.arcTo(x + ww, y + hh, x, y + hh, r); c.arcTo(x, y + hh, x, y, r); c.arcTo(x, y, x + ww, y, r); c.closePath(); }
@@ -2798,6 +2832,7 @@ const SPEC = {
     document.getElementById("cruiseDown").addEventListener("click", () => app.setCruiseSpeed(state.cruiseSetKmh - 10, true));
     document.getElementById("lapResetBtn").addEventListener("click", () => { state.lap = { running: state.route.active, startDist: state.distanceM, lastMs: 0, bestMs: state.lap.bestMs, curMs: 0 }; showToast("Lap timer reset."); });
     document.getElementById("dataBtn").addEventListener("click", () => { state.dataHud = !state.dataHud; showToast(state.dataHud ? "Telemetry overlay on." : "Telemetry overlay off."); });
+    { const _rb = document.getElementById("realBtn"); if (_rb) _rb.addEventListener("click", () => app.toggleRealMode()); }
     { const lb = document.getElementById("learnBtn"); if (lb) lb.addEventListener("click", () => {
         state.learnMode = !state.learnMode; lb.textContent = "Learning Mode: " + (state.learnMode ? "On" : "Off"); lb.classList.toggle("active", state.learnMode);
         showToast(state.learnMode ? "Learning Mode — countdown boards to the apex, live apex advice, the line on the road and the zoom map." : "Learning Mode off.", "Driving School"); }); }
