@@ -158,6 +158,14 @@ service time in Rally Stage Mode):
 The shared `RM_GRID` rival field encodes the same real 2026 form (Al-Rajhi retires ~stage 4, Sainz
 breaks an axle, Dacia runs clean), so rival retirements track the actual race.
 
+**Dakar stages on the capable road cars** — the seven shared Dakar stages (+ full terrain/dune/bump
+physics: `terrainStep`, terrain-aware `roughnessAt`, `terrainGrip`, desert palettes/scenery) are also
+injected into the road cars that could plausibly attempt off-road — the AWD/robust set **Bugatti
+Chiron, Tesla Model S Plaid, Taycan Turbo GT, Revuelto, 918 Spyder, GR Supra**. The ultra-low,
+slick-shod, ground-effect cars (Valkyrie, F80, AMG Black, Speedtail, Huayra BC, Jesko, 250 GTO) are
+left tarmac-only. Terrain is route-gated, so each road car's certified 0-100/top/braking is untouched;
+they keep their own cockpit/dashboard and simply gain the stages in the Circuit tab.
+
 The eleven F1 cars share **one calibrated chassis SPEC** so a single
 `--calibrate f1mercedes` certifies all eleven at the same exact 0-100; they differ
 in livery (`var(--f1body)` body + `var(--teal)` accent), race number, engine badge,

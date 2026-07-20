@@ -601,6 +601,13 @@
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
               <button data-circuit="Laguna Seca">Laguna Seca</button>
+              <button data-circuit="Prologue — Yanbu">Prologue · Yanbu</button>
+              <button data-circuit="Stage 2 — Yanbu to AlUla">S2 · Yanbu→AlUla</button>
+              <button data-circuit="Stage 4 — AlUla Marathon">S4 · AlUla marathon</button>
+              <button data-circuit="Stage 7 — Riyadh to Wadi Ad Dawasir">S7 · →Wadi Ad Dawasir</button>
+              <button data-circuit="Stage 8 — Wadi Ad Dawasir">S8 · Wadi (Queen)</button>
+              <button data-circuit="Stage 9 — Wadi Ad Dawasir to Bisha">S9 · →Bisha marathon</button>
+              <button data-circuit="Stage 13 — Yanbu Finish">S13 · Yanbu finish</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -810,6 +817,92 @@ const CIRCUITS = {
       c(2560, 1, 110, 40, "Corkscrew R"), c(2900, -1, 80, 55, "Rainey Curve"), c(3250, 1, 90, 50, "Turn 11")
     ]
   },
+  "Prologue — Yanbu": {
+    dist: 8200, env: "desert", limitKmh: 170, loop: true, widthM: 20.0, corners: 12,
+    blurb: "Prologue, Yanbu — a 23 km coastal blast on the Red Sea (2026 Dakar Rally)",
+    terrain: { surf: "coastal hardpack", grip: 0.82, rough: 0.34, dune: 0.25 },
+    bumps: [{ from: 2600, to: 3400, r: 0.55 }, { from: 6000, to: 6600, r: 0.5 }],
+    track: [
+      c(500, 1, 55, 90, "Seafront kink"), c(1200, -1, 70, 70, "Wadi mouth"), c(2100, 1, 80, 55, "Rock shelf"),
+      c(3000, -1, 60, 80, "Sand bowl"), c(4200, 1, 45, 130, "Fast right"), c(5200, -1, 90, 60, "Camel-grass L"),
+      c(6100, 1, 75, 65, "Dune toe"), c(7000, -1, 65, 75, "Beach return"), c(7700, 1, 50, 90, "Into Yanbu")
+    ]
+  },
+  "Stage 2 — Yanbu to AlUla": {
+    dist: 22000, env: "desert", limitKmh: 170, loop: true, widthM: 22.0, corners: 34,
+    blurb: "Stage 2, Yanbu → AlUla — 400 km special, coastal sand giving way to volcanic rock (2026 Dakar)",
+    terrain: { surf: "mixed sand & rock piste", grip: 0.70, rough: 0.52, dune: 0.55 },
+    bumps: [{ from: 3000, to: 6000, r: 0.62 }, { from: 11000, to: 13500, r: 0.7 }, { from: 18000, to: 20000, r: 0.6 }],
+    track: [
+      c(900, 1, 50, 120, "Coast run"), c(2600, -1, 70, 90, "Harrat lava L"), c(3800, 1, 85, 70, "Rock step"),
+      c(5200, -1, 60, 110, "Sand plain"), c(7000, 1, 40, 180, "Long right"), c(8800, -1, 90, 65, "Basalt L"),
+      c(10400, 1, 70, 80, "Camel grass"), c(12000, -1, 55, 120, "Fesh-fesh"), c(13800, 1, 80, 70, "Wadi cut"),
+      c(15600, -1, 65, 95, "Plateau L"), c(17200, 1, 50, 140, "Sweep to AlUla"), c(19000, -1, 75, 80, "Sandstone L"),
+      c(20600, 1, 60, 100, "AlUla approach")
+    ]
+  },
+  "Stage 4 — AlUla Marathon": {
+    dist: 25000, env: "canyon", limitKmh: 170, loop: true, widthM: 18.0, corners: 44,
+    blurb: "Stage 4, AlUla marathon — 451 km, no assistance overnight; mountainous rock and sand (2026 Dakar)",
+    terrain: { surf: "rock & mountain piste", grip: 0.74, rough: 0.66, dune: 0.45 },
+    bumps: [{ from: 4000, to: 7000, r: 0.74 }, { from: 12000, to: 15000, r: 0.72 }, { from: 20000, to: 23000, r: 0.7 }],
+    track: [
+      c(1000, 1, 60, 100, "Mountain climb"), c(2600, -1, 90, 60, "Ridge L"), c(4000, 1, 100, 55, "Rock hairpin"),
+      c(5600, -1, 70, 80, "Descent R"), c(7400, 1, 55, 120, "High plateau"), c(9400, -1, 85, 65, "Escarpment L"),
+      c(11200, 1, 75, 70, "Boulder field"), c(13000, -1, 60, 100, "Valley run"), c(15000, 1, 95, 55, "Cliff hairpin"),
+      c(16800, -1, 80, 65, "Scree L"), c(18800, 1, 50, 150, "Long right"), c(20800, -1, 70, 85, "Summit L"),
+      c(22600, 1, 65, 90, "Final ridge"), c(24000, -1, 55, 110, "Bivouac run")
+    ]
+  },
+  "Stage 7 — Riyadh to Wadi Ad Dawasir": {
+    dist: 21000, env: "desert", limitKmh: 170, loop: true, widthM: 24.0, corners: 30,
+    blurb: "Stage 7, Riyadh → Wadi Ad Dawasir — 462 km, central plateau falling into the first big dunes (2026 Dakar)",
+    terrain: { surf: "plateau to dune", grip: 0.66, rough: 0.5, dune: 0.95 },
+    bumps: [{ from: 5000, to: 8000, r: 0.6 }, { from: 13000, to: 18000, r: 0.66 }],
+    track: [
+      c(1200, 1, 45, 160, "Plateau sweep"), c(3200, -1, 60, 110, "Gravel L"), c(5000, 1, 70, 80, "Escarpment R"),
+      c(7000, -1, 50, 140, "Fast left"), c(9200, 1, 85, 65, "Dune ridge R"), c(11200, -1, 90, 60, "Crest L"),
+      c(13400, 1, 65, 90, "Soft sand R"), c(15400, -1, 75, 75, "Bowl L"), c(17400, 1, 55, 120, "Dune sweep"),
+      c(19200, -1, 70, 85, "Into Wadi")
+    ]
+  },
+  "Stage 8 — Wadi Ad Dawasir": {
+    dist: 24000, env: "dune", limitKmh: 170, loop: true, widthM: 26.0, corners: 48,
+    blurb: "Stage 8, Wadi Ad Dawasir — the 481 km QUEEN STAGE: dune plateaus, fesh-fesh and sudden changes of direction (2026 Dakar)",
+    terrain: { surf: "big dunes & fesh-fesh", grip: 0.60, rough: 0.72, dune: 1.6 },
+    bumps: [{ from: 2000, to: 6000, r: 0.8 }, { from: 9000, to: 13000, r: 0.82 }, { from: 16000, to: 21000, r: 0.8 }],
+    track: [
+      c(900, 1, 80, 70, "Dune wall R"), c(2200, -1, 95, 55, "Sharp reverse L"), c(3400, 1, 60, 100, "Long dune R"),
+      c(4800, -1, 100, 50, "Sudden L"), c(6200, 1, 90, 60, "Crest R"), c(7600, -1, 55, 120, "Fesh-fesh sweep"),
+      c(9200, 1, 100, 50, "Whip R"), c(10600, -1, 85, 60, "Bowl L"), c(12200, 1, 70, 80, "Ridge R"),
+      c(13800, -1, 95, 55, "Reverse L"), c(15400, 1, 60, 110, "Plateau R"), c(17000, -1, 100, 50, "Sudden L2"),
+      c(18600, 1, 80, 70, "Dune chain R"), c(20200, -1, 65, 95, "Soft L"), c(21800, 1, 90, 60, "Last crest"),
+      c(23000, -1, 55, 120, "Run to camp")
+    ]
+  },
+  "Stage 9 — Wadi Ad Dawasir to Bisha": {
+    dist: 21000, env: "dune", limitKmh: 170, loop: true, widthM: 24.0, corners: 38,
+    blurb: "Stage 9, Wadi Ad Dawasir → Bisha — 418 km marathon, Empty-Quarter-edge dunes into the Bisha mountains (2026 Dakar)",
+    terrain: { surf: "dunes into mountains", grip: 0.62, rough: 0.66, dune: 1.3 },
+    bumps: [{ from: 3000, to: 7000, r: 0.72 }, { from: 12000, to: 16000, r: 0.7 }],
+    track: [
+      c(1000, 1, 85, 65, "Dune R"), c(2600, -1, 90, 60, "Reverse L"), c(4200, 1, 60, 100, "Soft sand R"),
+      c(6000, -1, 75, 75, "Crest L"), c(8000, 1, 55, 120, "Sand plain"), c(10000, -1, 90, 55, "Foothill L"),
+      c(12000, 1, 70, 80, "Rock climb R"), c(14000, -1, 100, 50, "Mountain hairpin"), c(16000, 1, 65, 90, "Descent R"),
+      c(18000, -1, 55, 110, "Valley L"), c(19800, 1, 60, 95, "Into Bisha")
+    ]
+  },
+  "Stage 13 — Yanbu Finish": {
+    dist: 7000, env: "desert", limitKmh: 170, loop: true, widthM: 20.0, corners: 10,
+    blurb: "Stage 13, Yanbu → Yanbu — 105 km final special back on the Red Sea coast (2026 Dakar)",
+    terrain: { surf: "coastal sand & rock", grip: 0.80, rough: 0.4, dune: 0.3 },
+    bumps: [{ from: 2200, to: 3000, r: 0.5 }],
+    track: [
+      c(500, 1, 55, 90, "Coast R"), c(1400, -1, 70, 70, "Wadi L"), c(2400, 1, 80, 60, "Rock R"),
+      c(3400, -1, 60, 90, "Sand bowl"), c(4400, 1, 45, 130, "Fast right"), c(5400, -1, 75, 70, "Final L"),
+      c(6300, 1, 50, 90, "Finish arch")
+    ]
+  },
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -906,7 +999,7 @@ const SPEC = {
     heat: false, cool: false, ambient: true, audioCabin: false, shifterLight: true,
     frontRecline: 0, seatTempC: 22,
     oilTempC: 90, waterTempC: 88, brakeTempC: 120, egtC: 320,
-    downforceN: 0, roadInputG: 0, cabinHeaveG: 0,
+    downforceN: 0, roadInputG: 0, cabinHeaveG: 0, gripMul: 1, susComp: 0, _susVel: 0, airborne: false, duneGrade: 0, _gradeAccel: 0, bogging: false,
     shake: { x: 0, y: 0, rot: 0 },
     blinker: 0, blinkPhase: 0, blinkOn: false,
     toastTimer: 0,
@@ -1235,7 +1328,7 @@ const SPEC = {
   }
 
   function tractionCapN() {
-    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9);
+    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9) * terrainGrip();
     return grip;
   }
 
@@ -1279,11 +1372,43 @@ const SPEC = {
     if (r.active && r.widthZones && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; for (const z of r.widthZones) if (phase >= z.from && phase <= z.to) full = z.w; }
     return (full * TRACK_WIDTH_SCALE) / 2;
   }
-  // surface roughness 0..1 at d — smooth pit straights, broken kerbs, the Nordschleife
   function roughnessAt(d) {
     const r = state.route;
-    if (r.active && r.bumps && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; let v = 0.06; for (const z of r.bumps) if (phase >= z.from && phase <= z.to) v = Math.max(v, z.r); return v; }
-    return 0.1;
+    let v = 0.1;
+    if (r.active && CIRCUITS[r.name] && CIRCUITS[r.name].terrain) v = CIRCUITS[r.name].terrain.rough;
+    if (r.active && r.bumps && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; for (const z of r.bumps) if (phase >= z.from && phase <= z.to) v = Math.max(v, z.r); }
+    return v;
+  }
+  // ---- Dakar terrain model: surface grip, dune elevation/gradients, suspension travel & airborne.
+  // Deterministic (functions of distance/speed only) and only active on a real stage; Free run
+  // returns neutral (grip 1, no dunes), which is what the launch/brake/top-speed certification runs on.
+  function terrainOf() { const r = state.route; return (r.active && CIRCUITS[r.name] && CIRCUITS[r.name].terrain) ? CIRCUITS[r.name].terrain : null; }
+  function terrainGrip() { return state.gripMul == null ? 1 : state.gripMul; }
+  function terrainStep(dt) {
+    const terr = terrainOf();
+    if (!terr) { state.gripMul = 1; state.airborne = false; state.duneGrade = 0; state._gradeAccel = 0; state.bogging = false; state.susComp = approach(state.susComp || 0, 0, 0.02, dt); return; }
+    const d = state.distanceM, spd = Math.abs(state.speedMps);
+    const amp = terr.dune * 6.5, freq = 0.0060;
+    const slope = amp * freq * Math.cos(d * freq);
+    state.duneGrade = slope;
+    state._gradeAccel = -9.81 * slope / Math.sqrt(1 + slope * slope);
+    const rough = terr.rough;
+    const tex = Math.sin(d * 0.9) * 0.6 + Math.sin(d * 2.7 + 1.3) * 0.3 + Math.sin(d * 6.1) * 0.25;
+    const speedF = clamp(spd / 26, 0, 1.6);
+    const excite = rough * speedF * tex;
+    state._susVel = (state._susVel || 0) + (excite * 10 - (state.susComp || 0) * 46 - (state._susVel || 0) * 7.5) * dt;
+    state.susComp = clamp((state.susComp || 0) + state._susVel * dt, -1, 1);
+    const ridge = Math.sin(d * 0.075);
+    if (terr.dune > 0.85 && spd > 24 && ridge > 0.9975) state._airT = 0.28 + terr.dune * 0.12;
+    state._airT = Math.max(0, (state._airT || 0) - dt);
+    state.airborne = state._airT > 0;
+    let g = terr.grip * (1 - clamp(-state.susComp, 0, 1) * 0.5);
+    if (state.airborne) g *= 0.05;
+    if (terr.grip <= 0.64 && spd < 9 && state.throttle > 0.65) {
+      const bog = (1 - spd / 9) * (state.xMode ? 0.35 : 0.8);
+      g *= (1 - bog * 0.5); state.bogging = bog > 0.4;
+    } else state.bogging = false;
+    state.gripMul = clamp(g, 0.05, 1.2);
   }
   function seedWorld() {
     state.traffic = []; state.scenery = []; state.roadside = [];
@@ -1524,6 +1649,7 @@ const SPEC = {
     state.torqueNm = canMove ? engineTorque(state.rpm) * state.throttle * shiftCut : 0;  // display = crank torque
 
     const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff / SPEC.wheelRadiusM;
+    terrainStep(dt);
     const cap = tractionCapN();
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
@@ -1547,6 +1673,7 @@ const SPEC = {
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
+    accel += state._gradeAccel || 0;   // dune climbs bleed speed, descents build it
     // Limiter: 262 km/h as delivered; the Track Package hardware raises it to exactly 322.
     const govMps = state.trackPack ? SPEC.topSpeedRecordMps : SPEC.topSpeedLimitedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
@@ -1599,7 +1726,8 @@ const SPEC = {
     const speedF = clamp(speedAbs / 30, 0, 1.6);
     const tex = Math.abs(Math.sin(state.distanceM * 0.7)) * 0.5 + Math.abs(Math.sin(state.distanceM * 2.7)) * 0.3 + Math.abs(Math.sin(state.distanceM * 6.1)) * 0.2;
     const joint = Math.max(0, Math.sin(state.distanceM * 0.10)) ** 16;
-    state.roadInputG = rough * speedF * (0.04 + tex * 0.05) + rough * joint * 0.10;
+    const _terrAmp = terrainOf() ? 2.6 : 1;                     // the desert pounds the car far harder than tarmac
+    state.roadInputG = (rough * speedF * (0.04 + tex * 0.05) + rough * joint * 0.10) * _terrAmp + Math.abs(state.susComp || 0) * 0.06 * speedF;
     const damp = mode().damp;                         // Race firms the adaptive dampers -> more reaches you
     state.cabinHeaveG = approach(state.cabinHeaveG, state.roadInputG * (0.35 + damp * 0.4), 0.004, dt);
 
@@ -1610,7 +1738,7 @@ const SPEC = {
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
     state.shake.y = (Math.random() - 0.5) * shakeAmp * 1.2;
-    state.shake.rot = (Math.random() - 0.5) * shakeAmp * 0.0004 + state.bodyRoll * 0.0011;      // lean dominates the tilt
+    state.shake.rot = (Math.random() - 0.5) * shakeAmp * 0.0004 + state.bodyRoll * 0.0011 + (state.duneGrade || 0) * 0.85;      // lean dominates the tilt
     if (shakeAmp > 3.2 && navigator.vibrate && state.time - (state._lastBuzz || 0) > 0.5) { navigator.vibrate(14); state._lastBuzz = state.time; }
 
     // temperatures drift with load
@@ -1682,7 +1810,10 @@ const SPEC = {
       ring:     { road: "#202329", grass: "#262a22", far: "#2b333d", kerb: false, barrier: false },  // Nardò bank
       mountain: { road: "#23252b", grass: "#1d2a18", far: "#37404a", kerb: false, barrier: false },
       highway:  { road: "#1f2227", grass: "#222a1c", far: "#2a3640", kerb: false, barrier: false },
-      coast:    { road: "#212630", grass: "#1c3a3a", far: "#244a55", kerb: false, barrier: false }
+      coast:    { road: "#212630", grass: "#1c3a3a", far: "#244a55", kerb: false, barrier: false },
+      desert:   { road: "#a98b57", grass: "#cbb27e", far: "#c9a86f", kerb: false, barrier: false },
+      dune:     { road: "#b08a4e", grass: "#d8bd80", far: "#cfa96a", kerb: false, barrier: false },
+      canyon:   { road: "#8f7a55", grass: "#9c7a53", far: "#7e6038", kerb: false, barrier: false }
     };
     return { env, night, ...(palettes[env] || palettes.track) };
   }
@@ -1728,6 +1859,7 @@ const SPEC = {
   function drawSky(w, h, pal) {
     const sky = ctx.createLinearGradient(0, 0, 0, horizonY + 40);
     if (pal.night) { sky.addColorStop(0, "#05101f"); sky.addColorStop(0.6, "#0a1622"); sky.addColorStop(1, "#0d1a22"); }
+    else if (["desert","dune","canyon"].includes(pal.env)) { sky.addColorStop(0, "#5a86ac"); sky.addColorStop(0.5, "#c3b48f"); sky.addColorStop(1, "#e4cf9e"); }
     else { const dusk = state.dayPhase > 0.66; sky.addColorStop(0, dusk ? "#39506e" : "#6ea7cf"); sky.addColorStop(0.55, dusk ? "#9c6f5a" : "#a9c4d4"); sky.addColorStop(1, dusk ? "#caa07e" : "#d3dee0"); }
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, horizonY + 40);
     ctx.fillStyle = pal.night ? "rgba(220,228,240,0.85)" : "rgba(255,244,210,0.9)"; ctx.beginPath(); ctx.arc(w * 0.72, horizonY * 0.4, pal.night ? 16 : 24, 0, Math.PI * 2); ctx.fill();
@@ -1739,7 +1871,7 @@ const SPEC = {
       const p = projectAhead(z + 30, b.side * (halfAt(z + 30) + 8 + z * 0.04)); const scale = p.scale; if (scale < 0.12 || scale > 6) continue;
       const bw = b.width * scale * 0.5, bh = b.height * scale * 0.5, x = p.x, y = horizonY - bh;
       if (pal.env === "coast" && b.side === 1 && b.height > 150) continue;
-      if (pal.env === "mountain" || pal.env === "nords") { ctx.fillStyle = pal.night ? "#16210f" : "#23401b"; ctx.beginPath(); ctx.moveTo(x - bw, horizonY); ctx.lineTo(x, y); ctx.lineTo(x + bw, horizonY); ctx.closePath(); ctx.fill(); continue; }
+      if (["mountain","nords","canyon","dune","desert"].includes(pal.env)) { const sandy = pal.env !== "nords" && pal.env !== "mountain"; ctx.fillStyle = pal.night ? (sandy ? "#2c2416" : "#16210f") : (sandy ? (pal.env === "canyon" ? "#8a6f45" : "#c2a35f") : "#23401b"); ctx.beginPath(); ctx.moveTo(x - bw, horizonY); ctx.lineTo(x, y); ctx.lineTo(x + bw, horizonY); ctx.closePath(); ctx.fill(); continue; }
       ctx.fillStyle = pal.night ? `hsl(${b.hue},18%,${b.lit ? 16 : 11}%)` : `hsl(${b.hue},20%,${b.lit ? 58 : 46}%)`;
       ctx.fillRect(x - bw / 2, y, bw, bh + 2);
     }
@@ -1874,7 +2006,8 @@ const SPEC = {
       } else if (pal.env === "track" || pal.env === "ring" || pal.env === "nords") { // armco guardrail + posts
         ctx.fillStyle = "rgba(180,186,192,0.8)"; ctx.fillRect(p.x - 1.4 * sc, p.y - 10 * sc, 2.8 * sc, 10 * sc);
         ctx.fillStyle = "rgba(200,206,212,0.65)"; ctx.fillRect(p.x - 6 * sc, p.y - 9 * sc, 12 * sc, 2.4 * sc);
-      } else if (r.kind > 0.5) { ctx.fillStyle = pal.night ? "#15240f" : "#2c5226"; ctx.beginPath(); ctx.ellipse(p.x, p.y - 16 * sc, 7 * sc, 12 * sc, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#3a2a18"; ctx.fillRect(p.x - 1.3 * sc, p.y - 8 * sc, 2.6 * sc, 8 * sc); }
+      } else if (["desert","dune","canyon"].includes(pal.env)) { if (r.kind > 0.62) { ctx.fillStyle = pal.night ? "#3a3222" : "#8a7550"; ctx.beginPath(); ctx.moveTo(p.x - 6 * sc, p.y); ctx.lineTo(p.x - 2 * sc, p.y - 7 * sc); ctx.lineTo(p.x + 3 * sc, p.y - 5 * sc); ctx.lineTo(p.x + 6 * sc, p.y); ctx.closePath(); ctx.fill(); } else if (r.kind > 0.34) { ctx.fillStyle = pal.night ? "#243019" : "#6e7a45"; ctx.beginPath(); ctx.ellipse(p.x, p.y - 4 * sc, 4 * sc, 3 * sc, 0, 0, Math.PI * 2); ctx.fill(); } else { ctx.fillStyle = "rgba(214,214,214,0.85)"; ctx.fillRect(p.x - 0.8 * sc, p.y - 14 * sc, 1.6 * sc, 14 * sc); ctx.fillStyle = "#e2571f"; ctx.fillRect(p.x - 1.4 * sc, p.y - 14 * sc, 2.8 * sc, 3.5 * sc); } }
+      else if (r.kind > 0.5) { ctx.fillStyle = pal.night ? "#15240f" : "#2c5226"; ctx.beginPath(); ctx.ellipse(p.x, p.y - 16 * sc, 7 * sc, 12 * sc, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#3a2a18"; ctx.fillRect(p.x - 1.3 * sc, p.y - 8 * sc, 2.6 * sc, 8 * sc); }
       else { ctx.strokeStyle = "rgba(150,155,160,0.7)"; ctx.lineWidth = Math.max(1, 2 * sc); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 30 * sc); ctx.stroke(); ctx.fillStyle = pal.night ? "rgba(255,224,150,0.9)" : "rgba(200,205,210,0.8)"; ctx.beginPath(); ctx.arc(p.x, p.y - 30 * sc, 3 * sc, 0, Math.PI * 2); ctx.fill(); }
     }
     if (pal.env === "coast") { const seaTop = horizonY; const g = ctx.createLinearGradient(0, seaTop, 0, h); g.addColorStop(0, pal.night ? "#0d2733" : "#2f6f86"); g.addColorStop(1, pal.night ? "#08161d" : "#1c4a5c"); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(w, seaTop); ctx.lineTo(w, h); const p0 = projectAhead(2, 8), p1 = projectAhead(240, 8); ctx.lineTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.closePath(); ctx.fill(); }
