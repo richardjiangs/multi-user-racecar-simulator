@@ -5,8 +5,9 @@
 > car end-to-end, the ordering rules, and the hard-won warnings from building the 24-car garage.
 > When they disagree, `CLAUDE.md` wins and should be updated.
 
-The garage is **24 self-contained HTML simulators** + `index.html` (the garage shell that
-base64-embeds all 24). Today: **13 road cars/hypercars** then the **11-team 2026 F1 grid**.
+The garage is **34 self-contained HTML simulators** + `index.html` (the garage shell that
+base64-embeds all 34). Today: **19 road cars/hypercars** then the **11-team 2026 F1 grid**
+then the **four 2026 Dakar Rally raid cars**.
 Every sim shares one template; you add a car by **cloning the closest existing sim and
 changing only the per-car deltas**, never by writing a sim from scratch.
 
@@ -211,7 +212,7 @@ and keep your own end-to-end Playwright checks for new behaviours. Screenshot ne
 commit when all three pass.
 
 ### The applier-script pattern (use it for multi-file edits)
-When a change touches all 11 F1 (or all 24) files, write a Node script with
+When a change touches all 11 F1 (or all 34) files, write a Node script with
 `rep(find, replace)` that **asserts the split count === 1** (the anchor is unique), collects
 errors, and **writes only if there are no errors**. This is how every uniform change this
 session was made safely. Keep anchors long enough to be unique across files.
@@ -257,7 +258,7 @@ session was made safely. Keep anchors long enough to be unique across files.
    in the map's own integration but the driving world uses the opposite sign. When placing the
    apex dot / racing line, **verify the side empirically** (project both ±offsets and compare to
    the drawn inside kerb on screen) and lock it with a regression test.
-9. **`TRACK_WIDTH_SCALE` is 3.75** in all 24 sims (×1.5 wider). Keep it consistent if you clone.
+9. **`TRACK_WIDTH_SCALE` is 3.75** in all 34 sims (×1.5 wider). Keep it consistent if you clone.
 10. **Real photos vs liveries**: never publish a page that fakes a real photo of a liveried racer;
     use SVG. (General rule: don't impersonate real orgs/records.)
 11. **Don't re-derive facts** — the numbers below and in `CLAUDE.md` are researched and calibrated.
@@ -297,6 +298,6 @@ the 101 courses, width ×1.5, per-team July-2026 data, the drive-in pit with X-r
 
 ## 11. Quick reference — factory figures already encoded
 
-See the table in `CLAUDE.md` ("The cars — factory figures encoded in `SPEC`") for all 24 cars'
+See the table in `CLAUDE.md` ("The cars — factory figures encoded in `SPEC`") for all 34 cars'
 power/torque/0-100/top-speed/box/mass, and the Real-Mode sections for the per-team constants,
 pit-crew times, garage order, reliability and ERS characters. Reuse them; only research the new car.

@@ -142,6 +142,42 @@ const CARS = {
     topSpeed: { kmh: 250, minT: 55 },     // electronically governed
     brake100: { target: 34, tol: 1.0 },
   },
+  venom: {
+    file: "Hennessey Venom F5 simulator.html", app: "VenomApp", label: "Hennessey Venom F5",
+    marks: { 100: { target: 2.6, tol: 1e-4 } },
+    topSpeed: { minKmh: 430, maxKmh: 490, minT: 90 },   // drag-limited (301 mph design target)
+    brake100: { target: 30, tol: 1.0 },
+  },
+  zr1: {
+    file: "Chevrolet Corvette ZR1 simulator.html", app: "Zr1App", label: "Chevrolet Corvette ZR1",
+    marks: { 100: { target: 2.4, tol: 1e-4 } },
+    topSpeed: { kmh: 375, minT: 60 },     // 233 mph governed
+    brake100: { target: 30, tol: 1.0 },
+  },
+  evija: {
+    file: "Lotus Evija simulator.html", app: "EvijaApp", label: "Lotus Evija",
+    marks: { 100: { target: 2.9, tol: 1e-4 } },
+    topSpeed: { kmh: 349, minT: 55 },     // governed
+    brake100: { target: 31, tol: 1.0 },
+  },
+  nevera: {
+    file: "Rimac Nevera simulator.html", app: "NeveraApp", label: "Rimac Nevera",
+    marks: { 100: { target: 1.81, tol: 1e-4 } },
+    topSpeed: { kmh: 412, minT: 70 },     // governed
+    brake100: { target: 30, tol: 1.0 },
+  },
+  amgone: {
+    file: "Mercedes-AMG One simulator.html", app: "AmgOneApp", label: "Mercedes-AMG One",
+    marks: { 100: { target: 2.9, tol: 1e-4 } },
+    topSpeed: { kmh: 352, minT: 60 },     // electronically governed
+    brake100: { target: 30, tol: 1.0 },
+  },
+  p1: {
+    file: "McLaren P1 simulator.html", app: "P1App", label: "McLaren P1",
+    marks: { 100: { target: 2.8, tol: 1e-4 } },
+    topSpeed: { kmh: 350, minT: 60 },     // electronically governed
+    brake100: { target: 30, tol: 1.0 },
+  },
 };
 
 /* 2026 Formula 1 grid — eleven teams built from one shared chassis SPEC (identical

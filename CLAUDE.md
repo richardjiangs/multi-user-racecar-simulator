@@ -1,9 +1,11 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of twenty-eight simulators — each a **single self-contained HTML file** —
-thirteen road cars/hypercars (incl. the Toyota GR Supra), the full **2026
-Formula 1 grid** (eleven teams), and four **2026 Dakar Rally** raid cars (Dacia
-Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter). `index.html` bundles all of them together with
+A garage of thirty-four simulators — each a **single self-contained HTML file** —
+nineteen road cars/hypercars (incl. the Toyota GR Supra and six added later — Hennessey
+Venom F5 · Lotus Evija · Mercedes-AMG One · Rimac Nevera · Chevrolet Corvette ZR1 ·
+McLaren P1), the full **2026 Formula 1 grid** (eleven teams), and four **2026 Dakar
+Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive
+Hunter). `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
@@ -31,6 +33,14 @@ Lamborghini Revuelto simulator.html
 Porsche 918 Spyder simulator.html
 Porsche Taycan Turbo GT simulator.html
 Toyota GR Supra simulator.html
+Hennessey Venom F5 simulator.html           ← six later hypercars (each its own calibrated SPEC, real
+Lotus Evija simulator.html                     brand circuit, unique-but-real engine sound + Real Mode;
+Mercedes-AMG One simulator.html                inserted at the END of the road block, BEFORE the F1 cars):
+Rimac Nevera simulator.html                    Venom F5 (6.6 TT V8) · Evija + Nevera (quad-motor EV) ·
+Chevrolet Corvette ZR1 simulator.html          AMG One (F1 1.6 V6 hybrid) · ZR1 (5.5 flat-plane V8) ·
+McLaren P1 simulator.html                      P1 (3.8 V8 hybrid). The two AWD quad-motor EVs (Evija,
+                                               Nevera; cloned from Tesla) carry the Dakar stages + terrain;
+                                               the four low ground-effect cars are tarmac-only.
 Mercedes F1 2026 simulator.html             ← 2026 F1 grid (11 teams, one shared chassis SPEC):
 Red Bull F1 2026 simulator.html                Mercedes · Red Bull · Ferrari · McLaren · Aston Martin ·
 Ferrari F1 2026 simulator.html                 Alpine · Williams · Racing Bulls · Haas · Audi · Cadillac.
@@ -135,6 +145,12 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Porsche 918 Spyder | 652 kW / 887 PS combined (608 PS V8 @ 8,700 + 2 e-motors) | ~1,280 Nm combined | 2.6 s | 345 | 7-PDK | 1,674 kg |
 | Porsche Taycan Turbo GT | 815 kW / 1,108 PS overboost (dual PSM, 2-speed rear) | ~1,340 Nm | 2.2 s | 305 | 2-speed | 2,220 kg |
 | Toyota GR Supra | 285 kW / 387 PS @ 5,800–6,500 (B58 twin-scroll turbo I6) | 500 Nm @ 1,800–5,000 | 4.1 s | 250 governed | 8-ZF auto | 1,520 kg |
+| Hennessey Venom F5 | 1,355 kW / 1,817 hp @ 8,000 (6.6 L twin-turbo 'Fury' V8) | 1,617 Nm @ 5,000 | 2.6 s | 484 (301 mph design) | 7-single-clutch | 1,360 kg (dry) |
+| Lotus Evija | 1,500 kW / 2,039 PS (quad-motor EV, one motor/wheel) | 1,704 Nm | 2.9 s | 349 governed | 1-speed | 1,680 kg |
+| Mercedes-AMG One | 782 kW / 1,063 PS combined (1.6 L V6 F1 turbo-hybrid @ 11,000 + 4 e-motors) | ~900 Nm combined | 2.9 s | 352 governed | 7-AMG SPEEDSHIFT | 1,695 kg |
+| Rimac Nevera | 1,400 kW / 1,914 hp (quad-motor EV, one motor/wheel) | 2,340 Nm | 1.81 s | 412 governed | 1-speed | 2,150 kg |
+| Chevrolet Corvette ZR1 | 794 kW / 1,064 hp @ 7,000 (5.5 L flat-plane twin-turbo V8, LT7) | 1,123 Nm @ 6,000 | 2.4 s | 375 governed | 8-DCT | 1,665 kg |
+| McLaren P1 | 674 kW / 916 PS combined (3.8 L twin-turbo V8 @ 7,300 + IPAS e-motor) | 900 Nm @ 4,000 | 2.8 s | 350 governed | 7-DCT | 1,395 kg (dry) |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 
@@ -161,12 +177,14 @@ breaks an axle, Dacia runs clean), so rival retirements track the actual race.
 **Dakar stages on the capable road cars** — the seven shared Dakar stages (+ full terrain/dune/bump
 physics: `terrainStep`, terrain-aware `roughnessAt`, `terrainGrip`, desert palettes/scenery) are also
 injected into the road cars that could plausibly attempt off-road — the AWD/robust set **Bugatti
-Chiron, Tesla Model S Plaid, Taycan Turbo GT, Revuelto, 918 Spyder, GR Supra**. The ultra-low,
-slick-shod, ground-effect cars (Valkyrie, F80, AMG Black, Speedtail, Huayra BC, Jesko, 250 GTO) are
-left tarmac-only. Terrain is route-gated, so each road car's certified 0-100/top/braking is untouched;
-they keep their own cockpit/dashboard and simply gain the stages in the Circuit tab.
+Chiron, Tesla Model S Plaid, Taycan Turbo GT, Revuelto, 918 Spyder, GR Supra**, plus the two later
+AWD quad-motor EVs **Lotus Evija and Rimac Nevera** (cloned from Tesla). The ultra-low, slick-shod,
+ground-effect cars (Valkyrie, F80, AMG Black, Speedtail, Huayra BC, Jesko, 250 GTO — and the later
+Venom F5, AMG One, Corvette ZR1, McLaren P1) are left tarmac-only. Terrain is route-gated, so each
+road car's certified 0-100/top/braking is untouched; they keep their own cockpit/dashboard and simply
+gain the stages in the Circuit tab.
 
-**Road-car Real Mode (light)** — all **13 road cars** now have a Circuit-tab **Real Mode** toggle
+**Road-car Real Mode (light)** — all **19 road cars** now have a Circuit-tab **Real Mode** toggle
 (`realBtn`, `toggleRealMode`). ON: `realStep(dt)` grows real per-system damage `sys = {engine, gearbox,
 brakes, tyre, susp, body}` from real stress (revs→engine, shifts→gearbox, braking→brakes, tyre-wear²→
 tyre, `roughnessAt`·speed + airborne→susp, offs→body) scaled by `1/REL` (a per-car reliability — Tesla
@@ -247,19 +265,19 @@ craned away after `scT`, "in this lap" → box → GREEN and the next incident i
 pre-rolled. A race-control board (name/status/health per car) draws in
 `drawTelemetry`; map dots get status rings. The index.html AMG card is now the
 **FIA F1 Safety Car** (inline SVG livery: silver, green stripe, light bar).
-**Learning mode (all 24 sims)**: a `data-view="learn"` tab AFTER Circuit — road
+**Learning mode (all 34 sims)**: a `data-view="learn"` tab AFTER Circuit — road
 cars "Race Car 101", AMG "Safety Car 101", F1 "Formula 1 101" — with a curriculum
 panel + `learnBtn` toggling `state.learnMode`: `drawLearningMarks()` paints
 150/100/BRAKE boards, TURN IN, a LATE APEX cone (60% through the corner) and an
 EXIT—POWER board around the next corner; the teal racing line stays on and
 `drawMap` overlays the full racing line. All opt-in → certification untouched.
 
-**v8** — width 3.75 in ALL 24 sims. `radioSay` uses cancel → setTimeout(60 ms) →
+**v8** — width 3.75 in ALL 34 sims. `radioSay` uses cancel → setTimeout(60 ms) →
 resume+speak plus a 4 s resume keepalive (Chrome silently drops queued utterances
 otherwise). Learning is a **launch mode**: the learn tab is `display:none` until the
 garage card's **Learning** button calls `app.enterLearning()` (index.html
 `openLearning` polls `getSimApp()`). Each 101 is a real course: CONTENTS quick-nav,
-two inline SVG diagrams, a per-car feature lesson (all 24 differ) and **Demo**
+two inline SVG diagrams, a per-car feature lesson (all 34 differ) and **Demo**
 buttons → `app.learnDemo()` (Suzuka, test driver, gear engaged, markers on).
 `analyseCorner()` CACHES the corner target (no board jitter) and classifies the
 apex: straight after → LATE (frac .58), hairpin → V-LINE (.62), same-direction
@@ -319,11 +337,14 @@ panel. Perf-test never holds X/V, so the certified figures are untouched.
 
 ## index.html — garage + online race shell
 
-- Twenty-four `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1)
-  + spec chips; buttons `data-practice` / `data-online` per car key (`pagani, bugatti,
-  mclaren, ferrari, koenigsegg, tesla, amg, aston, gto, revuelto, porsche918, taycan,
-  supra, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine, f1williams,
-  f1racingbulls, f1haas, f1audi, f1cadillac`).
+- Thirty-four `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
+  the six later hypercars, each with a real-photo `<img class="realcar">` slot that reveals
+  a supplied photo and otherwise falls back to the SVG livery) + spec chips; buttons
+  `data-practice` / `data-online` per car key (`pagani, bugatti, mclaren, ferrari,
+  koenigsegg, tesla, amg, aston, gto, revuelto, porsche918, taycan, supra, venom, evija,
+  amgone, nevera, zr1, p1, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine,
+  f1williams, f1racingbulls, f1haas, f1audi, f1cadillac, dacia, fordraptor, grhilux,
+  hunter`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
 - `EMBEDDED_SIM_BASE64 = {…}` — every sim base64-embedded on ONE line between
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers. `tools/embed-sims.mjs`
   regenerates that line from the twelve files. Sims load into the `simFrame`
