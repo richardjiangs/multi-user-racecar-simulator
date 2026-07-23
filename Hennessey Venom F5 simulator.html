@@ -18,7 +18,7 @@
       --alu-d: #828a93;
       --teal: #2f7fe0;          /* Venom accent */
       --teal-b: #9fc8ff;
-      --amber: #f0d43c;         /* swedish gold tachometer */
+      --amber: #9fc8ff;         /* swedish gold tachometer */
       --amber-b: #fae9a0;
       --cognac: #23272c;        /* charcoal Alcantara, orange stitching */
       --cognac2: #c96a2a;
@@ -234,8 +234,8 @@
     /* twin turbos fed by the 400L compressed-air anti-lag tank */
     .turbo.left  { left:9%;  top:34%; } .turbo.right  { right:9%;  top:34%; }
     .emotor { position:absolute; left:30%; right:30%; bottom:58px; height:34px; border-radius:17px;
-      background: linear-gradient(180deg,#3a2c1c,#1c1208); border:1px solid rgba(232,106,28,0.55);
-      display:grid; place-items:center; color:#ffc296; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(232,106,28,0.25); }
+      background: linear-gradient(180deg,#3a2c1c,#1c1208); border:1px solid rgba(47,127,224,0.55);
+      display:grid; place-items:center; color:#9fc8ff; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(47,127,224,0.25); }
     .bay-exhaust { position:absolute; left:42%; right:42%; bottom:18px; height:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
     .bay-exhaust i { border-radius:4px 4px 2px 2px; background: linear-gradient(180deg,#3a3f47,#1a1d22); border:1px solid rgba(150,160,170,0.3); transition: box-shadow 120ms; }
     .engine-bay.glow .bay-exhaust i { box-shadow: 0 0 14px rgba(255,110,40,0.85); }
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Koenigsegg Jesko driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Hennessey Venom F5 driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
         <div class="mark">HV</div>
         <h1>Hennessey Venom F5</h1>
-        <p>5.0L twin-turbo V8 · 9-speed Light Speed Transmission · rear-wheel drive · Triplex dampers · boomerang wing · Attack aero.</p>
+        <p>6.6L twin-turbo 'Fury' V8 · 7-speed single-clutch · rear-wheel drive · adaptive dampers · active rear wing · chasing 300 mph.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -368,7 +368,7 @@
 
       <section class="quick" aria-label="Quick controls">
         <button id="aeroBtn" class="active" title="Active rear wing / airbrake">Aero</button>
-        <button id="doorAllBtn" title="Autoskin dihedral synchro-helix doors">Doors</button>
+        <button id="doorAllBtn" title="Open the carbon doors">Doors</button>
         <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
         <button id="liftBtn" title="Front axle lift">Lift</button>
         <button id="lightsBtn" class="active" title="Headlamps">Lights</button>
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the Jesko is yours.</div>
+        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the Venom F5 is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,7 +411,7 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Attack Aero Package</h2>
+          <h2>Exterior — Active Aero</h2>
           <span class="small"><span class="indicator"></span><span id="paintStatus">Exposed carbon with Hennessey blue, active rear wing, 'Fury' 6.6 twin-turbo V8</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
@@ -439,7 +439,7 @@
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>synchro-helix doors</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>carbon doors</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
           <div class="readout"><b>265 / 325</b><span>Michelin Pilot Sport Cup 2 R</span></div>
           <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">SmartCluster on the column — it turns with the wheel — SmartCenter touchscreen</span>
+          <span class="small" id="cockpitStatus">Digital driver display · centre touchscreen · carbon-shell seats</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="fuelBtn" class="race" title="Switch to E85 biofuel: 1,280 hp on petrol becomes 1,600 hp, torque rises to 1,500 Nm">E85 Fuel</button>
+          <button id="fuelBtn" class="race" title="F5 Mode — the top-speed setting: the active rear wing flattens to minimum drag for the run toward 500 km/h">F5 Mode</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -483,7 +483,7 @@
       <section class="mode-panel panel-engine">
         <div class="panel-title">
           <h2>Engine Bay — 5.0L Twin-Turbo V8</h2>
-          <span class="small" id="engineStatus">5.0L twin-turbo V8, flat-plane 180° crank · 1,280 hp @ 7,800 on petrol, 1,600 hp / 1,500 Nm @ 5,100 on E85 · 8,500 rpm · 9-speed LST · 0–100 in 2.5 s · 1,420 kg</span>
+          <span class="small" id="engineStatus">6.6L twin-turbo 'Fury' V8, cross-plane · 1,817 hp @ 8,000, 1,617 Nm @ 5,000 · 8,200 rpm · 7-speed single-clutch · 0–100 in 2.6 s · 1,360 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -511,7 +511,7 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Jesko V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
+          <button id="engineLoadBtn" title="Load a real Venom F5 V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
           <span class="small now" id="engineSoundStatus">Engine voice: synthesised flat-plane twin-turbo V8</span>
         </div>
       </section>
@@ -519,8 +519,8 @@
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — 9-Speed LST · Triplex · RWD</h2>
-          <span class="small" id="dynStatus">Race mode: Triplex dampers firm, ESC trail, boomerang wing hunting downforce</span>
+          <h2>Dynamics — 7-Speed · Adaptive · RWD</h2>
+          <span class="small" id="dynStatus">Race mode: dampers firm, ESC trail, active wing hunting downforce</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -699,12 +699,11 @@
 
   <script type="module">
 /* ===========================================================================
-   KOENIGSEGG JESKO — "Spöket" (browser megacar simulator)
-   Real Web-Audio flat-plane twin-turbo V8, factory-matched physics (0–100 km/h
-   2.5 s; 1,280 hp @ 7,800 on petrol, 1,600 hp / 1,500 Nm @ 5,100 on E85;
-   8,500 rpm; 1,420 kg; Attack aero — top speed is genuinely drag-limited),
-   a 9-speed Light Speed Transmission with jump-shifts, and a test driver
-   who can lap for you.
+   HENNESSEY VENOM F5 (browser hypercar simulator)
+   Real Web-Audio 6.6 L twin-turbo cross-plane V8, factory-matched physics (0–100 km/h
+   2.6 s; 1,817 hp @ 8,000, 1,617 Nm @ 5,000; 8,200 rpm; 1,360 kg; low-drag body
+   designed to chase 500 km/h — top speed is genuinely drag-limited), a 7-speed
+   single-clutch box, and a test driver who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -820,13 +819,11 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT Koenigsegg Jesko (Attack) figures =====
-   Koenigsegg 5.0 L twin-turbo V8, flat-plane 180° crank: 954 kW (1,280 hp) @ 7,800 rpm
-   on standard petrol; 1,193 kW (1,600 hp) and 1,500 Nm @ 5,100 rpm on E85 biofuel;
-   8,500 rpm rev limit; kerb weight 1,420 kg; 9-speed Light Speed Transmission;
-   0–100 km/h 2.5 s; up to 1,400 kg of downforce (Attack). Koenigsegg publishes no
-   Attack top speed — in this aero configuration it is genuinely drag-limited
-   (the low-drag Absolut is the 500+ km/h car). */
+/* ===== data: vehicle spec — EXACT Hennessey Venom F5 figures =====
+   Hennessey 6.6 L twin-turbo 'Fury' V8, cross-plane: 1,355 kW (1,817 hp) @ 8,000 rpm,
+   1,617 Nm (1,193 lb-ft) @ 5,000 rpm; 8,200 rpm limit; dry weight 1,360 kg;
+   7-speed single-clutch semi-auto; 0–100 km/h 2.6 s; low-drag body designed to
+   chase 500 km/h (301 mph) — top speed is genuinely drag-limited. */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
@@ -1340,7 +1337,7 @@ const SPEC = {
   /* Rivals carry real figures: top = real top speed (km/h), latG = real max lateral grip
      (g), accel = how hard they gather speed out of a corner (m/s^2). Corner speed is then
      pure physics: v = sqrt(latG * 9.81 / curvature), so each car slows to a DIFFERENT,
-     real speed for each bend, and the big-top-speed cars (Koenigsegg) rule the straights
+     real speed for each bend, and the big-top-speed cars (Hennessey) rule the straights
      while the high-grip cars (AMG ONE) rule the corners. */
   const GRID_CARS = [
     { name: "Bugatti Veyron Super Sport", body: "#1b1d22", stripe: "#8a1f1f", top: 431, latG: 1.15, accel: 11.6 },
@@ -1349,7 +1346,7 @@ const SPEC = {
     { name: "McLaren 765LT",           body: "#ff6a13", stripe: "#0a2a55", top: 330, latG: 1.55, accel: 11.8 },
     { name: "Porsche 911 Turbo S",     body: "#e9edf0", stripe: "#d0202f", top: 330, latG: 1.25, accel: 11.5 },
     { name: "Lamborghini Huracán STO", body: "#46b14a", stripe: "#ff7a1a", top: 310, latG: 1.55, accel: 11.0 },
-    { name: "Koenigsegg Regera",       body: "#d2d6da", stripe: "#e23b2e", top: 400, latG: 1.45, accel: 13.4 },
+    { name: "SSC Tuatara",             body: "#e9edf0", stripe: "#c8102e", top: 455, latG: 1.30, accel: 13.2 },
     { name: "Rimac Nevera",            body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
     { name: "Aston Martin Valkyrie",   body: "#0d5c63", stripe: "#c0c4c8", top: 350, latG: 2.00, accel: 12.9 },
     { name: "Ferrari LaFerrari",       body: "#cc1417", stripe: "#0a0c10", top: 350, latG: 1.55, accel: 12.6 },
@@ -1360,28 +1357,28 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-  /* The Owners Rally is a Koenigsegg-only event — so its grid is Koenigseggs, with
+  /* The Owners Rally is a Hennessey-only event — so its grid is Hennesseys, with
      their real (or, where limited, best-known) top speeds and grip. */
-  const KOENIGSEGG_GRID = [
-    { name: "Koenigsegg CC8S",             body: "#b8312f", stripe: "#c9cfd6", top: 365, latG: 1.10, accel: 10.2 },
-    { name: "Koenigsegg CCR",              body: "#d9d9d9", stripe: "#b8312f", top: 388, latG: 1.15, accel: 10.8 },
-    { name: "Koenigsegg CCX",              body: "#e9edf0", stripe: "#0a0c10", top: 395, latG: 1.20, accel: 11.0 },
-    { name: "Koenigsegg CCXR",             body: "#1c4f9c", stripe: "#c9cfd6", top: 400, latG: 1.22, accel: 11.4 },
-    { name: "Koenigsegg Agera",            body: "#15181d", stripe: "#e86a1c", top: 400, latG: 1.30, accel: 11.8 },
-    { name: "Koenigsegg Agera R",          body: "#e9edf0", stripe: "#e86a1c", top: 418, latG: 1.35, accel: 12.2 },
-    { name: "Koenigsegg Agera S",          body: "#20263a", stripe: "#f0d43c", top: 415, latG: 1.35, accel: 12.2 },
-    { name: "Koenigsegg Agera RS",         body: "#d2d6da", stripe: "#e23b2e", top: 447, latG: 1.45, accel: 12.8 },
-    { name: "Koenigsegg One:1",            body: "#0a0c10", stripe: "#f0d43c", top: 440, latG: 1.60, accel: 13.0 },
-    { name: "Koenigsegg Regera",           body: "#7a1f2e", stripe: "#c0a062", top: 400, latG: 1.45, accel: 13.4 },
-    { name: "Koenigsegg Gemera",           body: "#16604f", stripe: "#c9cfd6", top: 400, latG: 1.30, accel: 12.6 },
-    { name: "Koenigsegg CC850",            body: "#c8d0d6", stripe: "#0a0c10", top: 400, latG: 1.50, accel: 12.8 },
-    { name: "Koenigsegg Jesko Absolut",    body: "#2b3a4a", stripe: "#e86a1c", top: 500, latG: 1.40, accel: 13.2 }
+  const HENNESSEY_GRID = [
+    { name: "Hennessey Venom GT",          body: "#c0c4c8", stripe: "#2f7fe0", top: 435, latG: 1.20, accel: 12.4 },
+    { name: "Hennessey Venom F5 Roadster", body: "#1a1d22", stripe: "#2f7fe0", top: 480, latG: 1.25, accel: 12.8 },
+    { name: "Hennessey Venom F5 Revolution",body: "#0a0c10", stripe: "#2f7fe0", top: 480, latG: 1.60, accel: 13.0 },
+    { name: "Hennessey Exorcist Camaro",   body: "#15181d", stripe: "#c8102e", top: 350, latG: 1.30, accel: 11.6 },
+    { name: "Hennessey VelociRaptor 6x6",  body: "#2a2f24", stripe: "#e0a020", top: 290, latG: 1.00, accel: 9.0 },
+    { name: "SSC Tuatara",                 body: "#e9edf0", stripe: "#c8102e", top: 460, latG: 1.30, accel: 12.6 },
+    { name: "Czinger 21C",                 body: "#c0c4c8", stripe: "#0a0c10", top: 452, latG: 1.90, accel: 13.4 },
+    { name: "Ford GT",                     body: "#1f5fb0", stripe: "#e9edf0", top: 348, latG: 1.45, accel: 11.4 },
+    { name: "Chevrolet Corvette ZR1",      body: "#f2c200", stripe: "#0a0c10", top: 375, latG: 1.55, accel: 12.5 },
+    { name: "Dodge Viper ACR",             body: "#e0202a", stripe: "#0a0c10", top: 285, latG: 1.60, accel: 10.8 },
+    { name: "Saleen S7 Twin Turbo",        body: "#e9edf0", stripe: "#1f5fb0", top: 399, latG: 1.40, accel: 11.8 },
+    { name: "Vector W8",                   body: "#c8102e", stripe: "#0a0c10", top: 350, latG: 1.15, accel: 10.4 },
+    { name: "Mosler MT900",                body: "#16604f", stripe: "#c9cfd6", top: 320, latG: 1.45, accel: 10.6 }
   ];
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Road America") ? KOENIGSEGG_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Road America") ? HENNESSEY_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1635,7 +1632,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Jesko"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Venom F5"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1649,7 +1646,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the Jesko sits dead still.
+    // on smooth tarmac through a fast corner the Venom F5 sits dead still.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -2131,17 +2128,17 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Jesko SmartCluster: ONE round display mounted on the steering column, so it
-    // turns with the wheel (the Koenigsegg signature); hp and boost pods beside it ----
+    // ---- Venom F5 driver display: ONE round display mounted on the steering column, so it
+    // turns with the wheel (the Hennessey signature); hp and boost pods beside it ----
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
     const cx = w / 2 + sway;
-    drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "HK", true);
+    drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "HP", true);
     drawSideGauge(cx + R * 2.3, cy + R * 0.18, R * 0.55, state.boostBar * 1000, 1400, "MBAR", false);
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9); ctx.translate(-cx, -cy);   // column-mounted: turns with the rim
     drawSpeedo(cx, cy, R);
     ctx.restore();
-    // Koenigsegg wheel around the SmartCluster
+    // Hennessey wheel around the driver display
     drawWheel(w, h);
   }
   // instantaneous output (hp) for the left-hand pod — reads to 1,600 on E85
@@ -2149,7 +2146,7 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // the SmartCluster: speed arc to 500 km/h (megacar graduation) with the E85 zone
+  // the driver display: speed arc to 500 km/h (megacar graduation) with the E85 zone
   function drawSpeedo(cx, cy, R) {
     const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 500;
     ctx.save(); ctx.translate(cx, cy);
@@ -2167,7 +2164,7 @@ const SPEC = {
       if (major) { ctx.fillStyle = "rgba(210,224,240,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(String(v), Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); }
     }
     // E85 arc — lit tang-orange when the biofuel map (1,600 hp) is active
-    ctx.strokeStyle = state.e85 ? "rgba(255,194,150,0.8)" : "rgba(232,106,28,0.22)"; ctx.lineWidth = R * 0.045;
+    ctx.strokeStyle = state.e85 ? "rgba(159,200,255,0.8)" : "rgba(47,127,224,0.22)"; ctx.lineWidth = R * 0.045;
     ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, 400 / MAX), lerp(startA, endA, 500 / MAX)); ctx.stroke();
     // needle
     const na = lerp(startA, endA, clamp(kmhNow / MAX, 0, 1));
@@ -2175,7 +2172,7 @@ const SPEC = {
     ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.12, -Math.sin(na) * R * 0.12); ctx.lineTo(Math.cos(na) * R * 0.82, Math.sin(na) * R * 0.82); ctx.stroke();
     ctx.fillStyle = "#cfe4ff"; ctx.beginPath(); ctx.arc(0, 0, R * 0.07, 0, Math.PI * 2); ctx.fill();
     // gear badge (top), digital km/h (bottom)
-    ctx.fillStyle = state.e85 ? "#ffc296" : "#f0d43c"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.4);
+    ctx.fillStyle = state.e85 ? "#9fc8ff" : "#9fc8ff"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.4);
     ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.32)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmhNow)), 0, R * 0.36);
     ctx.fillStyle = "rgba(150,166,180,0.9)"; ctx.font = `600 ${Math.round(R * 0.095)}px ui-sans-serif`; ctx.fillText("KM/H", 0, R * 0.54);
     ctx.restore();
@@ -2198,25 +2195,25 @@ const SPEC = {
     ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
     ctx.restore();
   }
-  // Koenigsegg SmartWheel: squircle rim with touch pads on the two horizontal spokes
+  // Hennessey wheel: squircle rim with touch pads on the two horizontal spokes
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
     ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
     // tang-orange centring mark
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(232,106,28,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.45, Math.PI * 1.55); ctx.stroke();
+    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(47,127,224,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.45, Math.PI * 1.55); ctx.stroke();
     ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
     // flat bottom
     ctx.fillStyle = "#08090c"; ctx.fillRect(-R * 0.52, R * 0.82, R * 1.04, R * 0.4);
-    // horizontal spokes carrying the SmartWheel TOUCH PADS
+    // horizontal spokes carrying the wheel TOUCH PADS
     ctx.strokeStyle = "#14171d"; ctx.lineWidth = R * 0.1;
     [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.03); ctx.stroke(); });
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
-    [-1, 1].forEach(s => { ctx.fillStyle = "#0e1116"; ctx.strokeStyle = "rgba(232,106,28,0.5)"; ctx.lineWidth = R * 0.014;
+    [-1, 1].forEach(s => { ctx.fillStyle = "#0e1116"; ctx.strokeStyle = "rgba(47,127,224,0.5)"; ctx.lineWidth = R * 0.014;
       const px = s * R * 0.56; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2, R * 0.03) : ctx.rect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2); ctx.fill(); ctx.stroke(); });
-    // hub kept open — the SmartCluster sits on the column behind it
+    // hub kept open — the driver display sits on the column behind it
     ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, R * 0.24, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = "#ffc296"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("KOENIGSEGG", 0, R * 0.99 - R * 0.99 + R * 0.34);
+    ctx.fillStyle = "#9fc8ff"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("HENNESSEY", 0, R * 0.99 - R * 0.99 + R * 0.34);
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
@@ -2314,11 +2311,11 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Koenigsegg exterior — Jesko Attack side profile (arctic white over carbon, deep
+  /* Hennessey exterior — Venom F5 Attack side profile (arctic white over carbon, deep
      splitter, dive planes, the huge top-mounted BOOMERANG wing on central pylons) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Koenigsegg Jesko side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Hennessey Venom F5 side">
       <defs>
         <linearGradient id="kgWhiteG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7fa"/><stop offset="0.5" stop-color="#ccd4dc"/><stop offset="1" stop-color="#7e8892"/></linearGradient>
         <linearGradient id="kgBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
@@ -2342,7 +2339,7 @@ const SPEC = {
       <path d="M262,146 L262,102" fill="none" stroke="#20242b" stroke-width="9"/>
       <g id="rearWingArt">
         <path d="M108,86 Q220,104 336,86 L332,100 Q220,116 112,100 Z" fill="#15181d" stroke="#5c636c"/>
-        <path d="M108,86 Q220,104 336,86" fill="none" stroke="rgba(232,106,28,0.75)" stroke-width="3"/>
+        <path d="M108,86 Q220,104 336,86" fill="none" stroke="rgba(47,127,224,0.75)" stroke-width="3"/>
         <rect x="104" y="82" width="7" height="24" rx="2" fill="#101216"/>
         <rect x="331" y="82" width="7" height="24" rx="2" fill="#101216"/>
       </g>
@@ -2360,10 +2357,10 @@ const SPEC = {
         <!-- wraparound canopy -->
         <path d="M494,160 Q528,130 596,124 L660,124 Q716,132 750,154 Q614,146 494,160 Z" fill="url(#kgGlassG)" stroke="#6c757e" stroke-width="1.5"/>
         <!-- tang-orange Attack accent sweep -->
-        <path d="M292,196 Q460,180 760,186" fill="none" stroke="rgba(232,106,28,0.8)" stroke-width="4" stroke-linecap="round"/>
+        <path d="M292,196 Q460,180 760,186" fill="none" stroke="rgba(47,127,224,0.8)" stroke-width="4" stroke-linecap="round"/>
         <!-- big side intake -->
-        <path d="M430,204 Q474,194 514,196 L504,226 L432,226 Z" fill="#06080b" stroke="rgba(232,106,28,0.3)"/>
-        <!-- dihedral synchro-helix door (rotates out and forward — the Koenigsegg move) -->
+        <path d="M430,204 Q474,194 514,196 L504,226 L432,226 Z" fill="#06080b" stroke="rgba(47,127,224,0.3)"/>
+        <!-- dihedral synchro-helix door (rotates out and forward — the Hennessey move) -->
         <g id="doorArt">
           <path d="M514,170 Q568,142 648,144 L718,164 L716,226 L520,228 Z" fill="rgba(150,160,172,0.30)" stroke="#6c757e" stroke-width="1.4"/>
           <path d="M546,160 Q606,148 692,154" fill="none" stroke="rgba(220,230,240,0.4)" stroke-width="2"/>
@@ -2371,8 +2368,8 @@ const SPEC = {
         <!-- slim headlamp + splitter + dive plane -->
         <path d="M868,182 q24,-2 38,6" fill="none" stroke="#dfe9ee" stroke-width="3.6" stroke-linecap="round"/>
         <rect x="822" y="242" width="94" height="8" rx="3" fill="#05070a"/>
-        <path d="M872,218 l40,-4 l-2,8 l-38,2 Z" fill="#101216" stroke="rgba(232,106,28,0.5)"/>
-        <g id="frontFlapArt"><rect x="788" y="214" width="42" height="6" rx="3" fill="#15181d" stroke="rgba(232,106,28,0.4)"/></g>
+        <path d="M872,218 l40,-4 l-2,8 l-38,2 Z" fill="#101216" stroke="rgba(47,127,224,0.5)"/>
+        <g id="frontFlapArt"><rect x="788" y="214" width="42" height="6" rx="3" fill="#15181d" stroke="rgba(47,127,224,0.4)"/></g>
         <!-- single central round exhaust high in the tail -->
         <g id="quadExhaustArt">
           <circle cx="136" cy="212" r="10"/>
@@ -2381,22 +2378,21 @@ const SPEC = {
         <g stroke="#05070a" stroke-width="3">
           <path d="M114,246 l0,12"/><path d="M136,246 l0,12"/><path d="M158,246 l0,12"/><path d="M180,246 l0,12"/>
         </g>
-        <!-- JESKO script + KG shield -->
-        <text x="600" y="214" font-family="ui-sans-serif" font-size="12" fill="#5e6670" letter-spacing="3">JESKO</text>
-        <rect x="462" y="204" width="15" height="19" rx="3" fill="#f0d43c" stroke="#0a0c10"/>
-        <path d="M465,208 l4,5 l-4,5 M471,208 l4,5 l-4,5" fill="none" stroke="#0a0c10" stroke-width="1.2"/>
+        <!-- VENOM F5 script + KG shield -->
+        <text x="600" y="214" font-family="ui-sans-serif" font-size="12" fill="#5e6670" letter-spacing="3">VENOM F5</text>
+        <rect x="460" y="203" width="20" height="18" rx="3" fill="#0a0c10" stroke="#2f7fe0"/><text x="470" y="217" text-anchor="middle" font-size="12" font-weight="800" fill="#2f7fe0">H</text>
       </g>
 
       <!-- wheels: Aircore carbon centre-lock -->
       <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#e86a1c" stroke-width="2"/>
+        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#2f7fe0" stroke-width="2"/>
         <g class="kgWeave"><g transform="translate(255,250)">
           ${turbine()}
         </g></g>
         <circle cx="255" cy="250" r="12" fill="url(#kgHub)"/>
       </g>
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/><circle cx="745" cy="250" r="52" fill="none" stroke="#e86a1c" stroke-width="2"/>
+        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/><circle cx="745" cy="250" r="52" fill="none" stroke="#2f7fe0" stroke-width="2"/>
         <g class="kgWeave"><g transform="translate(745,250)">
           ${turbine()}
         </g></g>
@@ -2410,11 +2406,11 @@ const SPEC = {
   }
   function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* Koenigsegg cockpit SVG — SmartCluster on the column, SmartCenter portrait screen */
+  /* Hennessey cockpit SVG — driver display on the column, centre screen portrait screen */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Koenigsegg Jesko cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Hennessey Venom F5 cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
@@ -2425,20 +2421,20 @@ const SPEC = {
       <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
       <!-- low carbon cowl -->
       <rect x="120" y="46" width="760" height="20" rx="10" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.4"/>
-      <!-- SmartCluster: single round display ON THE COLUMN behind the wheel -->
+      <!-- driver display: single round display ON THE COLUMN behind the wheel -->
       <g transform="translate(360,120)">
-        <rect x="-14" y="34" width="28" height="60" rx="8" fill="#101318" stroke="rgba(232,106,28,0.4)"/>
-        <circle r="56" fill="url(#screenG)" stroke="rgba(232,106,28,0.7)" stroke-width="2.4" id="tachArt"/>
-        <text x="0" y="-16" text-anchor="middle" font-size="9" fill="#ffc296" letter-spacing="2">SMARTCLUSTER</text>
+        <rect x="-14" y="34" width="28" height="60" rx="8" fill="#101318" stroke="rgba(47,127,224,0.4)"/>
+        <circle r="56" fill="url(#screenG)" stroke="rgba(47,127,224,0.7)" stroke-width="2.4" id="tachArt"/>
+        <text x="0" y="-16" text-anchor="middle" font-size="9" fill="#9fc8ff" letter-spacing="2">DIGITAL CLUSTER</text>
         <text x="0" y="12" text-anchor="middle" font-size="26" font-weight="700" fill="#faf2e8" id="tachGearArt">N</text>
-        <text x="0" y="34" text-anchor="middle" font-size="8" fill="#c98a5a">TURNS WITH THE WHEEL</text>
+        <text x="0" y="34" text-anchor="middle" font-size="8" fill="#c98a5a">1,817 HP · 500 KM/H</text>
       </g>
-      <!-- SmartCenter: portrait 9" touchscreen on the spine -->
-      <rect x="466" y="120" width="68" height="118" rx="10" fill="url(#screenG)" stroke="rgba(232,106,28,0.55)"/>
-      <text x="500" y="252" text-anchor="middle" font-size="8" fill="#9aa2ab" letter-spacing="1">SMARTCENTER</text>
+      <!-- centre screen: portrait 9" touchscreen on the spine -->
+      <rect x="466" y="120" width="68" height="118" rx="10" fill="url(#screenG)" stroke="rgba(47,127,224,0.55)"/>
+      <text x="500" y="252" text-anchor="middle" font-size="8" fill="#9aa2ab" letter-spacing="1">CENTRE SCREEN</text>
       <!-- seats: carbon buckets, orange stitch -->
-      <g transform="translate(252,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(232,106,28,0.55)"/></g>
-      <g transform="translate(748,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(232,106,28,0.55)"/></g>
+      <g transform="translate(252,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(47,127,224,0.55)"/></g>
+      <g transform="translate(748,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(47,127,224,0.55)"/></g>
       <!-- milled shift keys + START on the spine -->
       <g id="shifterArt" transform="translate(500,296)">
         <rect x="-26" y="-34" width="52" height="96" rx="14" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
@@ -2447,15 +2443,15 @@ const SPEC = {
         <circle cx="0" cy="56" r="10" fill="url(#aluG)"/>
       </g>
       <g transform="translate(640,262)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="11" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="7" fill="#ffd7d7">START</text></g>
-      <!-- SmartWheel with touch pads -->
+      <!-- wheel with touch pads -->
       <g id="cabinWheelG" transform="translate(360,300)">
         <circle r="56" fill="none" stroke="#101216" stroke-width="15"/>
-        <circle r="56" fill="none" stroke="rgba(232,106,28,0.8)" stroke-width="3"/>
+        <circle r="56" fill="none" stroke="rgba(47,127,224,0.8)" stroke-width="3"/>
         <line x1="0" y1="0" x2="-52" y2="-4" stroke="#171a20" stroke-width="8"/>
         <line x1="0" y1="0" x2="52" y2="-4" stroke="#171a20" stroke-width="8"/>
         <line x1="0" y1="0" x2="0" y2="48" stroke="#171a20" stroke-width="8"/>
-        <rect x="-44" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(232,106,28,0.6)"/>
-        <rect x="24" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(232,106,28,0.6)"/>
+        <rect x="-44" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(47,127,224,0.6)"/>
+        <rect x="24" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(47,127,224,0.6)"/>
         <circle r="12" fill="none" stroke="#1a1e24" stroke-width="4"/>
       </g>
     </svg>`;
@@ -2479,7 +2475,7 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Autoskin sweeps the doors shut to drive.", "Jesko"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("power sweeps the doors shut to drive.", "Venom F5"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, 9); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2510,17 +2506,17 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: Triplex dampers firm, ESC trail, exhaust open, wing hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Jesko");
+    showToast(m === "race" ? "Race: adaptive dampers firm, ESC trail, exhaust open, wing hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Venom F5");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full V8 voice." : "Exhaust flap closed — muted."); }
-  // E85 flex-fuel: the same engine, hotter map. On E85 biofuel the Jesko runs
+  // E85 flex-fuel: the same engine, hotter map. On E85 biofuel the Venom F5 runs
   // 1,600 hp and 1,500 Nm @ 5,100 rpm; on standard petrol it makes 1,280 hp.
   function toggleFuel() {
     const next = !state.e85;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Switch fuel maps below 50 km/h — the ECU wants a quiet moment.", "Jesko"); return; }
+    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage F5 Mode below 50 km/h — line it up first.", "Venom F5"); return; }
     state.e85 = next; setActive("fuelBtn", next);
     const map = next ? SPEC.e85 : SPEC.petrol;
     SPEC.peakPowerW = map.peakPowerW; SPEC.peakPowerPS = map.peakPowerPS;
@@ -2528,10 +2524,10 @@ const SPEC = {
     if (next) {
       if (state.driveMode !== "race") setMode("race");
       audio.motor(0.8); audio.chime([392, 523, 659, 784]);
-      showToast("E85 biofuel map — 1,600 hp, 1,500 Nm @ 5,100. The full megacar.", "Jesko");
+      showToast("F5 Mode — active wing flat, minimum drag. Aim it at the horizon.", "Venom F5");
     } else {
       audio.motor(0.5);
-      showToast("Standard petrol map — 1,280 hp @ 7,800.", "Jesko");
+      showToast("Sport map — the active wing is hunting downforce again.", "Venom F5");
     }
   }
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
@@ -2540,7 +2536,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — air tank charged. Full throttle on the brake, then release." : "Launch control off.", "Jesko");
+    showToast(state.launchArmed ? "Launch control armed — air tank charged. Full throttle on the brake, then release." : "Launch control off.", "Venom F5");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2565,7 +2561,7 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Jesko"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Venom F5"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
@@ -2579,7 +2575,7 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Jesko");
+    showToast("Back in the pit lane.", "Venom F5");
   }
 
   Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
@@ -2600,7 +2596,7 @@ const SPEC = {
       case "shifterLight": showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
-      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "Autoskin raises the cover — the twin-turbo V8 on show." : "Engine cover closed."); break;
+      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "power raises the cover — the twin-turbo V8 on show." : "Engine cover closed."); break;
       case "antiLag": showToast(on ? "Air-tank anti-lag armed — 20 bar pre-spools the turbos, bangs on the overrun (Race)." : "Air-tank anti-lag off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
       case "ignition": break;
     }
@@ -2610,7 +2606,7 @@ const SPEC = {
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V8 barks to 3,000 with an air-tank hiss."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V8 lit.", "Jesko"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V8 lit.", "Venom F5"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2634,7 +2630,7 @@ const SPEC = {
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("e85", "biofuel", "flex fuel", "1600", "megacar")) { app.toggleFuel(); acted = true; }
+    if (has("f5 mode", "f5", "top speed", "low drag", "max")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2683,11 +2679,11 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.e85) warn.push("E85 MAP · 1,600 hp / 1,500 Nm");
+    if (state.e85) warn.push("F5 MODE · LOW DRAG");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.e85 && speed >= 320) warn.push("petrol map (1,280 hp) — switch to E85 for the full 1,600");
+    if (!state.e85 && speed >= 320) warn.push("Sport aero — engage F5 Mode for the top-speed run");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -2885,7 +2881,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Jesko"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Jesko"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Jesko"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Venom F5"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Venom F5"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Venom F5"); }); });
   }
 
   function setupPedals() {
@@ -2963,7 +2959,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Jesko"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Venom F5"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -2983,7 +2979,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Jesko");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Venom F5");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -3002,7 +2998,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Jesko");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Venom F5");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3045,7 +3041,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Jesko");
+        showToast("Trackpad steering hold cancelled.", "Venom F5");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3055,7 +3051,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Jesko");
+          showToast("Trackpad steering off.", "Venom F5");
         }
       }
     });
@@ -3063,7 +3059,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V8 lit, air tank charged. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Jesko"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V8 lit, air tank charged. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Venom F5"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();

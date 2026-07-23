@@ -18,7 +18,7 @@
       --alu-d: #828a93;
       --teal: #b6d900;          /* Evija accent */
       --teal-b: #e2ff7a;
-      --amber: #3ec6e8;         /* regen/energy cyan */
+      --amber: #b6d900;         /* regen/energy cyan */
       --amber-b: #b4ecf8;
       --cognac: #dfe3e8;        /* white vegan-leather interior */
       --cognac2: #6b7178;
@@ -234,8 +234,8 @@
     /* twin rear drive-unit rotors (the third motor sits on the front axle) */
     .turbo.left  { left:16%; top:30%; } .turbo.right  { right:16%; top:30%; }
     .emotor { position:absolute; left:12%; right:12%; bottom:52px; height:38px; border-radius:8px;
-      background: linear-gradient(180deg,#1c2a34,#0c141c); border:1px solid rgba(62,198,232,0.55);
-      display:grid; place-items:center; color:#b4ecf8; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(62,198,232,0.25); }
+      background: linear-gradient(180deg,#1c2a34,#0c141c); border:1px solid rgba(182,217,0,0.55);
+      display:grid; place-items:center; color:#b4ecf8; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(182,217,0,0.25); }
     .bay-exhaust { position:absolute; left:42%; right:42%; bottom:18px; height:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
     .bay-exhaust i { border-radius:4px 4px 2px 2px; background: linear-gradient(180deg,#3a3f47,#1a1d22); border:1px solid rgba(150,160,170,0.3); transition: box-shadow 120ms; }
     .engine-bay.glow .bay-exhaust i { box-shadow: 0 0 14px rgba(255,110,40,0.85); }
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Tesla Model S Plaid driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Lotus Evija driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
         <div class="mark">LE</div>
         <h1>Lotus Evija</h1>
-        <p>Tri-motor AWD · carbon-sleeved rotors · single-speed drive · torque vectoring · yoke steering · 100 kWh pack.</p>
+        <p>Quad-motor AWD (one motor per wheel) · single-speed · torque vectoring · Venturi tunnels · active rear wing · carbon monocoque.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -369,7 +369,7 @@
       <section class="quick" aria-label="Quick controls">
         <button id="aeroBtn" class="active" title="Carbon spoiler + diffuser trim">Aero</button>
         <button id="doorAllBtn" title="Auto-presenting doors">Doors</button>
-        <button id="exhaustBtn" class="active" title="Boombox — external speaker voice">Boombox</button>
+        <button id="exhaustBtn" class="active" title="EV Voice — external speaker voice">EV Voice</button>
         <button id="liftBtn" title="Adaptive air suspension raise">Raise</button>
         <button id="lightsBtn" class="active" title="Headlamps">Lights</button>
         <button id="resetBtn" title="Reset to pit lane">Reset</button>
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Pull D with the right paddle, doors shut, and the Plaid is yours.</div>
+        <div class="warning" id="warning">Pull D with the right paddle, doors shut, and the Track is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,7 +411,7 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Five-Seat Ludicrous Sedan</h2>
+          <h2>Exterior — Venturi Hypercar</h2>
           <span class="small"><span class="indicator"></span><span id="paintStatus">Solar Yellow over exposed carbon, Venturi tunnels, active rear wing</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
@@ -434,14 +434,14 @@
           <button data-door="passenger">Passenger Door</button>
           <button data-door="all">All Doors</button>
           <button id="wingBtn" class="active">Spoiler</button>
-          <button id="exhaustBtn2" class="active">Boombox</button>
+          <button id="exhaustBtn2" class="active">EV Voice</button>
           <button id="lightsBtn2" class="active">Headlamps</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
           <div class="readout"><b id="doorState">Closed</b><span>auto-present doors</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>air suspension</span></div>
-          <div class="readout"><b>265 / 295</b><span>Arachnid 21&quot; · PS4S</span></div>
+          <div class="readout"><b>265 / 305</b><span>Forged 21&quot; · Trofeo R</span></div>
           <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
         </div>
       </section>
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Yoke, 17&quot; landscape screen, white minimalist cabin, glass roof</span>
+          <span class="small" id="cockpitStatus">Round wheel · digital cluster · exposed-carbon minimalist cabin</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="trackPackBtn" class="race" title="Track Package: carbon-ceramic kit + Zero-G wheels — raises the limiter from 262 to 322 km/h (200 mph)">Track Pack</button>
+          <button id="trackPackBtn" class="race" title="Track Mode — sharpens throttle, dampers and torque-vectoring for the circuit">Track Mode</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,8 +482,8 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Drive Units — Tri-Motor + 100 kWh Pack</h2>
-          <span class="small" id="engineStatus">Tri-motor, carbon-sleeved rotors · 760 kW (1,020 hp) · 0–60 mph 1.99 s (rollout subtracted), 0–100 km/h 2.1 s · 1/4 mile 9.23 s · 262 km/h, 322 km/h with Track Pack · 2,162 kg</span>
+          <h2>Drive Units — Quad-motor + 100 kWh Pack</h2>
+          <span class="small" id="engineStatus">Quad-motor EV, one motor per wheel · 1,500 kW (2,039 PS) · 1,704 Nm · 0–100 km/h 2.9 s · 349 km/h governed · 93 kWh · 1,680 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -496,7 +496,7 @@
         </div>
         <div class="control-grid">
           <button id="coverBtn">Open Frunk</button>
-          <button id="exhaustBtn3" class="active">Boombox</button>
+          <button id="exhaustBtn3" class="active">EV Voice</button>
           <button id="fansBtn" class="active">Cooling Fans</button>
           <button id="blipBtn">Torque Blip</button>
           <button id="coldStartBtn">Power-Up Chime</button>
@@ -511,7 +511,7 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Plaid drive-unit recording — it becomes the motor voice, pitched with speed">&#9835; Use a real Plaid recording</button>
+          <button id="engineLoadBtn" title="Load a real Track drive-unit recording — it becomes the motor voice, pitched with speed">&#9835; Use a real Track recording</button>
           <span class="small now" id="engineSoundStatus">Motor voice: synthesised quad-motor inverter shriek</span>
         </div>
       </section>
@@ -520,7 +520,7 @@
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
           <h2>Dynamics — Single-Speed · Torque Vectoring · AWD</h2>
-          <span class="small" id="dynStatus">Plaid mode: adaptive dampers firm, stability trail, full power unlocked</span>
+          <span class="small" id="dynStatus">Track mode: adaptive dampers firm, stability trail, full 2,039 PS unlocked</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -561,7 +561,7 @@
           <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">3. Racecraft — the line changes in real time</a>
           <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">4. Braking — the countdown boards</a>
           <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">5. Vision</a>
-          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: launch and the yoke</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: quad-motor torque vectoring</a>
           </nav>
           <div style="flex:1; font-size:13px; line-height:1.6; color:#c8d2dd; min-width:0">
         <h3 id="ls0" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">1. The racing line</h3><p style="margin:4px 0">Outside–inside–outside. Enter from the far edge, cut across the yellow apex dot, release the car to the exit kerb. This maximises the corner radius, so your minimum speed — and everything that follows it — is higher. <svg viewBox="0 0 300 150" style="width:100%;max-width:300px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
@@ -580,7 +580,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: launch and the yoke</h3><p style="margin:4px 0">Tri-motor torque needs no launch technique — just brake, floor it, release (drag-strip rollout gives the quoted 1.99 s). The challenge is 2,162 kg into corners: brake far earlier than the acceleration tricks you into believing.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: quad-motor torque vectoring</h3><p style="margin:4px 0">One motor at each wheel means the Evija can send torque exactly where grip is — it rotates into a corner on the throttle. 2,039 PS arrives instantly, so the limit is traction, not power: squeeze the throttle as the wheel unwinds and let the vectoring pull you straight.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -640,9 +640,9 @@
 
     <footer class="bottombar">
       <section class="console" aria-label="Vehicle functions">
-        <button id="modeBtn" class="race active">Plaid</button>
+        <button id="modeBtn" class="race active">Track</button>
         <button id="escBtn" class="active toggle">ESC</button>
-        <button id="launchBtn">Drag Strip</button>
+        <button id="launchBtn">Launch</button>
         <button id="pitBtn" class="toggle">Pit Limit</button>
         <button id="hornBtn">Horn</button>
       </section>
@@ -678,7 +678,7 @@
           <button id="dataBtn" title="Toggle telemetry overlay" class="active">HUD</button>
           <button id="assistBtn" class="active" title="Steering assist — helps the car follow the line">Asst</button>
           <button id="wetBtn" title="Chill mode">Chill</button>
-          <button id="raceBtn" title="Plaid mode">Plaid</button>
+          <button id="raceBtn" title="Track mode">Track</button>
         </div>
       </section>
     </footer>
@@ -689,7 +689,7 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">T</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">L</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -706,12 +706,10 @@
 
   <script type="module">
 /* ===========================================================================
-   TESLA MODEL S PLAID — "Ludicrous" (browser electric-sedan simulator)
-   Real Web-Audio tri-motor inverter whine, factory-matched physics (0–60 mph
-   1.99 s / 0–100 km/h 2.1 s with the drag-strip 1-ft rollout subtracted —
-   Tesla's own convention; 1/4 mile 9.23 s; 760 kW / 1,020 hp; 262 km/h,
-   322 km/h with Track Pack; 2,162 kg), one-pedal regen, a single-speed
-   drive you never shift, and a test driver who can lap for you.
+   LOTUS EVIJA (browser electric-hypercar simulator)
+   Real Web-Audio quad-motor inverter voice, factory-matched physics (0–100 km/h
+   2.9 s, 349 km/h governed, 1,500 kW / 2,039 PS, 1,704 Nm, 1,680 kg), one motor per
+   wheel with torque vectoring, a single-speed drive, and a test driver who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -913,10 +911,10 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT Tesla Model S Plaid figures =====
-   Tri-motor: 760 kW (1,020 hp) combined, carbon-sleeved rotors; ~1,420 Nm combined
+/* ===== data: vehicle spec — EXACT Lotus Evija figures =====
+   Quad-motor: 760 kW (1,020 hp) combined, carbon-sleeved rotors; ~1,420 Nm combined
    motor torque; curb weight 2,162 kg; 0–60 mph 1.99 s and 0–100 km/h 2.1 s (WITH the
-   drag-strip 1-ft rollout subtracted — Tesla quotes both this way); 1/4 mile 9.23 s;
+   launch 1-ft rollout subtracted — Lotus quotes both this way); 1/4 mile 9.23 s;
    top speed 262 km/h (163 mph) as delivered, 322 km/h (200 mph) with the Track
    Package's carbon-ceramic kit; single-speed reduction gear ≈ 7.5:1. */
 const KMH = 1 / 3.6;            // m/s per km/h
@@ -990,8 +988,8 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    trackPack: false,              // Tesla Track Package: CCB kit + Zero-G wheels, limiter 262 -> 322 km/h
-    trackPackVis: 0,               // cheetah-stance dip when Drag Strip mode stages
+    trackPack: false,              // Lotus Track Mode: CCB kit + Zero-G wheels, limiter 262 -> 322 km/h
+    trackPackVis: 0,               // cheetah-stance dip when Launch mode stages
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -1050,7 +1048,7 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised tri-motor inverter whine, wind, road — no exhaust to crackle ===== */
+/* ===== audio: synthesised quad-motor inverter whine, wind, road — no exhaust to crackle ===== */
 {
   const app = window.EvijaApp;
   const { SPEC, clamp } = app;
@@ -1079,7 +1077,7 @@ const SPEC = {
 
       const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(2.6); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Tri-motor EV: pure tones — a soft fundamental hum with thin high inverter
+      // Quad-motor EV: pure tones — a soft fundamental hum with thin high inverter
       // orders gliding up with speed; no combustion buzz at all
       const defs = [
         { type: "sine",     mul: 1.0,  gain: 0.34, toShaper: false },
@@ -1126,7 +1124,7 @@ const SPEC = {
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
       const load = clamp(s.throttle, 0, 1);
       const spd = Math.abs(s.speedMps);
-      const valve = s.exhaustValve ? 1 : 0.45;            // Boombox external voice
+      const valve = s.exhaustValve ? 1 : 0.45;            // EV Voice external voice
       const modeGain = s.driveMode === "race" ? 1.0 : s.driveMode === "sport" ? 0.82 : 0.62;
 
       const engLevel = (0.02 + load * 0.26 + rpmN * 0.30) * valve * modeGain;   // quiet EV — whine rises with speed
@@ -1238,7 +1236,7 @@ const SPEC = {
   app.audio = audio;
 }
 
-/* ===== physics: tri-motor drive, single-speed, regen, launch (Drag Strip), world, test driver ===== */
+/* ===== physics: quad-motor drive, single-speed, regen, launch (Launch), world, test driver ===== */
 {
   const app = window.EvijaApp;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
@@ -1262,7 +1260,7 @@ const SPEC = {
     return wheelRps * SPEC.gearRatios[gear - 1] * SPEC.finalDrive * 60;
   }
 
-  const modeMap = {   // Chill / Sport / Plaid (single speed: shift points unused)
+  const modeMap = {   // Chill / Sport / Track (single speed: shift points unused)
     wet:   { upRpm: 99999, downRpm: 0, throttleRate: 0.0030, tc: 0.78, exhaust: 0.6, damp: 0.45 },
     sport: { upRpm: 99999, downRpm: 0, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
     race:  { upRpm: 99999, downRpm: 0, throttleRate: 0.0004, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
@@ -1309,7 +1307,7 @@ const SPEC = {
     let frontT, rearT;
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
-      // Standing downforce rises gently with speed — a sedan spoiler, not a wing.
+      // Standing downforce rises gently with speed — a hypercar spoiler, not a wing.
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -1319,7 +1317,7 @@ const SPEC = {
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
-    // (No active-aero override — the Plaid's spoiler is bonded carbon.)
+    // (No active-aero override — the Track's spoiler is bonded carbon.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
@@ -1478,28 +1476,28 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-  /* The Plaid Invitational is a Tesla-only meet — so its grid is Teslas, with their
+  /* The Track Invitational is a Lotus-only meet — so its grid is Lotuss, with their
      real (or, where limited, best-known) top speeds and grip. */
-  const TESLA_GRID = [
-    { name: "Tesla Roadster Sport (2010)", body: "#c8151b", stripe: "#0a0c10", top: 201, latG: 0.95, accel: 6.4 },
-    { name: "Tesla Model S P85D",          body: "#1a1d22", stripe: "#e82127", top: 250, latG: 0.95, accel: 8.6 },
-    { name: "Tesla Model S P100D",         body: "#2b3a4a", stripe: "#c9cfd6", top: 250, latG: 1.00, accel: 10.0 },
-    { name: "Tesla Model S Plaid (stock)", body: "#e9edf0", stripe: "#e82127", top: 262, latG: 1.05, accel: 12.6 },
-    { name: "Tesla Model 3 Performance",   body: "#c8151b", stripe: "#0a0c10", top: 262, latG: 1.02, accel: 9.6 },
-    { name: "Tesla Model Y Performance",   body: "#586069", stripe: "#e82127", top: 250, latG: 0.98, accel: 9.2 },
-    { name: "Tesla Model X Plaid",         body: "#0a0c10", stripe: "#3ec6e8", top: 262, latG: 0.98, accel: 11.8 },
-    { name: "Tesla Cybertruck Cyberbeast", body: "#8e9296", stripe: "#0a0c10", top: 209, latG: 0.85, accel: 9.8 },
-    { name: "Tesla Model 3 Long Range",    body: "#1f3a6e", stripe: "#c9cfd6", top: 233, latG: 0.92, accel: 7.4 },
-    { name: "Tesla Model S 85",            body: "#7a1f2e", stripe: "#c0a062", top: 225, latG: 0.88, accel: 6.8 },
-    { name: "Tesla Model X P100D",         body: "#16604f", stripe: "#c9cfd6", top: 250, latG: 0.92, accel: 9.4 },
-    { name: "Tesla Model S Plaid Track",   body: "#0a0c10", stripe: "#e82127", top: 322, latG: 1.10, accel: 12.8 },
-    { name: "Tesla Roadster (2008)",       body: "#f47a1a", stripe: "#0a0c10", top: 201, latG: 0.92, accel: 6.0 }
+  const LOTUS_GRID = [
+    { name: "Lotus Evija X",               body: "#b6d900", stripe: "#0a0c10", top: 349, latG: 1.90, accel: 13.6 },
+    { name: "Lotus Emeya R",               body: "#1a1d22", stripe: "#b6d900", top: 256, latG: 1.20, accel: 11.0 },
+    { name: "Lotus Eletre R",              body: "#586069", stripe: "#b6d900", top: 265, latG: 1.10, accel: 10.6 },
+    { name: "Lotus Emira V6",              body: "#c8d0d6", stripe: "#0a0c10", top: 290, latG: 1.30, accel: 9.4 },
+    { name: "Lotus Exige Cup 430",         body: "#f2c200", stripe: "#0a0c10", top: 280, latG: 1.55, accel: 9.8 },
+    { name: "Lotus Elise Cup 250",         body: "#1f6fb0", stripe: "#c9cfd6", top: 248, latG: 1.45, accel: 8.6 },
+    { name: "Lotus Evora GT430",           body: "#15181d", stripe: "#b6d900", top: 305, latG: 1.40, accel: 10.0 },
+    { name: "Rimac Nevera",                body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
+    { name: "Pininfarina Battista",        body: "#0a2a55", stripe: "#c0a062", top: 350, latG: 1.55, accel: 13.4 },
+    { name: "Porsche Taycan Turbo GT",     body: "#3fb2bd", stripe: "#0a0c10", top: 305, latG: 1.35, accel: 12.6 },
+    { name: "Lotus Roadster (next gen)",   body: "#c8102e", stripe: "#0a0c10", top: 400, latG: 1.40, accel: 13.8 },
+    { name: "Aspark Owl",                  body: "#0a0c10", stripe: "#c9cfd6", top: 413, latG: 1.45, accel: 13.6 },
+    { name: "McMurtry Spéirling",          body: "#16604f", stripe: "#c9cfd6", top: 240, latG: 2.20, accel: 14.2 }
   ];
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Hethel Test Track") ? TESLA_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Hethel Test Track") ? LOTUS_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1706,7 +1704,7 @@ const SPEC = {
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
     accel += state._gradeAccel || 0;   // dune climbs bleed speed, descents build it
-    // Limiter: 262 km/h as delivered; the Track Package hardware raises it to exactly 322.
+    // Limiter: 262 km/h as delivered; the Track Mode hardware raises it to exactly 322.
     const govMps = state.trackPack ? SPEC.topSpeedRecordMps : SPEC.topSpeedLimitedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
@@ -1751,7 +1749,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Air suspension back to ride height.", "Plaid"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Air suspension back to ride height.", "Track"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1766,7 +1764,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the Plaid sits dead still.
+    // on smooth tarmac through a fast corner the Track sits dead still.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -2253,14 +2251,14 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Plaid glass: the 12.3\" driver display behind the yoke and the 17\"
+    // ---- Track glass: the 12.3\" driver display behind the wheel and the 17\"
     // landscape centre screen floating to the right ----
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
     const cx = w / 2 + sway;
     drawSpeedo(cx, cy, R);                                   // driver display
     drawCenterScreen(cx + R * 3.4, cy, R);                   // 17\" landscape screen
-    // the yoke
+    // the wheel
     drawWheel(w, h);
   }
   // instantaneous combined output (hp) — all three motors together
@@ -2268,7 +2266,7 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // the Plaid driver display: a clean landscape card — huge digital speed, a power/regen
+  // the Track driver display: a clean landscape card — huge digital speed, a power/regen
   // bar that swings cyan on regen, P·R·N·D strip, battery bar. No dials anywhere.
   function drawSpeedo(cx, cy, R) {
     const kmhNow = Math.abs(app.kmh(state.speedMps));
@@ -2281,9 +2279,9 @@ const SPEC = {
     const cur = state.gearMode === "G" ? "D" : (state.gearMode === "R" ? "R" : (Math.abs(state.speedMps) < 0.1 && !state.ignition ? "P" : "N"));
     ctx.font = `700 ${Math.round(R * 0.14)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     gears.forEach((g, i) => { ctx.fillStyle = g === cur ? "#eef2f7" : "rgba(130,140,150,0.45)"; ctx.fillText(g, -W * 0.38 + i * R * 0.28, -H * 0.32); });
-    // Track Pack / limiter chip
+    // Track Mode / limiter chip
     ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "right";
-    ctx.fillStyle = state.trackPack ? "#ff9a9e" : "rgba(130,140,150,0.7)";
+    ctx.fillStyle = state.trackPack ? "#e2ff7a" : "rgba(130,140,150,0.7)";
     ctx.fillText(state.trackPack ? "TRACK · 322" : "LIMIT · 262", W * 0.44, -H * 0.32);
     // huge speed
     ctx.textAlign = "center";
@@ -2293,14 +2291,14 @@ const SPEC = {
     const barW = W * 0.8, barY = H * 0.31;
     ctx.fillStyle = "rgba(255,255,255,0.10)"; ctx.fillRect(-barW / 2, barY, barW, R * 0.07);
     const regenActive = state.gearMode === "G" && state.throttle < 0.02 && Math.abs(state.speedMps) > 0.6;
-    if (regenActive) { ctx.fillStyle = "#3ec6e8"; const f = clamp(SPEC.regenMps2 * (state.antiLag ? 1.25 : 1) / 3, 0, 1); ctx.fillRect(-barW * 0.25 * f - 1, barY, barW * 0.25 * f, R * 0.07); }
+    if (regenActive) { ctx.fillStyle = "#b6d900"; const f = clamp(SPEC.regenMps2 * (state.antiLag ? 1.25 : 1) / 3, 0, 1); ctx.fillRect(-barW * 0.25 * f - 1, barY, barW * 0.25 * f, R * 0.07); }
     else { ctx.fillStyle = "#f2f5f8"; ctx.fillRect(0, barY, barW * 0.5 * clamp(state.boostBar, 0, 1), R * 0.07); }
     ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.beginPath(); ctx.moveTo(0, barY - 2); ctx.lineTo(0, barY + R * 0.07 + 2); ctx.stroke();
     ctx.fillStyle = "rgba(150,160,170,0.9)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
     ctx.fillText(regenActive ? "REGEN" : Math.round(state.boostBar * SPEC.peakPowerKw) + " kW", 0, barY + R * 0.2);
     ctx.restore();
   }
-  // the 17\" landscape centre screen: battery, tri-motor tiles, mode
+  // the 17\" landscape centre screen: battery, quad-motor tiles, mode
   function drawCenterScreen(cx, cy, R) {
     const W = R * 2.2, H = R * 1.35;
     ctx.save(); ctx.translate(cx, cy + R * 0.14);
@@ -2312,10 +2310,10 @@ const SPEC = {
     ctx.fillStyle = soc > 0.2 ? "#57e07c" : "#ff8a5a"; roundRect(ctx, -W * 0.4, -H * 0.34, W * 0.8 * soc, R * 0.12, 3); ctx.fill();
     ctx.fillStyle = "rgba(220,228,236,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillText(Math.round(soc * 100) + "%", 0, -H * 0.1);
-    // tri-motor tiles light with throttle
-    for (let i = 0; i < 3; i++) { const on = state.throttle > 0.04 + i * 0.3; ctx.fillStyle = on ? "rgba(232,33,39,0.8)" : "rgba(255,255,255,0.1)"; roundRect(ctx, -W * 0.36 + i * W * 0.26, H * 0.04, W * 0.2, R * 0.16, 3); ctx.fill(); }
+    // quad-motor tiles light with throttle
+    for (let i = 0; i < 3; i++) { const on = state.throttle > 0.04 + i * 0.3; ctx.fillStyle = on ? "rgba(182,217,0,0.8)" : "rgba(255,255,255,0.1)"; roundRect(ctx, -W * 0.36 + i * W * 0.26, H * 0.04, W * 0.2, R * 0.16, 3); ctx.fill(); }
     ctx.fillStyle = "rgba(150,160,170,0.85)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
-    ctx.fillText((state.driveMode === "race" ? "PLAID" : state.driveMode === "sport" ? "SPORT" : "CHILL") + " · 3 MOTORS", 0, H * 0.34);
+    ctx.fillText((state.driveMode === "race" ? "TRACK" : state.driveMode === "sport" ? "SPORT" : "CHILL") + " · 4 MOTORS", 0, H * 0.34);
     ctx.restore();
   }
   // small flanking gauge (power on the left, revs on the right)
@@ -2349,19 +2347,19 @@ const SPEC = {
       ctx.quadraticCurveTo(sg * R * 1.06, R * 0.02, sg * R * 0.86, R * 0.3);
       ctx.stroke();
     });
-    // flat top bar across the grips (the yoke's signature straight top)
+    // flat top bar across the grips (the wheel's signature straight top)
     ctx.lineWidth = R * 0.13; ctx.beginPath(); ctx.moveTo(-R * 0.95, -R * 0.36); ctx.lineTo(R * 0.95, -R * 0.36); ctx.stroke();
     // lower cross-bar / airbag base
     ctx.lineWidth = R * 0.13; ctx.beginPath(); ctx.moveTo(-R * 0.82, R * 0.32); ctx.lineTo(R * 0.82, R * 0.32); ctx.stroke();
     // grip stitching hint
-    ctx.strokeStyle = "rgba(232,33,39,0.35)"; ctx.lineWidth = R * 0.012;
+    ctx.strokeStyle = "rgba(182,217,0,0.35)"; ctx.lineWidth = R * 0.012;
     [-1, 1].forEach(sg => { ctx.beginPath(); ctx.moveTo(sg * R * 0.98, -R * 0.3); ctx.quadraticCurveTo(sg * R * 1.05, R * 0.02, sg * R * 0.86, R * 0.26); ctx.stroke(); });
     // touch controls on the top bar
     [-1, 1].forEach(sg => { ctx.fillStyle = "#15181d"; ctx.beginPath(); ctx.arc(sg * R * 0.42, -R * 0.36, R * 0.05, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "rgba(180,190,200,0.4)"; ctx.lineWidth = 1; ctx.stroke(); });
     // airbag pad with the T
     ctx.fillStyle = "#0e1014"; roundRect(ctx, -R * 0.3, -R * 0.16, R * 0.6, R * 0.48, R * 0.08); ctx.fill();
     ctx.strokeStyle = "rgba(120,130,140,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, -R * 0.3, -R * 0.16, R * 0.6, R * 0.48, R * 0.08); ctx.stroke();
-    ctx.fillStyle = "#e82127"; ctx.font = `700 ${Math.round(R * 0.2)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("T", 0, R * 0.08);
+    ctx.fillStyle = "#b6d900"; ctx.font = `700 ${Math.round(R * 0.2)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("L", 0, R * 0.08);
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
@@ -2459,11 +2457,11 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Tesla exterior — Model S Plaid side profile (pearl-white five-seat sedan, glass
-     roof, flush handles, carbon spoiler; the fastest-accelerating production sedan) */
+  /* Lotus exterior — Evija side profile (pearl-white five-seat hypercar, glass
+     roof, flush handles, carbon spoiler; the fastest-accelerating production hypercar) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Tesla Model S Plaid side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lotus Evija side">
       <defs>
         <linearGradient id="tsWhiteG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfdff"/><stop offset="0.5" stop-color="#dbe2e8"/><stop offset="1" stop-color="#939ca6"/></linearGradient>
         <linearGradient id="tsBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0a0c10"/></linearGradient>
@@ -2475,45 +2473,51 @@ const SPEC = {
           #frontFlapArt{opacity:0.001;}
           #doorArt{transform-box:fill-box;transform-origin:12% 50%;transition:transform .5s cubic-bezier(.2,.9,.2,1);}
           #doorArt.open{transform:rotate(-9deg) translateX(-6px);}
-          #quadExhaustArt rect{fill:#3ec6e8;opacity:0.35;}
+          #quadExhaustArt rect{fill:#b6d900;opacity:0.35;}
           #quadExhaustArt.hot rect{opacity:0.9;}
         </style>
       </defs>
       <ellipse cx="500" cy="300" rx="400" ry="20" fill="rgba(0,0,0,0.5)"/>
 
       <g id="bcBody">
-        <!-- lower body: full-length sedan with a clean falling roofline -->
-        <path d="M96,244 Q94,222 116,214 Q170,204 240,200 Q300,166 372,148 Q450,130 552,130 Q650,132 706,152
-                 Q760,170 826,182 Q888,192 908,204 Q922,214 916,232 L900,244 Q840,236 770,238 L280,242 Q160,246 120,248 Z"
-              fill="url(#tsWhiteG)" stroke="rgba(200,210,220,0.7)" stroke-width="1.5"/>
-        <!-- greenhouse: one sweep of glass front-to-back -->
-        <path d="M256,198 Q306,168 376,152 Q452,134 548,134 Q642,136 698,156 Q652,158 600,160 L336,182 Q290,190 256,198 Z"
-              fill="url(#tsGlassG)" stroke="#7e8892" stroke-width="1.5"/>
-        <!-- B-pillar + door cuts (flush handles) -->
-        <path d="M470,140 L470,206" stroke="rgba(30,36,42,0.55)" stroke-width="2.5" fill="none"/>
+        <!-- carbon lower hull -->
+        <path d="M104,250 L150,236 Q210,222 250,216 Q320,196 372,186 Q440,166 528,160 Q616,156 690,166 Q766,176 822,194 Q884,208 906,230 L898,248 Q840,244 742,244 L300,248 Q180,250 140,252 Z"
+              fill="url(#tsBodyG)" stroke="#4a5058" stroke-width="1.4"/>
+        <!-- upper body -->
+        <path d="M300,206 Q382,180 470,168 Q560,158 646,166 Q724,172 786,192 Q740,180 660,178 L470,184 Q382,192 300,206 Z"
+              fill="url(#tsWhiteG)" stroke="rgba(200,210,220,0.55)" stroke-width="1"/>
+        <!-- wraparound canopy -->
+        <path d="M362,184 Q432,150 522,146 Q604,146 664,168 Q564,160 470,166 Q412,172 362,184 Z"
+              fill="url(#tsGlassG)" stroke="#6c757e" stroke-width="1.4"/>
+        <!-- accent sweep -->
+        <path d="M150,226 Q420,196 806,206" fill="none" stroke="#b6d900" stroke-width="4" stroke-linecap="round"/>
+        <!-- side intake (behind the cabin) -->
+        <path d="M300,214 Q352,204 394,206 L384,236 L300,238 Z" fill="#06080b" stroke="#b6d900" stroke-opacity="0.35"/>
+        <!-- dihedral door -->
         <g id="doorArt">
-          <path d="M336,182 Q400,158 470,148 L470,232 L342,234 Q330,208 336,182 Z" fill="rgba(160,176,190,0.22)" stroke="rgba(90,100,110,0.6)" stroke-width="1.4"/>
-          <rect x="380" y="196" width="34" height="4" rx="2" fill="#5a636c"/>
+          <path d="M410,180 Q470,152 558,154 L622,174 L620,236 L416,238 Z" fill="rgba(150,160,172,0.24)" stroke="#6c757e" stroke-width="1.4"/>
+          <path d="M440,172 Q502,160 590,164" fill="none" stroke="rgba(220,230,240,0.4)" stroke-width="2"/>
         </g>
-        <path d="M472,148 Q560,142 634,152 L640,232 L472,232 Z" fill="rgba(160,176,190,0.14)" stroke="rgba(90,100,110,0.5)" stroke-width="1.2"/>
-        <rect x="520" y="196" width="34" height="4" rx="2" fill="#5a636c"/>
-        <!-- smooth nose, slim LED lamps -->
-        <path d="M874,196 q24,0 34,8" fill="none" stroke="#e6edf4" stroke-width="4" stroke-linecap="round"/>
-        <path d="M96,232 q16,-4 34,-4" fill="none" stroke="#c8151b" stroke-width="4" stroke-linecap="round"/>
-        <!-- carbon SPOILER on the tail -->
+        <!-- slim LED headlamp (nose, right) -->
+        <path d="M872,198 q22,-2 34,8" fill="none" stroke="#e6edf4" stroke-width="4" stroke-linecap="round"/>
+        <!-- rear light bar (tail, left) -->
+        <path d="M104,228 q18,-3 40,-2" fill="none" stroke="#b6d900" stroke-width="4" stroke-linecap="round"/>
+        <!-- carbon rear wing -->
         <g id="rearWingArt">
-          <path d="M100,212 Q140,204 186,202 L184,208 Q140,210 102,218 Z" fill="#15181d" stroke="#4a5058"/>
+          <path d="M96,192 Q152,184 210,186 L208,196 Q152,198 98,206 Z" fill="#15181d" stroke="#4a5058"/>
+          <path d="M96,192 Q152,184 210,186" fill="none" stroke="#b6d900" stroke-width="2.4"/>
+          <rect x="150" y="190" width="6" height="26" fill="#101216"/>
         </g>
-        <!-- charge-port LED (glows while regenerating hard) -->
-        <g id="quadExhaustArt"><rect x="128" y="222" width="14" height="8" rx="3"/></g>
-        <!-- PLAID badge -->
-        <text x="560" y="222" font-family="ui-sans-serif" font-size="12" fill="#5a636c" letter-spacing="3">PLAID</text>
-        <path d="M624,212 l8,10 M630,212 l8,10 M636,212 l8,10" stroke="#e82127" stroke-width="2" fill="none"/>
-        <!-- T badge on the nose -->
-        <path d="M886,206 l10,0 l-4,2 l0,8 l-2,0 l0,-8 l-4,-2 Z" fill="#e82127"/>
+        <!-- charge / diffuser LED (EV — glows on hard regen) -->
+        <g id="quadExhaustArt"><rect x="120" y="236" width="16" height="8" rx="3"/></g>
+        <!-- diffuser strakes -->
+        <g stroke="#05070a" stroke-width="3"><path d="M112,244 l0,10"/><path d="M134,244 l0,10"/><path d="M156,244 l0,10"/></g>
+        <!-- EVIJA script + emblem -->
+        <text x="600" y="222" font-family="ui-sans-serif" font-size="12" fill="#7a828c" letter-spacing="3">EVIJA</text>
+        <circle cx="892" cy="208" r="9" fill="#0a0c10" stroke="#b6d900" stroke-width="1.4"/><text x="892" y="212" text-anchor="middle" font-size="8" font-weight="800" fill="#b6d900">L</text>
       </g>
 
-      <!-- Arachnid wheels -->
+      <!-- Hypercar wheels -->
       <g>
         <circle cx="250" cy="250" r="50" fill="#0a0b0e"/><circle cx="250" cy="250" r="50" fill="none" stroke="#6b7178" stroke-width="2"/>
         <g class="tsWeave"><g transform="translate(250,250)">
@@ -2536,34 +2540,34 @@ const SPEC = {
   }
   function turbine() { let s = ""; for (let a = 0; a < 360; a += 40) s += `<path d="M0,0 L${(36*Math.cos(a*Math.PI/180)).toFixed(1)},${(36*Math.sin(a*Math.PI/180)).toFixed(1)} L${(30*Math.cos((a+22)*Math.PI/180)).toFixed(1)},${(30*Math.sin((a+22)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="38" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* Tesla cockpit SVG — yoke, 17" landscape screen, white minimalist cabin, glass roof */
+  /* Lotus cockpit SVG — wheel, 17" landscape screen, white minimalist cabin, glass roof */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Tesla Model S Plaid cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Lotus Evija cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#23262b"/><stop offset="1" stop-color="#0d0f12"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
         <linearGradient id="whiteSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f4f7"/><stop offset="1" stop-color="#b8bfc7"/></linearGradient>
-        <linearGradient id="woodG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6b4f34"/><stop offset="1" stop-color="#3c2c1c"/></linearGradient>
+        <linearGradient id="woodG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2a2f37"/><stop offset="1" stop-color="#12151a"/></linearGradient>
         <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#10171e"/><stop offset="1" stop-color="#05080b"/></linearGradient>
       </defs>
       <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
       <!-- glass roof -->
       <path d="M40,36 Q500,-12 960,36" fill="none" stroke="rgba(157,187,212,0.5)" stroke-width="4"/>
-      <text x="500" y="24" text-anchor="middle" font-size="8" fill="#6b7178" letter-spacing="3">GLASS ROOF</text>
+      <text x="500" y="24" text-anchor="middle" font-size="8" fill="#6b7178" letter-spacing="3">CARBON ROOF</text>
       <!-- wood décor strip across the dash (the Model S signature line) -->
       <rect x="90" y="96" width="820" height="26" rx="12" fill="url(#woodG)"/>
-      <!-- driver display behind the yoke -->
+      <!-- driver display behind the wheel -->
       <rect x="200" y="52" width="240" height="64" rx="8" fill="url(#screenG)" stroke="rgba(120,130,140,0.5)"/>
       <text x="320" y="86" text-anchor="middle" font-size="22" font-weight="700" fill="#f2f5f8" id="tachGearArt">N</text>
       <circle cx="320" cy="84" r="1" fill="none" id="tachArt"/>
       <!-- 17-inch LANDSCAPE centre screen -->
       <rect x="470" y="128" width="300" height="170" rx="12" fill="url(#screenG)" stroke="rgba(120,130,140,0.6)" stroke-width="2"/>
-      <rect x="486" y="144" width="150" height="138" rx="6" fill="rgba(62,198,232,0.10)" stroke="rgba(62,198,232,0.3)"/>
-      <text x="561" y="216" text-anchor="middle" font-size="10" fill="#3ec6e8">NAV</text>
-      <rect x="648" y="144" width="106" height="66" rx="6" fill="rgba(232,33,39,0.12)" stroke="rgba(232,33,39,0.35)"/>
-      <text x="701" y="180" text-anchor="middle" font-size="10" fill="#ff9a9e">3 MOTORS</text>
+      <rect x="486" y="144" width="150" height="138" rx="6" fill="rgba(182,217,0,0.10)" stroke="rgba(182,217,0,0.3)"/>
+      <text x="561" y="216" text-anchor="middle" font-size="10" fill="#b6d900">NAV</text>
+      <rect x="648" y="144" width="106" height="66" rx="6" fill="rgba(182,217,0,0.12)" stroke="rgba(182,217,0,0.35)"/>
+      <text x="701" y="180" text-anchor="middle" font-size="10" fill="#e2ff7a">4 MOTORS</text>
       <rect x="648" y="216" width="106" height="66" rx="6" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)"/>
       <text x="701" y="252" text-anchor="middle" font-size="10" fill="#c9cfd6">MEDIA</text>
       <!-- white vegan-leather seats -->
@@ -2577,14 +2581,17 @@ const SPEC = {
         <line x1="0" y1="10" x2="0" y2="2" stroke="url(#aluG)" stroke-width="3" id="leverArt"/>
       </g>
       <!-- start-less: the car is on when you sit; keep a subtle power dot -->
-      <g transform="translate(410,80)"><circle cx="0" cy="0" r="7" fill="#0e2a33" stroke="#3ec6e8" id="startArt"/><text x="0" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">POWER</text></g>
+      <g transform="translate(410,80)"><circle cx="0" cy="0" r="7" fill="#0e2a33" stroke="#b6d900" id="startArt"/><text x="0" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">POWER</text></g>
       <!-- the YOKE -->
       <g id="cabinWheelG" transform="translate(320,296)">
-        <path d="M-58,-24 L58,-24" stroke="#101216" stroke-width="13" stroke-linecap="round"/>
-        <path d="M-58,-24 Q-66,4 -50,22 M58,-24 Q66,4 50,22" fill="none" stroke="#101216" stroke-width="13" stroke-linecap="round"/>
-        <path d="M-50,22 L50,22" stroke="#101216" stroke-width="12" stroke-linecap="round"/>
-        <rect x="-20" y="-12" width="40" height="26" rx="7" fill="#0e1014" stroke="rgba(120,130,140,0.4)"/>
-        <text x="0" y="6" text-anchor="middle" font-size="12" fill="#e82127" font-weight="700">T</text>
+        <circle r="54" fill="none" stroke="#101216" stroke-width="13"/>
+        <circle r="54" fill="none" stroke="#b6d900" stroke-opacity="0.85" stroke-width="2.5"/>
+        <path d="M-42,30 L42,30" stroke="#101216" stroke-width="12" stroke-linecap="round"/>
+        <line x1="0" y1="0" x2="-46" y2="-8" stroke="#171a20" stroke-width="8"/>
+        <line x1="0" y1="0" x2="46" y2="-8" stroke="#171a20" stroke-width="8"/>
+        <line x1="0" y1="0" x2="0" y2="44" stroke="#171a20" stroke-width="8"/>
+        <circle r="16" fill="#0e1014" stroke="rgba(120,130,140,0.4)"/>
+        <text x="0" y="5" text-anchor="middle" font-size="12" fill="#b6d900" font-weight="700">L</text>
       </g>
     </svg>`;
   }
@@ -2607,7 +2614,7 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors pulled shut to drive.", "Plaid"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors pulled shut to drive.", "Track"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = 1; }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2632,33 +2639,33 @@ const SPEC = {
 
   function setMode(m) {
     state.driveMode = m;
-    setActive("modeBtn", true); document.getElementById("modeBtn").textContent = m === "wet" ? "Chill" : m === "sport" ? "Sport" : "Plaid";
+    setActive("modeBtn", true); document.getElementById("modeBtn").textContent = m === "wet" ? "Chill" : m === "sport" ? "Sport" : "Track";
     document.getElementById("modeBtn").classList.toggle("race", m === "race");
-    // Plaid sharpens everything; Chill softens the pedal and adds TC margin
+    // Track sharpens everything; Chill softens the pedal and adds TC margin
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Plaid: full 1,020 hp, dampers firm, stability trail." : m === "sport" ? "Sport: balanced pedal and power." : "Chill: gentle pedal, traction protected.", "Plaid");
+    showToast(m === "race" ? "Track: full 2,039 PS, dampers firm, stability trail." : m === "sport" ? "Sport: balanced pedal and power." : "Chill: gentle pedal, traction protected.", "Track");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Spoiler trim: AUTO — diffuser and spoiler working with speed." : "Spoiler trim fixed."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Boombox on — the Plaid hums out loud." : "Boombox off — library quiet."); }
-  // The Track Package: carbon-ceramic brake kit + Zero-G wheels. With the hardware
-  // fitted, Tesla raises the limiter from 262 km/h to the full 322 km/h (200 mph).
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "EV Voice on — the Track hums out loud." : "EV Voice off — library quiet."); }
+  // The Track Mode: carbon-ceramic brake kit + Zero-G wheels. With the hardware
+  // fitted, Lotus raises the limiter from 262 km/h to the full 322 km/h (200 mph).
   function toggleTrackPack() {
     const next = !state.trackPack;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Fit the Track Package below 50 km/h — it is a brake kit, not a button.", "Plaid"); return; }
+    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Fit the Track Mode below 50 km/h — it is a brake kit, not a button.", "Track"); return; }
     state.trackPack = next; setActive("trackPackBtn", next);
     if (next) {
       if (state.driveMode !== "race") setMode("race");
       state.rideHeight = -1;            // air suspension drops to its lowest setting
       audio.motor(1.0); audio.chime([392, 523, 659, 784]);
-      showToast("Track Package fitted — carbon-ceramics on, limiter raised to 322 km/h (200 mph).", "Plaid");
+      showToast("Track Mode fitted — carbon-ceramics on, limiter raised to 322 km/h (200 mph).", "Track");
     } else {
       state.rideHeight = 0;
       audio.motor(0.6);
-      showToast("Track Package removed — limiter back to 262 km/h.", "Plaid");
+      showToast("Track Mode removed — limiter back to 262 km/h.", "Track");
     }
   }
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
@@ -2667,7 +2674,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Drag Strip Mode — cheetah stance. Hold the brake, floor it, then release." : "Drag Strip Mode off.", "Plaid");
+    showToast(state.launchArmed ? "Launch Mode — cheetah stance. Hold the brake, floor it, then release." : "Launch Mode off.", "Track");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2692,7 +2699,7 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Autopilot cruise holding ${state.cruiseSetKmh} km/h.`, "Plaid"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Autopilot cruise holding ${state.cruiseSetKmh} km/h.`, "Track"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, trackPack: false, rideHeight: 0 });
@@ -2705,7 +2712,7 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Plaid");
+    showToast("Back in the pit lane.", "Track");
   }
 
   Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleTrackPack, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
@@ -2736,7 +2743,7 @@ const SPEC = {
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Power-up chime — three motors report ready. That's the whole ceremony."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Power on — tri-motor ready. It will not make a sound until you move.", "Plaid"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Power on — quad-motor ready. It will not make a sound until you move.", "Track"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2772,7 +2779,7 @@ const SPEC = {
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “plaid mode”, “drag strip”, “track pack”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Hethel”, “track mode”, “launch”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
@@ -2810,11 +2817,11 @@ const SPEC = {
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
     if (state.trackPack) warn.push("TRACK PACK · 322 km/h (200 mph) unlocked");
-    if (state.launchArmed) warn.push("drag strip staged");
+    if (state.launchArmed) warn.push("launch staged");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.trackPack && speed >= 250) warn.push("262 km/h limiter — fit the Track Package for 322");
-    if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : ((state.driveMode === "race" ? "plaid" : state.driveMode === "wet" ? "chill" : "sport") + " mode")));
+    if (!state.trackPack && speed >= 250) warn.push("262 km/h limiter — fit the Track Mode for 322");
+    if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : ((state.driveMode === "race" ? "track" : state.driveMode === "wet" ? "chill" : "sport") + " mode")));
     el.warning.textContent = warn.join(" · ");
 
     const gp = document.getElementById("rivalGaps");
@@ -2834,8 +2841,8 @@ const SPEC = {
     el.lightState.textContent = state.lights ? "Active" : "Off";
     el.frontSeatRead.textContent = `${state.frontRecline}°`;
     el.climateRead.textContent = `${Math.round(state.seatTempC)}°C`;
-    el.modeReadCab.textContent = state.driveMode === "wet" ? "Chill" : state.driveMode === "sport" ? "Sport" : "Plaid";
-    el.rideRead.textContent = state.driveMode === "wet" ? "Comfort" : state.driveMode === "sport" ? "Sport" : "Plaid";
+    el.modeReadCab.textContent = state.driveMode === "wet" ? "Chill" : state.driveMode === "sport" ? "Sport" : "Track";
+    el.rideRead.textContent = state.driveMode === "wet" ? "Comfort" : state.driveMode === "sport" ? "Sport" : "Track";
     el.downforceRead.textContent = `${Math.round(state.downforceN / 9.81)} kg`;
     el.gRead.textContent = state.lateralG.toFixed(2) + " g";
     el.brakeTempRead.textContent = `${Math.round(state.brakeTempC)}°C`;
@@ -2848,7 +2855,7 @@ const SPEC = {
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
     el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetKmh)} km/h` : "Off";
     el.tcRead.textContent = state.esc ? (state.tractionControl ? "On" : "ESC only") : "Off";
-    el.dynStatus.textContent = `${state.driveMode === "race" ? "Plaid" : state.driveMode === "sport" ? "Sport" : "Chill"} · stability ${state.esc ? "on" : "off"} · regen ${state.antiLag ? "max" : "std"}`;
+    el.dynStatus.textContent = `${state.driveMode === "race" ? "Track" : state.driveMode === "sport" ? "Sport" : "Chill"} · stability ${state.esc ? "on" : "off"} · regen ${state.antiLag ? "max" : "std"}`;
 
     if (state.route.active && !app.isLoop()) { el.distRead.textContent = `${(state.route.remainingM / 1000).toFixed(2)} km`; }
     else el.distRead.textContent = app.isLoop() && state.route.active ? "lap" : "—";
@@ -3011,7 +3018,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Plaid"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Motor voice: ${name} — real recording`); showToast("Real drive-unit recording loaded — pitched with speed.", "Plaid"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the whine works best.", "Plaid"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Track"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Motor voice: ${name} — real recording`); showToast("Real drive-unit recording loaded — pitched with speed.", "Track"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the whine works best.", "Track"); }); });
   }
 
   function setupPedals() {
@@ -3089,7 +3096,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Plaid"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Track"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -3109,7 +3116,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Plaid");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Track");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -3128,7 +3135,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Plaid");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Track");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3171,7 +3178,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Plaid");
+        showToast("Trackpad steering hold cancelled.", "Track");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3181,7 +3188,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Plaid");
+          showToast("Trackpad steering off.", "Track");
         }
       }
     });
@@ -3189,7 +3196,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Powered up. Pull the right paddle for D, or open Circuit for a hot lap.", "Plaid"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Powered up. Pull the right paddle for D, or open Circuit for a hot lap.", "Track"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
