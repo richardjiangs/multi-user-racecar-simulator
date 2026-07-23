@@ -178,6 +178,18 @@ const CARS = {
     topSpeed: { kmh: 350, minT: 60 },     // electronically governed
     brake100: { target: 30, tol: 1.0 },
   },
+  f40: {
+    file: "Ferrari F40 simulator.html", app: "F40App", label: "Ferrari F40",
+    marks: { 100: { target: 4.1, tol: 1e-4 } },
+    topSpeed: { kmh: 324, minT: 65 },     // 201 mph (drag-limited vmax)
+    brake100: { target: 40, tol: 1.5 },
+  },
+  p917: {
+    file: "Porsche 917 simulator.html", app: "P917App", label: "Porsche 917K",
+    marks: { 100: { target: 2.9, tol: 1e-4 } },
+    topSpeed: { kmh: 360, minT: 55 },     // Le Mans-spec vmax
+    brake100: { target: 40, tol: 1.5 },
+  },
 };
 
 /* 2026 Formula 1 grid — eleven teams built from one shared chassis SPEC (identical
