@@ -18,7 +18,7 @@
       --alu-d: #828a93;
       --teal: #ff6a13;          /* P1 accent */
       --teal-b: #ffb684;
-      --amber: #35c2d4;         /* Speedtail cyan telemetry */
+      --amber: #35c2d4;         /* P1 cyan telemetry */
       --amber-b: #a8ecf4;
       --cognac: #3d3325;        /* Dark Glacio leather */
       --cognac2: #8f7a55;
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="McLaren Speedtail driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="McLaren P1 driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
         <div class="mark">P1</div>
         <h1>McLaren P1</h1>
-        <p>4.0L twin-turbo V8 + parallel hybrid · 7-speed dual-clutch (SSG) · rear-wheel drive · active ailerons · Monocage carbon tub · central driving seat.</p>
+        <p>3.8L twin-turbo V8 + IPAS e-motor · 7-speed dual-clutch (SSG) · rear-wheel drive · active DRS rear wing · MonoCage carbon tub.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -367,7 +367,7 @@
       </nav>
 
       <section class="quick" aria-label="Quick controls">
-        <button id="aeroBtn" class="active" title="Active rear ailerons / airbrake">Aero</button>
+        <button id="aeroBtn" class="active" title="Active rear wing / airbrake">Aero</button>
         <button id="doorAllBtn" title="Dihedral doors">Doors</button>
         <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
         <button id="liftBtn" title="Front-axle lift">Lift</button>
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the Speedtail is yours.</div>
+        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the P1 is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,7 +411,7 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Hyper-GT Teardrop</h2>
+          <h2>Exterior — Active Aero</h2>
           <span class="small"><span class="indicator"></span><span id="paintStatus">Volcano Orange over visual carbon, active rear wing (DRS), IPAS hybrid boost armed</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
@@ -433,7 +433,7 @@
           <button data-door="driver">Driver Door</button>
           <button data-door="passenger">Passenger Door</button>
           <button data-door="all">Both Doors</button>
-          <button id="wingBtn" class="active">Ailerons</button>
+          <button id="wingBtn" class="active">Rear Wing</button>
           <button id="exhaustBtn2" class="active">Exhaust Flap</button>
           <button id="lightsBtn2" class="active">Headlamps</button>
         </div>
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Central driving seat, twin passenger benches, three-screen glass dash</span>
+          <span class="small" id="cockpitStatus">Carbon bucket seats · digital cluster · Alcantara-and-carbon cabin</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="velocityBtn" class="race" title="Velocity mode: ride drops 35 mm, cameras retract, aero trims flat for the full 403 km/h">Velocity</button>
+          <button id="velocityBtn" class="race" title="DRS: the active rear wing stalls flat for minimum drag on the straights">DRS</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -483,7 +483,7 @@
       <section class="mode-panel panel-engine">
         <div class="panel-title">
           <h2>Engine Bay — M840TQ V8 + E-Motor</h2>
-          <span class="small" id="engineStatus">4.0L twin-turbo V8 + parallel e-motor · 787 kW (1,070 PS / 1,055 hp) combined · 1,150 Nm @ 5,500–6,500 · 403 km/h in Velocity mode · 0–300 in 12.8 s · 1,430 kg dry</span>
+          <span class="small" id="engineStatus">3.8L twin-turbo V8 + IPAS e-motor · 674 kW (916 PS / 903 hp) combined · 900 Nm @ 4,000 · 350 km/h governed · 0–100 in 2.8 s · 1,395 kg dry</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -511,7 +511,7 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Speedtail V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
+          <button id="engineLoadBtn" title="Load a real P1 V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
           <span class="small now" id="engineSoundStatus">Engine voice: synthesised twin-turbo V8 + e-motor</span>
         </div>
       </section>
@@ -519,8 +519,8 @@
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — Dual-Clutch · Active Ailerons · RWD</h2>
-          <span class="small" id="dynStatus">Race mode: dampers firm, ESC trail, ailerons hunting downforce</span>
+          <h2>Dynamics — Dual-Clutch · Active Rear Wing · RWD</h2>
+          <span class="small" id="dynStatus">Race mode: dampers firm, ESC trail, wing hunting downforce</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -682,7 +682,7 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">M</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">P1</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -699,10 +699,10 @@
 
   <script type="module">
 /* ===========================================================================
-   McLAREN SPEEDTAIL — "Albert" (browser hyper-GT simulator)
-   Real Web-Audio hybrid twin-turbo V8, factory-matched physics (0–100 km/h
-   3.0 s, 0–300 km/h 12.8 s, 403 km/h in Velocity mode, 787 kW / 1,070 PS,
-   1,150 Nm, 1,430 kg dry), active ailerons, a 7-speed dual-clutch you
+   McLAREN P1 (browser hypercar simulator)
+   Real Web-Audio 3.8 L twin-turbo V8 + IPAS hybrid, factory-matched physics (0–100 km/h
+   2.8 s, 350 km/h governed, 674 kW / 916 PS / 903 hp combined, 900 Nm @ 4,000,
+   1,395 kg dry), a DRS rear wing, up to 600 kg of downforce, a 7-speed dual-clutch you
    actually shift, and a test driver who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
@@ -892,8 +892,8 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    velocity: false,               // McLaren Velocity mode: ride -35 mm, cameras retracted, ailerons flat for 403 km/h
-    velocityVis: 0,                // animated ride-height drop when Velocity mode engages
+    velocity: false,               // McLaren DRS mode: ride -35 mm, cameras retracted, wing flat for 403 km/h
+    velocityVis: 0,                // animated ride-height drop when DRS mode engages
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -1210,7 +1210,7 @@ const SPEC = {
   }
 
   /* --- active aerodynamics: flexible carbon AILERONS baked into the rear clamshell ---
-     Under braking both ailerons flex fully up as an AIRBRAKE — shedding speed AND keeping
+     Under braking both wing flex fully up as an AIRBRAKE — shedding speed AND keeping
      the now-light rear axle planted (weight has pitched forward); the FRONT trim barely
      moves, or the forward-loaded nose would dig in and the tail would come around. So the
      two HUD bars deliberately read differently on the brakes. */
@@ -1220,7 +1220,7 @@ const SPEC = {
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
       // Standing downforce rises through mid-speed, then TRIMS FLAT toward Vmax — the
-      // Speedtail relaxes its ailerons at speed, exactly how it keeps 403 km/h on the table.
+      // P1 relaxes its wing at speed, exactly how it keeps 403 km/h on the table.
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -1230,7 +1230,7 @@ const SPEC = {
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
-    // Velocity mode overrides everything: ailerons lie flat for minimum drag
+    // DRS mode overrides everything: wing lie flat for minimum drag
     // (they still flex up as an airbrake only under heavy braking).
     if (state.velocity) { rearT = state.brake > 0.5 ? state.brake : 0; frontT = 0; }
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
@@ -1577,7 +1577,7 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction * realPower();
 
-    // Velocity mode drops the drag coefficient (ride -35 mm, cameras in, ailerons flat).
+    // DRS mode drops the drag coefficient (ride -35 mm, cameras in, wing flat).
     const baseCd = state.velocity ? SPEC.dragCdTopSpeed : SPEC.dragCd;
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
@@ -1589,7 +1589,7 @@ const SPEC = {
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Electronic governor at exactly 403 km/h — outside Velocity mode drag holds you below it.
+    // Electronic governor at exactly 403 km/h — outside DRS mode drag holds you below it.
     const govMps = SPEC.topSpeedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
@@ -1634,7 +1634,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Speedtail"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "P1"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1648,7 +1648,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the Speedtail sits dead still.
+    // on smooth tarmac through a fast corner the P1 sits dead still.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -2130,7 +2130,7 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Speedtail glass dash: THREE screens across the cowl — hybrid power to the
+    // ---- P1 glass dash: THREE screens across the cowl — hybrid power to the
     // left, the digital cluster dead-centre (central seat!), revs to the right ----
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
@@ -2146,7 +2146,7 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // the Speedtail's central digital cluster: speed arc to 420 km/h with a Velocity zone
+  // the P1's central digital cluster: speed arc to 420 km/h with a DRS zone
   function drawSpeedo(cx, cy, R) {
     const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 420;
     ctx.save(); ctx.translate(cx, cy);
@@ -2163,7 +2163,7 @@ const SPEC = {
       ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
       if (major) { ctx.fillStyle = "rgba(210,224,240,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(String(v), Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); }
     }
-    // Velocity zone arc (350 → 403), lit when Velocity mode is engaged
+    // DRS zone arc (350 → 403), lit when DRS mode is engaged
     ctx.strokeStyle = state.velocity ? "rgba(255,192,138,0.75)" : "rgba(255,160,90,0.22)"; ctx.lineWidth = R * 0.045;
     ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, 350 / MAX), lerp(startA, endA, 403 / MAX)); ctx.stroke();
     // needle
@@ -2203,13 +2203,13 @@ const SPEC = {
     // papaya centring band at the top of the rim
     ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(255,123,26,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.44, Math.PI * 1.56); ctx.stroke();
     ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // twin horizontal spokes + slim lower spoke (no buttons — Speedtail keeps the rim bare)
+    // twin horizontal spokes + slim lower spoke (no buttons — P1 keeps the rim bare)
     ctx.strokeStyle = "#171a20"; ctx.lineWidth = R * 0.1;
     [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.02); ctx.stroke(); });
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
     // hub + M roundel
     ctx.fillStyle = "#0c0e12"; ctx.beginPath(); ctx.arc(0, 0, R * 0.25, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#15181d"; ctx.strokeStyle = "#ff7b1a"; ctx.lineWidth = R * 0.02; ctx.beginPath(); ctx.arc(0, 0, R * 0.17, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
+    ctx.fillStyle = "#15181d"; ctx.strokeStyle = "#ff6a13"; ctx.lineWidth = R * 0.02; ctx.beginPath(); ctx.arc(0, 0, R * 0.17, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
     ctx.fillStyle = "#ff9a4d"; ctx.font = `700 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("M", 0, R * 0.01);
     ctx.restore();
   }
@@ -2308,13 +2308,13 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* McLaren exterior — Speedtail side profile (five-metre teardrop, canopy cockpit,
-     static carbon front-wheel covers, flexible tail ailerons, retractable cameras) */
+  /* McLaren exterior — P1 side profile (five-metre teardrop, canopy cockpit,
+     static carbon front-wheel covers, flexible tail wing, retractable cameras) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren Speedtail side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren P1 side">
       <defs>
-        <linearGradient id="mcSilverG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9edf1"/><stop offset="0.5" stop-color="#aeb6bf"/><stop offset="1" stop-color="#5e6670"/></linearGradient>
+        <linearGradient id="mcSilverG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f58236"/><stop offset="0.5" stop-color="#d9560f"/><stop offset="1" stop-color="#7a2e08"/></linearGradient>
         <linearGradient id="mcBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="mcGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8d4e8"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
         <radialGradient id="mcHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
@@ -2339,7 +2339,7 @@ const SPEC = {
         <!-- upper silver body panel over carbon -->
         <path d="M240,196 Q360,184 430,164 Q490,130 570,122 L640,122 Q740,130 806,150 Q852,166 884,190
                  L850,194 Q760,180 640,178 L430,186 Q330,190 240,196 Z"
-              fill="url(#mcSilverG)" stroke="rgba(200,210,220,0.5)" stroke-width="1"/>
+              fill="url(#mcSilverG)" stroke="rgba(255,160,100,0.5)" stroke-width="1"/>
         <!-- teardrop canopy glasshouse -->
         <path d="M446,162 Q492,128 566,124 L638,124 Q700,130 742,152 Q600,146 446,162 Z" fill="url(#mcGlassG)" stroke="#6c757e" stroke-width="1.5"/>
         <!-- flexible carbon AILERON on the tail clamshell (deploys with speed / braking) -->
@@ -2351,7 +2351,7 @@ const SPEC = {
         <g id="doorArt">
           <path d="M470,172 Q530,142 616,144 L700,164 L700,228 L478,232 Z" fill="rgba(120,132,146,0.28)" stroke="#6c757e" stroke-width="1.4"/>
           <path d="M506,160 Q570,146 664,152" fill="none" stroke="rgba(210,224,238,0.4)" stroke-width="2"/>
-          <!-- retractable rear-view CAMERA pod (replaces mirrors; slides in for Velocity mode) -->
+          <!-- retractable rear-view CAMERA pod (replaces mirrors; slides in for DRS mode) -->
           <rect id="cameraPod" x="486" y="146" width="18" height="7" rx="3" fill="#0c0e12" stroke="rgba(53,194,212,0.6)"/>
         </g>
         <!-- slim LED headlamp + nose blade -->
@@ -2369,26 +2369,26 @@ const SPEC = {
           <path d="M96,250 l0,10"/><path d="M126,250 l0,10"/><path d="M156,250 l0,10"/>
         </g>
         <!-- SPEEDTAIL script + M roundel -->
-        <text x="600" y="216" font-family="ui-sans-serif" font-size="12" fill="#c9cfd6" letter-spacing="3">SPEEDTAIL</text>
-        <circle cx="452" cy="212" r="9" fill="#15181d" stroke="#ff7b1a" stroke-width="1.6"/>
-        <text x="452" y="216" text-anchor="middle" font-family="ui-sans-serif" font-size="9" fill="#ff9a4d">M</text>
+        <text x="600" y="216" font-family="ui-sans-serif" font-size="12" fill="#c9cfd6" letter-spacing="3">McLAREN P1</text>
+        <circle cx="452" cy="212" r="9" fill="#15181d" stroke="#ff6a13" stroke-width="1.6"/>
+        <text x="452" y="216" text-anchor="middle" font-family="ui-sans-serif" font-size="9" fill="#ff9a4d">P1</text>
       </g>
 
       <!-- rear wheel: exposed 10-spoke -->
       <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
+        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#ff6a13" stroke-width="2"/>
         <g class="mcWeave"><g transform="translate(255,250)">
           ${turbine()}
         </g></g>
         <circle cx="255" cy="250" r="15" fill="url(#mcHub)"/>
       </g>
-      <!-- FRONT wheel: static carbon aero cover (the Speedtail signature) — the cover
+      <!-- FRONT wheel: static carbon aero cover (the P1 signature) — the cover
            stays still while the tyre turns behind it -->
       <g>
         <circle cx="745" cy="250" r="52" fill="#0a0b0e"/>
         <circle cx="745" cy="250" r="49" fill="#101318" stroke="#3a4048" stroke-width="2"/>
         <path d="M745,206 A44,44 0 0 1 789,250 L745,250 Z" fill="rgba(233,237,241,0.10)"/>
-        <circle cx="745" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
+        <circle cx="745" cy="250" r="52" fill="none" stroke="#ff6a13" stroke-width="2"/>
         <circle cx="745" cy="250" r="7" fill="url(#mcHub)"/>
         <text x="745" y="286" text-anchor="middle" font-size="8" fill="#7a838d">STATIC AERO COVER</text>
       </g>
@@ -2404,7 +2404,7 @@ const SPEC = {
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren Speedtail cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren P1 cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
@@ -2423,7 +2423,7 @@ const SPEC = {
       <rect x="658" y="66" width="212" height="84" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.5)" id="screenRArt"/>
       <text x="236" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">HYBRID kW</text>
       <text x="500" y="100" text-anchor="middle" font-size="26" font-weight="700" fill="#e8f6fa" id="tachGearArt">N</text>
-      <text x="500" y="140" text-anchor="middle" font-size="11" fill="#7fd7e2" letter-spacing="2">VELOCITY READY</text>
+      <text x="500" y="140" text-anchor="middle" font-size="11" fill="#7fd7e2" letter-spacing="2">DRS READY</text>
       <text x="764" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">1/MIN</text>
       <circle cx="500" cy="100" r="1" fill="none" id="tachArt"/>
       <!-- CENTRAL driving seat -->
@@ -2436,8 +2436,8 @@ const SPEC = {
       <!-- passenger benches, set back either side -->
       <g transform="translate(232,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
       <g transform="translate(768,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
-      <!-- overhead start button + Velocity control (Speedtail puts them above the driver) -->
-      <g transform="translate(500,26)"><rect x="-64" y="-14" width="128" height="28" rx="8" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="-34" cy="0" r="8" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="-34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">START</text><circle cx="34" cy="0" r="8" fill="#0e2a33" stroke="#35c2d4" id="velocityArt"/><text x="34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">VELOCITY</text></g>
+      <!-- overhead start button + DRS control (P1 puts them above the driver) -->
+      <g transform="translate(500,26)"><rect x="-64" y="-14" width="128" height="28" rx="8" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="-34" cy="0" r="8" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="-34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">START</text><circle cx="34" cy="0" r="8" fill="#0e2a33" stroke="#35c2d4" id="velocityArt"/><text x="34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">DRS</text></g>
       <!-- shifter keys on the slim centre console -->
       <g id="shifterArt" transform="translate(500,196)">
         <rect x="-40" y="-16" width="80" height="30" rx="8" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.6"/>
@@ -2451,7 +2451,7 @@ const SPEC = {
         <line x1="0" y1="0" x2="-52" y2="-4" stroke="#171a20" stroke-width="8"/>
         <line x1="0" y1="0" x2="52" y2="-4" stroke="#171a20" stroke-width="8"/>
         <line x1="0" y1="0" x2="0" y2="46" stroke="#171a20" stroke-width="8"/>
-        <circle r="15" fill="#15181d" stroke="#ff7b1a" stroke-width="1.8"/><text x="0" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="12" fill="#ff9a4d">M</text>
+        <circle r="15" fill="#15181d" stroke="#ff6a13" stroke-width="1.8"/><text x="0" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="12" fill="#ff9a4d">P1</text>
       </g>
     </svg>`;
   }
@@ -2474,7 +2474,7 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors drawn shut to drive.", "Speedtail"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors drawn shut to drive.", "P1"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, 7); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2505,29 +2505,29 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: dampers firm, ESC trail, exhaust open, ailerons hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Speedtail");
+    showToast(m === "race" ? "Race: dampers firm, ESC trail, exhaust open, wing hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "P1");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
-  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Active ailerons: AUTO — flexing for downforce and airbraking." : "Ailerons fixed (manual)."); }
+  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Active wing: AUTO — flexing for downforce and airbraking." : "Rear Wing fixed (manual)."); }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full V8 voice." : "Exhaust flap closed — muted."); }
-  // McLaren "Velocity mode": a dedicated top-speed protocol. It drops the ride height
-  // 35 mm, retracts the rear-view cameras, trims the ailerons flat, and clears the
+  // McLaren "DRS mode": a dedicated top-speed protocol. It drops the ride height
+  // 35 mm, retracts the rear-view cameras, trims the wing flat, and clears the
   // powertrain for the full 403 km/h run.
-  function toggleVelocity() {
+  function toggleDRS() {
     const next = !state.velocity;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage Velocity mode below 50 km/h, then build up.", "Speedtail"); return; }
+    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage DRS mode below 50 km/h, then build up.", "P1"); return; }
     state.velocity = next; setActive("velocityBtn", next);
     if (next) {
       if (state.driveMode !== "race") setMode("race");
-      state.rideHeight = -1;            // Velocity mode drops the car 35 mm
-      state.aeroAuto = true;            // ailerons managed (flat) by the Velocity logic
+      state.rideHeight = -1;            // DRS mode drops the car 35 mm
+      state.aeroAuto = true;            // wing managed (flat) by the DRS logic
       audio.motor(1.0); audio.chime([392, 523, 659, 784]);
-      showToast("Velocity mode — ride lowered 35 mm, cameras retracted, ailerons flat. 403 km/h cleared. Clear road only.", "Speedtail");
+      showToast("DRS open — the rear wing stalls flat, drag drops away. Clear road only.", "P1");
     } else {
       state.rideHeight = 0;
       audio.motor(0.6);
-      showToast("Velocity mode off — road trim restored.", "Speedtail");
+      showToast("DRS closed — the wing is back to full downforce.", "P1");
     }
   }
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
@@ -2536,7 +2536,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — full throttle on the brake, then release." : "Launch control off.", "Speedtail");
+    showToast(state.launchArmed ? "Launch control armed — full throttle on the brake, then release." : "Launch control off.", "P1");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2561,7 +2561,7 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Speedtail"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "P1"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, velocity: false, rideHeight: 0 });
@@ -2574,10 +2574,10 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Speedtail");
+    showToast("Back in the pit lane.", "P1");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleVelocity, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleDRS, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
@@ -2605,7 +2605,7 @@ const SPEC = {
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V8 barks to 3,000 and settles."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — hybrid V8 lit.", "Speedtail"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — hybrid V8 lit.", "P1"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2629,7 +2629,7 @@ const SPEC = {
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("velocity", "top speed", "250 mph", "unlock", "record run")) { app.toggleVelocity(); acted = true; }
+    if (has("drs", "wing", "top speed", "low drag")) { app.toggleDRS(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2641,7 +2641,7 @@ const SPEC = {
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “velocity mode”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Barcelona”, “race mode”, “launch”, “DRS”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
@@ -2678,11 +2678,11 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.velocity) warn.push("VELOCITY · ailerons flat, 403 km/h cleared");
+    if (state.velocity) warn.push("DRS · wing flat, 403 km/h cleared");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.velocity && speed >= 340) warn.push("drag-limited — engage Velocity mode for the full 403 km/h");
+    if (!state.velocity && speed >= 340) warn.push("drag-limited — engage DRS mode for the full 403 km/h");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -2730,9 +2730,9 @@ const SPEC = {
     document.documentElement.style.setProperty("--wheel-rot", `${state.wheelRotation}deg`);
     if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
-    state.velocityVis = lerp(state.velocityVis, state.velocity ? 1 : 0, 0.1);            // Velocity ride drop
+    state.velocityVis = lerp(state.velocityVis, state.velocity ? 1 : 0, 0.1);            // DRS ride drop
     if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 ${(state.velocityVis * 7).toFixed(1)}) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
-    const camPod = document.getElementById("cameraPod"); if (camPod) camPod.setAttribute("opacity", state.velocity ? "0.15" : "1");   // cameras retract in Velocity
+    const camPod = document.getElementById("cameraPod"); if (camPod) camPod.setAttribute("opacity", state.velocity ? "0.15" : "1");   // cameras retract in DRS
     const velArt = document.getElementById("velocityArt"); if (velArt) velArt.setAttribute("fill", state.velocity ? "#1f7a8a" : "#0e2a33");
 
     // engine art
@@ -2864,7 +2864,7 @@ const SPEC = {
     document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
-    document.getElementById("velocityBtn").addEventListener("click", () => app.toggleVelocity());
+    document.getElementById("velocityBtn").addEventListener("click", () => app.toggleDRS());
   }
 
   function bindMedia() {
@@ -2882,7 +2882,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Speedtail"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Speedtail"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Speedtail"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "P1"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "P1"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "P1"); }); });
   }
 
   function setupPedals() {
@@ -2960,7 +2960,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Speedtail"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "P1"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -2980,7 +2980,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Speedtail");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "P1");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -2999,7 +2999,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Speedtail");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "P1");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3042,7 +3042,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Speedtail");
+        showToast("Trackpad steering hold cancelled.", "P1");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3052,7 +3052,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Speedtail");
+          showToast("Trackpad steering off.", "P1");
         }
       }
     });
@@ -3060,7 +3060,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Hybrid V8 lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Speedtail"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Hybrid V8 lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "P1"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
