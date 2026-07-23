@@ -28,6 +28,8 @@ const FILES = {
   nevera: "Rimac Nevera simulator.html",
   zr1: "Chevrolet Corvette ZR1 simulator.html",
   p1: "McLaren P1 simulator.html",
+  f40: "Ferrari F40 simulator.html",
+  p917: "Porsche 917 simulator.html",
   f1mercedes: "Mercedes F1 2026 simulator.html",
   f1redbull: "Red Bull F1 2026 simulator.html",
   f1ferrari: "Ferrari F1 2026 simulator.html",

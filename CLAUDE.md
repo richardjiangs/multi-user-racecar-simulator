@@ -1,9 +1,10 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of thirty-four simulators — each a **single self-contained HTML file** —
-nineteen road cars/hypercars (incl. the Toyota GR Supra and six added later — Hennessey
-Venom F5 · Lotus Evija · Mercedes-AMG One · Rimac Nevera · Chevrolet Corvette ZR1 ·
-McLaren P1), the full **2026 Formula 1 grid** (eleven teams), and four **2026 Dakar
+A garage of thirty-six simulators — each a **single self-contained HTML file** —
+twenty-one road/classic cars & hypercars (incl. the Toyota GR Supra, six later hypercars —
+Hennessey Venom F5 · Lotus Evija · Mercedes-AMG One · Rimac Nevera · Chevrolet Corvette ZR1 ·
+McLaren P1 — and two classic racers, the **Ferrari F40** and **Porsche 917K**), the full
+**2026 Formula 1 grid** (eleven teams), and four **2026 Dakar
 Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive
 Hunter). `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
@@ -41,6 +42,9 @@ Chevrolet Corvette ZR1 simulator.html          AMG One (F1 1.6 V6 hybrid) · ZR1
 McLaren P1 simulator.html                      P1 (3.8 V8 hybrid). The two AWD quad-motor EVs (Evija,
                                                Nevera; cloned from Tesla) carry the Dakar stages + terrain;
                                                the four low ground-effect cars are tarmac-only.
+Ferrari F40 simulator.html                  ← two classic racers (cloned from the 250 GTO, tarmac-only, a low
+Porsche 917 simulator.html                     mid-engine body swapped in): F40 (2.9 TT V8, Mugello, red) and
+                                               917K (4.9 air-cooled flat-12, Daytona, Gulf blue/orange).
 Mercedes F1 2026 simulator.html             ← 2026 F1 grid (11 teams, one shared chassis SPEC):
 Red Bull F1 2026 simulator.html                Mercedes · Red Bull · Ferrari · McLaren · Aston Martin ·
 Ferrari F1 2026 simulator.html                 Alpine · Williams · Racing Bulls · Haas · Audi · Cadillac.
@@ -151,6 +155,8 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Rimac Nevera | 1,400 kW / 1,914 hp (quad-motor EV, one motor/wheel) | 2,340 Nm | 1.81 s | 412 governed | 1-speed | 2,150 kg |
 | Chevrolet Corvette ZR1 | 794 kW / 1,064 hp @ 7,000 (5.5 L flat-plane twin-turbo V8, LT7) | 1,123 Nm @ 6,000 | 2.4 s | 375 governed | 8-DCT | 1,665 kg |
 | McLaren P1 | 674 kW / 916 PS combined (3.8 L twin-turbo V8 @ 7,300 + IPAS e-motor) | 900 Nm @ 4,000 | 2.8 s | 350 governed | 7-DCT | 1,395 kg (dry) |
+| Ferrari F40 | 352 kW / 478 PS @ 7,000 (2.9 L IHI twin-turbo V8, F120A) | 577 Nm @ 4,000 | 4.1 s | 324 (drag-limited) | 5-manual | 1,100 kg (dry) |
+| Porsche 917K | 441 kW / ~600 PS @ 8,400 (4.9 L air-cooled flat-12, Type 912) | ~500 Nm @ 6,400 | 2.9 s | ~360 (Le Mans) | 5-manual | ~800 kg |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 
@@ -265,19 +271,19 @@ craned away after `scT`, "in this lap" → box → GREEN and the next incident i
 pre-rolled. A race-control board (name/status/health per car) draws in
 `drawTelemetry`; map dots get status rings. The index.html AMG card is now the
 **FIA F1 Safety Car** (inline SVG livery: silver, green stripe, light bar).
-**Learning mode (all 34 sims)**: a `data-view="learn"` tab AFTER Circuit — road
+**Learning mode (all 36 sims)**: a `data-view="learn"` tab AFTER Circuit — road
 cars "Race Car 101", AMG "Safety Car 101", F1 "Formula 1 101" — with a curriculum
 panel + `learnBtn` toggling `state.learnMode`: `drawLearningMarks()` paints
 150/100/BRAKE boards, TURN IN, a LATE APEX cone (60% through the corner) and an
 EXIT—POWER board around the next corner; the teal racing line stays on and
 `drawMap` overlays the full racing line. All opt-in → certification untouched.
 
-**v8** — width 3.75 in ALL 34 sims. `radioSay` uses cancel → setTimeout(60 ms) →
+**v8** — width 3.75 in ALL 36 sims. `radioSay` uses cancel → setTimeout(60 ms) →
 resume+speak plus a 4 s resume keepalive (Chrome silently drops queued utterances
 otherwise). Learning is a **launch mode**: the learn tab is `display:none` until the
 garage card's **Learning** button calls `app.enterLearning()` (index.html
 `openLearning` polls `getSimApp()`). Each 101 is a real course: CONTENTS quick-nav,
-two inline SVG diagrams, a per-car feature lesson (all 34 differ) and **Demo**
+two inline SVG diagrams, a per-car feature lesson (all 36 differ) and **Demo**
 buttons → `app.learnDemo()` (Suzuka, test driver, gear engaged, markers on).
 `analyseCorner()` CACHES the corner target (no board jitter) and classifies the
 apex: straight after → LATE (frac .58), hairpin → V-LINE (.62), same-direction
@@ -337,12 +343,12 @@ panel. Perf-test never holds X/V, so the certified figures are untouched.
 
 ## index.html — garage + online race shell
 
-- Thirty-four `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
+- Thirty-six `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
   the six later hypercars, each with a real-photo `<img class="realcar">` slot that reveals
   a supplied photo and otherwise falls back to the SVG livery) + spec chips; buttons
   `data-practice` / `data-online` per car key (`pagani, bugatti, mclaren, ferrari,
   koenigsegg, tesla, amg, aston, gto, revuelto, porsche918, taycan, supra, venom, evija,
-  amgone, nevera, zr1, p1, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine,
+  amgone, nevera, zr1, p1, f40, p917, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine,
   f1williams, f1racingbulls, f1haas, f1audi, f1cadillac, dacia, fordraptor, grhilux,
   hunter`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
 - `EMBEDDED_SIM_BASE64 = {…}` — every sim base64-embedded on ONE line between

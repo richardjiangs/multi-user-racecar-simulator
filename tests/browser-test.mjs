@@ -45,8 +45,8 @@ const check = (label, ok, detail) => {
   if (!ok) failures++;
 };
 
-const CAR_KEYS = ["pagani", "bugatti", "mclaren", "ferrari", "koenigsegg", "tesla", "amg", "aston", "gto", "revuelto", "porsche918", "taycan", "supra", "venom", "evija", "amgone", "nevera", "zr1", "p1", "f1mercedes", "f1redbull", "f1ferrari", "f1mclaren", "f1aston", "f1alpine", "f1williams", "f1racingbulls", "f1haas", "f1audi", "f1cadillac", "dacia", "fordraptor", "grhilux", "hunter"];
-const APPS = { pagani: "PaganiApp", bugatti: "BugattiApp", mclaren: "McLarenApp", ferrari: "FerrariApp", koenigsegg: "KoenigseggApp", tesla: "TeslaApp", amg: "AmgApp", aston: "AstonApp", gto: "GtoApp", revuelto: "RevueltoApp", porsche918: "Porsche918App", taycan: "TaycanApp", supra: "SupraApp", venom: "VenomApp", evija: "EvijaApp", amgone: "AmgOneApp", nevera: "NeveraApp", zr1: "Zr1App", p1: "P1App", f1mercedes: "MercedesF1App", f1redbull: "RedbullF1App", f1ferrari: "FerrariF1App", f1mclaren: "MclarenF1App", f1aston: "AstonF1App", f1alpine: "AlpineF1App", f1williams: "WilliamsF1App", f1racingbulls: "RacingbullsF1App", f1haas: "HaasF1App", f1audi: "AudiF1App", f1cadillac: "CadillacF1App", dacia: "DaciaDakarApp", fordraptor: "FordDakarApp", grhilux: "ToyotaDakarApp", hunter: "ProdriveDakarApp" };
+const CAR_KEYS = ["pagani", "bugatti", "mclaren", "ferrari", "koenigsegg", "tesla", "amg", "aston", "gto", "revuelto", "porsche918", "taycan", "supra", "venom", "evija", "amgone", "nevera", "zr1", "p1", "f40", "p917", "f1mercedes", "f1redbull", "f1ferrari", "f1mclaren", "f1aston", "f1alpine", "f1williams", "f1racingbulls", "f1haas", "f1audi", "f1cadillac", "dacia", "fordraptor", "grhilux", "hunter"];
+const APPS = { pagani: "PaganiApp", bugatti: "BugattiApp", mclaren: "McLarenApp", ferrari: "FerrariApp", koenigsegg: "KoenigseggApp", tesla: "TeslaApp", amg: "AmgApp", aston: "AstonApp", gto: "GtoApp", revuelto: "RevueltoApp", porsche918: "Porsche918App", taycan: "TaycanApp", supra: "SupraApp", venom: "VenomApp", evija: "EvijaApp", amgone: "AmgOneApp", nevera: "NeveraApp", zr1: "Zr1App", p1: "P1App", f40: "F40App", p917: "P917App", f1mercedes: "MercedesF1App", f1redbull: "RedbullF1App", f1ferrari: "FerrariF1App", f1mclaren: "MclarenF1App", f1aston: "AstonF1App", f1alpine: "AlpineF1App", f1williams: "WilliamsF1App", f1racingbulls: "RacingbullsF1App", f1haas: "HaasF1App", f1audi: "AudiF1App", f1cadillac: "CadillacF1App", dacia: "DaciaDakarApp", fordraptor: "FordDakarApp", grhilux: "ToyotaDakarApp", hunter: "ProdriveDakarApp" };
 
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -55,7 +55,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("thirty-four car cards render", await page.locator(".car-card").count() === 34);
+check("thirty-six car cards render", await page.locator(".car-card").count() === 36);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- private practice: AI rivals must survive ---------- */
