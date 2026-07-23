@@ -1235,7 +1235,7 @@ const SPEC = {
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
     state.frontFlap = state.aeroFrontDeploy;
     const avg = (state.aeroFrontDeploy + state.aeroRearDeploy) / 2;
-    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;
+    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg * (state.e85 ? 1.4 : 1);   // ZTK adds downforce for grip
   }
 
   // ---- Real Mode (opt-in): real per-system damage + reliability. OFF by default; realPower/realGrip
@@ -1575,7 +1575,7 @@ const SPEC = {
     const engineForce = usable * direction * realPower();
 
     // Attack aero: the boomerang wing is fixed hardware — its drag is always in the baseline.
-    const baseCd = SPEC.dragCd;
+    const baseCd = SPEC.dragCd * (state.e85 ? 1.14 : 1);   // ZTK: high-downforce wing -> more drag
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
@@ -2333,14 +2333,14 @@ const SPEC = {
       </defs>
       <ellipse cx="500" cy="300" rx="392" ry="20" fill="rgba(0,0,0,0.5)"/>
 
-      <!-- BOOMERANG wing on twin top-mounted central pylons -->
+      <!-- huge straight ZTK gooseneck wing -->
       <path d="M180,150 L210,102" fill="none" stroke="#20242b" stroke-width="9"/>
       <path d="M262,146 L262,102" fill="none" stroke="#20242b" stroke-width="9"/>
       <g id="rearWingArt">
-        <path d="M108,86 Q220,104 336,86 L332,100 Q220,116 112,100 Z" fill="#15181d" stroke="#5c636c"/>
-        <path d="M108,86 Q220,104 336,86" fill="none" stroke="rgba(242,194,0,0.75)" stroke-width="3"/>
-        <rect x="104" y="82" width="7" height="24" rx="2" fill="#101216"/>
-        <rect x="331" y="82" width="7" height="24" rx="2" fill="#101216"/>
+        <rect x="92" y="76" width="268" height="11" rx="2" fill="#15181d" stroke="#5c636c"/>
+        <rect x="92" y="76" width="268" height="3.6" fill="#f2c200"/>
+        <path d="M150,87 q-8,16 6,30 M302,87 q8,16 -6,30" fill="none" stroke="#101216" stroke-width="8"/>
+        <rect x="88" y="72" width="8" height="20" rx="2" fill="#101216"/><rect x="356" y="72" width="8" height="20" rx="2" fill="#101216"/>
       </g>
 
       <g id="bcBody">
@@ -2515,7 +2515,6 @@ const SPEC = {
   // 1,600 hp and 1,500 Nm @ 5,100 rpm; on standard petrol it makes 1,280 hp.
   function toggleFuel() {
     const next = !state.e85;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage ZTK Track Mode below 50 km/h.", "Corvette ZR1"); return; }
     state.e85 = next; setActive("fuelBtn", next);
     const map = next ? SPEC.e85 : SPEC.petrol;
     SPEC.peakPowerW = map.peakPowerW; SPEC.peakPowerPS = map.peakPowerPS;
