@@ -2516,7 +2516,6 @@ const SPEC = {
   // powertrain for the full 403 km/h run.
   function toggleDRS() {
     const next = !state.velocity;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage DRS mode below 50 km/h, then build up.", "P1"); return; }
     state.velocity = next; setActive("velocityBtn", next);
     if (next) {
       if (state.driveMode !== "race") setMode("race");
@@ -2678,11 +2677,11 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.velocity) warn.push("DRS · wing flat, 403 km/h cleared");
+    if (state.velocity) warn.push("DRS · rear wing stalled flat, low drag");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.velocity && speed >= 340) warn.push("drag-limited — engage DRS mode for the full 403 km/h");
+    if (!state.velocity && speed >= 300) warn.push("engage DRS to stall the wing for lower drag");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 

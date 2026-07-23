@@ -1236,7 +1236,7 @@ const SPEC = {
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
     state.frontFlap = state.aeroFrontDeploy;
     const avg = (state.aeroFrontDeploy + state.aeroRearDeploy) / 2;
-    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;
+    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg * (state.e85 ? 0.55 : 1);   // F5 Mode sheds downforce for speed
   }
 
   // ---- Real Mode (opt-in): real per-system damage + reliability. OFF by default; realPower/realGrip
@@ -1576,7 +1576,7 @@ const SPEC = {
     const engineForce = usable * direction * realPower();
 
     // Attack aero: the boomerang wing is fixed hardware — its drag is always in the baseline.
-    const baseCd = SPEC.dragCd;
+    const baseCd = SPEC.dragCd * (state.e85 ? 0.84 : 1);   // F5 Mode: active wing flat -> less drag
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
@@ -2516,7 +2516,6 @@ const SPEC = {
   // 1,600 hp and 1,500 Nm @ 5,100 rpm; on standard petrol it makes 1,280 hp.
   function toggleFuel() {
     const next = !state.e85;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage F5 Mode below 50 km/h — line it up first.", "Venom F5"); return; }
     state.e85 = next; setActive("fuelBtn", next);
     const map = next ? SPEC.e85 : SPEC.petrol;
     SPEC.peakPowerW = map.peakPowerW; SPEC.peakPowerPS = map.peakPowerPS;

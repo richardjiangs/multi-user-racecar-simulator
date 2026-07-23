@@ -482,7 +482,7 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Drive Units — Quad-motor + 100 kWh Pack</h2>
+          <h2>Drive Units — Quad-motor + 93 kWh Pack</h2>
           <span class="small" id="engineStatus">Quad-motor EV, one motor per wheel · 1,500 kW (2,039 PS) · 1,704 Nm · 0–100 km/h 2.9 s · 349 km/h governed · 93 kWh · 1,680 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
@@ -490,7 +490,7 @@
           <div class="turbo left" id="turboL"></div>
           <div class="turbo right" id="turboR"></div>
           <div class="v12"></div>
-          <div class="emotor" id="packArt">100 kWh STRUCTURAL PACK · 3 × CARBON-SLEEVED MOTORS</div>
+          <div class="emotor" id="packArt">93 kWh PACK · 4 × MOTORS (ONE PER WHEEL)</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">FRUNK CLOSED</div>
         </div>
@@ -912,11 +912,9 @@ const CIRCUITS = {
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
 /* ===== data: vehicle spec — EXACT Lotus Evija figures =====
-   Quad-motor: 760 kW (1,020 hp) combined, carbon-sleeved rotors; ~1,420 Nm combined
-   motor torque; curb weight 2,162 kg; 0–60 mph 1.99 s and 0–100 km/h 2.1 s (WITH the
-   launch 1-ft rollout subtracted — Lotus quotes both this way); 1/4 mile 9.23 s;
-   top speed 262 km/h (163 mph) as delivered, 322 km/h (200 mph) with the Track
-   Package's carbon-ceramic kit; single-speed reduction gear ≈ 7.5:1. */
+   Lotus Evija (Type 130): quad-motor EV, one motor per wheel — 1,500 kW (2,039 PS)
+   combined, 1,704 Nm; 0–100 km/h 2.9 s; top speed 349 km/h (governed); 93 kWh pack;
+   ~1,680 kg; single-speed drive with All-Wheel Torque Vectoring. */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
@@ -988,7 +986,7 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    trackPack: false,              // Lotus Track Mode: CCB kit + Zero-G wheels, limiter 262 -> 322 km/h
+    trackPack: false,              // Lotus Track Mode: firm dampers, more downforce, sharper torque-vectoring
     trackPackVis: 0,               // cheetah-stance dip when Launch mode stages
     testDriver: false,
     lights: true, hazards: false, horn: false,
@@ -1323,7 +1321,7 @@ const SPEC = {
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
     state.frontFlap = state.aeroFrontDeploy;
     const avg = (state.aeroFrontDeploy + state.aeroRearDeploy) / 2;
-    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;
+    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg * (state.trackPack ? 1.3 : 1);   // Track Mode: more downforce
   }
 
   // ---- Real Mode (opt-in): real per-system damage + reliability. OFF by default; realPower/realGrip
@@ -1688,7 +1686,7 @@ const SPEC = {
     const engineForce = usable * direction * realPower();
 
     // Cd 0.208 — nothing moves; the number is the whole story.
-    const baseCd = SPEC.dragCd;
+    const baseCd = SPEC.dragCd * (state.trackPack ? 1.08 : 1);   // Track Mode trades a little top speed for grip
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
@@ -1704,8 +1702,8 @@ const SPEC = {
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
     accel += state._gradeAccel || 0;   // dune climbs bleed speed, descents build it
-    // Limiter: 262 km/h as delivered; the Track Mode hardware raises it to exactly 322.
-    const govMps = state.trackPack ? SPEC.topSpeedRecordMps : SPEC.topSpeedLimitedMps;
+    // Limiter: the car’s real governed top speed.
+    const govMps = SPEC.topSpeedLimitedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -2261,7 +2259,7 @@ const SPEC = {
     // the wheel
     drawWheel(w, h);
   }
-  // instantaneous combined output (hp) — all three motors together
+  // instantaneous combined output (hp) — all four motors together
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
@@ -2282,7 +2280,7 @@ const SPEC = {
     // Track Mode / limiter chip
     ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "right";
     ctx.fillStyle = state.trackPack ? "#e2ff7a" : "rgba(130,140,150,0.7)";
-    ctx.fillText(state.trackPack ? "TRACK · 322" : "LIMIT · 262", W * 0.44, -H * 0.32);
+    ctx.fillText((state.trackPack ? "TRACK · " : "V-MAX · ") + SPEC.topSpeedLimitedKmh, W * 0.44, -H * 0.32);
     // huge speed
     ctx.textAlign = "center";
     ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.62)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmhNow)), 0, -H * 0.02);
@@ -2481,18 +2479,18 @@ const SPEC = {
 
       <g id="bcBody">
         <!-- carbon lower hull -->
-        <path d="M104,250 L150,236 Q210,222 250,216 Q320,196 372,186 Q440,166 528,160 Q616,156 690,166 Q766,176 822,194 Q884,208 906,230 L898,248 Q840,244 742,244 L300,248 Q180,250 140,252 Z"
+        <path d="M104,250 L150,238 Q214,222 262,216 Q330,198 380,190 Q452,168 540,163 Q628,160 700,172 Q772,182 826,200 Q886,214 904,232 L896,248 Q838,244 742,244 L300,248 Q180,250 140,252 Z"
               fill="url(#tsBodyG)" stroke="#4a5058" stroke-width="1.4"/>
         <!-- upper body -->
         <path d="M300,206 Q382,180 470,168 Q560,158 646,166 Q724,172 786,192 Q740,180 660,178 L470,184 Q382,192 300,206 Z"
               fill="url(#tsWhiteG)" stroke="rgba(200,210,220,0.55)" stroke-width="1"/>
         <!-- wraparound canopy -->
-        <path d="M362,184 Q432,150 522,146 Q604,146 664,168 Q564,160 470,166 Q412,172 362,184 Z"
+        <path d="M372,188 Q440,156 528,152 Q612,152 668,172 Q572,164 480,170 Q420,176 372,188 Z"
               fill="url(#tsGlassG)" stroke="#6c757e" stroke-width="1.4"/>
         <!-- accent sweep -->
         <path d="M150,226 Q420,196 806,206" fill="none" stroke="#b6d900" stroke-width="4" stroke-linecap="round"/>
         <!-- side intake (behind the cabin) -->
-        <path d="M300,214 Q352,204 394,206 L384,236 L300,238 Z" fill="#06080b" stroke="#b6d900" stroke-opacity="0.35"/>
+        <path d="M296,206 Q330,196 366,200 Q372,224 344,236 Q306,234 296,220 Z M470,206 Q506,198 544,204 Q548,226 520,236 Q484,232 470,218 Z" fill="#06080b" stroke="#b6d900" stroke-opacity="0.35"/>
         <!-- dihedral door -->
         <g id="doorArt">
           <path d="M410,180 Q470,152 558,154 L622,174 L620,236 L416,238 Z" fill="rgba(150,160,172,0.24)" stroke="#6c757e" stroke-width="1.4"/>
@@ -2652,20 +2650,19 @@ const SPEC = {
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Spoiler trim: AUTO — diffuser and spoiler working with speed." : "Spoiler trim fixed."); }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "EV Voice on — the Track hums out loud." : "EV Voice off — library quiet."); }
   // The Track Mode: carbon-ceramic brake kit + Zero-G wheels. With the hardware
-  // fitted, Lotus raises the limiter from 262 km/h to the full 322 km/h (200 mph).
+  // fitted, Lotus sharpens the car for the circuit.
   function toggleTrackPack() {
     const next = !state.trackPack;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Fit the Track Mode below 50 km/h — it is a brake kit, not a button.", "Track"); return; }
     state.trackPack = next; setActive("trackPackBtn", next);
     if (next) {
       if (state.driveMode !== "race") setMode("race");
       state.rideHeight = -1;            // air suspension drops to its lowest setting
       audio.motor(1.0); audio.chime([392, 523, 659, 784]);
-      showToast("Track Mode fitted — carbon-ceramics on, limiter raised to 322 km/h (200 mph).", "Track");
+      showToast("Track Mode — dampers firm, downforce up, torque-vectoring sharpened for the circuit.", "Track");
     } else {
       state.rideHeight = 0;
       audio.motor(0.6);
-      showToast("Track Mode removed — limiter back to 262 km/h.", "Track");
+      showToast("Track Mode off — road setup restored.", "Track");
     }
   }
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
@@ -2740,7 +2737,7 @@ const SPEC = {
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
   function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Torque blip — 1,420 Nm twitches the whole car without a sound."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Power-up chime — three motors report ready. That's the whole ceremony."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Power-up chime — four motors report ready. That's the whole ceremony."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
     if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Power on — quad-motor ready. It will not make a sound until you move.", "Track"); }
@@ -2767,7 +2764,7 @@ const SPEC = {
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("track pack", "track package", "200 mph", "322", "unlock")) { app.toggleTrackPack(); acted = true; }
+    if (has("track mode", "track pack", "downforce", "grip")) { app.toggleTrackPack(); acted = true; }
     if (has("launch", "drag strip", "cheetah")) { app.armLaunch(); acted = true; }
     if (has("plaid", "race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("chill", "wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2816,11 +2813,11 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.trackPack) warn.push("TRACK PACK · 322 km/h (200 mph) unlocked");
+    if (state.trackPack) warn.push("TRACK MODE · downforce up, sharper");
     if (state.launchArmed) warn.push("launch staged");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.trackPack && speed >= 250) warn.push("262 km/h limiter — fit the Track Mode for 322");
+    if (state.trackPack && speed >= 250) warn.push("TRACK MODE — leaning on the aero");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : ((state.driveMode === "race" ? "track" : state.driveMode === "wet" ? "chill" : "sport") + " mode")));
     el.warning.textContent = warn.join(" · ");
 
