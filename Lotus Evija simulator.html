@@ -2333,32 +2333,21 @@ const SPEC = {
     ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
     ctx.restore();
   }
-  // the YOKE: flat top AND bottom, two side grips, airbag pad with the T — nothing else
+  // Lotus Evija wheel: a rounded-rectangle rim with an OPEN centre (the display shows
+  // through it), thin lime rim accent, two low spokes to a small hub tab
   function drawWheel(w, h) {
-    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.02; const R = Math.min(w, h) * 0.31;
+    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.06; const R = Math.min(w, h) * 0.32;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineCap = "round"; ctx.lineJoin = "round";
-    // side grips: two vertical bars joined by a low cross-bar (no upper rim at all)
-    ctx.strokeStyle = "#101216"; ctx.lineWidth = R * 0.15;
-    [-1, 1].forEach(sg => {
-      ctx.beginPath();
-      ctx.moveTo(sg * R * 0.98, -R * 0.34);
-      ctx.quadraticCurveTo(sg * R * 1.06, R * 0.02, sg * R * 0.86, R * 0.3);
-      ctx.stroke();
-    });
-    // flat top bar across the grips (the wheel's signature straight top)
-    ctx.lineWidth = R * 0.13; ctx.beginPath(); ctx.moveTo(-R * 0.95, -R * 0.36); ctx.lineTo(R * 0.95, -R * 0.36); ctx.stroke();
-    // lower cross-bar / airbag base
-    ctx.lineWidth = R * 0.13; ctx.beginPath(); ctx.moveTo(-R * 0.82, R * 0.32); ctx.lineTo(R * 0.82, R * 0.32); ctx.stroke();
-    // grip stitching hint
-    ctx.strokeStyle = "rgba(182,217,0,0.35)"; ctx.lineWidth = R * 0.012;
-    [-1, 1].forEach(sg => { ctx.beginPath(); ctx.moveTo(sg * R * 0.98, -R * 0.3); ctx.quadraticCurveTo(sg * R * 1.05, R * 0.02, sg * R * 0.86, R * 0.26); ctx.stroke(); });
-    // touch controls on the top bar
-    [-1, 1].forEach(sg => { ctx.fillStyle = "#15181d"; ctx.beginPath(); ctx.arc(sg * R * 0.42, -R * 0.36, R * 0.05, 0, Math.PI * 2); ctx.fill(); ctx.strokeStyle = "rgba(180,190,200,0.4)"; ctx.lineWidth = 1; ctx.stroke(); });
-    // airbag pad with the T
-    ctx.fillStyle = "#0e1014"; roundRect(ctx, -R * 0.3, -R * 0.16, R * 0.6, R * 0.48, R * 0.08); ctx.fill();
-    ctx.strokeStyle = "rgba(120,130,140,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, -R * 0.3, -R * 0.16, R * 0.6, R * 0.48, R * 0.08); ctx.stroke();
-    ctx.fillStyle = "#b6d900"; ctx.font = `700 ${Math.round(R * 0.2)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("L", 0, R * 0.08);
+    ctx.lineJoin = "round"; ctx.lineCap = "round";
+    ctx.strokeStyle = "#101216"; ctx.lineWidth = R * 0.14;
+    roundRect(ctx, -R * 0.95, -R * 0.7, R * 1.9, R * 1.5, R * 0.5); ctx.stroke();
+    ctx.strokeStyle = "rgba(182,217,0,0.9)"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.moveTo(-R * 0.13, -R * 0.7); ctx.lineTo(R * 0.13, -R * 0.7); ctx.stroke();
+    ctx.strokeStyle = "rgba(120,130,140,0.5)"; ctx.lineWidth = R * 0.02; roundRect(ctx, -R * 0.95, -R * 0.7, R * 1.9, R * 1.5, R * 0.5); ctx.stroke();
+    ctx.strokeStyle = "#14171d"; ctx.lineWidth = R * 0.1;
+    [-1, 1].forEach(sg => { ctx.beginPath(); ctx.moveTo(sg * R * 0.9, R * 0.16); ctx.lineTo(sg * R * 0.3, R * 0.55); ctx.stroke(); });
+    ctx.beginPath(); ctx.moveTo(-R * 0.3, R * 0.55); ctx.lineTo(R * 0.3, R * 0.55); ctx.stroke();
+    ctx.fillStyle = "#0e1014"; roundRect(ctx, -R * 0.24, R * 0.42, R * 0.48, R * 0.26, R * 0.06); ctx.fill();
+    ctx.fillStyle = "#b6d900"; ctx.font = "700 " + Math.round(R * 0.13) + "px ui-sans-serif"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("LOTUS", 0, R * 0.55);
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
