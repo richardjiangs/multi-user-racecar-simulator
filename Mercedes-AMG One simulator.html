@@ -234,8 +234,8 @@
     /* two E-TURBOS in the hot vee — MGU-H style spool with no lag */
     .turbo.left  { left:26%; top:16%; } .turbo.right  { right:26%; top:16%; }
     .emotor { position:absolute; left:26%; right:26%; bottom:58px; height:34px; border-radius:8px;
-      background: linear-gradient(180deg,#3a1c1c,#1c0d0d); border:1px solid rgba(224,36,42,0.55);
-      display:grid; place-items:center; color:#8fe6dd; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(224,36,42,0.25); }
+      background: linear-gradient(180deg,#3a1c1c,#1c0d0d); border:1px solid rgba(22,179,166,0.55);
+      display:grid; place-items:center; color:#8fe6dd; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(22,179,166,0.25); }
     .bay-exhaust { position:absolute; left:42%; right:42%; bottom:18px; height:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
     .bay-exhaust i { border-radius:4px 4px 2px 2px; background: linear-gradient(180deg,#3a3f47,#1a1d22); border:1px solid rgba(150,160,170,0.3); transition: box-shadow 120ms; }
     .engine-bay.glow .bay-exhaust i { box-shadow: 0 0 14px rgba(255,110,40,0.85); }
@@ -2148,17 +2148,17 @@ const SPEC = {
   }
   // the AMG One's central TACHOMETER: graduated to 9,200 rpm, red zone from 9,000
   function drawSpeedo(cx, cy, R) {
-    const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 9200;
+    const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 11000;
     const rpmNow = state.rpm;
     ctx.save(); ctx.translate(cx, cy);
     const bz = ctx.createRadialGradient(0, -R * 0.3, R * 0.2, 0, 0, R * 1.15); bz.addColorStop(0, "#2c2224"); bz.addColorStop(1, "#0a0c10");
     ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.13, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "rgba(8,6,7,0.97)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(224,36,42,0.55)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = "rgba(22,179,166,0.55)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
     const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (let v = 0; v <= MAX; v += 250) {
-      const f = v / MAX, a = lerp(startA, endA, f), major = v % 1000 === 0, on = v <= rpmNow, zone = v >= 9000;
+      const f = v / MAX, a = lerp(startA, endA, f), major = v % 1000 === 0, on = v <= rpmNow, zone = v >= 10000;
       ctx.strokeStyle = on ? (zone ? "#ff5b5b" : "#f5e9ea") : (zone ? "rgba(255,91,91,0.4)" : "rgba(140,130,132,0.3)");
       ctx.lineWidth = major ? 2.4 : 1.1; const r1 = R * (major ? 0.74 : 0.83), r2 = R * 0.95;
       ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
@@ -2209,7 +2209,7 @@ const SPEC = {
     ctx.beginPath(); ctx.arc(0, 0, R, -Math.PI * 0.24, Math.PI * 0.24); ctx.stroke();
     ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 0.76, Math.PI * 1.24); ctx.stroke();
     // red centring stripe at top
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(224,36,42,0.95)"; ctx.beginPath(); ctx.moveTo(-R * 0.1, -R * 0.69); ctx.lineTo(R * 0.1, -R * 0.69); ctx.stroke();
+    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(22,179,166,0.95)"; ctx.beginPath(); ctx.moveTo(-R * 0.1, -R * 0.69); ctx.lineTo(R * 0.1, -R * 0.69); ctx.stroke();
     // LED shift lights across the top pad
     for (let i = 0; i < 9; i++) { const f = (i + 1) / 9, lit = state.rpm / 9200 >= f * 0.82; ctx.fillStyle = lit ? (i > 6 ? "#ff4040" : i > 3 ? "#ffd23c" : "#57e07c") : "rgba(255,255,255,0.12)"; ctx.beginPath(); ctx.arc((i - 4) * R * 0.14, -R * 0.5, R * 0.028, 0, Math.PI * 2); ctx.fill(); }
     // spokes + hub with cavallino badge
@@ -2344,7 +2344,7 @@ const SPEC = {
       <path d="M236,148 q6,-34 34,-44" fill="none" stroke="#20242b" stroke-width="8"/>
       <g id="rearWingArt">
         <rect x="108" y="92" width="200" height="13" rx="5" fill="#15181d" stroke="#5c636c"/>
-        <rect x="108" y="92" width="200" height="4" rx="2" fill="rgba(224,36,42,0.7)"/>
+        <rect x="108" y="92" width="200" height="4" rx="2" fill="rgba(22,179,166,0.7)"/>
       </g>
 
       <g id="bcBody">
