@@ -2388,53 +2388,20 @@ const SPEC = {
     app.el.cabinArt.innerHTML = `
     <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren P1 cockpit">
       <defs>
-        <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="leatherG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f7a55"/><stop offset="1" stop-color="#3d3325"/></linearGradient>
-        <linearGradient id="papayaTrimG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffab5e"/><stop offset="1" stop-color="#b34f0a"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12303a"/><stop offset="1" stop-color="#060d12"/></linearGradient>
+        <linearGradient id="cabC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e24"/><stop offset="1" stop-color="#08090c"/></linearGradient>
+        <linearGradient id="cabA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
+        <linearGradient id="cabScr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12171e"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+        <linearGradient id="cabSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2312"/><stop offset="1" stop-color="#160c06"/></linearGradient>
       </defs>
-      <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- teardrop canopy line overhead -->
-      <path d="M60,44 Q500,-16 940,44" fill="none" stroke="rgba(184,212,232,0.35)" stroke-width="3"/>
-      <!-- glass dash: THREE screens wrapping the cowl -->
-      <rect x="110" y="52" width="780" height="112" rx="16" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-      <rect x="130" y="66" width="212" height="84" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.5)" id="screenLArt"/>
-      <rect x="394" y="60" width="212" height="96" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.7)"/>
-      <rect x="658" y="66" width="212" height="84" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.5)" id="screenRArt"/>
-      <text x="236" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">HYBRID kW</text>
-      <text x="500" y="100" text-anchor="middle" font-size="26" font-weight="700" fill="#e8f6fa" id="tachGearArt">N</text>
-      <text x="500" y="140" text-anchor="middle" font-size="11" fill="#7fd7e2" letter-spacing="2">DRS READY</text>
-      <text x="764" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">1/MIN</text>
-      <circle cx="500" cy="100" r="1" fill="none" id="tachArt"/>
-      <!-- CENTRAL driving seat -->
-      <g transform="translate(500,262)">
-        <rect x="-46" y="-38" width="92" height="132" rx="22" fill="url(#leatherG)" stroke="rgba(0,0,0,0.35)"/>
-        <rect x="-30" y="-30" width="60" height="30" rx="12" fill="rgba(0,0,0,0.28)"/>
-        <path d="M-32,16 L32,16 M-32,42 L32,42 M-32,68 L32,68" stroke="rgba(255,123,26,0.55)"/>
-        <text x="0" y="112" text-anchor="middle" font-size="9" fill="#8f97a1" letter-spacing="2">DRIVER · CENTRE</text>
-      </g>
-      <!-- passenger benches, set back either side -->
-      <g transform="translate(232,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
-      <g transform="translate(768,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
-      <!-- overhead start button + DRS control (P1 puts them above the driver) -->
-      <g transform="translate(500,26)"><rect x="-64" y="-14" width="128" height="28" rx="8" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="-34" cy="0" r="8" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="-34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">START</text><circle cx="34" cy="0" r="8" fill="#0e2a33" stroke="#35c2d4" id="velocityArt"/><text x="34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">DRS</text></g>
-      <!-- shifter keys on the slim centre console -->
-      <g id="shifterArt" transform="translate(500,196)">
-        <rect x="-40" y="-16" width="80" height="30" rx="8" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.6"/>
-        <g fill="url(#aluG)"><circle cx="-22" cy="0" r="6"/><circle cx="0" cy="0" r="6"/><circle cx="22" cy="0" r="6"/></g>
-        <line x1="0" y1="10" x2="0" y2="0" stroke="url(#aluG)" stroke-width="4" id="leverArt"/>
-      </g>
-      <!-- McLaren wheel, dead centre -->
-      <g id="cabinWheelG" transform="translate(500,300)">
-        <circle r="56" fill="none" stroke="#101216" stroke-width="15"/>
-        <circle r="56" fill="none" stroke="url(#papayaTrimG)" stroke-width="3"/>
-        <line x1="0" y1="0" x2="-52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="0" y2="46" stroke="#171a20" stroke-width="8"/>
-        <circle r="15" fill="#15181d" stroke="#ff6a13" stroke-width="1.8"/><text x="0" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="12" fill="#ff9a4d">P1</text>
-      </g>
+      <rect width="1000" height="360" fill="url(#cabC)"/>
+      <rect x="108" y="44" width="784" height="20" rx="10" fill="#0c0f14" stroke="url(#cabA)" stroke-width="1.2"/>
+      <g transform="translate(250,270)"><rect x="-46" y="-34" width="92" height="122" rx="20" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/><path d="M-30,-18 L30,-18 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(255,255,255,0.16)"/></g>
+      <g transform="translate(750,270)"><rect x="-46" y="-34" width="92" height="122" rx="20" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/><path d="M-30,-18 L30,-18 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(255,255,255,0.16)"/></g>
+      <g transform="translate(360,116)"><rect x="-92" y="-34" width="184" height="76" rx="8" fill="url(#cabScr)" stroke="#ff6a13" stroke-width="2" id="tachArt"/><text x="0" y="-16" text-anchor="middle" font-size="9" fill="#ffb684" letter-spacing="2">HYBRID · V8</text><path d="M-80,4 A64,64 0 0 1 80,4" fill="none" stroke="#3a2410" stroke-width="5"/><path d="M-80,4 A64,64 0 0 1 20,-40" fill="none" stroke="#ff6a13" stroke-width="5"/><text x="0" y="26" text-anchor="middle" font-size="30" font-weight="800" fill="#ffd9b8" id="tachGearArt">N</text></g>
+      <rect x="472" y="122" width="60" height="100" rx="8" fill="url(#cabScr)" stroke="#ff6a13" stroke-opacity="0.5"/><rect x="482" y="132" width="40" height="16" rx="3" fill="#0e2a33" stroke="#35c2d4"/><text x="502" y="144" text-anchor="middle" font-size="7" fill="#7fd7e2">IPAS</text><rect x="482" y="156" width="40" height="16" rx="3" fill="#3a2410" stroke="#ff6a13"/><text x="502" y="168" text-anchor="middle" font-size="7" fill="#ffb684">DRS</text>
+      <g transform="translate(640,262)"><rect x="-24" y="-16" width="48" height="32" rx="6" fill="#0c0f14" stroke="url(#cabA)"/><circle r="10" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text y="3" text-anchor="middle" font-size="6" fill="#ffd7d7">START</text></g>
+      <g id="cabinWheelG" transform="translate(360,300)"><path d="M-56,-24 L56,-24 Q60,4 50,26 L-50,26 Q-60,4 -56,-24 Z" fill="none" stroke="#101216" stroke-width="14"/><path d="M-56,-24 L56,-24" fill="none" stroke="#ff6a13" stroke-width="3"/><line x1="0" y1="0" x2="-46" y2="0" stroke="#171a20" stroke-width="9"/><line x1="0" y1="0" x2="46" y2="0" stroke="#171a20" stroke-width="9"/><rect x="-16" y="-12" width="32" height="24" rx="4" fill="#0e1116" stroke="#ff6a13" stroke-width="2"/><circle cx="-38" cy="6" r="6" fill="#ff6a13"/><circle cx="38" cy="6" r="6" fill="#35c2d4"/></g>
+      <text x="500" y="352" text-anchor="middle" font-size="9" fill="#6b7480" letter-spacing="2">McLAREN · IPAS · DRS</text>
     </svg>`;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }

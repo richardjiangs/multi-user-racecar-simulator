@@ -2383,40 +2383,21 @@ const SPEC = {
     app.el.cabinArt.innerHTML = `
     <svg viewBox="0 0 1000 360" role="img" aria-label="Ferrari F40 cockpit">
       <defs>
-        <linearGradient id="dashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a1114"/><stop offset="1" stop-color="#2a0708"/></linearGradient>
-        <linearGradient id="chromeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f5f8"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="seatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a2a20"/><stop offset="1" stop-color="#1a120c"/></linearGradient>
-        <radialGradient id="dialG" cx="50%" cy="42%" r="60%"><stop offset="0" stop-color="#20242a"/><stop offset="1" stop-color="#07090c"/></radialGradient>
+        <linearGradient id="cabC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e24"/><stop offset="1" stop-color="#08090c"/></linearGradient>
+        <linearGradient id="cabA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
+        <linearGradient id="cabScr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12171e"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+        <linearGradient id="cabSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1416"/><stop offset="1" stop-color="#160708"/></linearGradient>
       </defs>
-      <rect x="0" y="0" width="1000" height="360" fill="#120404"/>
-      <!-- body-colour painted metal dash -->
-      <rect x="90" y="40" width="820" height="150" rx="14" fill="url(#dashG)" stroke="#7a0c0e" stroke-width="1.4"/>
-      <!-- big central Veglia tacho + speedo, chrome bezels -->
-      <g transform="translate(430,118)"><circle r="66" fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="4" id="tachArt"/><text x="0" y="-30" text-anchor="middle" font-size="9" fill="#d9c07a">giri/min x100</text><text x="0" y="12" text-anchor="middle" font-size="24" font-weight="700" fill="#f2ead2" id="tachGearArt">N</text></g>
-      <g transform="translate(568,120)"><circle r="52" fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="4"/><text x="0" y="4" text-anchor="middle" font-size="9" fill="#9aa2ab" letter-spacing="1">km/h</text></g>
-      <!-- row of minor gauges -->
-      <g fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="2"><circle cx="150" cy="120" r="22"/><circle cx="210" cy="120" r="22"/><circle cx="800" cy="120" r="22"/><circle cx="860" cy="120" r="22"/></g>
-      <!-- bucket seats, leather -->
-      <g transform="translate(250,272)"><rect x="-42" y="-28" width="84" height="112" rx="14" fill="url(#seatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-28,-12 L28,-12 M-28,12 L28,12 M-28,36 L28,36" stroke="rgba(180,150,110,0.45)"/></g>
-      <g transform="translate(750,272)"><rect x="-42" y="-28" width="84" height="112" rx="14" fill="url(#seatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-28,-12 L28,-12 M-28,12 L28,12 M-28,36 L28,36" stroke="rgba(180,150,110,0.45)"/></g>
-      <!-- exposed open-gate shifter with chrome ball -->
-      <g id="shifterArt" transform="translate(500,296)">
-        <rect x="-30" y="-30" width="60" height="80" rx="6" fill="#1a0a08" stroke="url(#chromeG)" stroke-width="1.6"/>
-        <g stroke="url(#chromeG)" stroke-width="1.4"><path d="M-16,-20 L16,-20 M-16,0 L16,0 M-16,20 L16,20 M-16,-20 L-16,20 M16,-20 L16,20 M0,-20 L0,20"/></g>
-        <line x1="0" y1="46" x2="0" y2="6" stroke="url(#chromeG)" stroke-width="5" id="leverArt"/>
-        <circle cx="0" cy="50" r="9" fill="url(#chromeG)"/>
-      </g>
-      <g transform="translate(640,262)"><rect x="-24" y="-16" width="48" height="32" rx="4" fill="#1a0a08" stroke="url(#chromeG)"/><circle cx="0" cy="0" r="10" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6" fill="#ffd7d7">AVV</text></g>
-      <!-- thin wood-rim three-spoke Nardi wheel -->
-      <g id="cabinWheelG" transform="translate(430,300)">
-        <circle r="60" fill="none" stroke="#7a4a24" stroke-width="9"/>
-        <circle r="60" fill="none" stroke="rgba(210,160,90,0.5)" stroke-width="2"/>
-        <line x1="0" y1="0" x2="-52" y2="20" stroke="url(#chromeG)" stroke-width="5"/>
-        <line x1="0" y1="0" x2="52" y2="20" stroke="url(#chromeG)" stroke-width="5"/>
-        <line x1="0" y1="0" x2="0" y2="-58" stroke="url(#chromeG)" stroke-width="5"/>
-        <circle r="14" fill="#1a0a08" stroke="url(#chromeG)" stroke-width="2"/>
-        <g transform="translate(0,0)"><rect x="-6" y="-6" width="12" height="15" rx="2" fill="#f5d400" stroke="#0a0c10" stroke-width="0.6"/></g>
-      </g>
+      <rect width="1000" height="360" fill="url(#cabC)"/>
+      <rect x="108" y="44" width="784" height="20" rx="10" fill="#0c0f14" stroke="url(#cabA)" stroke-width="1.2"/>
+      <g transform="translate(250,272)"><rect x="-42" y="-30" width="84" height="118" rx="8" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.4)"/><path d="M-24,-12 L24,-12 M-24,12 L24,12" stroke="rgba(220,30,34,0.5)"/></g>
+      <g transform="translate(750,272)"><rect x="-42" y="-30" width="84" height="118" rx="8" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.4)"/></g>
+      <path d="M470,206 l-14,64 M530,206 l14,64" stroke="#d81e22" stroke-width="3"/>
+      <g transform="translate(360,116)"><rect x="-104" y="-36" width="208" height="76" rx="6" fill="#0a0c10" stroke="#5a5f66"/><g transform="translate(-58,4)"><circle r="30" fill="url(#cabScr)" stroke="#c9a24a"/><text y="-14" text-anchor="middle" font-size="7" fill="#d0b060">GIRI</text><path d="M0,0 L14,-10" stroke="#d81e22" stroke-width="2"/></g><g transform="translate(58,4)"><circle r="30" fill="url(#cabScr)" stroke="#c9a24a"/><text y="-14" text-anchor="middle" font-size="7" fill="#d0b060">KM/H</text><path d="M0,0 L-14,-10" stroke="#e9edf0" stroke-width="2"/></g><text x="0" y="8" text-anchor="middle" font-size="30" font-weight="800" fill="#f2f2f2" id="tachGearArt">N</text></g>
+      <g transform="translate(508,128)"><circle r="20" fill="url(#cabScr)" stroke="#c9a24a"/><text y="3" text-anchor="middle" font-size="7" fill="#d0b060">BOOST</text></g>
+      <g transform="translate(640,250)"><rect x="-30" y="-34" width="60" height="92" rx="4" fill="#c9cfd6" stroke="#8a9098"/><g stroke="#3a3f46" stroke-width="1.5"><path d="M-16,-22 h32 M-16,0 h32 M-16,22 h32 M-16,-22 v44 M0,-22 v44 M16,-22 v44"/></g><line x1="0" y1="46" x2="0" y2="0" stroke="url(#cabA)" stroke-width="6" id="leverArt"/><circle cx="0" cy="50" r="10" fill="#1a1410" stroke="#c9a24a"/></g>
+      <g id="cabinWheelG" transform="translate(360,300)"><circle r="56" fill="none" stroke="#17110c" stroke-width="8"/><circle r="56" fill="none" stroke="#3a2c1e" stroke-width="2"/><line x1="0" y1="0" x2="-50" y2="14" stroke="#8a9098" stroke-width="4"/><line x1="0" y1="0" x2="50" y2="14" stroke="#8a9098" stroke-width="4"/><line x1="0" y1="0" x2="0" y2="-52" stroke="#8a9098" stroke-width="4"/><circle r="14" fill="#1a1410" stroke="#c9a24a" stroke-width="2"/><path d="M0,-9 q4,5 0,14 M-4,-5 q4,-1 8,0" fill="none" stroke="#c9a24a" stroke-width="1.4"/></g>
+      <text x="500" y="352" text-anchor="middle" font-size="9" fill="#6b7480" letter-spacing="2">FERRARI F40 · 2.9 V8 TT</text>
     </svg>
     `;
   }

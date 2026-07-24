@@ -2418,52 +2418,20 @@ const SPEC = {
     app.el.cabinArt.innerHTML = `
     <svg viewBox="0 0 1000 360" role="img" aria-label="Mercedes-AMG One cockpit">
       <defs>
-        <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="rossoSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c4a47"/><stop offset="1" stop-color="#0e2423"/></linearGradient>
-        <linearGradient id="neroSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33383f"/><stop offset="1" stop-color="#101216"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#301416"/><stop offset="1" stop-color="#0d0607"/></linearGradient>
+        <linearGradient id="cabC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e24"/><stop offset="1" stop-color="#08090c"/></linearGradient>
+        <linearGradient id="cabA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
+        <linearGradient id="cabScr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12171e"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+        <linearGradient id="cabSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#123a37"/><stop offset="1" stop-color="#0a1c1b"/></linearGradient>
       </defs>
-      <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- slim F1-style cluster ahead of the driver -->
-      <rect x="150" y="52" width="420" height="104" rx="14" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-      <rect x="168" y="64" width="384" height="80" rx="8" fill="url(#screenG)" stroke="rgba(224,36,42,0.6)"/>
-      <text x="360" y="102" text-anchor="middle" font-size="26" font-weight="700" fill="#ffe9ea" id="tachGearArt">N</text>
-      <text x="360" y="132" text-anchor="middle" font-size="10" fill="#8fe6dd" letter-spacing="3">REV · 11000</text>
-      <circle cx="360" cy="100" r="1" fill="none" id="tachArt"/>
-      <!-- passenger side kept bare carbon (weight!) with a grab handle -->
-      <rect x="640" y="86" width="210" height="12" rx="6" fill="#15181d" stroke="rgba(255,255,255,0.14)"/>
-      <text x="745" y="128" text-anchor="middle" font-size="9" fill="#7a838d" letter-spacing="2">CARBONIO A VISTA</text>
-      <!-- driver seat: rosso, mounted forward -->
-      <g transform="translate(360,246)">
-        <rect x="-46" y="-38" width="92" height="132" rx="20" fill="url(#rossoSeatG)" stroke="rgba(0,0,0,0.35)"/>
-        <path d="M-30,-20 L30,-20 M-30,8 L30,8 M-30,36 L30,36" stroke="rgba(0,0,0,0.35)"/>
-        <text x="0" y="112" text-anchor="middle" font-size="9" fill="#c98a8d" letter-spacing="2">PILOTA</text>
-      </g>
-      <!-- passenger seat: nero, offset BACK into the hull -->
-      <g transform="translate(700,282)">
-        <rect x="-42" y="-26" width="84" height="104" rx="18" fill="url(#neroSeatG)" stroke="rgba(0,0,0,0.35)"/>
-        <text x="0" y="96" text-anchor="middle" font-size="8" fill="#7a838d" letter-spacing="2">PASSEGGERO +</text>
-      </g>
-      <!-- centre bridge with the e-manettino + START -->
-      <g id="shifterArt" transform="translate(524,236)">
-        <rect x="-24" y="-36" width="48" height="110" rx="12" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-        <g fill="url(#aluG)"><circle cx="0" cy="-16" r="6"/><circle cx="0" cy="4" r="6"/><circle cx="0" cy="24" r="6"/></g>
-        <line x1="0" y1="50" x2="0" y2="8" stroke="url(#aluG)" stroke-width="5" id="leverArt"/>
-        <circle cx="0" cy="56" r="9" fill="url(#aluG)"/>
-      </g>
-      <g transform="translate(640,232)"><rect x="-24" y="-16" width="48" height="32" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="10" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="26" text-anchor="middle" font-size="6" fill="#9aa2ab">START</text></g>
-      <!-- AMG One squared wheel, offset to the driver -->
-      <g id="cabinWheelG" transform="translate(360,300)">
-        <path d="M-56,-34 L56,-34 M-56,34 L56,34" stroke="#101216" stroke-width="14" stroke-linecap="round"/>
-        <path d="M-56,-34 A56,56 0 0 0 -56,34 M56,-34 A56,56 0 0 1 56,34" fill="none" stroke="#101216" stroke-width="14"/>
-        <path d="M-12,-34 L12,-34" stroke="#16b3a6" stroke-width="6"/>
-        <line x1="0" y1="0" x2="-50" y2="4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="50" y2="4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="0" y2="30" stroke="#171a20" stroke-width="8"/>
-        <circle r="14" fill="#ffd23c" stroke="#0a0c10" stroke-width="1.6"/><text x="0" y="4" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="#0a0c10">AMG</text>
-      </g>
+      <rect width="1000" height="360" fill="url(#cabC)"/>
+      <rect x="108" y="44" width="784" height="20" rx="10" fill="#0c0f14" stroke="url(#cabA)" stroke-width="1.2"/>
+      <g transform="translate(360,278)"><rect x="-40" y="-30" width="80" height="112" rx="16" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/><path d="M-26,-14 L26,-14 M-26,10 L26,10" stroke="rgba(143,230,221,0.4)"/></g>
+      <g transform="translate(632,282)"><rect x="-36" y="-26" width="72" height="104" rx="16" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/></g>
+      <g transform="translate(360,110)"><rect x="-96" y="-30" width="192" height="24" rx="4" fill="#0a0c10" stroke="#16b3a6" id="tachArt"/><g><rect x="-88" y="-26" width="8" height="16" rx="1" fill="#16b3a6" opacity="0.9"/><rect x="-76" y="-26" width="8" height="16" rx="1" fill="#16b3a6" opacity="0.9"/><rect x="-64" y="-26" width="8" height="16" rx="1" fill="#16b3a6" opacity="0.9"/><rect x="-52" y="-26" width="8" height="16" rx="1" fill="#16b3a6" opacity="0.9"/><rect x="-40" y="-26" width="8" height="16" rx="1" fill="#16b3a6" opacity="0.9"/><rect x="-28" y="-26" width="8" height="16" rx="1" fill="#16b3a6" opacity="0.9"/><rect x="-16" y="-26" width="8" height="16" rx="1" fill="#f2c200" opacity="0.9"/><rect x="-4" y="-26" width="8" height="16" rx="1" fill="#f2c200" opacity="0.9"/><rect x="8" y="-26" width="8" height="16" rx="1" fill="#f2c200" opacity="0.9"/><rect x="20" y="-26" width="8" height="16" rx="1" fill="#f2c200" opacity="0.35"/><rect x="32" y="-26" width="8" height="16" rx="1" fill="#f2c200" opacity="0.35"/><rect x="44" y="-26" width="8" height="16" rx="1" fill="#ff5b5b" opacity="0.35"/><rect x="56" y="-26" width="8" height="16" rx="1" fill="#ff5b5b" opacity="0.35"/><rect x="68" y="-26" width="8" height="16" rx="1" fill="#ff5b5b" opacity="0.35"/><rect x="80" y="-26" width="8" height="16" rx="1" fill="#ff5b5b" opacity="0.35"/></g><rect x="-70" y="4" width="140" height="44" rx="6" fill="url(#cabScr)" stroke="#16b3a6" stroke-opacity="0.6"/><text x="-40" y="30" text-anchor="middle" font-size="8" fill="#8fe6dd">DEPLOY</text><text x="40" y="34" text-anchor="middle" font-size="30" font-weight="800" fill="#c7fff6" id="tachGearArt">N</text></g>
+      
+      <g transform="translate(636,250)"><rect x="-13" y="-16" width="26" height="32" rx="6" fill="#0c0f14" stroke="url(#cabA)"/><circle r="9" fill="#1f7a3a" stroke="#7cffa8" id="startArt"/><text y="3" text-anchor="middle" font-size="6" fill="#d7ffe4">RS</text></g>
+      <g id="cabinWheelG" transform="translate(360,300)"><path d="M-58,-32 L58,-32 Q68,-6 58,20 L-58,20 Q-68,-6 -58,-32 Z" fill="#0e1116" stroke="#16b3a6" stroke-width="2.4"/><rect x="-34" y="-26" width="68" height="18" rx="3" fill="url(#cabScr)" stroke="#16b3a6" stroke-opacity="0.7"/><circle cx="-42" cy="4" r="7" fill="#16b3a6"/><circle cx="42" cy="4" r="7" fill="#c8102e"/><circle cx="-24" cy="8" r="5" fill="#2a2f37"/><circle cx="24" cy="8" r="5" fill="#2a2f37"/><rect x="-14" y="-4" width="28" height="18" rx="3" fill="#0a0c10" stroke="#16b3a6"/></g>
+      <text x="500" y="352" text-anchor="middle" font-size="9" fill="#6b7480" letter-spacing="2">AMG · F1 V6 · 11,000 RPM</text>
     </svg>`;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }

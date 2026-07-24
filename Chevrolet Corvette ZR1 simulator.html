@@ -2411,48 +2411,20 @@ const SPEC = {
     app.el.cabinArt.innerHTML = `
     <svg viewBox="0 0 1000 360" role="img" aria-label="Chevrolet Corvette ZR1 cockpit">
       <defs>
-        <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="alcSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="1" stop-color="#15181d"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a1c10"/><stop offset="1" stop-color="#0d0805"/></linearGradient>
+        <linearGradient id="cabC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e24"/><stop offset="1" stop-color="#08090c"/></linearGradient>
+        <linearGradient id="cabA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
+        <linearGradient id="cabScr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12171e"/><stop offset="1" stop-color="#05080b"/></linearGradient>
+        <linearGradient id="cabSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33301a"/><stop offset="1" stop-color="#131208"/></linearGradient>
       </defs>
-      <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- low carbon cowl -->
-      <rect x="120" y="46" width="760" height="20" rx="10" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.4"/>
-      <!-- driver display: single round display ON THE COLUMN behind the wheel -->
-      <g transform="translate(360,120)">
-        <rect x="-14" y="34" width="28" height="60" rx="8" fill="#101318" stroke="rgba(242,194,0,0.4)"/>
-        <circle r="56" fill="url(#screenG)" stroke="rgba(242,194,0,0.7)" stroke-width="2.4" id="tachArt"/>
-        <text x="0" y="-16" text-anchor="middle" font-size="9" fill="#ffe57a" letter-spacing="2">DRIVER DISPLAY</text>
-        <text x="0" y="12" text-anchor="middle" font-size="26" font-weight="700" fill="#faf2e8" id="tachGearArt">N</text>
-        <text x="0" y="34" text-anchor="middle" font-size="8" fill="#c98a5a">1,064 HP · LT7</text>
-      </g>
-      <!-- centre screen: portrait 9" touchscreen on the spine -->
-      <rect x="466" y="120" width="68" height="118" rx="10" fill="url(#screenG)" stroke="rgba(242,194,0,0.55)"/>
-      <text x="500" y="252" text-anchor="middle" font-size="8" fill="#9aa2ab" letter-spacing="1">CENTRE SCREEN</text>
-      <!-- seats: carbon buckets, orange stitch -->
-      <g transform="translate(252,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(242,194,0,0.55)"/></g>
-      <g transform="translate(748,268)"><rect x="-44" y="-30" width="88" height="116" rx="20" fill="url(#alcSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(242,194,0,0.55)"/></g>
-      <!-- milled shift keys + START on the spine -->
-      <g id="shifterArt" transform="translate(500,296)">
-        <rect x="-26" y="-34" width="52" height="96" rx="14" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-        <g fill="url(#aluG)"><circle cx="0" cy="-14" r="7"/><circle cx="0" cy="8" r="7"/><circle cx="0" cy="30" r="7"/></g>
-        <line x1="0" y1="52" x2="0" y2="12" stroke="url(#aluG)" stroke-width="6" id="leverArt"/>
-        <circle cx="0" cy="56" r="10" fill="url(#aluG)"/>
-      </g>
-      <g transform="translate(640,262)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="11" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="7" fill="#ffd7d7">START</text></g>
-      <!-- wheel with touch pads -->
-      <g id="cabinWheelG" transform="translate(360,300)">
-        <circle r="56" fill="none" stroke="#101216" stroke-width="15"/>
-        <circle r="56" fill="none" stroke="rgba(242,194,0,0.8)" stroke-width="3"/>
-        <line x1="0" y1="0" x2="-52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="0" y2="48" stroke="#171a20" stroke-width="8"/>
-        <rect x="-44" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(242,194,0,0.6)"/>
-        <rect x="24" y="-12" width="20" height="18" rx="4" fill="#0e1116" stroke="rgba(242,194,0,0.6)"/>
-        <circle r="12" fill="none" stroke="#1a1e24" stroke-width="4"/>
-      </g>
+      <rect width="1000" height="360" fill="url(#cabC)"/>
+      <rect x="108" y="44" width="784" height="20" rx="10" fill="#0c0f14" stroke="url(#cabA)" stroke-width="1.2"/>
+      <g transform="translate(250,270)"><rect x="-46" y="-34" width="92" height="122" rx="20" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/><path d="M-30,-18 L30,-18 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(255,255,255,0.16)"/></g>
+      <g transform="translate(750,270)"><rect x="-46" y="-34" width="92" height="122" rx="20" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/><path d="M-30,-18 L30,-18 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(255,255,255,0.16)"/></g>
+      <g transform="translate(360,116)"><rect x="-100" y="-36" width="200" height="78" rx="6" fill="url(#cabScr)" stroke="#f2c200" stroke-width="2" id="tachArt"/><text x="0" y="-16" text-anchor="middle" font-size="9" fill="#ffe57a" letter-spacing="2">DRIVER DISPLAY</text><path d="M-88,-2 A70,70 0 0 1 88,-2" fill="none" stroke="#3a3410" stroke-width="5"/><path d="M-88,-2 A70,70 0 0 1 40,-40" fill="none" stroke="#f2c200" stroke-width="5"/><text x="0" y="24" text-anchor="middle" font-size="30" font-weight="800" fill="#fff3c0" id="tachGearArt">N</text></g>
+      <rect x="470" y="118" width="150" height="66" rx="8" fill="url(#cabScr)" stroke="#f2c200" stroke-opacity="0.5"/><text x="545" y="156" text-anchor="middle" font-size="9" fill="#9aa2ab">INFOTAINMENT</text>
+      <g transform="translate(690,250)"><rect x="-14" y="-30" width="28" height="86" rx="8" fill="#0c0f14" stroke="url(#cabA)"/><circle cx="0" cy="-14" r="6" fill="url(#cabA)"/><line x1="0" y1="44" x2="0" y2="6" stroke="url(#cabA)" stroke-width="6" id="leverArt"/><circle cx="0" cy="48" r="9" fill="url(#cabA)"/></g>
+      <g id="cabinWheelG" transform="translate(360,300)"><path d="M-54,-16 A56,56 0 1 1 54,-16" fill="none" stroke="#101216" stroke-width="15"/><path d="M-54,-16 A56,56 0 1 1 54,-16" fill="none" stroke="#f2c200" stroke-width="3"/><line x1="-42" y1="44" x2="42" y2="44" stroke="#101216" stroke-width="13"/><line x1="0" y1="0" x2="-48" y2="2" stroke="#171a20" stroke-width="9"/><line x1="0" y1="0" x2="48" y2="2" stroke="#171a20" stroke-width="9"/><line x1="0" y1="0" x2="0" y2="42" stroke="#171a20" stroke-width="9"/><circle r="15" fill="#0e1116" stroke="#f2c200" stroke-width="2"/><text y="5" text-anchor="middle" font-size="10" font-weight="800" fill="#f2c200">ZR1</text></g>
+      <text x="500" y="352" text-anchor="middle" font-size="9" fill="#6b7480" letter-spacing="2">CORVETTE · LT7 · 1,064 HP</text>
     </svg>`;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
