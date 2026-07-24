@@ -2130,14 +2130,8 @@ const SPEC = {
     ctx.restore();
     // ---- Ferrari 250 GTO cluster: big central Veglia tacho, chrome bezel, on the painted dash
     // with power and load pods flanking it ----
-    const R = Math.min(w, h) * 0.118;
-    const cy = dashY + R * 0.66;
-    const cx = w / 2 + sway;
-    drawSideGauge(cx - R * 2.3, cy + R * 0.18, R * 0.55, powerPS(), SPEC.peakPowerPS, "CV", true);
-    drawSideGauge(cx + R * 2.3, cy + R * 0.18, R * 0.55, state.boostBar / 1.35 * 100, 100, "LOAD", false);
-    drawSpeedo(cx, cy, R);   // dash-fixed cluster (does not turn with the wheel)
-    // Ferrari wheel around the dial
-    drawWheel(w, h);
+drawCluster(w, h, dashY, sway);
+        drawWheel(w, h);
   }
   // instantaneous output (CV) for the left-hand pod — reads to 300 at peak
   function powerPS() {
@@ -2145,52 +2139,43 @@ const SPEC = {
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
   // the tacho: speed arc to 300 km/h with the 280 km/h zone
-  function drawSpeedo(cx, cy, R) {
-    const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 340;
-    ctx.save(); ctx.translate(cx, cy);
-    const bz = ctx.createRadialGradient(0, -R * 0.3, R * 0.2, 0, 0, R * 1.15); bz.addColorStop(0, "#222732"); bz.addColorStop(1, "#0a0c10");
-    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.13, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "rgba(6,8,11,0.97)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(120,160,220,0.55)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
+  // ---- Ferrari F40 cluster: paired black-faced analogue dials (rev counter + speedo),
+  // chrome bezels on the painted dash, gear badge and boost readout between them ----
+  function drawCluster(w, h, dashY, sway) {
+    const R = Math.min(w, h) * 0.132;
+    const cx = w / 2 + sway, cy = dashY + R * 0.7;
+    const kmh = Math.abs(app.kmh(state.speedMps));
+    f40Dial(cx - R * 1.32, cy, R, state.rpm, 8000, 7700, "RPM x1000", true);
+    f40Dial(cx + R * 1.32, cy, R, kmh, 340, 301, "KM/H", false);
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    for (let v = 0; v <= MAX; v += 20) {
-      const f = v / MAX, a = lerp(startA, endA, f), major = v % 100 === 0, on = v <= kmhNow, zone = v >= 240;
-      ctx.strokeStyle = on ? (zone ? "#9cc6ff" : "#e6edf5") : (zone ? "rgba(120,160,220,0.35)" : "rgba(120,130,140,0.3)");
-      ctx.lineWidth = major ? 2.4 : 1.1; const r1 = R * (major ? 0.74 : 0.83), r2 = R * 0.95;
-      ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
-      if (major) { ctx.fillStyle = "rgba(210,224,240,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(String(v), Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); }
-    }
-    // ~280 km/h top-speed zone marked in yellow
-    ctx.strokeStyle = "rgba(245,212,0,0.6)"; ctx.lineWidth = R * 0.045;
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, 240 / MAX), lerp(startA, endA, 280 / MAX)); ctx.stroke();
-    // needle
-    const na = lerp(startA, endA, clamp(kmhNow / MAX, 0, 1));
-    ctx.strokeStyle = "#9cc6ff"; ctx.lineWidth = 3; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.12, -Math.sin(na) * R * 0.12); ctx.lineTo(Math.cos(na) * R * 0.82, Math.sin(na) * R * 0.82); ctx.stroke();
-    ctx.fillStyle = "#cfe4ff"; ctx.beginPath(); ctx.arc(0, 0, R * 0.07, 0, Math.PI * 2); ctx.fill();
-    // gear badge (top), digital km/h (bottom)
-    ctx.fillStyle = "#f5d400"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.4);
-    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.32)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmhNow)), 0, R * 0.36);
-    ctx.fillStyle = "rgba(150,166,180,0.9)"; ctx.font = `600 ${Math.round(R * 0.095)}px ui-sans-serif`; ctx.fillText("KM/H", 0, R * 0.54);
-    ctx.restore();
+    ctx.fillStyle = "#f5d400"; ctx.font = "800 " + Math.round(R * 0.36) + "px ui-sans-serif";
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy - R * 0.44);
+    ctx.fillStyle = "rgba(210,175,90,0.9)"; ctx.font = "600 " + Math.round(R * 0.13) + "px ui-sans-serif";
+    ctx.fillText("BOOST " + state.boostBar.toFixed(1) + " bar", cx, cy + R * 0.66);
   }
-  // small flanking gauge (power on the left, revs on the right)
-  function drawSideGauge(cx, cy, R, val, max, label, isPower) {
+  function f40Dial(cx, cy, R, val, max, redFrom, label, isTach) {
     ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "rgba(6,8,11,0.95)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(120,160,220,0.4)"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
-    for (let i = 0; i <= 40; i++) {
-      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 280 : v > 85;
-      ctx.strokeStyle = on ? (red ? "#ff5b5b" : (isPower ? "#9cc6ff" : "#f0a23c")) : "rgba(120,130,140,0.3)";
-      ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.lineTo(Math.cos(a) * R * 0.94, Math.sin(a) * R * 0.94); ctx.stroke();
+    const bz = ctx.createRadialGradient(0, -R * 0.4, R * 0.15, 0, 0, R * 1.15);
+    bz.addColorStop(0, "#3c414a"); bz.addColorStop(0.6, "#20242b"); bz.addColorStop(1, "#0a0c10");
+    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.09, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#070808"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(190,160,95,0.55)"; ctx.lineWidth = 2; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+    const sA = Math.PI * 0.75, eA = Math.PI * 2.25;
+    const step = isTach ? 1000 : 20, lab = isTach ? 1000 : 100;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    for (let v = 0; v <= max; v += step) {
+      const f = v / max, a = sA + (eA - sA) * f, red = v >= redFrom, on = v <= val, major = v % lab === 0;
+      ctx.strokeStyle = red ? (on ? "#ff6a5a" : "rgba(225,70,60,0.5)") : (on ? "#efe6d0" : "rgba(150,140,120,0.35)");
+      ctx.lineWidth = major ? 2.4 : 1.1; const r1 = R * (major ? 0.76 : 0.84), r2 = R * 0.94;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
+      if (major) { ctx.fillStyle = "rgba(224,214,188,0.9)"; ctx.font = "600 " + Math.round(R * 0.12) + "px ui-sans-serif"; ctx.fillText(String(isTach ? v / 1000 : v), Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); }
     }
-    const na = lerp(startA, endA, clamp(val / max, 0, 1)); ctx.strokeStyle = "#dfe9ee"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.7, Math.sin(na) * R * 0.7); ctx.stroke();
-    ctx.fillStyle = "rgba(160,176,190,0.9)"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = `700 ${Math.round(R * 0.34)}px ui-sans-serif`; ctx.fillText(String(Math.round(val)), 0, R * 0.02);
-    ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
+    const na = sA + (eA - sA) * clamp(val / max, 0, 1);
+    ctx.strokeStyle = isTach ? "#f5d400" : "#e8433a"; ctx.lineWidth = 3; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.14, -Math.sin(na) * R * 0.14); ctx.lineTo(Math.cos(na) * R * 0.8, Math.sin(na) * R * 0.8); ctx.stroke();
+    ctx.fillStyle = "#d8cfb4"; ctx.beginPath(); ctx.arc(0, 0, R * 0.08, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = isTach ? "#e8433a" : "#eef2f7"; ctx.font = "800 " + Math.round(R * 0.2) + "px ui-sans-serif"; ctx.fillText(String(Math.round(val)), 0, R * 0.45);
+    ctx.fillStyle = "rgba(175,165,145,0.85)"; ctx.font = "600 " + Math.round(R * 0.1) + "px ui-sans-serif"; ctx.fillText(label, 0, R * 0.62);
     ctx.restore();
   }
   // Ferrari 250 GTO wheel: thin wood rim, three chromed spokes, Cavallino boss
