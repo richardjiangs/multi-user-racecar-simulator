@@ -2334,53 +2334,31 @@ const SPEC = {
       </defs>
       <ellipse cx="500" cy="300" rx="392" ry="20" fill="rgba(0,0,0,0.5)"/>
 
-      <!-- BOOMERANG wing on twin top-mounted central pylons -->
-      <path d="M180,150 L210,102" fill="none" stroke="#20242b" stroke-width="9"/>
-      <path d="M262,146 L262,102" fill="none" stroke="#20242b" stroke-width="9"/>
+      <!-- single swan-neck rear wing (the Venom's clean fixed wing) -->
       <g id="rearWingArt">
-        <path d="M108,86 Q220,104 336,86 L332,100 Q220,116 112,100 Z" fill="#15181d" stroke="#5c636c"/>
-        <path d="M108,86 Q220,104 336,86" fill="none" stroke="rgba(47,127,224,0.75)" stroke-width="3"/>
-        <rect x="104" y="82" width="7" height="24" rx="2" fill="#101216"/>
-        <rect x="331" y="82" width="7" height="24" rx="2" fill="#101216"/>
+        <path d="M100,104 Q220,94 342,102 L340,112 Q220,104 102,114 Z" fill="#15181d" stroke="#5c636c"/>
+        <path d="M100,104 Q220,94 342,102" fill="none" stroke="rgba(47,127,224,0.8)" stroke-width="3"/>
+        <path d="M150,112 q-10,50 20,98 M296,112 q10,50 -20,98" fill="none" stroke="#101216" stroke-width="6"/>
       </g>
 
       <g id="bcBody">
-        <!-- carbon lower hull -->
-        <path d="M110,254 L110,212 Q140,204 214,200 Q314,194 392,186 Q442,178 478,162
-                 Q524,130 598,122 L664,122 Q748,130 804,150 Q862,168 900,196
-                 Q920,208 914,226 L900,240 Q838,232 758,232 L292,238 Q184,242 146,250 Z"
-              fill="url(#kgBodyG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- arctic-white upper body -->
-        <path d="M292,196 Q392,186 442,176 Q480,166 478,162 Q524,130 598,122 L664,122 Q748,130 804,150 Q850,166 878,188
-                 L844,192 Q758,178 664,176 L478,182 Q382,188 292,196 Z"
-              fill="url(#kgWhiteG)" stroke="rgba(210,220,230,0.6)" stroke-width="1"/>
-        <!-- wraparound canopy -->
-        <path d="M494,160 Q528,130 596,124 L660,124 Q716,132 750,154 Q614,146 494,160 Z" fill="url(#kgGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <!-- tang-orange Attack accent sweep -->
-        <path d="M292,196 Q460,180 760,186" fill="none" stroke="rgba(47,127,224,0.8)" stroke-width="4" stroke-linecap="round"/>
-        <!-- big side intake -->
-        <path d="M430,204 Q474,194 514,196 L504,226 L432,226 Z" fill="#06080b" stroke="rgba(47,127,224,0.3)"/>
-        <!-- dihedral synchro-helix door (rotates out and forward — the Hennessey move) -->
+        <!-- very long, very low carbon hull -->
+        <path d="M92,250 L92,224 Q124,212 208,206 Q322,198 404,190 Q474,178 522,158 Q560,132 634,126 L704,126 Q788,134 838,156 Q892,176 912,206 Q924,218 916,232 L900,244 Q814,238 730,238 L276,244 Q168,246 126,250 Z" fill="url(#kgBodyG)" stroke="#4a5058" stroke-width="1.5"/>
+        <path d="M276,204 Q392,192 470,182 Q510,170 522,158 Q560,132 634,126 L704,126 Q788,134 838,156 Q876,172 900,194 L868,198 Q782,184 704,182 L522,188 Q392,196 276,204 Z" fill="url(#kgWhiteG)" stroke="rgba(210,220,230,0.6)" stroke-width="1"/>
+        <path d="M520,158 Q558,132 632,128 L702,128 Q756,136 792,160 Q660,152 520,158 Z" fill="url(#kgGlassG)" stroke="#6c757e" stroke-width="1.5"/>
+        <path d="M150,220 Q460,196 800,204" fill="none" stroke="rgba(47,127,224,0.8)" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M340,208 Q420,200 500,202 L492,230 L344,232 Z" fill="#06080b" stroke="rgba(47,127,224,0.3)"/>
         <g id="doorArt">
-          <path d="M514,170 Q568,142 648,144 L718,164 L716,226 L520,228 Z" fill="rgba(150,160,172,0.30)" stroke="#6c757e" stroke-width="1.4"/>
-          <path d="M546,160 Q606,148 692,154" fill="none" stroke="rgba(220,230,240,0.4)" stroke-width="2"/>
+          <path d="M508,168 Q566,140 648,142 L716,164 L714,228 L514,230 Z" fill="rgba(150,160,172,0.28)" stroke="#6c757e" stroke-width="1.4"/>
+          <path d="M540,158 Q604,146 692,150" fill="none" stroke="rgba(220,230,240,0.4)" stroke-width="2"/>
         </g>
-        <!-- slim headlamp + splitter + dive plane -->
-        <path d="M868,182 q24,-2 38,6" fill="none" stroke="#dfe9ee" stroke-width="3.6" stroke-linecap="round"/>
-        <rect x="822" y="242" width="94" height="8" rx="3" fill="#05070a"/>
-        <path d="M872,218 l40,-4 l-2,8 l-38,2 Z" fill="#101216" stroke="rgba(47,127,224,0.5)"/>
-        <g id="frontFlapArt"><rect x="788" y="214" width="42" height="6" rx="3" fill="#15181d" stroke="rgba(47,127,224,0.4)"/></g>
-        <!-- single central round exhaust high in the tail -->
-        <g id="quadExhaustArt">
-          <circle cx="136" cy="212" r="10"/>
-        </g>
-        <!-- diffuser strakes -->
-        <g stroke="#05070a" stroke-width="3">
-          <path d="M114,246 l0,12"/><path d="M136,246 l0,12"/><path d="M158,246 l0,12"/><path d="M180,246 l0,12"/>
-        </g>
-        <!-- VENOM F5 script + KG shield -->
-        <text x="600" y="214" font-family="ui-sans-serif" font-size="12" fill="#5e6670" letter-spacing="3">VENOM F5</text>
-        <rect x="460" y="203" width="20" height="18" rx="3" fill="#0a0c10" stroke="#2f7fe0"/><text x="470" y="217" text-anchor="middle" font-size="12" font-weight="800" fill="#2f7fe0">H</text>
+        <path d="M868,192 q26,-2 40,8" fill="none" stroke="#dfe9ee" stroke-width="4" stroke-linecap="round"/>
+        <g id="frontFlapArt"><rect x="800" y="216" width="42" height="6" rx="3" fill="#15181d" stroke="rgba(47,127,224,0.4)"/></g>
+        <g id="quadExhaustArt"><circle cx="120" cy="220" r="9"/></g>
+        <circle cx="150" cy="212" r="4" fill="#2f7fe0"/><circle cx="168" cy="212" r="4" fill="#2f7fe0"/>
+        <g stroke="#05070a" stroke-width="3"><path d="M100,244 l0,10"/><path d="M120,244 l0,10"/><path d="M140,244 l0,10"/></g>
+        <text x="600" y="216" font-family="ui-sans-serif" font-size="12" fill="#5e6670" letter-spacing="3">VENOM F5</text>
+        <rect x="460" y="205" width="20" height="18" rx="3" fill="#0a0c10" stroke="#2f7fe0"/><text x="470" y="219" text-anchor="middle" font-size="12" font-weight="800" fill="#2f7fe0">H</text>
       </g>
 
       <!-- wheels: Aircore carbon centre-lock -->
