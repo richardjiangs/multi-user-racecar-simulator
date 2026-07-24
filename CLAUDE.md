@@ -62,7 +62,8 @@ Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound 
 Prodrive Hunter Dakar simulator.html           real 2026 Dakar stages with terrain/dune/bump physics, Rally Stage (Real) Mode, Dakar Rally 101.
 tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
-tools/embed-sims.mjs                        ← re-embeds all sim files into index.html (run after editing a sim)
+tools/embed-sims.mjs                        ← regenerates sims-embedded.js + the index.html SIM_FILES map (run after editing a sim)
+sims-embedded.js                            ← generated: all sims base64; loaded by index.html ONLY over file:// (offline fallback)
 vendor/trystero-nostr.min.js                ← bundled Trystero (ESM); vendor/peerjs.min.js ← PeerJS fallback
 ```
 
@@ -351,10 +352,17 @@ panel. Perf-test never holds X/V, so the certified figures are untouched.
   amgone, nevera, zr1, p1, f40, p917, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine,
   f1williams, f1racingbulls, f1haas, f1audi, f1cadillac, dacia, fordraptor, grhilux,
   hunter`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
-- `EMBEDDED_SIM_BASE64 = {…}` — every sim base64-embedded on ONE line between
-  `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers. `tools/embed-sims.mjs`
-  regenerates that line from the twelve files. Sims load into the `simFrame`
-  iframe via `srcdoc`, so everything works from `file://` AND hosted.
+- **Lazy sim loading** (so the homepage isn't a 12 MB download): between the
+  `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers index.html now carries only a
+  tiny `SIM_FILES = {key: "filename.html"}` map. `loadEmbeddedSim` branches on
+  protocol — over **http(s)** it sets `simFrame.src` to the real sim file, fetching
+  just that one car on demand (cached after); over **file://** (where Chrome blocks
+  sibling-file iframes) it falls back to `srcdoc` from `EMBEDDED_SIM_BASE64`, which
+  lives in the generated **`sims-embedded.js`** and is pulled in by a
+  `document.write` guard **only** when `location.protocol === "file:"`.
+  `tools/embed-sims.mjs` regenerates both `sims-embedded.js` and the inline
+  `SIM_FILES` map. So it still works from `file://` AND hosted, but hosted visitors
+  download ~0.2 MB of shell instead of ~12 MB.
 - **Private Practice** = untouched sim in the iframe. The shell must NOT touch
   `state.rivals`/`raceGrid` in practice (that was the "no AI cars" bug: a
   global 750 ms interval kept calling `injectRemoteRacers()` in every mode).
