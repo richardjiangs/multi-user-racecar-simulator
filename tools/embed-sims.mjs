@@ -1,7 +1,13 @@
 #!/usr/bin/env node
-/* Re-embeds the simulator HTML files into index.html as base64, replacing
-   the single line between the EMBED markers. Run after editing ANY simulator:
+/* Regenerates the sim registry after editing ANY simulator:
      node tools/embed-sims.mjs
+
+   Writes two things:
+     - sims-embedded.js  — every sim base64-encoded. index.html loads this ONLY
+       over file:// (offline), where Chrome can't point an iframe at a sibling file.
+     - index.html        — between the EMBED markers, just the tiny key -> filename
+       SIM_FILES map. Over http(s) the garage lazy-loads each sim file on demand,
+       so the initial page stays small (was ~12 MB with the base64 inlined).
 */
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve, dirname } from "node:path";
@@ -54,11 +60,18 @@ for (const [key, file] of Object.entries(FILES)) {
   console.log(`${key.padEnd(11)} ${file}  ${(buf.length / 1024).toFixed(0)} KB`);
 }
 
+// 1) base64 copies -> a separate file, loaded by index.html ONLY over file://.
+const embedPath = resolve(ROOT, "sims-embedded.js");
+const embedJs = `window.EMBEDDED_SIM_BASE64 = ${JSON.stringify(enc)};\n`;
+writeFileSync(embedPath, embedJs);
+
+// 2) index.html carries only the small key -> filename map for the lazy http(s) path.
 const indexPath = resolve(ROOT, "index.html");
 const html = readFileSync(indexPath, "utf8");
 const START = "/*__EMBED_START__*/", END = "/*__EMBED_END__*/";
 const i = html.indexOf(START), j = html.indexOf(END);
 if (i < 0 || j < 0) { console.error("EMBED markers not found in index.html"); process.exit(1); }
-const line = `${START}const EMBEDDED_SIM_BASE64 = ${JSON.stringify(enc)};${END}`;
+const line = `${START}const SIM_FILES = ${JSON.stringify(FILES)};${END}`;
 writeFileSync(indexPath, html.slice(0, i) + line + html.slice(j + END.length));
-console.log(`index.html updated (${(line.length / 1024 / 1024).toFixed(2)} MB embedded).`);
+console.log(`sims-embedded.js written (${(embedJs.length / 1024 / 1024).toFixed(2)} MB — file:// fallback only).`);
+console.log(`index.html updated (${(line.length / 1024).toFixed(1)} KB SIM_FILES map inline).`);
