@@ -2144,7 +2144,7 @@ const SPEC = {
   }
   // the tacho: speed arc to 300 km/h with the 280 km/h zone
   function drawSpeedo(cx, cy, R) {
-    const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 300;
+    const kmhNow = Math.abs(app.kmh(state.speedMps)), MAX = 380;
     ctx.save(); ctx.translate(cx, cy);
     const bz = ctx.createRadialGradient(0, -R * 0.3, R * 0.2, 0, 0, R * 1.15); bz.addColorStop(0, "#222732"); bz.addColorStop(1, "#0a0c10");
     ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.13, 0, Math.PI * 2); ctx.fill();
