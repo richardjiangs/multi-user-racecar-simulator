@@ -2,8 +2,26 @@
 
 `switch.html` is the whole garage — all 36 cars — as **one self-contained file**
 with a Joy-Con / Pro Controller layer added. Nothing is cut: same cars, same
-physics, same circuits, same modes. Copy the single file onto your microSD
-("TF") card and play it.
+physics, same circuits, same modes.
+
+> ### Read this first: it is a web page, not a Switch game
+>
+> **The Switch cannot run an HTML file from the microSD card.** Retail games are
+> signed, encrypted `.nsp` / `.xci`; homebrew is `.nro`. There is no supported
+> way to put a file on the card and have the console launch it. Doing that needs
+> custom firmware, which means exploiting the console — that risks a permanent
+> Nintendo Online ban and can brick the unit. **This project does not help with
+> that, and these docs do not describe it.**
+>
+> What *is* supported: the Switch has a real WebKit browser (the hidden one used
+> for Wi-Fi captive-portal logins). It renders ordinary HTML, so you can point it
+> at this page over your network — no modification to the console. See
+> "Playing it" below.
+>
+> If you just want the controller experience with no caveats, the most reliable
+> option by far is to pair a **Pro Controller or Joy-Con over Bluetooth to a PC,
+> phone or tablet** and open the page there. The pads report as a standard
+> gamepad, which is exactly what this layer is built and tested against.
 
 Build it with:
 
@@ -42,27 +60,40 @@ If no controller is detected the panel says so; press any button to wake it.
 The Switch is also a touchscreen in handheld mode, and the game's touch wheel
 and pedals work there too, so you have both.
 
-## Getting it onto the console
+## Playing it
 
-The Switch's browser cannot open files from the SD card on stock firmware —
-that needs homebrew. Two routes, most reliable first:
+**Copying it to the microSD card does nothing** — the console has no way to open
+it from there. Use one of these instead.
 
-**1. Serve it from a PC on the same Wi-Fi (works on any Switch).**
-Put `switch.html` in a folder on your computer and run a tiny web server in it:
+**1. Pro Controller / Joy-Con on a PC, phone or tablet (recommended).**
+Pair the pad over Bluetooth and open `switch.html` (or the normal site) in any
+modern browser. The pads report as a standard gamepad, which is what this layer
+targets and what `tests/switch-test.mjs` verifies — so the full mapping works,
+with no caveats and nothing done to your console.
+
+**2. On the Switch itself, through its own browser.**
+Serve the file from a computer on the same Wi-Fi:
 
 ```
 python3 -m http.server 8080
 ```
 
-Then open the Switch's browser and go to `http://<your-computer-ip>:8080/switch.html`.
-(The hidden browser is normally reached through the Wi-Fi captive-portal login
-screen.) Nothing is installed on the console.
+then reach the console's built-in browser — it is the one that appears when a
+Wi-Fi network shows a captive-portal login — and open
+`http://<your-computer-ip>:8080/switch.html`. Nothing is installed and nothing
+is modified; you are using a feature the console already ships. Note the browser
+is a cut-down WebKit build, so treat gamepad support as unproven (see below);
+the touchscreen works in handheld mode either way.
 
-**2. From the SD card via homebrew (Atmosphère / hbmenu).**
-Copy `switch.html` to the card, e.g. `sd:/switch/racecar/switch.html`, and open
-it with a homebrew browser or the offline web applet. Because the file is fully
-self-contained — every car embedded inline, zero network requests — it does not
-need any other file next to it.
+Because the file is fully self-contained, only that one URL is ever fetched.
+
+### Not covered here
+
+Running this from the SD card would require custom firmware, which means
+exploiting the console. That risks a permanent Nintendo Online ban and can
+brick the unit, and it is out of scope for this project — no instructions for it
+are provided. Shipping an actual Switch title (`.nsp`) requires a licensed
+Nintendo developer account through the Nintendo Developer Portal.
 
 ## Honest caveats
 
@@ -76,8 +107,8 @@ to check on the console itself:
   controller" — the touchscreen and the browser's own cursor still work, so the
   game remains playable.
 - **Memory.** The file is ~12 MB because every car is embedded. The Switch
-  browser has a modest memory budget; if it struggles, use route 1 above with
-  the ordinary `index.html`, which loads one ~300 KB car at a time.
+  browser has a modest memory budget; if it struggles, serve the ordinary
+  `index.html` instead, which loads one ~300 KB car at a time.
 - **Face-button positions.** The layer uses the W3C standard mapping by physical
   position (bottom / right / left / top), which on a Nintendo pad is B / A / Y /
   X. If a driver reports them swapped, A and B (and X and Y) will be exchanged.
