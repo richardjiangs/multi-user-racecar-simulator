@@ -72,6 +72,28 @@ const START = "/*__EMBED_START__*/", END = "/*__EMBED_END__*/";
 const i = html.indexOf(START), j = html.indexOf(END);
 if (i < 0 || j < 0) { console.error("EMBED markers not found in index.html"); process.exit(1); }
 const line = `${START}const SIM_FILES = ${JSON.stringify(FILES)};${END}`;
-writeFileSync(indexPath, html.slice(0, i) + line + html.slice(j + END.length));
+const newIndex = html.slice(0, i) + line + html.slice(j + END.length);
+writeFileSync(indexPath, newIndex);
+
+// 3) index-offline.html — the original all-in-one page: one self-contained file
+//    with every sim embedded inline, always uses the embedded copy (no network,
+//    zero loading), works the same from disk or a server. Derived from index.html
+//    so it never drifts.
+const offline = newIndex
+  // inline the base64 next to the filename map (no external sims-embedded.js)
+  .replace(line, `${START}const SIM_FILES = ${JSON.stringify(FILES)};window.EMBEDDED_SIM_BASE64 = ${JSON.stringify(enc)};${END}`)
+  // the file:// guard that pulls in the external embed is unnecessary here
+  .replace(`if (location.protocol === "file:") document.write('<script src="sims-embedded.js"><\\/script>');`,
+           `/* index-offline.html: every sim is embedded inline above — no external file */`)
+  // always take the embedded path so it needs zero network on any protocol
+  .replace(`if (location.protocol === "file:") {`, `if (true) {  /* self-contained build: always use the embedded copy */`)
+  // no background prefetch — the sims are already inline
+  .replace(`      if (document.readyState === "complete") setTimeout(prefetchSims, 600);\n      else window.addEventListener("load", () => setTimeout(prefetchSims, 600));`,
+           `      /* index-offline.html: sims embedded inline, no prefetch needed */`);
+const offlinePath = resolve(ROOT, "index-offline.html");
+if (offline === newIndex) { console.error("index-offline transform matched nothing — aborting"); process.exit(1); }
+writeFileSync(offlinePath, offline);
+
 console.log(`sims-embedded.js written (${(embedJs.length / 1024 / 1024).toFixed(2)} MB — file:// fallback only).`);
 console.log(`index.html updated (${(line.length / 1024).toFixed(1)} KB SIM_FILES map inline).`);
+console.log(`index-offline.html written (${(offline.length / 1024 / 1024).toFixed(2)} MB — self-contained, zero network).`);
