@@ -2922,30 +2922,46 @@
           simFrame.src = encodeURI(SIM_FILES[car.key]);
         }
       }
-      /* Zero-loading: once the garage has painted, quietly warm every sim in the
-         background so opening any car is instant. Over file:// the sims are already
-         embedded, so there is nothing to fetch. Uses <link rel=prefetch> at the
-         browser's lowest priority and staggers on idle, so it never competes with
-         the first paint or the card photos. */
+      /* Zero-loading: warm every sim in the background so opening a car is instant.
+         Strictly second-class to what the visitor is actually looking at — it waits
+         for the card photos to settle, then trickles at most 2 low-priority fetches
+         at a time, and stands down entirely on metered / very slow connections.
+         Over file:// the sims are already embedded, so there is nothing to fetch. */
       let simsPrefetched = false;
       function prefetchSims() {
         if (simsPrefetched || location.protocol === "file:" || typeof SIM_FILES === "undefined") return;
+        const net = navigator.connection || {};
+        if (net.saveData || /(^|-)2g$/.test(net.effectiveType || "")) return;   // don't burn metered data
         simsPrefetched = true;
-        const idle = window.requestIdleCallback || ((fn) => setTimeout(fn, 250));
         const keys = Object.keys(SIM_FILES);
-        let i = 0;
-        (function step() {
-          if (i >= keys.length) return;
-          const link = document.createElement("link");
-          link.rel = "prefetch"; link.as = "document";
-          link.href = encodeURI(SIM_FILES[keys[i]]);
-          document.head.appendChild(link);
-          i++;
-          idle(step);
+        let i = 0, active = 0;
+        (function pump() {
+          while (active < 2 && i < keys.length) {
+            const href = encodeURI(SIM_FILES[keys[i++]]);
+            active++;
+            const done = () => { active--; setTimeout(pump, 150); };
+            try { fetch(href, { credentials: "same-origin", priority: "low" }).then((r) => r && r.arrayBuffer()).then(done, done); }
+            catch (err) { done(); }
+          }
         })();
       }
-      if (document.readyState === "complete") setTimeout(prefetchSims, 600);
-      else window.addEventListener("load", () => setTimeout(prefetchSims, 600));
+      /* Start only once the visible card photos have finished (or 5 s, whichever
+         comes first), so the prefetch never competes for bandwidth with the garage. */
+      function startPrefetchWhenIdle() {
+        let fired = false;
+        const go = () => { if (fired) return; fired = true; setTimeout(prefetchSims, 700); };
+        const pending = [...document.querySelectorAll(".photo img")].filter((im) => !im.complete);
+        if (!pending.length) return go();
+        let left = pending.length;
+        pending.forEach((im) => {
+          const tick = () => { if (--left <= 0) go(); };
+          im.addEventListener("load", tick, { once: true });
+          im.addEventListener("error", tick, { once: true });
+        });
+        setTimeout(go, 5000);   // lazy off-screen photos may never load — never wait forever
+      }
+      if (document.readyState === "complete") startPrefetchWhenIdle();
+      else window.addEventListener("load", startPrefetchWhenIdle);
       function getSimApp() {
         if (!selectedCar || !simFrame.contentWindow) return null;
         try { return simFrame.contentWindow[selectedCar.appName] || null; } catch (err) { return null; }
