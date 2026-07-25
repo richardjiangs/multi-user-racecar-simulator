@@ -62,30 +62,73 @@ and pedals work there too, so you have both.
 
 ## Playing it
 
-**Copying it to the microSD card does nothing** — the console has no way to open
-it from there. Use one of these instead.
+**Copying a file to the microSD card does nothing** — the console has no way to
+open it from there. Here are the two routes that actually work, no console
+modification, no exploit.
 
-**1. Pro Controller / Joy-Con on a PC, phone or tablet (recommended).**
-Pair the pad over Bluetooth and open `switch.html` (or the normal site) in any
-modern browser. The pads report as a standard gamepad, which is what this layer
-targets and what `tests/switch-test.mjs` verifies — so the full mapping works,
-with no caveats and nothing done to your console.
+### A. On your actual Switch, in its own browser (touch)
 
-**2. On the Switch itself, through its own browser.**
-Serve the file from a computer on the same Wi-Fi:
+This uses the hidden browser the Switch already ships (the one that appears when
+a Wi-Fi network wants a login page). A tiny launcher on your computer makes the
+console open it straight onto the game.
+
+On your computer (same Wi-Fi as the Switch):
 
 ```
-python3 -m http.server 8080
+sudo node tools/switch-server.mjs
 ```
 
-then reach the console's built-in browser — it is the one that appears when a
-Wi-Fi network shows a captive-portal login — and open
-`http://<your-computer-ip>:8080/switch.html`. Nothing is installed and nothing
-is modified; you are using a feature the console already ships. Note the browser
-is a cut-down WebKit build, so treat gamepad support as unproven (see below);
-the touchscreen works in handheld mode either way.
+It prints your computer's IP and holds ports 53 (DNS) and 80 (web) — hence
+`sudo`. Then, on the Switch:
 
-Because the file is fully self-contained, only that one URL is ever fetched.
+> System Settings → Internet → Internet Settings → (your Wi-Fi) → **Change
+> Settings** → **DNS Settings → Manual** → **Primary DNS = the IP it printed**
+> (Secondary DNS `0.0.0.0`) → **Save** → **Connect to This Network.**
+
+The console decides it needs to log in and opens its browser **on the game**.
+Turn the Switch sideways (handheld) and drive with the on-screen wheel + pedals.
+When you're done, press `Ctrl+C` on the computer and set the Switch's DNS back to
+**Automatic**.
+
+What the launcher does — all on your own machine and console, nothing installed
+on the Switch:
+
+- answers *only* the Switch's "am I online?" check (`conntest.nintendowifi.net`,
+  `ctest.cdn.nintendo.net`) with your computer's IP, and **forwards every other
+  DNS query to a real resolver** so the console still works;
+- serves the game (the light lazy-loading `index.html`, so the Switch's modest
+  browser only pulls one ~300 KB car at a time);
+- injects a small **touch→pointer shim** and forces the on-screen wheel + D-pad
+  visible, because the Switch reports a desktop-width viewport and its older
+  browser may lack Pointer Events. `tests/switch-server-test.mjs` verifies, with
+  Pointer Events removed, that dragging the wheel actually steers.
+
+macOS notes: port 53 is normally free (it is *not* held by mDNSResponder); if a
+VPN or another DNS tool has it, quit that first. The first run pops a macOS
+firewall prompt — click **Allow**. Find your IP by hand any time with
+`ipconfig getifaddr en0` (Wi-Fi) — the launcher also prints it.
+
+### B. With your Joy-Cons — on a Mac, phone or tablet
+
+The Switch's own browser will **not** drive the Joy-Cons (it is a login browser,
+not a game runtime — only custom firmware could change that, which this project
+will not do). To play with the controllers, pair them to a device that exposes
+the Gamepad API:
+
+1. Hold the little **sync button** on the Joy-Con / Pro Controller until the
+   lights run, and pair it in the Mac's **Bluetooth** settings (they show up as
+   "Joy-Con" / "Pro Controller").
+2. Open the game in **Chrome** — either the live site, or `switch.html`, or serve
+   the folder locally.
+3. The pads report as a **standard gamepad**, which is exactly what the control
+   layer targets. `tests/switch-test.mjs` verifies the full mapping (left-stick
+   steer, ZR/ZL, right-stick pointer, A/B/X/Y). Same controllers, full mapping,
+   nothing done to your console.
+
+Everything in one place cannot be had without hacking: Joy-Cons *and* the
+Switch's own screen means the Switch's browser reading the controllers, which it
+does not do. Route A gives you the Switch screen (touch); route B gives you the
+Joy-Cons (on another screen).
 
 ### Not covered here
 
@@ -97,18 +140,24 @@ Nintendo developer account through the Nintendo Developer Portal.
 
 ## Honest caveats
 
-I could not test this on real Switch hardware from here, so these are the parts
-to check on the console itself:
+I could not test on real Switch hardware from here. The parts I *could* verify
+in a headless browser are green (DNS interception + web serving in
+`tests/switch-server-test.mjs`; and touch steering with Pointer Events removed,
+proving the shim). These are the things only the console itself can settle:
 
-- **Gamepad API support.** The mapping is verified against a simulated Switch
-  Pro Controller in the standard mapping (`tests/switch-test.mjs`, 14 checks),
-  but Nintendo's browser is a limited WebKit build and may not expose
-  `navigator.getGamepads`. If it doesn't, the cheat-sheet will keep saying "no
-  controller" — the touchscreen and the browser's own cursor still work, so the
-  game remains playable.
-- **Memory.** The file is ~12 MB because every car is embedded. The Switch
-  browser has a modest memory budget; if it struggles, serve the ordinary
-  `index.html` instead, which loads one ~300 KB car at a time.
-- **Face-button positions.** The layer uses the W3C standard mapping by physical
-  position (bottom / right / left / top), which on a Nintendo pad is B / A / Y /
-  X. If a driver reports them swapped, A and B (and X and Y) will be exchanged.
+- **Reaching the browser (route A).** The captive-portal trick works on every
+  retail Switch I know of, but Nintendo tweaks the connection-check between
+  firmware versions. If the browser never opens, the launcher intercepts several
+  known check domains; tell me the firmware version and I'll add whichever host
+  yours uses.
+- **The browser's age.** It is a cut-down, older WebKit. The touch shim covers a
+  missing Pointer Events API, and the page is the light one-car-at-a-time build,
+  but if a car is too heavy the tab may reload — pick a simpler car, or tell me
+  and I'll add a "lite" single-car page.
+- **Gamepad in the Switch browser (route B is the answer).** That browser almost
+  certainly does not expose `navigator.getGamepads`, which is exactly why the
+  Joy-Cons go on a Mac/phone instead. On the Mac the mapping is verified
+  (`tests/switch-test.mjs`, 14 checks).
+- **Face-button positions (route B).** The layer uses the W3C standard mapping by
+  physical position (bottom / right / left / top), which on a Nintendo pad is
+  B / A / Y / X. If a driver reports them swapped, A/B (and X/Y) are exchanged.
