@@ -63,6 +63,7 @@ Prodrive Hunter Dakar simulator.html           real 2026 Dakar stages with terra
 tests/perf-test.mjs                         ← factory-figure verification harness (node tests/perf-test.mjs)
 tests/browser-test.mjs                      ← shell + practice + online + race-control smoke test
 tests/switch-test.mjs                       ← drives switch.html with a simulated Pro Controller (node tests/switch-test.mjs)
+tests/switch-joycon-test.mjs                ← verifies switch.html's controller-calibration wizard with two non-standard fake Joy-Cons
 tests/switch-server-test.mjs                ← verifies tools/switch-server.mjs (DNS capture + serving + touch-shim steering)
 tools/embed-sims.mjs                        ← regenerates sims-embedded.js + the index.html SIM_FILES map (run after editing a sim)
 sims-embedded.js                            ← generated: all sims base64; loaded by index.html ONLY over file:// (offline fallback)

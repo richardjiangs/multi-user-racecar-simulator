@@ -50,6 +50,29 @@ const CSS = `
   #nxHelp .on { color: #7ce38b; }
   /* Switch screen is 1280x720 handheld / 1920x1080 docked — keep touch targets comfortable */
   @media (max-height: 760px) { .photo { height: 150px; } }
+  /* remap button + calibration wizard (used when a pad reports a non-standard
+     layout, e.g. two separate Joy-Cons on a Mac) */
+  #nxRemap {
+    position: fixed; left: 12px; top: 12px; z-index: 2147483646;
+    background: rgba(6,10,16,0.9); border: 1px solid rgba(150,180,210,0.4); border-radius: 8px;
+    padding: 6px 10px; font: 600 12px/1 ui-sans-serif, system-ui, sans-serif; color: #cfe0f0;
+    cursor: pointer; user-select: none;
+  }
+  #nxCal {
+    position: fixed; inset: 0; z-index: 2147483647; display: grid; place-items: center;
+    background: rgba(3,6,10,0.86); backdrop-filter: blur(4px);
+    font: 400 15px/1.5 ui-sans-serif, system-ui, sans-serif; color: #e6eef7; text-align: center;
+  }
+  #nxCal .card { max-width: 560px; padding: 26px 30px; border: 1px solid rgba(150,180,210,0.3);
+    border-radius: 14px; background: rgba(8,12,18,0.96); box-shadow: 0 30px 90px rgba(0,0,0,0.6); }
+  #nxCal h2 { margin: 0 0 6px; font-size: 20px; color: #8fd4ff; }
+  #nxCal .prompt { font-size: 26px; font-weight: 800; margin: 18px 0 6px; color: #fff; }
+  #nxCal .hint { color: #9fb2c4; font-size: 13px; }
+  #nxCal .got { color: #7ce38b; font-weight: 700; }
+  #nxCal .steps { margin: 16px 0 6px; font-size: 12px; color: #7f93a6; }
+  #nxCal .steps .done { color: #7ce38b; }
+  #nxCal .steps .cur { color: #fff; }
+  #nxCal .cancel { margin-top: 14px; font-size: 12px; color: #9fb2c4; text-decoration: underline; cursor: pointer; }
 `;
 
 const JS = String.raw`
@@ -166,7 +189,9 @@ const JS = String.raw`
   function ui() {
     cursor = document.createElement("div"); cursor.id = "nxCursor";
     help = document.createElement("div"); help.id = "nxHelp";
-    document.body.appendChild(cursor); document.body.appendChild(help);
+    var remap = document.createElement("div"); remap.id = "nxRemap"; remap.textContent = "⚙ Remap controls";
+    remap.onclick = function () { startCal(); };
+    document.body.appendChild(cursor); document.body.appendChild(help); document.body.appendChild(remap);
     cx = Math.round(innerWidth / 2); cy = Math.round(innerHeight / 2);
     paintHelp();
   }
@@ -179,7 +204,7 @@ const JS = String.raw`
       '<div><span class="k">L-stick</span>steer &nbsp; <span class="k">ZR</span>accelerate &nbsp; <span class="k">ZL</span>brake / reverse</div>' +
       '<div><span class="k">R-stick</span>pointer &nbsp; <span class="k">A</span>click / continue &nbsp; <span class="k">B</span>back</div>' +
       '<div><span class="k">X</span>horn &nbsp; <span class="k">Y</span>boost / track mode &nbsp; <span class="k">L</span><span class="k">R</span>gear down / up</div>' +
-      '<div style="opacity:.65;margin-top:3px">+ shows / hides this panel</div>';
+      '<div style="opacity:.65;margin-top:3px">+ shows / hides this panel &nbsp;·&nbsp; Joy-Cons / odd pad? tap <b>⚙ Remap</b> (top-left)</div>';
   }
   /* show the cheat-sheet briefly, then let it fade so it never covers the HUD */
   var hideT = null;
@@ -191,11 +216,14 @@ const JS = String.raw`
     hideT = setTimeout(function () { help.classList.add("fade"); }, ms || 8000);
   }
 
-  /* ---- main poll ---- */
-  function pads() {
-    var g = navigator.getGamepads ? navigator.getGamepads() : [];
-    for (var i = 0; i < g.length; i++) if (g[i] && g[i].connected) return g[i];
-    return null;
+  /* ---- gamepads ---- */
+  function rawPads() { return navigator.getGamepads ? navigator.getGamepads() : []; }
+  function anyPad() { var g = rawPads(); for (var i = 0; i < g.length; i++) if (g[i] && g[i].connected) return g[i]; return null; }
+  function joyconPresent() { var g = rawPads(); for (var i = 0; i < g.length; i++) if (g[i] && g[i].connected && /joy-?con/i.test(g[i].id || "")) return true; return false; }
+  function btn(gp, i) {
+    var b = gp.buttons[i];
+    if (b == null) return { p: false, v: 0 };
+    return (typeof b === "object") ? { p: !!b.pressed, v: b.value || (b.pressed ? 1 : 0) } : { p: b > 0.5, v: b };
   }
   function edge(name, isDown, onDown, onUp) {
     var was = !!prevBtn[name];
@@ -203,88 +231,198 @@ const JS = String.raw`
     if (!isDown && was && onUp) onUp();
     prevBtn[name] = isDown;
   }
-  function btn(gp, i) {
-    var b = gp.buttons[i];
-    if (b == null) return { p: false, v: 0 };
-    return (typeof b === "object") ? { p: !!b.pressed, v: b.value || (b.pressed ? 1 : 0) } : { p: b > 0.5, v: b };
+  function axDead(v) { return Math.abs(v) > DEAD ? clamp((v - (v < 0 ? -DEAD : DEAD)) / (1 - DEAD), -1, 1) : 0; }
+  function trig(v) { return v > TRIG ? clamp((v - TRIG) / (1 - TRIG), 0, 1) : 0; }
+
+  /* ---- learned profile (for non-standard pads, e.g. two Joy-Cons on a Mac) ---- */
+  var PKEY = "mucsPadProfileV1";
+  var profile = null;
+  try { profile = JSON.parse(localStorage.getItem(PKEY) || "null"); } catch (e) { profile = null; }
+  function padByRef(src) {
+    if (!src) return null;
+    var g = rawPads(), i;
+    for (i = 0; i < g.length; i++) if (g[i] && g[i].connected && g[i].id === src.id) return g[i];
+    return g[src.idx] && g[src.idx].connected ? g[src.idx] : null;
+  }
+  function axOf(src) { var gp = padByRef(src); if (!gp) return 0; return (gp.axes[src.i] || 0) * (src.dir || 1); }
+  function bOf(src) { var gp = padByRef(src); if (!gp) return 0; var b = gp.buttons[src.i]; return b ? (typeof b === "object" ? (b.value || (b.pressed ? 1 : 0)) : b) : 0; }
+
+  /* the normalized inputs the rest of the layer consumes, from EITHER a learned
+     profile (paired Joy-Cons, odd pads) or the default Standard-Gamepad mapping
+     (Pro Controller / Xbox / PlayStation) */
+  function readInputs() {
+    if (profile) {
+      if (!anyPad()) return null;
+      return {
+        steer: axDead(axOf(profile.steer)),
+        throttle: bOf(profile.accel) > 0.5 ? 1 : 0,   // Joy-Con shoulders are digital
+        brake: bOf(profile.brake) > 0.5 ? 1 : 0,
+        ptrx: axDead(axOf(profile.ptrx)), ptry: axDead(axOf(profile.ptry)),
+        click: bOf(profile.click) > 0.5, back: bOf(profile.back) > 0.5,
+        horn: bOf(profile.horn) > 0.5, boost: bOf(profile.boost) > 0.5,
+        plus: false, gearUp: false, gearDown: false,
+      };
+    }
+    var gp = anyPad(); if (!gp) return null;
+    return {
+      steer: axDead(gp.axes[0] || 0),
+      throttle: trig(btn(gp, 7).v), brake: trig(btn(gp, 6).v),
+      ptrx: axDead(gp.axes[2] || 0), ptry: axDead(gp.axes[3] || 0),
+      click: btn(gp, 1).p, back: btn(gp, 0).p, horn: btn(gp, 3).p, boost: btn(gp, 2).p,
+      plus: btn(gp, 9).p, gearUp: btn(gp, 5).p, gearDown: btn(gp, 4).p,
+    };
   }
 
-  function loop(t) {
-    requestAnimationFrame(loop);
-    var dt = last ? Math.min(0.1, (t - last) / 1000) : 0; last = t;
-    var gp = pads();
-    if (!gp) { if (connected) { connected = false; paintHelp(); } return; }
-    if (!connected) { connected = true; paintHelp(); flashHelp(8000); }
-
-    var lx = gp.axes[0] || 0, rx = gp.axes[2] || 0, ry = gp.axes[3] || 0;
-    var B = btn(gp, 0), A = btn(gp, 1), Y = btn(gp, 2), X = btn(gp, 3);
-    var L = btn(gp, 4), R = btn(gp, 5), ZL = btn(gp, 6), ZR = btn(gp, 7);
-    var plus = btn(gp, 9);
-
-    /* right stick -> pointer */
-    var mx = Math.abs(rx) > DEAD ? (rx - Math.sign(rx) * DEAD) / (1 - DEAD) : 0;
-    var my = Math.abs(ry) > DEAD ? (ry - Math.sign(ry) * DEAD) / (1 - DEAD) : 0;
-    if (mx || my) {
-      cx = clamp(cx + mx * CURSOR_PXPS * dt, 0, innerWidth - 1);
-      cy = clamp(cy + my * CURSOR_PXPS * dt, 0, innerHeight - 1);
+  /* ---- apply the normalized inputs to the page + the car ---- */
+  function backAction() {
+    var bb = $("backBtn");
+    if (bb && bb.offsetParent !== null) { bb.click(); return; }
+    var pb = $("practiceBackBtn");
+    if (pb && pb.offsetParent !== null) pb.click();
+  }
+  function toggleHelp() {
+    if (!help) return;
+    var hidden = help.classList.contains("fade") || help.style.display === "none";
+    if (hidden) flashHelp(10000); else help.classList.add("fade");
+  }
+  function applyInputs(inp, dt) {
+    if (inp.ptrx || inp.ptry) {
+      cx = clamp(cx + inp.ptrx * CURSOR_PXPS * dt, 0, innerWidth - 1);
+      cy = clamp(cy + inp.ptry * CURSOR_PXPS * dt, 0, innerHeight - 1);
       haveCursor = true;
     }
     if (cursor && haveCursor) cursor.style.transform = "translate(" + (cx - 13) + "px," + (cy - 13) + "px)";
-
-    /* A = click / continue, B = back */
-    edge("A", A.p, pointerDown, pointerUp);
-    edge("B", B.p, function () {
-      var bb = $("backBtn");
-      if (bb && bb.offsetParent !== null) { bb.click(); return; }
-      var pb = $("practiceBackBtn");
-      if (pb && pb.offsetParent !== null) pb.click();
-    });
-    edge("plus", plus.p, function () {
-      if (!help) return;
-      var hidden = help.classList.contains("fade") || help.style.display === "none";
-      if (hidden) flashHelp(10000); else help.classList.add("fade");
-    });
+    edge("A", inp.click, pointerDown, pointerUp);
+    edge("B", inp.back, backAction);
+    edge("plus", inp.plus, toggleHelp);
 
     var app = simApp();
     if (!app || !app.state) return;
     var st = app.state;
 
-    /* left stick -> analog steering (same channel the touch wheel uses) */
-    if (Math.abs(lx) > DEAD) {
-      st.touchActive = true;
-      st.touchSteer = clamp((lx - Math.sign(lx) * DEAD) / (1 - DEAD), -1, 1);
-      padSteering = true;
-    } else if (padSteering) {
-      st.touchActive = false; st.touchSteer = 0; padSteering = false;
-    }
+    if (Math.abs(inp.steer) > 0.001) { st.touchActive = true; st.touchSteer = clamp(inp.steer, -1, 1); padSteering = true; }
+    else if (padSteering) { st.touchActive = false; st.touchSteer = 0; padSteering = false; }
 
-    /* ZR -> throttle, ZL -> brake (analog, same channel as the pedals) */
-    st.padThrottle = ZR.v > TRIG ? clamp((ZR.v - TRIG) / (1 - TRIG), 0, 1) : 0;
-    st.padBrake    = ZL.v > TRIG ? clamp((ZL.v - TRIG) / (1 - TRIG), 0, 1) : 0;
+    st.padThrottle = inp.throttle; st.padBrake = inp.brake;
 
-    /* holding ZL once stopped selects reverse; a dab of ZR takes drive again */
     var stopped = Math.abs(st.speedMps || 0) < 0.5;
-    if (ZL.v > 0.5 && stopped) {
-      revHold += dt;
-      if (revHold > 0.45 && st.gearMode !== "R" && typeof app.setGear === "function") { app.setGear("R"); }
-    } else revHold = 0;
-    if (ZR.v > 0.5 && st.gearMode === "R" && stopped && typeof app.setGear === "function") app.setGear("G", 1);
+    if (inp.brake > 0.5 && stopped) { revHold += dt; if (revHold > 0.45 && st.gearMode !== "R" && typeof app.setGear === "function") app.setGear("R"); }
+    else revHold = 0;
+    if (inp.throttle > 0.5 && st.gearMode === "R" && stopped && typeof app.setGear === "function") app.setGear("G", 1);
 
-    /* X = horn (hold) */
-    edge("X", X.p,
+    edge("X", inp.horn,
       function () { hornDown = true; if (app.hornOn) app.hornOn(); },
       function () { if (hornDown && app.hornOff) app.hornOff(); hornDown = false; });
-
-    /* Y = the car's speed feature: Speed Key / Track Pack / Velocity / E85 / DRS,
-       and on the F1 cars it holds the ERS Override while pressed */
-    edge("Y", Y.p,
+    edge("Y", inp.boost,
       function () { pressSpecial(app); if (st.keys) st.keys.KeyV = true; },
       function () { if (st.keys) st.keys.KeyV = false; });
-
-    /* L / R = paddle shift (the cars are auto by default, so this is optional) */
-    edge("L", L.p, function () { if (app.paddleDown) app.paddleDown(); });
-    edge("R", R.p, function () { if (app.paddleUp) app.paddleUp(); });
+    edge("L", inp.gearDown, function () { if (app.paddleDown) app.paddleDown(); });
+    edge("R", inp.gearUp, function () { if (app.paddleUp) app.paddleUp(); });
   }
+
+  /* ---- calibration wizard: learn ANY pad by having the player do each action.
+     Whatever indices the browser reports for your Joy-Cons, this captures them. ---- */
+  var STEPS = [
+    { k: "steer", kind: "axis",   prompt: "Push the LEFT stick fully RIGHT", hint: "steering" },
+    { k: "accel", kind: "button", prompt: "Press ACCELERATE", hint: "right trigger — ZR" },
+    { k: "brake", kind: "button", prompt: "Press BRAKE", hint: "left trigger — ZL" },
+    { k: "ptrx",  kind: "axis",   prompt: "Push the RIGHT stick RIGHT", hint: "on-screen pointer" },
+    { k: "ptry",  kind: "axis",   prompt: "Push the RIGHT stick DOWN", hint: "on-screen pointer" },
+    { k: "click", kind: "button", prompt: "Press A", hint: "select / continue" },
+    { k: "back",  kind: "button", prompt: "Press B", hint: "back to the garage" },
+    { k: "horn",  kind: "button", prompt: "Press X", hint: "horn" },
+    { k: "boost", kind: "button", prompt: "Press Y", hint: "boost / track mode" },
+  ];
+  var calActive = false, calStep = 0, calResult = null, calBase = null, calWait = null, calEl = null, autoCalTried = false;
+
+  function snapshot() {
+    var g = rawPads(), snap = [];
+    for (var i = 0; i < g.length; i++) {
+      var gp = g[i];
+      if (!gp || !gp.connected) { snap[i] = null; continue; }
+      snap[i] = { axes: (gp.axes || []).slice(), buttons: (gp.buttons || []).map(function (b) { return b ? (typeof b === "object" ? (b.value || (b.pressed ? 1 : 0)) : b) : 0; }) };
+    }
+    return snap;
+  }
+  function scan(kind, base) {
+    var g = rawPads(), best = null, i, j;
+    for (i = 0; i < g.length; i++) {
+      var gp = g[i]; if (!gp || !gp.connected || !base[i]) continue;
+      if (kind === "axis") {
+        for (j = 0; j < gp.axes.length; j++) {
+          var d = (gp.axes[j] || 0) - (base[i].axes[j] || 0);
+          if (Math.abs(d) > 0.55 && (!best || Math.abs(d) > best.mag)) best = { id: gp.id, idx: i, kind: "axis", i: j, dir: d >= 0 ? 1 : -1, mag: Math.abs(d) };
+        }
+      } else {
+        for (j = 0; j < gp.buttons.length; j++) {
+          var bb = gp.buttons[j], v = bb ? (typeof bb === "object" ? (bb.value || (bb.pressed ? 1 : 0)) : bb) : 0;
+          var bv = base[i].buttons[j] || 0;
+          if (v > 0.6 && bv < 0.5 && (!best || v > best.mag)) best = { id: gp.id, idx: i, kind: "button", i: j, dir: 1, mag: v };
+        }
+      }
+    }
+    return best;
+  }
+  function neutral(src) {
+    var gp = padByRef(src); if (!gp) return true;
+    if (src.kind === "axis") { var b = calBase[src.idx] ? (calBase[src.idx].axes[src.i] || 0) : 0; return Math.abs((gp.axes[src.i] || 0) - b) < 0.3; }
+    var bb = gp.buttons[src.i], v = bb ? (typeof bb === "object" ? (bb.value || (bb.pressed ? 1 : 0)) : bb) : 0;
+    return v < 0.4;
+  }
+  function startCal() {
+    calActive = true; calStep = 0; calResult = {}; calWait = null; calBase = snapshot();
+    if (!calEl) { calEl = document.createElement("div"); calEl.id = "nxCal"; document.body.appendChild(calEl); }
+    calEl.style.display = "grid"; paintCal(false);
+  }
+  function cancelCal() { calActive = false; if (calEl) calEl.style.display = "none"; paintHelp(); }
+  function finishCal() {
+    profile = calResult; calActive = false;
+    try { localStorage.setItem(PKEY, JSON.stringify(profile)); } catch (e) {}
+    if (calEl) calEl.style.display = "none";
+    prevBtn = {}; paintHelp(); flashHelp(6000);
+  }
+  function paintCal(got) {
+    if (!calEl) return;
+    var s = STEPS[calStep];
+    var list = STEPS.map(function (x, i) {
+      var cls = i < calStep ? "done" : (i === calStep ? "cur" : "");
+      return '<span class="' + cls + '">' + (i < calStep ? "✓ " : "") + x.k + '</span>';
+    }).join(" · ");
+    calEl.innerHTML =
+      '<div class="card">' +
+      '<h2>Controller setup</h2>' +
+      '<div>Do each action once. Two Joy-Cons? Use whichever one fits the prompt.</div>' +
+      '<div class="prompt">' + (got ? '<span class="got">✓ got it</span>' : s.prompt) + '</div>' +
+      '<div class="hint">' + s.hint + '</div>' +
+      '<div class="steps">' + list + '</div>' +
+      '<div class="cancel" id="nxCalCancel">skip setup (use default mapping)</div>' +
+      '</div>';
+    var c = $("nxCalCancel"); if (c) c.onclick = function () { profile = null; try { localStorage.removeItem(PKEY); } catch (e) {} cancelCal(); };
+  }
+  function calTick() {
+    if (calWait) { if (neutral(calWait)) { calWait = null; calStep++; if (calStep >= STEPS.length) { finishCal(); return; } calBase = snapshot(); paintCal(false); } return; }
+    var hit = scan(STEPS[calStep].kind, calBase);
+    if (hit) { calResult[STEPS[calStep].k] = { id: hit.id, idx: hit.idx, kind: hit.kind, i: hit.i, dir: hit.dir }; calWait = calResult[STEPS[calStep].k]; paintCal(true); }
+  }
+  function maybeAutoCalibrate() {
+    if (profile || autoCalTried) return;
+    if (joyconPresent()) { autoCalTried = true; startCal(); }
+  }
+
+  /* ---- main loop ---- */
+  function loop(t) {
+    requestAnimationFrame(loop);
+    var dt = last ? Math.min(0.1, (t - last) / 1000) : 0; last = t;
+    var present = !!anyPad();
+    if (present !== connected) { connected = present; paintHelp(); if (present) { flashHelp(8000); maybeAutoCalibrate(); } }
+    if (!present) return;
+    if (calActive) { calTick(); return; }
+    var inp = readInputs();
+    if (inp) applyInputs(inp, dt);
+  }
+
+  /* small hook for tests + a manual "re-map controls" entry point */
+  window.__NX = { calActive: function () { return calActive; }, step: function () { return calStep; }, profile: function () { return profile; }, remap: startCal };
 
   function boot() {
     ui();
