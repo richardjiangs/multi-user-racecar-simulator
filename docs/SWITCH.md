@@ -112,18 +112,29 @@ firewall prompt — click **Allow**. Find your IP by hand any time with
 
 The Switch's own browser will **not** drive the Joy-Cons (it is a login browser,
 not a game runtime — only custom firmware could change that, which this project
-will not do). To play with the controllers, pair them to a device that exposes
-the Gamepad API:
+will not do). So the controllers go on a device that exposes the Gamepad API:
 
-1. Hold the little **sync button** on the Joy-Con / Pro Controller until the
-   lights run, and pair it in the Mac's **Bluetooth** settings (they show up as
-   "Joy-Con" / "Pro Controller").
-2. Open the game in **Chrome** — either the live site, or `switch.html`, or serve
-   the folder locally.
-3. The pads report as a **standard gamepad**, which is exactly what the control
-   layer targets. `tests/switch-test.mjs` verifies the full mapping (left-stick
-   steer, ZR/ZL, right-stick pointer, A/B/X/Y). Same controllers, full mapping,
-   nothing done to your console.
+1. **Pair each Joy-Con.** Detach it from the console, then hold its little
+   **sync button** — the round button on the flat rail edge, between SL and SR —
+   for ~5 s until the four lights run. On the Mac, open **Bluetooth** settings and
+   connect **"Joy-Con (L)"** and **"Joy-Con (R)"**. (Keep the Switch asleep so it
+   doesn't grab them back.) A **Pro Controller** pairs the same way, from the sync
+   button on its top edge.
+2. **Open `switch.html` in Chrome** (or the live site, or serve the folder).
+3. **One-time setup.** Two Joy-Cons show up as *two separate, non-standard* pads
+   on a Mac — macOS does not fuse them into one L+R controller the way the console
+   does, and their button numbers are not the standard layout. So `switch.html`
+   pops a **calibration wizard** the first time it sees a Joy-Con: it asks you to
+   do each action once ("push the LEFT stick right", "press ACCELERATE", …) and
+   learns whatever your pads report — using the left Joy-Con for steering and the
+   right for the buttons/pointer, or vice-versa, whatever you press. It saves the
+   result, so it is a one-time thing. Redo it any time with the **⚙ Remap
+   controls** button (top-left).
+
+   A **Pro Controller** or an **Xbox / PlayStation** pad reports the *standard*
+   layout and needs no wizard — it just works (`tests/switch-test.mjs`, 14
+   checks). The wizard is verified by `tests/switch-joycon-test.mjs`, which learns
+   two deliberately scrambled fake Joy-Cons and then drives the car with them.
 
 Everything in one place cannot be had without hacking: Joy-Cons *and* the
 Switch's own screen means the Switch's browser reading the controllers, which it
