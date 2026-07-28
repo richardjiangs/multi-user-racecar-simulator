@@ -2640,7 +2640,9 @@ const SPEC = {
   // the huge central gear, speed on the left, ERS deploy on the right, an ERS store bar ----
   function drawWheelDisplay(cx, cy, R) {
     const ACC = (getComputedStyle(document.documentElement).getPropertyValue('--teal').trim() || '#7ad0ff');
-    const kmh = Math.abs(app.kmh(state.speedMps)), ers = clamp(state.boostBar / 1.35, 0, 1);
+    const kmh = Math.abs(app.kmh(state.speedMps));
+    // the ERS STORE (0..1) — charged by harvesting, spent by holding V. NOT turbo boost.
+    const ers = clamp(state.ersStore == null ? 0 : state.ersStore, 0, 1), deploying = !!state.ersBoost;
     const W = R * 3.1, H = R * 1.68, x = cx - W / 2, y = cy - H / 2;
     ctx.save();
     const pg = ctx.createLinearGradient(0, y, 0, y + H); pg.addColorStop(0, "#0c1014"); pg.addColorStop(1, "#05070a");
@@ -2652,11 +2654,11 @@ const SPEC = {
     ctx.textAlign = "center"; ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.66)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy + R * 0.04);
     ctx.textAlign = "left"; ctx.fillStyle = ACC; ctx.font = `800 ${Math.round(R * 0.3)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), x + R * 0.22, cy - R * 0.06);
     ctx.fillStyle = "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("km/h", x + R * 0.22, cy + R * 0.16);
-    ctx.textAlign = "right"; ctx.fillStyle = "#f5c518"; ctx.font = `800 ${Math.round(R * 0.3)}px ui-sans-serif`; ctx.fillText(Math.round(ers * 100) + "%", x + W - R * 0.22, cy - R * 0.06);
-    ctx.fillStyle = "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("ERS", x + W - R * 0.22, cy + R * 0.16);
+    ctx.textAlign = "right"; ctx.fillStyle = deploying ? "#ffd24a" : "#f5c518"; ctx.font = `800 ${Math.round(R * 0.3)}px ui-sans-serif`; ctx.fillText(Math.round(ers * 100) + "%", x + W - R * 0.22, cy - R * 0.06);
+    ctx.fillStyle = deploying ? "#ffd24a" : "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(deploying ? "ERS DEPLOY" : "ERS STORE", x + W - R * 0.22, cy + R * 0.16);
     const eb = W * 0.7, ex = cx - eb / 2, ey = y + H - R * 0.24;
     ctx.fillStyle = "rgba(255,255,255,0.08)"; ctx.fillRect(ex, ey, eb, R * 0.09);
-    ctx.fillStyle = ACC; ctx.fillRect(ex, ey, eb * ers, R * 0.09);
+    ctx.fillStyle = deploying ? "#ffd24a" : ACC; ctx.fillRect(ex, ey, eb * ers, R * 0.09);
     ctx.restore();
   }
 
