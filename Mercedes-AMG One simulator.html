@@ -2863,6 +2863,7 @@ drawCluster(w, h, dashY, sway);
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
+      if (e.code === "KeyZ" && !e.repeat) app.toggleDrs();   // Z = this car's ultimate-speed feature (DRS)
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }

@@ -2907,6 +2907,7 @@ const SPEC = {
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
+      if (e.code === "KeyZ" && !e.repeat) app.toggleVelocity();   // Z = this car's ultimate-speed feature (Velocity Mode)
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }
