@@ -2276,56 +2276,77 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // ---- GR Supra cluster: the A90's dominant central round digital tachometer with a
-  // GR-red rev sweep and the digital speed in the hub, flanked by BOOST + TEMP readouts ----
+  // ---- GR Supra (A90): ONE hooded binnacle, deliberately asymmetric — the big round
+  // tachometer sits LEFT with its GR-red sweep, and a rectangular digital panel (speed,
+  // gear, boost, temp) fills the RIGHT. Not a centre dial with matching pods. ----
   function drawCluster(w, h, dashY, sway) {
-    const R = Math.min(w, h) * 0.128;
-    const cx = w / 2 + sway, cy = dashY + R * 0.82;
-    drawTach(cx, cy, R);
-    const boost = clamp(state.boostBar / 1.3, 0, 1);
-    const temp = clamp((82 + (state.rpm / (SPEC.redlineRpm || 6500)) * 26 - 60) / 60, 0, 1);
-    drawMiniArc(cx - R * 1.62, cy + R * 0.1, R * 0.5, boost, "BOOST", (state.boostBar).toFixed(1), "#ff5a49");
-    drawMiniArc(cx + R * 1.62, cy + R * 0.1, R * 0.5, temp, "TEMP", Math.round(82 + (state.rpm / (SPEC.redlineRpm || 6500)) * 26) + "°", "#6fc4e8");
+    const R = Math.min(w, h) * 0.125;
+    const cx = w / 2 + sway, cy = dashY + R * 0.46;   // hood sits high on the dash, clear of the console
+    const BW = R * 4.0, BH = R * 1.9, bx = cx - BW * 0.46, by = cy - BH / 2;
+    ctx.save();
+    // the hood over the binnacle
+    ctx.fillStyle = "#0b0d11";
+    ctx.beginPath(); ctx.moveTo(bx - R * 0.16, by + R * 0.1); ctx.quadraticCurveTo(cx, by - R * 0.34, bx + BW + R * 0.16, by + R * 0.1);
+    ctx.lineTo(bx + BW + R * 0.16, by + R * 0.3); ctx.lineTo(bx - R * 0.16, by + R * 0.3); ctx.closePath(); ctx.fill();
+    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#0e1116"); pg.addColorStop(1, "#05070a");
+    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.13); ctx.fill();
+    ctx.strokeStyle = "rgba(216,30,44,0.45)"; ctx.lineWidth = 1.5; roundRect(ctx, bx, by, BW, BH, R * 0.13); ctx.stroke();
+    ctx.restore();
+    // LEFT: the dominant round tachometer
+    drawTach(bx + BH * 0.5 + R * 0.06, cy, BH * 0.44);
+    // RIGHT: the rectangular digital panel
+    const px = bx + BH * 0.98, pw = BW - BH * 1.06;
+    drawInfoPanel(px, by + R * 0.2, pw, BH - R * 0.4, R);
   }
-  // the central round tach: a bold GR-red rev sweep, rpm numerals, digital speed + gear
+  // the A90 round tach: bold GR-red sweep, rpm numerals, SPORT tag
   function drawTach(cx, cy, R) {
-    const rpm = state.rpm, MAX = 7500, kmh = Math.abs(app.kmh(state.speedMps)), redAt = (SPEC.redlineRpm || 6500);
+    const rpm = state.rpm, MAX = 7500, redAt = (SPEC.redlineRpm || 6500);
     const sport = state.driveMode === "race" || state.driveMode === "sport";
     ctx.save(); ctx.translate(cx, cy);
-    const bz = ctx.createRadialGradient(-R * 0.3, -R * 0.3, R * 0.2, 0, 0, R * 1.12); bz.addColorStop(0, "#232830"); bz.addColorStop(1, "#0a0c10");
-    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.1, 0, Math.PI * 2); ctx.fill();
+    const bz = ctx.createRadialGradient(-R * 0.3, -R * 0.3, R * 0.2, 0, 0, R * 1.1); bz.addColorStop(0, "#232830"); bz.addColorStop(1, "#0a0c10");
+    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.06, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "rgba(6,8,11,0.98)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
     const startA = Math.PI * 0.72, endA = Math.PI * 2.28, rev = clamp(rpm / MAX, 0, 1);
-    // bold rev sweep (GR red) under the ticks
-    ctx.lineWidth = R * 0.1; ctx.lineCap = "butt";
-    ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.beginPath(); ctx.arc(0, 0, R * 0.88, startA, endA); ctx.stroke();
-    ctx.strokeStyle = sport ? "#ff2a30" : "#d81e2c"; ctx.beginPath(); ctx.arc(0, 0, R * 0.88, startA, lerp(startA, endA, rev)); ctx.stroke();
-    // ticks + rpm numerals 0..7
+    ctx.lineWidth = R * 0.11; ctx.lineCap = "butt";
+    ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.beginPath(); ctx.arc(0, 0, R * 0.86, startA, endA); ctx.stroke();
+    ctx.strokeStyle = sport ? "#ff2a30" : "#d81e2c"; ctx.beginPath(); ctx.arc(0, 0, R * 0.86, startA, lerp(startA, endA, rev)); ctx.stroke();
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     for (let v = 0; v <= MAX; v += 500) {
       const f = v / MAX, a = lerp(startA, endA, f), major = v % 1000 === 0, red = v >= redAt;
-      ctx.strokeStyle = red ? "#ff5b5b" : "rgba(230,236,242,0.85)";
-      ctx.lineWidth = major ? 2.2 : 1; const r1 = R * (major ? 0.64 : 0.72), r2 = R * 0.8;
+      ctx.strokeStyle = red ? "#ff5b5b" : "rgba(230,236,242,0.85)"; ctx.lineWidth = major ? 2 : 1;
+      const r1 = R * (major ? 0.6 : 0.68), r2 = R * 0.76;
       ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
-      if (major) { ctx.fillStyle = red ? "#ff8080" : "rgba(220,228,236,0.9)"; ctx.font = `600 ${Math.round(R * 0.12)}px ui-sans-serif`; ctx.fillText(String(v / 1000), Math.cos(a) * R * 0.5, Math.sin(a) * R * 0.5); }
+      if (major) { ctx.fillStyle = red ? "#ff8080" : "rgba(220,228,236,0.9)"; ctx.font = `600 ${Math.round(R * 0.15)}px ui-sans-serif`; ctx.fillText(String(v / 1000), Math.cos(a) * R * 0.45, Math.sin(a) * R * 0.45); }
     }
-    // hub: SPORT/NORMAL tag, big digital speed, gear + km/h
-    ctx.fillStyle = sport ? "rgba(255,90,73,0.95)" : "rgba(150,166,180,0.8)"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(sport ? "SPORT" : "NORMAL", 0, -R * 0.32);
-    ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.44)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), 0, R * 0.04);
-    ctx.fillStyle = "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("km/h", 0, R * 0.3);
-    ctx.fillStyle = "#ff5a49"; ctx.font = `800 ${Math.round(R * 0.17)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, R * 0.52);
+    // the dial centre is free (the sweep replaces a needle) — the mode tag lives there
+    ctx.fillStyle = sport ? "rgba(255,90,73,0.95)" : "rgba(150,166,180,0.75)"; ctx.font = `800 ${Math.round(R * 0.16)}px ui-sans-serif`;
+    ctx.fillText(sport ? "SPORT" : "NORMAL", 0, -R * 0.02);
+    ctx.fillStyle = "rgba(180,196,210,0.85)"; ctx.font = `600 ${Math.round(R * 0.11)}px ui-sans-serif`; ctx.fillText("x1000 r/min", 0, R * 0.44);
     ctx.restore();
   }
-  // a small digital arc readout (boost / temp)
-  function drawMiniArc(cx, cy, R, frac, label, val, col) {
-    const startA = Math.PI * 0.72, endA = Math.PI * 2.28;
-    ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "rgba(6,8,11,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.lineWidth = R * 0.14; ctx.beginPath(); ctx.arc(0, 0, R * 0.78, startA, endA); ctx.stroke();
-    ctx.strokeStyle = col; ctx.beginPath(); ctx.arc(0, 0, R * 0.78, startA, lerp(startA, endA, clamp(frac, 0, 1))); ctx.stroke();
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = "#eef2f7"; ctx.font = `700 ${Math.round(R * 0.4)}px ui-sans-serif`; ctx.fillText(val, 0, -R * 0.02);
-    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.24)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
+  // the right-hand digital panel: speed (dominant), gear, boost + temp bars
+  function drawInfoPanel(x, y, w2, h2, R) {
+    const kmh = Math.abs(app.kmh(state.speedMps));
+    ctx.save(); ctx.textBaseline = "middle";
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.62)}px ui-sans-serif`;
+    ctx.fillText(String(Math.round(kmh)), x + R * 0.1, y + h2 * 0.32);
+    ctx.fillStyle = "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`;
+    ctx.fillText("km/h", x + R * 0.13, y + h2 * 0.56);
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#ff5a49"; ctx.font = `800 ${Math.round(R * 0.34)}px ui-sans-serif`;
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, x + w2 - R * 0.12, y + h2 * 0.3);
+    // boost + temp bars
+    const bw = w2 - R * 0.24, bx2 = x + R * 0.12;
+    const rows = [["BOOST", clamp(state.boostBar / 1.3, 0, 1), "#ff5a49"],
+                  ["TEMP", clamp((82 + (state.rpm / (SPEC.redlineRpm || 6500)) * 26 - 60) / 60, 0, 1), "#6fc4e8"]];
+    rows.forEach(([lab, frac, col], i) => {
+      const yy = y + h2 * (0.72 + i * 0.16);
+      ctx.textAlign = "left"; ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
+      ctx.fillText(lab, bx2, yy);
+      ctx.fillStyle = "rgba(255,255,255,0.08)"; ctx.fillRect(bx2 + R * 0.42, yy - R * 0.05, bw - R * 0.42, R * 0.1);
+      ctx.fillStyle = col; ctx.fillRect(bx2 + R * 0.42, yy - R * 0.05, (bw - R * 0.42) * frac, R * 0.1);
+    });
     ctx.restore();
   }
   // GR leather wheel: round rim, flat bottom, red 12-o'clock marker and metal paddles

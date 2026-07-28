@@ -2263,8 +2263,7 @@ const SPEC = {
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
     const cx = w / 2 + sway;
-    drawSpeedo(cx, cy, R);                                   // driver display
-    drawCenterScreen(cx + R * 3.4, cy, R);                   // 17\" landscape screen
+    drawCluster(cx, cy, R);
     // the yoke
     drawWheel(w, h);
   }
@@ -2275,75 +2274,52 @@ const SPEC = {
   }
   // the Taycan driver display: a clean landscape card — huge digital speed, a power/regen
   // bar that swings cyan on regen, P·R·N·D strip, battery bar. No dials anywhere.
-  function drawSpeedo(cx, cy, R) {
-    const kmhNow = Math.abs(app.kmh(state.speedMps));
-    const W = R * 3.35, H = R * 1.62, rr = H * 0.4;
-    ctx.save(); ctx.translate(cx, cy);
-    // the 16.8" free-standing CURVED glass cluster — rounded ends, no cowl, floating shadow
-    ctx.save(); ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = R * 0.42; ctx.shadowOffsetY = R * 0.12;
-    roundRect(ctx, -W / 2, -H / 2, W, H, rr); ctx.fillStyle = "rgba(6,8,10,0.97)"; ctx.fill(); ctx.restore();
-    ctx.strokeStyle = "rgba(120,130,140,0.45)"; ctx.lineWidth = 1.6; roundRect(ctx, -W / 2, -H / 2, W, H, rr); ctx.stroke();
-    // curved anti-reflective glass — a soft top highlight (the polarised Taycan panel)
-    const gh = ctx.createLinearGradient(0, -H / 2, 0, 0); gh.addColorStop(0, "rgba(170,205,255,0.10)"); gh.addColorStop(1, "rgba(0,0,0,0)");
-    ctx.fillStyle = gh; roundRect(ctx, -W / 2, -H / 2, W, H * 0.46, rr); ctx.fill();
-    // P R N D strip
-    const gears = ["P", "R", "N", "D"];
-    const cur = state.gearMode === "G" ? "D" : (state.gearMode === "R" ? "R" : (Math.abs(state.speedMps) < 0.1 && !state.ignition ? "P" : "N"));
-    ctx.font = `700 ${Math.round(R * 0.14)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    gears.forEach((g, i) => { ctx.fillStyle = g === cur ? "#eef2f7" : "rgba(130,140,150,0.45)"; ctx.fillText(g, -W * 0.38 + i * R * 0.28, -H * 0.32); });
-    // Attack Mode chip
-    ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "right";
-    ctx.fillStyle = state.trackPack ? "#6fe0e8" : "rgba(130,140,150,0.7)";
-    ctx.fillText(state.trackPack ? "ATTACK" : "TURBO GT", W * 0.44, -H * 0.32);
-    // huge speed
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.62)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmhNow)), 0, -H * 0.02);
-    ctx.fillStyle = "rgba(150,160,170,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("KM/H", 0, H * 0.19);
-    // power / regen bar: right of centre = kW out (white), left = regen (cyan)
-    const barW = W * 0.8, barY = H * 0.31;
-    ctx.fillStyle = "rgba(255,255,255,0.10)"; ctx.fillRect(-barW / 2, barY, barW, R * 0.07);
-    const regenActive = state.gearMode === "G" && state.throttle < 0.02 && Math.abs(state.speedMps) > 0.6;
-    if (regenActive) { ctx.fillStyle = "#3ec6e8"; const f = clamp(SPEC.regenMps2 * (state.antiLag ? 1.25 : 1) / 3, 0, 1); ctx.fillRect(-barW * 0.25 * f - 1, barY, barW * 0.25 * f, R * 0.07); }
-    else { ctx.fillStyle = "#f2f5f8"; ctx.fillRect(0, barY, barW * 0.5 * clamp(state.boostBar, 0, 1), R * 0.07); }
-    ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.beginPath(); ctx.moveTo(0, barY - 2); ctx.lineTo(0, barY + R * 0.07 + 2); ctx.stroke();
-    ctx.fillStyle = "rgba(150,160,170,0.9)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
-    ctx.fillText(regenActive ? "REGEN" : Math.round(state.boostBar * SPEC.peakPowerKw) + " kW", 0, barY + R * 0.2);
+  // ---- Porsche Taycan: the 16.8" free-standing CURVED glass cluster (no cowl), running
+  // CLASSIC mode — the rounded Porsche instruments, with the side touch fields. ----
+  function drawCluster(cx, cy, R) {
+    const ACC = "#00a9b5";
+    const kmh = Math.abs(app.kmh(state.speedMps));
+    const soc = 0.9 - clamp(state.distanceM / 500000, 0, 0.5);
+    const W = R * 4.5, H = R * 1.66, rr = H * 0.44, x = cx - W / 2, y = cy - H / 2;
+    ctx.save();
+    // curved free-standing glass: rounded ends + a floating shadow, no cowl
+    ctx.save(); ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = R * 0.4; ctx.shadowOffsetY = R * 0.12;
+    ctx.fillStyle = "rgba(6,8,10,0.97)"; roundRect(ctx, x, y, W, H, rr); ctx.fill(); ctx.restore();
+    ctx.strokeStyle = "rgba(120,130,140,0.45)"; ctx.lineWidth = 1.6; roundRect(ctx, x, y, W, H, rr); ctx.stroke();
+    const gh = ctx.createLinearGradient(0, y, 0, cy); gh.addColorStop(0, "rgba(170,205,255,0.10)"); gh.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = gh; roundRect(ctx, x, y, W, H * 0.46, rr); ctx.fill();
+    // CLASSIC mode: a central round POWER meter flanked by round dials
+    pDial(cx, cy, R * 0.62, clamp(kmh / 305, 0, 1), String(Math.round(kmh)), "km/h", "#eef2f7");
+    pDial(cx - R * 1.32, cy, R * 0.46, clamp(state.throttle, 0, 1), Math.round(clamp(state.throttle, 0, 1) * (SPEC.peakPowerKw || 815)) + "", "kW", ACC);
+    pDial(cx + R * 1.32, cy, R * 0.46, soc, Math.round(soc * 100) + "%", "BATT", soc > 0.2 ? "#57e07c" : "#ff8a5a");
+    // the side touch control fields (light / chassis) — real Taycan detail
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `600 ${Math.round(R * 0.082)}px ui-sans-serif`;
+    [["LIGHT", x + R * 0.3], ["CHASSIS", x + W - R * 0.3]].forEach(([t, tx]) => {
+      ctx.fillStyle = "rgba(255,255,255,0.05)"; roundRect(ctx, tx - R * 0.24, cy - R * 0.34, R * 0.48, R * 0.68, R * 0.07); ctx.fill();
+      ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.save(); ctx.translate(tx, cy); ctx.rotate(-Math.PI / 2); ctx.fillText(t, 0, 0); ctx.restore();
+    });
+    // Attack Mode flag
+    if (state.trackPack) { ctx.fillStyle = "#6fe0e8"; ctx.font = `700 ${Math.round(R * 0.09)}px ui-sans-serif`; ctx.fillText("ATTACK", cx, y + R * 0.16); }
     ctx.restore();
   }
-  // the 17\" landscape centre screen: battery, dual-motor tiles, mode
-  function drawCenterScreen(cx, cy, R) {
-    const W = R * 2.2, H = R * 1.35;
-    ctx.save(); ctx.translate(cx, cy + R * 0.14);
-    roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.1); ctx.fillStyle = "rgba(8,10,12,0.94)"; ctx.fill();
-    ctx.strokeStyle = "rgba(120,130,140,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.1); ctx.stroke();
-    // battery bar
-    const soc = 0.90 - clamp(state.distanceM / 500000, 0, 0.5);
-    ctx.fillStyle = "rgba(255,255,255,0.12)"; roundRect(ctx, -W * 0.4, -H * 0.34, W * 0.8, R * 0.12, 3); ctx.fill();
-    ctx.fillStyle = soc > 0.2 ? "#57e07c" : "#ff8a5a"; roundRect(ctx, -W * 0.4, -H * 0.34, W * 0.8 * soc, R * 0.12, 3); ctx.fill();
-    ctx.fillStyle = "rgba(220,228,236,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(Math.round(soc * 100) + "%", 0, -H * 0.1);
-    // dual-motor tiles light with throttle
-    for (let i = 0; i < 2; i++) { const on = state.throttle > 0.04 + i * 0.4; ctx.fillStyle = on ? "rgba(0,169,181,0.85)" : "rgba(255,255,255,0.1)"; roundRect(ctx, -W * 0.24 + i * W * 0.28, H * 0.04, W * 0.2, R * 0.16, 3); ctx.fill(); }
-    ctx.fillStyle = "rgba(150,160,170,0.85)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
-    ctx.fillText((state.driveMode === "race" ? "SPORT+" : state.driveMode === "sport" ? "SPORT" : "NORMAL") + " · 2 MOTORS", 0, H * 0.34);
-    ctx.restore();
-  }
-  // small flanking gauge (power on the left, revs on the right)
-  function drawSideGauge(cx, cy, R, val, max, label, isPower) {
-    ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "rgba(6,8,11,0.95)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(120,160,220,0.4)"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+  // a rounded Porsche instrument: dark face, fine ticks, needle, value in the middle
+  function pDial(cx, cy, R, frac, val, label, col) {
     const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
-    for (let i = 0; i <= 40; i++) {
-      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 1350 : v > 5600;
-      ctx.strokeStyle = on ? (red ? "#ff5b5b" : (isPower ? "#9cc6ff" : "#f0a23c")) : "rgba(120,130,140,0.3)";
-      ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.lineTo(Math.cos(a) * R * 0.94, Math.sin(a) * R * 0.94); ctx.stroke();
+    ctx.save(); ctx.translate(cx, cy);
+    const bz = ctx.createRadialGradient(-R * 0.3, -R * 0.3, R * 0.2, 0, 0, R * 1.05); bz.addColorStop(0, "#2b3138"); bz.addColorStop(1, "#0d1014");
+    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.02, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#080a0d"; ctx.beginPath(); ctx.arc(0, 0, R * 0.94, 0, Math.PI * 2); ctx.fill();
+    for (let i = 0; i <= 30; i++) {
+      const f = i / 30, a = lerp(startA, endA, f), on = f <= frac;
+      ctx.strokeStyle = on ? col : "rgba(140,152,164,0.3)"; ctx.lineWidth = i % 5 === 0 ? 2 : 1;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.72, Math.sin(a) * R * 0.72); ctx.lineTo(Math.cos(a) * R * 0.87, Math.sin(a) * R * 0.87); ctx.stroke();
     }
-    const na = lerp(startA, endA, clamp(val / max, 0, 1)); ctx.strokeStyle = "#dfe9ee"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.7, Math.sin(na) * R * 0.7); ctx.stroke();
-    ctx.fillStyle = "rgba(160,176,190,0.9)"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = `700 ${Math.round(R * 0.34)}px ui-sans-serif`; ctx.fillText(isPower ? String(Math.round(val)) : (val / 1000).toFixed(1), 0, R * 0.02);
-    ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
+    const na = lerp(startA, endA, clamp(frac, 0, 1));
+    ctx.strokeStyle = "#e6ebef"; ctx.lineWidth = R * 0.045; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.64, Math.sin(na) * R * 0.64); ctx.stroke();
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "#eef2f7"; ctx.font = `700 ${Math.round(R * 0.36)}px ui-sans-serif`; ctx.fillText(val, 0, R * 0.02);
+    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.18)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.46);
     ctx.restore();
   }
   // Porsche Taycan wheel: round rim with the drive-mode dial at 5 o'clock (GT wheel)

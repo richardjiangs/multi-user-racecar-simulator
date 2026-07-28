@@ -2255,8 +2255,7 @@ const SPEC = {
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
     const cx = w / 2 + sway;
-    drawSpeedo(cx, cy, R);                                   // driver display
-    drawCenterScreen(cx + R * 3.4, cy, R);                   // 17\" landscape screen
+    drawCluster(cx, cy, R);
     // the wheel
     drawWheel(w, h);
   }
@@ -2269,71 +2268,64 @@ const SPEC = {
   // bar that swings cyan on regen, P·R·N·D strip, battery bar. No dials anywhere.
   // the Nevera driver display: a round digital dial — an outer speed ring, huge central
   // km/h, gear and kW/regen inside; distinct from the Evija's landscape card
-  function drawSpeedo(cx, cy, R) {
-    const kmhNow = Math.abs(app.kmh(state.speedMps));
-    const topv = SPEC.topSpeedLimitedKmh || 412;
-    ctx.save(); ctx.translate(cx, cy);
-    const bz = ctx.createRadialGradient(0, -R * 0.4, R * 0.15, 0, 0, R * 1.2); bz.addColorStop(0, "#1a2a2c"); bz.addColorStop(1, "#070b0c");
-    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.14, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "rgba(6,10,11,0.97)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    const sA = Math.PI * 0.75, eA = Math.PI * 2.25;
-    ctx.lineCap = "round";
-    ctx.strokeStyle = "rgba(255,255,255,0.1)"; ctx.lineWidth = R * 0.1; ctx.beginPath(); ctx.arc(0, 0, R * 0.86, sA, eA); ctx.stroke();
-    const sf = clamp(kmhNow / topv, 0, 1);
-    ctx.strokeStyle = "#2bb3c0"; ctx.beginPath(); ctx.arc(0, 0, R * 0.86, sA, sA + (eA - sA) * sf); ctx.stroke();
+  // ---- Rimac Nevera: three TFTs. The driver screen's signature is the live per-wheel
+  // TORQUE VECTORING map (one motor per wheel) plus a g-meter; a passenger screen sits right. ----
+  function drawCluster(cx, cy, R) {
+    const ACC = "#2bb3c0";
+    cy -= R * 0.42;                       // sit the TFT up on the dash, clear of the console
+    const kmh = Math.abs(app.kmh(state.speedMps));
+    const soc = 0.9 - clamp(state.distanceM / 500000, 0, 0.5);
+    const kw = Math.round(clamp(state.throttle, 0, 1) * (SPEC.peakPowerKw || 1400));
+    const W = R * 3.2, H = R * 1.7, x = cx - W / 2, y = cy - H / 2;
+    ctx.save();
+    const pg = ctx.createLinearGradient(0, y, 0, y + H); pg.addColorStop(0, "#0b1315"); pg.addColorStop(1, "#05070a");
+    ctx.fillStyle = pg; roundRect(ctx, x, y, W, H, R * 0.12); ctx.fill();
+    ctx.strokeStyle = ACC; ctx.lineWidth = 1.5; roundRect(ctx, x, y, W, H, R * 0.12); ctx.stroke();
+    ctx.textBaseline = "middle";
+    // left: speed + power + charge
+    ctx.textAlign = "left";
+    ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.46)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), x + R * 0.22, cy - R * 0.3);
+    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.09)}px ui-sans-serif`; ctx.fillText("km/h", x + R * 0.24, cy - R * 0.02);
+    ctx.fillStyle = ACC; ctx.font = `700 ${Math.round(R * 0.17)}px ui-sans-serif`; ctx.fillText(kw + " kW", x + R * 0.22, cy + R * 0.3);
+    ctx.fillStyle = soc > 0.2 ? "#57e07c" : "#ff8a5a"; ctx.font = `700 ${Math.round(R * 0.13)}px ui-sans-serif`; ctx.fillText(Math.round(soc * 100) + "%", x + R * 0.22, cy + R * 0.56);
+    // centre: the four-wheel torque map — one bar per corner, split drive/regen
+    const bx = cx + R * 0.12, by = cy - R * 0.42, gw = R * 0.86, gh = R * 0.94;
+    ctx.strokeStyle = "rgba(150,166,180,0.35)"; ctx.lineWidth = 1; roundRect(ctx, bx - gw / 2, by, gw, gh, R * 0.08); ctx.stroke();
+    const regen = state.throttle < 0.02 && Math.abs(state.speedMps) > 0.6;
+    const base = regen ? -0.5 : clamp(state.throttle, 0, 1);
+    for (let i = 0; i < 4; i++) {
+      const wx = bx + (i % 2 ? gw * 0.24 : -gw * 0.24), wy = by + (i < 2 ? gh * 0.24 : gh * 0.74);
+      // torque vectoring: outside wheels get more under lateral load
+      const lat = clamp((state.lateralG || 0) / 2, -1, 1);
+      const outer = (i % 2 ? 1 : -1) * lat;
+      const tq = clamp(Math.abs(base) * (1 + outer * 0.5), 0, 1);
+      ctx.fillStyle = "rgba(255,255,255,0.10)"; ctx.fillRect(wx - R * 0.075, wy - R * 0.16, R * 0.15, R * 0.32);
+      ctx.fillStyle = base < 0 ? "#3ec6e8" : ACC;
+      ctx.fillRect(wx - R * 0.075, wy - R * 0.16 + R * 0.32 * (1 - tq), R * 0.15, R * 0.32 * tq);
+    }
+    ctx.textAlign = "center"; ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
+    ctx.fillText(regen ? "REGEN" : "TORQUE VECTORING", bx, by + gh + R * 0.12);
+    // right: g-meter
+    const gx = x + W - R * 0.62, gy = cy - R * 0.1, gr = R * 0.42;
+    ctx.strokeStyle = "rgba(150,166,180,0.3)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.arc(gx, gy, gr, 0, Math.PI * 2); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(gx - gr, gy); ctx.lineTo(gx + gr, gy); ctx.moveTo(gx, gy - gr); ctx.lineTo(gx, gy + gr); ctx.stroke();
+    const gxo = clamp((state.lateralG || 0) / 2, -1, 1) * gr * 0.85;
+    const gyo = clamp((state.brake > 0.05 ? state.brake : -clamp(state.throttle, 0, 1)) , -1, 1) * gr * 0.85;
+    ctx.fillStyle = "#ffd24a"; ctx.beginPath(); ctx.arc(gx + gxo, gy + gyo, R * 0.07, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
+    ctx.fillText(Math.abs(state.lateralG || 0).toFixed(1) + " g", gx, gy + gr + R * 0.16);
+    ctx.restore();
+    // the passenger screen — the Nevera's third TFT
+    const px = cx + R * 2.5, pw = R * 1.15, ph = R * 0.66;
+    ctx.save();
+    ctx.fillStyle = "rgba(8,12,14,0.94)"; roundRect(ctx, px - pw / 2, cy - ph / 2, pw, ph, R * 0.07); ctx.fill();
+    ctx.strokeStyle = "rgba(43,179,192,0.5)"; ctx.lineWidth = 1.2; roundRect(ctx, px - pw / 2, cy - ph / 2, pw, ph, R * 0.07); ctx.stroke();
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    for (let v = 0; v <= topv; v += 100) {
-      const a = sA + (eA - sA) * (v / topv);
-      ctx.strokeStyle = "rgba(180,200,205,0.5)"; ctx.lineWidth = 1.4;
-      ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.7, Math.sin(a) * R * 0.7); ctx.lineTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.stroke();
-      ctx.fillStyle = "rgba(170,190,195,0.8)"; ctx.font = "600 " + Math.round(R * 0.09) + "px ui-sans-serif"; ctx.fillText(String(v), Math.cos(a) * R * 0.58, Math.sin(a) * R * 0.58);
-    }
-    ctx.fillStyle = "#eafcff"; ctx.font = "800 " + Math.round(R * 0.5) + "px ui-sans-serif"; ctx.fillText(String(Math.round(kmhNow)), 0, -R * 0.02);
-    ctx.fillStyle = "rgba(150,180,185,0.9)"; ctx.font = "600 " + Math.round(R * 0.1) + "px ui-sans-serif"; ctx.fillText("KM/H", 0, R * 0.2);
-    const cur = state.gearMode === "G" ? "D" : (state.gearMode === "R" ? "R" : "N");
-    ctx.fillStyle = "#5fe0d0"; ctx.font = "800 " + Math.round(R * 0.2) + "px ui-sans-serif"; ctx.fillText(cur, 0, -R * 0.42);
-    const regen = state.gearMode === "G" && state.throttle < 0.02 && Math.abs(state.speedMps) > 0.6;
-    ctx.fillStyle = regen ? "#2bb3c0" : "rgba(200,220,225,0.9)"; ctx.font = "600 " + Math.round(R * 0.12) + "px ui-sans-serif";
-    ctx.fillText(regen ? "REGEN" : Math.round(state.boostBar * SPEC.peakPowerKw) + " kW", 0, R * 0.44);
+    ctx.fillStyle = "#eef2f7"; ctx.font = `700 ${Math.round(R * 0.2)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), px, cy - R * 0.06);
+    ctx.fillStyle = "rgba(150,166,180,0.75)"; ctx.font = `600 ${Math.round(R * 0.08)}px ui-sans-serif`; ctx.fillText("PASSENGER", px, cy + R * 0.16);
     ctx.restore();
   }
-  // the 17\" landscape centre screen: battery, quad-motor tiles, mode
-  function drawCenterScreen(cx, cy, R) {
-    const W = R * 2.2, H = R * 1.35;
-    ctx.save(); ctx.translate(cx, cy + R * 0.14);
-    roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.1); ctx.fillStyle = "rgba(8,10,12,0.94)"; ctx.fill();
-    ctx.strokeStyle = "rgba(120,130,140,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.1); ctx.stroke();
-    // battery bar
-    const soc = 0.90 - clamp(state.distanceM / 500000, 0, 0.5);
-    ctx.fillStyle = "rgba(255,255,255,0.12)"; roundRect(ctx, -W * 0.4, -H * 0.34, W * 0.8, R * 0.12, 3); ctx.fill();
-    ctx.fillStyle = soc > 0.2 ? "#57e07c" : "#ff8a5a"; roundRect(ctx, -W * 0.4, -H * 0.34, W * 0.8 * soc, R * 0.12, 3); ctx.fill();
-    ctx.fillStyle = "rgba(220,228,236,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(Math.round(soc * 100) + "%", 0, -H * 0.1);
-    // quad-motor tiles light with throttle
-    for (let i = 0; i < 4; i++) { const on = state.throttle > 0.04 + i * 0.22; ctx.fillStyle = on ? "rgba(43,179,192,0.8)" : "rgba(255,255,255,0.1)"; roundRect(ctx, -W * 0.36 + i * W * 0.19, H * 0.04, W * 0.145, R * 0.16, 3); ctx.fill(); }
-    ctx.fillStyle = "rgba(150,160,170,0.85)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
-    ctx.fillText((state.driveMode === "race" ? "TRACK" : state.driveMode === "sport" ? "SPORT" : "CHILL") + " · 4 MOTORS", 0, H * 0.34);
-    ctx.restore();
-  }
-  // small flanking gauge (power on the left, revs on the right)
-  function drawSideGauge(cx, cy, R, val, max, label, isPower) {
-    ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "rgba(6,8,11,0.95)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(120,160,220,0.4)"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
-    for (let i = 0; i <= 40; i++) {
-      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 1350 : v > 5600;
-      ctx.strokeStyle = on ? (red ? "#ff5b5b" : (isPower ? "#9cc6ff" : "#f0a23c")) : "rgba(120,130,140,0.3)";
-      ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.lineTo(Math.cos(a) * R * 0.94, Math.sin(a) * R * 0.94); ctx.stroke();
-    }
-    const na = lerp(startA, endA, clamp(val / max, 0, 1)); ctx.strokeStyle = "#dfe9ee"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.7, Math.sin(na) * R * 0.7); ctx.stroke();
-    ctx.fillStyle = "rgba(160,176,190,0.9)"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = `700 ${Math.round(R * 0.34)}px ui-sans-serif`; ctx.fillText(isPower ? String(Math.round(val)) : (val / 1000).toFixed(1), 0, R * 0.02);
-    ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
-    ctx.restore();
-  }
-  // Rimac Nevera wheel: a round rim with a flattened base, two horizontal spokes to a
   // round hub carrying the Rimac 'R'
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.1; const R = Math.min(w, h) * 0.33;
