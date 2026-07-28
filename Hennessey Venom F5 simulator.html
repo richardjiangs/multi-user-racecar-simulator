@@ -464,9 +464,9 @@
           <button id="frontForward">Recline +</button>
           <button id="frontBack">Recline -</button>
           <button id="harnessBtn">Harness</button>
-          <button id="heatBtn">Seat Heat</button>
+          <button id="heatBtn">Heated Seats</button>
           <button id="coolBtn">Climate A/C</button>
-          <button id="ambientBtn" class="active">Ambient Light</button>
+          <button id="ambientBtn" class="active">Cabin Light</button>
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
@@ -1761,7 +1761,7 @@ const SPEC = {
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
     drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
-    drawCabinFrame(w, h, pal);
+    drawCabinFrame(w, h, pal); /* cabin glow: this car's own cockpit controls — a real visual */ { const _cg = state.ambient ? "rgba(47,127,224,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (pal.night) drawHeadlights(w, h);
     if (state.dataHud) drawTelemetry(w, h);
     if (state.hazards && state.blinkOn) { ctx.fillStyle = "rgba(255,120,40,0.10)"; ctx.fillRect(0, horizonY, w, h - horizonY); }
@@ -2510,8 +2510,8 @@ drawCluster(w, h, dashY, sway);
   function applyEffect(key, on) {
     switch (key) {
       case "heat": if (on) state.cool = false; if (on) audio.whoosh(0.4); showToast(on ? "Seat heating on." : "Seat heating off."); break;
-      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Climate A/C drawing cool air." : "A/C off."); break;
-      case "ambient": showToast(on ? "Cabin ambient lighting on." : "Ambient lighting off."); break;
+      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Climate drawing cool air — about the only luxury fitted." : "A/C off."); break;
+      case "ambient": if (on) audio.chime([440,587,784]); else audio.click(360); showToast(on ? "Cabin lighting on." : "Cabin light off."); break;
       case "shifterLight": showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
