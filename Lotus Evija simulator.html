@@ -2255,8 +2255,7 @@ const SPEC = {
     const R = Math.min(w, h) * 0.118;
     const cy = dashY + R * 0.66;
     const cx = w / 2 + sway;
-    drawSpeedo(cx, cy, R);                                   // driver display
-    drawCenterScreen(cx + R * 3.4, cy, R);                   // 17\" landscape screen
+    drawCluster(cx, cy, R);
     // the wheel
     drawWheel(w, h);
   }
@@ -2267,73 +2266,46 @@ const SPEC = {
   }
   // the Track driver display: a clean landscape card — huge digital speed, a power/regen
   // bar that swings cyan on regen, P·R·N·D strip, battery bar. No dials anywhere.
-  function drawSpeedo(cx, cy, R) {
-    const kmhNow = Math.abs(app.kmh(state.speedMps));
-    const W = R * 3.1, H = R * 1.7;
-    ctx.save(); ctx.translate(cx, cy);
-    roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.14); ctx.fillStyle = "rgba(6,8,10,0.97)"; ctx.fill();
-    ctx.strokeStyle = "rgba(120,130,140,0.45)"; ctx.lineWidth = 1.6; roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.14); ctx.stroke();
-    // P R N D strip
-    const gears = ["P", "R", "N", "D"];
-    const cur = state.gearMode === "G" ? "D" : (state.gearMode === "R" ? "R" : (Math.abs(state.speedMps) < 0.1 && !state.ignition ? "P" : "N"));
-    ctx.font = `700 ${Math.round(R * 0.14)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    gears.forEach((g, i) => { ctx.fillStyle = g === cur ? "#eef2f7" : "rgba(130,140,150,0.45)"; ctx.fillText(g, -W * 0.38 + i * R * 0.28, -H * 0.32); });
-    // Track Mode / limiter chip
-    ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "right";
-    ctx.fillStyle = state.trackPack ? "#e2ff7a" : "rgba(130,140,150,0.7)";
-    ctx.fillText((state.trackPack ? "TRACK · " : "V-MAX · ") + SPEC.topSpeedLimitedKmh, W * 0.44, -H * 0.32);
-    // huge speed
-    ctx.textAlign = "center";
-    ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.62)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmhNow)), 0, -H * 0.02);
-    ctx.fillStyle = "rgba(150,160,170,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("KM/H", 0, H * 0.19);
-    // power / regen bar: right of centre = kW out (white), left = regen (cyan)
-    const barW = W * 0.8, barY = H * 0.31;
-    ctx.fillStyle = "rgba(255,255,255,0.10)"; ctx.fillRect(-barW / 2, barY, barW, R * 0.07);
-    const regenActive = state.gearMode === "G" && state.throttle < 0.02 && Math.abs(state.speedMps) > 0.6;
-    if (regenActive) { ctx.fillStyle = "#b6d900"; const f = clamp(SPEC.regenMps2 * (state.antiLag ? 1.25 : 1) / 3, 0, 1); ctx.fillRect(-barW * 0.25 * f - 1, barY, barW * 0.25 * f, R * 0.07); }
-    else { ctx.fillStyle = "#f2f5f8"; ctx.fillRect(0, barY, barW * 0.5 * clamp(state.boostBar, 0, 1), R * 0.07); }
-    ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.beginPath(); ctx.moveTo(0, barY - 2); ctx.lineTo(0, barY + R * 0.07 + 2); ctx.stroke();
-    ctx.fillStyle = "rgba(150,160,170,0.9)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
-    ctx.fillText(regenActive ? "REGEN" : Math.round(state.boostBar * SPEC.peakPowerKw) + " kW", 0, barY + R * 0.2);
-    ctx.restore();
-  }
-  // the 17\" landscape centre screen: battery, quad-motor tiles, mode
-  function drawCenterScreen(cx, cy, R) {
-    const W = R * 2.2, H = R * 1.35;
-    ctx.save(); ctx.translate(cx, cy + R * 0.14);
-    roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.1); ctx.fillStyle = "rgba(8,10,12,0.94)"; ctx.fill();
-    ctx.strokeStyle = "rgba(120,130,140,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.1); ctx.stroke();
-    // battery bar
-    const soc = 0.90 - clamp(state.distanceM / 500000, 0, 0.5);
-    ctx.fillStyle = "rgba(255,255,255,0.12)"; roundRect(ctx, -W * 0.4, -H * 0.34, W * 0.8, R * 0.12, 3); ctx.fill();
-    ctx.fillStyle = soc > 0.2 ? "#57e07c" : "#ff8a5a"; roundRect(ctx, -W * 0.4, -H * 0.34, W * 0.8 * soc, R * 0.12, 3); ctx.fill();
-    ctx.fillStyle = "rgba(220,228,236,0.9)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillText(Math.round(soc * 100) + "%", 0, -H * 0.1);
-    // quad-motor tiles light with throttle
-    for (let i = 0; i < 4; i++) { const on = state.throttle > 0.04 + i * 0.22; ctx.fillStyle = on ? "rgba(182,217,0,0.8)" : "rgba(255,255,255,0.1)"; roundRect(ctx, -W * 0.36 + i * W * 0.19, H * 0.04, W * 0.145, R * 0.16, 3); ctx.fill(); }
-    ctx.fillStyle = "rgba(150,160,170,0.85)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
-    ctx.fillText((state.driveMode === "race" ? "TRACK" : state.driveMode === "sport" ? "SPORT" : "CHILL") + " · 4 MOTORS", 0, H * 0.34);
-    ctx.restore();
-  }
-  // small flanking gauge (power on the left, revs on the right)
-  function drawSideGauge(cx, cy, R, val, max, label, isPower) {
-    ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "rgba(6,8,11,0.95)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(120,160,220,0.4)"; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    const startA = Math.PI * 0.75, endA = Math.PI * 2.25;
-    for (let i = 0; i <= 40; i++) {
-      const f = i / 40, a = lerp(startA, endA, f), v = f * max, on = v <= val, red = isPower ? v > 1350 : v > 5600;
-      ctx.strokeStyle = on ? (red ? "#ff5b5b" : (isPower ? "#9cc6ff" : "#f0a23c")) : "rgba(120,130,140,0.3)";
-      ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.lineTo(Math.cos(a) * R * 0.94, Math.sin(a) * R * 0.94); ctx.stroke();
+  // ---- Lotus Evija: a deliberately simple slim binnacle ahead of the wheel and NOTHING
+  // else — the real car has no centre screen at all. Hexagons are the Evija design motif. ----
+  function drawCluster(cx, cy, R) {
+    const ACC = "#b6d900";
+    const kmh = Math.abs(app.kmh(state.speedMps));
+    const soc = 0.9 - clamp(state.distanceM / 500000, 0, 0.5);
+    const range = Math.round(soc * 350);
+    const modes = { wet: "RANGE", road: "CITY", sport: "TOUR", race: "TRACK", track: "TRACK" };
+    const mode = state.trackPack ? "TRACK" : (modes[(state.driveMode || "road").toLowerCase()] || "TOUR");
+    const W = R * 3.9, H = R * 1.12, x = cx - W / 2, y = cy - H / 2, ch = H * 0.42;
+    ctx.save();
+    const pg = ctx.createLinearGradient(0, y, 0, y + H); pg.addColorStop(0, "#0d1108"); pg.addColorStop(1, "#05070a");
+    ctx.fillStyle = pg; hexPanelC(x, y, W, H, ch); ctx.fill();
+    ctx.strokeStyle = ACC; ctx.lineWidth = 1.5; hexPanelC(x, y, W, H, ch); ctx.stroke();
+    ctx.textBaseline = "middle";
+    // left: drive mode
+    ctx.textAlign = "left"; ctx.fillStyle = ACC; ctx.font = `800 ${Math.round(R * 0.17)}px ui-sans-serif`;
+    ctx.fillText(mode, x + R * 0.42, cy - R * 0.12);
+    ctx.fillStyle = "rgba(150,166,180,0.75)"; ctx.font = `600 ${Math.round(R * 0.09)}px ui-sans-serif`;
+    ctx.fillText("DRIVE MODE", x + R * 0.42, cy + R * 0.14);
+    // centre: speed
+    ctx.textAlign = "center"; ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.5)}px ui-sans-serif`;
+    ctx.fillText(String(Math.round(kmh)), cx, cy - R * 0.04);
+    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.095)}px ui-sans-serif`;
+    ctx.fillText("km/h", cx, cy + R * 0.26);
+    // right: battery + range
+    ctx.textAlign = "right"; ctx.fillStyle = soc > 0.2 ? ACC : "#ff8a5a"; ctx.font = `800 ${Math.round(R * 0.17)}px ui-sans-serif`;
+    ctx.fillText(Math.round(soc * 100) + "%", x + W - R * 0.42, cy - R * 0.12);
+    ctx.fillStyle = "rgba(150,166,180,0.75)"; ctx.font = `600 ${Math.round(R * 0.09)}px ui-sans-serif`;
+    ctx.fillText(range + " km RANGE", x + W - R * 0.42, cy + R * 0.14);
+    // the Evija hexagon motif: a row of small hexes lighting with throttle
+    const t = clamp(state.throttle, 0, 1);
+    for (let i = 0; i < 7; i++) {
+      const hx = cx - R * 0.72 + i * R * 0.24, hy = y + H + R * 0.2, hr = R * 0.075, lit = t >= (i + 1) / 8;
+      ctx.beginPath(); for (let k = 0; k < 6; k++) { const a = Math.PI / 6 + k * Math.PI / 3, px = hx + Math.cos(a) * hr, py = hy + Math.sin(a) * hr; k ? ctx.lineTo(px, py) : ctx.moveTo(px, py); } ctx.closePath();
+      ctx.fillStyle = lit ? ACC : "rgba(120,140,90,0.18)"; ctx.fill();
     }
-    const na = lerp(startA, endA, clamp(val / max, 0, 1)); ctx.strokeStyle = "#dfe9ee"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.7, Math.sin(na) * R * 0.7); ctx.stroke();
-    ctx.fillStyle = "rgba(160,176,190,0.9)"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.font = `700 ${Math.round(R * 0.34)}px ui-sans-serif`; ctx.fillText(isPower ? String(Math.round(val)) : (val / 1000).toFixed(1), 0, R * 0.02);
-    ctx.fillStyle = "rgba(130,146,160,0.8)"; ctx.font = `600 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.42);
     ctx.restore();
   }
-  // Lotus Evija wheel: a rounded-rectangle rim with an OPEN centre (the display shows
+  function hexPanelC(x, y, ww, hh, ch) { ctx.beginPath(); ctx.moveTo(x + ch, y); ctx.lineTo(x + ww - ch, y); ctx.lineTo(x + ww, y + ch); ctx.lineTo(x + ww, y + hh - ch); ctx.lineTo(x + ww - ch, y + hh); ctx.lineTo(x + ch, y + hh); ctx.lineTo(x, y + hh - ch); ctx.lineTo(x, y + ch); ctx.closePath(); }
   // through it), thin lime rim accent, two low spokes to a small hub tab
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.06; const R = Math.min(w, h) * 0.32;
