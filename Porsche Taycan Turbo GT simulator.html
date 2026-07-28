@@ -487,8 +487,11 @@
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
-          <div class="turbo left" id="turboL"></div>
-          <div class="turbo right" id="turboR"></div>
+          <div class="turbo left" id="turboL" style="display:none"></div>
+          <div class="turbo right" id="turboR" style="display:none"></div>
+          <div style="position:absolute;left:13%;right:13%;top:12%;height:150px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs>
+  <linearGradient id="ebty" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3138"/><stop offset="1" stop-color="#0c0f14"/></linearGradient>
+  <radialGradient id="moty" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bfeefb"/><stop offset="0.5" stop-color="#2596b8"/><stop offset="1" stop-color="#0c2f3c"/></radialGradient></defs><rect x="46" y="34" width="208" height="60" rx="8" fill="url(#ebty)" stroke="#57e07c" stroke-opacity="0.5"/><rect x="52" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="74" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="96" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="118" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="140" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="162" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="184" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="206" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="228" y="42" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="52" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="74" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="96" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="118" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="140" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="162" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="184" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="206" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="228" y="57" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="52" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="74" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="96" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="118" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="140" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="162" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><rect x="184" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.59"/><rect x="206" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.35"/><rect x="228" y="72" width="18" height="11" rx="2" fill="#57e07c" opacity="0.47"/><text x="150" y="106" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="800" fill="#57e07c">105 kWh</text><rect x="112" y="8" width="76" height="18" rx="9" fill="url(#moty)" stroke="rgba(180,235,250,0.55)" stroke-width="1.2"/><circle cx="121" cy="17" r="5" fill="#0c2f3c"/><circle cx="179" cy="17" r="5" fill="#0c2f3c"/><text x="150" y="6" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#35c0e0">FRONT PSM</text><rect x="104" y="104" width="68" height="18" rx="9" fill="url(#moty)" stroke="rgba(180,235,250,0.55)" stroke-width="1.2"/><circle cx="113" cy="113" r="5" fill="#0c2f3c"/><circle cx="163" cy="113" r="5" fill="#0c2f3c"/><rect x="176" y="104" width="20" height="18" rx="3" fill="#12333f" stroke="#35c0e0" stroke-opacity="0.6"/><text x="150" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#35c0e0">REAR PSM · 2-SPEED</text></svg></div>
           <div class="emotor" id="packArt">FRONT + REAR PSM MOTORS · 105 kWh BATTERY</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">FRUNK CLOSED</div>
@@ -1884,8 +1887,8 @@ const SPEC = {
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
     drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
-    drawCabinFrame(w, h, pal);
-    if (pal.night) drawHeadlights(w, h);
+    drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(120,160,255,0.18)" : state.heat ? "rgba(255,120,40,0.16)" : state.cool ? "rgba(90,170,255,0.16)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
+    if (state.lights || pal.night) drawHeadlights(w, h);
     if (state.dataHud) drawTelemetry(w, h);
     if (state.hazards && state.blinkOn) { ctx.fillStyle = "rgba(255,120,40,0.10)"; ctx.fillRect(0, horizonY, w, h - horizonY); }
     ctx.restore();
@@ -2274,10 +2277,15 @@ const SPEC = {
   // bar that swings cyan on regen, P·R·N·D strip, battery bar. No dials anywhere.
   function drawSpeedo(cx, cy, R) {
     const kmhNow = Math.abs(app.kmh(state.speedMps));
-    const W = R * 3.1, H = R * 1.7;
+    const W = R * 3.35, H = R * 1.62, rr = H * 0.4;
     ctx.save(); ctx.translate(cx, cy);
-    roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.14); ctx.fillStyle = "rgba(6,8,10,0.97)"; ctx.fill();
-    ctx.strokeStyle = "rgba(120,130,140,0.45)"; ctx.lineWidth = 1.6; roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.14); ctx.stroke();
+    // the 16.8" free-standing CURVED glass cluster — rounded ends, no cowl, floating shadow
+    ctx.save(); ctx.shadowColor = "rgba(0,0,0,0.5)"; ctx.shadowBlur = R * 0.42; ctx.shadowOffsetY = R * 0.12;
+    roundRect(ctx, -W / 2, -H / 2, W, H, rr); ctx.fillStyle = "rgba(6,8,10,0.97)"; ctx.fill(); ctx.restore();
+    ctx.strokeStyle = "rgba(120,130,140,0.45)"; ctx.lineWidth = 1.6; roundRect(ctx, -W / 2, -H / 2, W, H, rr); ctx.stroke();
+    // curved anti-reflective glass — a soft top highlight (the polarised Taycan panel)
+    const gh = ctx.createLinearGradient(0, -H / 2, 0, 0); gh.addColorStop(0, "rgba(170,205,255,0.10)"); gh.addColorStop(1, "rgba(0,0,0,0)");
+    ctx.fillStyle = gh; roundRect(ctx, -W / 2, -H / 2, W, H * 0.46, rr); ctx.fill();
     // P R N D strip
     const gears = ["P", "R", "N", "D"];
     const cur = state.gearMode === "G" ? "D" : (state.gearMode === "R" ? "R" : (Math.abs(state.speedMps) < 0.1 && !state.ignition ? "P" : "N"));
@@ -2610,7 +2618,7 @@ const SPEC = {
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Spoiler trim: AUTO — diffuser and spoiler working with speed." : "Spoiler trim fixed."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Electric Sport Sound on — the motors sing out loud." : "Electric Sport Sound off — library quiet."); }
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 260); } showToast(state.exhaustValve ? "Electric Sport Sound on — the motors sing out loud." : "Electric Sport Sound off — library quiet."); }
   // Attack Mode: ten seconds of maximum overboost. Launch control uses it automatically;
   // this button lights the overboost band and drops the car into its lowest ride height.
   function toggleTrackPack() {
@@ -2628,7 +2636,7 @@ const SPEC = {
       showToast("Attack Mode off — back to normal ride height.", "Turbo GT");
     }
   }
-  function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
+  function toggleLights() { state.lights = !state.lights; audio.click(state.lights ? 760 : 520); showToast(state.lights ? "Matrix LED headlamps on — the road lights up." : "Headlamps off."); }
   function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Air suspension raised for the ramp." : "Air suspension back to ride height."); }
   function armLaunch() {
     if (state.driveMode !== "race") setMode("race");
@@ -2689,12 +2697,12 @@ const SPEC = {
     switch (key) {
       case "heat": if (on) state.cool = false; if (on) audio.whoosh(0.4); showToast(on ? "Seat heating on." : "Seat heating off."); break;
       case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Climate A/C drawing cool air." : "A/C off."); break;
-      case "ambient": showToast(on ? "Cabin ambient lighting on." : "Ambient lighting off."); break;
-      case "shifterLight": showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
+      case "ambient": if (on) audio.chime([466, 622, 784]); else audio.click(360); showToast(on ? "Cabin ambient lighting on — the cabin glows." : "Ambient lighting off."); break;
+      case "shifterLight": audio.click(1500); showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
       case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "FRUNK OPEN" : "FRUNK CLOSED"; audio.motor(0.9); showToast(on ? "Frunk open — luggage where an engine would be." : "Frunk closed."); break;
-      case "antiLag": showToast(on ? "Max regen — one-pedal driving hauls the car down harder." : "Standard regen."); break;
+      case "antiLag": audio.click(on ? 900 : 560); showToast(on ? "Max regen — one-pedal driving hauls the car down harder." : "Standard regen."); break;
       case "ignition": break;
     }
   }
