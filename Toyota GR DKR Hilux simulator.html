@@ -2035,6 +2035,7 @@ const SPEC = {
     realStep(dt, dsdt);
     state.lateralG = (v * yawRate) / 9.81;
     state.bodyRoll = approach(state.bodyRoll, clamp(state.lateralG * (state.driveMode === "race" ? 4 : 8), -8, 8), 0.002, dt);
+    if (!Number.isFinite(state.bodyRoll)) state.bodyRoll = 0;   // a non-finite lateralG must not poison the cabin render
     state.wheelRotation = (state.wheelRotation + v * dt / SPEC.wheelRadiusM * 57.2958) % 360;
 
     // lap timing & route progress
@@ -2633,7 +2634,7 @@ const SPEC = {
 
   /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
   function drawCabinFrame(w, h, pal) {
-    const sway = state.bodyRoll * 1.4;
+    const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
     const ACC = (getComputedStyle(document.documentElement).getPropertyValue('--teal').trim() || '#b4d000');
     // Closed rally-raid cockpit: a roof, two A-pillars and the welded roll cage frame the
     // windscreen; a flat dash carries the roadbook (left), the gauge cluster (centre) and the GPS (right).

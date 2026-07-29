@@ -1741,6 +1741,7 @@ const SPEC = {
     state.distanceM += dsdt * dt;
     state.lateralG = (v * yawRate) / 9.81;
     state.bodyRoll = approach(state.bodyRoll, clamp(state.lateralG * (state.driveMode === "race" ? 4 : 8), -8, 8), 0.002, dt);
+    if (!Number.isFinite(state.bodyRoll)) state.bodyRoll = 0;   // a non-finite lateralG must not poison the cabin render
     state.wheelRotation = (state.wheelRotation + v * dt / SPEC.wheelRadiusM * 57.2958) % 360;
 
     // lap timing & route progress
@@ -2233,7 +2234,7 @@ const SPEC = {
 
   /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
   function drawCabinFrame(w, h, pal) {
-    const sway = state.bodyRoll * 1.4;
+    const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
     ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
     ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
