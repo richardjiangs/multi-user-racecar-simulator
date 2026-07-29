@@ -464,8 +464,8 @@
           <button id="frontForward">Recline +</button>
           <button id="frontBack">Recline -</button>
           <button id="harnessBtn">Harness</button>
-          <button id="heatBtn">Heated Seats</button>
-          <button id="coolBtn">Dual-Zone Climate</button>
+          <button id="heatBtn">Targa Roof Panel</button>
+          <button id="coolBtn">Climate A/C</button>
           <button id="ambientBtn" class="active">Cabin Light</button>
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
@@ -983,7 +983,7 @@ const SPEC = {
     gearMode: "N",                 // N, R, or "G" (a forward gear given by curGear)
     curGear: 1, shiftTimer: 0, shiftFrom: 1,
     wheelRotation: 0,
-    curvature: 0, lateralG: 0, bodyRoll: 0,
+    curvature: 0, lateralG: 0, bodyRoll: 0, seqStage: 0,
     doors: { driver: false, passenger: false },
     harness: false,
     driveMode: "race",             // wet | sport | race
@@ -1068,24 +1068,26 @@ const SPEC = {
       this.ctx = c;
       this.master = c.createGain(); this.master.gain.value = 0.92; this.master.connect(c.destination);
 
-      this.engFilter = c.createBiquadFilter(); this.engFilter.type = "lowpass"; this.engFilter.frequency.value = 900; this.engFilter.Q.value = 1.1;
+      this.engFilter = c.createBiquadFilter(); this.engFilter.type = "lowpass"; this.engFilter.frequency.value = 1050; this.engFilter.Q.value = 1.1;
       this.engineBus = c.createGain(); this.engineBus.gain.value = 0.0;
       this.engFilter.connect(this.engineBus); this.engineBus.connect(this.master);
 
       this.synthGain = c.createGain(); this.synthGain.gain.value = 1.0; this.synthGain.connect(this.engFilter);
       this.recGain = c.createGain(); this.recGain.gain.value = 0.0; this.recGain.connect(this.engFilter);
 
-      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(2.4); shaper.oversample = "4x"; shaper.connect(this.synthGain);
+      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
       // Twin-scroll turbo inline-six (2JZ-GTE): inherently balanced, smooth and creamy with a
       // hard-edged howl building to the limiter and the turbo whistling underneath
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.42, toShaper: false },
-        { type: "triangle", mul: 1.0,  gain: 0.54, toShaper: true  },
-        { type: "sawtooth", mul: 1.0,  gain: 0.30, toShaper: true  },
-        { type: "sine",     mul: 2.0,  gain: 0.20, toShaper: false },
-        { type: "sawtooth", mul: 3.0,  gain: 0.12, toShaper: true  },
-        { type: "triangle", mul: 4.0,  gain: 0.06, toShaper: true  }
+        { type: "sine",     mul: 0.5,  gain: 0.58, toShaper: false },   // the cast-iron 2JZ bottom end
+        { type: "sine",     mul: 0.75, gain: 0.26, toShaper: false },   // sub-order weight the alloy B58 never had
+        { type: "triangle", mul: 1.0,  gain: 0.50, toShaper: true  },
+        { type: "sawtooth", mul: 1.0,  gain: 0.34, toShaper: true  },
+        { type: "sine",     mul: 2.0,  gain: 0.22, toShaper: false },
+        { type: "sawtooth", mul: 3.0,  gain: 0.20, toShaper: true  },   // the hard straight-six howl
+        { type: "triangle", mul: 4.0,  gain: 0.09, toShaper: true  },
+        { type: "sawtooth", mul: 6.0,  gain: 0.05, toShaper: true  }    // metallic edge near the limiter
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1127,10 +1129,15 @@ const SPEC = {
       const valve = s.exhaustValve ? 1 : 0.45;            // exhaust flap
       const modeGain = s.driveMode === "race" ? 1.0 : s.driveMode === "sport" ? 0.82 : 0.62;
 
-      const engLevel = (0.05 + load * 0.5 + rpmN * 0.22) * valve * modeGain;
-      const cutoff = 360 + s.rpm * 0.24 + load * 3200 + (s.exhaustValve ? 900 : 0);
-      const turbo = clamp(s.boostBar, 0, 1.4) * (0.10 + rpmN * 0.42) * (s.exhaustValve ? 1 : 0.8);
-      const turboFreq = 1200 + rpmN * 3200 + s.boostBar * 900;
+      const engLevel = (0.06 + load * 0.54 + rpmN * 0.26) * valve * modeGain;
+      const cutoff = 340 + s.rpm * 0.30 + load * 3600 + (s.exhaustValve ? 1100 : 0);
+      // sequential twin-turbo (CT12B): #1 alone below ~4,000 rpm, both above it. The
+      // handover is audible — the whistle steps up and the boost surges through.
+      const seqHand = 4000, seqBand = 700;
+      const seq = clamp((s.rpm - seqHand) / seqBand, 0, 1);            // 0 = single, 1 = both blowing
+      s.seqStage = seq;                                                 // read by the HUD flag
+      const turbo = clamp(s.boostBar, 0, 1.4) * (0.10 + rpmN * 0.42) * (1 + seq * 0.55) * (s.exhaustValve ? 1 : 0.8);
+      const turboFreq = 1050 + rpmN * 2600 + s.boostBar * 800 + seq * 2100;
       const wind = clamp((spd - 6) / 70, 0, 1) * (s.windowsOpen ? 0.22 : 0.12);
       const windFreq = 420 + spd * 16;
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
@@ -1153,7 +1160,7 @@ const SPEC = {
       }
 
       // turbo blow-off on a quick lift
-      if (this.lastThrottle - load > 0.25 && s.rpm > 2600 && t - this.blowoffAt > 0.4) { this.blowoffAt = t; this.blowoff(); }
+      if (this.lastThrottle - load > 0.18 && s.rpm > 2200 && t - this.blowoffAt > 0.32) { this.blowoffAt = t; this.blowoff(); }
       // exhaust crackle/overrun on trailing throttle at revs (Race + Sport)
       const overrun = load < 0.12 && s.rpm > 3200 && s.driveMode !== "wet" && (s.exhaustValve || s.antiLag);
       if ((overrun || (s.antiLag && load > 0.5 && s.rpm > 4500)) && t - this.crackleAt > 0.05 + Math.random()*0.12) {
@@ -1489,18 +1496,14 @@ const SPEC = {
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
   const SUPRA_GRID = [
-    { name: "Toyota GR010 Hybrid",           body: "#d81e2c", stripe: "#0a0c10", top: 340, latG: 1.95, accel: 12.8 },
-    { name: "Toyota GT-One (TS020)",         body: "#e6e8ea", stripe: "#d81e2c", top: 350, latG: 1.72, accel: 12.2 },
-    { name: "Lexus LFA",                     body: "#e9edf0", stripe: "#111318", top: 325, latG: 1.42, accel: 11.6 },
-    { name: "Toyota Supra MK4 GT4",           body: "#1b1d22", stripe: "#d81e2c", top: 285, latG: 1.62, accel: 11.7 },
-    { name: "Toyota Supra Mk4 (A80 2JZ)",    body: "#e04a2e", stripe: "#0a0c10", top: 285, latG: 1.10, accel: 11.0 },
-    { name: "Lexus LC 500",                  body: "#20263a", stripe: "#c0a062", top: 270, latG: 1.08, accel: 10.7 },
-    { name: "Toyota Supra MK4 3.0",           body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.30, accel: 11.2 },
-    { name: "Toyota GR Yaris",               body: "#e9edf0", stripe: "#d81e2c", top: 230, latG: 1.24, accel: 11.0 },
-    { name: "Toyota GR Corolla",             body: "#15181d", stripe: "#d81e2c", top: 230, latG: 1.22, accel: 10.9 },
-    { name: "Toyota GR86",                   body: "#c8d0d6", stripe: "#d81e2c", top: 226, latG: 1.14, accel: 10.4 },
-    { name: "Lexus RC F Track Edition",      body: "#e6e8ea", stripe: "#111318", top: 270, latG: 1.16, accel: 10.9 },
-    { name: "Toyota Supra MK4 45th Anniv.",   body: "#3a3d42", stripe: "#c0a062", top: 250, latG: 1.32, accel: 11.2 }
+    { name: "Nissan Skyline GT-R R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
+    { name: "Mazda RX-7 FD3S",               body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 11.0 },
+    { name: "Honda NSX-R (NA2)",             body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
+    { name: "Mitsubishi 3000GT VR-4",        body: "#b03030", stripe: "#15181d", top: 250, latG: 1.16, accel: 10.6 },
+    { name: "Toyota Supra MK4 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
+    { name: "Subaru Impreza 22B STi",        body: "#2a54a8", stripe: "#f0d000", top: 240, latG: 1.22, accel: 10.8 },
+    { name: "Nissan 300ZX Twin Turbo (Z32)", body: "#1b1d22", stripe: "#c0c4c8", top: 250, latG: 1.14, accel: 10.4 },
+    { name: "Toyota Supra MK4 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
@@ -2311,6 +2314,10 @@ const SPEC = {
     ctx.fillStyle = "#ff7a3c"; ctx.font = `800 ${Math.round(R * 0.2)}px ui-sans-serif`;
     ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, by + BH - R * 0.2);
     if (state.raceAero) { ctx.fillStyle = "#ffd24a"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("DERESTRICTED", cx, by + R * 0.24); }
+    // the sequential handover — TURBO 1 alone, then both
+    const _sq = state.seqStage || 0;
+    ctx.fillStyle = _sq > 0.5 ? "#ff7a3c" : "rgba(150,162,176,0.8)"; ctx.font = `700 ${Math.round(R * 0.092)}px ui-sans-serif`;
+    ctx.fillText(_sq > 0.5 ? "TURBO 1+2" : "TURBO 1", cx, by + BH - R * 0.42);
     ctx.restore();
   }
   // a period analog dial: black face, white numerals, thin orange needle, chrome bezel
@@ -2772,9 +2779,9 @@ const SPEC = {
   function setToggle(key, value) { const next = value === undefined ? !state[key] : value; state[key] = next; applyEffect(key, next); }
   function applyEffect(key, on) {
     switch (key) {
-      case "heat": if (on) state.cool = false; if (on) audio.whoosh(0.4); showToast(on ? "Seat heating on." : "Seat heating off."); break;
-      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Dual-zone climate drawing cool air." : "Climate off."); break;
-      case "ambient": if (on) audio.chime([523,659,784]); else audio.click(360); showToast(on ? "Cabin lighting on." : "Cabin light off."); break;
+      case "heat": if (on) state.cool = false; if (on) audio.motor(0.7); else audio.click(820); showToast(on ? "Targa roof panel out — lifted off and stowed behind the seats." : "Targa panel back in and latched."); break;
+      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Climate A/C drawing cool air." : "A/C off."); break;
+      case "ambient": if (on) audio.click(1100); else audio.click(360); showToast(on ? "Cabin light on — warm over the tan leather." : "Cabin light off."); break;
       case "shifterLight": audio.click(1500); showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
