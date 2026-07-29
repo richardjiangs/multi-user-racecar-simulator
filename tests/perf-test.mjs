@@ -135,12 +135,12 @@ const CARS = {
     brake100: { target: 31, tol: 1.0 },
   },
   supra: {
-    file: "Toyota GR Supra simulator.html",
+    file: "Toyota Supra MK4 simulator.html",
     app: "SupraApp",
-    label: "Toyota GR Supra",
-    marks: { 100: { target: 4.1, tol: 1e-4 } },
-    topSpeed: { kmh: 250, minT: 55 },     // electronically governed
-    brake100: { target: 34, tol: 1.0 },
+    label: "Toyota Supra MK4 (A80)",
+    marks: { 100: { target: 4.9, tol: 1e-4 } },
+    topSpeed: { kmh: 250, minT: 55 },     // export limiter (derestricts to ~285)
+    brake100: { target: 36, tol: 1.5 },
   },
   venom: {
     file: "Hennessey Venom F5 simulator.html", app: "VenomApp", label: "Hennessey Venom F5",
