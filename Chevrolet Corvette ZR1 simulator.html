@@ -1743,7 +1743,10 @@ const SPEC = {
     const first = t[0], last = t[t.length - 1];
     if (off <= first.off) { const e = off - first.off; return { X: first.X + Math.sin(first.psi) * e, Z: first.Z + Math.cos(first.psi) * e, psi: first.psi }; }
     if (off >= last.off) { const e = off - last.off; return { X: last.X + Math.sin(last.psi) * e, Z: last.Z + Math.cos(last.psi) * e, psi: last.psi }; }
-    const idx = (off - first.off) / ROAD.STEP, i0 = Math.floor(idx), i1 = Math.min(t.length - 1, i0 + 1), f = idx - i0; const a = t[i0], b = t[i1];
+    const idx = (off - first.off) / ROAD.STEP;
+    if (!Number.isFinite(idx)) return { X: 0, Z: Math.max(0.1, off), psi: 0 };   // never let a bad offset poison the render
+    let i0 = Math.floor(idx); if (i0 < 0) i0 = 0; if (i0 > t.length - 1) i0 = t.length - 1;
+    const i1 = Math.min(t.length - 1, i0 + 1), f = Math.max(0, Math.min(1, idx - i0)); const a = t[i0], b = t[i1];
     return { X: lerp(a.X, b.X, f), Z: lerp(a.Z, b.Z, f), psi: lerp(a.psi, b.psi, f) };
   }
   function projectAhead(distAhead, lateralM) { const c = centerlineAt(distAhead); const nx = Math.cos(c.psi), nz = -Math.sin(c.psi); return projectRoad(c.X + (lateralM || 0) * nx, c.Z + (lateralM || 0) * nz); }
