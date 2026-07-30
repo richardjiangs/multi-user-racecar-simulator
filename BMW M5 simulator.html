@@ -1270,9 +1270,9 @@ const SPEC = {
   }
 
   const modeMap = {
-    wet:   { upRpm: 3800, downRpm: 1500, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 5400, downRpm: 1900, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 6300, downRpm: 2200, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+    wet:   { upRpm: 4020, downRpm: 1590, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 5720, downRpm: 2010, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 6670, downRpm: 2330, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
@@ -2280,87 +2280,59 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // ---- Nissan M5 (R35): the dominant central TACHOMETER with the digital speed read
-  // inside it, and to its right the multi-function display Polyphony Digital designed for
-  // the car — boost, g-meter and temps, the M5's signature screen. ----
+  // ---- BMW M5 (G90): the BMW Curved Display — one wide curved glass panel with a round
+  // rev arc left, a round speed arc right, the M tricolour shift lights across the top and
+  // the hybrid eDrive bar between them. ----
   function drawCluster(w, h, dashY, sway) {
     const R = Math.min(w, h) * 0.125;
-    const cx = w / 2 + sway, cy = dashY + R * 0.26;
-    const BW = R * 4.4, BH = R * 1.94, bx = cx - BW * 0.42, by = cy - BH / 2;
+    const cx = w / 2 + sway, cy = dashY + R * 0.3;
+    const BW = R * 4.7, BH = R * 1.86, bx = cx - BW / 2, by = cy - BH / 2;
     ctx.save();
-    ctx.fillStyle = "#08090c";
-    ctx.beginPath(); ctx.moveTo(bx - R * 0.18, by + R * 0.12); ctx.quadraticCurveTo(cx, by - R * 0.36, bx + BW + R * 0.18, by + R * 0.12);
-    ctx.lineTo(bx + BW + R * 0.18, by + R * 0.32); ctx.lineTo(bx - R * 0.18, by + R * 0.32); ctx.closePath(); ctx.fill();
-    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#111419"); pg.addColorStop(1, "#05070a");
-    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.11); ctx.fill();
-    ctx.strokeStyle = "rgba(216,31,42,0.42)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.11); ctx.stroke();
-    ctx.restore();
-    gtrTach(bx + BH * 0.5, cy, BH * 0.43);
-    gtrMfd(bx + BH * 1.02, by + R * 0.2, BW - BH * 1.1, BH - R * 0.4, R);
-  }
-  // the central tach: white numerals to 8, red from 7.1, digital km/h in the middle
-  function gtrTach(cx, cy, R) {
-    const rpm = state.rpm, MAX = 8000, kmh = Math.abs(app.kmh(state.speedMps)), redAt = (SPEC.redlineRpm || 7100);
-    const startA = Math.PI * 0.74, endA = Math.PI * 2.26;
-    ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "#1b1e24"; ctx.beginPath(); ctx.arc(0, 0, R * 1.08, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(216,31,42,0.5)"; ctx.lineWidth = R * 0.045; ctx.beginPath(); ctx.arc(0, 0, R * 1.05, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = "#05070a"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    for (let v = 0; v <= MAX; v += 250) {
-      const f = v / MAX, a = lerp(startA, endA, f), major = v % 1000 === 0, red = v >= redAt, on = rpm >= v;
-      ctx.strokeStyle = red ? "#ff3b30" : (on ? "#ffffff" : "rgba(226,232,240,0.62)");
-      ctx.lineWidth = major ? 2.3 : 1; const r1 = R * (major ? 0.7 : 0.8), r2 = R * 0.93;
-      ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
-      if (major) { ctx.fillStyle = red ? "#ff7a72" : "#eef2f7"; ctx.font = `600 ${Math.round(R * 0.155)}px ui-sans-serif`;
-        ctx.fillText(String(v / 1000), Math.cos(a) * R * 0.56, Math.sin(a) * R * 0.56); }
+    // the curved panel: a shallow arc top and bottom, canted toward the driver
+    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#0d1116"); pg.addColorStop(1, "#05070a");
+    ctx.fillStyle = pg;
+    ctx.beginPath();
+    ctx.moveTo(bx, by + R * 0.16); ctx.quadraticCurveTo(cx, by - R * 0.1, bx + BW, by + R * 0.16);
+    ctx.lineTo(bx + BW, by + BH - R * 0.1); ctx.quadraticCurveTo(cx, by + BH + R * 0.14, bx, by + BH - R * 0.1);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "rgba(0,102,177,0.45)"; ctx.lineWidth = 1.5; ctx.stroke();
+    // M tricolour shift lights
+    const rev = clamp(state.rpm / (SPEC.redlineRpm || 7200), 0, 1), seg = 16;
+    const bw = BW * 0.5, sx = cx - bw / 2, sw = bw / seg;
+    for (let i = 0; i < seg; i++) {
+      const f = i / (seg - 1), lit = rev >= f;
+      const col = f < 0.4 ? "#2e6ef0" : f < 0.72 ? "#8b2fd0" : "#e8232c";   // M blue / purple / red
+      ctx.fillStyle = lit ? col : "rgba(70,80,92,0.26)";
+      ctx.fillRect(sx + i * sw + 1, by + R * 0.2, sw - 2, R * 0.1);
     }
-    ctx.fillStyle = "rgba(180,190,200,0.8)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("r/min x1000", 0, -R * 0.44);
-    // digital speed in the dial face — the R35 way
-    ctx.fillStyle = "#f2f5f8"; ctx.font = `800 ${Math.round(R * 0.34)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), 0, R * 0.36);
-    ctx.fillStyle = "rgba(150,162,176,0.85)"; ctx.font = `600 ${Math.round(R * 0.095)}px ui-sans-serif`; ctx.fillText("km/h", 0, R * 0.56);
-    const na = lerp(startA, endA, clamp(rpm / MAX, 0, 1));
-    ctx.strokeStyle = "#ff2a20"; ctx.lineWidth = R * 0.05; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.14, -Math.sin(na) * R * 0.14); ctx.lineTo(Math.cos(na) * R * 0.86, Math.sin(na) * R * 0.86); ctx.stroke();
-    ctx.fillStyle = "#22262c"; ctx.beginPath(); ctx.arc(0, 0, R * 0.1, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    m5Arc(cx - R * 1.36, cy + R * 0.14, R * 0.66, rev, "rpm", Math.round(state.rpm), true);
+    m5Arc(cx + R * 1.36, cy + R * 0.14, R * 0.66, clamp(Math.abs(app.kmh(state.speedMps)) / 305, 0, 1), "km/h", Math.round(Math.abs(app.kmh(state.speedMps))), false);
+    // centre: gear, drive mode and the eDrive bar (it is a plug-in hybrid)
+    ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.42)}px ui-sans-serif`;
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy + R * 0.02);
+    const mode = state.raceAero ? "M DRIVER" : (state.driveMode === "race" ? "SPORT PLUS" : state.driveMode === "sport" ? "SPORT" : "COMFORT");
+    ctx.fillStyle = state.raceAero ? "#ffd24a" : "rgba(150,166,180,0.85)"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`;
+    ctx.fillText(mode, cx, cy - R * 0.34);
+    const soc = clamp(0.62 - clamp(state.distanceM / 400000, 0, 0.5), 0, 1);
+    ctx.fillStyle = "rgba(255,255,255,0.09)"; ctx.fillRect(cx - R * 0.4, cy + R * 0.42, R * 0.8, R * 0.09);
+    ctx.fillStyle = "#39d353"; ctx.fillRect(cx - R * 0.4, cy + R * 0.42, R * 0.8 * soc, R * 0.09);
+    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.08)}px ui-sans-serif`;
+    ctx.fillText("eDRIVE " + Math.round(soc * 100) + "%", cx, cy + R * 0.62);
     ctx.restore();
   }
-  // the Polyphony Digital multi-function display: R-Mode row, boost, g-meter, temps
-  function gtrMfd(x, y, w2, h2, R) {
-    const rmode = !!state.raceAero;
-    ctx.save();
-    ctx.fillStyle = "rgba(4,6,9,0.95)"; roundRect(ctx, x, y, w2, h2, R * 0.07); ctx.fill();
-    ctx.strokeStyle = "rgba(216,31,42,0.45)"; ctx.lineWidth = 1.2; roundRect(ctx, x, y, w2, h2, R * 0.07); ctx.stroke();
-    ctx.textBaseline = "middle";
-    // the three R switches
-    ctx.textAlign = "left"; ctx.font = `700 ${Math.round(R * 0.088)}px ui-sans-serif`;
-    ["TRANS", "SUSP", "VDC"].forEach((t, i) => {
-      const tx = x + R * 0.16 + i * (w2 - R * 0.3) / 3;
-      ctx.fillStyle = rmode ? "#ff5a49" : "rgba(150,162,176,0.8)";
-      ctx.fillText(t, tx, y + R * 0.18);
-      ctx.fillStyle = rmode ? "#ffd24a" : "rgba(120,132,146,0.8)";
-      ctx.fillText(rmode ? "R" : "NORM", tx, y + R * 0.36);
-    });
-    // boost bar (the S68 runs about 1.2 bar)
-    const bst = clamp(state.boostBar / 1.3, 0, 1);
-    ctx.textAlign = "left"; ctx.fillStyle = "rgba(150,162,176,0.85)"; ctx.font = `600 ${Math.round(R * 0.082)}px ui-sans-serif`;
-    ctx.fillText("BOOST", x + R * 0.16, y + h2 * 0.52);
-    ctx.fillStyle = "rgba(255,255,255,0.09)"; ctx.fillRect(x + R * 0.62, y + h2 * 0.52 - R * 0.05, w2 - R * 0.78, R * 0.1);
-    ctx.fillStyle = "#ff5a49"; ctx.fillRect(x + R * 0.62, y + h2 * 0.52 - R * 0.05, (w2 - R * 0.78) * bst, R * 0.1);
-    ctx.textAlign = "right"; ctx.fillStyle = "#eef2f7"; ctx.font = `700 ${Math.round(R * 0.09)}px ui-sans-serif`;
-    ctx.fillText(state.boostBar.toFixed(2) + " bar", x + w2 - R * 0.16, y + h2 * 0.68);
-    // the g-meter — the MFD's signature readout
-    const gx = x + w2 * 0.5, gy = y + h2 * 0.86, gr = R * 0.3;
-    ctx.strokeStyle = "rgba(150,162,176,0.32)"; ctx.lineWidth = 1;
-    ctx.beginPath(); ctx.arc(gx, gy, gr, 0, Math.PI * 2); ctx.stroke();
-    ctx.beginPath(); ctx.moveTo(gx - gr, gy); ctx.lineTo(gx + gr, gy); ctx.moveTo(gx, gy - gr); ctx.lineTo(gx, gy + gr); ctx.stroke();
-    const ox = clamp((state.lateralG || 0) / 2, -1, 1) * gr * 0.85;
-    const oy = clamp((state.brake > 0.05 ? state.brake : -clamp(state.throttle, 0, 1)), -1, 1) * gr * 0.85;
-    ctx.fillStyle = "#ffd24a"; ctx.beginPath(); ctx.arc(gx + ox, gy + oy, R * 0.055, 0, Math.PI * 2); ctx.fill();
-    ctx.textAlign = "left"; ctx.fillStyle = "rgba(150,162,176,0.85)"; ctx.font = `600 ${Math.round(R * 0.08)}px ui-sans-serif`;
-    ctx.fillText(Math.abs(state.lateralG || 0).toFixed(1) + " g", x + R * 0.16, gy);
-    ctx.textAlign = "right"; ctx.fillStyle = "#ff5a49"; ctx.font = `800 ${Math.round(R * 0.17)}px ui-sans-serif`;
-    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, x + w2 - R * 0.16, gy);
+  // a BMW arc gauge: a thin 240° sweep, big value inside
+  function m5Arc(cx, cy, R, frac, label, val, isRev) {
+    const a0 = Math.PI * 0.78, a1 = Math.PI * 2.22;
+    ctx.save(); ctx.translate(cx, cy);
+    ctx.strokeStyle = "rgba(255,255,255,0.07)"; ctx.lineWidth = R * 0.13; ctx.lineCap = "butt";
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.84, a0, a1); ctx.stroke();
+    ctx.strokeStyle = isRev ? (frac > 0.9 ? "#e8232c" : "#2e6ef0") : "#e6ebef";
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.84, a0, lerp(a0, a1, clamp(frac, 0, 1))); ctx.stroke();
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.36)}px ui-sans-serif`; ctx.fillText(String(val), 0, -R * 0.02);
+    ctx.fillStyle = "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.14)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.3);
     ctx.restore();
   }
   // the S-AWC centre display: drive map + live front/rear torque split
