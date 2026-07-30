@@ -16,8 +16,8 @@
       --line: rgba(180,194,208,0.14);
       --alu: #c9cfd6;
       --alu-d: #828a93;
-      --teal: #ff8b30;          /* Toyota GR / F1 red accent */
-      --teal-b: #ff6b60;
+      --teal: #ff8b30;          /* McLaren papaya */
+      --teal-b: #ffb367;
       --amber: #ff5a49;         /* GR red-hot tachometer */
       --amber-b: #fae9a0;
       --cognac: #241417;        /* black leather, red Alcantara, red stitching */
@@ -154,7 +154,7 @@
     .pedal i::before { content:""; display:block; height:100%; width:var(--level,0%); background:var(--teal-b); transition:width 70ms linear; }
     .pedal.brake i::before { background:#ff8a8a; }
 
-    /* telemetry mini pad (G + boost dial) */
+    /* telemetry mini pad (G + load dial) */
     .telepad { display:grid; grid-template-columns:1fr auto; gap:8px; align-items:center; }
     .gforce { height:84px; position:relative; border-radius:6px; border:1px solid rgba(255,255,255,0.1); overflow:hidden;
       background: radial-gradient(circle at 50% 50%, rgba(47,123,224,0.10), rgba(8,10,13,0.9) 70%); }
@@ -353,7 +353,7 @@
       <section class="brand">
         <div class="mark">F1</div>
         <h1>McLaren F1</h1>
-        <p>6.1L NA V12 · 6-speed transverse manual · rear-wheel drive · adaptive variable suspension · active differential.</p>
+        <p>6.1L NA V12 · 6-speed transverse manual · rear-wheel drive · carbon monocoque · gold-lined engine bay.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -387,7 +387,7 @@
         </div>
         <div class="meter-grid">
           <div class="meter"><label><span>Engine</span><span id="rpmText">850 rpm</span></label><div class="bar rpm"><i id="rpmBar"></i></div></div>
-          <div class="meter"><label><span>Boost</span><span id="boostText">0.0 bar</span></label><div class="bar boost"><i id="boostBar"></i></div></div>
+          <div class="meter"><label><span>Load</span><span id="boostText">0%</span></label><div class="bar boost"><i id="boostBar"></i></div></div>
           <div class="meter"><label><span>Throttle</span><span id="throttleText">0%</span></label><div class="bar"><i id="throttleBar"></i></div></div>
           <div class="meter"><label><span>Brake</span><span id="brakeText">0%</span></label><div class="bar brake"><i id="brakeBar"></i></div></div>
         </div>
@@ -411,8 +411,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — GR Aero</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Renaissance Red over black double-bubble roof, GR accents, integrated ducktail spoiler</span></span>
+          <h2>Exterior — Central-Seat Teardrop</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">Magnesium Silver, roof snorkel, butterfly doors, no rear wing</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -439,10 +439,10 @@
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>front-hinged doors</span></div>
-          <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
-          <div class="readout"><b>255 / 275</b><span>Michelin Pilot Super Sport</span></div>
-          <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>butterfly doors</span></div>
+          <div class="readout"><b id="rideHeightRead">Standard</b><span>fixed ride height</span></div>
+          <div class="readout"><b>235 / 315</b><span>Goodyear Eagle F1</span></div>
+          <div class="readout"><b id="lightState">Auto</b><span>projector headlamps</span></div>
         </div>
       </section>
 
@@ -450,25 +450,25 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Digital GR instrument cluster with the central tachometer · 8.8-inch F1 Command touchscreen</span>
+          <span class="small" id="cockpitStatus">Central driving seat with two passenger seats set back · all-analogue dials · no screens</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
-          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat recline</span></div>
+          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>pedal box</span></div>
           <div class="readout"><b id="climateRead">22&deg;C</b><span>cabin climate</span></div>
-          <div class="readout"><b id="beltRead">Open</b><span>safety harness</span></div>
+          <div class="readout"><b id="beltRead">Open</b><span>lap belt</span></div>
           <div class="readout"><b id="modeReadCab">Sport</b><span>drive mode</span></div>
         </div>
         <div class="divider"></div>
         <div class="control-grid">
-          <button id="frontForward">Recline +</button>
-          <button id="frontBack">Recline -</button>
-          <button id="harnessBtn">Harness</button>
-          <button id="heatBtn">Targa Roof Panel</button>
-          <button id="coolBtn">Climate A/C</button>
-          <button id="ambientBtn" class="active">Cabin Light</button>
-          <button id="audioBtn">Cabin Audio</button>
-          <button id="shifterLightBtn" class="active">Spine Light</button>
+          <button id="frontForward">Pedals +</button>
+          <button id="frontBack">Pedals -</button>
+          <button id="harnessBtn">Lap Belt</button>
+          <button id="heatBtn">Heated Screen</button>
+          <button id="coolBtn">Air Conditioning</button>
+          <button id="ambientBtn" class="active">Map Light</button>
+          <button id="audioBtn">Kenwood Audio</button>
+          <button id="shifterLightBtn" class="active">Shift Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
           <button id="raceAeroBtn" class="race" title="Raise the rev limiter, as McLaren did for XP5 at Ehra-Lessien — 372 becomes the 386.4 km/h record">Record Run</button>
         </div>
@@ -506,7 +506,7 @@
         <div class="readout-grid">
           <div class="readout"><b id="oilTempRead">90&deg;C</b><span>oil temperature</span></div>
           <div class="readout"><b id="waterTempRead">88&deg;C</b><span>coolant</span></div>
-          <div class="readout"><b id="boostRead">0.0 bar</b><span>manifold boost</span></div>
+          <div class="readout"><b id="boostRead">0%</b><span>engine load</span></div>
           <div class="readout"><b id="egtRead">320&deg;C</b><span>exhaust gas</span></div>
         </div>
         <div class="studio-bar">
@@ -520,7 +520,7 @@
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
           <h2>Dynamics — 8-Speed ZF · AVS · RWD</h2>
-          <span class="small" id="dynStatus">Track mode: adaptive dampers firm, VSC in Track, active diff locked, ducktail trimmed</span>
+          <span class="small" id="dynStatus">Track setting: dampers firm, no electronic aids of any kind, tail flap armed</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -670,7 +670,7 @@
 
       <section class="telepad" aria-label="Telemetry">
         <div>
-          <div class="small">G / boost telemetry</div>
+          <div class="small">G / load telemetry</div>
           <div class="gforce" id="gforce"><div class="gdot" id="gdot"></div></div>
         </div>
         <div class="tele-actions">
@@ -698,7 +698,7 @@
     <div class="key-card">
       <div class="pmark">GR</div>
       <h1>F1</h1>
-      <p>The frameless doors thunk shut, the naturally-aspirated V12 catches with a smooth off-beat growl, the boost builds with a whistle, and the ducktail settles. Drive it yourself, or hand it to the test driver.</p>
+      <p>You climb in over the sill to the seat in the middle, the S70/2 catches through the roof snorkel with a hard induction roar, and there is no assistance of any kind between you and it. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
       <div class="ring">Toyota Gazoo Racing · Toyota City, Japan</div>
     </div>
@@ -706,11 +706,11 @@
 
   <script type="module">
 /* ===========================================================================
-      TOYOTA GR EVO (browser naturally-aspirated V12 simulator)
+      McLAREN F1 (1993) (browser naturally-aspirated V12 simulator)
    Real Web-Audio naturally-aspirated V12, factory-matched physics (0–100 km/h
-   4.1 s; 387 PS / 382 hp @ 6,200; 500 Nm @ 1,800–5,000; 6,500 rpm; 1,520 kg;
-   250 km/h governed; integrated ducktail spoiler and active differential),
-   an 6-speed transverse manual with paddle shifts, and a test driver
+   3.2 s; 461 kW / 627 PS / 618 hp; 650 Nm; 7500 rpm limit; 1138 kg;
+   372 km/h, 386 km/h with the car's own top-speed mode; brake-actuated under-tail flap (there is no rear wing)),
+   a 6-speed transverse manual, and a test driver
    who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
@@ -913,12 +913,12 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT McLaren F1 3.0 figures =====
-   McLaren F1 3.0 L (2,998 cc) B58 twin-scroll single-naturally-aspirated V12:
-   285 kW (387 PS / 382 hp) @ 5,800–6,500 rpm; 500 Nm @ 1,800–5,000 rpm; 6,500 rpm
-   rev limit; kerb weight 1,520 kg; 6-speed transverse manual, rear-wheel drive.
-   0–100 km/h 4.1 s; electronically governed top speed 250 km/h; integrated ducktail
-   spoiler with an active differential and adaptive variable suspension. */
+/* ===== data: vehicle spec — EXACT McLAREN F1 figures =====
+   6.1 L (6,064 cc) BMW S70/2 naturally-aspirated V12, gold-lined bay:
+   461 kW (627 PS / 618 hp); 650 Nm; 7500 rpm rev limit;
+   kerb weight 1138 kg; 6-speed, rear-wheel drive.
+   0–100 km/h 3.2 s; top speed 372 km/h, 386 km/h with the car's own top-speed mode; brake-actuated under-tail flap (there is no rear wing)
+   with a carbon monocoque, no ABS and no traction control. */
 
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
@@ -1077,8 +1077,8 @@ const SPEC = {
       // Twin-scroll naturally-aspirated V12 (BMW S70/2): inherently balanced, smooth and creamy with a
       // hard-edged howl building to the limiter and the turbo whistling underneath
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.58, toShaper: false },   // the cast-iron 2JZ bottom end
-        { type: "sine",     mul: 0.75, gain: 0.26, toShaper: false },   // sub-order weight the alloy B58 never had
+        { type: "sine",     mul: 0.5,  gain: 0.58, toShaper: false },   // the S70/2's twelve-cylinder bottom end
+        { type: "sine",     mul: 0.75, gain: 0.26, toShaper: false },   // the roof snorkel's induction roar over the top
         { type: "triangle", mul: 1.0,  gain: 0.50, toShaper: true  },
         { type: "sawtooth", mul: 1.0,  gain: 0.34, toShaper: true  },
         { type: "sine",     mul: 2.0,  gain: 0.22, toShaper: false },
@@ -1183,7 +1183,7 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // V6 catch + rev flare on ignition
+    startupFlair() { // V12 catch + rev flare on ignition
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
       const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
       o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
@@ -2490,94 +2490,82 @@ const SPEC = {
   }
 
   /* McLaren F1 exterior — side profile (long clamshell bonnet, matrix LED lamps,
-     double-bubble roof, cab-rearward greenhouse, dual round exhaust, integrated ducktail) */
+     central-seat teardrop: roof snorkel over the V12, long louvred tail, no rear wing at all) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren F1 side">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren F1 (1993) side">
       <defs>
-        <linearGradient id="supRedG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a49"/><stop offset="0.45" stop-color="#d81e2c"/><stop offset="1" stop-color="#7d0f18"/></linearGradient>
-        <linearGradient id="supLowG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#20242a"/><stop offset="0.5" stop-color="#121418"/><stop offset="1" stop-color="#07080a"/></linearGradient>
-        <linearGradient id="supGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9d3e8"/><stop offset="1" stop-color="#0d151b"/></linearGradient>
-        <radialGradient id="supHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
-        <filter id="supExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <style>
+        <linearGradient id="mfBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4dce4"/><stop offset="0.52" stop-color="#9ba5af"/><stop offset="1" stop-color="#3b434b"/></linearGradient>
+        <linearGradient id="mfLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#06080a"/></linearGradient>
+        <linearGradient id="mfGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadeef"/><stop offset="1" stop-color="#0f1a22"/></linearGradient>
+        <radialGradient id="mfHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
+        <filter id="mfGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="mfCarbon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2e34"/><stop offset="0.5" stop-color="#14171b"/><stop offset="1" stop-color="#2a2e34"/></linearGradient><style>
           .grWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:60% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.28));transition:transform .42s ease;}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 0%;transform:rotate(calc(var(--wing-deg,10deg) * 0.5));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:24% 92%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-11deg) translate(-4px,-22px);}
-          #quadExhaustArt circle{fill:#8b929b;}
-          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#supExhGlow);}
+          #doorArt{transform-box:fill-box;transform-origin:30% 98%;transition:transform .8s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-34deg) translate(-2px,-24px);}
+          #quadExhaustArt circle{fill:#a8b0b8;}
+          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#mfGlow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="300" rx="404" ry="20" fill="rgba(0,0,0,0.5)"/>
-
-      <!-- integrated ducktail rear spoiler on the short rear deck (rear = left) -->
-      <g id="rearWingArt">
-        <path d="M92,182 Q150,166 214,170 L214,182 Q150,178 92,192 Z" fill="#111318" stroke="#4a5058" stroke-width="1.4"/>
-        <path d="M96,180 Q152,166 210,171" fill="none" stroke="rgba(216,30,44,0.85)" stroke-width="3"/>
-      </g>
+      <ellipse cx="500" cy="366" rx="392" ry="15" fill="rgba(0,0,0,0.5)"/>
 
       <g id="bcBody">
-        <!-- lower carbon-look sill / rocker; long dash-to-axle hood to the right (front) -->
-        <path d="M104,250 L104,214 Q150,208 236,206 Q360,204 470,200 Q604,194 706,186
-                 Q818,176 894,196 Q916,202 918,218 L910,238 Q840,246 720,248 L300,250 Q170,252 130,250 Z"
-              fill="url(#supLowG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- F1 red upper body: cab-rearward, muscular rear haunch, long bonnet -->
-        <path d="M120,214 Q160,200 250,196 L360,196 Q430,192 470,182 Q520,156 604,150 Q676,146 726,158
-                 Q820,150 878,192 Q902,204 906,214 L866,210 Q760,196 636,196 L470,200 Q380,200 300,208 Q200,212 120,214 Z"
-              fill="url(#supRedG)" stroke="rgba(255,180,180,0.5)" stroke-width="1"/>
-        <!-- double-bubble greenhouse: low, tapered, black roof -->
-        <path d="M470,182 Q520,156 604,150 Q676,146 726,158 Q762,166 792,184 Q690,172 560,178 Q510,180 470,182 Z" fill="url(#supGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <path d="M560,160 Q640,150 712,158" fill="none" stroke="#0b0d10" stroke-width="7" stroke-linecap="round"/>
-        <!-- sweeping side character line -->
-        <path d="M150,214 Q430,198 858,208" fill="none" stroke="rgba(255,120,120,0.55)" stroke-width="2.4" stroke-linecap="round"/>
-        <!-- rear haunch shadow -->
-        <path d="M230,208 Q290,196 360,198" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="6" stroke-linecap="round"/>
-        <!-- long clamshell bonnet vents -->
-        <g stroke="#3a0f12" stroke-width="2.2">
-          <path d="M792,182 l30,-5"/><path d="M812,188 l30,-5"/>
+        <path d="M110,321 L110,265 110,265 Q129.5,238.1 151,229.3 Q172.4,220.4 219.2,215.3 Q266,210.1 320.6,207 L375.2,203.8 Q453.2,145.8 484.4,143.2 Q515.6,140.6 558.5,140.6 Q601.4,140.6 628.7,145.3 Q656,149.9 695,181 L734,212.1 Q812,224.6 839.3,233.4 Q866.6,242.2 878.3,257.8 L890,273.3 L890,321 L812.5,321 A65.2 90.6 0 0 0 682.1,321 L317.9,321 A65.2 90.6 0 0 0 187.5,321 L110,321 Z" fill="url(#mfBody)" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+        <path d="M394.7,205.9 Q468.8,152 498.1,149.9 Q527.3,147.8 558.5,147.8 Q589.7,147.8 617,152 Q644.3,156.1 679.4,183.1 L714.5,210.1 Z" fill="url(#mfGlass)" stroke="#7a838c" stroke-width="1.4"/>
+        <path d="M309.9,319 L690.1,316 L686.1,334 L313.9,337 Z" fill="url(#mfLow)" stroke="#454b52" stroke-width="1.2"/>
+        <!-- ROOF SNORKEL: the airbox standing above the roof, feeding the BMW V12 -->
+        <path d="M519.5,140.6 Q535.1,125 560.8,124.4 Q578,125 581.9,140.6 Z" fill="url(#mfCarbon)" stroke="#8b949d" stroke-width="1.5"/>
+        <path d="M528.9,131.2 Q550.7,127.7 574.9,131.2" fill="none" stroke="#05070a" stroke-width="4.5" stroke-linecap="round"/>
+        <!-- long tail deck: engine louvres over the V12 -->
+        <g stroke="#0b0e12" stroke-width="3">
+          <path d="M223.1,222.8 l0,24"/><path d="M250.4,219.8 l0,25"/>
+          <path d="M277.7,217.4 l0,26"/><path d="M305,215.8 l0,26"/>
+          <path d="M332.3,214.3 l0,26"/><path d="M359.6,212.7 l0,26"/>
         </g>
-        <!-- matrix LED headlamp cluster at the nose -->
-        <path d="M872,186 q26,-3 36,5" fill="none" stroke="#eef4f8" stroke-width="4.4" stroke-linecap="round"/>
-        <path d="M880,196 q18,-2 26,3" fill="none" stroke="rgba(216,30,44,0.7)" stroke-width="2"/>
-        <!-- lower front intake + splitter -->
-        <path d="M884,214 L916,218 L912,232 L888,232 Z" fill="#06080b" stroke="rgba(216,30,44,0.35)"/>
-        <rect x="838" y="238" width="80" height="8" rx="3" fill="#05070a"/>
-        <g id="frontFlapArt"><rect x="806" y="228" width="38" height="6" rx="3" fill="#141317" stroke="rgba(216,30,44,0.4)"/></g>
-        <!-- frameless door + mirror -->
+        <path d="M133.4,252.5 Q266,224.1 375.2,215.8" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M141.2,260.9 Q484.4,259.8 858.8,267.1" fill="none" stroke="rgba(0,0,0,0.16)" stroke-width="2.2"/>
+        <path d="M187.5,321 A65.2 90.6 0 0 1 317.9,321" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="3.6"/><path d="M682.1,321 A65.2 90.6 0 0 1 812.5,321" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="3.6"/>
+        <!-- the F1's small ROUND blunt nose: two low lamps, shallow mouth, tiny splitter -->
+        <ellipse cx="815.9" cy="244.3" rx="15" ry="8" fill="#eef4f8" opacity="0.92"/>
+        <ellipse cx="854.9" cy="257.8" rx="10" ry="6" fill="rgba(255,200,140,0.75)"/>
+        <path d="M847.1,278.5 L890,275.4 L890,309.6 L843.2,311.7 Z" fill="#0a0e12" stroke="rgba(255,139,48,0.5)" stroke-width="1.2"/>
+        <path d="M761.3,314.8 L886.1,311.7 L882.2,329.3 L757.4,331.4 Z" fill="#05070a" stroke="rgba(255,139,48,0.3)"/>
+        <g id="frontFlapArt"><rect x="726.2" y="325.2" width="36" height="6" rx="3" fill="#141317" stroke="rgba(255,139,48,0.5)"/></g>
+        <!-- butterfly door cut deep into the roof; swings UP and forward -->
         <g id="doorArt">
-          <path d="M470,190 Q536,180 612,182 L682,200 L680,240 L474,242 Z" fill="rgba(255,120,120,0.14)" stroke="#7d3036" stroke-width="1.4"/>
-          <path d="M498,200 Q566,190 652,194" fill="none" stroke="rgba(255,200,200,0.4)" stroke-width="2"/>
-          <path d="M474,186 l-14,-6 l0,10 l14,2 Z" fill="#0b0d10"/>
+          <path d="M422,184.1 Q453.2,153 515.6,142.7 L566.3,141.6 L700.5,211.1 L696.6,303.4 L425.9,305.5 Z"
+                fill="rgba(255,255,255,0.06)" stroke="rgba(160,170,180,0.65)" stroke-width="1.3"/>
+          <path d="M457.1,256.7 Q562.4,249.5 673.2,258.8" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2.2"/>
+          <path d="M704.4,204.9 l18,-9 l2,12 l-18,4 Z" fill="#0b0d10"/>
         </g>
-        <!-- round dual exhaust tips at the rear valance -->
-        <g id="quadExhaustArt">
-          <circle cx="120" cy="240" r="6.5"/><circle cx="140" cy="240" r="6.5"/>
-        </g>
-        <!-- rear diffuser strakes -->
-        <g stroke="#05070a" stroke-width="3">
-          <path d="M112,242 l0,10"/><path d="M134,242 l0,10"/><path d="M156,242 l0,10"/><path d="M178,242 l0,10"/>
-        </g>
-        <!-- EVO script + GR badge -->
-        <text x="300" y="224" font-family="ui-sans-serif" font-size="12" fill="#f2c9cc" letter-spacing="3">EVO</text>
-        <g transform="translate(452,214)"><rect x="-13" y="-8" width="26" height="16" rx="3" fill="#0a0c10" stroke="#d81e2c" stroke-width="1.2"/><text x="0" y="4" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="800" fill="#ff5a49">GR</text></g>
-      </g>
-
-      <!-- wheels: GR forged multi-spoke -->
-      <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#d81e2c" stroke-width="2"/>
-        <g class="grWeave"><g transform="translate(255,250)">
-          ${turbine()}
-        </g></g>
-        <circle cx="255" cy="250" r="12" fill="url(#supHub)"/>
+        <!-- TWIN EXHAUSTS HIGH IN THE TAIL DECK — the F1's signature -->
+        <g id="quadExhaustArt"><circle cx="145.1" cy="249.7" r="9"/><circle cx="178.6" cy="237.7" r="9"/></g>
+        <circle cx="145.1" cy="249.7" r="13" fill="none" stroke="#4a525c" stroke-width="2.2"/>
+        <circle cx="178.6" cy="237.7" r="13" fill="none" stroke="#4a525c" stroke-width="2.2"/>
+        <!-- round tail lamps low on the panel -->
+        <g fill="rgba(255,60,50,0.85)"><circle cx="127.2" cy="299.3" r="6"/><circle cx="155.2" cy="299.3" r="6"/></g>
+        <!-- the brake-actuated under-tail flap: the F1's only movable aero -->
+        <g id="rearWingArt"><path d="M113.9,316.9 L219.2,312.7 L217.6,330.4 L112.3,334.5 Z" fill="url(#mfCarbon)" stroke="#5b636d" stroke-width="1.3"/></g>
+        <!-- decals -->
+        <text x="375.2" y="252.6" font-family="ui-sans-serif" font-size="12" fill="#f2f7fb" letter-spacing="4.4">McLaren F1</text>
+        <g transform="translate(833.8,223.5)"><path d="M-16,5 q11,-14 30,-10 q-16,3 -23,11 Z" fill="#ff8b30"/><path d="M-7,12 q11,-14 30,-10 q-16,3 -23,11 Z" fill="#ff8b30" opacity="0.8"/></g>
       </g>
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/><circle cx="745" cy="250" r="52" fill="none" stroke="#d81e2c" stroke-width="2"/>
-        <g class="grWeave"><g transform="translate(745,250)">
+        <circle cx="252.7" cy="289.8" r="58.2" fill="#0a0b0e"/><circle cx="252.7" cy="289.8" r="58.2" fill="none" stroke="#c9a24a" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(252.7,289.8) scale(1.1)">
           ${turbine()}
         </g></g>
-        <circle cx="745" cy="250" r="12" fill="url(#supHub)"/>
+        <circle cx="252.7" cy="289.8" r="12.8" fill="url(#mfHub)"/>
+      </g>
+      <g>
+        <circle cx="747.3" cy="289.8" r="58.2" fill="#0a0b0e"/><circle cx="747.3" cy="289.8" r="58.2" fill="none" stroke="#c9a24a" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(747.3,289.8) scale(1.1)">
+          ${turbine()}
+        </g></g>
+        <circle cx="747.3" cy="289.8" r="12.8" fill="url(#mfHub)"/>
       </g>
     </svg>
     `;
@@ -2586,66 +2574,94 @@ const SPEC = {
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
   }
-  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  function turbine() { let s = '<circle r="38" fill="#171310" stroke="#2b241c" stroke-width="4"/>'; for (let i = 0; i < 5; i++) { const c = i * 72 * Math.PI / 180; s += '<path d="M' + (12 * Math.cos(c - 0.3)).toFixed(1) + ',' + (12 * Math.sin(c - 0.3)).toFixed(1) + ' L' + (36 * Math.cos(c - 0.12)).toFixed(1) + ',' + (36 * Math.sin(c - 0.12)).toFixed(1) + ' L' + (36 * Math.cos(c + 0.12)).toFixed(1) + ',' + (36 * Math.sin(c + 0.12)).toFixed(1) + ' L' + (12 * Math.cos(c + 0.3)).toFixed(1) + ',' + (12 * Math.sin(c + 0.3)).toFixed(1) + ' Z" fill="#5d564a"/>'; } return s + '<circle r="38" fill="none" stroke="#8a8071" stroke-width="1.6"/><circle r="7" fill="#c9a24a"/>'; }
 
   /* McLaren F1 cockpit SVG — digital GR cluster, round GR wheel, F1 Command touchscreen */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren F1 cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren F1 (1993) cockpit — central driving seat">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="supSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a161a"/><stop offset="1" stop-color="#120a0c"/></linearGradient>
         <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#05080d"/></linearGradient>
-      </defs>
+        <linearGradient id="mfSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2f22"/><stop offset="1" stop-color="#12100c"/></linearGradient>
+        <linearGradient id="mfHide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2118"/><stop offset="1" stop-color="#100d09"/></linearGradient>
+        <radialGradient id="mfDial" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#1d1a15"/><stop offset="1" stop-color="#070605"/></radialGradient></defs>
       <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.14" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- soft-touch dash brow with alu trim -->
-      <rect x="120" y="44" width="760" height="22" rx="11" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.4"/>
-      <!-- driver's digital instrument binnacle with the big central tachometer -->
-      <g transform="translate(360,120)">
-        <rect x="-116" y="-44" width="232" height="88" rx="14" fill="url(#screenG)" stroke="rgba(216,30,44,0.6)" stroke-width="2" id="tachArt"/>
-        <!-- central round tacho -->
-        <circle cx="-58" cy="0" r="36" fill="none" stroke="rgba(216,30,44,0.75)" stroke-width="2.4"/>
-        <circle cx="-58" cy="0" r="36" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="6"/>
-        <text x="-58" y="7" text-anchor="middle" font-size="19" font-weight="700" fill="#f6eef0" id="tachGearArt">N</text>
-        <!-- EVO wordmark block on the right of the binnacle -->
-        <text x="52" y="-6" text-anchor="middle" font-size="24" font-weight="800" fill="#eef2f7">EVO</text>
-        <text x="52" y="22" text-anchor="middle" font-size="9" fill="#e0868c" letter-spacing="3">F1 · 3.0 TURBO</text>
+      <g opacity="0.10" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
+
+      <!-- leather-trimmed dash roll, symmetric about the centre because the driver is -->
+      <path d="M110,58 Q500,34 890,58 L890,82 Q500,58 110,82 Z" fill="url(#mfHide)" stroke="#4a3f30" stroke-width="1.4"/>
+
+      <!-- the two PASSENGER seats, set BACK and outboard -->
+      <g transform="translate(228,296)" opacity="0.95">
+        <path d="M-44,-24 Q-50,-36 -34,-38 L34,-38 Q50,-36 44,-24 L48,74 L-48,74 Z" fill="url(#mfSeat)" stroke="#4a3f30"/>
+        <path d="M-28,-20 L-28,58 M28,-20 L28,58" stroke="#5c4e3a"/>
+        <text x="0" y="-46" text-anchor="middle" font-size="7" fill="#8a7c66" letter-spacing="1.2">PASSENGER</text>
       </g>
-      <!-- 8.8in central touchscreen angled to the driver -->
-      <rect x="470" y="96" width="96" height="70" rx="8" fill="url(#screenG)" stroke="rgba(216,30,44,0.5)"/>
-      <text x="518" y="178" text-anchor="middle" font-size="8" fill="#9aa2ab" letter-spacing="1">EVO COMMAND</text>
-      <!-- GR sport seats: black leather / red Alcantara, red stitch -->
-      <g transform="translate(240,270)"><rect x="-46" y="-32" width="92" height="120" rx="18" fill="url(#supSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,10 L30,10 M0,-30 L0,84" stroke="rgba(216,30,44,0.6)"/></g>
-      <g transform="translate(760,270)"><rect x="-46" y="-32" width="92" height="120" rx="18" fill="url(#supSeatG)" stroke="rgba(0,0,0,0.3)"/><path d="M-30,-16 L30,-16 M-30,10 L30,10 M0,-30 L0,84" stroke="rgba(216,30,44,0.6)"/></g>
-      <!-- centre console: drive-mode + gear lever + START on the spine -->
-      <g id="shifterArt" transform="translate(500,300)">
-        <rect x="-28" y="-36" width="56" height="98" rx="12" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-        <g fill="url(#aluG)"><rect x="-16" y="-24" width="32" height="10" rx="3"/><rect x="-16" y="-6" width="32" height="10" rx="3"/><rect x="-16" y="12" width="32" height="10" rx="3"/></g>
-        <line x1="0" y1="54" x2="0" y2="30" stroke="url(#aluG)" stroke-width="6" id="leverArt"/>
-        <circle cx="0" cy="58" r="9" fill="url(#aluG)"/>
+      <g transform="translate(772,296)" opacity="0.95">
+        <path d="M-44,-24 Q-50,-36 -34,-38 L34,-38 Q50,-36 44,-24 L48,74 L-48,74 Z" fill="url(#mfSeat)" stroke="#4a3f30"/>
+        <path d="M-28,-20 L-28,58 M28,-20 L28,58" stroke="#5c4e3a"/>
+        <text x="0" y="-46" text-anchor="middle" font-size="7" fill="#8a7c66" letter-spacing="1.2">PASSENGER</text>
       </g>
-      <g transform="translate(636,262)"><rect x="-26" y="-18" width="52" height="36" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="11" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="7" fill="#ffd7d7">START</text></g>
-      <!-- round GR leather wheel with red 12-o'clock marker + metal paddles -->
-      <g id="cabinWheelG" transform="translate(360,300)">
-        <circle r="58" fill="none" stroke="#101216" stroke-width="15"/>
-        <circle r="58" fill="none" stroke="rgba(216,30,44,0.5)" stroke-width="2.4"/>
-        <path d="M-8,-58 L8,-58 L4,-48 L-4,-48 Z" fill="#d81e2c"/>
-        <path d="M-40,44 L40,44 L34,58 L-34,58 Z" fill="#0c0f14"/>
-        <line x1="0" y1="0" x2="-52" y2="-6" stroke="#171a20" stroke-width="9"/>
-        <line x1="0" y1="0" x2="52" y2="-6" stroke="#171a20" stroke-width="9"/>
-        <line x1="0" y1="0" x2="0" y2="46" stroke="#171a20" stroke-width="9"/>
-        <!-- thumb controls on the lower spokes -->
-        <circle cx="-30" cy="30" r="12" fill="#0e1116" stroke="rgba(216,30,44,0.7)" stroke-width="2.2"/>
-        <circle cx="30" cy="30" r="12" fill="#0e1116" stroke="#c53a2a" stroke-width="2.2"/>
-        <text x="30" y="34" text-anchor="middle" font-size="8" fill="#ff7a6a">GR</text>
-        <!-- metal shift paddles -->
-        <path d="M-70,-8 L-50,-14 L-50,4 L-70,10 Z" fill="url(#aluG)" opacity="0.9"/>
-        <path d="M70,-8 L50,-14 L50,4 L70,10 Z" fill="url(#aluG)" opacity="0.9"/>
-        <circle r="14" fill="#0e1116" stroke="#1a1e24" stroke-width="4"/>
-        <g transform="translate(0,0)"><circle r="7.5" fill="#0a0c10" stroke="#d81e2c" stroke-width="1.2"/><text x="0" y="3" text-anchor="middle" font-size="7" font-weight="800" fill="#ff7a6a">GR</text></g>
+
+      <!-- THE CENTRAL DRIVING SEAT, set forward of the other two -->
+      <g transform="translate(500,268)">
+        <path d="M-46,-30 Q-52,-44 -34,-46 L34,-46 Q52,-44 46,-30 L50,92 L-50,92 Z" fill="url(#mfSeat)" stroke="#5c4e3a" stroke-width="1.6"/>
+        <path d="M-30,-26 L-30,74 M30,-26 L30,74" stroke="#6b5b44" stroke-width="2"/>
+        <path d="M0,-40 L0,84" stroke="rgba(255,139,48,0.4)"/>
+        <text x="0" y="-54" text-anchor="middle" font-size="7.5" fill="#ff8b30" letter-spacing="1.6">CENTRAL DRIVING SEAT</text>
+      </g>
+
+      <!-- small pod of ANALOGUE dials, centred on the driver. No screens in this car. -->
+      <g transform="translate(500,128)">
+        <path d="M-104,-46 Q0,-62 104,-46 L104,40 Q0,52 -104,40 Z" fill="#0d0b08" stroke="#4a3f30" stroke-width="1.6"/>
+        <rect x="-96" y="-38" width="192" height="76" rx="9" fill="url(#mfDial)" stroke="rgba(255,139,48,0.45)" stroke-width="1.6" id="tachArt"/>
+        <!-- the tachometer, dead centre and biggest -->
+        <circle cx="0" cy="0" r="33" fill="url(#mfDial)" stroke="#8a7c66" stroke-width="2.2"/>
+        <g stroke="#c9bda6" stroke-width="1.5"><path d="M-25,17 l-6,4"/><path d="M-30,-2 l-7,0"/><path d="M-23,-20 l-6,-4"/><path d="M-4,-31 l-1,-7"/><path d="M16,-27 l4,-6"/><path d="M28,-13 l7,-3"/></g>
+        <path d="M0,0 L-18,-20" stroke="#ff8b30" stroke-width="2.6" stroke-linecap="round"/>
+        <text x="0" y="22" text-anchor="middle" font-size="7" fill="#a89a80">rpm x1000</text>
+        <!-- speedo left, oil pressure right; both analogue -->
+        <circle cx="-64" cy="2" r="23" fill="url(#mfDial)" stroke="#6d6152" stroke-width="1.8"/>
+        <text x="-64" y="7" text-anchor="middle" font-size="13" font-weight="700" fill="#f1e9db" id="tachGearArt">N</text>
+        <circle cx="64" cy="2" r="23" fill="url(#mfDial)" stroke="#6d6152" stroke-width="1.8"/>
+        <path d="M64,2 L52,-8" stroke="#e0d3bb" stroke-width="1.8"/>
+        <text x="64" y="20" text-anchor="middle" font-size="6" fill="#a89a80">OIL bar</text>
+      </g>
+
+      <!-- toggle switches: this is the whole control set -->
+      <g transform="translate(500,196)">
+        <rect x="-72" y="-12" width="144" height="26" rx="4" fill="#12100c" stroke="#5c4e3a" stroke-width="1.3"/>
+        <g stroke="url(#aluG)" stroke-width="3" stroke-linecap="round">
+          <path d="M-56,6 l0,-12"/><path d="M-34,6 l0,-12"/><path d="M-12,6 l4,-11"/><path d="M12,6 l0,-12"/><path d="M34,6 l4,-11"/><path d="M56,6 l0,-12"/></g>
+        <text x="0" y="26" text-anchor="middle" font-size="6.5" fill="#8a7c66" letter-spacing="1.4">LIGHTS · FAN · WIPE · FUEL · IGN · AUX</text>
+      </g>
+
+      <!-- the exposed OPEN GATE: a milled aluminium plate with the lever standing in it -->
+      <g id="shifterArt" transform="translate(626,286)">
+        <path d="M-34,-24 L34,-24 L40,52 L-40,52 Z" fill="#151310" stroke="#5c4e3a" stroke-width="1.4"/>
+        <path d="M-24,-14 L24,-14 L26,30 L-26,30 Z" fill="#0a0907" stroke="url(#aluG)" stroke-width="1.6"/>
+        <g stroke="url(#aluG)" stroke-width="1.4" opacity="0.75">
+          <path d="M-14,-10 L-14,26"/><path d="M0,-10 L0,26"/><path d="M14,-10 L14,26"/><path d="M-20,8 L20,8"/></g>
+        <line x1="0" y1="26" x2="0" y2="0" stroke="url(#aluG)" stroke-width="6" id="leverArt"/>
+        <circle cx="0" cy="-6" r="10" fill="#2a2118" stroke="url(#aluG)" stroke-width="1.4"/>
+        <text x="0" y="48" text-anchor="middle" font-size="6.5" fill="#8a7c66">6-SPEED TRANSVERSE</text>
+      </g>
+      <g transform="translate(376,250)"><rect x="-27" y="-19" width="54" height="38" rx="4" fill="#12100c" stroke="#5c4e3a"/><circle cx="0" cy="0" r="12" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6.5" fill="#ffd7d7">IGN</text></g>
+
+      <!-- thin unassisted rim, CENTRED on the driver, nothing mounted on it -->
+      <g id="cabinWheelG" transform="translate(500,300)">
+        <circle r="52" fill="none" stroke="#171512" stroke-width="11"/>
+        <circle r="52" fill="none" stroke="rgba(200,186,160,0.3)" stroke-width="1.4"/>
+        <line x1="0" y1="0" x2="-46" y2="-16" stroke="#211e19" stroke-width="7"/>
+        <line x1="0" y1="0" x2="46" y2="-16" stroke="#211e19" stroke-width="7"/>
+        <line x1="0" y1="0" x2="0" y2="46" stroke="#211e19" stroke-width="7"/>
+        <!-- drilled lightening holes in the spokes, like the real magnesium centre -->
+        <g fill="#0b0a08"><circle cx="-24" cy="-9" r="3.4"/><circle cx="-34" cy="-12" r="3.4"/><circle cx="24" cy="-9" r="3.4"/><circle cx="34" cy="-12" r="3.4"/><circle cx="0" cy="24" r="3.4"/><circle cx="0" cy="34" r="3.4"/></g>
+        <circle r="12" fill="#12100c" stroke="#2a2620" stroke-width="3"/>
+        <path d="M-9,3 q7,-9 18,-6 q-10,2 -14,7 Z" fill="#ff8b30"/>
       </g>
     </svg>
     `;
@@ -2705,9 +2721,9 @@ const SPEC = {
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — the twin-scroll V6 growls and pops." : "Exhaust flap closed — muted."); }
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — the naturally-aspirated V12 growls and pops." : "Exhaust flap closed — muted."); }
     // Sport mode firms the adaptive variable suspension, sharpens throttle and shifts,
-  // locks the active differential and trims the integrated ducktail for a little more
+  // locks the active differential and trims the tail flap for a little more
   // rear downforce and high-speed stability. It does not change engine output.
   function toggleRaceAero() {
     const next = !state.raceAero;
@@ -2716,10 +2732,10 @@ const SPEC = {
     if (next) {
       if (state.driveMode !== "race") setMode("race");
       audio.motor(0.7); audio.chime([392, 523, 659, 784]);
-      showToast("Sport — dampers firm, active diff locked, ducktail trimmed (~55 kg).", "F1");
+      showToast("Sport — dampers firm, active diff locked, tail flap trimmed (~55 kg).", "F1");
     } else {
       audio.motor(0.5);
-      showToast("Road setting — dampers supple, diff open, ducktail relaxed.", "F1");
+      showToast("Road setting — dampers supple, diff open, tail flap relaxed.", "F1");
     }
   }
 
@@ -2783,23 +2799,23 @@ const SPEC = {
   function setToggle(key, value) { const next = value === undefined ? !state[key] : value; state[key] = next; applyEffect(key, next); }
   function applyEffect(key, on) {
     switch (key) {
-      case "heat": if (on) state.cool = false; if (on) audio.motor(0.7); else audio.click(820); showToast(on ? "Targa roof panel out — lifted off and stowed behind the seats." : "Targa panel back in and latched."); break;
-      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Climate A/C drawing cool air." : "A/C off."); break;
-      case "ambient": if (on) audio.click(1100); else audio.click(360); showToast(on ? "Cabin light on — warm over the tan leather." : "Cabin light off."); break;
-      case "shifterLight": audio.click(1500); showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
+      case "heat": if (on) state.cool = false; if (on) audio.motor(0.7); else audio.click(820); showToast(on ? "Heated windscreen on — the element clears the glass." : "Heated screen off."); break;
+      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Air conditioning on — the F1 was the first road McLaren with it." : "Air conditioning off."); break;
+      case "ambient": if (on) audio.click(1100); else audio.click(360); showToast(on ? "Map light on — a single lamp over the central seat." : "Map light off."); break;
+      case "shifterLight": audio.click(1500); showToast(on ? "Shift light armed at 7,500." : "Shift light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
       case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "The bonnet lifts — the naturally-aspirated V12 on show." : "Bonnet closed."); break;
-      case "antiLag": if (on) audio.crackle(); showToast(on ? "Overrun map armed — the V6 pops and crackles on a trailing throttle (Track)." : "Overrun map off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
+      case "antiLag": if (on) audio.crackle(); showToast(on ? "Overrun map armed — the V12 pops and crackles on a trailing throttle (Track)." : "Overrun map off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
       case "ignition": break;
     }
   }
-  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the V6 spins up smooth and hard."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V6 clears its throat to 3,000 with a smooth growl."); }
+  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Pedal box ${state.frontRecline}.`); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the V12 spins up smooth and hard."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V12 clears its throat to 3,000."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V6 lit.", "F1"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V12 lit.", "F1"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2853,7 +2869,7 @@ const SPEC = {
     el.gearReadout.classList.toggle("limit", state.gearMode === "G" && state.rpm > 6900);
     el.rpmText.textContent = `${Math.round(state.rpm)} rpm`;
     el.rpmBar.style.width = clamp(state.rpm / SPEC.redlineRpm * 100, 0, 100) + "%";
-    el.boostText.textContent = `${state.boostBar.toFixed(1)} bar`;
+    el.boostText.textContent = `${Math.round(state.boostBar / 1.35 * 100)}%`;
     el.boostBar.style.width = clamp(state.boostBar / 1.35 * 100, 0, 100) + "%";
     el.throttleText.textContent = Math.round(state.throttle * 100) + "%";
     el.throttleBar.style.width = Math.round(state.throttle * 100) + "%";
@@ -2904,7 +2920,7 @@ const SPEC = {
     el.brakeTempRead.textContent = `${Math.round(state.brakeTempC)}°C`;
     el.oilTempRead.textContent = `${Math.round(state.oilTempC)}°C`;
     el.waterTempRead.textContent = `${Math.round(state.waterTempC)}°C`;
-    el.boostRead.textContent = `${state.boostBar.toFixed(1)} bar`;
+    el.boostRead.textContent = `${Math.round(state.boostBar / 1.35 * 100)}%`;
     el.egtRead.textContent = `${Math.round(state.egtC)}°C`;
     el.navRead.textContent = state.route.active ? state.route.name : "Free run";
     el.lapRead.textContent = state.lap.bestMs ? `${app.fmtLap(state.lap.curMs)} / ${app.fmtLap(state.lap.bestMs)}` : (state.lap.curMs > 0 ? app.fmtLap(state.lap.curMs) : "—");
@@ -2925,7 +2941,7 @@ const SPEC = {
     if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
     state.raceAeroVis = lerp(state.raceAeroVis, state.raceAero ? 1 : 0, 0.1);                          // fuel-map indicator
-    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 0) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
+    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 0) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 252.7 289.8)`);
 
     // engine art
     const turboRot = (state.time * (260 + state.boostBar * 3000)) % 360;   // twin-scroll spool speed
@@ -2948,7 +2964,7 @@ const SPEC = {
 
     // cabin svg
     const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(360,300) rotate(${(state.steer * 90).toFixed(1)})`);
+    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(500,300) rotate(${(state.steer * 90).toFixed(1)})`);
     const leverArt = document.getElementById("leverArt"); if (leverArt) leverArt.setAttribute("transform", `rotate(${state.shiftTimer > 0 ? 10 : 0})`);
     const startArt = document.getElementById("startArt"); if (startArt) startArt.setAttribute("fill", state.ignition ? "#1f7a3a" : "#7a1f1f");
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
@@ -3074,7 +3090,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "F1"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V6 recording loaded — pitched with the revs.", "F1"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V6 works best.", "F1"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "F1"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V12 recording loaded — pitched with the revs.", "F1"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V12 works best.", "F1"); }); });
   }
 
   function setupPedals() {
