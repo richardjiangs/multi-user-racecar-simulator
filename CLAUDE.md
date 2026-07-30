@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
 A garage of thirty-six simulators — each a **single self-contained HTML file** —
-twenty-one road/classic cars & hypercars (incl. the Toyota GR Supra, six later hypercars —
+twenty-one road/classic cars & hypercars (incl. the Toyota Supra MK4 (A80), six later hypercars —
 Hennessey Venom F5 · Lotus Evija · Mercedes-AMG One · Rimac Nevera · Chevrolet Corvette ZR1 ·
 McLaren P1 — and two classic racers, the **Ferrari F40** and **Porsche 917K**), the full
 **2026 Formula 1 grid** (eleven teams), and four **2026 Dakar
@@ -33,7 +33,7 @@ Ferrari 250 GTO simulator.html
 Lamborghini Revuelto simulator.html
 Porsche 918 Spyder simulator.html
 Porsche Taycan Turbo GT simulator.html
-Toyota GR Supra simulator.html
+Toyota Supra MK4 simulator.html
 Hennessey Venom F5 simulator.html           ← six later hypercars (each its own calibrated SPEC, real
 Lotus Evija simulator.html                     brand circuit, unique-but-real engine sound + Real Mode;
 Mercedes-AMG One simulator.html                inserted at the END of the road block, BEFORE the F1 cars):
@@ -156,7 +156,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Lamborghini Revuelto | 747 kW / 1,015 CV combined (825 CV V12 @ 9,250 + 3 e-motors) | ~1,100 Nm combined | 2.5 s | 350 | 8-DCT | 1,772 kg (dry) |
 | Porsche 918 Spyder | 652 kW / 887 PS combined (608 PS V8 @ 8,700 + 2 e-motors) | ~1,280 Nm combined | 2.6 s | 345 | 7-PDK | 1,674 kg |
 | Porsche Taycan Turbo GT | 815 kW / 1,108 PS overboost (dual PSM, 2-speed rear) | ~1,340 Nm | 2.2 s | 305 | 2-speed | 2,220 kg |
-| Toyota GR Supra | 285 kW / 387 PS @ 5,800–6,500 (B58 twin-scroll turbo I6) | 500 Nm @ 1,800–5,000 | 4.1 s | 250 governed | 8-ZF auto | 1,520 kg |
+| Toyota Supra MK4 (A80) | 285 kW / 387 PS @ 5,800–6,500 (B58 twin-scroll turbo I6) | 500 Nm @ 1,800–5,000 | 4.1 s | 250 governed | 8-ZF auto | 1,520 kg |
 | Hennessey Venom F5 | 1,355 kW / 1,817 hp @ 8,000 (6.6 L twin-turbo 'Fury' V8) | 1,617 Nm @ 5,000 | 2.6 s | 484 (301 mph design) | 7-single-clutch | 1,360 kg (dry) |
 | Lotus Evija | 1,500 kW / 2,039 PS (quad-motor EV, one motor/wheel) | 1,704 Nm | 2.9 s | 349 governed | 1-speed | 1,680 kg |
 | Mercedes-AMG One | 782 kW / 1,063 PS combined (1.6 L V6 F1 turbo-hybrid @ 11,000 + 4 e-motors) | ~900 Nm combined | 2.9 s | 352 governed | 7-AMG SPEEDSHIFT | 1,695 kg |
@@ -191,7 +191,7 @@ breaks an axle, Dacia runs clean), so rival retirements track the actual race.
 **Dakar stages on the capable road cars** — the seven shared Dakar stages (+ full terrain/dune/bump
 physics: `terrainStep`, terrain-aware `roughnessAt`, `terrainGrip`, desert palettes/scenery) are also
 injected into the road cars that could plausibly attempt off-road — the AWD/robust set **Bugatti
-Chiron, Tesla Model S Plaid, Taycan Turbo GT, Revuelto, 918 Spyder, GR Supra**, plus the two later
+Chiron, Tesla Model S Plaid, Taycan Turbo GT, Revuelto, 918 Spyder, Supra MK4**, plus the two later
 AWD quad-motor EVs **Lotus Evija and Rimac Nevera** (cloned from Tesla). The ultra-low, slick-shod,
 ground-effect cars (Valkyrie, F80, AMG Black, Speedtail, Huayra BC, Jesko, 250 GTO — and the later
 Venom F5, AMG One, Corvette ZR1, McLaren P1) are left tarmac-only. Terrain is route-gated, so each

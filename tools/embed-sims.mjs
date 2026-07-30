@@ -27,7 +27,7 @@ const FILES = {
   revuelto: "Lamborghini Revuelto simulator.html",
   porsche918: "Porsche 918 Spyder simulator.html",
   taycan: "Porsche Taycan Turbo GT simulator.html",
-  supra: "Toyota GR Supra simulator.html",
+  supra: "Toyota Supra MK4 simulator.html",
   venom: "Hennessey Venom F5 simulator.html",
   evija: "Lotus Evija simulator.html",
   amgone: "Mercedes-AMG One simulator.html",
