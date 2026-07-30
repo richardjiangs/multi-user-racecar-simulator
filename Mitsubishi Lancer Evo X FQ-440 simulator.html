@@ -2359,21 +2359,23 @@ const SPEC = {
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // GR red 12-o'clock marker
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(216,30,44,0.95)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.45, Math.PI * 1.55); ctx.stroke();
-    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // flat bottom
-    ctx.fillStyle = "#08090c"; ctx.fillRect(-R * 0.52, R * 0.82, R * 1.04, R * 0.4);
-    // horizontal spokes carrying the SmartWheel TOUCH PADS
-    ctx.strokeStyle = "#14171d"; ctx.lineWidth = R * 0.1;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.03); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
-    [-1, 1].forEach(s => { ctx.fillStyle = "#0e1116"; ctx.strokeStyle = "rgba(216,30,44,0.5)"; ctx.lineWidth = R * 0.014;
-      const px = s * R * 0.56; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2, R * 0.03) : ctx.rect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2); ctx.fill(); ctx.stroke(); });
-    // hub kept open — the digital cluster sits on the dash behind it
-    ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, R * 0.24, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = "#ff9a90"; ctx.font = `700 ${Math.round(R * 0.12)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("Evo", 0, R * 0.34);
+    ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    // leather rim with the Evo's red stitching
+    ctx.lineWidth = R * 0.115; ctx.strokeStyle = "#14161b"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = R * 0.012; ctx.setLineDash([R * 0.05, R * 0.05]); ctx.strokeStyle = "rgba(200,16,46,0.75)";
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.955, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "#c8102e"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.46, Math.PI * 1.54); ctx.stroke();
+    // three spokes: two low, one up — classic Evo
+    ctx.strokeStyle = "#1a1d23"; ctx.lineWidth = R * 0.105;
+    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.86, R * 0.36); ctx.stroke(); });
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -R * 0.88); ctx.stroke();
+    // hub with the three-diamond badge suggested
+    ctx.fillStyle = "#0e1116"; ctx.beginPath(); ctx.arc(0, 0, R * 0.22, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(200,16,46,0.8)"; ctx.lineWidth = R * 0.02; ctx.stroke();
+    ctx.fillStyle = "#c8102e";
+    [[0, -0.07], [-0.062, 0.038], [0.062, 0.038]].forEach(([dx, dy]) => {
+      ctx.beginPath(); ctx.moveTo(dx * R, (dy - 0.045) * R); ctx.lineTo((dx + 0.045) * R, dy * R);
+      ctx.lineTo(dx * R, (dy + 0.045) * R); ctx.lineTo((dx - 0.045) * R, dy * R); ctx.closePath(); ctx.fill(); });
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
