@@ -1184,7 +1184,7 @@ const SPEC = {
       if (dir > 0) { app.setGear("G", 1); return; }
       return;
     }
-    const next = clamp(state.curGear + dir, 1, 8);
+    const next = clamp(state.curGear + dir, 1, SPEC.gearRatios.length);   // this box’s real gear count
     if (next === state.curGear) return;
     state.shiftFrom = state.curGear; state.curGear = next; state.shiftTimer = SPEC.shiftTimeS;
     state.manualHold = 1.4;
@@ -2432,7 +2432,7 @@ drawCluster(w, h, dashY, sway);
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
     if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors drawn shut to drive.", "AMG One"); }
-    if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, 8); }
+    if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, SPEC.gearRatios.length); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
     if (mode !== "G") state.adaptiveCruise = false;
