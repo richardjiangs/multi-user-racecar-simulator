@@ -55,7 +55,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("thirty-eight car cards render", await page.locator(".car-card").count() === 38);
+check("thirty-nine car cards render", await page.locator(".car-card").count() === 39);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- private practice: AI rivals must survive ---------- */
