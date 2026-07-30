@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Mitsubishi Lancer Evo X FQ-440 — 3.0 turbo inline-four</title>
+  <title>McLaren F1 — 3.0 naturally-aspirated V12</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,7 +16,7 @@
       --line: rgba(180,194,208,0.14);
       --alu: #c9cfd6;
       --alu-d: #828a93;
-      --teal: #c8102e;          /* Toyota GR / Evo red accent */
+      --teal: #ff8b30;          /* Toyota GR / F1 red accent */
       --teal-b: #ff6b60;
       --amber: #ff5a49;         /* GR red-hot tachometer */
       --amber-b: #fae9a0;
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Mitsubishi Lancer Evo X FQ-440 driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="McLaren F1 driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">EVO</div>
-        <h1>Mitsubishi Lancer Evo X FQ-440</h1>
-        <p>2.0L turbo inline-4 · 6-speed SST twin-clutch · S-AWC all-wheel drive · adaptive variable suspension · active differential.</p>
+        <div class="mark">F1</div>
+        <h1>McLaren F1</h1>
+        <p>6.1L NA V12 · 6-speed transverse manual · rear-wheel drive · adaptive variable suspension · active differential.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Digital GR instrument cluster with the central tachometer · 8.8-inch Evo Command touchscreen</span>
+          <span class="small" id="cockpitStatus">Digital GR instrument cluster with the central tachometer · 8.8-inch F1 Command touchscreen</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="raceAeroBtn" class="race" title="S-AWC Super All Wheel Control — Tarmac map: the active centre diff and Active Yaw Control put the power where it bites">S-AWC Tarmac</button>
+          <button id="raceAeroBtn" class="race" title="Raise the rev limiter, as McLaren did for XP5 at Ehra-Lessien — 372 becomes the 386.4 km/h record">Record Run</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,18 +482,15 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — 2.0L Turbo 4B11T Inline-4</h2>
-          <span class="small" id="engineStatus">2.0L turbo inline-4 (4B11T, alloy block) · 446 PS / 440 hp · 559 Nm · 7,000 rpm · 6-speed SST twin-clutch · S-AWC all-wheel drive · 0–100 in 3.8 s · 252 km/h · 1,590 kg</span>
+          <h2>Engine Bay — 6.1L BMW S70/2 V12, gold-lined</h2>
+          <span class="small" id="engineStatus">6.1L naturally-aspirated BMW S70/2 60° V12, quad-cam, gold-foil heat shielding · 627 PS / 618 hp @ 7,400 · 650 Nm @ 5,600 · 7,500 rpm · 6-speed transverse manual · rear-wheel drive · central driving seat · 0–100 in 3.2 s · 372 km/h (386.4 record) · 1,138 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL" style="display:none"></div>
           <div class="turbo right" id="turboR" style="display:none"></div>
-          <div style="position:absolute;left:12%;right:12%;top:13%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs>
-  <linearGradient id="ccsb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e33a44"/><stop offset="0.5" stop-color="#a11720"/><stop offset="1" stop-color="#5c0c11"/></linearGradient>
-  <linearGradient id="blsb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="1" stop-color="#12161b"/></linearGradient>
-  <radialGradient id="tbsb" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#dfe6ec"/><stop offset="0.5" stop-color="#7c848c"/><stop offset="1" stop-color="#14171d"/></radialGradient></defs><rect x="40" y="34" width="192" height="18" rx="4" fill="url(#ccsb)" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="44" y="20" width="16" height="14" rx="2" fill="#14171d" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="74" y="20" width="16" height="14" rx="2" fill="#14171d" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="104" y="20" width="16" height="14" rx="2" fill="#14171d" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="134" y="20" width="16" height="14" rx="2" fill="#14171d" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="164" y="20" width="16" height="14" rx="2" fill="#14171d" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="194" y="20" width="16" height="14" rx="2" fill="#14171d" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="40" y="52" width="192" height="34" rx="4" fill="url(#blsb)" stroke="#c8d0d8" stroke-opacity="0.4"/><circle cx="52" cy="69" r="7" fill="#0c0f13" stroke="#c8d0d8" stroke-opacity="0.5"/><circle cx="82" cy="69" r="7" fill="#0c0f13" stroke="#c8d0d8" stroke-opacity="0.5"/><circle cx="112" cy="69" r="7" fill="#0c0f13" stroke="#c8d0d8" stroke-opacity="0.5"/><circle cx="142" cy="69" r="7" fill="#0c0f13" stroke="#c8d0d8" stroke-opacity="0.5"/><circle cx="172" cy="69" r="7" fill="#0c0f13" stroke="#c8d0d8" stroke-opacity="0.5"/><circle cx="202" cy="69" r="7" fill="#0c0f13" stroke="#c8d0d8" stroke-opacity="0.5"/><path d="M52 84 q -6 14 -18 18" stroke="#c8d0d8" stroke-width="2.2" fill="none" opacity="0.5"/><path d="M82 84 q -6 14 -18 18" stroke="#c8d0d8" stroke-width="2.2" fill="none" opacity="0.5"/><path d="M112 84 q -6 14 -18 18" stroke="#c8d0d8" stroke-width="2.2" fill="none" opacity="0.5"/><path d="M142 84 q -6 14 -18 18" stroke="#c8d0d8" stroke-width="2.2" fill="none" opacity="0.5"/><path d="M172 84 q -6 14 -18 18" stroke="#c8d0d8" stroke-width="2.2" fill="none" opacity="0.5"/><path d="M202 84 q -6 14 -18 18" stroke="#c8d0d8" stroke-width="2.2" fill="none" opacity="0.5"/><path d="M52 84 q 6 12 180 20" stroke="#d81e2c" stroke-width="2" fill="none" opacity="0.45"/><path d="M82 84 q 6 12 150 20" stroke="#d81e2c" stroke-width="2" fill="none" opacity="0.45"/><path d="M112 84 q 6 12 120 20" stroke="#d81e2c" stroke-width="2" fill="none" opacity="0.45"/><path d="M142 84 q 6 12 90 20" stroke="#d81e2c" stroke-width="2" fill="none" opacity="0.45"/><path d="M172 84 q 6 12 60 20" stroke="#d81e2c" stroke-width="2" fill="none" opacity="0.45"/><path d="M202 84 q 6 12 30 20" stroke="#d81e2c" stroke-width="2" fill="none" opacity="0.45"/><rect x="60" y="104" width="150" height="12" rx="4" fill="url(#blsb)" stroke="#c8d0d8" stroke-opacity="0.35"/><circle cx="248" cy="104" r="15" fill="url(#tbsb)" stroke="rgba(210,220,230,0.6)" stroke-width="1.4"/><circle cx="248" cy="104" r="6.5" fill="#0c0f13"/><text x="150" y="14" text-anchor="middle" font-family="ui-sans-serif" font-size="9.5" font-weight="700" fill="#c8d0d8" letter-spacing="0.5">2.0 INLINE-4 · 4B11T</text><text x="250" y="122" text-anchor="middle" font-family="ui-sans-serif" font-size="7" font-weight="700" fill="#d81e2c">HKS TURBO</text></svg></div>
-          <div class="emotor" id="airTankArt">HKS TURBO · JANSPEED EXHAUST · S-AWC</div>
+          <div style="position:absolute;left:13%;right:13%;top:12%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebgt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecgt" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="etgt" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#f0b48a"/><stop offset="0.5" stop-color="#a5431f"/><stop offset="1" stop-color="#3a160a"/></radialGradient></defs><rect x="58" y="8" width="72" height="108" rx="11" fill="url(#ebgt)" stroke="#c8d0d8" stroke-opacity="0.42"/><rect x="170" y="8" width="72" height="108" rx="11" fill="url(#ebgt)" stroke="#c8d0d8" stroke-opacity="0.42"/><rect x="132" y="14" width="36" height="96" rx="6" fill="url(#ebgt)" stroke="rgba(150,160,170,0.4)"/><circle cx="92" cy="26" r="9.5" fill="url(#ecgt)" stroke="rgba(190,200,210,0.5)"/><line x1="101" y1="26" x2="130" y2="26" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="208" cy="26" r="9.5" fill="url(#ecgt)" stroke="rgba(190,200,210,0.5)"/><line x1="199" y1="26" x2="170" y2="26" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="92" cy="64" r="9.5" fill="url(#ecgt)" stroke="rgba(190,200,210,0.5)"/><line x1="101" y1="64" x2="130" y2="64" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="208" cy="64" r="9.5" fill="url(#ecgt)" stroke="rgba(190,200,210,0.5)"/><line x1="199" y1="64" x2="170" y2="64" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="92" cy="102" r="9.5" fill="url(#ecgt)" stroke="rgba(190,200,210,0.5)"/><line x1="101" y1="102" x2="130" y2="102" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="208" cy="102" r="9.5" fill="url(#ecgt)" stroke="rgba(190,200,210,0.5)"/><line x1="199" y1="102" x2="170" y2="102" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="34" cy="96" r="15" fill="url(#etgt)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="34" cy="96" r="6" fill="#2a120a"/><circle cx="266" cy="96" r="15" fill="url(#etgt)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="266" cy="96" r="6" fill="#2a120a"/><text x="150" y="9" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#c8d0d8" letter-spacing="0.5">3.8 TWIN-TURBO V6</text><text x="150" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#d81f2a">S70/2 · TAKUMI PLAQUE</text></svg></div>
+          <div class="emotor" id="airTankArt">NATURALLY ASPIRATED · GOLD FOIL BAY · CENTRAL SEAT</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
@@ -514,8 +511,8 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Evo X FQ-440 inline-four recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real inline-four recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised turbo inline-four</span>
+          <button id="engineLoadBtn" title="Load a real F1 V6 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V6 recording</button>
+          <span class="small now" id="engineSoundStatus">Engine voice: synthesised naturally-aspirated V12</span>
         </div>
       </section>
 
@@ -583,7 +580,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: slow car fast</h3><p style="margin:4px 0">387 PS is the honest teacher: the Evo rewards perfect lines because power can't paper over mistakes. This is where the racing line, trail braking and vision lessons pay off most.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: slow car fast</h3><p style="margin:4px 0">387 PS is the honest teacher: the F1 rewards perfect lines because power can't paper over mistakes. This is where the racing line, trail braking and vision lessons pay off most.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -603,7 +600,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Tsukuba Circuit">Tsukuba Circuit</button>
+              <button data-circuit="Goodwood Motor Circuit">Goodwood Motor Circuit</button>
               <button data-circuit="Prologue — Yanbu">Prologue · Yanbu</button>
               <button data-circuit="Stage 2 — Yanbu to AlUla">S2 · Yanbu→AlUla</button>
               <button data-circuit="Stage 4 — AlUla Marathon">S4 · AlUla marathon</button>
@@ -700,8 +697,8 @@
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
       <div class="pmark">GR</div>
-      <h1>Evo X FQ-440</h1>
-      <p>The frameless doors thunk shut, the turbo inline-four catches with a smooth off-beat growl, the boost builds with a whistle, and the ducktail settles. Drive it yourself, or hand it to the test driver.</p>
+      <h1>F1</h1>
+      <p>The frameless doors thunk shut, the naturally-aspirated V12 catches with a smooth off-beat growl, the boost builds with a whistle, and the ducktail settles. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
       <div class="ring">Toyota Gazoo Racing · Toyota City, Japan</div>
     </div>
@@ -709,11 +706,11 @@
 
   <script type="module">
 /* ===========================================================================
-      TOYOTA GR EVO (browser turbo inline-four simulator)
-   Real Web-Audio turbo inline-four, factory-matched physics (0–100 km/h
+      TOYOTA GR EVO (browser naturally-aspirated V12 simulator)
+   Real Web-Audio naturally-aspirated V12, factory-matched physics (0–100 km/h
    4.1 s; 387 PS / 382 hp @ 6,200; 500 Nm @ 1,800–5,000; 6,500 rpm; 1,520 kg;
    250 km/h governed; integrated ducktail spoiler and active differential),
-   an 6-speed SST twin-clutch with paddle shifts, and a test driver
+   an 6-speed transverse manual with paddle shifts, and a test driver
    who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
@@ -811,7 +808,7 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Tsukuba Circuit": {
+  "Goodwood Motor Circuit": {
     dist: 4563, env: "track", limitKmh: 300, loop: true, widthM: 15, corners: 9,
     blurb: "the 4.563 km Fuji Speedway beneath Mt. Fuji, Toyota's home circuit",
     bumps: [],
@@ -916,49 +913,49 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT Mitsubishi Lancer Evo X FQ-440 3.0 figures =====
-   Mitsubishi Lancer Evo X FQ-440 3.0 L (2,998 cc) B58 twin-scroll single-turbo inline-four:
+/* ===== data: vehicle spec — EXACT McLaren F1 3.0 figures =====
+   McLaren F1 3.0 L (2,998 cc) B58 twin-scroll single-naturally-aspirated V12:
    285 kW (387 PS / 382 hp) @ 5,800–6,500 rpm; 500 Nm @ 1,800–5,000 rpm; 6,500 rpm
-   rev limit; kerb weight 1,520 kg; 6-speed SST twin-clutch, S-AWC all-wheel drive.
+   rev limit; kerb weight 1,520 kg; 6-speed transverse manual, rear-wheel drive.
    0–100 km/h 4.1 s; electronically governed top speed 250 km/h; integrated ducktail
    spoiler with an active differential and adaptive variable suspension. */
 
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
-  name: "Mitsubishi Lancer Evo X FQ-440",
-  engineLabel: "Mitsubishi Lancer Evolution X FQ-440 MR 2.0 L turbo inline-4 (4B11T)",
-  displacementCc: 1998,         // 4B11T, 1,998 cc
-  massKg: 1590,                 // FQ-440 MR kerb weight
+  name: "McLaren F1",
+  engineLabel: "McLaren F1 6.1 L naturally-aspirated BMW S70/2 V12",
+  displacementCc: 6064,         // BMW S70/2, 6,064 cc, 60° V12
+  massKg: 1138,                 // McLaren F1 kerb weight
   rotInertia: 1.06,
-  peakPowerW: 328000,           // 328 kW = 446 PS / 440 hp (HKS turbo, Janspeed exhaust)
-  peakPowerPS: 446,
-  peakPowerHp: 440,
-  peakPowerKw: 328,
-  peakPowerRpm: 6500,
-  peakTorqueNm: 559,            // 559 Nm (412 lb-ft)
-  torqueLoRpm: 3500,
-  torqueHiRpm: 5500,
-  idleRpm: 850,
-  redlineRpm: 7000,             // 4B11T rev limit
-  finalDrive: 4.06,
-  gearRatios: [3.65, 2.37, 1.71, 1.29, 1.00, 0.78],               // 6-speed SST twin-clutch
-  reverseRatio: 3.42,
-  wheelRadiusM: 0.318,          // 245/40 R18
-  dragCd: 0.28,                 // Evo X saloon — Mitsubishi quote Cd 0.28
-  frontalAreaM2: 2.10,
+  peakPowerW: 461000,           // 461 kW = 627 PS / 618 hp @ 7,400 rpm
+  peakPowerPS: 627,
+  peakPowerHp: 618,
+  peakPowerKw: 461,
+  peakPowerRpm: 7400,
+  peakTorqueNm: 650,            // 650 Nm (479 lb-ft) @ 5,600 rpm
+  torqueLoRpm: 4000,
+  torqueHiRpm: 7000,
+  idleRpm: 750,
+  redlineRpm: 7500,             // S70/2 rev limit (raised for the record run)
+  finalDrive: 2.37,
+  gearRatios: [3.23, 2.19, 1.71, 1.39, 1.16, 1.03],                 // 6-speed transverse manual — 6th puts the S70/2 near 7,400 at Vmax, as the real car does
+  reverseRatio: 2.29,
+  wheelRadiusM: 0.335,          // 315/45 ZR17 rear
+  dragCd: 0.32,                 // slippery, no wing — the F1 makes downforce with its fan-assisted underbody
+  frontalAreaM2: 1.79,
   rollingResistance: 0.013,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 0.808684,     // calibrated -> 0–100 km/h = 3.8000 s ±0.0001 (S-AWC launch; see tests/perf-test.mjs)
-  topSpeedKmh: 252,             // 157 mph
-  topSpeedMps: 252 * KMH,
-  topSpeedLimitedKmh: 252,
-  topSpeedLimitedMps: 252 * KMH,
-  topSpeedRecordKmh: 252,       // no derestrict — the FQ-440 runs to its real 252
-  topSpeedRecordMps: 252 * KMH,
-  zeroTo100Kmh: 3.8,            // s (0-62 mph, Mitsubishi UK)
-  brakeMaxMps2: 11.7366,        // Brembo four-piston front; calibrated to 34.0 m 100-0 km/h
+  tractionCoeff: 0.963976,     // calibrated -> 0–100 km/h = 3.2000 s ±0.0001 (see tests/perf-test.mjs)
+  topSpeedKmh: 372,             // 231 mph declared
+  topSpeedMps: 372 * KMH,
+  topSpeedLimitedKmh: 372,
+  topSpeedLimitedMps: 372 * KMH,
+  topSpeedRecordKmh: 386.4,     // 386.4 km/h — XP5 at Ehra-Lessien, rev limiter raised
+  topSpeedRecordMps: 386.4 * KMH,
+  zeroTo100Kmh: 3.2,            // s (McLaren)
+  brakeMaxMps2: 12.0586,        // huge Brembos, no ABS; calibrated to 33.0 m 100-0 km/h
   brakeDist100to0M: 34,         // target 100-0 km/h braking distance
   shiftTimeS: 0.10,             // ZF 8HP torque-converter automatic
   launchRpm: 3000,
@@ -1035,12 +1032,12 @@ const SPEC = {
     state.toastTimer = 3.0;
   }
 
-  window.EvoApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
+  window.McF1App = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
 }
 
 /* ===== media status helpers ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const studioNowPlaying = document.getElementById("studioNowPlaying");
   const engineSoundStatus = document.getElementById("engineSoundStatus");
   function setNowPlaying(text, live) { if (!studioNowPlaying) return; studioNowPlaying.textContent = text; studioNowPlaying.classList.toggle("live", !!live); }
@@ -1048,9 +1045,9 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised turbo inline-four, spool, blow-off, crackle ===== */
+/* ===== audio: synthesised naturally-aspirated V12, spool, blow-off, crackle ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { SPEC, clamp } = app;
 
   const audio = {
@@ -1077,7 +1074,7 @@ const SPEC = {
 
       const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Twin-scroll turbo inline-four (4B11T): inherently balanced, smooth and creamy with a
+      // Twin-scroll naturally-aspirated V12 (BMW S70/2): inherently balanced, smooth and creamy with a
       // hard-edged howl building to the limiter and the turbo whistling underneath
       const defs = [
         { type: "sine",     mul: 0.5,  gain: 0.58, toShaper: false },   // the cast-iron 2JZ bottom end
@@ -1120,7 +1117,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 2);   // inline-4: 2 firing pulses / rev — the Evo's hard four-pot bark
+      const firing = Math.max(20, (s.rpm / 60) * 6);   // 60° V12: 6 firing pulses / rev — the S70/2’s hard, gold-lined shriek
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
@@ -1186,7 +1183,7 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // inline-four catch + rev flare on ignition
+    startupFlair() { // V6 catch + rev flare on ignition
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
       const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
       o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
@@ -1251,7 +1248,7 @@ const SPEC = {
 
 /* ===== physics: engine, 8-speed auto, active diff, launch, world, test driver ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
   const audio = app.audio;
   const showToast = app.showToast;
@@ -1273,13 +1270,13 @@ const SPEC = {
   }
 
   const modeMap = {
-    wet:   { upRpm: 3910, downRpm: 1550, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 5560, downRpm: 1950, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 6480, downRpm: 2270, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+    wet:   { upRpm: 4190, downRpm: 1660, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 5960, downRpm: 2090, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 6950, downRpm: 2430, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
-  /* --- the 6-speed SST twin-clutch: auto-shifts for you, but the paddles always win --- */
+  /* --- the 6-speed transverse manual: auto-shifts for you, but the paddles always win --- */
   function manualShift(dir) {
     if (state.gearMode !== "G") {
       if (dir > 0) { app.setGear("G", 1); return; }
@@ -1495,22 +1492,22 @@ const SPEC = {
   ];
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
-  const EVO_GRID = [
-    { name: "Nissan Skyline GT-R R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
+  const MCF1_GRID = [
+    { name: "Nissan Skyline F1 R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
     { name: "Mazda RX-7 FD3S",               body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 11.0 },
     { name: "Honda NSX-R (NA2)",             body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
     { name: "Mitsubishi 3000GT VR-4",        body: "#b03030", stripe: "#15181d", top: 250, latG: 1.16, accel: 10.6 },
-    { name: "Mitsubishi Lancer Evo X FQ-440 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
+    { name: "McLaren F1 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
     { name: "Subaru Impreza 22B STi",        body: "#2a54a8", stripe: "#f0d000", top: 240, latG: 1.22, accel: 10.8 },
     { name: "Nissan 300ZX Twin Turbo (Z32)", body: "#1b1d22", stripe: "#c0c4c8", top: 250, latG: 1.14, accel: 10.4 },
-    { name: "Mitsubishi Lancer Evo X FQ-440 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
+    { name: "McLaren F1 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Tsukuba Circuit") ? EVO_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Goodwood Motor Circuit") ? MCF1_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1722,7 +1719,7 @@ const SPEC = {
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
     accel += state._gradeAccel || 0;   // dune climbs bleed speed, descents build it
     // Safety ceiling only — the Attack is drag-limited far below this in practice.
-    const govMps = SPEC.topSpeedMps;
+    const govMps = state.raceAero ? SPEC.topSpeedRecordMps : SPEC.topSpeedMps;   // Record Run -> 386.4
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -1767,7 +1764,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Evo"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "F1"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1836,7 +1833,7 @@ const SPEC = {
 
 /* ===== render: the driving world ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, canvas, ctx, clamp, lerp } = app;
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
@@ -2272,7 +2269,7 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Evo X FQ-440 digital cluster: the A90's dominant central round tachometer (GR-red
+    // ---- F1 digital cluster: the A90's dominant central round tachometer (GR-red
     // rev sweep, digital speed in the hub) with turbo BOOST + TEMP readouts either side ----
     drawCluster(w, h, dashY, sway);
     // GR wheel in front of the cluster
@@ -2283,51 +2280,72 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // ---- Evolution X: two red-lit round dials (speedometer left, tachometer right) with the
-  // S-AWC centre display between them — the Evo's signature readout: drive map + the live
-  // front/rear torque split from the active centre diff and Active Yaw Control. ----
+  // ---- McLaren F1 (1993): no screens anywhere. A dominant central analogue tachometer in a
+  // deep pod, a smaller speedometer to its left and oil/water/fuel gauges right — cream
+  // numerals on black, thin orange needles, exactly as XP5 had it. ----
   function drawCluster(w, h, dashY, sway) {
-    const R = Math.min(w, h) * 0.122;
-    const cx = w / 2 + sway, cy = dashY + R * 0.28;
-    const BW = R * 4.5, BH = R * 1.9, bx = cx - BW / 2, by = cy - BH / 2;
+    const R = Math.min(w, h) * 0.125;
+    const cx = w / 2 + sway, cy = dashY + R * 0.3;
+    const BW = R * 4.5, BH = R * 1.92, bx = cx - BW * 0.46, by = cy - BH / 2;
     ctx.save();
     ctx.fillStyle = "#0a0b0e";
-    ctx.beginPath(); ctx.moveTo(bx - R * 0.18, by + R * 0.12); ctx.quadraticCurveTo(cx, by - R * 0.36, bx + BW + R * 0.18, by + R * 0.12);
-    ctx.lineTo(bx + BW + R * 0.18, by + R * 0.32); ctx.lineTo(bx - R * 0.18, by + R * 0.32); ctx.closePath(); ctx.fill();
-    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#12141a"); pg.addColorStop(1, "#06070a");
-    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.11); ctx.fill();
-    ctx.strokeStyle = "rgba(200,16,46,0.42)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.11); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(bx - R * 0.2, by + R * 0.14); ctx.quadraticCurveTo(cx, by - R * 0.38, bx + BW + R * 0.2, by + R * 0.14);
+    ctx.lineTo(bx + BW + R * 0.2, by + R * 0.34); ctx.lineTo(bx - R * 0.2, by + R * 0.34); ctx.closePath(); ctx.fill();
+    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#14171c"); pg.addColorStop(1, "#06080b");
+    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.fill();
+    ctx.strokeStyle = "rgba(255,139,48,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.stroke();
     ctx.restore();
-    const dR = BH * 0.4;
-    evoDial(cx - R * 1.28, cy, dR, clamp(Math.abs(app.kmh(state.speedMps)) / 260, 0, 1), "km/h",
-            Math.round(Math.abs(app.kmh(state.speedMps))), 260, 40, null);
-    evoDial(cx + R * 1.28, cy, dR, clamp(state.rpm / 8000, 0, 1), "r/min x1000",
-            null, 8, 1, (SPEC.redlineRpm || 7000) / 8000);
-    evoSawc(cx, cy, R);
+    // the big tach sits centre-left in the binnacle, the speedo smaller to its left
+    f1Dial(bx + BH * 0.86, cy, BH * 0.43, clamp(state.rpm / 8000, 0, 1), "rpm x1000", null, 8, 1, (SPEC.redlineRpm || 7500) / 8000);
+    f1Dial(bx + BH * 0.3, cy + R * 0.06, BH * 0.27, clamp(Math.abs(app.kmh(state.speedMps)) / 400, 0, 1), "km/h", Math.round(Math.abs(app.kmh(state.speedMps))), 400, 100, null);
+    // the three small ancillaries down the right
+    const sx = bx + BW - R * 0.5;
+    [["OIL", clamp(0.3 + state.rpm / 9000, 0, 1)], ["WATER", clamp(0.34 + state.rpm / 12000, 0, 1)], ["FUEL", 0.68]]
+      .forEach(([lab, f], i) => f1Small(sx, by + R * 0.42 + i * (BH - R * 0.9) / 2, R * 0.28, f, lab));
+    ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "#ffab6a"; ctx.font = `800 ${Math.round(R * 0.2)}px ui-sans-serif`;
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, bx + BH * 0.86, cy + BH * 0.36);
+    if (state.raceAero) { ctx.fillStyle = "#ffd24a"; ctx.font = `700 ${Math.round(R * 0.092)}px ui-sans-serif`; ctx.fillText("XP5 · LIMITER RAISED", cx + R * 0.2, by + R * 0.24); }
+    ctx.restore();
   }
-  // a red-lit Evo dial: black face, red rim glow, white numerals, red needle
-  function evoDial(cx, cy, R, frac, label, bigVal, maxN, step, redFrac) {
-    const startA = Math.PI * 0.76, endA = Math.PI * 2.24;
+  function f1Dial(cx, cy, R, frac, label, bigVal, maxN, step, redFrac) {
+    const a0 = Math.PI * 0.78, a1 = Math.PI * 2.22;
     ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "#1a1c22"; ctx.beginPath(); ctx.arc(0, 0, R * 1.08, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "rgba(200,16,46,0.55)"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, R * 1.04, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = "#06070a"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+    const bz = ctx.createRadialGradient(-R * 0.3, -R * 0.3, R * 0.2, 0, 0, R * 1.1);
+    bz.addColorStop(0, "#cdd4da"); bz.addColorStop(0.62, "#6f777f"); bz.addColorStop(1, "#2a2f36");
+    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.07, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#07090b"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
     const N = Math.round(maxN / step);
     for (let i = 0; i <= N * 2; i++) {
-      const f = i / (N * 2), a = lerp(startA, endA, f), major = i % 2 === 0, red = redFrac != null && f >= redFrac;
-      ctx.strokeStyle = red ? "#ff3b30" : "rgba(236,240,246,0.9)"; ctx.lineWidth = major ? 2 : 1;
-      const r1 = R * (major ? 0.7 : 0.79), r2 = R * 0.92;
+      const f = i / (N * 2), a = lerp(a0, a1, f), major = i % 2 === 0, red = redFrac != null && f >= redFrac;
+      ctx.strokeStyle = red ? "#e8322c" : "rgba(240,236,220,0.9)"; ctx.lineWidth = major ? 2.1 : 1;
+      const r1 = R * (major ? 0.7 : 0.8), r2 = R * 0.93;
       ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
-      if (major) { ctx.fillStyle = red ? "#ff7a72" : "rgba(232,238,245,0.95)"; ctx.font = `600 ${Math.round(R * 0.145)}px ui-sans-serif`;
-        ctx.fillText(String(Math.round(i / 2 * step)), Math.cos(a) * R * 0.55, Math.sin(a) * R * 0.55); }
+      if (major) { ctx.fillStyle = red ? "#ff8078" : "#f0ecdc"; ctx.font = `600 ${Math.round(R * 0.16)}px Georgia, ui-serif`;
+        ctx.fillText(String(Math.round(i / 2 * step)), Math.cos(a) * R * 0.56, Math.sin(a) * R * 0.56); }
     }
-    ctx.fillStyle = "rgba(180,190,200,0.8)"; ctx.font = `600 ${Math.round(R * 0.11)}px ui-sans-serif`; ctx.fillText(label, 0, R * 0.62);
-    if (bigVal != null) { ctx.fillStyle = "rgba(238,242,247,0.95)"; ctx.font = `700 ${Math.round(R * 0.2)}px ui-sans-serif`; ctx.fillText(String(bigVal), 0, -R * 0.48); }
-    const na = lerp(startA, endA, clamp(frac, 0, 1));
-    ctx.strokeStyle = "#ff2a20"; ctx.lineWidth = R * 0.055; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.15, -Math.sin(na) * R * 0.15); ctx.lineTo(Math.cos(na) * R * 0.84, Math.sin(na) * R * 0.84); ctx.stroke();
-    ctx.fillStyle = "#22262c"; ctx.beginPath(); ctx.arc(0, 0, R * 0.1, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "rgba(226,220,198,0.8)"; ctx.font = `600 ${Math.round(R * 0.12)}px Georgia, ui-serif`; ctx.fillText(label, 0, R * 0.62);
+    if (bigVal != null) { ctx.fillStyle = "#f0ecdc"; ctx.font = `700 ${Math.round(R * 0.24)}px ui-sans-serif`; ctx.fillText(String(bigVal), 0, -R * 0.46); }
+    const na = lerp(a0, a1, clamp(frac, 0, 1));
+    ctx.strokeStyle = "#ff8b30"; ctx.lineWidth = R * 0.05; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.15, -Math.sin(na) * R * 0.15); ctx.lineTo(Math.cos(na) * R * 0.85, Math.sin(na) * R * 0.85); ctx.stroke();
+    ctx.fillStyle = "#1e2228"; ctx.beginPath(); ctx.arc(0, 0, R * 0.1, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+  function f1Small(cx, cy, R, frac, label) {
+    const a0 = Math.PI * 0.88, a1 = Math.PI * 1.62;
+    ctx.save(); ctx.translate(cx, cy);
+    ctx.fillStyle = "#22262c"; ctx.beginPath(); ctx.arc(0, 0, R * 1.06, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#07090b"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+    for (let i = 0; i <= 4; i++) { const a = lerp(a0, a1, i / 4);
+      ctx.strokeStyle = "rgba(240,236,220,0.75)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); ctx.lineTo(Math.cos(a) * R * 0.86, Math.sin(a) * R * 0.86); ctx.stroke(); }
+    const na = lerp(a0, a1, clamp(frac, 0, 1));
+    ctx.strokeStyle = "#ff8b30"; ctx.lineWidth = R * 0.09; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.7, Math.sin(na) * R * 0.7); ctx.stroke();
+    ctx.fillStyle = "rgba(226,220,198,0.8)"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = `600 ${Math.round(R * 0.34)}px Georgia, ui-serif`; ctx.fillText(label, 0, R * 0.56);
     ctx.restore();
   }
   // the S-AWC centre display: drive map + live front/rear torque split
@@ -2373,7 +2391,7 @@ const SPEC = {
       const px = s * R * 0.56; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2, R * 0.03) : ctx.rect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2); ctx.fill(); ctx.stroke(); });
     // hub kept open — the digital cluster sits on the dash behind it
     ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, R * 0.24, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = "#ff9a90"; ctx.font = `700 ${Math.round(R * 0.12)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("Evo", 0, R * 0.34);
+    ctx.fillStyle = "#ff9a90"; ctx.font = `700 ${Math.round(R * 0.12)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("F1", 0, R * 0.34);
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
@@ -2471,11 +2489,11 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Mitsubishi Lancer Evo X FQ-440 exterior — side profile (long clamshell bonnet, matrix LED lamps,
+  /* McLaren F1 exterior — side profile (long clamshell bonnet, matrix LED lamps,
      double-bubble roof, cab-rearward greenhouse, dual round exhaust, integrated ducktail) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mitsubishi Lancer Evo X FQ-440 side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren F1 side">
       <defs>
         <linearGradient id="supRedG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5a49"/><stop offset="0.45" stop-color="#d81e2c"/><stop offset="1" stop-color="#7d0f18"/></linearGradient>
         <linearGradient id="supLowG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#20242a"/><stop offset="0.5" stop-color="#121418"/><stop offset="1" stop-color="#07080a"/></linearGradient>
@@ -2505,7 +2523,7 @@ const SPEC = {
         <path d="M104,250 L104,214 Q150,208 236,206 Q360,204 470,200 Q604,194 706,186
                  Q818,176 894,196 Q916,202 918,218 L910,238 Q840,246 720,248 L300,250 Q170,252 130,250 Z"
               fill="url(#supLowG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- Evo red upper body: cab-rearward, muscular rear haunch, long bonnet -->
+        <!-- F1 red upper body: cab-rearward, muscular rear haunch, long bonnet -->
         <path d="M120,214 Q160,200 250,196 L360,196 Q430,192 470,182 Q520,156 604,150 Q676,146 726,158
                  Q820,150 878,192 Q902,204 906,214 L866,210 Q760,196 636,196 L470,200 Q380,200 300,208 Q200,212 120,214 Z"
               fill="url(#supRedG)" stroke="rgba(255,180,180,0.5)" stroke-width="1"/>
@@ -2570,11 +2588,11 @@ const SPEC = {
   }
   function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* Mitsubishi Lancer Evo X FQ-440 cockpit SVG — digital GR cluster, round GR wheel, Evo Command touchscreen */
+  /* McLaren F1 cockpit SVG — digital GR cluster, round GR wheel, F1 Command touchscreen */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Mitsubishi Lancer Evo X FQ-440 cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren F1 cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
@@ -2594,7 +2612,7 @@ const SPEC = {
         <text x="-58" y="7" text-anchor="middle" font-size="19" font-weight="700" fill="#f6eef0" id="tachGearArt">N</text>
         <!-- EVO wordmark block on the right of the binnacle -->
         <text x="52" y="-6" text-anchor="middle" font-size="24" font-weight="800" fill="#eef2f7">EVO</text>
-        <text x="52" y="22" text-anchor="middle" font-size="9" fill="#e0868c" letter-spacing="3">Evo · 3.0 TURBO</text>
+        <text x="52" y="22" text-anchor="middle" font-size="9" fill="#e0868c" letter-spacing="3">F1 · 3.0 TURBO</text>
       </g>
       <!-- 8.8in central touchscreen angled to the driver -->
       <rect x="470" y="96" width="96" height="70" rx="8" fill="url(#screenG)" stroke="rgba(216,30,44,0.5)"/>
@@ -2639,7 +2657,7 @@ const SPEC = {
 
 /* ===== UI actions ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, el, CIRCUITS, SPEC, clamp, kmh, audio } = app;
   const showToast = app.showToast;
 
@@ -2651,7 +2669,7 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors close to drive.", "Evo"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors close to drive.", "F1"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, SPEC.gearRatios.length); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2682,12 +2700,12 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Track: dampers firm, VSC in Track, exhaust open, diff locked." : m === "sport" ? "Sport: balanced throttle and shifts." : "Comfort: throttle softened, traction protected.", "Evo");
+    showToast(m === "race" ? "Track: dampers firm, VSC in Track, exhaust open, diff locked." : m === "sport" ? "Sport: balanced throttle and shifts." : "Comfort: throttle softened, traction protected.", "F1");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — the twin-scroll inline-four growls and pops." : "Exhaust flap closed — muted."); }
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — the twin-scroll V6 growls and pops." : "Exhaust flap closed — muted."); }
     // Sport mode firms the adaptive variable suspension, sharpens throttle and shifts,
   // locks the active differential and trims the integrated ducktail for a little more
   // rear downforce and high-speed stability. It does not change engine output.
@@ -2698,10 +2716,10 @@ const SPEC = {
     if (next) {
       if (state.driveMode !== "race") setMode("race");
       audio.motor(0.7); audio.chime([392, 523, 659, 784]);
-      showToast("Sport — dampers firm, active diff locked, ducktail trimmed (~55 kg).", "Evo");
+      showToast("Sport — dampers firm, active diff locked, ducktail trimmed (~55 kg).", "F1");
     } else {
       audio.motor(0.5);
-      showToast("Road setting — dampers supple, diff open, ducktail relaxed.", "Evo");
+      showToast("Road setting — dampers supple, diff open, ducktail relaxed.", "F1");
     }
   }
 
@@ -2711,7 +2729,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — build the revs on the brake, then release." : "Launch control off.", "Evo");
+    showToast(state.launchArmed ? "Launch control armed — build the revs on the brake, then release." : "Launch control off.", "F1");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2736,7 +2754,7 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Evo"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "F1"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
@@ -2750,7 +2768,7 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Evo");
+    showToast("Back in the pit lane.", "F1");
   }
 
   Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleRaceAero, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
@@ -2758,7 +2776,7 @@ const SPEC = {
 
 /* ===== cockpit / engine feature effects ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2771,17 +2789,17 @@ const SPEC = {
       case "shifterLight": audio.click(1500); showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
-      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "The bonnet lifts — the turbo inline-four on show." : "Bonnet closed."); break;
-      case "antiLag": if (on) audio.crackle(); showToast(on ? "Overrun map armed — the inline-four pops and crackles on a trailing throttle (Track)." : "Overrun map off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
+      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "The bonnet lifts — the naturally-aspirated V12 on show." : "Bonnet closed."); break;
+      case "antiLag": if (on) audio.crackle(); showToast(on ? "Overrun map armed — the V6 pops and crackles on a trailing throttle (Track)." : "Overrun map off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
       case "ignition": break;
     }
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the inline-four spins up smooth and hard."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the inline-four clears its throat to 3,000 with a smooth growl."); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the V6 spins up smooth and hard."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V6 clears its throat to 3,000 with a smooth growl."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — inline-four lit.", "Evo"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V6 lit.", "F1"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2789,7 +2807,7 @@ const SPEC = {
 
 /* ===== Co-Pilot voice ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, el, audio } = app;
   const showToast = app.showToast;
   function processVoice() {
@@ -2799,7 +2817,7 @@ const SPEC = {
     if (/^(hi|hello|hey|hallo)/.test(text)) { reply("Hallo! Which circuit?"); return; }
     if (has("thank", "danke")) { reply("Gern geschehen."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Tsukuba Circuit", ["tsukuba", "tsukuba circuit", "mitsubishi", "japan"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Goodwood Motor Circuit", ["goodwood", "goodwood motor circuit", "mclaren", "sussex"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
@@ -2824,7 +2842,7 @@ const SPEC = {
 
 /* ===== HUD (per frame) ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, el, SPEC, clamp, lerp, kmh } = app;
   function setActive(id, on) { const n = document.getElementById(id); if (n) n.classList.toggle("active", !!on); }
 
@@ -2958,7 +2976,7 @@ const SPEC = {
 
 /* ===== events ===== */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -3056,7 +3074,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Evo"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real inline-four recording loaded — pitched with the revs.", "Evo"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the inline-four works best.", "Evo"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "F1"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V6 recording loaded — pitched with the revs.", "F1"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V6 works best.", "F1"); }); });
   }
 
   function setupPedals() {
@@ -3135,7 +3153,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Evo"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "F1"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -3155,7 +3173,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Evo");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "F1");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -3174,7 +3192,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Evo");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "F1");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3217,7 +3235,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Evo");
+        showToast("Trackpad steering hold cancelled.", "F1");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3227,7 +3245,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Evo");
+          showToast("Trackpad steering off.", "F1");
         }
       }
     });
@@ -3235,7 +3253,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Inline-six lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Evo"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Inline-six lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "F1"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
@@ -3248,7 +3266,7 @@ const SPEC = {
    it is exactly the step the verification harness integrates at (tests/perf-test.mjs),
    so what the test proves is literally what the car does. */
 {
-  const app = window.EvoApp;
+  const app = window.McF1App;
   const { state, clamp, audio } = app;
   const FIXED_DT = 1 / 120;         // 120 Hz physics — same step the perf test calibrates at
   let accumulator = 0;
