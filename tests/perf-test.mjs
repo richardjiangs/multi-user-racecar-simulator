@@ -150,6 +150,14 @@ const CARS = {
     topSpeed: { kmh: 252, minT: 70 },
     brake100: { target: 34, tol: 1.5 },
   },
+  gtr: {
+    file: "Nissan GT-R Nismo simulator.html",
+    app: "GtrApp",
+    label: "Nissan GT-R Nismo",
+    marks: { 100: { target: 2.7, tol: 1e-4 } },
+    topSpeed: { kmh: 315, minT: 70 },
+    brake100: { target: 33, tol: 1.5 },
+  },
   venom: {
     file: "Hennessey Venom F5 simulator.html", app: "VenomApp", label: "Hennessey Venom F5",
     marks: { 100: { target: 2.6, tol: 1e-4 } },
