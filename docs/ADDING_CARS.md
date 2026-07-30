@@ -19,7 +19,7 @@ There are two kinds of car, and they sort into two blocks in **every ordered lis
 (the `index.html` car-cards, `EMBEDDED_SIM_BASE64`, the `tests/perf-test.mjs` `CARS`
 registry, and the docs):
 
-1. **Normal cars** — road cars & hypercars (Bugatti … Toyota GR Supra). No Real Race Mode
+1. **Normal cars** — road cars & hypercars (Bugatti … Toyota Supra MK4 (A80)). No Real Race Mode
    by default (though they all have Learning Mode + a "Race Car 101").
 2. **Special racing cars** — the F1 grid today; any purpose-built racer you add next
    (LMH/Le Mans Hypercar, IndyCar, GT3, NASCAR, …). **These get a Real Mode.**
