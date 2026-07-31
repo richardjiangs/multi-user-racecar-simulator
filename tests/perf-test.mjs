@@ -196,6 +196,48 @@ const CARS = {
     topSpeed: { kmh: 322, minT: 70 },
     brake100: { target: 31, tol: 1.5 },
   },
+  agera: {
+    file: "Koenigsegg Agera RS simulator.html",
+    app: "AgeraApp",
+    label: "Koenigsegg Agera RS",
+    marks: { 100: { target: 2.8, tol: 1e-4 } },
+    // Standard pump-petrol car. The 447.19 km/h two-way record was set on the 1 MW
+    // package, which is opt-in (key Z) and therefore never enabled here.
+    topSpeed: { kmh: 429, minT: 80 },
+    brake100: { target: 30, tol: 1.0 },
+  },
+  u9: {
+    file: "Yangwang U9 simulator.html",
+    app: "U9App",
+    label: "Yangwang U9",
+    marks: { 100: { target: 2.36, tol: 1e-4 } },
+    topSpeed: { kmh: 309, minT: 60 },
+    brake100: { target: 31, tol: 1.0 },
+  },
+  db5: {
+    file: "Aston Martin DB5 simulator.html",
+    app: "Db5App",
+    label: "Aston Martin DB5",
+    marks: { 100: { target: 7.1, tol: 1e-4 } },
+    topSpeed: { kmh: 233, minT: 60 },
+    brake100: { target: 44, tol: 2.0 },
+  },
+  slr300: {
+    file: "Mercedes-Benz 300 SLR Uhlenhaut simulator.html",
+    app: "SlrApp",
+    label: "Mercedes-Benz 300 SLR Uhlenhaut",
+    marks: { 100: { target: 6.9, tol: 1e-4 } },
+    topSpeed: { kmh: 290, minT: 60 },
+    brake100: { target: 42, tol: 2.0 },
+  },
+  czinger: {
+    file: "Czinger 21C simulator.html",
+    app: "CzingerApp",
+    label: "Czinger 21C",
+    marks: { 100: { target: 1.9, tol: 1e-4 } },
+    topSpeed: { kmh: 407, minT: 80 },
+    brake100: { target: 29, tol: 1.0 },
+  },
   venom: {
     file: "Hennessey Venom F5 simulator.html", app: "VenomApp", label: "Hennessey Venom F5",
     marks: { 100: { target: 2.6, tol: 1e-4 } },

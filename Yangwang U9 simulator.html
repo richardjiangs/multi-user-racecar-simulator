@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>McLaren Speedtail — Albert</title>
+  <title>Yangwang U9 — Quad-Motor</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,12 +16,12 @@
       --line: rgba(180,194,208,0.14);
       --alu: #c9cfd6;
       --alu-d: #828a93;
-      --teal: #ff7b1a;          /* McLaren papaya accent */
-      --teal-b: #ffc08a;
-      --amber: #35c2d4;         /* Speedtail cyan telemetry */
-      --amber-b: #a8ecf4;
-      --cognac: #3d3325;        /* Dark Glacio leather */
-      --cognac2: #8f7a55;
+      --teal: #c8a34a;          /* Yangwang gold */
+      --teal-b: #f0d68e;
+      --amber: #2bb3c0;         /* regen/energy cyan */
+      --amber-b: #b4ecf8;
+      --cognac: #dfe3e8;        /* white vegan-leather interior */
+      --cognac2: #6b7178;
       --green: #5fe08c;
       --red: #ff6060;
       --shadow: rgba(0,0,0,0.55);
@@ -231,11 +231,11 @@
       box-shadow: inset 0 0 8px rgba(0,0,0,0.7); }
     .turbo::after { content:""; position:absolute; inset:11px; border-radius:50%;
       background: conic-gradient(from var(--turbo-rot,0deg), #aab3bc 0 18deg, #2a2f37 18deg 36deg); }
-    /* twin turbochargers flanking the hot vee, e-motor on the crank */
-    .turbo.left  { left:9%;  top:34%; } .turbo.right  { right:9%;  top:34%; }
-    .emotor { position:absolute; left:38%; right:38%; bottom:58px; height:34px; border-radius:17px;
-      background: linear-gradient(180deg,#2a3f52,#12202c); border:1px solid rgba(53,194,212,0.55);
-      display:grid; place-items:center; color:#a8ecf4; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(53,194,212,0.25); }
+    /* twin rear drive-unit rotors (the third motor sits on the front axle) */
+    .turbo.left  { left:16%; top:30%; } .turbo.right  { right:16%; top:30%; }
+    .emotor { position:absolute; left:12%; right:12%; bottom:52px; height:38px; border-radius:8px;
+      background: linear-gradient(180deg,#1c2a34,#0c141c); border:1px solid rgba(43,179,192,0.55);
+      display:grid; place-items:center; color:#b4ecf8; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(43,179,192,0.25); }
     .bay-exhaust { position:absolute; left:42%; right:42%; bottom:18px; height:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
     .bay-exhaust i { border-radius:4px 4px 2px 2px; background: linear-gradient(180deg,#3a3f47,#1a1d22); border:1px solid rgba(150,160,170,0.3); transition: box-shadow 120ms; }
     .engine-bay.glow .bay-exhaust i { box-shadow: 0 0 14px rgba(255,110,40,0.85); }
@@ -250,7 +250,7 @@
     .drivetrain { min-height:256px; position:relative; border:1px solid rgba(255,255,255,0.1); border-radius:7px; overflow:hidden;
       background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)); }
     .gear-stack { position:absolute; left:18px; top:30px; width:78px; bottom:30px; border:1px solid rgba(255,255,255,0.14); border-radius:6px;
-      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(7,1fr); gap:2px; padding:6px; }
+      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(1,1fr); gap:2px; padding:6px; }
     .gear-stack i { display:grid; place-items:center; border-radius:3px; background:rgba(255,255,255,0.07); color:var(--muted); font-size:11px; font-style:normal; }
     .gear-stack i.active { background:rgba(240,162,60,0.4); color:#fff1da; }
     .shifter-link { position:absolute; left:104px; top:50%; width:60px; height:8px; background:linear-gradient(90deg, rgba(200,210,220,0.5), rgba(156,198,255,0.7));
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="McLaren Speedtail driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Yangwang U9 driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">M</div>
-        <h1>McLaren Speedtail</h1>
-        <p>4.0L twin-turbo V8 + parallel hybrid · 7-speed dual-clutch (SSG) · rear-wheel drive · active ailerons · Monocage carbon tub · central driving seat.</p>
+        <div class="mark">U9</div>
+        <h1>Yangwang U9</h1>
+        <p>Quad-motor e⁴ platform · one motor per wheel · 960 kW · DiSus-X active body control · 1,200 V Blade battery.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -367,10 +367,10 @@
       </nav>
 
       <section class="quick" aria-label="Quick controls">
-        <button id="aeroBtn" class="active" title="Active rear ailerons / airbrake">Aero</button>
-        <button id="doorAllBtn" title="Dihedral doors">Doors</button>
-        <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
-        <button id="liftBtn" title="Front-axle lift">Lift</button>
+        <button id="aeroBtn" class="active" title="Carbon spoiler + diffuser trim">Aero</button>
+        <button id="doorAllBtn" title="Auto-presenting doors">Doors</button>
+        <button id="exhaustBtn" class="active" title="EV Voice — external speaker voice">EV Voice</button>
+        <button id="liftBtn" title="Adaptive air suspension raise">Raise</button>
         <button id="lightsBtn" class="active" title="Headlamps">Lights</button>
         <button id="resetBtn" title="Reset to pit lane">Reset</button>
       </section>
@@ -387,7 +387,7 @@
         </div>
         <div class="meter-grid">
           <div class="meter"><label><span>Engine</span><span id="rpmText">850 rpm</span></label><div class="bar rpm"><i id="rpmBar"></i></div></div>
-          <div class="meter"><label><span>Boost</span><span id="boostText">0.0 bar</span></label><div class="bar boost"><i id="boostBar"></i></div></div>
+          <div class="meter"><label><span>Power</span><span id="boostText">0 kW</span></label><div class="bar boost"><i id="boostBar"></i></div></div>
           <div class="meter"><label><span>Throttle</span><span id="throttleText">0%</span></label><div class="bar"><i id="throttleBar"></i></div></div>
           <div class="meter"><label><span>Brake</span><span id="brakeText">0%</span></label><div class="bar brake"><i id="brakeBar"></i></div></div>
         </div>
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the Speedtail is yours.</div>
+        <div class="warning" id="warning">Pull D with the right paddle, butterfly doors shut, and the U9 is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,8 +411,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Hyper-GT Teardrop</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Speedtail Silver over visual carbon, teardrop canopy, static front-wheel aero covers</span></span>
+          <h2>Exterior — Butterfly Doors, Active Rear Wing</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">Skyward Blue over exposed carbon, butterfly doors, active rear wing</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -432,16 +432,16 @@
         <div class="control-grid">
           <button data-door="driver">Driver Door</button>
           <button data-door="passenger">Passenger Door</button>
-          <button data-door="all">Both Doors</button>
-          <button id="wingBtn" class="active">Ailerons</button>
-          <button id="exhaustBtn2" class="active">Exhaust Flap</button>
+          <button data-door="all">All Doors</button>
+          <button id="wingBtn" class="active">Spoiler</button>
+          <button id="exhaustBtn2" class="active">EV Voice</button>
           <button id="lightsBtn2" class="active">Headlamps</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>dihedral doors</span></div>
-          <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
-          <div class="readout"><b>235 / 315</b><span>Pirelli P Zero (bespoke)</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>auto-present doors</span></div>
+          <div class="readout"><b id="rideHeightRead">Standard</b><span>air suspension</span></div>
+          <div class="readout"><b>275 / 325</b><span>Giti GitiSport e·GTR2 on forged 21″</span></div>
           <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
         </div>
       </section>
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Central driving seat, twin passenger benches, three-screen glass dash</span>
+          <span class="small" id="cockpitStatus">Round wheel · driver display and centre touchscreen · DiSus-X body control</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -465,12 +465,12 @@
           <button id="frontBack">Recline -</button>
           <button id="harnessBtn">Harness</button>
           <button id="heatBtn">Heated Seats</button>
-          <button id="coolBtn">Electrochromic Glass</button>
-          <button id="ambientBtn" class="active">Cabin Light</button>
+          <button id="coolBtn">Climate A/C</button>
+          <button id="ambientBtn" class="active">Ambient Light</button>
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="velocityBtn" class="race" title="Velocity mode: ride drops 35 mm, cameras retract, aero trims flat for the full 403 km/h">Velocity</button>
+          <button id="trackPackBtn" class="race" title="Fit the U9 Xtreme specification — four 30,000 rpm motors, 3,000 PS on 1,200 V: the car that ran 496.22 km/h at Papenburg">Xtreme Spec</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,49 +482,46 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — M840TQ V8 + E-Motor</h2>
-          <span class="small" id="engineStatus">4.0L twin-turbo V8 + parallel e-motor · 787 kW (1,070 PS / 1,055 hp) combined · 1,150 Nm @ 5,500–6,500 · 403 km/h in Velocity mode · 0–300 in 12.8 s · 1,430 kg dry</span>
+          <h2>Drive Units — Quad-Motor e⁴</h2>
+          <span class="small" id="engineStatus">Quad-motor e⁴ EV, one motor per wheel · 960 kW (1,306 PS) · 1,680 Nm · 0–100 km/h in 2.36 s · 309 km/h · 80 kWh Blade battery on 1,200 V · 2,475 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
-          <div class="turbo left" id="turboL"></div>
-          <div class="turbo right" id="turboR"></div>
-          <div style="position:absolute;left:14%;right:14%;top:14%;height:156px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebspd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecspd" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="emspd" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#ffc48f"/><stop offset="1" stop-color="#8a4416"/></radialGradient></defs><rect x="56" y="8" width="72" height="98" rx="11" fill="url(#ebspd)" stroke="#ff8b30" stroke-opacity="0.4"/><rect x="172" y="8" width="72" height="98" rx="11" fill="url(#ebspd)" stroke="#ff8b30" stroke-opacity="0.4"/><rect x="128" y="12" width="44" height="90" rx="7" fill="url(#ebspd)" stroke="rgba(150,160,170,0.4)"/><line x1="128" y1="24.0" x2="110" y2="24.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="24.0" x2="190" y2="24.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="24.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="24.0" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="24.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="24.0" r="4" fill="#ff8b30" opacity="0.6"/><line x1="128" y1="50.7" x2="110" y2="50.7" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="50.7" x2="190" y2="50.7" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="50.7" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="50.7" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="50.7" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="50.7" r="4" fill="#ff8b30" opacity="0.6"/><line x1="128" y1="77.3" x2="110" y2="77.3" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="77.3" x2="190" y2="77.3" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="77.3" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="77.3" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="77.3" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="77.3" r="4" fill="#ff8b30" opacity="0.6"/><line x1="128" y1="104.0" x2="110" y2="104.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="104.0" x2="190" y2="104.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="104.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="104.0" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="104.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="104.0" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="150" cy="104" r="13" fill="url(#emspd)" stroke="rgba(255,190,140,0.7)"/><text x="150" y="105" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" font-weight="700" fill="#2a1808">HYB</text><text x="150" y="124" text-anchor="middle" font-family="ui-sans-serif" font-size="9.5" font-weight="700" fill="#ffbf94" letter-spacing="0.5">4.0 M840TQ · TWIN-TURBO V8 + E-MOTOR</text></svg></div>
-          <div class="emotor" id="eMotorArt">E-MOTOR</div>
-          <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
-          <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
+          <div style="position:absolute;left:12%;right:12%;top:12%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebu9E" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecu9E" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="etu9E" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#f0b48a"/><stop offset="0.5" stop-color="#a5431f"/><stop offset="1" stop-color="#3a160a"/></radialGradient><radialGradient id="emu9E" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bff3d6"/><stop offset="0.5" stop-color="#21b872"/><stop offset="1" stop-color="#0c3020"/></radialGradient><radialGradient id="esu9E" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#eef4f8"/><stop offset="0.5" stop-color="#8f9aa4"/><stop offset="1" stop-color="#2a3138"/></radialGradient><radialGradient id="epu9E" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bfe6f6"/><stop offset="0.5" stop-color="#2b8fc0"/><stop offset="1" stop-color="#0a2836"/></radialGradient></defs><rect x="98" y="34" width="104" height="60" rx="7" fill="url(#ebu9E)" stroke="#5fd0ea" stroke-opacity="0.45"/><rect x="106" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="112.4" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="118.8" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="125.2" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="131.6" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="138" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="144.4" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="150.8" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="157.2" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="163.6" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="170" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="176.4" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="182.8" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><rect x="189.2" y="42" width="4.6" height="44" rx="1.4" fill="#0f3a4a" stroke="#5fd0ea" stroke-opacity="0.55" stroke-width="0.7"/><circle cx="38" cy="34" r="17" fill="url(#epu9E)" stroke="#5fd0ea" stroke-opacity="0.8" stroke-width="1.6"/><circle cx="38" cy="34" r="6.5" fill="#061820"/><g stroke="rgba(230,246,255,0.55)" stroke-width="1.2"><line x1="26" y1="34" x2="30" y2="34"/><line x1="46" y1="34" x2="50" y2="34"/><line x1="38" y1="22" x2="38" y2="26"/><line x1="38" y1="42" x2="38" y2="46"/></g><text x="38" y="64" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" fill="#5fd0ea">FRONT LEFT</text><circle cx="262" cy="34" r="17" fill="url(#epu9E)" stroke="#5fd0ea" stroke-opacity="0.8" stroke-width="1.6"/><circle cx="262" cy="34" r="6.5" fill="#061820"/><g stroke="rgba(230,246,255,0.55)" stroke-width="1.2"><line x1="250" y1="34" x2="254" y2="34"/><line x1="270" y1="34" x2="274" y2="34"/><line x1="262" y1="22" x2="262" y2="26"/><line x1="262" y1="42" x2="262" y2="46"/></g><text x="262" y="64" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" fill="#5fd0ea">FRONT RIGHT</text><circle cx="38" cy="96" r="17" fill="url(#epu9E)" stroke="#5fd0ea" stroke-opacity="0.8" stroke-width="1.6"/><circle cx="38" cy="96" r="6.5" fill="#061820"/><g stroke="rgba(230,246,255,0.55)" stroke-width="1.2"><line x1="26" y1="96" x2="30" y2="96"/><line x1="46" y1="96" x2="50" y2="96"/><line x1="38" y1="84" x2="38" y2="88"/><line x1="38" y1="104" x2="38" y2="108"/></g><text x="38" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" fill="#5fd0ea">REAR LEFT</text><circle cx="262" cy="96" r="17" fill="url(#epu9E)" stroke="#5fd0ea" stroke-opacity="0.8" stroke-width="1.6"/><circle cx="262" cy="96" r="6.5" fill="#061820"/><g stroke="rgba(230,246,255,0.55)" stroke-width="1.2"><line x1="250" y1="96" x2="254" y2="96"/><line x1="270" y1="96" x2="274" y2="96"/><line x1="262" y1="84" x2="262" y2="88"/><line x1="262" y1="104" x2="262" y2="108"/></g><text x="262" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" fill="#5fd0ea">REAR RIGHT</text><g stroke="#5fd0ea" stroke-opacity="0.4" stroke-width="1.4" stroke-dasharray="3 3"><line x1="56" y1="40" x2="98" y2="48"/><line x1="244" y1="40" x2="202" y2="48"/><line x1="56" y1="90" x2="98" y2="80"/><line x1="244" y1="90" x2="202" y2="80"/></g><text x="150" y="10" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#5fd0ea" letter-spacing="0.5">QUAD-MOTOR e⁴ DRIVETRAIN</text><text x="150" y="124" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#5fd0ea">ONE MOTOR PER WHEEL · 960 kW</text><text x="150" y="27" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" fill="rgba(200,232,244,0.75)">80 kWh BLADE PACK · 1,200 V</text></svg></div>
+          <div class="emotor" id="airTankArt">FOUR INDEPENDENT DRIVE UNITS</div>
+          <div class="cover" id="engineCover">FRUNK CLOSED</div>
         </div>
         <div class="control-grid">
-          <button id="coverBtn">Open Cover</button>
-          <button id="exhaustBtn3" class="active">Exhaust Flap</button>
+          <button id="coverBtn">Open Frunk</button>
+          <button id="exhaustBtn3" class="active">EV Voice</button>
           <button id="fansBtn" class="active">Cooling Fans</button>
-          <button id="blipBtn">Blip Throttle</button>
-          <button id="coldStartBtn">Cold Start Flair</button>
-          <button id="antiLagBtn">E-Boost Hold</button>
+          <button id="blipBtn">Torque Blip</button>
+          <button id="coldStartBtn">Power-Up Chime</button>
+          <button id="antiLagBtn">Max Regen</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="oilTempRead">90&deg;C</b><span>oil temperature</span></div>
-          <div class="readout"><b id="waterTempRead">88&deg;C</b><span>coolant</span></div>
-          <div class="readout"><b id="boostRead">0.0 bar</b><span>manifold boost</span></div>
-          <div class="readout"><b id="egtRead">320&deg;C</b><span>exhaust gas</span></div>
+          <div class="readout"><b id="oilTempRead">40&deg;C</b><span>motor temperature</span></div>
+          <div class="readout"><b id="waterTempRead">28&deg;C</b><span>battery temperature</span></div>
+          <div class="readout"><b id="boostRead">0 kW</b><span>power output</span></div>
+          <div class="readout"><b id="egtRead">30&deg;C</b><span>inverter temperature</span></div>
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Speedtail V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised hybrid twin-turbo V8</span>
+          <button id="engineLoadBtn" title="Load a real U9 drive-unit recording — it becomes the motor voice, pitched with speed">&#9835; Use a real Track recording</button>
+          <span class="small now" id="engineSoundStatus">Motor voice: synthesised quad-motor inverter surge</span>
         </div>
       </section>
 
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — Dual-Clutch · Active Ailerons · RWD</h2>
-          <span class="small" id="dynStatus">Race mode: dampers firm, ESC trail, ailerons hunting downforce</span>
+          <h2>Dynamics — Single-Speed × 4 · DiSus-X · e⁴ All-Wheel Drive</h2>
+          <span class="small" id="dynStatus">Track mode: DiSus-X firm, stability trail, all four motors unlocked</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
-            <div class="gear-stack" id="gearStack"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i></div>
+            <div class="gear-stack" id="gearStack"><i>D</i></div>
             <div class="shifter-link" id="shifterLink"></div>
             <div class="aero-diagram">
               <div class="arrow" id="aeroArrow"></div>
@@ -561,7 +558,7 @@
           <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">3. Racecraft — the line changes in real time</a>
           <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">4. Braking — the countdown boards</a>
           <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">5. Vision</a>
-          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: Velocity mode & drag</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: four motors and DiSus-X</a>
           </nav>
           <div style="flex:1; font-size:13px; line-height:1.6; color:#c8d2dd; min-width:0">
         <h3 id="ls0" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">1. The racing line</h3><p style="margin:4px 0">Outside–inside–outside. Enter from the far edge, cut across the yellow apex dot, release the car to the exit kerb. This maximises the corner radius, so your minimum speed — and everything that follows it — is higher. <svg viewBox="0 0 300 150" style="width:100%;max-width:300px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
@@ -580,7 +577,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: Velocity mode & drag</h3><p style="margin:4px 0">The Speedtail is a streamliner: Velocity mode drops it low and reshapes aero for 403 km/h. Low drag means long braking zones — trust the 300-board, not your instincts from downforce cars.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: four motors and DiSus-X</h3><p style="margin:4px 0">Four independent motors mean torque is placed wheel by wheel, so the U9 rotates on the throttle rather than the steering. <b>DiSus-X</b> is the other half: fully active hydraulic body control that keeps the car flat, can lift a corner clear of the road — BYD famously made a U9 <em>jump</em> — and can carry the car on three wheels after a blowout. In 2025 the 3,000 PS <b>U9 Xtreme</b> ran 496.22 km/h at ATP Papenburg, the highest speed ever recorded by a production car. Press <kbd>Z</kbd> for it.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -600,7 +597,14 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Algarve Circuit">Algarve (Portimão)</button>
+              <button data-circuit="Shanghai International Circuit">Grobnik</button>
+              <button data-circuit="Prologue — Yanbu">Prologue · Yanbu</button>
+              <button data-circuit="Stage 2 — Yanbu to AlUla">S2 · Yanbu→AlUla</button>
+              <button data-circuit="Stage 4 — AlUla Marathon">S4 · AlUla marathon</button>
+              <button data-circuit="Stage 7 — Riyadh to Wadi Ad Dawasir">S7 · →Wadi Ad Dawasir</button>
+              <button data-circuit="Stage 8 — Wadi Ad Dawasir">S8 · Wadi (Queen)</button>
+              <button data-circuit="Stage 9 — Wadi Ad Dawasir to Bisha">S9 · →Bisha marathon</button>
+              <button data-circuit="Stage 13 — Yanbu Finish">S13 · Yanbu finish</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -615,7 +619,7 @@
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <button id="realBtn" class="race" title="Real Mode — real tyre wear, damage and reliability; a failed system retires you">Real Mode: Off</button>
             <div class="voice">
-              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “velocity mode”">
+              <input id="voiceInput" autocomplete="off" placeholder="“take me to Grobnik”, “race mode”, “launch”">
               <button id="voiceBtn">Tell Co-Pilot</button>
             </div>
             <div class="status-list">
@@ -633,7 +637,7 @@
 
     <footer class="bottombar">
       <section class="console" aria-label="Vehicle functions">
-        <button id="modeBtn" class="race active">Race</button>
+        <button id="modeBtn" class="race active">Track</button>
         <button id="escBtn" class="active toggle">ESC</button>
         <button id="launchBtn">Launch</button>
         <button id="pitBtn" class="toggle">Pit Limit</button>
@@ -670,8 +674,8 @@
           <button id="lapResetBtn" title="Reset lap timer">Lap</button>
           <button id="dataBtn" title="Toggle telemetry overlay" class="active">HUD</button>
           <button id="assistBtn" class="active" title="Steering assist — helps the car follow the line">Asst</button>
-          <button id="wetBtn" title="Wet mode">Wet</button>
-          <button id="raceBtn" title="Race mode">Race</button>
+          <button id="wetBtn" title="Chill mode">Chill</button>
+          <button id="raceBtn" title="Track mode">Track</button>
         </div>
       </section>
     </footer>
@@ -682,28 +686,29 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">M</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">U9</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">M</div>
-      <h1>Speedtail</h1>
-      <p>Slide over the carbon sill into the centre seat. The hybrid V8 catches with a flare, the dihedral doors draw down, and the ailerons flex once in salute. Drive it yourself, or hand it to the test driver.</p>
+      <div class="pmark">U9</div>
+      <h1>U9</h1>
+      <p>Four motors, 1,306 PS and 2,360 Nm arrive the instant your foot moves — 0-100 in 2.36 seconds, a wall of silent, ferocious thrust. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">McLaren Ultimate Series · Woking, England</div>
+      <div class="ring">Yangwang U9 · Sveta Nedelja, Croatia</div>
     </div>
   </div>
 
   <script type="module">
 /* ===========================================================================
-   McLAREN SPEEDTAIL — "Albert" (browser hyper-GT simulator)
-   Real Web-Audio hybrid twin-turbo V8, factory-matched physics (0–100 km/h
-   3.0 s, 0–300 km/h 12.8 s, 403 km/h in Velocity mode, 787 kW / 1,070 PS,
-   1,150 Nm, 1,430 kg dry), active ailerons, a 7-speed dual-clutch you
-   actually shift, and a test driver who can lap for you.
+      YANGWANG U9 (browser quad-motor EV simulator)
+   Real Web-Audio quad-motor EV, factory-matched physics (0–100 km/h
+   2.36 s; 960 kW / 1305 PS / 1287 hp; 1680 Nm; 20000 rpm limit; 2475 kg;
+   309 km/h, 496 km/h in the car's own top-speed mode; active rear wing),
+   a single-speed reduction on each of the four motors, and a test driver
+   who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -800,15 +805,103 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Algarve Circuit": {
-    dist: 4653, env: "track", limitKmh: 300, loop: true, widthM: 14, corners: 10,
-    blurb: "the 4.653 km Autódromo Internacional do Algarve at Portimão",
-    bumps: [{ from: 1200, to: 1400, r: 0.3 }, { from: 3000, to: 3200, r: 0.35 }],
+  "Shanghai International Circuit": {
+    dist: 5451, env: "track", limitKmh: 330, loop: true, widthM: 15.0, corners: 16,
+    blurb: "the 5.451 km Shanghai International Circuit — the shrinking-radius Turn 1-2-3 snail and a 1.2 km back straight",
+    bumps: [{ from: 3900, to: 4300, r: 0.22 }],
     track: [
-      c(600, 1, 90, 55, "Turn 1"), c(1050, -1, 70, 80, "Turn 2 crest"), c(1500, 1, 100, 50, "Turn 3"),
-      c(1950, -1, 80, 60, "Turn 4"), c(2350, 1, 60, 90, "Turn 5"), c(2900, -1, 120, 45, "Turn 6"),
-      c(3300, 1, 90, 55, "Turn 7"), c(3700, -1, 70, 70, "Turn 8"), c(4050, 1, 110, 45, "Turn 13"),
-      c(4400, -1, 80, 60, "Turn 15")
+      c(420, 1, 95, 190, "Turn 1 (snail entry)"), c(640, 1, 110, 150, "Turn 2"), c(820, 1, 130, 90, "Turn 3"),
+      c(1180, -1, 70, 90, "Turn 4"), c(1420, 1, 55, 110, "Turn 5"), c(1720, 1, 165, 70, "Turn 6 hairpin"),
+      c(2050, -1, 60, 120, "Turn 7"), c(2260, 1, 80, 90, "Turn 8"), c(2520, 1, 95, 80, "Turn 9"),
+      c(2900, -1, 55, 130, "Turn 10"), c(3180, 1, 70, 100, "Turn 11"), c(3420, -1, 60, 110, "Turn 12"),
+      c(3700, -1, 150, 260, "Turn 13 (onto the back straight)"), c(5000, 1, 170, 70, "Turn 14 hairpin"),
+      c(5180, -1, 60, 90, "Turn 15"), c(5330, 1, 80, 90, "Turn 16")
+    ]
+  },
+  "Prologue — Yanbu": {
+    dist: 8200, env: "desert", limitKmh: 170, loop: true, widthM: 20.0, corners: 12,
+    blurb: "Prologue, Yanbu — a 23 km coastal blast on the Red Sea (2026 Dakar Rally)",
+    terrain: { surf: "coastal hardpack", grip: 0.82, rough: 0.34, dune: 0.25 },
+    bumps: [{ from: 2600, to: 3400, r: 0.55 }, { from: 6000, to: 6600, r: 0.5 }],
+    track: [
+      c(500, 1, 55, 90, "Seafront kink"), c(1200, -1, 70, 70, "Wadi mouth"), c(2100, 1, 80, 55, "Rock shelf"),
+      c(3000, -1, 60, 80, "Sand bowl"), c(4200, 1, 45, 130, "Fast right"), c(5200, -1, 90, 60, "Camel-grass L"),
+      c(6100, 1, 75, 65, "Dune toe"), c(7000, -1, 65, 75, "Beach return"), c(7700, 1, 50, 90, "Into Yanbu")
+    ]
+  },
+  "Stage 2 — Yanbu to AlUla": {
+    dist: 22000, env: "desert", limitKmh: 170, loop: true, widthM: 22.0, corners: 34,
+    blurb: "Stage 2, Yanbu → AlUla — 400 km special, coastal sand giving way to volcanic rock (2026 Dakar)",
+    terrain: { surf: "mixed sand & rock piste", grip: 0.70, rough: 0.52, dune: 0.55 },
+    bumps: [{ from: 3000, to: 6000, r: 0.62 }, { from: 11000, to: 13500, r: 0.7 }, { from: 18000, to: 20000, r: 0.6 }],
+    track: [
+      c(900, 1, 50, 120, "Coast run"), c(2600, -1, 70, 90, "Harrat lava L"), c(3800, 1, 85, 70, "Rock step"),
+      c(5200, -1, 60, 110, "Sand plain"), c(7000, 1, 40, 180, "Long right"), c(8800, -1, 90, 65, "Basalt L"),
+      c(10400, 1, 70, 80, "Camel grass"), c(12000, -1, 55, 120, "Fesh-fesh"), c(13800, 1, 80, 70, "Wadi cut"),
+      c(15600, -1, 65, 95, "Plateau L"), c(17200, 1, 50, 140, "Sweep to AlUla"), c(19000, -1, 75, 80, "Sandstone L"),
+      c(20600, 1, 60, 100, "AlUla approach")
+    ]
+  },
+  "Stage 4 — AlUla Marathon": {
+    dist: 25000, env: "canyon", limitKmh: 170, loop: true, widthM: 18.0, corners: 44,
+    blurb: "Stage 4, AlUla marathon — 451 km, no assistance overnight; mountainous rock and sand (2026 Dakar)",
+    terrain: { surf: "rock & mountain piste", grip: 0.74, rough: 0.66, dune: 0.45 },
+    bumps: [{ from: 4000, to: 7000, r: 0.74 }, { from: 12000, to: 15000, r: 0.72 }, { from: 20000, to: 23000, r: 0.7 }],
+    track: [
+      c(1000, 1, 60, 100, "Mountain climb"), c(2600, -1, 90, 60, "Ridge L"), c(4000, 1, 100, 55, "Rock hairpin"),
+      c(5600, -1, 70, 80, "Descent R"), c(7400, 1, 55, 120, "High plateau"), c(9400, -1, 85, 65, "Escarpment L"),
+      c(11200, 1, 75, 70, "Boulder field"), c(13000, -1, 60, 100, "Valley run"), c(15000, 1, 95, 55, "Cliff hairpin"),
+      c(16800, -1, 80, 65, "Scree L"), c(18800, 1, 50, 150, "Long right"), c(20800, -1, 70, 85, "Summit L"),
+      c(22600, 1, 65, 90, "Final ridge"), c(24000, -1, 55, 110, "Bivouac run")
+    ]
+  },
+  "Stage 7 — Riyadh to Wadi Ad Dawasir": {
+    dist: 21000, env: "desert", limitKmh: 170, loop: true, widthM: 24.0, corners: 30,
+    blurb: "Stage 7, Riyadh → Wadi Ad Dawasir — 462 km, central plateau falling into the first big dunes (2026 Dakar)",
+    terrain: { surf: "plateau to dune", grip: 0.66, rough: 0.5, dune: 0.95 },
+    bumps: [{ from: 5000, to: 8000, r: 0.6 }, { from: 13000, to: 18000, r: 0.66 }],
+    track: [
+      c(1200, 1, 45, 160, "Plateau sweep"), c(3200, -1, 60, 110, "Gravel L"), c(5000, 1, 70, 80, "Escarpment R"),
+      c(7000, -1, 50, 140, "Fast left"), c(9200, 1, 85, 65, "Dune ridge R"), c(11200, -1, 90, 60, "Crest L"),
+      c(13400, 1, 65, 90, "Soft sand R"), c(15400, -1, 75, 75, "Bowl L"), c(17400, 1, 55, 120, "Dune sweep"),
+      c(19200, -1, 70, 85, "Into Wadi")
+    ]
+  },
+  "Stage 8 — Wadi Ad Dawasir": {
+    dist: 24000, env: "dune", limitKmh: 170, loop: true, widthM: 26.0, corners: 48,
+    blurb: "Stage 8, Wadi Ad Dawasir — the 481 km QUEEN STAGE: dune plateaus, fesh-fesh and sudden changes of direction (2026 Dakar)",
+    terrain: { surf: "big dunes & fesh-fesh", grip: 0.60, rough: 0.72, dune: 1.6 },
+    bumps: [{ from: 2000, to: 6000, r: 0.8 }, { from: 9000, to: 13000, r: 0.82 }, { from: 16000, to: 21000, r: 0.8 }],
+    track: [
+      c(900, 1, 80, 70, "Dune wall R"), c(2200, -1, 95, 55, "Sharp reverse L"), c(3400, 1, 60, 100, "Long dune R"),
+      c(4800, -1, 100, 50, "Sudden L"), c(6200, 1, 90, 60, "Crest R"), c(7600, -1, 55, 120, "Fesh-fesh sweep"),
+      c(9200, 1, 100, 50, "Whip R"), c(10600, -1, 85, 60, "Bowl L"), c(12200, 1, 70, 80, "Ridge R"),
+      c(13800, -1, 95, 55, "Reverse L"), c(15400, 1, 60, 110, "Plateau R"), c(17000, -1, 100, 50, "Sudden L2"),
+      c(18600, 1, 80, 70, "Dune chain R"), c(20200, -1, 65, 95, "Soft L"), c(21800, 1, 90, 60, "Last crest"),
+      c(23000, -1, 55, 120, "Run to camp")
+    ]
+  },
+  "Stage 9 — Wadi Ad Dawasir to Bisha": {
+    dist: 21000, env: "dune", limitKmh: 170, loop: true, widthM: 24.0, corners: 38,
+    blurb: "Stage 9, Wadi Ad Dawasir → Bisha — 418 km marathon, Empty-Quarter-edge dunes into the Bisha mountains (2026 Dakar)",
+    terrain: { surf: "dunes into mountains", grip: 0.62, rough: 0.66, dune: 1.3 },
+    bumps: [{ from: 3000, to: 7000, r: 0.72 }, { from: 12000, to: 16000, r: 0.7 }],
+    track: [
+      c(1000, 1, 85, 65, "Dune R"), c(2600, -1, 90, 60, "Reverse L"), c(4200, 1, 60, 100, "Soft sand R"),
+      c(6000, -1, 75, 75, "Crest L"), c(8000, 1, 55, 120, "Sand plain"), c(10000, -1, 90, 55, "Foothill L"),
+      c(12000, 1, 70, 80, "Rock climb R"), c(14000, -1, 100, 50, "Mountain hairpin"), c(16000, 1, 65, 90, "Descent R"),
+      c(18000, -1, 55, 110, "Valley L"), c(19800, 1, 60, 95, "Into Bisha")
+    ]
+  },
+  "Stage 13 — Yanbu Finish": {
+    dist: 7000, env: "desert", limitKmh: 170, loop: true, widthM: 20.0, corners: 10,
+    blurb: "Stage 13, Yanbu → Yanbu — 105 km final special back on the Red Sea coast (2026 Dakar)",
+    terrain: { surf: "coastal sand & rock", grip: 0.80, rough: 0.4, dune: 0.3 },
+    bumps: [{ from: 2200, to: 3000, r: 0.5 }],
+    track: [
+      c(500, 1, 55, 90, "Coast R"), c(1400, -1, 70, 70, "Wadi L"), c(2400, 1, 80, 60, "Rock R"),
+      c(3400, -1, 60, 90, "Sand bowl"), c(4400, 1, 45, 130, "Fast right"), c(5400, -1, 75, 70, "Final L"),
+      c(6300, 1, 50, 90, "Finish arch")
     ]
   },
   "Nardò Ring": {
@@ -820,55 +913,60 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT McLaren Speedtail figures =====
-   Combined power 787 kW (1,070 PS / 1,055 hp) — M840TQ 4.0 L twin-turbo V8 (757 PS)
-   plus parallel e-motor (313 PS); combined torque 1,150 Nm @ 5,500–6,500 rpm (e-torque
-   fills from standstill); dry weight 1,430 kg (lightest); top speed 403 km/h (250 mph,
-   Velocity mode); 0–60 mph 2.9 s (0–100 km/h ≈ 3.0 s); 0–300 km/h 12.8 s (manufacturer);
-   7-speed dual-clutch (SSG), rear-wheel drive; central driving position. */
+/* ===== data: vehicle spec — EXACT Yangwang U9 figures =====
+   quad-motor e⁴ electric drivetrain, one permanent-magnet motor per wheel:
+   960 kW (1305 PS / 1287 hp); 1680 Nm; 20000 rpm rev limit;
+   kerb weight 2475 kg; single-speed, e⁴ all-wheel drive.
+   0–100 km/h 2.36 s; top speed 309 km/h, 496 km/h in the car's own top-speed mode; active rear wing
+   with DiSus-X fully active hydraulic body control and an 80 kWh Blade battery on 1,200 V. */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
-  name: "McLaren Speedtail",
-  engineLabel: "McLaren M840TQ 4.0 L twin-turbo V8 + e-motor",
-  displacementCc: 3994,
-  massKg: 1430,                 // dry weight, lightest (manufacturer)
-  rotInertia: 1.04,
-  peakPowerW: 787000,           // 787 kW = 1,070 PS = 1,055 hp combined (V8 757 PS + e-motor 313 PS)
-  peakPowerPS: 1070,
-  peakPowerHp: 1055,
-  peakPowerKw: 787,
-  peakPowerRpm: 7000,
-  peakTorqueNm: 1150,           // combined @ 5,500–6,500 rpm; e-motor torque-fill from standstill
-  torqueLoRpm: 2000,
-  torqueHiRpm: 6500,
-  idleRpm: 850,
-  redlineRpm: 8200,
-  finalDrive: 3.31,
-  gearRatios: [3.98, 2.61, 1.90, 1.48, 1.16, 0.91, 0.69],   // tall 7th so 403 km/h sits below the 8,200 redline
-  reverseRatio: 3.10,
-  wheelRadiusM: 0.361,          // 315/30 R21 rear (bespoke Pirelli P Zero)
-  dragCd: 0.32,                 // road trim; the teardrop is the slipperiest McLaren ever made
-  dragCdTopSpeed: 0.278,        // Velocity mode: ride -35 mm, cameras retracted, ailerons flat
-  frontalAreaM2: 1.79,
+  name: "Yangwang U9",
+  engineLabel: "BYD quad-motor e⁴ platform (one motor per wheel, 960 kW)",
+  displacementCc: 0,
+  massKg: 2475,
+  rotInertia: 1.05,
+  peakPowerW: 960000,
+  peakPowerPS: 1306,
+  peakPowerHp: 1287,
+  peakPowerKw: 960,
+  peakPowerRpm: 6600,
+  peakTorqueNm: 1680,
+  torqueLoRpm: 0,
+  torqueHiRpm: 6600,
+  idleRpm: 0,
+  redlineRpm: 20000,
+  finalDrive: 10.6,
+  gearRatios: [1],
+  reverseRatio: 1.0,
+  wheelRadiusM: 0.352,
+  dragCd: 0.26,
+  dragCdTopSpeed: 0.26,
+  frontalAreaM2: 2.05,
   rollingResistance: 0.011,
   airDensity: 1.225,
-  drivelineEff: 0.813823,       // lumped gearbox loss + hybrid-deployment taper on a sustained run; calibrated -> 0–300 km/h = 12.800 s (manufacturer)
-  tractionCoeff: 1.021506,      // calibrated -> 0–100 km/h = 3.0000 s ±0.0001 with launch control (see tests/perf-test.mjs)
-  topSpeedKmh: 403,             // 250 mph, achieved in Velocity mode (manufacturer)
-  topSpeedMps: 403 * KMH,
-  topSpeedLimitedKmh: 403,      // the governor itself sits at 403 — outside Velocity mode drag holds you below it
-  topSpeedLimitedMps: 403 * KMH,
-  topSpeedRecordKmh: 403,
-  topSpeedRecordMps: 403 * KMH,
-  zeroTo100Kmh: 3.0,            // s (0–60 mph 2.9 s manufacturer; 0–100 km/h widely tested ≈ 3.0 s)
-  zeroTo300Kmh: 12.8,           // s (manufacturer, the Speedtail headline figure)
-  brakeMaxMps2: 11.9379,        // carbon-ceramic; calibrated to 32.0 m 100-0 km/h (aero adds grip with speed)
-  brakeDist100to0M: 32,         // target 100-0 km/h braking distance
-  shiftTimeS: 0.08,             // dual-clutch, sharp
-  launchRpm: 3400,
-  aeroClA: 2.2,                 // downforce coefficient*area (lumped, flexible ailerons)
-  aeroDragAdd: 0.50             // fraction added to CdA when the ailerons are fully deployed
+  drivelineEff: 0.97,
+  tractionCoeff: 1.273535,      // calibrated -> 0-100 = 2.36 s
+  topSpeedKmh: 309,
+  topSpeedMps: 309 * KMH,
+  topSpeedLimitedKmh: 309,
+  topSpeedLimitedMps: 309 * KMH,
+  topSpeedRecordKmh: 496,
+  topSpeedRecordMps: 496 * KMH,
+  xtremePowerW: 2220000,       // U9 Xtreme: 2,220 kW = 3,000 PS (BYD)
+  zeroTo100Kmh: 2.36,
+  quarterMileS: 10.0,
+  packSagStartRpm: 30000,
+  packSagPerRpm: 0,
+  packSagFloor: 1.0,
+  regenMps2: 2.2,
+  brakeMaxMps2: 10.8922,     // calibrated -> 30 m 100-0
+  brakeDist100to0M: 31,
+  shiftTimeS: 0,
+  launchRpm: 0,
+  aeroClA: 1.6,
+  aeroDragAdd: 0.20
 };
 
 /* ===== shared context ===== */
@@ -893,8 +991,8 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    velocity: false,               // McLaren Velocity mode: ride -35 mm, cameras retracted, ailerons flat for 403 km/h
-    velocityVis: 0,                // animated ride-height drop when Velocity mode engages
+    trackPack: false,              // Yangwang Track mode: firm dampers, more downforce, sharper torque-vectoring
+    trackPackVis: 0,               // cheetah-stance dip when Launch mode stages
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -903,7 +1001,7 @@ const SPEC = {
     heat: false, cool: false, ambient: true, audioCabin: false, shifterLight: true,
     frontRecline: 0, seatTempC: 22,
     oilTempC: 90, waterTempC: 88, brakeTempC: 120, egtC: 320,
-    downforceN: 0, roadInputG: 0, cabinHeaveG: 0, realMode: false, retired: false, tyreWear: 0, damage: 0, failCause: "", sys: { engine: 0, gearbox: 0, brakes: 0, tyre: 0, susp: 0, body: 0 },
+    downforceN: 0, roadInputG: 0, cabinHeaveG: 0, realMode: false, retired: false, tyreWear: 0, damage: 0, failCause: "", sys: { engine: 0, gearbox: 0, brakes: 0, tyre: 0, susp: 0, body: 0 }, gripMul: 1, susComp: 0, _susVel: 0, airborne: false, duneGrade: 0, _gradeAccel: 0, bogging: false,
     shake: { x: 0, y: 0, rot: 0 },
     blinker: 0, blinkPhase: 0, blinkOn: false,
     toastTimer: 0,
@@ -940,12 +1038,12 @@ const SPEC = {
     state.toastTimer = 3.0;
   }
 
-  window.McLarenApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
+  window.U9App = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
 }
 
 /* ===== media status helpers ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const studioNowPlaying = document.getElementById("studioNowPlaying");
   const engineSoundStatus = document.getElementById("engineSoundStatus");
   function setNowPlaying(text, live) { if (!studioNowPlaying) return; studioNowPlaying.textContent = text; studioNowPlaying.classList.toggle("live", !!live); }
@@ -953,9 +1051,9 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised hybrid twin-turbo V8, e-motor whine, blow-off, exhaust crackle ===== */
+/* ===== audio: synthesised quad-motor inverter whine, wind, road — no exhaust to crackle ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { SPEC, clamp } = app;
 
   const audio = {
@@ -980,17 +1078,17 @@ const SPEC = {
       this.synthGain = c.createGain(); this.synthGain.gain.value = 1.0; this.synthGain.connect(this.engFilter);
       this.recGain = c.createGain(); this.recGain.gain.value = 0.0; this.recGain.connect(this.engFilter);
 
-      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
+      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.4); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Flat-plane-adjacent McLaren V8: harder-edged saws, a raspy top harmonic, and a
-      // thin constant e-motor whine layered above the combustion voice
+      // Quad-motor EV: pure tones — a soft fundamental hum with thin high inverter
+      // orders gliding up with speed; no combustion buzz at all
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.40, toShaper: false },
-        { type: "sine",     mul: 1.0,  gain: 0.26, toShaper: false },
-        { type: "sawtooth", mul: 1.0,  gain: 0.55, toShaper: true  },
-        { type: "sawtooth", mul: 1.007,gain: 0.34, toShaper: true  },
-        { type: "sawtooth", mul: 2.0,  gain: 0.24, toShaper: true  },
-        { type: "square",   mul: 4.0,  gain: 0.05, toShaper: true  }
+        { type: "sine",     mul: 1.0,  gain: 0.46, toShaper: false },
+        { type: "sine",     mul: 2.0,  gain: 0.26, toShaper: false },
+        { type: "triangle", mul: 3.0,  gain: 0.16, toShaper: false },
+        { type: "sawtooth", mul: 6.0,  gain: 0.10, toShaper: true  },
+        { type: "sine",     mul: 6.03, gain: 0.08, toShaper: true  },
+        { type: "triangle", mul: 9.0,  gain: 0.05, toShaper: true  }
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1023,19 +1121,19 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 4);   // V8: 4 firing pulses / rev
+      const firing = Math.max(30, (s.rpm / 60) * 1.0 + 26);   // quad-motor EV: a deep, powerful inverter surge
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
       const load = clamp(s.throttle, 0, 1);
       const spd = Math.abs(s.speedMps);
-      const valve = s.exhaustValve ? 1 : 0.45;            // exhaust flap
+      const valve = s.exhaustValve ? 1 : 0.45;            // EV Voice external voice
       const modeGain = s.driveMode === "race" ? 1.0 : s.driveMode === "sport" ? 0.82 : 0.62;
 
-      const engLevel = (0.05 + load * 0.5 + rpmN * 0.22) * valve * modeGain;
-      const cutoff = 360 + s.rpm * 0.24 + load * 3200 + (s.exhaustValve ? 900 : 0);
-      const turbo = clamp(s.boostBar, 0, 1.4) * (0.10 + rpmN * 0.42) * (s.exhaustValve ? 1 : 0.8);
-      const turboFreq = 1200 + rpmN * 3200 + s.boostBar * 900;
+      const engLevel = (0.02 + load * 0.26 + rpmN * 0.30) * valve * modeGain;   // quiet EV — whine rises with speed
+      const cutoff = 500 + s.rpm * 0.5 + load * 2600;
+      const turbo = clamp(s.boostBar, 0, 1.4) * (0.06 + rpmN * 0.30);           // inverter hiss follows power
+      const turboFreq = 2400 + rpmN * 7600;
       const wind = clamp((spd - 6) / 70, 0, 1) * (s.windowsOpen ? 0.22 : 0.12);
       const windFreq = 420 + spd * 16;
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
@@ -1057,13 +1155,7 @@ const SPEC = {
         this.engineSrc.playbackRate.setTargetAtTime(rate, t, 0.05);
       }
 
-      // turbo blow-off on a quick lift
-      if (this.lastThrottle - load > 0.25 && s.rpm > 2600 && t - this.blowoffAt > 0.4) { this.blowoffAt = t; this.blowoff(); }
-      // exhaust crackle/overrun on trailing throttle at revs (Race + Sport)
-      const overrun = load < 0.12 && s.rpm > 3200 && s.driveMode !== "wet" && (s.exhaustValve || s.antiLag);
-      if ((overrun || (s.antiLag && load > 0.5 && s.rpm > 4500)) && t - this.crackleAt > 0.05 + Math.random()*0.12) {
-        this.crackleAt = t; this.crackle();
-      }
+      // no wastegate, no overrun bangs — an EV lifts in silence (regen just hums down)
       this.lastThrottle = load;
     },
 
@@ -1084,13 +1176,13 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // V8 catch + rev flare on ignition
+    startupFlair() { // EV power-up: a rising two-tone chime and the contactor clunk
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
-      const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
-      o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
-      const f = c.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1400;
-      const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.3, t + 0.12); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
-      o.connect(f); f.connect(g); g.connect(this.master); o.start(t); o.stop(t + 1.7);
+      const o = c.createOscillator(); o.type = "sine"; o.frequency.setValueAtTime(392, t);
+      o.frequency.exponentialRampToValueAtTime(784, t + 0.35);
+      const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.14, t + 0.05); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.9);
+      o.connect(g); g.connect(this.master); o.start(t); o.stop(t + 1.0);
+      this.clunk(120);
     },
     blip(strength) { // throttle blip / downshift rev-match
       if (!this.ready) return; const c = this.ctx, t = c.currentTime; strength = strength || 1;
@@ -1147,21 +1239,22 @@ const SPEC = {
   app.audio = audio;
 }
 
-/* ===== physics: engine, dual-clutch box, hybrid aero, launch, world, test driver ===== */
+/* ===== physics: quad-motor drive, single-speed, regen, launch (Launch), world, test driver ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
   const audio = app.audio;
   const showToast = app.showToast;
   const anyDoorOpen = () => app.anyDoorOpen();
 
-  /* --- engine torque (identical curve to the verification test) --- */
+  /* --- motor torque (identical curve to the verification test): the EV textbook —
+     full combined torque from ZERO rpm, constant power once the rotors spin up, then a
+     pack-discharge SAG at high rotor speed (calibrated to the 9.23 s / 155 mph quarter) --- */
   function engineTorque(rpm) {
     const omega = rpm * Math.PI * 2 / 60;
-    const plateau = rpm <= SPEC.torqueLoRpm
-      ? 820 + 330 * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
-      : SPEC.peakTorqueNm;                                     // e-motor torque-fills the bottom end
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at exactly 787 kW combined
+    const plateau = SPEC.peakTorqueNm;                         // full torque from standstill
+    const sag = Math.max(SPEC.packSagFloor, 1 - SPEC.packSagPerRpm * Math.max(0, rpm - SPEC.packSagStartRpm));
+    const powerCap = SPEC.peakPowerW * sag / Math.max(omega, 1);   // 760 kW, tapering on the top end
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1170,14 +1263,14 @@ const SPEC = {
     return wheelRps * SPEC.gearRatios[gear - 1] * SPEC.finalDrive * 60;
   }
 
-  const modeMap = {
-    wet:   { upRpm: 4200, downRpm: 1600, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 6200, downRpm: 2100, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 7600, downRpm: 2500, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+  const modeMap = {   // Chill / Sport / Track (single speed: shift points unused)
+    wet:   { upRpm: 99999, downRpm: 0, throttleRate: 0.0030, tc: 0.78, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 99999, downRpm: 0, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 99999, downRpm: 0, throttleRate: 0.0004, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
-  /* --- the dual-clutch 7-speed: auto-shifts for you, but the paddles always win --- */
+  /* --- single-speed drive: D is the only gear; the "paddles" just engage/park it --- */
   function manualShift(dir) {
     if (state.gearMode !== "G") {
       if (dir > 0) { app.setGear("G", 1); return; }
@@ -1220,18 +1313,14 @@ const SPEC = {
     }
   }
 
-  /* --- active aerodynamics: flexible carbon AILERONS baked into the rear clamshell ---
-     Under braking both ailerons flex fully up as an AIRBRAKE — shedding speed AND keeping
-     the now-light rear axle planted (weight has pitched forward); the FRONT trim barely
-     moves, or the forward-loaded nose would dig in and the tail would come around. So the
-     two HUD bars deliberately read differently on the brakes. */
+  /* --- aerodynamics: a fixed carbon spoiler and flat floor — nothing moves, the bars
+     just show the (small) trim envelope of spoiler + diffuser working with speed. */
   function updateAero(dt) {
     const spd = Math.abs(state.speedMps);
     let frontT, rearT;
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
-      // Standing downforce rises through mid-speed, then TRIMS FLAT toward Vmax — the
-      // Speedtail relaxes its ailerons at speed, exactly how it keeps 403 km/h on the table.
+      // Standing downforce rises gently with speed — a hypercar spoiler, not a wing.
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -1241,21 +1330,19 @@ const SPEC = {
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
-    // Velocity mode overrides everything: ailerons lie flat for minimum drag
-    // (they still flex up as an airbrake only under heavy braking).
-    if (state.velocity) { rearT = state.brake > 0.5 ? state.brake : 0; frontT = 0; }
+    // (No active-aero override — the Track's spoiler is bonded carbon.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
     state.frontFlap = state.aeroFrontDeploy;
     const avg = (state.aeroFrontDeploy + state.aeroRearDeploy) / 2;
-    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;
+    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg * (state.trackPack ? 1.3 : 1);   // Track mode: more downforce
   }
 
   // ---- Real Mode (opt-in): real per-system damage + reliability. OFF by default; realPower/realGrip
   // return 1 when off, so the certified 0-100 / top speed / braking never see it. Damage grows with
   // real stress and far faster on the rough Dakar stages (roughnessAt); a system at 1.0 = retirement. ----
-  const REL = 0.82;   // this car's reliability (higher = tougher)
+  const REL = 0.9;   // this car's reliability (higher = tougher)
   function realPower() { if (!state.realMode || state.retired) return 1; return clamp(1 - state.sys.engine * 0.45, 0.2, 1); }
   function realGrip() { if (!state.realMode) return 1; if (state.retired) return 0.35; return clamp((1 - state.tyreWear * 0.30) * (1 - state.sys.tyre * 0.4) * (1 - state.sys.susp * 0.15), 0.25, 1); }
   function realStep(dt) {
@@ -1284,7 +1371,7 @@ const SPEC = {
   }
   Object.assign(app, { toggleRealMode, realStep });
   function tractionCapN() {
-    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9) * realGrip();
+    const grip = SPEC.tractionCoeff * (SPEC.massKg * 9.81 + state.downforceN * 0.9) * terrainGrip() * realGrip();
     return grip;
   }
 
@@ -1328,11 +1415,43 @@ const SPEC = {
     if (r.active && r.widthZones && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; for (const z of r.widthZones) if (phase >= z.from && phase <= z.to) full = z.w; }
     return (full * TRACK_WIDTH_SCALE) / 2;
   }
-  // surface roughness 0..1 at d — smooth pit straights, broken kerbs, the Nordschleife
   function roughnessAt(d) {
     const r = state.route;
-    if (r.active && r.bumps && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; let v = 0.06; for (const z of r.bumps) if (phase >= z.from && phase <= z.to) v = Math.max(v, z.r); return v; }
-    return 0.1;
+    let v = 0.1;
+    if (r.active && CIRCUITS[r.name] && CIRCUITS[r.name].terrain) v = CIRCUITS[r.name].terrain.rough;
+    if (r.active && r.bumps && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; for (const z of r.bumps) if (phase >= z.from && phase <= z.to) v = Math.max(v, z.r); }
+    return v;
+  }
+  // ---- Dakar terrain model: surface grip, dune elevation/gradients, suspension travel & airborne.
+  // Deterministic (functions of distance/speed only) and only active on a real stage; Free run
+  // returns neutral (grip 1, no dunes), which is what the launch/brake/top-speed certification runs on.
+  function terrainOf() { const r = state.route; return (r.active && CIRCUITS[r.name] && CIRCUITS[r.name].terrain) ? CIRCUITS[r.name].terrain : null; }
+  function terrainGrip() { return state.gripMul == null ? 1 : state.gripMul; }
+  function terrainStep(dt) {
+    const terr = terrainOf();
+    if (!terr) { state.gripMul = 1; state.airborne = false; state.duneGrade = 0; state._gradeAccel = 0; state.bogging = false; state.susComp = approach(state.susComp || 0, 0, 0.02, dt); return; }
+    const d = state.distanceM, spd = Math.abs(state.speedMps);
+    const amp = terr.dune * 6.5, freq = 0.0060;
+    const slope = amp * freq * Math.cos(d * freq);
+    state.duneGrade = slope;
+    state._gradeAccel = -9.81 * slope / Math.sqrt(1 + slope * slope);
+    const rough = terr.rough;
+    const tex = Math.sin(d * 0.9) * 0.6 + Math.sin(d * 2.7 + 1.3) * 0.3 + Math.sin(d * 6.1) * 0.25;
+    const speedF = clamp(spd / 26, 0, 1.6);
+    const excite = rough * speedF * tex;
+    state._susVel = (state._susVel || 0) + (excite * 10 - (state.susComp || 0) * 46 - (state._susVel || 0) * 7.5) * dt;
+    state.susComp = clamp((state.susComp || 0) + state._susVel * dt, -1, 1);
+    const ridge = Math.sin(d * 0.075);
+    if (terr.dune > 0.85 && spd > 24 && ridge > 0.9975) state._airT = 0.28 + terr.dune * 0.12;
+    state._airT = Math.max(0, (state._airT || 0) - dt);
+    state.airborne = state._airT > 0;
+    let g = terr.grip * (1 - clamp(-state.susComp, 0, 1) * 0.5);
+    if (state.airborne) g *= 0.05;
+    if (terr.grip <= 0.64 && spd < 9 && state.throttle > 0.65) {
+      const bog = (1 - spd / 9) * (state.xMode ? 0.35 : 0.8);
+      g *= (1 - bog * 0.5); state.bogging = bog > 0.4;
+    } else state.bogging = false;
+    state.gripMul = clamp(g, 0.05, 1.2);
   }
   function seedWorld() {
     state.traffic = []; state.scenery = []; state.roadside = [];
@@ -1353,14 +1472,14 @@ const SPEC = {
      real speed for each bend, and the big-top-speed cars (Koenigsegg) rule the straights
      while the high-grip cars (AMG ONE) rule the corners. */
   const GRID_CARS = [
-    { name: "Bugatti Chiron SS 300+",  body: "#10357f", stripe: "#ff8a36", top: 440, latG: 1.35, accel: 12.9 },
+    { name: "Bugatti Veyron Super Sport", body: "#1b1d22", stripe: "#8a1f1f", top: 431, latG: 1.15, accel: 11.6 },
     { name: "Mercedes-AMG ONE",        body: "#c8d0d6", stripe: "#16b3a6", top: 352, latG: 1.95, accel: 12.0 },
     { name: "Ferrari SF90 Stradale",   body: "#d81e22", stripe: "#f5d400", top: 340, latG: 1.45, accel: 12.8 },
-    { name: "McLaren P1 GTR",          body: "#ff6a13", stripe: "#0a2a55", top: 350, latG: 1.90, accel: 12.9 },
+    { name: "McLaren 765LT",           body: "#ff6a13", stripe: "#0a2a55", top: 330, latG: 1.55, accel: 11.8 },
     { name: "Porsche 911 Turbo S",     body: "#e9edf0", stripe: "#d0202f", top: 330, latG: 1.25, accel: 11.5 },
     { name: "Lamborghini Huracán STO", body: "#46b14a", stripe: "#ff7a1a", top: 310, latG: 1.55, accel: 11.0 },
     { name: "Koenigsegg Jesko",        body: "#d2d6da", stripe: "#e23b2e", top: 480, latG: 1.60, accel: 13.2 },
-    { name: "Rimac Nevera",            body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
+    { name: "Yangwang U9",            body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
     { name: "Aston Martin Valkyrie",   body: "#0d5c63", stripe: "#c0c4c8", top: 350, latG: 2.00, accel: 12.9 },
     { name: "Ferrari LaFerrari",       body: "#cc1417", stripe: "#0a0c10", top: 350, latG: 1.55, accel: 12.6 },
     { name: "McLaren P1",              body: "#1a1d22", stripe: "#ff6a13", top: 350, latG: 1.60, accel: 12.5 },
@@ -1370,28 +1489,28 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-  /* Pure McLaren is a McLaren-only programme — so its grid is McLarens, with their
+  /* The Track Invitational is a Yangwang-only meet — so its grid is Yangwangs, with their
      real (or, where limited, best-known) top speeds and grip. */
-  const MCLAREN_GRID = [
-    { name: "McLaren F1",                  body: "#c8501e", stripe: "#0a0c10", top: 386, latG: 1.15, accel: 10.8 },
-    { name: "McLaren F1 LM",               body: "#f47a1a", stripe: "#0a0c10", top: 362, latG: 1.30, accel: 11.2 },
-    { name: "McLaren P1",                  body: "#1a1d22", stripe: "#ff6a13", top: 350, latG: 1.60, accel: 12.5 },
-    { name: "McLaren P1 GTR",              body: "#ffd700", stripe: "#16603f", top: 350, latG: 1.90, accel: 12.9 },
-    { name: "McLaren Senna",               body: "#3aa0d8", stripe: "#ff6a13", top: 335, latG: 1.90, accel: 12.6 },
-    { name: "McLaren Sabre",               body: "#e9edf0", stripe: "#c8102e", top: 350, latG: 1.70, accel: 12.6 },
-    { name: "McLaren Elva",                body: "#c9cfd6", stripe: "#2b6fb0", top: 327, latG: 1.65, accel: 12.4 },
-    { name: "McLaren 765LT",               body: "#ff6a13", stripe: "#0a2a55", top: 330, latG: 1.55, accel: 11.8 },
-    { name: "McLaren 720S",                body: "#7a1fa0", stripe: "#c9cfd6", top: 341, latG: 1.45, accel: 11.5 },
-    { name: "McLaren 675LT",               body: "#c8d0d6", stripe: "#ff6a13", top: 330, latG: 1.50, accel: 11.2 },
-    { name: "McLaren 600LT",               body: "#ff8a36", stripe: "#0a0c10", top: 328, latG: 1.45, accel: 11.0 },
-    { name: "McLaren Artura",              body: "#16604f", stripe: "#c0c4c8", top: 330, latG: 1.40, accel: 11.0 },
-    { name: "McLaren 12C",                 body: "#8e9296", stripe: "#c8102e", top: 333, latG: 1.35, accel: 10.6 }
+  const YANGWANG_GRID = [
+    { name: "Yangwang U8",           body: "#2bb3c0", stripe: "#0a0c10", top: 355, latG: 1.45, accel: 12.8 },
+    { name: "Yangwang U9 (development mule)",           body: "#1a1d22", stripe: "#2bb3c0", top: 412, latG: 1.55, accel: 13.6 },
+    { name: "Pininfarina Battista",        body: "#0a2a55", stripe: "#c0a062", top: 350, latG: 1.55, accel: 13.4 },
+    { name: "Lotus Evija",                 body: "#b6d900", stripe: "#0a0c10", top: 349, latG: 1.60, accel: 13.4 },
+    { name: "Aspark Owl",                  body: "#0a0c10", stripe: "#c9cfd6", top: 413, latG: 1.45, accel: 13.6 },
+    { name: "Yangwang U7",   body: "#c8102e", stripe: "#0a0c10", top: 400, latG: 1.40, accel: 13.8 },
+    { name: "Porsche Taycan Turbo GT",     body: "#3fb2bd", stripe: "#0a0c10", top: 305, latG: 1.35, accel: 12.6 },
+    { name: "McMurtry Spéirling",          body: "#16604f", stripe: "#c9cfd6", top: 240, latG: 2.20, accel: 14.2 },
+    { name: "Yangwang U9",         body: "#e9edf0", stripe: "#c8102e", top: 322, latG: 1.10, accel: 12.8 },
+    { name: "Lucid Air Sapphire",          body: "#1f3a6e", stripe: "#c9cfd6", top: 330, latG: 1.15, accel: 12.4 },
+    { name: "Nio EP9",                     body: "#15181d", stripe: "#2bb3c0", top: 313, latG: 1.90, accel: 13.0 },
+    { name: "Maserati GranTurismo Folgore",body: "#0a2a55", stripe: "#c0a062", top: 320, latG: 1.30, accel: 11.6 },
+    { name: "Pininfarina B95",             body: "#16604f", stripe: "#c9cfd6", top: 300, latG: 1.50, accel: 13.2 }
   ];
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Algarve Circuit") ? MCLAREN_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Shanghai International Circuit") ? YANGWANG_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1479,7 +1598,7 @@ const SPEC = {
   function laneScan() { const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } }; for (const car of state.traffic) { if (car.oncoming) continue; const e = r[car.lane]; if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; } } return r; }
   function chooseLaneOffset() { const lanes = laneScan(); const cur = clamp(Math.round(state.laneOffset / 3), -1, 1); const follow = followDist(); const spd = Math.abs(state.speedMps); const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5; if (!blocked) { if (cur !== 0 && lanes["0"].gap > follow + 10) return 0; return cur * 3; } let best = cur, bestGap = lanes[cur].gap + 12; for (let l = -1; l <= 1; l++) { if (Math.abs(l - cur) > 1) continue; if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; } } return best * 3; }
 
-  const STEERING = { wheelbase: 2.720, frontTrack: 1.658, maxAngle: 0.58 };
+  const STEERING = { wheelbase: 2.960, frontTrack: 1.664, maxAngle: 0.58 };
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
   function steerForYaw(desiredYaw, v) { const vAbs = Math.max(2.2, Math.abs(v)); const ang = Math.atan((desiredYaw * STEERING.wheelbase) / vAbs); return clamp(ang / (STEERING.maxAngle * steerFactorOf(Math.abs(v))), -1, 1); }
   function pathSteer(gain, targetOffset) { const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
@@ -1557,30 +1676,23 @@ const SPEC = {
     else if (state.gearMode === "R") { driven = true; ratio = SPEC.reverseRatio; direction = -1; }
 
     const wheelRps = speedAbs / (2 * Math.PI * SPEC.wheelRadiusM);
-    // launch / clutch: hold revs up off the line, then blend into the geared rpm
-    let rawRpm;
-    if (driven) {
-      const geared = wheelRps * ratio * SPEC.finalDrive * 60;
-      if (state.launchActive) rawRpm = Math.max(geared, SPEC.launchRpm * clamp(1 - speedAbs / 18, 0, 1) + geared * clamp(speedAbs / 18, 0, 1));
-      else if (speedAbs < 9 && state.throttle > 0.05) rawRpm = Math.max(geared, SPEC.idleRpm + state.throttle * 2600 * clamp(1 - speedAbs / 9, 0, 1));
-      else rawRpm = geared;
-    } else {
-      rawRpm = state.ignition ? SPEC.idleRpm + state.throttle * 2400 : 0;
-    }
-    state.rpm = approach(state.rpm, clamp(rawRpm, state.ignition ? SPEC.idleRpm : 0, SPEC.redlineRpm), 0.0005, dt);
+    // motor speed IS road speed through the fixed reduction — no clutch, no flare, no idle
+    const rawRpm = driven ? wheelRps * ratio * SPEC.finalDrive * 60 : 0;
+    state.rpm = approach(state.rpm, clamp(rawRpm, 0, SPEC.redlineRpm), 0.00005, dt);
 
-    // turbo boost lag/spool (cosmetic + audio + tiny torque shaping)
-    const boostTarget = state.ignition ? clamp(state.throttle * (0.5 + clamp(state.rpm / 4200, 0, 1)) * 1.35, 0, 1.35) : 0;
-    state.boostBar = approach(state.boostBar, boostTarget, state.antiLag ? 0.002 : 0.02, dt);
+    // power-output meter (kW fraction of 760) — electric response, no spool at all
+    const boostTarget = state.ignition ? clamp((state.torqueNm * state.rpm * Math.PI * 2 / 60) / SPEC.peakPowerW, 0, 1.05) : 0;
+    state.boostBar = approach(state.boostBar, boostTarget, 0.0001, dt);
 
-    const shiftCut = state.shiftTimer > 0 ? 0.12 : 1;
+    const shiftCut = 1;                                    // nothing to shift
     const canMove = driven && state.ignition && !anyDoorOpen();
     const harnessLimiter = state.harness ? 1 : 0.32;
-    const boostFactor = 0.78 + 0.22 * clamp(state.boostBar / 1.2, 0, 1);   // torque follows boost
+    const boostFactor = 1;                                   // electric: torque is just there
     const torqueAvail = engineTorque(state.rpm) * boostFactor;
     state.torqueNm = canMove ? engineTorque(state.rpm) * state.throttle * shiftCut : 0;  // display = crank torque
 
     const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff / SPEC.wheelRadiusM;
+    terrainStep(dt);
     const cap = tractionCapN();
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
@@ -1588,20 +1700,25 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction * realPower();
 
-    // Velocity mode drops the drag coefficient (ride -35 mm, cameras in, ailerons flat).
-    const baseCd = state.velocity ? SPEC.dragCdTopSpeed : SPEC.dragCd;
+    // Cd 0.208 — nothing moves; the number is the whole story.
+    const baseCd = SPEC.dragCd * (state.trackPack ? 1.08 : 1);   // Track mode trades a little top speed for grip
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
     const brakeGrip = 1 + (state.downforceN / (SPEC.massKg * 9.81)) * 0.6;   // aero helps the carbon-ceramics
     const brakeForce = state.brake * SPEC.brakeMaxMps2 * SPEC.massKg * brakeGrip * Math.sign(state.speedMps || direction);
 
-    let total = engineForce - drag - roll - brakeForce;
+    // one-pedal regen: lifting fully in D hauls the car down and lights the meter cyan
+    const regenScale = state.antiLag ? 1.25 : 1;             // "Max Regen" toggle
+    const regenForce = (driven && state.ignition && state.throttle < 0.02 && speedAbs > 0.6)
+      ? SPEC.regenMps2 * regenScale * SPEC.massKg * Math.sign(state.speedMps) : 0;
+    let total = engineForce - drag - roll - brakeForce - regenForce;
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Electronic governor at exactly 403 km/h — outside Velocity mode drag holds you below it.
-    const govMps = SPEC.topSpeedMps;
+    accel += state._gradeAccel || 0;   // dune climbs bleed speed, descents build it
+    // Limiter: the car’s real governed top speed.
+    const govMps = state.trackPack ? SPEC.topSpeedRecordMps : SPEC.topSpeedLimitedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -1646,7 +1763,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Speedtail"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Air suspension back to ride height.", "U9"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1654,26 +1771,27 @@ const SPEC = {
     const speedF = clamp(speedAbs / 30, 0, 1.6);
     const tex = Math.abs(Math.sin(state.distanceM * 0.7)) * 0.5 + Math.abs(Math.sin(state.distanceM * 2.7)) * 0.3 + Math.abs(Math.sin(state.distanceM * 6.1)) * 0.2;
     const joint = Math.max(0, Math.sin(state.distanceM * 0.10)) ** 16;
-    state.roadInputG = rough * speedF * (0.04 + tex * 0.05) + rough * joint * 0.10;
+    const _terrAmp = terrainOf() ? 2.6 : 1;                     // the desert pounds the car far harder than tarmac
+    state.roadInputG = (rough * speedF * (0.04 + tex * 0.05) + rough * joint * 0.10) * _terrAmp + Math.abs(state.susComp || 0) * 0.06 * speedF;
     const damp = mode().damp;                         // Race firms the adaptive dampers -> more reaches you
     state.cabinHeaveG = approach(state.cabinHeaveG, state.roadInputG * (0.35 + damp * 0.4), 0.004, dt);
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the Speedtail sits dead still.
+    // on smooth tarmac through a fast corner the Track sits dead still.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
     state.shake.y = (Math.random() - 0.5) * shakeAmp * 1.2;
-    state.shake.rot = (Math.random() - 0.5) * shakeAmp * 0.0004 + state.bodyRoll * 0.0011;      // lean dominates the tilt
+    state.shake.rot = (Math.random() - 0.5) * shakeAmp * 0.0004 + state.bodyRoll * 0.0011 + (state.duneGrade || 0) * 0.85;      // lean dominates the tilt
     if (shakeAmp > 3.2 && navigator.vibrate && state.time - (state._lastBuzz || 0) > 0.5) { navigator.vibrate(14); state._lastBuzz = state.time; }
 
     // temperatures drift with load
     const load = state.throttle;
-    state.oilTempC = approach(state.oilTempC, 88 + load * 32 + speedAbs * 0.05, 0.06, dt);
-    state.waterTempC = approach(state.waterTempC, 86 + load * 18 - (state.coolingFans ? 4 : 0), 0.05, dt);
-    state.egtC = approach(state.egtC, 300 + load * 620 + (state.antiLag ? 180 : 0), 0.05, dt);
-    state.brakeTempC = approach(state.brakeTempC, 110 + state.brake * 480 + speedAbs * 0.6, 0.05, dt);
+    state.oilTempC = approach(state.oilTempC, 38 + load * 60 + speedAbs * 0.08, 0.06, dt);                      // motor temp
+    state.waterTempC = approach(state.waterTempC, 26 + load * 22 - (state.coolingFans ? 4 : 0), 0.05, dt);      // battery temp
+    state.egtC = approach(state.egtC, 28 + load * 55 + speedAbs * 0.05, 0.05, dt);                              // inverter temp
+    state.brakeTempC = approach(state.brakeTempC, 90 + state.brake * 430 + speedAbs * 0.5, 0.05, dt);
 
     if (state.blinker !== 0 || state.hazards) { state.blinkPhase += dt; if (state.blinkPhase > 0.42) { state.blinkPhase = 0; state.blinkOn = !state.blinkOn; if (state.blinkOn) audio.click(1500); } }
     else { state.blinkOn = false; state.blinkPhase = 0; }
@@ -1714,7 +1832,7 @@ const SPEC = {
 
 /* ===== render: the driving world ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, canvas, ctx, clamp, lerp } = app;
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
@@ -1737,7 +1855,10 @@ const SPEC = {
       ring:     { road: "#202329", grass: "#262a22", far: "#2b333d", kerb: false, barrier: false },  // Nardò bank
       mountain: { road: "#23252b", grass: "#1d2a18", far: "#37404a", kerb: false, barrier: false },
       highway:  { road: "#1f2227", grass: "#222a1c", far: "#2a3640", kerb: false, barrier: false },
-      coast:    { road: "#212630", grass: "#1c3a3a", far: "#244a55", kerb: false, barrier: false }
+      coast:    { road: "#212630", grass: "#1c3a3a", far: "#244a55", kerb: false, barrier: false },
+      desert:   { road: "#a98b57", grass: "#cbb27e", far: "#c9a86f", kerb: false, barrier: false },
+      dune:     { road: "#b08a4e", grass: "#d8bd80", far: "#cfa96a", kerb: false, barrier: false },
+      canyon:   { road: "#8f7a55", grass: "#9c7a53", far: "#7e6038", kerb: false, barrier: false }
     };
     return { env, night, ...(palettes[env] || palettes.track) };
   }
@@ -1776,9 +1897,8 @@ const SPEC = {
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
     drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
-    drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,139,48,0.18)" : state.heat ? null : state.cool ? null : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
-    if (state.lights || pal.night) drawHeadlights(w, h);
-    if (state.cool) { ctx.save(); const _et = ctx.createLinearGradient(0, 0, 0, horizonY * 1.15); _et.addColorStop(0, "rgba(10,14,22,0.55)"); _et.addColorStop(1, "rgba(10,14,22,0)"); ctx.fillStyle = _et; ctx.fillRect(0, 0, w, horizonY * 1.15); ctx.restore(); }   // electrochromic roof glass
+    drawCabinFrame(w, h, pal); /* cabin glow: this car's own cockpit controls — a real visual */ { const _cg = state.ambient ? "rgba(43,179,192,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
+    if (pal.night) drawHeadlights(w, h);
     if (state.dataHud) drawTelemetry(w, h);
     if (state.hazards && state.blinkOn) { ctx.fillStyle = "rgba(255,120,40,0.10)"; ctx.fillRect(0, horizonY, w, h - horizonY); }
     ctx.restore();
@@ -1787,6 +1907,7 @@ const SPEC = {
   function drawSky(w, h, pal) {
     const sky = ctx.createLinearGradient(0, 0, 0, horizonY + 40);
     if (pal.night) { sky.addColorStop(0, "#05101f"); sky.addColorStop(0.6, "#0a1622"); sky.addColorStop(1, "#0d1a22"); }
+    else if (["desert","dune","canyon"].includes(pal.env)) { sky.addColorStop(0, "#5a86ac"); sky.addColorStop(0.5, "#c3b48f"); sky.addColorStop(1, "#e4cf9e"); }
     else { const dusk = state.dayPhase > 0.66; sky.addColorStop(0, dusk ? "#39506e" : "#6ea7cf"); sky.addColorStop(0.55, dusk ? "#9c6f5a" : "#a9c4d4"); sky.addColorStop(1, dusk ? "#caa07e" : "#d3dee0"); }
     ctx.fillStyle = sky; ctx.fillRect(0, 0, w, horizonY + 40);
     ctx.fillStyle = pal.night ? "rgba(220,228,240,0.85)" : "rgba(255,244,210,0.9)"; ctx.beginPath(); ctx.arc(w * 0.72, horizonY * 0.4, pal.night ? 16 : 24, 0, Math.PI * 2); ctx.fill();
@@ -1798,7 +1919,7 @@ const SPEC = {
       const p = projectAhead(z + 30, b.side * (halfAt(z + 30) + 8 + z * 0.04)); const scale = p.scale; if (scale < 0.12 || scale > 6) continue;
       const bw = b.width * scale * 0.5, bh = b.height * scale * 0.5, x = p.x, y = horizonY - bh;
       if (pal.env === "coast" && b.side === 1 && b.height > 150) continue;
-      if (pal.env === "mountain" || pal.env === "nords") { ctx.fillStyle = pal.night ? "#16210f" : "#23401b"; ctx.beginPath(); ctx.moveTo(x - bw, horizonY); ctx.lineTo(x, y); ctx.lineTo(x + bw, horizonY); ctx.closePath(); ctx.fill(); continue; }
+      if (["mountain","nords","canyon","dune","desert"].includes(pal.env)) { const sandy = pal.env !== "nords" && pal.env !== "mountain"; ctx.fillStyle = pal.night ? (sandy ? "#2c2416" : "#16210f") : (sandy ? (pal.env === "canyon" ? "#8a6f45" : "#c2a35f") : "#23401b"); ctx.beginPath(); ctx.moveTo(x - bw, horizonY); ctx.lineTo(x, y); ctx.lineTo(x + bw, horizonY); ctx.closePath(); ctx.fill(); continue; }
       ctx.fillStyle = pal.night ? `hsl(${b.hue},18%,${b.lit ? 16 : 11}%)` : `hsl(${b.hue},20%,${b.lit ? 58 : 46}%)`;
       ctx.fillRect(x - bw / 2, y, bw, bh + 2);
     }
@@ -1933,7 +2054,8 @@ const SPEC = {
       } else if (pal.env === "track" || pal.env === "ring" || pal.env === "nords") { // armco guardrail + posts
         ctx.fillStyle = "rgba(180,186,192,0.8)"; ctx.fillRect(p.x - 1.4 * sc, p.y - 10 * sc, 2.8 * sc, 10 * sc);
         ctx.fillStyle = "rgba(200,206,212,0.65)"; ctx.fillRect(p.x - 6 * sc, p.y - 9 * sc, 12 * sc, 2.4 * sc);
-      } else if (r.kind > 0.5) { ctx.fillStyle = pal.night ? "#15240f" : "#2c5226"; ctx.beginPath(); ctx.ellipse(p.x, p.y - 16 * sc, 7 * sc, 12 * sc, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#3a2a18"; ctx.fillRect(p.x - 1.3 * sc, p.y - 8 * sc, 2.6 * sc, 8 * sc); }
+      } else if (["desert","dune","canyon"].includes(pal.env)) { if (r.kind > 0.62) { ctx.fillStyle = pal.night ? "#3a3222" : "#8a7550"; ctx.beginPath(); ctx.moveTo(p.x - 6 * sc, p.y); ctx.lineTo(p.x - 2 * sc, p.y - 7 * sc); ctx.lineTo(p.x + 3 * sc, p.y - 5 * sc); ctx.lineTo(p.x + 6 * sc, p.y); ctx.closePath(); ctx.fill(); } else if (r.kind > 0.34) { ctx.fillStyle = pal.night ? "#243019" : "#6e7a45"; ctx.beginPath(); ctx.ellipse(p.x, p.y - 4 * sc, 4 * sc, 3 * sc, 0, 0, Math.PI * 2); ctx.fill(); } else { ctx.fillStyle = "rgba(214,214,214,0.85)"; ctx.fillRect(p.x - 0.8 * sc, p.y - 14 * sc, 1.6 * sc, 14 * sc); ctx.fillStyle = "#e2571f"; ctx.fillRect(p.x - 1.4 * sc, p.y - 14 * sc, 2.8 * sc, 3.5 * sc); } }
+      else if (r.kind > 0.5) { ctx.fillStyle = pal.night ? "#15240f" : "#2c5226"; ctx.beginPath(); ctx.ellipse(p.x, p.y - 16 * sc, 7 * sc, 12 * sc, 0, 0, Math.PI * 2); ctx.fill(); ctx.fillStyle = "#3a2a18"; ctx.fillRect(p.x - 1.3 * sc, p.y - 8 * sc, 2.6 * sc, 8 * sc); }
       else { ctx.strokeStyle = "rgba(150,155,160,0.7)"; ctx.lineWidth = Math.max(1, 2 * sc); ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 30 * sc); ctx.stroke(); ctx.fillStyle = pal.night ? "rgba(255,224,150,0.9)" : "rgba(200,205,210,0.8)"; ctx.beginPath(); ctx.arc(p.x, p.y - 30 * sc, 3 * sc, 0, Math.PI * 2); ctx.fill(); }
     }
     if (pal.env === "coast") { const seaTop = horizonY; const g = ctx.createLinearGradient(0, seaTop, 0, h); g.addColorStop(0, pal.night ? "#0d2733" : "#2f6f86"); g.addColorStop(1, pal.night ? "#08161d" : "#1c4a5c"); ctx.fillStyle = g; ctx.beginPath(); ctx.moveTo(w, seaTop); ctx.lineTo(w, h); const p0 = projectAhead(2, 8), p1 = projectAhead(240, 8); ctx.lineTo(p0.x, p0.y); ctx.lineTo(p1.x, p1.y); ctx.closePath(); ctx.fill(); }
@@ -2146,71 +2268,92 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Speedtail: a clean central digital cluster flanked by two touch-HD
-    // display panels (no analogue, no buttons — the real central-seat glass dash) ----
-    drawCluster(w, h, dashY, sway);
-    // McLaren wheel on the central column
+    // ---- Track glass: the 12.3\" driver display behind the wheel and the 17\"
+    // landscape centre screen floating to the right ----
+    const R = Math.min(w, h) * 0.118;
+    const cy = dashY + R * 0.66;
+    const cx = w / 2 + sway;
+    drawCluster(cx, cy, R);
+    // the wheel
     drawWheel(w, h);
   }
-  // instantaneous combined output (PS) for the left-hand screen — V8 + e-motor together
+  // instantaneous combined output (hp) — all four motors together
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // the Speedtail cluster: a central digital instrument panel flanked by two
-  // touch-HD display panels (hybrid power · e-motor), papaya-lit in Velocity mode
-  function drawCluster(w, h, dashY, sway) {
-    const cx = w / 2 + sway, cy = dashY + Math.min(w, h) * 0.075, u = Math.min(w, h) * 0.1;
-    const kmh = Math.abs(app.kmh(state.speedMps)), vel = state.velocity;
-    const accent = vel ? "#ffb072" : "#35c2d4";
-    // central instrument panel
-    const cW = u * 2.6, cH = u * 2.0, cX = cx - cW / 2, cY = cy - cH / 2;
-    glass(cX, cY, cW, cH, u * 0.12, accent);
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const rpmf = clamp(state.rpm / app.SPEC.redlineRpm, 0, 1), bw = cW * 0.82, bx = cx - bw / 2, by = cY + cH * 0.15;
-    ctx.fillStyle = "rgba(255,255,255,0.08)"; roundRect(ctx, bx, by, bw, u * 0.1, 3); ctx.fill();
-    ctx.fillStyle = rpmf > 0.86 ? "#ff5b5b" : accent; roundRect(ctx, bx, by, bw * rpmf, u * 0.1, 3); ctx.fill();
-    ctx.fillStyle = "#f2f6fa"; ctx.font = `800 ${Math.round(u * 0.8)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), cx, cy + u * 0.05);
-    ctx.fillStyle = "rgba(150,165,180,0.9)"; ctx.font = `600 ${Math.round(u * 0.13)}px ui-sans-serif`; ctx.fillText("KM/H", cx, cy + u * 0.48);
-    ctx.fillStyle = accent; ctx.font = `800 ${Math.round(u * 0.3)}px ui-sans-serif`; ctx.textAlign = "left"; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cX + u * 0.22, cY + cH * 0.3);
-    if (vel) { ctx.fillStyle = "#ffb072"; ctx.font = `700 ${Math.round(u * 0.12)}px ui-sans-serif`; ctx.textAlign = "right"; ctx.fillText("VELOCITY", cX + cW - u * 0.22, cY + cH * 0.3); }
-    // two flanking touch-HD panels
-    const sW = u * 1.35, sH = u * 1.7, gap = u * 0.3, sY = cy - sH / 2;
-    glass(cX - gap - sW, sY, sW, sH, u * 0.1, accent);
-    vbar(cX - gap - sW / 2, sY, sW, sH, clamp(powerPS() / app.SPEC.peakPowerPS, 0, 1), accent, "POWER", Math.round(powerPS()) + " PS");
-    glass(cX + cW + gap, sY, sW, sH, u * 0.1, accent);
-    const emo = clamp((state.throttle || 0) * (0.6 + 0.4 * rpmf), 0, 1);
-    vbar(cX + cW + gap + sW / 2, sY, sW, sH, emo, "#7ce38b", "E-MOTOR", state.driveMode === "race" ? "TRACK" : state.driveMode === "sport" ? "SPORT" : "COMFORT");
+  // the Track driver display: a clean landscape card — huge digital speed, a power/regen
+  // bar that swings cyan on regen, P·R·N·D strip, battery bar. No dials anywhere.
+  // the U9 driver display: a round digital dial — an outer speed ring, huge central
+  // km/h, gear and kW/regen inside; distinct from the Evija's landscape card
+  // ---- Yangwang U9: three TFTs. The driver screen's signature is the live per-wheel
+  // ---- Yangwang U9 cluster: a letterbox TFT. Power (not revs) across the top, the gear
+  // ---- Yangwang U9 cluster: a letterbox TFT. Power (not revs) across the top, the gear
+  // digit in the middle, the 1,200 V pack below, and the four DiSus-X corner heights. ----
+  function drawCluster(cx, cy, R) {
+    cy -= R * 0.42;                       // sit the TFT up on the dash, clear of the console
+    const BW = R * 5.1, BH = R * 1.62, bx = cx - BW / 2, by = cy - BH / 2;
+    ctx.save();
+    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#08202c"); pg.addColorStop(1, "#03080c");
+    ctx.fillStyle = pg; ctx.beginPath(); ctx.roundRect(bx, by, BW, BH, R * 0.2); ctx.fill();
+    ctx.strokeStyle = "rgba(95,208,234,0.55)"; ctx.lineWidth = 1.6; ctx.stroke();
+    // POWER bar: an EV reports kW, not rpm
+    const kw = clamp((state.throttle || 0) * (state.trackPack ? 2220 : 960), 0, 2220);
+    const pf = clamp(kw / (state.trackPack ? 2220 : 960), 0, 1);
+    ctx.lineCap = "round"; ctx.lineWidth = R * 0.15;
+    ctx.strokeStyle = "rgba(70,110,128,0.35)";
+    ctx.beginPath(); ctx.moveTo(bx + R * 0.3, by + R * 0.36); ctx.lineTo(bx + BW - R * 0.3, by + R * 0.36); ctx.stroke();
+    ctx.strokeStyle = pf > 0.85 ? "#7ff0ff" : "#5fd0ea";
+    ctx.beginPath(); ctx.moveTo(bx + R * 0.3, by + R * 0.36); ctx.lineTo(bx + R * 0.3 + (BW - R * 0.6) * pf, by + R * 0.36); ctx.stroke();
+    ctx.textAlign = "left"; ctx.textBaseline = "middle";
+    ctx.fillStyle = "rgba(140,190,210,0.9)"; ctx.font = `600 ${Math.round(R * 0.13)}px ui-sans-serif`;
+    ctx.fillText(Math.round(kw) + " kW", bx + R * 0.3, by + R * 0.18);
+    ctx.textAlign = "right";
+    ctx.fillStyle = state.trackPack ? "#7ff0ff" : "rgba(140,190,210,0.9)";
+    ctx.fillText(state.trackPack ? "XTREME · 3,000 PS" : "e⁴ · 1,306 PS", bx + BW - R * 0.3, by + R * 0.18);
+    // the gear digit
+    ctx.textAlign = "center"; ctx.fillStyle = "#e8f6ff"; ctx.font = `800 ${Math.round(R * 0.6)}px ui-sans-serif`;
+    ctx.fillText(state.gearMode === "G" ? "D" : state.gearMode, cx, cy + R * 0.02);
+    // 1,200 V pack
+    const soc = clamp(0.9 - clamp(state.distanceM / 340000, 0, 0.7), 0, 1);
+    const sbx = bx + R * 0.3, sbw = BW * 0.42;
+    ctx.fillStyle = "rgba(255,255,255,0.09)"; ctx.fillRect(sbx, cy + R * 0.5, sbw, R * 0.1);
+    ctx.fillStyle = soc < 0.2 ? "#e8623c" : "#5fd0ea"; ctx.fillRect(sbx, cy + R * 0.5, sbw * soc, R * 0.1);
+    ctx.textAlign = "left"; ctx.fillStyle = "rgba(140,190,210,0.85)"; ctx.font = `600 ${Math.round(R * 0.11)}px ui-sans-serif`;
+    ctx.fillText("1,200 V · " + Math.round(soc * 100) + "%", sbx, cy + R * 0.72);
+    // DiSus-X: four corner-height columns, live off the body attitude
+    const lat = clamp((state.latG || 0) / 1.6, -1, 1), pit = clamp((state.pitchVis || 0), -1, 1);
+    const corners = [-lat + pit, lat + pit, -lat - pit, lat - pit];
+    for (let i = 0; i < 4; i++) {
+      const x = bx + BW - R * (1.24 - i * 0.3), base = by + BH - R * 0.14;
+      const hgt = R * (0.22 + clamp(0.5 + corners[i] * 0.4, 0.08, 0.92) * 0.4);
+      ctx.strokeStyle = "rgba(95,208,234,0.85)"; ctx.lineWidth = R * 0.07;
+      ctx.beginPath(); ctx.moveTo(x, base); ctx.lineTo(x, base - hgt); ctx.stroke();
+    }
+    ctx.textAlign = "right"; ctx.fillStyle = "rgba(110,150,168,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`;
+    ctx.fillText("DiSus-X", bx + BW - R * 0.25, by + R * 0.66);
+    ctx.restore();
   }
-  function glass(x, y, w2, h2, r, accent) {
-    ctx.fillStyle = "rgba(6,9,13,0.95)"; roundRect(ctx, x, y, w2, h2, r); ctx.fill();
-    ctx.strokeStyle = "rgba(120,150,170,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, x, y, w2, h2, r); ctx.stroke();
-    ctx.save(); ctx.globalAlpha = 0.55; ctx.strokeStyle = accent; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x + r, y + 2.5); ctx.lineTo(x + w2 - r, y + 2.5); ctx.stroke(); ctx.restore();
-  }
-  function vbar(cxp, y, w2, h2, frac, col, label, val) {
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const bw = w2 * 0.24, bx = cxp - bw / 2, by = y + h2 * 0.2, bh = h2 * 0.48;
-    ctx.fillStyle = "rgba(255,255,255,0.08)"; roundRect(ctx, bx, by, bw, bh, 3); ctx.fill();
-    const fh = bh * clamp(frac, 0, 1); ctx.fillStyle = col; roundRect(ctx, bx, by + bh - fh, bw, fh, 3); ctx.fill();
-    ctx.fillStyle = "rgba(150,165,180,0.85)"; ctx.font = `600 ${Math.round(w2 * 0.13)}px ui-sans-serif`; ctx.fillText(label, cxp, y + h2 * 0.1);
-    ctx.fillStyle = "#eef3f7"; ctx.font = `700 ${Math.round(w2 * 0.13)}px ui-sans-serif`; ctx.fillText(val, cxp, y + h2 * 0.84);
-  }
-  // clean McLaren wheel: round dark-alcantara rim, papaya centre-band, M roundel centre
+  // Yangwang U9 wheel: flat top AND bottom, lit spoke inlays, U9 on the boss
   function drawWheel(w, h) {
-    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // papaya centring band at the top of the rim
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(255,123,26,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.44, Math.PI * 1.56); ctx.stroke();
-    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // twin horizontal spokes + slim lower spoke (no buttons — Speedtail keeps the rim bare)
-    ctx.strokeStyle = "#171a20"; ctx.lineWidth = R * 0.1;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.02); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
-    // hub + M roundel
-    ctx.fillStyle = "#0c0e12"; ctx.beginPath(); ctx.arc(0, 0, R * 0.25, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#15181d"; ctx.strokeStyle = "#ff7b1a"; ctx.lineWidth = R * 0.02; ctx.beginPath(); ctx.arc(0, 0, R * 0.17, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#ff9a4d"; ctx.font = `700 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("M", 0, R * 0.01);
+    const R = Math.min(w, h) * 0.2, cx = w / 2, cy = h * 0.965;
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.62);
+    ctx.strokeStyle = "#12161b"; ctx.lineWidth = R * 0.2; ctx.lineCap = "butt";
+    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.12, Math.PI * 1.88); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 0.12, Math.PI * 0.88); ctx.stroke();
+    ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(-R * 0.94, -R * 0.36); ctx.lineTo(R * 0.94, -R * 0.36); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-R * 0.94, R * 0.36); ctx.lineTo(R * 0.94, R * 0.36); ctx.stroke();
+    ctx.strokeStyle = "#1b2128"; ctx.lineWidth = R * 0.16;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-R * 0.88, -R * 0.1); ctx.moveTo(0, 0); ctx.lineTo(R * 0.88, -R * 0.1);
+    ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.34); ctx.stroke();
+    ctx.strokeStyle = "rgba(95,208,234,0.85)"; ctx.lineWidth = R * 0.035;
+    ctx.beginPath(); ctx.moveTo(-R * 0.72, -R * 0.19); ctx.lineTo(-R * 0.34, -R * 0.15);
+    ctx.moveTo(R * 0.72, -R * 0.19); ctx.lineTo(R * 0.34, -R * 0.15); ctx.stroke();
+    ctx.fillStyle = "#08171e"; ctx.beginPath(); ctx.arc(0, 0, R * 0.26, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(95,208,234,0.8)"; ctx.lineWidth = R * 0.03; ctx.stroke();
+    ctx.fillStyle = "#9fe8fb"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = `800 ${Math.round(R * 0.2)}px ui-sans-serif`; ctx.fillText("U9", 0, R * 0.01);
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
@@ -2219,7 +2362,7 @@ const SPEC = {
     ctx.fillStyle = "rgba(156,198,255,0.85)"; ctx.font = "11px ui-monospace, monospace"; ctx.textAlign = "left";
     const x = w * 0.5 - 70, y = h * 0.1;
     ctx.fillText(`${Math.round(app.kmh(state.speedMps))} km/h   ${Math.round(state.rpm)} rpm`, x, y);
-    ctx.fillText(`G ${state.lateralG.toFixed(2)}  DF ${Math.round(state.downforceN / 9.81)} kg  ${app.SPEC.gearRatios && state.gearMode === "G" ? "gear " + state.curGear : state.gearMode}`, x, y + 14);
+    ctx.fillText(`G ${state.lateralG.toFixed(2)}  DF ${Math.round(state.downforceN / 9.81)} kg  ${state.gearMode === "G" ? "D" : state.gearMode}`, x, y + 14);
     if (state.lap.curMs > 0) ctx.fillText(`lap ${app.fmtLap(state.lap.curMs)}${state.lap.bestMs ? "  best " + app.fmtLap(state.lap.bestMs) : ""}`, x, y + 28);
     if (state.realMode) { ctx.fillStyle = state.retired ? "#ff6b6b" : "#ffd27a"; ctx.fillText(state.retired ? ("OUT \u2014 " + state.failCause) : ("REAL  tyre " + Math.round((state.tyreWear || 0) * 100) + "%  dmg " + Math.round((state.damage || 0) * 100) + "%"), x, y + 42); }
     ctx.restore();
@@ -2308,161 +2451,167 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* McLaren exterior — Speedtail side profile (five-metre teardrop, canopy cockpit,
-     static carbon front-wheel covers, flexible tail ailerons, retractable cameras) */
+  /* Yangwang exterior — U9 side profile (pearl-white five-seat hypercar, glass
+     roof, flush handles, carbon spoiler; the fastest-accelerating production hypercar) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren Speedtail side">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Yangwang U9 side">
       <defs>
-        <linearGradient id="mcSilverG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9edf1"/><stop offset="0.5" stop-color="#aeb6bf"/><stop offset="1" stop-color="#5e6670"/></linearGradient>
-        <linearGradient id="mcBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="mcGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8d4e8"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
-        <radialGradient id="mcHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
-        <filter id="mcExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <style>
-          .mcWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:20% 100%;transform:rotate(calc(var(--wing-deg,10deg) * 0.6));transition:transform .42s ease;}
+        <linearGradient id="u9Body" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5fd0ea"/><stop offset="0.52" stop-color="#1b83b8"/><stop offset="1" stop-color="#0a3a56"/></linearGradient>
+        <linearGradient id="u9Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#06080a"/></linearGradient>
+        <linearGradient id="u9Glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadeef"/><stop offset="1" stop-color="#0f1a22"/></linearGradient>
+        <radialGradient id="u9Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
+        <filter id="u9Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="u9Carbon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2f36"/><stop offset="0.5" stop-color="#12161b"/><stop offset="1" stop-color="#2a2f36"/></linearGradient><style>
+          .grWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.65));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:88% 8%;transition:transform .6s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-38deg) translateY(-8px);}
-          #quadExhaustArt rect{fill:#6d747d;}
-          #quadExhaustArt.hot rect{fill:#ff8a3c;filter:url(#mcExhGlow);}
+          #doorArt{transform-box:fill-box;transform-origin:26% 97%;transition:transform .8s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-34deg) translate(-4px,-26px);}
+          #quadExhaustArt circle{fill:none;stroke:rgba(95,208,234,0.8);stroke-width:2.4;}
+          #quadExhaustArt.hot circle{stroke:#7ff0ff;filter:url(#u9Glow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="300" rx="420" ry="20" fill="rgba(0,0,0,0.5)"/>
+      <ellipse cx="500" cy="366" rx="392" ry="15" fill="rgba(0,0,0,0.5)"/>
+      <g id="rearWingArt"><path d="M183.3,157.5 L183.3,204" stroke="#39404a" stroke-width="7" stroke-linecap="round"/><path d="M286.3,157.5 L286.3,186.1" stroke="#39404a" stroke-width="7" stroke-linecap="round"/><path d="M149,147.5 L320.6,144.5 L320.6,157.5 L149,160.5 Z" fill="url(#u9Carbon)" stroke="#6f7a85" stroke-width="1.4"/><path d="M149,150.5 L320.6,147.5" fill="none" stroke="rgba(95,208,234,0.9)" stroke-width="2.4"/></g>
 
       <g id="bcBody">
-        <!-- teardrop silhouette: needle tail at the left, cab-forward canopy, clean nose right -->
-        <path d="M42,236 Q140,208 240,196 Q360,184 430,164 Q490,130 570,122 L640,122 Q740,130 806,150
-                 Q866,168 906,196 Q924,208 918,226 L904,240 Q840,232 760,232 L260,240 Q120,242 60,242 Z"
-              fill="url(#mcBodyG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- upper silver body panel over carbon -->
-        <path d="M240,196 Q360,184 430,164 Q490,130 570,122 L640,122 Q740,130 806,150 Q852,166 884,190
-                 L850,194 Q760,180 640,178 L430,186 Q330,190 240,196 Z"
-              fill="url(#mcSilverG)" stroke="rgba(200,210,220,0.5)" stroke-width="1"/>
-        <!-- teardrop canopy glasshouse -->
-        <path d="M446,162 Q492,128 566,124 L638,124 Q700,130 742,152 Q600,146 446,162 Z" fill="url(#mcGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <!-- flexible carbon AILERON on the tail clamshell (deploys with speed / braking) -->
-        <g id="rearWingArt">
-          <path d="M44,232 L150,214 L152,222 L46,240 Z" fill="#15181d" stroke="#5c636c"/>
-          <path d="M44,232 L150,214" fill="none" stroke="rgba(255,192,138,0.6)" stroke-width="2"/>
-        </g>
-        <!-- dihedral door cut -->
+        <path d="M110,321.6 L110,266.6 110,266.6 Q133.4,230 156.8,215.8 Q180.2,201.5 223.1,193.4 Q266,185.3 308.9,180.7 Q351.8,176.1 394.7,163.9 Q437.6,151.7 476.6,148.1 Q515.6,144.6 550.7,146.1 Q585.8,147.6 624.8,166.5 Q663.8,185.3 710.6,205.7 Q757.4,226 792.5,239.2 Q827.6,252.4 851,261.6 Q874.4,270.7 882.2,282.9 L890,295.1 L890,321.6 L791.7,321.6 A64 89.1 0 0 0 663.7,321.6 L336.3,321.6 A64 89.1 0 0 0 208.3,321.6 L110,321.6 Z" fill="url(#u9Body)" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+        <path d="M386.9,173.1 Q453.2,155.8 488.3,152.8 Q523.4,149.7 550.7,152.3 Q578,154.8 615.1,170.6 L652.1,186.3 Z" fill="url(#u9Glass)" stroke="#7a838c" stroke-width="1.4"/>
+        <path d="M328.3,319.6 L671.7,316.6 L667.7,334.6 L332.3,337.6 Z" fill="url(#u9Low)" stroke="#454b52" stroke-width="1.2"/>
+        <!-- faceted flank intake feeding the two rear motors -->
+        <path d="M293.3,213.8 L375.2,201.5 L386.9,246.3 L301.1,256.5 Z" fill="#06090c" stroke="rgba(95,208,234,0.7)" stroke-width="1.6"/>
+        <g stroke="#3f4952" stroke-width="1.6"><path d="M308.9,219.9 L379.1,212.7"/><path d="M307.3,234.1 L381.4,227"/></g>
+        <!-- hard body crease along the flank: the U9's cyber line -->
+        <path d="M133.4,258.5 L476.6,246.3 L866.6,262.6" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2.2" stroke-linejoin="miter"/>
+        <path d="M133.4,295.1 L500,287 L866.6,300.2 L866.6,327.7 L133.4,329.7 Z" fill="url(#u9Carbon)" opacity="0.85"/>
+        <path d="M208.3,321.6 A64 89.1 0 0 1 336.3,321.6" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3.6"/><path d="M663.7,321.6 A64 89.1 0 0 1 791.7,321.6" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3.6"/>
+        <!-- nose: FOUR stacked LED elements, no grille of any kind -->
+        <g stroke="#e8f6ff" stroke-width="4" stroke-linecap="round">
+          <path d="M815.9,246.3 l38,7"/><path d="M815.9,257.5 l38,7"/></g>
+        <g stroke="rgba(95,208,234,0.9)" stroke-width="3" stroke-linecap="round">
+          <path d="M821.4,267.7 l32,6"/><path d="M821.4,276.8 l32,6"/></g>
+        <path d="M769.1,316.5 L888.4,312.4 L884.5,332.7 L765.2,334.8 Z" fill="url(#u9Carbon)" stroke="#4c545e"/>
+        <g id="frontFlapArt"><rect x="714.5" y="328.7" width="44" height="7" rx="3.5" fill="#141317" stroke="rgba(95,208,234,0.5)"/></g>
+        <!-- butterfly door: hinged at the top of the A-pillar, it swings up and out -->
         <g id="doorArt">
-          <path d="M470,172 Q530,142 616,144 L700,164 L700,228 L478,232 Z" fill="rgba(120,132,146,0.28)" stroke="#6c757e" stroke-width="1.4"/>
-          <path d="M506,160 Q570,146 664,152" fill="none" stroke="rgba(210,224,238,0.4)" stroke-width="2"/>
-          <!-- retractable rear-view CAMERA pod (replaces mirrors; slides in for Velocity mode) -->
-          <rect id="cameraPod" x="486" y="146" width="18" height="7" rx="3" fill="#0c0e12" stroke="rgba(53,194,212,0.6)"/>
+          <path d="M410.3,173.1 Q445.4,151.7 507.8,146.6 L570.2,152.7 L644.3,181.2 L648.2,287 L414.2,289 Z"
+                fill="rgba(255,255,255,0.07)" stroke="rgba(160,200,220,0.6)" stroke-width="1.3"/>
+          <path d="M437.6,236.1 L535.1,228 L628.7,238.2" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2.2"/>
+          <path d="M656,179.2 l20,-10 l2,13 l-20,5 Z" fill="url(#u9Carbon)"/>
+          <rect x="589.7" y="232.1" width="20" height="5" rx="2.5" fill="#3b4148"/>
         </g>
-        <!-- slim LED headlamp + nose blade -->
-        <path d="M872,182 q26,-2 40,6" fill="none" stroke="#dfe9ee" stroke-width="4" stroke-linecap="round"/>
-        <path d="M872,182 q26,-2 40,6" fill="none" stroke="#ffc08a" stroke-width="1.4" stroke-linecap="round"/>
-        <!-- front splitter + active front trim -->
-        <rect x="836" y="242" width="82" height="7" rx="3" fill="#05070a"/>
-        <g id="frontFlapArt"><rect x="800" y="216" width="40" height="6" rx="3" fill="#15181d" stroke="rgba(255,192,138,0.35)"/></g>
-        <!-- hidden low exhaust exit under the tail -->
-        <g id="quadExhaustArt">
-          <rect x="60" y="244" width="52" height="7" rx="3"/>
-        </g>
-        <!-- diffuser strakes -->
-        <g stroke="#05070a" stroke-width="3">
-          <path d="M96,250 l0,10"/><path d="M126,250 l0,10"/><path d="M156,250 l0,10"/>
-        </g>
-        <!-- SPEEDTAIL script + M roundel -->
-        <text x="600" y="216" font-family="ui-sans-serif" font-size="12" fill="#c9cfd6" letter-spacing="3">SPEEDTAIL</text>
-        <circle cx="452" cy="212" r="9" fill="#15181d" stroke="#ff7b1a" stroke-width="1.6"/>
-        <text x="452" y="216" text-anchor="middle" font-family="ui-sans-serif" font-size="9" fill="#ff9a4d">M</text>
+        <!-- full-width tail bar; the "exhaust" row is the diffuser strakes, lit not hot -->
+        <path d="M113.1,234.1 L113.1,270.7" stroke="rgba(255,70,60,0.9)" stroke-width="8" stroke-linecap="round"/>
+        <path d="M131.8,237.1 L131.8,266.6" stroke="rgba(255,160,150,0.45)" stroke-width="3"/>
+        <g id="quadExhaustArt"><circle cx="145.1" cy="318.5" r="8"/><circle cx="174" cy="318.5" r="8"/><circle cx="202.8" cy="318.5" r="8"/><circle cx="231.7" cy="318.5" r="8"/></g>
+        <text x="258.2" y="266.6" font-family="ui-sans-serif" font-size="11" fill="#bfe6f4" letter-spacing="3.6">DiSus-X</text>
+        <g transform="translate(464.9,272.7)"><rect x="-26" y="-9" width="52" height="18" rx="3" fill="#06222e" stroke="#5fd0ea" stroke-width="1.3"/><text x="0" y="4" text-anchor="middle" font-family="ui-sans-serif" font-size="10" font-weight="800" fill="#9fe8fb">U9</text></g>
       </g>
-
-      <!-- rear wheel: exposed 10-spoke -->
       <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
-        <g class="mcWeave"><g transform="translate(255,250)">
+        <circle cx="272.3" cy="290.8" r="57.2" fill="#0a0b0e"/><circle cx="272.3" cy="290.8" r="57.2" fill="none" stroke="#d8e6ee" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(272.3,290.8) scale(1.1)">
           ${turbine()}
         </g></g>
-        <circle cx="255" cy="250" r="15" fill="url(#mcHub)"/>
+        <circle cx="272.3" cy="290.8" r="12.6" fill="url(#u9Hub)"/>
       </g>
-      <!-- FRONT wheel: static carbon aero cover (the Speedtail signature) — the cover
-           stays still while the tyre turns behind it -->
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/>
-        <circle cx="745" cy="250" r="49" fill="#101318" stroke="#3a4048" stroke-width="2"/>
-        <path d="M745,206 A44,44 0 0 1 789,250 L745,250 Z" fill="rgba(233,237,241,0.10)"/>
-        <circle cx="745" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
-        <circle cx="745" cy="250" r="7" fill="url(#mcHub)"/>
-        <text x="745" y="286" text-anchor="middle" font-size="8" fill="#7a838d">STATIC AERO COVER</text>
+        <circle cx="727.7" cy="290.8" r="57.2" fill="#0a0b0e"/><circle cx="727.7" cy="290.8" r="57.2" fill="none" stroke="#d8e6ee" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(727.7,290.8) scale(1.1)">
+          ${turbine()}
+        </g></g>
+        <circle cx="727.7" cy="290.8" r="12.6" fill="url(#u9Hub)"/>
       </g>
-    </svg>`;
+    </svg>
+    `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
   }
-  function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  function turbine() { let s = ""; for (let a = 0; a < 360; a += 40) s += `<path d="M0,0 L${(36*Math.cos(a*Math.PI/180)).toFixed(1)},${(36*Math.sin(a*Math.PI/180)).toFixed(1)} L${(30*Math.cos((a+22)*Math.PI/180)).toFixed(1)},${(30*Math.sin((a+22)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="38" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* McLaren cockpit SVG — CENTRAL driving seat, two passenger benches, three-screen dash */
+  /* Yangwang cockpit SVG — wheel, 17" landscape screen, white minimalist cabin, glass roof */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren Speedtail cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Yangwang U9 cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="leatherG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f7a55"/><stop offset="1" stop-color="#3d3325"/></linearGradient>
-        <linearGradient id="papayaTrimG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffab5e"/><stop offset="1" stop-color="#b34f0a"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12303a"/><stop offset="1" stop-color="#060d12"/></linearGradient>
-      </defs>
+        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#05080d"/></linearGradient>
+        <linearGradient id="u9Seat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#123a4c"/><stop offset="1" stop-color="#071319"/></linearGradient>
+        <linearGradient id="u9Scr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#08202c"/><stop offset="1" stop-color="#03080c"/></linearGradient></defs>
       <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- teardrop canopy line overhead -->
-      <path d="M60,44 Q500,-16 940,44" fill="none" stroke="rgba(184,212,232,0.35)" stroke-width="3"/>
-      <!-- glass dash: THREE screens wrapping the cowl -->
-      <rect x="110" y="52" width="780" height="112" rx="16" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-      <rect x="130" y="66" width="212" height="84" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.5)" id="screenLArt"/>
-      <rect x="394" y="60" width="212" height="96" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.7)"/>
-      <rect x="658" y="66" width="212" height="84" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.5)" id="screenRArt"/>
-      <text x="236" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">HYBRID kW</text>
-      <text x="500" y="100" text-anchor="middle" font-size="26" font-weight="700" fill="#e8f6fa" id="tachGearArt">N</text>
-      <text x="500" y="140" text-anchor="middle" font-size="11" fill="#7fd7e2" letter-spacing="2">VELOCITY READY</text>
-      <text x="764" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">1/MIN</text>
-      <circle cx="500" cy="100" r="1" fill="none" id="tachArt"/>
-      <!-- CENTRAL driving seat -->
-      <g transform="translate(500,262)">
-        <rect x="-46" y="-38" width="92" height="132" rx="22" fill="url(#leatherG)" stroke="rgba(0,0,0,0.35)"/>
-        <rect x="-30" y="-30" width="60" height="30" rx="12" fill="rgba(0,0,0,0.28)"/>
-        <path d="M-32,16 L32,16 M-32,42 L32,42 M-32,68 L32,68" stroke="rgba(255,123,26,0.55)"/>
-        <text x="0" y="112" text-anchor="middle" font-size="9" fill="#8f97a1" letter-spacing="2">DRIVER · CENTRE</text>
+      <g opacity="0.10" stroke="#7fc6dd" stroke-width="1">${weave()}</g>
+
+      <!-- slim dash with a lit accent line the whole width -->
+      <path d="M84,54 Q500,34 916,54 L916,68 Q500,48 84,68 Z" fill="#0a1016" stroke="#22303a" stroke-width="1.4"/>
+      <path d="M96,66 Q500,46 904,66" fill="none" stroke="rgba(95,208,234,0.75)" stroke-width="2.2"/>
+
+      <!-- driver TFT: a wide letterbox strip, not a round binnacle -->
+      <g transform="translate(320,134)">
+        <rect x="-150" y="-46" width="300" height="86" rx="10" fill="url(#u9Scr)" stroke="rgba(95,208,234,0.55)" stroke-width="1.8" id="tachArt"/>
+        <text x="-128" y="-22" font-size="7.5" fill="#6f8894" letter-spacing="1.6">POWER kW</text>
+        <path d="M-128,-10 L128,-10" stroke="#1b2c36" stroke-width="7" stroke-linecap="round"/>
+        <path d="M-128,-10 L44,-10" stroke="rgba(95,208,234,0.95)" stroke-width="7" stroke-linecap="round"/>
+        <text x="0" y="26" text-anchor="middle" font-size="30" font-weight="800" fill="#e8f6ff" id="tachGearArt">N</text>
+        <text x="-128" y="34" font-size="7" fill="#6f8894">1,200 V</text>
+        <text x="128" y="34" text-anchor="end" font-size="7" fill="#6f8894">e⁴ · 4 MOTORS</text>
       </g>
-      <!-- passenger benches, set back either side -->
-      <g transform="translate(232,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
-      <g transform="translate(768,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
-      <!-- overhead start button + Velocity control (Speedtail puts them above the driver) -->
-      <g transform="translate(500,26)"><rect x="-64" y="-14" width="128" height="28" rx="8" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="-34" cy="0" r="8" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="-34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">START</text><circle cx="34" cy="0" r="8" fill="#0e2a33" stroke="#35c2d4" id="velocityArt"/><text x="34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">VELOCITY</text></g>
-      <!-- shifter keys on the slim centre console -->
-      <g id="shifterArt" transform="translate(500,196)">
-        <rect x="-40" y="-16" width="80" height="30" rx="8" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.6"/>
-        <g fill="url(#aluG)"><circle cx="-22" cy="0" r="6"/><circle cx="0" cy="0" r="6"/><circle cx="22" cy="0" r="6"/></g>
-        <line x1="0" y1="10" x2="0" y2="0" stroke="url(#aluG)" stroke-width="4" id="leverArt"/>
+
+      <!-- centre touchscreen, rotated towards the driver, showing DiSus-X -->
+      <g transform="translate(552,150) rotate(-7)">
+        <rect x="-66" y="-52" width="132" height="104" rx="7" fill="url(#u9Scr)" stroke="#2b3d48" stroke-width="1.6"/>
+        <text x="0" y="-32" text-anchor="middle" font-size="8.5" fill="#8fd3e6" letter-spacing="1.8">DiSus-X</text>
+        <!-- four corner-height bars: the active body control readout -->
+        <g stroke="#5fd0ea" stroke-width="5" stroke-linecap="round">
+          <path d="M-38,10 l0,-22"/><path d="M-13,14 l0,-30"/><path d="M13,12 l0,-26"/><path d="M38,8 l0,-18"/></g>
+        <text x="0" y="34" text-anchor="middle" font-size="6.5" fill="#5d7885">FL   FR   RL   RR</text>
+        <text x="0" y="46" text-anchor="middle" font-size="6.5" fill="#5d7885">ACTIVE · JUMP READY</text>
       </g>
-      <!-- McLaren wheel, dead centre -->
-      <g id="cabinWheelG" transform="translate(500,300)">
-        <circle r="56" fill="none" stroke="#101216" stroke-width="15"/>
-        <circle r="56" fill="none" stroke="url(#papayaTrimG)" stroke-width="3"/>
-        <line x1="0" y1="0" x2="-52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="0" y2="46" stroke="#171a20" stroke-width="8"/>
-        <circle r="15" fill="#15181d" stroke="#ff7b1a" stroke-width="1.8"/><text x="0" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="12" fill="#ff9a4d">M</text>
+
+      <!-- floating console: the crystal selector and the drive-mode ring -->
+      <g id="shifterArt" transform="translate(534,286)">
+        <path d="M-40,-26 L40,-26 L46,54 L-46,54 Z" fill="#0a1016" stroke="#2b3d48" stroke-width="1.5"/>
+        <rect x="-13" y="-20" width="26" height="42" rx="6" fill="#0a1a22" stroke="rgba(95,208,234,0.8)" stroke-width="1.4"/>
+        <line x1="0" y1="22" x2="0" y2="-4" stroke="rgba(140,225,245,0.95)" stroke-width="7" id="leverArt"/>
+        <circle cx="0" cy="-10" r="9" fill="#0d2530" stroke="rgba(95,208,234,0.9)" stroke-width="1.6"/>
+        <text x="0" y="42" text-anchor="middle" font-size="6.5" fill="#6f8894">P  R  N  D</text>
       </g>
-    </svg>`;
+      <g transform="translate(662,242)"><rect x="-27" y="-19" width="54" height="38" rx="6" fill="#0a1016" stroke="#2b3d48"/><circle cx="0" cy="0" r="12" fill="#123c4c" stroke="#5fd0ea" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6.5" fill="#bff0ff">START</text></g>
+
+      <!-- two-tone buckets in blue and white -->
+      <g transform="translate(198,278)">
+        <path d="M-46,-30 Q-50,-40 -34,-42 L34,-42 Q50,-40 46,-30 L50,84 L-50,84 Z" fill="url(#u9Seat)" stroke="#123644"/>
+        <path d="M-28,-30 L-28,66 M28,-30 L28,66" stroke="rgba(232,242,246,0.75)" stroke-width="2.4"/>
+      </g>
+      <g transform="translate(812,278)">
+        <path d="M-46,-30 Q-50,-40 -34,-42 L34,-42 Q50,-40 46,-30 L50,84 L-50,84 Z" fill="url(#u9Seat)" stroke="#123644"/>
+        <path d="M-28,-30 L-28,66 M28,-30 L28,66" stroke="rgba(232,242,246,0.75)" stroke-width="2.4"/>
+      </g>
+
+      <!-- D-shaped wheel, flat top AND bottom, lit spokes -->
+      <g id="cabinWheelG" transform="translate(320,300)">
+        <path d="M-53,-18 A56 56 0 0 0 -53,18 L-53,26 A56 56 0 0 0 53,26 L53,-18 A56 56 0 0 0 -53,-18 Z" fill="none" stroke="#141a20" stroke-width="13"/>
+        <g stroke="#1c232a" stroke-width="10">
+          <line x1="0" y1="0" x2="-48" y2="-6"/><line x1="0" y1="0" x2="48" y2="-6"/><line x1="0" y1="0" x2="0" y2="46"/></g>
+        <g stroke="rgba(95,208,234,0.85)" stroke-width="2.4">
+          <line x1="-42" y1="-12" x2="-20" y2="-9"/><line x1="42" y1="-12" x2="20" y2="-9"/></g>
+        <circle r="15" fill="#08171e" stroke="rgba(95,208,234,0.8)" stroke-width="2"/>
+        <text x="0" y="4" text-anchor="middle" font-size="9" font-weight="800" fill="#9fe8fb">U9</text>
+      </g>
+    </svg>
+    `;
   }
-  function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
+  function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; return s; }
 
   Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect });
 }
 
 /* ===== UI actions ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, el, CIRCUITS, SPEC, clamp, kmh, audio } = app;
   const showToast = app.showToast;
 
@@ -2474,8 +2623,8 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors drawn shut to drive.", "Speedtail"); }
-    if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, SPEC.gearRatios.length); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors pulled shut to drive.", "U9"); }
+    if (mode === "G") { state.gearMode = "G"; state.curGear = 1; }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
     if (mode !== "G") state.adaptiveCruise = false;
@@ -2499,49 +2648,42 @@ const SPEC = {
 
   function setMode(m) {
     state.driveMode = m;
-    setActive("modeBtn", true); document.getElementById("modeBtn").textContent = m === "wet" ? "Wet" : m === "sport" ? "Sport" : "Race";
+    setActive("modeBtn", true); document.getElementById("modeBtn").textContent = m === "wet" ? "Chill" : m === "sport" ? "Sport" : "U9";
     document.getElementById("modeBtn").classList.toggle("race", m === "race");
-    // Race sharpens everything; Wet softens and adds TC margin; exhaust/suspension follow in physics+audio
+    // Track sharpens everything; Chill softens the pedal and adds TC margin
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: dampers firm, ESC trail, exhaust open, ailerons hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Speedtail");
+    showToast(m === "race" ? "Track: full 1,306 PS, dampers firm, stability trail." : m === "sport" ? "Sport: balanced pedal and power." : "Chill: gentle pedal, traction protected.", "U9");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
-  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Active ailerons: AUTO — flexing for downforce and airbraking." : "Ailerons fixed (manual)."); }
-  function toggleExhaust() {
-    state.exhaustValve = !state.exhaustValve;
-    if (state.exhaustValve) { audio.crackle(); if (el.engineBay) { el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 320); } }
-    else audio.click(900);
-    showToast(state.exhaustValve ? "Exhaust flap open — full twin-turbo V8 voice, crackle on the overrun." : "Exhaust flap closed — muted.");
-  }
-  // McLaren "Velocity mode": a dedicated top-speed protocol. It drops the ride height
-  // 35 mm, retracts the rear-view cameras, trims the ailerons flat, and clears the
-  // powertrain for the full 403 km/h run.
-  function toggleVelocity() {
-    const next = !state.velocity;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage Velocity mode below 50 km/h, then build up.", "Speedtail"); return; }
-    state.velocity = next; setActive("velocityBtn", next);
+  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Spoiler trim: AUTO — diffuser and spoiler working with speed." : "Spoiler trim fixed."); }
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "EV Voice on — the Track hums out loud." : "EV Voice off — library quiet."); }
+  // The Track mode: carbon-ceramic brake kit + Zero-G wheels. With the hardware
+  // fitted, Yangwang sharpens the car for the circuit.
+  function toggleTrackPack() {
+    const next = !state.trackPack;
+    state.trackPack = next; setActive("trackPackBtn", next);
+    SPEC.peakPowerW = next ? SPEC.xtremePowerW : 960000;
     if (next) {
       if (state.driveMode !== "race") setMode("race");
-      state.rideHeight = -1;            // Velocity mode drops the car 35 mm
-      state.aeroAuto = true;            // ailerons managed (flat) by the Velocity logic
-      audio.motor(1.0); audio.chime([392, 523, 659, 784]);
-      showToast("Velocity mode — ride lowered 35 mm, cameras retracted, ailerons flat. 403 km/h cleared. Clear road only.", "Speedtail");
+      state.rideHeight = -1;            // DiSus-X drops the body to its lowest setting
+      audio.motor(1.0); audio.whoosh(0.7); audio.chime([523, 659, 784, 1047, 1319]);
+      showToast("U9 Xtreme — four 30,000 rpm motors, 3,000 PS on 1,200 V. 496.22 km/h at ATP Papenburg, September 2025.", "U9");
     } else {
       state.rideHeight = 0;
-      audio.motor(0.6);
-      showToast("Velocity mode off — road trim restored.", "Speedtail");
+      audio.motor(0.6); audio.click(620);
+      showToast("Standard U9 — 1,306 PS, 309 km/h. DiSus-X back to road height.", "U9");
     }
   }
-  function toggleLights() { state.lights = !state.lights; audio.click(state.lights ? 760 : 520); showToast(state.lights ? "Headlamps on — the beam lights the road." : "Headlamps off."); }
-  function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Nose raised for the ramp." : "Nose lowered to ride height."); }
+  function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
+  function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Air suspension raised for the ramp." : "Air suspension back to ride height."); }
   function armLaunch() {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — full throttle on the brake, then release." : "Launch control off.", "Speedtail");
+    showToast(state.launchArmed ? "Launch Mode — cheetah stance. Hold the brake, floor it, then release." : "Launch Mode off.", "U9");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2566,11 +2708,11 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Speedtail"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Autopilot cruise holding ${state.cruiseSetKmh} km/h.`, "U9"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, velocity: false, rideHeight: 0 });
-    setActive("velocityBtn", false);
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, trackPack: false, rideHeight: 0 });
+    setActive("trackPackBtn", false);
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2579,15 +2721,15 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Speedtail");
+    showToast("Back in the pit lane.", "U9");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleVelocity, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleTrackPack, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2595,22 +2737,22 @@ const SPEC = {
   function applyEffect(key, on) {
     switch (key) {
       case "heat": if (on) state.cool = false; if (on) audio.whoosh(0.4); showToast(on ? "Seat heating on." : "Seat heating off."); break;
-      case "cool": if (on) state.heat = false; if (on) audio.motor(0.45); showToast(on ? "The roof glass darkens at the touch — no sun visors fitted." : "Roof glass clear."); break;
-      case "ambient": if (on) audio.chime([523,659,784]); else audio.click(360); showToast(on ? "The central driving seat glows." : "Cabin light off."); break;
-      case "shifterLight": audio.click(1500); showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
+      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Climate drawing cool air." : "A/C off."); break;
+      case "ambient": if (on) audio.chime([523,698,880]); else audio.click(360); showToast(on ? "The machined aluminium dials glow." : "Ambient lighting off."); break;
+      case "shifterLight": showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
-      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "Engine cover raised — the hybrid V8 on show." : "Engine cover closed."); break;
-      case "antiLag": showToast(on ? "E-boost hold armed — the e-motor keeps the turbos spooled, crackles on the overrun (Race)." : "E-boost hold off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
+      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "FRUNK OPEN" : "FRUNK CLOSED"; audio.motor(0.9); showToast(on ? "Frunk open — luggage where an engine would be." : "Frunk closed."); break;
+      case "antiLag": showToast(on ? "Max regen — one-pedal driving hauls the car down harder." : "Standard regen."); break;
       case "ignition": break;
     }
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the V8 answers with the e-motor whistling over it."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V8 barks to 3,000 and settles."); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Torque blip — 1,420 Nm twitches the whole car without a sound."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Power-up chime — four motors report ready. That's the whole ceremony."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — hybrid V8 lit.", "Speedtail"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Power on — quad-motor ready. It will not make a sound until you move.", "U9"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2618,25 +2760,25 @@ const SPEC = {
 
 /* ===== Co-Pilot voice ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, el, audio } = app;
   const showToast = app.showToast;
   function processVoice() {
     const text = el.voiceInput.value.trim().toLowerCase(); if (!text) return; el.voiceInput.value = "";
     const has = (...w) => w.some(x => text.includes(x)); const reply = (m) => showToast(m, "Co-Pilot");
     const numberFrom = (v) => { const m = v.match(/(\d{1,3})/); return m ? parseInt(m[1], 10) : null; };
-    if (/^(hi|hello|hey)/.test(text)) { reply("Right then. Which circuit?"); return; }
-    if (has("thank", "cheers")) { reply("My pleasure."); return; }
+    if (/^(hi|hello|hey)/.test(text)) { reply("Hey. Which circuit?"); return; }
+    if (has("thank")) { reply("Anytime."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Algarve Circuit", ["algarve", "portimao", "portimão", "portugal"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Laguna Seca", ["laguna", "laguna seca", "corkscrew", "monterey"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("velocity", "top speed", "250 mph", "unlock", "record run")) { app.toggleVelocity(); acted = true; }
-    if (has("launch")) { app.armLaunch(); acted = true; }
-    if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
+    if (has("xtreme", "track mode", "3000", "496")) { app.toggleTrackPack(); acted = true; }
+    if (has("launch", "drag strip", "cheetah")) { app.armLaunch(); acted = true; }
+    if (has("plaid", "race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("chill", "wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
     if (has("exhaust", "valve", "louder")) { app.toggleExhaust(); acted = true; }
     if (has("door", "dihedral")) { has("open") ? app.toggleDoor("all") : app.closeAllDoors(); acted = true; }
@@ -2646,26 +2788,26 @@ const SPEC = {
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “velocity mode”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Grobnik”, “track mode”, “launch”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
 
 /* ===== HUD (per frame) ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, el, SPEC, clamp, lerp, kmh } = app;
   function setActive(id, on) { const n = document.getElementById(id); if (n) n.classList.toggle("active", !!on); }
 
   function updateUi() {
     const speed = Math.round(Math.abs(kmh(state.speedMps)));
     el.speedReadout.textContent = String(speed);
-    el.gearReadout.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    el.gearReadout.classList.toggle("limit", state.gearMode === "G" && state.rpm > 6050);
+    el.gearReadout.textContent = state.gearMode === "G" ? "D" : state.gearMode;
+    el.gearReadout.classList.toggle("limit", false);
     el.rpmText.textContent = `${Math.round(state.rpm)} rpm`;
     el.rpmBar.style.width = clamp(state.rpm / SPEC.redlineRpm * 100, 0, 100) + "%";
-    el.boostText.textContent = `${state.boostBar.toFixed(1)} bar`;
-    el.boostBar.style.width = clamp(state.boostBar / 1.35 * 100, 0, 100) + "%";
+    el.boostText.textContent = `${Math.round(state.boostBar * SPEC.peakPowerKw)} kW`;
+    el.boostBar.style.width = clamp(state.boostBar * 100, 0, 100) + "%";
     el.throttleText.textContent = Math.round(state.throttle * 100) + "%";
     el.throttleBar.style.width = Math.round(state.throttle * 100) + "%";
     el.brakeText.textContent = Math.round(state.brake * 100) + "%";
@@ -2683,12 +2825,12 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.velocity) warn.push("VELOCITY · ailerons flat, 403 km/h cleared");
-    if (state.launchArmed) warn.push("launch armed");
+    if (state.trackPack) warn.push("XTREME SPEC");
+    if (state.launchArmed) warn.push("launch staged");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.velocity && speed >= 340) warn.push("drag-limited — engage Velocity mode for the full 403 km/h");
-    if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
+    if (state.trackPack && speed >= 250) warn.push("TRACK MODE — leaning on the aero");
+    if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : ((state.driveMode === "race" ? "track" : state.driveMode === "wet" ? "chill" : "sport") + " mode")));
     el.warning.textContent = warn.join(" · ");
 
     const gp = document.getElementById("rivalGaps");
@@ -2708,21 +2850,21 @@ const SPEC = {
     el.lightState.textContent = state.lights ? "Active" : "Off";
     el.frontSeatRead.textContent = `${state.frontRecline}°`;
     el.climateRead.textContent = `${Math.round(state.seatTempC)}°C`;
-    el.modeReadCab.textContent = state.driveMode === "wet" ? "Wet" : state.driveMode === "sport" ? "Sport" : "Race";
-    el.rideRead.textContent = state.driveMode === "wet" ? "Soft" : state.driveMode === "sport" ? "Sport" : "Race";
+    el.modeReadCab.textContent = state.driveMode === "wet" ? "Chill" : state.driveMode === "sport" ? "Sport" : "U9";
+    el.rideRead.textContent = state.driveMode === "wet" ? "Comfort" : state.driveMode === "sport" ? "Sport" : "U9";
     el.downforceRead.textContent = `${Math.round(state.downforceN / 9.81)} kg`;
     el.gRead.textContent = state.lateralG.toFixed(2) + " g";
     el.brakeTempRead.textContent = `${Math.round(state.brakeTempC)}°C`;
     el.oilTempRead.textContent = `${Math.round(state.oilTempC)}°C`;
     el.waterTempRead.textContent = `${Math.round(state.waterTempC)}°C`;
-    el.boostRead.textContent = `${state.boostBar.toFixed(1)} bar`;
+    el.boostRead.textContent = `${Math.round(state.boostBar * SPEC.peakPowerKw)} kW`;
     el.egtRead.textContent = `${Math.round(state.egtC)}°C`;
     el.navRead.textContent = state.route.active ? state.route.name : "Free run";
     el.lapRead.textContent = state.lap.bestMs ? `${app.fmtLap(state.lap.curMs)} / ${app.fmtLap(state.lap.bestMs)}` : (state.lap.curMs > 0 ? app.fmtLap(state.lap.curMs) : "—");
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
     el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetKmh)} km/h` : "Off";
     el.tcRead.textContent = state.esc ? (state.tractionControl ? "On" : "ESC only") : "Off";
-    el.dynStatus.textContent = `${state.driveMode === "race" ? "Race" : state.driveMode === "sport" ? "Sport" : "Wet"} · ESC ${state.esc ? "on" : "off"} · aero ${state.aeroAuto ? "auto" : "fixed"}`;
+    el.dynStatus.textContent = `${state.driveMode === "race" ? "U9" : state.driveMode === "sport" ? "Sport" : "Chill"} · stability ${state.esc ? "on" : "off"} · regen ${state.antiLag ? "max" : "std"}`;
 
     if (state.route.active && !app.isLoop()) { el.distRead.textContent = `${(state.route.remainingM / 1000).toFixed(2)} km`; }
     else el.distRead.textContent = app.isLoop() && state.route.active ? "lap" : "—";
@@ -2733,18 +2875,16 @@ const SPEC = {
     document.documentElement.style.setProperty("--wing-deg", (12 + state.aeroDeploy * 26) + "deg");
     document.documentElement.style.setProperty("--flap-deg", (state.frontFlap * 22) + "deg");
     document.documentElement.style.setProperty("--wheel-rot", `${state.wheelRotation}deg`);
-    if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
+    if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.gearMode === "G" && state.throttle < 0.02 && Math.abs(state.speedMps) > 5);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
-    state.velocityVis = lerp(state.velocityVis, state.velocity ? 1 : 0, 0.1);            // Velocity ride drop
-    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 ${(state.velocityVis * 7).toFixed(1)}) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
-    const camPod = document.getElementById("cameraPod"); if (camPod) camPod.setAttribute("opacity", state.velocity ? "0.15" : "1");   // cameras retract in Velocity
-    const velArt = document.getElementById("velocityArt"); if (velArt) velArt.setAttribute("fill", state.velocity ? "#1f7a8a" : "#0e2a33");
+    state.trackPackVis = lerp(state.trackPackVis, (state.trackPack || state.launchArmed) ? 1 : 0, 0.1);   // cheetah-stance dip
+    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 ${(state.trackPackVis * 5).toFixed(1)}) rotate(${(state.trackPackVis * 1.1 - state.noseLiftVis * 3.4).toFixed(2)} 250 250)`);
 
     // engine art
-    const turboRot = (state.time * (200 + state.boostBar * 2600)) % 360;
-    if (el.turboL) el.turboL.style.setProperty("--turbo-rot", turboRot + "deg");
-    if (el.turboR) el.turboR.style.setProperty("--turbo-rot", -turboRot + "deg");
-    el.engineBay.style.setProperty("--haze", clamp((state.egtC - 360) / 600, 0, 0.9));
+    const rotorRot = (state.time * (40 + Math.abs(state.rpm) * 0.6)) % 360;   // rotors spin with road speed
+    if (el.turboL) el.turboL.style.setProperty("--turbo-rot", rotorRot + "deg");
+    if (el.turboR) el.turboR.style.setProperty("--turbo-rot", -rotorRot + "deg");
+    el.engineBay.style.setProperty("--haze", 0);
 
     // dynamics art
     if (el.gearStack) [...el.gearStack.children].forEach((n, i) => n.classList.toggle("active", state.gearMode === "G" && i + 1 === state.curGear));
@@ -2760,8 +2900,8 @@ const SPEC = {
     if (el.gdot) { const gx = clamp(50 + state.lateralG * 30, 6, 94); const accelG = clamp((state.throttle - state.brake) * 1.2, -1.4, 1.4); const gy = clamp(50 - accelG * 30, 6, 94); el.gdot.style.left = gx + "%"; el.gdot.style.top = gy + "%"; }
 
     // cabin svg
-    const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(500,300) rotate(${(state.steer * 90).toFixed(1)})`);
+    const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? "D" : state.gearMode;
+    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(320,300) rotate(${(state.steer * 90).toFixed(1)})`);
     const leverArt = document.getElementById("leverArt"); if (leverArt) leverArt.setAttribute("transform", `rotate(${state.shiftTimer > 0 ? 10 : 0})`);
     const startArt = document.getElementById("startArt"); if (startArt) startArt.setAttribute("fill", state.ignition ? "#1f7a3a" : "#7a1f1f");
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
@@ -2772,7 +2912,7 @@ const SPEC = {
     setActive("exhaustBtn", state.exhaustValve); setActive("exhaustBtn2", state.exhaustValve); setActive("exhaustBtn3", state.exhaustValve);
     setActive("lightsBtn", state.lights); setActive("lightsBtn2", state.lights);
     setActive("liftBtn", state.rideHeight === 1);
-    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("velocityBtn", state.velocity);
+    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("trackPackBtn", state.trackPack);
     setActive("testDriverBtn", state.testDriver);
     setActive("heatBtn", state.heat); setActive("coolBtn", state.cool); setActive("ambientBtn", state.ambient);
     setActive("audioBtn", state.audioCabin); setActive("shifterLightBtn", state.shifterLight); setActive("startSwitchBtn", state.ignition);
@@ -2789,7 +2929,7 @@ const SPEC = {
 
 /* ===== events ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2869,7 +3009,7 @@ const SPEC = {
     document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
-    document.getElementById("velocityBtn").addEventListener("click", () => app.toggleVelocity());
+    document.getElementById("trackPackBtn").addEventListener("click", () => app.toggleTrackPack());
   }
 
   function bindMedia() {
@@ -2887,7 +3027,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Speedtail"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Speedtail"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Speedtail"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "U9"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Motor voice: ${name} — real recording`); showToast("Real drive-unit recording loaded — pitched with speed.", "U9"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the whine works best.", "U9"); }); });
   }
 
   function setupPedals() {
@@ -2922,7 +3062,7 @@ const SPEC = {
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
-      if (e.code === "KeyZ" && !e.repeat) app.toggleVelocity();   // Z = this car's ultimate-speed feature (Velocity Mode)
+      if (e.code === "KeyZ" && !e.repeat) app.toggleTrackPack();   // Z = this car's ultimate-speed feature (Xtreme Spec)
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }
@@ -2966,7 +3106,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Speedtail"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "U9"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -2986,7 +3126,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Speedtail");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "U9");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -3005,7 +3145,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Speedtail");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "U9");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3048,7 +3188,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Speedtail");
+        showToast("Trackpad steering hold cancelled.", "U9");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3058,7 +3198,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Speedtail");
+          showToast("Trackpad steering off.", "U9");
         }
       }
     });
@@ -3066,7 +3206,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Hybrid V8 lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Speedtail"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Powered up. Pull the right paddle for D, or open Circuit for a hot lap.", "U9"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
@@ -3079,7 +3219,7 @@ const SPEC = {
    it is exactly the step the verification harness integrates at (tests/perf-test.mjs),
    so what the test proves is literally what the car does. */
 {
-  const app = window.McLarenApp;
+  const app = window.U9App;
   const { state, clamp, audio } = app;
   const FIXED_DT = 1 / 120;         // 120 Hz physics — same step the perf test calibrates at
   let accumulator = 0;

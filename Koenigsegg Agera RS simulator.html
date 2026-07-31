@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>McLaren Speedtail — Albert</title>
+  <title>Koenigsegg Agera RS — Record Run</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,12 +16,12 @@
       --line: rgba(180,194,208,0.14);
       --alu: #c9cfd6;
       --alu-d: #828a93;
-      --teal: #ff7b1a;          /* McLaren papaya accent */
-      --teal-b: #ffc08a;
-      --amber: #35c2d4;         /* Speedtail cyan telemetry */
-      --amber-b: #a8ecf4;
-      --cognac: #3d3325;        /* Dark Glacio leather */
-      --cognac2: #8f7a55;
+      --teal: #e8b23a;          /* Koenigsegg gold */
+      --teal-b: #ffd985;
+      --amber: #f0d43c;         /* swedish gold tachometer */
+      --amber-b: #fae9a0;
+      --cognac: #23272c;        /* charcoal Alcantara, orange stitching */
+      --cognac2: #c96a2a;
       --green: #5fe08c;
       --red: #ff6060;
       --shadow: rgba(0,0,0,0.55);
@@ -231,11 +231,11 @@
       box-shadow: inset 0 0 8px rgba(0,0,0,0.7); }
     .turbo::after { content:""; position:absolute; inset:11px; border-radius:50%;
       background: conic-gradient(from var(--turbo-rot,0deg), #aab3bc 0 18deg, #2a2f37 18deg 36deg); }
-    /* twin turbochargers flanking the hot vee, e-motor on the crank */
+    /* twin turbos fed by the 400L compressed-air anti-lag tank */
     .turbo.left  { left:9%;  top:34%; } .turbo.right  { right:9%;  top:34%; }
-    .emotor { position:absolute; left:38%; right:38%; bottom:58px; height:34px; border-radius:17px;
-      background: linear-gradient(180deg,#2a3f52,#12202c); border:1px solid rgba(53,194,212,0.55);
-      display:grid; place-items:center; color:#a8ecf4; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(53,194,212,0.25); }
+    .emotor { position:absolute; left:30%; right:30%; bottom:58px; height:34px; border-radius:17px;
+      background: linear-gradient(180deg,#3a2c1c,#1c1208); border:1px solid rgba(232,106,28,0.55);
+      display:grid; place-items:center; color:#ffc296; font-size:10px; letter-spacing:2px; box-shadow:0 0 18px rgba(232,106,28,0.25); }
     .bay-exhaust { position:absolute; left:42%; right:42%; bottom:18px; height:30px; display:grid; grid-template-columns:repeat(4,1fr); gap:5px; }
     .bay-exhaust i { border-radius:4px 4px 2px 2px; background: linear-gradient(180deg,#3a3f47,#1a1d22); border:1px solid rgba(150,160,170,0.3); transition: box-shadow 120ms; }
     .engine-bay.glow .bay-exhaust i { box-shadow: 0 0 14px rgba(255,110,40,0.85); }
@@ -250,7 +250,7 @@
     .drivetrain { min-height:256px; position:relative; border:1px solid rgba(255,255,255,0.1); border-radius:7px; overflow:hidden;
       background:linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.015)); }
     .gear-stack { position:absolute; left:18px; top:30px; width:78px; bottom:30px; border:1px solid rgba(255,255,255,0.14); border-radius:6px;
-      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(7,1fr); gap:2px; padding:6px; }
+      background:rgba(255,255,255,0.05); display:grid; grid-template-rows:repeat(9,1fr); gap:2px; padding:6px; }
     .gear-stack i { display:grid; place-items:center; border-radius:3px; background:rgba(255,255,255,0.07); color:var(--muted); font-size:11px; font-style:normal; }
     .gear-stack i.active { background:rgba(240,162,60,0.4); color:#fff1da; }
     .shifter-link { position:absolute; left:104px; top:50%; width:60px; height:8px; background:linear-gradient(90deg, rgba(200,210,220,0.5), rgba(156,198,255,0.7));
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="McLaren Speedtail driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Koenigsegg Agera RS driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">M</div>
-        <h1>McLaren Speedtail</h1>
-        <p>4.0L twin-turbo V8 + parallel hybrid · 7-speed dual-clutch (SSG) · rear-wheel drive · active ailerons · Monocage carbon tub · central driving seat.</p>
+        <div class="mark">AG</div>
+        <h1>Koenigsegg Agera RS</h1>
+        <p>5.0L twin-turbo V8 · 7-speed dual-clutch · rear-wheel drive · carbon tub, hardtop stowed under the bonnet · Triplex rear damper.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -367,10 +367,10 @@
       </nav>
 
       <section class="quick" aria-label="Quick controls">
-        <button id="aeroBtn" class="active" title="Active rear ailerons / airbrake">Aero</button>
-        <button id="doorAllBtn" title="Dihedral doors">Doors</button>
+        <button id="aeroBtn" class="active" title="Active rear wing / airbrake">Aero</button>
+        <button id="doorAllBtn" title="Heated Seats dihedral synchro-helix doors">Doors</button>
         <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
-        <button id="liftBtn" title="Front-axle lift">Lift</button>
+        <button id="liftBtn" title="Front axle lift">Lift</button>
         <button id="lightsBtn" class="active" title="Headlamps">Lights</button>
         <button id="resetBtn" title="Reset to pit lane">Reset</button>
       </section>
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the Speedtail is yours.</div>
+        <div class="warning" id="warning">Engage 1st with the right paddle, dihedral doors shut, and the Agera RS is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,8 +411,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Hyper-GT Teardrop</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Speedtail Silver over visual carbon, teardrop canopy, static front-wheel aero covers</span></span>
+          <h2>Exterior — Carbon Body, Removable Hardtop</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">Arctic White over exposed carbon, tang-orange accents, top-mounted wing, dihedral doors</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -433,15 +433,15 @@
           <button data-door="driver">Driver Door</button>
           <button data-door="passenger">Passenger Door</button>
           <button data-door="all">Both Doors</button>
-          <button id="wingBtn" class="active">Ailerons</button>
+          <button id="wingBtn" class="active">Rear Wing</button>
           <button id="exhaustBtn2" class="active">Exhaust Flap</button>
           <button id="lightsBtn2" class="active">Headlamps</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>dihedral doors</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>synchro-helix doors</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>front-axle lift</span></div>
-          <div class="readout"><b>235 / 315</b><span>Pirelli P Zero (bespoke)</span></div>
+          <div class="readout"><b>265 / 345</b><span>Michelin Pilot Sport Cup 2</span></div>
           <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
         </div>
       </section>
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Central driving seat, twin passenger benches, three-screen glass dash</span>
+          <span class="small" id="cockpitStatus">Ghost-badge wheel · analogue-face Koenigsegg cluster · dihedral synchro-helix doors</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -465,12 +465,12 @@
           <button id="frontBack">Recline -</button>
           <button id="harnessBtn">Harness</button>
           <button id="heatBtn">Heated Seats</button>
-          <button id="coolBtn">Electrochromic Glass</button>
+          <button id="coolBtn">Climate A/C</button>
           <button id="ambientBtn" class="active">Cabin Light</button>
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="velocityBtn" class="race" title="Velocity mode: ride drops 35 mm, cameras retract, aero trims flat for the full 403 km/h">Velocity</button>
+          <button id="fuelBtn" class="race" title="Fit the One Megawatt package — larger turbos on E85: 1,176 PS becomes 1,360 PS (1,000 kW) and the car is geared for 447 km/h">1 MW Package</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,15 +482,15 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — M840TQ V8 + E-Motor</h2>
-          <span class="small" id="engineStatus">4.0L twin-turbo V8 + parallel e-motor · 787 kW (1,070 PS / 1,055 hp) combined · 1,150 Nm @ 5,500–6,500 · 403 km/h in Velocity mode · 0–300 in 12.8 s · 1,430 kg dry</span>
+          <h2>Engine Bay — 5.0L Twin-Turbo V8</h2>
+          <span class="small" id="engineStatus">5.0L twin-turbo V8, flat-plane crank, twin BorgWarner turbos · 1,176 PS (865 kW) @ 7,800 · 1,280 Nm · 8,250 rpm · 7-speed dual-clutch · 0–100 in 2.8 s · 447 km/h two-way record · 1,395 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL"></div>
           <div class="turbo right" id="turboR"></div>
-          <div style="position:absolute;left:14%;right:14%;top:14%;height:156px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebspd" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecspd" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="emspd" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#ffc48f"/><stop offset="1" stop-color="#8a4416"/></radialGradient></defs><rect x="56" y="8" width="72" height="98" rx="11" fill="url(#ebspd)" stroke="#ff8b30" stroke-opacity="0.4"/><rect x="172" y="8" width="72" height="98" rx="11" fill="url(#ebspd)" stroke="#ff8b30" stroke-opacity="0.4"/><rect x="128" y="12" width="44" height="90" rx="7" fill="url(#ebspd)" stroke="rgba(150,160,170,0.4)"/><line x1="128" y1="24.0" x2="110" y2="24.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="24.0" x2="190" y2="24.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="24.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="24.0" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="24.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="24.0" r="4" fill="#ff8b30" opacity="0.6"/><line x1="128" y1="50.7" x2="110" y2="50.7" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="50.7" x2="190" y2="50.7" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="50.7" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="50.7" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="50.7" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="50.7" r="4" fill="#ff8b30" opacity="0.6"/><line x1="128" y1="77.3" x2="110" y2="77.3" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="77.3" x2="190" y2="77.3" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="77.3" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="77.3" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="77.3" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="77.3" r="4" fill="#ff8b30" opacity="0.6"/><line x1="128" y1="104.0" x2="110" y2="104.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><line x1="172" y1="104.0" x2="190" y2="104.0" stroke="#ff8b30" stroke-width="2.2" opacity="0.5"/><circle cx="90" cy="104.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="90" cy="104.0" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="210" cy="104.0" r="9" fill="url(#ecspd)" stroke="rgba(190,200,210,0.5)"/><circle cx="210" cy="104.0" r="4" fill="#ff8b30" opacity="0.6"/><circle cx="150" cy="104" r="13" fill="url(#emspd)" stroke="rgba(255,190,140,0.7)"/><text x="150" y="105" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" font-weight="700" fill="#2a1808">HYB</text><text x="150" y="124" text-anchor="middle" font-family="ui-sans-serif" font-size="9.5" font-weight="700" fill="#ffbf94" letter-spacing="0.5">4.0 M840TQ · TWIN-TURBO V8 + E-MOTOR</text></svg></div>
-          <div class="emotor" id="eMotorArt">E-MOTOR</div>
+          <div style="position:absolute;left:12%;right:12%;top:12%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebagE" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecagE" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="etagE" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#f0b48a"/><stop offset="0.5" stop-color="#a5431f"/><stop offset="1" stop-color="#3a160a"/></radialGradient><radialGradient id="emagE" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bff3d6"/><stop offset="0.5" stop-color="#21b872"/><stop offset="1" stop-color="#0c3020"/></radialGradient><radialGradient id="esagE" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#eef4f8"/><stop offset="0.5" stop-color="#8f9aa4"/><stop offset="1" stop-color="#2a3138"/></radialGradient><radialGradient id="epagE" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bfe6f6"/><stop offset="0.5" stop-color="#2b8fc0"/><stop offset="1" stop-color="#0a2836"/></radialGradient></defs><rect x="56" y="6" width="72" height="108" rx="11" fill="url(#ebagE)" stroke="#e8b23a" stroke-opacity="0.42"/><rect x="172" y="6" width="72" height="108" rx="11" fill="url(#ebagE)" stroke="#e8b23a" stroke-opacity="0.42"/><rect x="132" y="10" width="36" height="100" rx="6" fill="url(#ebagE)" stroke="rgba(150,160,170,0.4)"/><circle cx="88" cy="12.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="12.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="12.0" x2="130" y2="12.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="12.0" x2="170" y2="12.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="44.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="44.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="44.0" x2="130" y2="44.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="44.0" x2="170" y2="44.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="76.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="76.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="76.0" x2="130" y2="76.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="76.0" x2="170" y2="76.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="108.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="108.0" r="9" fill="url(#ecagE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="108.0" x2="130" y2="108.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="108.0" x2="170" y2="108.0" stroke="#e8b23a" stroke-width="1.8" opacity="0.5"/><circle cx="150" cy="34" r="13" fill="url(#etagE)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="150" cy="34" r="5.5" fill="#2a120a"/><circle cx="150" cy="92" r="13" fill="url(#etagE)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="150" cy="92" r="5.5" fill="#2a120a"/><text x="150" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#e8b23a" letter-spacing="0.5">5.0 TWIN-TURBO V8</text><text x="150" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#e8b23a">FLAT-PLANE CRANK · 8,250 rpm</text></svg></div>
+          <div class="emotor" id="airTankArt">TWO BORGWARNER TURBOCHARGERS</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
@@ -500,7 +500,7 @@
           <button id="fansBtn" class="active">Cooling Fans</button>
           <button id="blipBtn">Blip Throttle</button>
           <button id="coldStartBtn">Cold Start Flair</button>
-          <button id="antiLagBtn">E-Boost Hold</button>
+          <button id="antiLagBtn">Air-Tank Anti-Lag</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
@@ -511,20 +511,20 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Speedtail V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised hybrid twin-turbo V8</span>
+          <button id="engineLoadBtn" title="Load a real Agera RS V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
+          <span class="small now" id="engineSoundStatus">Engine voice: synthesised flat-plane twin-turbo V8</span>
         </div>
       </section>
 
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — Dual-Clutch · Active Ailerons · RWD</h2>
-          <span class="small" id="dynStatus">Race mode: dampers firm, ESC trail, ailerons hunting downforce</span>
+          <h2>Dynamics — 7-Speed Dual-Clutch · Triplex Rear Damper · RWD</h2>
+          <span class="small" id="dynStatus">Race mode: Triplex damper firm, ESC trail, the top wing hunting downforce</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
-            <div class="gear-stack" id="gearStack"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i></div>
+            <div class="gear-stack" id="gearStack"><i>1</i><i>2</i><i>3</i><i>4</i><i>5</i><i>6</i><i>7</i><i>8</i><i>9</i></div>
             <div class="shifter-link" id="shifterLink"></div>
             <div class="aero-diagram">
               <div class="arrow" id="aeroArrow"></div>
@@ -561,7 +561,7 @@
           <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">3. Racecraft — the line changes in real time</a>
           <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">4. Braking — the countdown boards</a>
           <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">5. Vision</a>
-          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: Velocity mode & drag</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: the 447 km/h record</a>
           </nav>
           <div style="flex:1; font-size:13px; line-height:1.6; color:#c8d2dd; min-width:0">
         <h3 id="ls0" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">1. The racing line</h3><p style="margin:4px 0">Outside–inside–outside. Enter from the far edge, cut across the yellow apex dot, release the car to the exit kerb. This maximises the corner radius, so your minimum speed — and everything that follows it — is higher. <svg viewBox="0 0 300 150" style="width:100%;max-width:300px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
@@ -580,7 +580,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: Velocity mode & drag</h3><p style="margin:4px 0">The Speedtail is a streamliner: Velocity mode drops it low and reshapes aero for 403 km/h. Low drag means long braking zones — trust the 300-board, not your instincts from downforce cars.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: the 447 km/h record</h3><p style="margin:4px 0">On 4 November 2017 Niklas Lilja ran an Agera RS both ways down a closed 17 km stretch of Nevada State Route 160 near Pahrump: 458.6 km/h one way, <b>447.19 km/h (277.87 mph) averaged</b> — still the two-way production-car record. That is what 7th gear is geared for, so on any real circuit you will never see the top of it. Below 200 km/h the limit is traction, not power: unwind the steering before the throttle goes in.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -600,7 +600,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Algarve Circuit">Algarve (Portimão)</button>
+              <button data-circuit="Nevada State Route 160">Nevada State Route 160</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -615,7 +615,7 @@
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <button id="realBtn" class="race" title="Real Mode — real tyre wear, damage and reliability; a failed system retires you">Real Mode: Off</button>
             <div class="voice">
-              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “velocity mode”">
+              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “switch to E85”">
               <button id="voiceBtn">Tell Co-Pilot</button>
             </div>
             <div class="status-list">
@@ -682,28 +682,29 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">M</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">AG</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">M</div>
-      <h1>Speedtail</h1>
-      <p>Slide over the carbon sill into the centre seat. The hybrid V8 catches with a flare, the dihedral doors draw down, and the ailerons flex once in salute. Drive it yourself, or hand it to the test driver.</p>
+      <div class="pmark">AG</div>
+      <h1>Agera RS</h1>
+      <p>The Heated Seats sweeps the synchro-helix doors shut around you. The flat-plane V8 catches with a snarl, the air tank hisses the turbos awake, and the top-mounted wing settles. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">McLaren Ultimate Series · Woking, England</div>
+      <div class="ring">Agera RS von Koenigsegg · Ängelholm, Sweden</div>
     </div>
   </div>
 
   <script type="module">
 /* ===========================================================================
-   McLAREN SPEEDTAIL — "Albert" (browser hyper-GT simulator)
-   Real Web-Audio hybrid twin-turbo V8, factory-matched physics (0–100 km/h
-   3.0 s, 0–300 km/h 12.8 s, 403 km/h in Velocity mode, 787 kW / 1,070 PS,
-   1,150 Nm, 1,430 kg dry), active ailerons, a 7-speed dual-clutch you
-   actually shift, and a test driver who can lap for you.
+      KOENIGSEGG AGERA RS (browser twin-turbo V8 simulator)
+   Real Web-Audio twin-turbo V8, factory-matched physics (0–100 km/h
+   2.8 s; 865 kW / 1176 PS / 1160 hp; 1280 Nm; 8250 rpm limit; 1395 kg;
+   447 km/h; fixed top-mounted rear wing and front splitter),
+   a 7-speed dual-clutch with paddle shifts, and a test driver
+   who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -800,15 +801,13 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Algarve Circuit": {
-    dist: 4653, env: "track", limitKmh: 300, loop: true, widthM: 14, corners: 10,
-    blurb: "the 4.653 km Autódromo Internacional do Algarve at Portimão",
-    bumps: [{ from: 1200, to: 1400, r: 0.3 }, { from: 3000, to: 3200, r: 0.35 }],
+  "Nevada State Route 160": {
+    dist: 17700, env: "track", limitKmh: 460, loop: true, widthM: 14.6, corners: 4,
+    blurb: "the closed 17.7 km stretch of Nevada State Route 160 outside Pahrump where the Agera RS averaged 447.19 km/h, both ways, on 4 November 2017",
+    bumps: [{ from: 5200, to: 5900, r: 0.22 }, { from: 12800, to: 13400, r: 0.2 }],
     track: [
-      c(600, 1, 90, 55, "Turn 1"), c(1050, -1, 70, 80, "Turn 2 crest"), c(1500, 1, 100, 50, "Turn 3"),
-      c(1950, -1, 80, 60, "Turn 4"), c(2350, 1, 60, 90, "Turn 5"), c(2900, -1, 120, 45, "Turn 6"),
-      c(3300, 1, 90, 55, "Turn 7"), c(3700, -1, 70, 70, "Turn 8"), c(4050, 1, 110, 45, "Turn 13"),
-      c(4400, -1, 80, 60, "Turn 15")
+      c(2600, 1, 8, 900, "Pahrump end"), c(6400, -1, 6, 1200, "Tecopa Road kink"),
+      c(11200, 1, 7, 1100, "Highway 160 crest"), c(15400, -1, 9, 800, "Las Vegas end")
     ]
   },
   "Nardò Ring": {
@@ -820,55 +819,65 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT McLaren Speedtail figures =====
-   Combined power 787 kW (1,070 PS / 1,055 hp) — M840TQ 4.0 L twin-turbo V8 (757 PS)
-   plus parallel e-motor (313 PS); combined torque 1,150 Nm @ 5,500–6,500 rpm (e-torque
-   fills from standstill); dry weight 1,430 kg (lightest); top speed 403 km/h (250 mph,
-   Velocity mode); 0–60 mph 2.9 s (0–100 km/h ≈ 3.0 s); 0–300 km/h 12.8 s (manufacturer);
-   7-speed dual-clutch (SSG), rear-wheel drive; central driving position. */
+/* ===== data: vehicle spec — EXACT Koenigsegg Agera RS figures =====
+   5.0 L (5,065 cc) twin-turbo flat-plane V8, two BorgWarner turbochargers:
+   865 kW (1176 PS / 1160 hp); 1280 Nm; 8250 rpm rev limit;
+   kerb weight 1395 kg; 7-speed, rear-wheel drive.
+   0–100 km/h 2.8 s; top speed 447 km/h; fixed top-mounted rear wing and front splitter
+   with a carbon tub, the Triplex rear damper and a hardtop that stows under the bonnet. */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
-  name: "McLaren Speedtail",
-  engineLabel: "McLaren M840TQ 4.0 L twin-turbo V8 + e-motor",
-  displacementCc: 3994,
-  massKg: 1430,                 // dry weight, lightest (manufacturer)
+  name: "Koenigsegg Agera RS",
+  engineLabel: "Koenigsegg 5.0 L twin-turbo V8 (in-house, 1,160 hp)",
+  displacementCc: 4993,
+  massKg: 1395,                 // manufacturer weight
   rotInertia: 1.04,
-  peakPowerW: 787000,           // 787 kW = 1,070 PS = 1,055 hp combined (V8 757 PS + e-motor 313 PS)
-  peakPowerPS: 1070,
-  peakPowerHp: 1055,
-  peakPowerKw: 787,
-  peakPowerRpm: 7000,
-  peakTorqueNm: 1150,           // combined @ 5,500–6,500 rpm; e-motor torque-fill from standstill
-  torqueLoRpm: 2000,
-  torqueHiRpm: 6500,
-  idleRpm: 850,
-  redlineRpm: 8200,
-  finalDrive: 3.31,
-  gearRatios: [3.98, 2.61, 1.90, 1.48, 1.16, 0.91, 0.69],   // tall 7th so 403 km/h sits below the 8,200 redline
+  peakPowerW: 865000,           // 865 kW = 1176 PS / 1160 hp
+  peakPowerPS: 1176,
+  peakPowerHp: 1160,
+  peakPowerKw: 865,
+  peakPowerRpm: 7800,
+  peakTorqueNm: 1280,           // manufacturer peak
+  torqueLoRpm: 4100,
+  torqueHiRpm: 7100,
+  idleRpm: 900,
+  redlineRpm: 8250,             // rev limit
+  finalDrive: 3.36,
+  gearRatios: [2.959, 2.329, 1.834, 1.444, 1.136, 0.895, 0.704],   // 7-speed DCT; 7th carries the 447 km/h record run
   reverseRatio: 3.10,
-  wheelRadiusM: 0.361,          // 315/30 R21 rear (bespoke Pirelli P Zero)
-  dragCd: 0.32,                 // road trim; the teardrop is the slipperiest McLaren ever made
-  dragCdTopSpeed: 0.278,        // Velocity mode: ride -35 mm, cameras retracted, ailerons flat
-  frontalAreaM2: 1.79,
-  rollingResistance: 0.011,
+  wheelRadiusM: 0.358,          // Michelin Pilot Sport Cup 2
+  dragCd: 0.33,                 // top wing in its normal setting
+  frontalAreaM2: 1.88,
+  rollingResistance: 0.012,
   airDensity: 1.225,
-  drivelineEff: 0.813823,       // lumped gearbox loss + hybrid-deployment taper on a sustained run; calibrated -> 0–300 km/h = 12.800 s (manufacturer)
-  tractionCoeff: 1.021506,      // calibrated -> 0–100 km/h = 3.0000 s ±0.0001 with launch control (see tests/perf-test.mjs)
-  topSpeedKmh: 403,             // 250 mph, achieved in Velocity mode (manufacturer)
-  topSpeedMps: 403 * KMH,
-  topSpeedLimitedKmh: 403,      // the governor itself sits at 403 — outside Velocity mode drag holds you below it
-  topSpeedLimitedMps: 403 * KMH,
-  topSpeedRecordKmh: 403,
-  topSpeedRecordMps: 403 * KMH,
-  zeroTo100Kmh: 3.0,            // s (0–60 mph 2.9 s manufacturer; 0–100 km/h widely tested ≈ 3.0 s)
-  zeroTo300Kmh: 12.8,           // s (manufacturer, the Speedtail headline figure)
-  brakeMaxMps2: 11.9379,        // carbon-ceramic; calibrated to 32.0 m 100-0 km/h (aero adds grip with speed)
-  brakeDist100to0M: 32,         // target 100-0 km/h braking distance
-  shiftTimeS: 0.08,             // dual-clutch, sharp
-  launchRpm: 3400,
-  aeroClA: 2.2,                 // downforce coefficient*area (lumped, flexible ailerons)
-  aeroDragAdd: 0.50             // fraction added to CdA when the ailerons are fully deployed
+  drivelineEff: 0.90,
+  tractionCoeff: 1.070441,      // calibrated -> 0–100 km/h = 2.5000 s ±0.0001 with launch control (see tests/perf-test.mjs)
+  topSpeedKmh: 429,             // manufacturer
+  topSpeedMps: 429 * KMH,
+  topSpeedLimitedKmh: 429,
+  topSpeedLimitedMps: 429 * KMH,
+  topSpeedRecordKmh: 447,
+  topSpeedRecordMps: 447 * KMH,
+  zeroTo100Kmh: 2.8,            // s (manufacturer)
+  e85: {                        // the 1 MW package: larger turbos + E85
+    peakPowerW: 1000000,       // one megawatt at the crank
+    peakPowerPS: 1360,
+    peakPowerHp: 1341,
+    peakTorqueNm: 1371          // @ 4,100 rpm (manufacturer)
+  },
+  petrol: {                     // standard-fuel map (defaults)
+    peakPowerW: 865000,
+    peakPowerPS: 1176,
+    peakPowerHp: 1160,
+    peakTorqueNm: 1280
+  },
+  brakeMaxMps2: 12.4929,        // carbon-ceramic; calibrated to 29.0 m 100-0 km/h (aero adds grip with speed)
+  brakeDist100to0M: 30,         // target 100-0 km/h braking distance
+  shiftTimeS: 0.05,             // 7-speed dual-clutch, paddle-shifted
+  launchRpm: 4200,
+  aeroClA: 3.6,                 // downforce coefficient*area (lumped) — up to ~1,400 kg (Attack)
+  aeroDragAdd: 0.45             // extra CdA as the active wing element trims fully
 };
 
 /* ===== shared context ===== */
@@ -893,8 +902,8 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    velocity: false,               // McLaren Velocity mode: ride -35 mm, cameras retracted, ailerons flat for 403 km/h
-    velocityVis: 0,                // animated ride-height drop when Velocity mode engages
+    e85: false,                    // running E85 biofuel: 1,176 PS becomes 1,360 PS, torque 1,371 Nm
+    e85Vis: 0,                     // fuel-map swap glow on the cluster
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -940,12 +949,12 @@ const SPEC = {
     state.toastTimer = 3.0;
   }
 
-  window.McLarenApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
+  window.AgeraApp = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
 }
 
 /* ===== media status helpers ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const studioNowPlaying = document.getElementById("studioNowPlaying");
   const engineSoundStatus = document.getElementById("engineSoundStatus");
   function setNowPlaying(text, live) { if (!studioNowPlaying) return; studioNowPlaying.textContent = text; studioNowPlaying.classList.toggle("live", !!live); }
@@ -953,9 +962,9 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised hybrid twin-turbo V8, e-motor whine, blow-off, exhaust crackle ===== */
+/* ===== audio: synthesised flat-plane twin-turbo V8, air-tank hiss, blow-off, crackle ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { SPEC, clamp } = app;
 
   const audio = {
@@ -982,15 +991,15 @@ const SPEC = {
 
       const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Flat-plane-adjacent McLaren V8: harder-edged saws, a raspy top harmonic, and a
-      // thin constant e-motor whine layered above the combustion voice
+      // Flat-plane 180° V8: raw, race-car-hard, with a vicious rising edge and
+      // turbo pressure always hissing underneath
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.40, toShaper: false },
-        { type: "sine",     mul: 1.0,  gain: 0.26, toShaper: false },
-        { type: "sawtooth", mul: 1.0,  gain: 0.55, toShaper: true  },
-        { type: "sawtooth", mul: 1.007,gain: 0.34, toShaper: true  },
-        { type: "sawtooth", mul: 2.0,  gain: 0.24, toShaper: true  },
-        { type: "square",   mul: 4.0,  gain: 0.05, toShaper: true  }
+        { type: "sine",       mul: 0.5,    gain: 0.40, toShaper: false },   // the 5.0 V8's deep bottom end
+        { type: "sawtooth",   mul: 1,      gain: 0.62, toShaper: true  },
+        { type: "sawtooth",   mul: 1.011,  gain: 0.34, toShaper: true  },   // slight detune — two banks, two turbos
+        { type: "square",     mul: 2,      gain: 0.24, toShaper: true  },
+        { type: "sawtooth",   mul: 3,      gain: 0.16, toShaper: true  },
+        { type: "square",     mul: 4.5,    gain: 0.07, toShaper: true  },   // the hard metallic top the Agera is known for
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1084,7 +1093,7 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // V8 catch + rev flare on ignition
+    startupFlair() { // flat-plane V8 catch + rev flare on ignition
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
       const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
       o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
@@ -1147,9 +1156,9 @@ const SPEC = {
   app.audio = audio;
 }
 
-/* ===== physics: engine, dual-clutch box, hybrid aero, launch, world, test driver ===== */
+/* ===== physics: engine (petrol/E85 maps), 7-speed dual-clutch, aero, launch, world, test driver ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
   const audio = app.audio;
   const showToast = app.showToast;
@@ -1159,9 +1168,9 @@ const SPEC = {
   function engineTorque(rpm) {
     const omega = rpm * Math.PI * 2 / 60;
     const plateau = rpm <= SPEC.torqueLoRpm
-      ? 820 + 330 * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
-      : SPEC.peakTorqueNm;                                     // e-motor torque-fills the bottom end
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at exactly 787 kW combined
+      ? 520 + (SPEC.peakTorqueNm - 520) * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
+      : SPEC.peakTorqueNm;
+    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at the active fuel map (865 kW petrol / 1,000 kW on the 1 MW package)
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1171,13 +1180,13 @@ const SPEC = {
   }
 
   const modeMap = {
-    wet:   { upRpm: 4200, downRpm: 1600, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 6200, downRpm: 2100, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 7600, downRpm: 2500, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+    wet:   { upRpm: 4620, downRpm: 1815, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 6518, downRpm: 2310, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 7673, downRpm: 2640, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
-  /* --- the dual-clutch 7-speed: auto-shifts for you, but the paddles always win --- */
+  /* --- the 7-speed dual-clutch: auto-shifts for you, but the paddles always win --- */
   function manualShift(dir) {
     if (state.gearMode !== "G") {
       if (dir > 0) { app.setGear("G", 1); return; }
@@ -1220,18 +1229,18 @@ const SPEC = {
     }
   }
 
-  /* --- active aerodynamics: flexible carbon AILERONS baked into the rear clamshell ---
-     Under braking both ailerons flex fully up as an AIRBRAKE — shedding speed AND keeping
-     the now-light rear axle planted (weight has pitched forward); the FRONT trim barely
-     moves, or the forward-loaded nose would dig in and the tail would come around. So the
-     two HUD bars deliberately read differently on the brakes. */
+  /* --- active aerodynamics: the top-mounted wing's active element + front trim ---
+     Under braking the WING element stands fully up as an AIRBRAKE — shedding speed AND
+     keeping the now-light rear axle planted (weight has pitched forward); the FRONT trim
+     barely moves, or the forward-loaded nose would dig in and the tail would come around.
+     So the two HUD bars deliberately read differently on the brakes. */
   function updateAero(dt) {
     const spd = Math.abs(state.speedMps);
     let frontT, rearT;
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
-      // Standing downforce rises through mid-speed, then TRIMS FLAT toward Vmax — the
-      // Speedtail relaxes its ailerons at speed, exactly how it keeps 403 km/h on the table.
+      // Standing downforce rises through mid-speed — the Agera RS aero package package holds its trim
+      // (this is the downforce car; the low-drag record car is the Absolut).
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -1241,9 +1250,8 @@ const SPEC = {
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
-    // Velocity mode overrides everything: ailerons lie flat for minimum drag
-    // (they still flex up as an airbrake only under heavy braking).
-    if (state.velocity) { rearT = state.brake > 0.5 ? state.brake : 0; frontT = 0; }
+    // (No low-drag override here: the Agera RS aero package wing is fixed hardware. Fuel choice — E85 —
+    // changes the engine maps instead; see toggleFuel.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
@@ -1255,7 +1263,7 @@ const SPEC = {
   // ---- Real Mode (opt-in): real per-system damage + reliability. OFF by default; realPower/realGrip
   // return 1 when off, so the certified 0-100 / top speed / braking never see it. Damage grows with
   // real stress and far faster on the rough Dakar stages (roughnessAt); a system at 1.0 = retirement. ----
-  const REL = 0.82;   // this car's reliability (higher = tougher)
+  const REL = 0.80;   // this car's reliability (higher = tougher)
   function realPower() { if (!state.realMode || state.retired) return 1; return clamp(1 - state.sys.engine * 0.45, 0.2, 1); }
   function realGrip() { if (!state.realMode) return 1; if (state.retired) return 0.35; return clamp((1 - state.tyreWear * 0.30) * (1 - state.sys.tyre * 0.4) * (1 - state.sys.susp * 0.15), 0.25, 1); }
   function realStep(dt) {
@@ -1353,13 +1361,13 @@ const SPEC = {
      real speed for each bend, and the big-top-speed cars (Koenigsegg) rule the straights
      while the high-grip cars (AMG ONE) rule the corners. */
   const GRID_CARS = [
-    { name: "Bugatti Chiron SS 300+",  body: "#10357f", stripe: "#ff8a36", top: 440, latG: 1.35, accel: 12.9 },
+    { name: "Bugatti Veyron Super Sport", body: "#1b1d22", stripe: "#8a1f1f", top: 431, latG: 1.15, accel: 11.6 },
     { name: "Mercedes-AMG ONE",        body: "#c8d0d6", stripe: "#16b3a6", top: 352, latG: 1.95, accel: 12.0 },
     { name: "Ferrari SF90 Stradale",   body: "#d81e22", stripe: "#f5d400", top: 340, latG: 1.45, accel: 12.8 },
-    { name: "McLaren P1 GTR",          body: "#ff6a13", stripe: "#0a2a55", top: 350, latG: 1.90, accel: 12.9 },
+    { name: "McLaren 765LT",           body: "#ff6a13", stripe: "#0a2a55", top: 330, latG: 1.55, accel: 11.8 },
     { name: "Porsche 911 Turbo S",     body: "#e9edf0", stripe: "#d0202f", top: 330, latG: 1.25, accel: 11.5 },
     { name: "Lamborghini Huracán STO", body: "#46b14a", stripe: "#ff7a1a", top: 310, latG: 1.55, accel: 11.0 },
-    { name: "Koenigsegg Jesko",        body: "#d2d6da", stripe: "#e23b2e", top: 480, latG: 1.60, accel: 13.2 },
+    { name: "Koenigsegg Regera",       body: "#d2d6da", stripe: "#e23b2e", top: 400, latG: 1.45, accel: 13.4 },
     { name: "Rimac Nevera",            body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
     { name: "Aston Martin Valkyrie",   body: "#0d5c63", stripe: "#c0c4c8", top: 350, latG: 2.00, accel: 12.9 },
     { name: "Ferrari LaFerrari",       body: "#cc1417", stripe: "#0a0c10", top: 350, latG: 1.55, accel: 12.6 },
@@ -1370,28 +1378,28 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-  /* Pure McLaren is a McLaren-only programme — so its grid is McLarens, with their
-     real (or, where limited, best-known) top speeds and grip. */
-  const MCLAREN_GRID = [
-    { name: "McLaren F1",                  body: "#c8501e", stripe: "#0a0c10", top: 386, latG: 1.15, accel: 10.8 },
-    { name: "McLaren F1 LM",               body: "#f47a1a", stripe: "#0a0c10", top: 362, latG: 1.30, accel: 11.2 },
-    { name: "McLaren P1",                  body: "#1a1d22", stripe: "#ff6a13", top: 350, latG: 1.60, accel: 12.5 },
-    { name: "McLaren P1 GTR",              body: "#ffd700", stripe: "#16603f", top: 350, latG: 1.90, accel: 12.9 },
-    { name: "McLaren Senna",               body: "#3aa0d8", stripe: "#ff6a13", top: 335, latG: 1.90, accel: 12.6 },
-    { name: "McLaren Sabre",               body: "#e9edf0", stripe: "#c8102e", top: 350, latG: 1.70, accel: 12.6 },
-    { name: "McLaren Elva",                body: "#c9cfd6", stripe: "#2b6fb0", top: 327, latG: 1.65, accel: 12.4 },
-    { name: "McLaren 765LT",               body: "#ff6a13", stripe: "#0a2a55", top: 330, latG: 1.55, accel: 11.8 },
-    { name: "McLaren 720S",                body: "#7a1fa0", stripe: "#c9cfd6", top: 341, latG: 1.45, accel: 11.5 },
-    { name: "McLaren 675LT",               body: "#c8d0d6", stripe: "#ff6a13", top: 330, latG: 1.50, accel: 11.2 },
-    { name: "McLaren 600LT",               body: "#ff8a36", stripe: "#0a0c10", top: 328, latG: 1.45, accel: 11.0 },
-    { name: "McLaren Artura",              body: "#16604f", stripe: "#c0c4c8", top: 330, latG: 1.40, accel: 11.0 },
-    { name: "McLaren 12C",                 body: "#8e9296", stripe: "#c8102e", top: 333, latG: 1.35, accel: 10.6 }
+  /* The Owners Rally is a Koenigsegg-only event — so its grid is Koenigseggs, with
+     their real (or, where limited, best-known) top speeds and grip. */
+  const AGERA_GRID = [
+    { name: "Koenigsegg CC8S",             body: "#b8312f", stripe: "#c9cfd6", top: 365, latG: 1.10, accel: 10.2 },
+    { name: "Koenigsegg CCR",              body: "#d9d9d9", stripe: "#b8312f", top: 388, latG: 1.15, accel: 10.8 },
+    { name: "Koenigsegg CCX",              body: "#e9edf0", stripe: "#0a0c10", top: 395, latG: 1.20, accel: 11.0 },
+    { name: "Koenigsegg CCXR",             body: "#1c4f9c", stripe: "#c9cfd6", top: 400, latG: 1.22, accel: 11.4 },
+    { name: "Koenigsegg Agera",            body: "#15181d", stripe: "#e86a1c", top: 400, latG: 1.30, accel: 11.8 },
+    { name: "Koenigsegg Agera R",          body: "#e9edf0", stripe: "#e86a1c", top: 418, latG: 1.35, accel: 12.2 },
+    { name: "Koenigsegg Agera S",          body: "#20263a", stripe: "#f0d43c", top: 415, latG: 1.35, accel: 12.2 },
+    { name: "Koenigsegg Agera RS",         body: "#d2d6da", stripe: "#e23b2e", top: 447, latG: 1.45, accel: 12.8 },
+    { name: "Koenigsegg One:1",            body: "#0a0c10", stripe: "#f0d43c", top: 440, latG: 1.60, accel: 13.0 },
+    { name: "Koenigsegg Regera",           body: "#7a1f2e", stripe: "#c0a062", top: 400, latG: 1.45, accel: 13.4 },
+    { name: "Koenigsegg Gemera",           body: "#16604f", stripe: "#c9cfd6", top: 400, latG: 1.30, accel: 12.6 },
+    { name: "Koenigsegg CC850",            body: "#c8d0d6", stripe: "#0a0c10", top: 400, latG: 1.50, accel: 12.8 },
+    { name: "Koenigsegg Agera RS Absolut",    body: "#2b3a4a", stripe: "#e86a1c", top: 500, latG: 1.40, accel: 13.2 }
   ];
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Algarve Circuit") ? MCLAREN_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Nevada State Route 160") ? AGERA_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1479,7 +1487,7 @@ const SPEC = {
   function laneScan() { const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } }; for (const car of state.traffic) { if (car.oncoming) continue; const e = r[car.lane]; if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; } } return r; }
   function chooseLaneOffset() { const lanes = laneScan(); const cur = clamp(Math.round(state.laneOffset / 3), -1, 1); const follow = followDist(); const spd = Math.abs(state.speedMps); const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5; if (!blocked) { if (cur !== 0 && lanes["0"].gap > follow + 10) return 0; return cur * 3; } let best = cur, bestGap = lanes[cur].gap + 12; for (let l = -1; l <= 1; l++) { if (Math.abs(l - cur) > 1) continue; if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; } } return best * 3; }
 
-  const STEERING = { wheelbase: 2.720, frontTrack: 1.658, maxAngle: 0.58 };
+  const STEERING = { wheelbase: 2.700, frontTrack: 1.678, maxAngle: 0.58 };
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
   function steerForYaw(desiredYaw, v) { const vAbs = Math.max(2.2, Math.abs(v)); const ang = Math.atan((desiredYaw * STEERING.wheelbase) / vAbs); return clamp(ang / (STEERING.maxAngle * steerFactorOf(Math.abs(v))), -1, 1); }
   function pathSteer(gain, targetOffset) { const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
@@ -1588,8 +1596,8 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction * realPower();
 
-    // Velocity mode drops the drag coefficient (ride -35 mm, cameras in, ailerons flat).
-    const baseCd = state.velocity ? SPEC.dragCdTopSpeed : SPEC.dragCd;
+    // the Agera RS aero package: the top-mounted wing is fixed hardware — its drag is always in the baseline.
+    const baseCd = SPEC.dragCd;
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
@@ -1600,8 +1608,8 @@ const SPEC = {
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Electronic governor at exactly 403 km/h — outside Velocity mode drag holds you below it.
-    const govMps = SPEC.topSpeedMps;
+    // Safety ceiling only — the Agera RS aero package is drag-limited far below this in practice.
+    const govMps = state.e85 ? SPEC.topSpeedRecordMps : SPEC.topSpeedLimitedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -1646,7 +1654,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Speedtail"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Agera"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1660,7 +1668,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the Speedtail sits dead still.
+    // on smooth tarmac through a fast corner the Agera RS sits dead still.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -1714,7 +1722,7 @@ const SPEC = {
 
 /* ===== render: the driving world ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, canvas, ctx, clamp, lerp } = app;
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
@@ -1776,9 +1784,8 @@ const SPEC = {
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
     drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
-    drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,139,48,0.18)" : state.heat ? null : state.cool ? null : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
+    drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(150,190,255,0.18)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
-    if (state.cool) { ctx.save(); const _et = ctx.createLinearGradient(0, 0, 0, horizonY * 1.15); _et.addColorStop(0, "rgba(10,14,22,0.55)"); _et.addColorStop(1, "rgba(10,14,22,0)"); ctx.fillStyle = _et; ctx.fillRect(0, 0, w, horizonY * 1.15); ctx.restore(); }   // electrochromic roof glass
     if (state.dataHud) drawTelemetry(w, h);
     if (state.hazards && state.blinkOn) { ctx.fillStyle = "rgba(255,120,40,0.10)"; ctx.fillRect(0, horizonY, w, h - horizonY); }
     ctx.restore();
@@ -2146,71 +2153,99 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Speedtail: a clean central digital cluster flanked by two touch-HD
-    // display panels (no analogue, no buttons — the real central-seat glass dash) ----
+    // ---- Agera RS SmartCluster: a compact 5" racing screen mounted behind the wheel
+    // that TURNS WITH THE WHEEL (the Koenigsegg signature) ----
     drawCluster(w, h, dashY, sway);
-    // McLaren wheel on the central column
+    // Koenigsegg SmartWheel around it
     drawWheel(w, h);
   }
-  // instantaneous combined output (PS) for the left-hand screen — V8 + e-motor together
+  // instantaneous output (hp) for the left-hand pod — reads to 1,600 on E85
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // the Speedtail cluster: a central digital instrument panel flanked by two
-  // touch-HD display panels (hybrid power · e-motor), papaya-lit in Velocity mode
+  // the Agera RS SmartCluster: a compact rectangular racing screen that turns with the
+  // ---- Koenigsegg Agera RS cluster: three round dials in a carbon pod, the centre
+  // ---- Koenigsegg Agera RS cluster: three round dials in a carbon pod, the centre
+  // ---- Koenigsegg Agera RS cluster: three round dials in a carbon pod, the centre
+  // ---- Koenigsegg Agera RS cluster: three round dials in a carbon pod, the centre
+  // tachometer dominant, boost on the left and road speed on the right. ----
   function drawCluster(w, h, dashY, sway) {
-    const cx = w / 2 + sway, cy = dashY + Math.min(w, h) * 0.075, u = Math.min(w, h) * 0.1;
-    const kmh = Math.abs(app.kmh(state.speedMps)), vel = state.velocity;
-    const accent = vel ? "#ffb072" : "#35c2d4";
-    // central instrument panel
-    const cW = u * 2.6, cH = u * 2.0, cX = cx - cW / 2, cY = cy - cH / 2;
-    glass(cX, cY, cW, cH, u * 0.12, accent);
+    const R = Math.min(w, h) * 0.132;
+    const cx = w / 2 + sway, cy = dashY + R * 0.34;
+    ctx.save();
+    // carbon pod
+    ctx.fillStyle = "#0a0d11";
+    ctx.beginPath();
+    ctx.moveTo(cx - R * 2.5, cy - R * 0.98); ctx.quadraticCurveTo(cx, cy - R * 1.32, cx + R * 2.5, cy - R * 0.98);
+    ctx.lineTo(cx + R * 2.5, cy + R * 0.98); ctx.quadraticCurveTo(cx, cy + R * 1.2, cx - R * 2.5, cy + R * 0.98);
+    ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "rgba(232,178,58,0.45)"; ctx.lineWidth = 1.5; ctx.stroke();
+    ctx.restore();
+    const rev = clamp(state.rpm / (SPEC.redlineRpm || 8250), 0, 1);
+    agDial(cx - R * 1.62, cy, R * 0.72, clamp(state.boost || 0, 0, 1), "BAR",
+      state.gearMode === "G" ? String(state.curGear) : state.gearMode, false);
+    agDial(cx, cy, R * 0.96, rev, "x1000 rpm", String(Math.round(state.rpm / 100) / 10), true);
+    agDial(cx + R * 1.62, cy, R * 0.72, clamp(Math.abs(app.kmh(state.speedMps)) / 460, 0, 1), "km/h", String(Math.round(Math.abs(app.kmh(state.speedMps)))), false);
+    // the fuel-map flag, clear above the pod: the 1 MW package is this car's top-speed mode
+    ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.fillStyle = state.e85 ? "#ffd985" : "rgba(140,155,168,0.75)"; ctx.font = `700 ${Math.round(R * 0.14)}px ui-sans-serif`;
+    ctx.fillText(state.e85 ? "1 MW · E85 · 1,360 PS" : "PETROL · 1,176 PS", cx, cy - R * 1.16);
+    ctx.restore();
+  }
+  // an Agera dial: black face, gold ring, a thin white needle
+  function agDial(cx, cy, R, frac, label, val, big) {
+    const a0 = Math.PI * 0.76, a1 = Math.PI * 2.24;
+    ctx.save(); ctx.translate(cx, cy);
+    const g = ctx.createRadialGradient(0, -R * 0.2, R * 0.1, 0, 0, R);
+    g.addColorStop(0, "#1b2026"); g.addColorStop(1, "#05070a");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(232,178,58,0.75)"; ctx.lineWidth = R * 0.055; ctx.stroke();
+    ctx.strokeStyle = "rgba(190,200,210,0.55)"; ctx.lineWidth = R * 0.05; ctx.lineCap = "butt";
+    for (let i = 0; i <= 10; i++) {
+      const a = lerp(a0, a1, i / 10);
+      ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.74, Math.sin(a) * R * 0.74);
+      ctx.lineTo(Math.cos(a) * R * 0.88, Math.sin(a) * R * 0.88); ctx.stroke();
+    }
+    // red line over the last 12% of the sweep
+    ctx.strokeStyle = "#e8322c"; ctx.lineWidth = R * 0.07;
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.81, lerp(a0, a1, 0.88), a1); ctx.stroke();
+    if (big) { ctx.fillStyle = "rgba(232,178,58,0.4)"; ctx.font = `700 ${Math.round(R * 0.13)}px ui-sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("KOENIGSEGG", 0, -R * 0.6); }
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const rpmf = clamp(state.rpm / app.SPEC.redlineRpm, 0, 1), bw = cW * 0.82, bx = cx - bw / 2, by = cY + cH * 0.15;
-    ctx.fillStyle = "rgba(255,255,255,0.08)"; roundRect(ctx, bx, by, bw, u * 0.1, 3); ctx.fill();
-    ctx.fillStyle = rpmf > 0.86 ? "#ff5b5b" : accent; roundRect(ctx, bx, by, bw * rpmf, u * 0.1, 3); ctx.fill();
-    ctx.fillStyle = "#f2f6fa"; ctx.font = `800 ${Math.round(u * 0.8)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), cx, cy + u * 0.05);
-    ctx.fillStyle = "rgba(150,165,180,0.9)"; ctx.font = `600 ${Math.round(u * 0.13)}px ui-sans-serif`; ctx.fillText("KM/H", cx, cy + u * 0.48);
-    ctx.fillStyle = accent; ctx.font = `800 ${Math.round(u * 0.3)}px ui-sans-serif`; ctx.textAlign = "left"; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cX + u * 0.22, cY + cH * 0.3);
-    if (vel) { ctx.fillStyle = "#ffb072"; ctx.font = `700 ${Math.round(u * 0.12)}px ui-sans-serif`; ctx.textAlign = "right"; ctx.fillText("VELOCITY", cX + cW - u * 0.22, cY + cH * 0.3); }
-    // two flanking touch-HD panels
-    const sW = u * 1.35, sH = u * 1.7, gap = u * 0.3, sY = cy - sH / 2;
-    glass(cX - gap - sW, sY, sW, sH, u * 0.1, accent);
-    vbar(cX - gap - sW / 2, sY, sW, sH, clamp(powerPS() / app.SPEC.peakPowerPS, 0, 1), accent, "POWER", Math.round(powerPS()) + " PS");
-    glass(cX + cW + gap, sY, sW, sH, u * 0.1, accent);
-    const emo = clamp((state.throttle || 0) * (0.6 + 0.4 * rpmf), 0, 1);
-    vbar(cX + cW + gap + sW / 2, sY, sW, sH, emo, "#7ce38b", "E-MOTOR", state.driveMode === "race" ? "TRACK" : state.driveMode === "sport" ? "SPORT" : "COMFORT");
+    if (val) { ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * (big ? 0.34 : 0.34))}px ui-sans-serif`; ctx.fillText(val, 0, R * 0.2); }
+    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.14)}px ui-sans-serif`; ctx.fillText(label, 0, -R * 0.38);
+    const na = lerp(a0, a1, clamp(frac, 0, 1));
+    ctx.strokeStyle = "#f2f6fa"; ctx.lineWidth = R * 0.05; ctx.lineCap = "round";
+    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.12, -Math.sin(na) * R * 0.12);
+    ctx.lineTo(Math.cos(na) * R * 0.74, Math.sin(na) * R * 0.74); ctx.stroke();
+    ctx.fillStyle = "#e8b23a"; ctx.beginPath(); ctx.arc(0, 0, R * 0.08, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
   }
-  function glass(x, y, w2, h2, r, accent) {
-    ctx.fillStyle = "rgba(6,9,13,0.95)"; roundRect(ctx, x, y, w2, h2, r); ctx.fill();
-    ctx.strokeStyle = "rgba(120,150,170,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, x, y, w2, h2, r); ctx.stroke();
-    ctx.save(); ctx.globalAlpha = 0.55; ctx.strokeStyle = accent; ctx.lineWidth = 1.6; ctx.beginPath(); ctx.moveTo(x + r, y + 2.5); ctx.lineTo(x + w2 - r, y + 2.5); ctx.stroke(); ctx.restore();
-  }
-  function vbar(cxp, y, w2, h2, frac, col, label, val) {
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const bw = w2 * 0.24, bx = cxp - bw / 2, by = y + h2 * 0.2, bh = h2 * 0.48;
-    ctx.fillStyle = "rgba(255,255,255,0.08)"; roundRect(ctx, bx, by, bw, bh, 3); ctx.fill();
-    const fh = bh * clamp(frac, 0, 1); ctx.fillStyle = col; roundRect(ctx, bx, by + bh - fh, bw, fh, 3); ctx.fill();
-    ctx.fillStyle = "rgba(150,165,180,0.85)"; ctx.font = `600 ${Math.round(w2 * 0.13)}px ui-sans-serif`; ctx.fillText(label, cxp, y + h2 * 0.1);
-    ctx.fillStyle = "#eef3f7"; ctx.font = `700 ${Math.round(w2 * 0.13)}px ui-sans-serif`; ctx.fillText(val, cxp, y + h2 * 0.84);
-  }
-  // clean McLaren wheel: round dark-alcantara rim, papaya centre-band, M roundel centre
+  // Koenigsegg Agera RS wheel: a flat-bottomed three-spoke rim with the ghost on the boss
   function drawWheel(w, h) {
-    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // papaya centring band at the top of the rim
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(255,123,26,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.44, Math.PI * 1.56); ctx.stroke();
-    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // twin horizontal spokes + slim lower spoke (no buttons — Speedtail keeps the rim bare)
-    ctx.strokeStyle = "#171a20"; ctx.lineWidth = R * 0.1;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.02); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
-    // hub + M roundel
-    ctx.fillStyle = "#0c0e12"; ctx.beginPath(); ctx.arc(0, 0, R * 0.25, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#15181d"; ctx.strokeStyle = "#ff7b1a"; ctx.lineWidth = R * 0.02; ctx.beginPath(); ctx.arc(0, 0, R * 0.17, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#ff9a4d"; ctx.font = `700 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("M", 0, R * 0.01);
+    const R = Math.min(w, h) * 0.2, cx = w / 2, cy = h * 0.965;
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.62);
+    ctx.strokeStyle = "#12161b"; ctx.lineWidth = R * 0.2; ctx.lineJoin = "round";
+    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 0.94, Math.PI * 0.06); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(-R * 0.96, R * 0.28); ctx.lineTo(R * 0.96, R * 0.28); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 0.06, Math.PI * 0.28); ctx.stroke();
+    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 0.72, Math.PI * 0.94); ctx.stroke();
+    ctx.strokeStyle = "rgba(232,178,58,0.35)"; ctx.lineWidth = R * 0.02;
+    ctx.beginPath(); ctx.arc(0, 0, R * 1.06, Math.PI * 0.94, Math.PI * 0.06); ctx.stroke();
+    ctx.strokeStyle = "#1b2128"; ctx.lineWidth = R * 0.15;
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-R * 0.86, -R * 0.2); ctx.moveTo(0, 0); ctx.lineTo(R * 0.86, -R * 0.2);
+    ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.3); ctx.stroke();
+    ctx.fillStyle = "#e8b23a";
+    ctx.fillRect(-R * 0.7, -R * 0.28, R * 0.22, R * 0.08); ctx.fillRect(R * 0.48, -R * 0.28, R * 0.22, R * 0.08);
+    ctx.fillStyle = "#0e1319"; ctx.beginPath(); ctx.arc(0, 0, R * 0.26, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "#aab2bb"; ctx.lineWidth = R * 0.03; ctx.stroke();
+    // the ghost
+    ctx.fillStyle = "#e8b23a"; ctx.beginPath();
+    ctx.moveTo(0, -R * 0.15); ctx.quadraticCurveTo(-R * 0.11, -R * 0.15, -R * 0.11, -R * 0.02);
+    ctx.lineTo(-R * 0.11, R * 0.1); ctx.lineTo(-R * 0.055, R * 0.05); ctx.lineTo(0, R * 0.1);
+    ctx.lineTo(R * 0.055, R * 0.05); ctx.lineTo(R * 0.11, R * 0.1); ctx.lineTo(R * 0.11, -R * 0.02);
+    ctx.quadraticCurveTo(R * 0.11, -R * 0.15, 0, -R * 0.15); ctx.closePath(); ctx.fill();
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
@@ -2308,152 +2343,172 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* McLaren exterior — Speedtail side profile (five-metre teardrop, canopy cockpit,
-     static carbon front-wheel covers, flexible tail ailerons, retractable cameras) */
+  /* Koenigsegg exterior — Agera RS Attack side profile (arctic white over carbon, deep
+     splitter, dive planes, the top-mounted rear wing on two struts) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren Speedtail side">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Koenigsegg Agera RS side">
       <defs>
-        <linearGradient id="mcSilverG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9edf1"/><stop offset="0.5" stop-color="#aeb6bf"/><stop offset="1" stop-color="#5e6670"/></linearGradient>
-        <linearGradient id="mcBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="mcGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8d4e8"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
-        <radialGradient id="mcHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
-        <filter id="mcExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <style>
-          .mcWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:20% 100%;transform:rotate(calc(var(--wing-deg,10deg) * 0.6));transition:transform .42s ease;}
+        <linearGradient id="agBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7fa"/><stop offset="0.52" stop-color="#c9d2da"/><stop offset="1" stop-color="#5f6a75"/></linearGradient>
+        <linearGradient id="agLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#06080a"/></linearGradient>
+        <linearGradient id="agGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadeef"/><stop offset="1" stop-color="#0f1a22"/></linearGradient>
+        <radialGradient id="agHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
+        <filter id="agGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="agCarbon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2b2f35"/><stop offset="0.5" stop-color="#14171b"/><stop offset="1" stop-color="#2b2f35"/></linearGradient><style>
+          .grWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.5));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:88% 8%;transition:transform .6s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-38deg) translateY(-8px);}
-          #quadExhaustArt rect{fill:#6d747d;}
-          #quadExhaustArt.hot rect{fill:#ff8a3c;filter:url(#mcExhGlow);}
+          #doorArt{transform-box:fill-box;transform-origin:22% 96%;transition:transform .8s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-26deg) translate(-14px,-16px);}
+          #quadExhaustArt circle{fill:#aab3bc;}
+          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#agGlow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="300" rx="420" ry="20" fill="rgba(0,0,0,0.5)"/>
+      <ellipse cx="500" cy="366" rx="392" ry="15" fill="rgba(0,0,0,0.5)"/>
+      <g id="rearWingArt"><path d="M194.2,152.2 L194.2,209.3" stroke="#39404a" stroke-width="7" stroke-linecap="round"/><path d="M306.6,152.2 L306.6,189.7" stroke="#39404a" stroke-width="7" stroke-linecap="round"/><path d="M156.8,142.2 L344,139.2 L344,152.2 L156.8,155.2 Z" fill="url(#agCarbon)" stroke="#7b848d" stroke-width="1.4"/><path d="M156.8,145.2 L344,142.2" fill="none" stroke="rgba(232,178,58,0.85)" stroke-width="2.4"/></g>
 
       <g id="bcBody">
-        <!-- teardrop silhouette: needle tail at the left, cab-forward canopy, clean nose right -->
-        <path d="M42,236 Q140,208 240,196 Q360,184 430,164 Q490,130 570,122 L640,122 Q740,130 806,150
-                 Q866,168 906,196 Q924,208 918,226 L904,240 Q840,232 760,232 L260,240 Q120,242 60,242 Z"
-              fill="url(#mcBodyG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- upper silver body panel over carbon -->
-        <path d="M240,196 Q360,184 430,164 Q490,130 570,122 L640,122 Q740,130 806,150 Q852,166 884,190
-                 L850,194 Q760,180 640,178 L430,186 Q330,190 240,196 Z"
-              fill="url(#mcSilverG)" stroke="rgba(200,210,220,0.5)" stroke-width="1"/>
-        <!-- teardrop canopy glasshouse -->
-        <path d="M446,162 Q492,128 566,124 L638,124 Q700,130 742,152 Q600,146 446,162 Z" fill="url(#mcGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <!-- flexible carbon AILERON on the tail clamshell (deploys with speed / braking) -->
-        <g id="rearWingArt">
-          <path d="M44,232 L150,214 L152,222 L46,240 Z" fill="#15181d" stroke="#5c636c"/>
-          <path d="M44,232 L150,214" fill="none" stroke="rgba(255,192,138,0.6)" stroke-width="2"/>
-        </g>
-        <!-- dihedral door cut -->
+        <path d="M110,321.5 L110,278.8 110,278.8 Q129.5,242.2 147.1,228 Q164.6,213.7 203.6,204.1 Q242.6,194.4 293.3,188.3 Q344,182.2 390.8,166.9 Q437.6,151.6 476.6,148.1 Q515.6,144.5 550.7,146.1 Q585.8,147.6 620.9,168.5 Q656,189.3 702.8,211.7 Q749.6,234 788.6,248.3 Q827.6,262.5 849.1,271.7 Q870.5,280.8 880.3,292 L890,303.2 L890,321.5 L814.5,321.5 A72.7 104.8 0 0 0 669.1,321.5 L330.9,321.5 A72.7 104.8 0 0 0 185.5,321.5 L110,321.5 Z" fill="url(#agBody)" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+        <path d="M386.9,179.1 Q453.2,155.7 488.3,152.6 Q523.4,149.6 550.7,152.1 Q578,154.7 611.2,172.5 L644.3,190.3 Z" fill="url(#agGlass)" stroke="#7a838c" stroke-width="1.4"/>
+        <path d="M322.9,319.5 L677.1,316.5 L673.1,334.5 L326.9,337.5 Z" fill="url(#agLow)" stroke="#454b52" stroke-width="1.2"/>
+        <!-- the side scoop feeding the twin turbos, ahead of the rear arch -->
+        <path d="M301.1,219.8 Q344,201.5 394.7,205.6 L386.9,244.2 Q340.1,238.1 303.4,252.4 Z" fill="#07090c" stroke="#8e98a4" stroke-width="1.6"/>
+        <g stroke="#4a525b" stroke-width="1.6"><path d="M316.7,221.8 L379.1,216.7"/><path d="M315.1,234 L381.4,229"/></g>
+        <!-- exposed-carbon lower body, the Agera's split line -->
+        <path d="M125.6,287 Q461,277.8 866.6,292 L866.6,323.6 L125.6,325.6 Z" fill="url(#agCarbon)" opacity="0.85"/>
+        <path d="M125.6,287 Q461,277.8 866.6,292" fill="none" stroke="rgba(232,178,58,0.55)" stroke-width="1.8"/>
+        <path d="M185.5,321.5 A72.7 104.8 0 0 1 330.9,321.5" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3.6"/><path d="M669.1,321.5 A72.7 104.8 0 0 1 814.5,321.5" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3.6"/>
+        <!-- roof hatch: the hardtop lifts out and stows under the bonnet -->
+        <path d="M433.7,150.6 Q500,143.5 558.5,152.6" fill="none" stroke="rgba(0,0,0,0.35)" stroke-width="2.2"/>
+        <!-- nose: LED bar, splitter and a canard -->
+        <path d="M800.3,251.3 q36,-3 50,10" fill="none" stroke="#eef4f8" stroke-width="5.4" stroke-linecap="round"/>
+        <path d="M815.9,263.5 q28,-2 38,7" fill="none" stroke="rgba(232,178,58,0.7)" stroke-width="2.2"/>
+        <path d="M843.2,275.8 L890,266.6 L890,307.3 L839.3,310.4 Z" fill="#07090c" stroke="rgba(232,178,58,0.4)" stroke-width="1.2"/>
+        <path d="M757.4,316.5 L888.4,313.4 L884.5,332.7 L753.5,334.8 Z" fill="url(#agCarbon)" stroke="#4c545e"/>
+        <path d="M714.5,307.3 l46,8 l-2,13 l-46,-8 Z" fill="url(#agCarbon)" stroke="#4c545e"/>
+        <g id="frontFlapArt"><rect x="698.9" y="329.7" width="42" height="7" rx="3.5" fill="#141317" stroke="rgba(232,178,58,0.5)"/></g>
+        <!-- dihedral synchro-helix door: it rotates out AND forward -->
         <g id="doorArt">
-          <path d="M470,172 Q530,142 616,144 L700,164 L700,228 L478,232 Z" fill="rgba(120,132,146,0.28)" stroke="#6c757e" stroke-width="1.4"/>
-          <path d="M506,160 Q570,146 664,152" fill="none" stroke="rgba(210,224,238,0.4)" stroke-width="2"/>
-          <!-- retractable rear-view CAMERA pod (replaces mirrors; slides in for Velocity mode) -->
-          <rect id="cameraPod" x="486" y="146" width="18" height="7" rx="3" fill="#0c0e12" stroke="rgba(53,194,212,0.6)"/>
+          <path d="M402.5,179.1 Q437.6,152.6 500,146.5 L558.5,153.7 L628.7,187.2 L632.6,287 L406.4,289 Z"
+                fill="rgba(255,255,255,0.07)" stroke="rgba(150,160,172,0.65)" stroke-width="1.3"/>
+          <path d="M429.8,242.2 Q515.6,234 613.1,244.2" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2.2"/>
+          <path d="M636.5,185.2 l20,-10 l2,13 l-20,5 Z" fill="url(#agCarbon)"/>
+          <rect x="578" y="240.1" width="20" height="5" rx="2.5" fill="#3b4148"/>
         </g>
-        <!-- slim LED headlamp + nose blade -->
-        <path d="M872,182 q26,-2 40,6" fill="none" stroke="#dfe9ee" stroke-width="4" stroke-linecap="round"/>
-        <path d="M872,182 q26,-2 40,6" fill="none" stroke="#ffc08a" stroke-width="1.4" stroke-linecap="round"/>
-        <!-- front splitter + active front trim -->
-        <rect x="836" y="242" width="82" height="7" rx="3" fill="#05070a"/>
-        <g id="frontFlapArt"><rect x="800" y="216" width="40" height="6" rx="3" fill="#15181d" stroke="rgba(255,192,138,0.35)"/></g>
-        <!-- hidden low exhaust exit under the tail -->
-        <g id="quadExhaustArt">
-          <rect x="60" y="244" width="52" height="7" rx="3"/>
-        </g>
-        <!-- diffuser strakes -->
-        <g stroke="#05070a" stroke-width="3">
-          <path d="M96,250 l0,10"/><path d="M126,250 l0,10"/><path d="M156,250 l0,10"/>
-        </g>
-        <!-- SPEEDTAIL script + M roundel -->
-        <text x="600" y="216" font-family="ui-sans-serif" font-size="12" fill="#c9cfd6" letter-spacing="3">SPEEDTAIL</text>
-        <circle cx="452" cy="212" r="9" fill="#15181d" stroke="#ff7b1a" stroke-width="1.6"/>
-        <text x="452" y="216" text-anchor="middle" font-family="ui-sans-serif" font-size="9" fill="#ff9a4d">M</text>
+        <!-- tail: thin LED bar and ONE round central pipe low in the diffuser -->
+        <path d="M113.1,246.3 L113.1,274.7" stroke="rgba(255,80,60,0.9)" stroke-width="7" stroke-linecap="round"/>
+        <g id="quadExhaustArt"><circle cx="152.9" cy="318.5" r="13"/></g>
+        <circle cx="152.9" cy="318.5" r="18" fill="none" stroke="#7d868f" stroke-width="2.4"/>
+        <!-- the ghost squadron badge and the model plate -->
+        <g transform="translate(453.2,274.7)"><rect x="-32" y="-9" width="64" height="18" rx="3" fill="#0b0e12" stroke="#e8b23a" stroke-width="1.3"/><text x="0" y="4" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="800" fill="#ffd985">AGERA RS</text></g>
+        <text x="266" y="262.5" font-family="ui-sans-serif" font-size="11" fill="#7c8792" letter-spacing="3.2">447.19 km/h</text>
       </g>
-
-      <!-- rear wheel: exposed 10-spoke -->
       <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
-        <g class="mcWeave"><g transform="translate(255,250)">
+        <circle cx="258.2" cy="283" r="65" fill="#0a0b0e"/><circle cx="258.2" cy="283" r="65" fill="none" stroke="#e8b23a" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(258.2,283) scale(1.3)">
           ${turbine()}
         </g></g>
-        <circle cx="255" cy="250" r="15" fill="url(#mcHub)"/>
+        <circle cx="258.2" cy="283" r="14.3" fill="url(#agHub)"/>
       </g>
-      <!-- FRONT wheel: static carbon aero cover (the Speedtail signature) — the cover
-           stays still while the tyre turns behind it -->
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/>
-        <circle cx="745" cy="250" r="49" fill="#101318" stroke="#3a4048" stroke-width="2"/>
-        <path d="M745,206 A44,44 0 0 1 789,250 L745,250 Z" fill="rgba(233,237,241,0.10)"/>
-        <circle cx="745" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
-        <circle cx="745" cy="250" r="7" fill="url(#mcHub)"/>
-        <text x="745" y="286" text-anchor="middle" font-size="8" fill="#7a838d">STATIC AERO COVER</text>
+        <circle cx="741.8" cy="283" r="65" fill="#0a0b0e"/><circle cx="741.8" cy="283" r="65" fill="none" stroke="#e8b23a" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(741.8,283) scale(1.3)">
+          ${turbine()}
+        </g></g>
+        <circle cx="741.8" cy="283" r="14.3" fill="url(#agHub)"/>
       </g>
-    </svg>`;
+    </svg>
+    `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
   }
-  function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* McLaren cockpit SVG — CENTRAL driving seat, two passenger benches, three-screen dash */
+  /* Koenigsegg cockpit SVG — SmartCluster on the column, SmartCenter portrait screen */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="McLaren Speedtail cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Koenigsegg Agera RS cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="leatherG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f7a55"/><stop offset="1" stop-color="#3d3325"/></linearGradient>
-        <linearGradient id="papayaTrimG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffab5e"/><stop offset="1" stop-color="#b34f0a"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12303a"/><stop offset="1" stop-color="#060d12"/></linearGradient>
-      </defs>
+        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#05080d"/></linearGradient>
+        <linearGradient id="agSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#23272c"/><stop offset="1" stop-color="#0c0e11"/></linearGradient>
+        <radialGradient id="agDial" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#1b2026"/><stop offset="1" stop-color="#06080b"/></radialGradient></defs>
       <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- teardrop canopy line overhead -->
-      <path d="M60,44 Q500,-16 940,44" fill="none" stroke="rgba(184,212,232,0.35)" stroke-width="3"/>
-      <!-- glass dash: THREE screens wrapping the cowl -->
-      <rect x="110" y="52" width="780" height="112" rx="16" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-      <rect x="130" y="66" width="212" height="84" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.5)" id="screenLArt"/>
-      <rect x="394" y="60" width="212" height="96" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.7)"/>
-      <rect x="658" y="66" width="212" height="84" rx="8" fill="url(#screenG)" stroke="rgba(53,194,212,0.5)" id="screenRArt"/>
-      <text x="236" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">HYBRID kW</text>
-      <text x="500" y="100" text-anchor="middle" font-size="26" font-weight="700" fill="#e8f6fa" id="tachGearArt">N</text>
-      <text x="500" y="140" text-anchor="middle" font-size="11" fill="#7fd7e2" letter-spacing="2">VELOCITY READY</text>
-      <text x="764" y="112" text-anchor="middle" font-size="12" fill="#35c2d4">1/MIN</text>
-      <circle cx="500" cy="100" r="1" fill="none" id="tachArt"/>
-      <!-- CENTRAL driving seat -->
-      <g transform="translate(500,262)">
-        <rect x="-46" y="-38" width="92" height="132" rx="22" fill="url(#leatherG)" stroke="rgba(0,0,0,0.35)"/>
-        <rect x="-30" y="-30" width="60" height="30" rx="12" fill="rgba(0,0,0,0.28)"/>
-        <path d="M-32,16 L32,16 M-32,42 L32,42 M-32,68 L32,68" stroke="rgba(255,123,26,0.55)"/>
-        <text x="0" y="112" text-anchor="middle" font-size="9" fill="#8f97a1" letter-spacing="2">DRIVER · CENTRE</text>
+      <g opacity="0.13" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
+
+      <!-- the removable hardtop's hatch line runs across the roof -->
+      <path d="M250,20 Q500,4 750,20" fill="none" stroke="#39404a" stroke-width="3"/>
+      <text x="500" y="16" text-anchor="middle" font-size="7" fill="#5d6873" letter-spacing="2.4">DETACHABLE HARDTOP · STOWS UNDER THE BONNET</text>
+
+      <!-- low carbon dash with a machined aluminium top rail -->
+      <path d="M92,58 Q500,40 908,58 L908,72 Q500,54 92,72 Z" fill="url(#aluG)" opacity="0.55"/>
+      <path d="M92,72 Q500,54 908,72 L908,120 Q500,104 92,120 Z" fill="#0c0f13" stroke="#2a3037"/>
+
+      <!-- THREE-DIAL binnacle: round LCD tacho centre, two smaller flanking dials -->
+      <g transform="translate(330,140)">
+        <path d="M-140,-56 Q0,-74 140,-56 L140,48 Q0,58 -140,48 Z" fill="#0a0d11" stroke="#2f353c" stroke-width="1.6"/>
+        <rect x="-132" y="-48" width="264" height="92" rx="14" fill="url(#agDial)" stroke="rgba(232,178,58,0.5)" stroke-width="1.8" id="tachArt"/>
+        <circle cx="0" cy="-2" r="42" fill="url(#agDial)" stroke="rgba(232,178,58,0.85)" stroke-width="2.6"/>
+        <g stroke="#7d858e" stroke-width="1.6">
+          <path d="M-33,20 l-7,4"/><path d="M-39,-4 l-8,0"/><path d="M-30,-26 l-7,-5"/><path d="M-7,-39 l-1,-8"/><path d="M17,-35 l4,-7"/><path d="M35,-18 l8,-4"/></g>
+        <path d="M0,-2 L-24,-26" stroke="#e8b23a" stroke-width="3" stroke-linecap="round"/>
+        <text x="0" y="26" text-anchor="middle" font-size="7.5" fill="#94a0ab" letter-spacing="1">x1000 rpm · 8250</text>
+        <circle cx="-90" cy="-2" r="30" fill="url(#agDial)" stroke="#4c545e" stroke-width="2"/>
+        <text x="-90" y="4" text-anchor="middle" font-size="16" font-weight="700" fill="#e8eef4" id="tachGearArt">N</text>
+        <circle cx="90" cy="-2" r="30" fill="url(#agDial)" stroke="#4c545e" stroke-width="2"/>
+        <text x="90" y="1" text-anchor="middle" font-size="9" font-weight="700" fill="#ffd985">BOOST</text>
+        <text x="90" y="16" text-anchor="middle" font-size="6.5" fill="#8d97a2">bar</text>
       </g>
-      <!-- passenger benches, set back either side -->
-      <g transform="translate(232,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
-      <g transform="translate(768,286)"><rect x="-40" y="-24" width="80" height="96" rx="18" fill="url(#leatherG)" opacity="0.8" stroke="rgba(0,0,0,0.3)"/><text x="0" y="90" text-anchor="middle" font-size="8" fill="#7a838d">PASSENGER</text></g>
-      <!-- overhead start button + Velocity control (Speedtail puts them above the driver) -->
-      <g transform="translate(500,26)"><rect x="-64" y="-14" width="128" height="28" rx="8" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="-34" cy="0" r="8" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="-34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">START</text><circle cx="34" cy="0" r="8" fill="#0e2a33" stroke="#35c2d4" id="velocityArt"/><text x="34" y="18" text-anchor="middle" font-size="6" fill="#9aa2ab">VELOCITY</text></g>
-      <!-- shifter keys on the slim centre console -->
-      <g id="shifterArt" transform="translate(500,196)">
-        <rect x="-40" y="-16" width="80" height="30" rx="8" fill="#0c0f14" stroke="url(#aluG)" stroke-width="1.6"/>
-        <g fill="url(#aluG)"><circle cx="-22" cy="0" r="6"/><circle cx="0" cy="0" r="6"/><circle cx="22" cy="0" r="6"/></g>
-        <line x1="0" y1="10" x2="0" y2="0" stroke="url(#aluG)" stroke-width="4" id="leverArt"/>
+
+      <!-- centre stack: small square screen over the round rotary controller -->
+      <g transform="translate(530,0)">
+        <rect x="-46" y="96" width="92" height="58" rx="5" fill="url(#screenG)" stroke="#3a4149" stroke-width="1.4"/>
+        <text x="0" y="120" text-anchor="middle" font-size="8" fill="#7d8a96" letter-spacing="1.6">KOENIGSEGG</text>
+        <text x="0" y="136" text-anchor="middle" font-size="6.5" fill="#57626c">TRIPLEX · AERO · FUEL MAP</text>
+        <circle cx="0" cy="192" r="26" fill="#0f1318" stroke="url(#aluG)" stroke-width="2.2"/>
+        <circle cx="0" cy="192" r="12" fill="#161b21" stroke="url(#aluG)" stroke-width="1.2"/>
+        <g stroke="#8c959f" stroke-width="1.6"><path d="M0,166 l0,-7"/><path d="M26,192 l7,0"/><path d="M-26,192 l-7,0"/></g>
+        <text x="0" y="232" text-anchor="middle" font-size="6.5" fill="#5b6670" letter-spacing="1">ROTARY CONTROLLER</text>
       </g>
-      <!-- McLaren wheel, dead centre -->
-      <g id="cabinWheelG" transform="translate(500,300)">
-        <circle r="56" fill="none" stroke="#101216" stroke-width="15"/>
-        <circle r="56" fill="none" stroke="url(#papayaTrimG)" stroke-width="3"/>
-        <line x1="0" y1="0" x2="-52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="52" y2="-4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="0" y2="46" stroke="#171a20" stroke-width="8"/>
-        <circle r="15" fill="#15181d" stroke="#ff7b1a" stroke-width="1.8"/><text x="0" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="12" fill="#ff9a4d">M</text>
+
+      <!-- carbon buckets, tang-orange stitch, six-point belts -->
+      <g transform="translate(206,276)">
+        <path d="M-46,-32 Q-50,-42 -34,-44 L34,-44 Q50,-42 46,-32 L50,84 L-50,84 Z" fill="url(#agSeat)" stroke="#3a3f46"/>
+        <path d="M-30,-32 L-30,66 M30,-32 L30,66" stroke="rgba(201,106,42,0.85)" stroke-width="2.2"/>
+        <path d="M-18,-38 L-6,60 M18,-38 L6,60" stroke="rgba(232,178,58,0.5)" stroke-width="3.4"/>
       </g>
-    </svg>`;
+      <g transform="translate(806,276)">
+        <path d="M-46,-32 Q-50,-42 -34,-44 L34,-44 Q50,-42 46,-32 L50,84 L-50,84 Z" fill="url(#agSeat)" stroke="#3a3f46"/>
+        <path d="M-30,-32 L-30,66 M30,-32 L30,66" stroke="rgba(201,106,42,0.85)" stroke-width="2.2"/>
+      </g>
+
+      <!-- transmission tunnel: the DCT selector, milled from billet -->
+      <g id="shifterArt" transform="translate(524,290)">
+        <path d="M-36,-30 L36,-30 L42,58 L-42,58 Z" fill="#0b0e12" stroke="url(#aluG)" stroke-width="1.4"/>
+        <rect x="-16" y="-18" width="32" height="44" rx="4" fill="#06080b" stroke="#3a424b"/>
+        <line x1="0" y1="26" x2="0" y2="-2" stroke="url(#aluG)" stroke-width="7" id="leverArt"/>
+        <circle cx="0" cy="-8" r="10" fill="#1a1f25" stroke="url(#aluG)" stroke-width="1.6"/>
+        <text x="0" y="46" text-anchor="middle" font-size="6.5" fill="#77828d">7-SPEED DUAL-CLUTCH</text>
+      </g>
+      <g transform="translate(650,244)"><rect x="-27" y="-19" width="54" height="38" rx="5" fill="#0c1015" stroke="url(#aluG)"/><circle cx="0" cy="0" r="12" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6.5" fill="#ffd7d7">START</text></g>
+
+      <!-- three-spoke wheel, flat-bottomed, the ghost badge on the boss -->
+      <g id="cabinWheelG" transform="translate(330,300)">
+        <path d="M-56,-8 A56 56 0 1 1 -56,8 L-56,26 A56 56 0 0 0 56,26 L56,-8 A56 56 0 0 0 -56,-8 Z" fill="none" stroke="#141a20" stroke-width="13"/>
+        <circle r="56" fill="none" stroke="rgba(232,178,58,0.28)" stroke-width="1.2"/>
+        <g stroke="#1c232a" stroke-width="10">
+          <line x1="0" y1="0" x2="-50" y2="-10"/><line x1="0" y1="0" x2="50" y2="-10"/><line x1="0" y1="0" x2="0" y2="46"/></g>
+        <g fill="#e8b23a"><rect x="-42" y="-16" width="14" height="5" rx="2.5"/><rect x="28" y="-16" width="14" height="5" rx="2.5"/></g>
+        <circle r="15" fill="#0e1319" stroke="url(#aluG)" stroke-width="2.2"/>
+        <!-- the Koenigsegg ghost -->
+        <path d="M0,-9 q-6,0 -6,7 l0,7 l3,-3 l3,3 l3,-3 l3,3 l0,-7 q0,-7 -6,-7 Z" fill="#e8b23a"/>
+      </g>
+    </svg>
+    `;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -2462,7 +2517,7 @@ const SPEC = {
 
 /* ===== UI actions ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, el, CIRCUITS, SPEC, clamp, kmh, audio } = app;
   const showToast = app.showToast;
 
@@ -2474,7 +2529,7 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors drawn shut to drive.", "Speedtail"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Heated Seats sweeps the doors shut to drive.", "Agera"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, SPEC.gearRatios.length); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2505,34 +2560,33 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: dampers firm, ESC trail, exhaust open, ailerons hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Speedtail");
+    showToast(m === "race" ? "Race: Triplex dampers firm, ESC trail, exhaust open, wing hunting." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Agera");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
-  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Active ailerons: AUTO — flexing for downforce and airbraking." : "Ailerons fixed (manual)."); }
+  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
   function toggleExhaust() {
     state.exhaustValve = !state.exhaustValve;
     if (state.exhaustValve) { audio.crackle(); if (el.engineBay) { el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 320); } }
     else audio.click(900);
     showToast(state.exhaustValve ? "Exhaust flap open — full twin-turbo V8 voice, crackle on the overrun." : "Exhaust flap closed — muted.");
   }
-  // McLaren "Velocity mode": a dedicated top-speed protocol. It drops the ride height
-  // 35 mm, retracts the rear-view cameras, trims the ailerons flat, and clears the
-  // powertrain for the full 403 km/h run.
-  function toggleVelocity() {
-    const next = !state.velocity;
-    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Engage Velocity mode below 50 km/h, then build up.", "Speedtail"); return; }
-    state.velocity = next; setActive("velocityBtn", next);
+  // E85 flex-fuel: the same engine, hotter map. On E85 biofuel the Agera RS runs
+  // 1,360 PS and 1,371 Nm @ 4,100 rpm; on standard petrol it makes 1,176 PS.
+  function toggleFuel() {
+    const next = !state.e85;
+    if (next && Math.abs(state.speedMps) > 50 / 3.6) { showToast("Switch fuel maps below 50 km/h — the ECU wants a quiet moment.", "Agera"); return; }
+    state.e85 = next; setActive("fuelBtn", next);
+    const map = next ? SPEC.e85 : SPEC.petrol;
+    SPEC.peakPowerW = map.peakPowerW; SPEC.peakPowerPS = map.peakPowerPS;
+    SPEC.peakPowerHp = map.peakPowerHp; SPEC.peakTorqueNm = map.peakTorqueNm;
     if (next) {
       if (state.driveMode !== "race") setMode("race");
-      state.rideHeight = -1;            // Velocity mode drops the car 35 mm
-      state.aeroAuto = true;            // ailerons managed (flat) by the Velocity logic
-      audio.motor(1.0); audio.chime([392, 523, 659, 784]);
-      showToast("Velocity mode — ride lowered 35 mm, cameras retracted, ailerons flat. 403 km/h cleared. Clear road only.", "Speedtail");
+      audio.whoosh(0.9); audio.motor(0.9); audio.chime([392, 523, 659, 880]);
+      showToast("One Megawatt package on E85 — 1,360 PS (1,000 kW), 1,371 Nm. This is the map that ran 447.19 km/h.", "Agera");
     } else {
-      state.rideHeight = 0;
-      audio.motor(0.6);
-      showToast("Velocity mode off — road trim restored.", "Speedtail");
+      audio.motor(0.5); audio.click(700);
+      showToast("Standard pump-petrol map — 1,176 PS @ 7,800, 1,280 Nm.", "Agera");
     }
   }
   function toggleLights() { state.lights = !state.lights; audio.click(state.lights ? 760 : 520); showToast(state.lights ? "Headlamps on — the beam lights the road." : "Headlamps off."); }
@@ -2541,7 +2595,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — full throttle on the brake, then release." : "Launch control off.", "Speedtail");
+    showToast(state.launchArmed ? "Launch control armed — air tank charged. Full throttle on the brake, then release." : "Launch control off.", "Agera");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2566,11 +2620,12 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Speedtail"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Agera"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, velocity: false, rideHeight: 0 });
-    setActive("velocityBtn", false);
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
+    if (state.e85) { state.e85 = false; SPEC.peakPowerW = SPEC.petrol.peakPowerW; SPEC.peakPowerPS = SPEC.petrol.peakPowerPS; SPEC.peakPowerHp = SPEC.petrol.peakPowerHp; SPEC.peakTorqueNm = SPEC.petrol.peakTorqueNm; }
+    setActive("fuelBtn", false);
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2579,38 +2634,38 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Speedtail");
+    showToast("Back in the pit lane.", "Agera");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleVelocity, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
   function setToggle(key, value) { const next = value === undefined ? !state[key] : value; state[key] = next; applyEffect(key, next); }
   function applyEffect(key, on) {
     switch (key) {
-      case "heat": if (on) state.cool = false; if (on) audio.whoosh(0.4); showToast(on ? "Seat heating on." : "Seat heating off."); break;
-      case "cool": if (on) state.heat = false; if (on) audio.motor(0.45); showToast(on ? "The roof glass darkens at the touch — no sun visors fitted." : "Roof glass clear."); break;
-      case "ambient": if (on) audio.chime([523,659,784]); else audio.click(360); showToast(on ? "The central driving seat glows." : "Cabin light off."); break;
+      case "heat": if (on) state.cool = false; if (on) audio.motor(0.85); showToast(on ? "Heated Seats — the hydraulics swing the dihedral doors on their own." : "Heated Seats idle."); break;
+      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Climate drawing cool air." : "A/C off."); break;
+      case "ambient": if (on) audio.chime([494,659,784]); else audio.click(360); showToast(on ? "Cabin lighting on." : "Cabin light off."); break;
       case "shifterLight": audio.click(1500); showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
-      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "Engine cover raised — the hybrid V8 on show." : "Engine cover closed."); break;
-      case "antiLag": showToast(on ? "E-boost hold armed — the e-motor keeps the turbos spooled, crackles on the overrun (Race)." : "E-boost hold off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
+      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "Heated Seats raises the cover — the twin-turbo V8 on show." : "Engine cover closed."); break;
+      case "antiLag": showToast(on ? "Air-tank anti-lag armed — 20 bar pre-spools the turbos, bangs on the overrun (Race)." : "Air-tank anti-lag off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
       case "ignition": break;
     }
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the V8 answers with the e-motor whistling over it."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V8 barks to 3,000 and settles."); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the flat-plane V8 snaps like a race engine."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V8 barks to 3,000 with an air-tank hiss."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — hybrid V8 lit.", "Speedtail"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V8 lit.", "Agera"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2618,23 +2673,23 @@ const SPEC = {
 
 /* ===== Co-Pilot voice ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, el, audio } = app;
   const showToast = app.showToast;
   function processVoice() {
     const text = el.voiceInput.value.trim().toLowerCase(); if (!text) return; el.voiceInput.value = "";
     const has = (...w) => w.some(x => text.includes(x)); const reply = (m) => showToast(m, "Co-Pilot");
     const numberFrom = (v) => { const m = v.match(/(\d{1,3})/); return m ? parseInt(m[1], 10) : null; };
-    if (/^(hi|hello|hey)/.test(text)) { reply("Right then. Which circuit?"); return; }
-    if (has("thank", "cheers")) { reply("My pleasure."); return; }
+    if (/^(hi|hello|hey|hej)/.test(text)) { reply("Hej! Which circuit?"); return; }
+    if (has("thank", "tack")) { reply("Varsågod."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Algarve Circuit", ["algarve", "portimao", "portimão", "portugal"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Nevada State Route 160", ["nevada", "route 160", "sr-160", "pahrump", "record run"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("velocity", "top speed", "250 mph", "unlock", "record run")) { app.toggleVelocity(); acted = true; }
+    if (has("e85", "biofuel", "flex fuel", "1600", "record car")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2646,14 +2701,14 @@ const SPEC = {
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “velocity mode”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “switch to E85”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
 
 /* ===== HUD (per frame) ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, el, SPEC, clamp, lerp, kmh } = app;
   function setActive(id, on) { const n = document.getElementById(id); if (n) n.classList.toggle("active", !!on); }
 
@@ -2683,11 +2738,11 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.velocity) warn.push("VELOCITY · ailerons flat, 403 km/h cleared");
+    if (state.e85) warn.push("1 MW PACKAGE");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.velocity && speed >= 340) warn.push("drag-limited — engage Velocity mode for the full 403 km/h");
+    if (!state.e85 && speed >= 320) warn.push("petrol map (1,176 PS) — switch to E85 for the full 1,600");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -2735,13 +2790,11 @@ const SPEC = {
     document.documentElement.style.setProperty("--wheel-rot", `${state.wheelRotation}deg`);
     if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
-    state.velocityVis = lerp(state.velocityVis, state.velocity ? 1 : 0, 0.1);            // Velocity ride drop
-    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 ${(state.velocityVis * 7).toFixed(1)}) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
-    const camPod = document.getElementById("cameraPod"); if (camPod) camPod.setAttribute("opacity", state.velocity ? "0.15" : "1");   // cameras retract in Velocity
-    const velArt = document.getElementById("velocityArt"); if (velArt) velArt.setAttribute("fill", state.velocity ? "#1f7a8a" : "#0e2a33");
+    state.e85Vis = lerp(state.e85Vis, state.e85 ? 1 : 0, 0.1);                          // fuel-map indicator
+    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 0) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 258.2 283)`);
 
     // engine art
-    const turboRot = (state.time * (200 + state.boostBar * 2600)) % 360;
+    const turboRot = (state.time * (260 + state.boostBar * 3000)) % 360;   // air-tank pre-spool keeps them turning
     if (el.turboL) el.turboL.style.setProperty("--turbo-rot", turboRot + "deg");
     if (el.turboR) el.turboR.style.setProperty("--turbo-rot", -turboRot + "deg");
     el.engineBay.style.setProperty("--haze", clamp((state.egtC - 360) / 600, 0, 0.9));
@@ -2761,7 +2814,7 @@ const SPEC = {
 
     // cabin svg
     const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(500,300) rotate(${(state.steer * 90).toFixed(1)})`);
+    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(330,300) rotate(${(state.steer * 90).toFixed(1)})`);
     const leverArt = document.getElementById("leverArt"); if (leverArt) leverArt.setAttribute("transform", `rotate(${state.shiftTimer > 0 ? 10 : 0})`);
     const startArt = document.getElementById("startArt"); if (startArt) startArt.setAttribute("fill", state.ignition ? "#1f7a3a" : "#7a1f1f");
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
@@ -2772,7 +2825,7 @@ const SPEC = {
     setActive("exhaustBtn", state.exhaustValve); setActive("exhaustBtn2", state.exhaustValve); setActive("exhaustBtn3", state.exhaustValve);
     setActive("lightsBtn", state.lights); setActive("lightsBtn2", state.lights);
     setActive("liftBtn", state.rideHeight === 1);
-    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("velocityBtn", state.velocity);
+    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("fuelBtn", state.e85);
     setActive("testDriverBtn", state.testDriver);
     setActive("heatBtn", state.heat); setActive("coolBtn", state.cool); setActive("ambientBtn", state.ambient);
     setActive("audioBtn", state.audioCabin); setActive("shifterLightBtn", state.shifterLight); setActive("startSwitchBtn", state.ignition);
@@ -2789,7 +2842,7 @@ const SPEC = {
 
 /* ===== events ===== */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -2869,7 +2922,7 @@ const SPEC = {
     document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
-    document.getElementById("velocityBtn").addEventListener("click", () => app.toggleVelocity());
+    document.getElementById("fuelBtn").addEventListener("click", () => app.toggleFuel());
   }
 
   function bindMedia() {
@@ -2887,7 +2940,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Speedtail"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Speedtail"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Speedtail"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Agera"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Agera"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Agera"); }); });
   }
 
   function setupPedals() {
@@ -2922,7 +2975,7 @@ const SPEC = {
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
-      if (e.code === "KeyZ" && !e.repeat) app.toggleVelocity();   // Z = this car's ultimate-speed feature (Velocity Mode)
+      if (e.code === "KeyZ" && !e.repeat) app.toggleFuel();   // Z = this car's ultimate-speed feature (1 MW Package))
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }
@@ -2966,7 +3019,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Speedtail"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Agera"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -2986,7 +3039,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Speedtail");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Agera");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -3005,7 +3058,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Speedtail");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Agera");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3048,7 +3101,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Speedtail");
+        showToast("Trackpad steering hold cancelled.", "Agera");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3058,7 +3111,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Speedtail");
+          showToast("Trackpad steering off.", "Agera");
         }
       }
     });
@@ -3066,7 +3119,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("Hybrid V8 lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Speedtail"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V8 lit, air tank charged. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Agera"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
@@ -3079,7 +3132,7 @@ const SPEC = {
    it is exactly the step the verification harness integrates at (tests/perf-test.mjs),
    so what the test proves is literally what the car does. */
 {
-  const app = window.McLarenApp;
+  const app = window.AgeraApp;
   const { state, clamp, audio } = app;
   const FIXED_DT = 1 / 120;         // 120 Hz physics — same step the perf test calibrates at
   let accumulator = 0;
