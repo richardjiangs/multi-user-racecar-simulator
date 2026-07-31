@@ -45,9 +45,6 @@ const check = (label, ok, detail) => {
   if (!ok) failures++;
 };
 
-const CAR_KEYS = ["pagani", "bugatti", "mclaren", "ferrari", "koenigsegg", "tesla", "amg", "aston", "gto", "revuelto", "porsche918", "taycan", "supra", "venom", "evija", "amgone", "nevera", "zr1", "p1", "f40", "p917", "f1mercedes", "f1redbull", "f1ferrari", "f1mclaren", "f1aston", "f1alpine", "f1williams", "f1racingbulls", "f1haas", "f1audi", "f1cadillac", "dacia", "fordraptor", "grhilux", "hunter"];
-const APPS = { pagani: "PaganiApp", bugatti: "BugattiApp", mclaren: "McLarenApp", ferrari: "FerrariApp", koenigsegg: "KoenigseggApp", tesla: "TeslaApp", amg: "AmgApp", aston: "AstonApp", gto: "GtoApp", revuelto: "RevueltoApp", porsche918: "Porsche918App", taycan: "TaycanApp", supra: "SupraApp", venom: "VenomApp", evija: "EvijaApp", amgone: "AmgOneApp", nevera: "NeveraApp", zr1: "Zr1App", p1: "P1App", f40: "F40App", p917: "P917App", f1mercedes: "MercedesF1App", f1redbull: "RedbullF1App", f1ferrari: "FerrariF1App", f1mclaren: "MclarenF1App", f1aston: "AstonF1App", f1alpine: "AlpineF1App", f1williams: "WilliamsF1App", f1racingbulls: "RacingbullsF1App", f1haas: "HaasF1App", f1audi: "AudiF1App", f1cadillac: "CadillacF1App", dacia: "DaciaDakarApp", fordraptor: "FordDakarApp", grhilux: "ToyotaDakarApp", hunter: "ProdriveDakarApp" };
-
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const pageErrors = [];
@@ -58,43 +55,70 @@ console.log("▶ garage");
 check("forty-seven car cards render", await page.locator(".car-card").count() === 47);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
+/* ---------- every card must be WIRED, not just rendered ----------
+   The car keys are read off the page instead of being listed here, because a hardcoded
+   list is exactly how five cards once shipped that rendered perfectly and did nothing:
+   they had no entry in the shell's `cars` registry, so openPractice() returned at
+   `if (!car) return;` and every button on them was inert — and this file never tried
+   them, because they were not in the list. Derive, never enumerate. */
+const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 47);
+
+const wiring = await page.evaluate((keys) => keys.map((k) => ({
+  key: k,
+  practice: !!document.querySelector(`[data-practice="${k}"]`),
+  online: !!document.querySelector(`[data-online="${k}"]`),
+  learn: !!document.querySelector(`[data-learn="${k}"]`),
+})), CAR_KEYS);
+const unwired = wiring.filter((w) => !w.practice || !w.online || !w.learn);
+check("every card has practice / online / learning buttons", unwired.length === 0,
+  unwired.length ? JSON.stringify(unwired) : "");
+
+/* Open a car from the garage and wait for its sim to be live in the iframe. The app's
+   global name is discovered inside the frame rather than looked up in a table here — one
+   less hardcoded per-car list to forget to update. Returns the frame and that name. */
+async function openCar(key) {
+  await page.click(`[data-practice="${key}"]`);
+  await page.waitForFunction(() => {
+    const w = document.getElementById("simFrame").contentWindow;
+    if (!w) return false;
+    return Object.keys(w).some((k) => /App$/.test(k) && w[k] && w[k].updatePhysics);
+  }, null, { timeout: 20000 });
+  const frame = page.frames().find((f) => f !== page.mainFrame());
+  const app = await frame.evaluate(() =>
+    Object.keys(window).find((k) => /App$/.test(k) && window[k] && window[k].updatePhysics));
+  return { frame, app };
+}
+
 /* ---------- private practice: AI rivals must survive ---------- */
 console.log("▶ private practice (AI rival grid)");
 for (const key of ["bugatti", "tesla"]) {
-  await page.click(`[data-practice="${key}"]`);
-  await page.waitForFunction((app) => {
-    const w = document.getElementById("simFrame").contentWindow;
-    return w && w[app] && w[app].updatePhysics;
-  }, APPS[key]);
-  const frame = page.frames().find((f) => f !== page.mainFrame());
+  const { frame, app } = await openCar(key);
   await frame.click("#startBtn");
-  await frame.evaluate((app) => window[app].selectCircuit("Suzuka Circuit"), APPS[key]);
+  await frame.evaluate((a) => window[a].selectCircuit("Suzuka Circuit"), app);
   await page.waitForTimeout(2600);   // > 3 shell render ticks: the old bug wiped rivals here
-  const r = await frame.evaluate((app) => ({
-    rivals: window[app].state.rivals.length,
-    grid: window[app].state.raceGrid,
-  }), APPS[key]);
+  const r = await frame.evaluate((a) => ({
+    rivals: window[a].state.rivals.length,
+    grid: window[a].state.raceGrid,
+  }), app);
   check(`${key}: AI rivals alive after 2.6 s (${r.rivals} cars)`, r.rivals > 0 && r.grid === true);
   await page.click("#practiceBackBtn");
 }
 
-/* ---------- every sim boots inside the shell ---------- */
+/* ---------- every sim boots inside the shell ----------
+   CAR_KEYS comes off the page, so a newly added card is tested the moment it exists —
+   including that Private Practice actually puts a running simulator in the iframe. */
 console.log("▶ all sims boot in the shell");
 for (const key of CAR_KEYS) {
-  await page.click(`[data-practice="${key}"]`);
-  await page.waitForFunction((app) => {
-    const w = document.getElementById("simFrame").contentWindow;
-    return w && w[app] && w[app].updatePhysics;
-  }, APPS[key]);
-  const frame = page.frames().find((f) => f !== page.mainFrame());
-  const moved = await frame.evaluate((app) => {
-    const a = window[app];
-    a.state.ignition = true; a.setGear("G", 1); a.state.keys.KeyW = true;
-    for (let i = 0; i < 240; i++) a.updatePhysics(1 / 120);
-    a.state.keys.KeyW = false;
-    return a.state.speedMps;
-  }, APPS[key]);
-  check(`${key}: physics advance (2 s -> ${(moved * 3.6).toFixed(0)} km/h)`, moved > 5);
+  const { frame, app } = await openCar(key);
+  const moved = await frame.evaluate((a) => {
+    const x = window[a];
+    x.state.ignition = true; x.setGear("G", 1); x.state.keys.KeyW = true;
+    for (let i = 0; i < 240; i++) x.updatePhysics(1 / 120);
+    x.state.keys.KeyW = false;
+    return x.state.speedMps;
+  }, app);
+  check(`${key}: ${app} boots, physics advance (2 s -> ${(moved * 3.6).toFixed(0)} km/h)`, moved > 5);
   await page.click("#practiceBackBtn");
 }
 
