@@ -215,6 +215,32 @@ slick (rivals that drive through it lose grip), the smoke screen, the passenger 
 rival. `qStep(dt)` runs from `updatePhysics`; all of it is opt-in, so the certified figures
 stand.
 
+**DB5 Mission mode (two stages)** — the Q Branch equipment now has a job. The Circuit tab
+carries two extra routes, both point-to-point, both seeded with **enemy cars instead of a
+hypercar grid**, and both losable:
+
+- **Mission — Furka Pass, 1964** — the real *Goldfinger* chase, shot in July 1964 on the
+  Furka Pass above Andermatt. Goldfinger's **Rolls-Royce Phantom III (AU 1)** is the target
+  you must not lose, **Tilly Masterson's white Ford Mustang** shoots at you, and three
+  **Auric Enterprises** guards follow, one of which will board you.
+- **Mission — Docks & Rig** — the infiltration run: coast road, dock gate, up the loading
+  ramp onto a tanker deck, out the causeway to an offshore rig and back to the fuel depot,
+  hunted throughout.
+
+`MISSIONS` gives each stage a brief, a time limit, a damage allowance and five objectives;
+`missionStep(dt)` runs from `updatePhysics` and `drawMissionHud` draws the board (clock,
+damage pips, objective ticks). Enemies carry a **role** and the gadget that answers it:
+
+| role | what it does | the answer |
+|---|---|---|
+| `target` | must stay within `loseM` or the mission is lost | drive |
+| `shooter` | fires at you every ~1.6 s | the **bulletproof shield** — it blocks the shot outright |
+| `guard` | has hit points | the **wing guns**, the **slashers** alongside, or the **oil slick** |
+| `boarder` | latches on behind and gets in after 12 s | the **ejector seat** |
+
+Smoke blinds anything within 60 m behind for 3 s. You lose on the clock, on
+`hits >= maxHits`, on losing the target, or on being boarded too long.
+
 The four **2026 Dakar** cars share **one calibrated chassis SPEC** (like the F1 grid — a single
 `--calibrate dacia` certifies all four at 0-100 = 5.3 s; the FIA air-restrictor equalises T1+ power,
 so raw straight-line performance is real *because* it's near-identical). They differ in livery

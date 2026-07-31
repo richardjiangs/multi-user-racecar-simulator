@@ -628,7 +628,9 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Furka Pass">Le Mans (Sarthe)</button>
+              <button data-circuit="Furka Pass">Furka Pass</button>
+              <button data-circuit="Mission — Furka Pass, 1964">Mission · Goldfinger 1964</button>
+              <button data-circuit="Mission — Docks & Rig">Mission · Docks &amp; Rig</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -843,6 +845,37 @@ const CIRCUITS = {
       c(13900, 1, 140, 38, "Realp upper"), c(15300, -1, 105, 60, "Into Realp")
     ]
   },
+  /* The real Goldfinger chase, July 1964: the Furka Pass above Andermatt, run from the
+     Rhône glacier down to Realp, with the Auric Enterprises factory approach at the end. */
+  "Mission — Furka Pass, 1964": {
+    dist: 16200, env: "track", limitKmh: 90, loop: false, widthM: 6.4, corners: 14,
+    blurb: "Goldfinger, July 1964 — tail the Phantom III down the Furka Pass to Realp",
+    bumps: [{ from: 2600, to: 3600, r: 0.42 }, { from: 9800, to: 11200, r: 0.4 }],
+    track: [
+      c(700, 1, 175, 26, "Gletsch hairpin 1"), c(1250, -1, 175, 26, "Gletsch hairpin 2"),
+      c(1900, 1, 170, 28, "Gletsch hairpin 3"), c(2700, -1, 130, 40, "Rhône Glacier"),
+      c(3500, 1, 175, 24, "Belvédère hairpin"), c(4400, -1, 110, 55, "Hotel Belvédère"),
+      c(5600, 1, 95, 70, "Furkablick"), c(6900, -1, 120, 50, "Blaue Grat"),
+      c(8100, 1, 60, 110, "Furka summit, 2,429 m"), c(9400, -1, 165, 30, "Tiefenbach hairpin"),
+      c(10800, 1, 150, 34, "Tiefengletscher"), c(12300, -1, 170, 26, "Sidelenbach hairpin"),
+      c(13900, 1, 140, 38, "Realp upper"), c(15300, -1, 105, 60, "Auric Enterprises gate")
+    ]
+  },
+  /* The infiltration run: a coast road out to a docked tanker, across the deck on the
+     loading ramps, out the causeway to the offshore rig, then back to the fuel depot. */
+  "Mission — Docks & Rig": {
+    dist: 11400, env: "street", limitKmh: 120, loop: false, widthM: 8.5, corners: 12,
+    blurb: "infiltration — coast road, tanker deck, offshore rig, fuel depot",
+    bumps: [{ from: 3900, to: 4600, r: 0.5 }, { from: 7200, to: 8100, r: 0.45 }],
+    track: [
+      c(600, 1, 70, 80, "Coast road"), c(1500, -1, 95, 55, "Harbour approach"),
+      c(2400, 1, 150, 30, "Dock gate"), c(3100, -1, 120, 38, "Quayside"),
+      c(3900, 1, 165, 26, "Loading ramp"), c(4600, -1, 60, 90, "Tanker deck"),
+      c(5600, 1, 110, 45, "Stern ramp"), c(6600, -1, 80, 70, "Causeway"),
+      c(7800, 1, 140, 34, "Rig approach"), c(8700, -1, 155, 28, "Under the derrick"),
+      c(9900, 1, 100, 50, "Return causeway"), c(10900, -1, 130, 40, "Fuel depot")
+    ]
+  },
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -936,6 +969,8 @@ const SPEC = {
       radar: false, radarSweep: 0,
     },
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    mission: null,               // set by startMission() on a mission route
+
     corsa: false,                  // period competition trim (sharper throttle, open exhaust)
     corsaVis: 0,                   // Corsa-trim indicator
     testDriver: false,
@@ -1297,6 +1332,125 @@ const SPEC = {
   }
 
   /* --- Q Branch: the equipment actually does something, every step --- */
+  /* ===== MISSION ENGINE ==============================================================
+     state.mission is null off a mission route. On one it carries the clock, the hit
+     count, and which objectives are done — and any of them can fail the run. */
+  function startMission(M) {
+    state.mission = {
+      def: M, t: 0, hits: 0, done: {}, guards: 0, over: false, won: false,
+      cause: "", flash: "", flashT: 0, announced: false,
+    };
+    app.showToast(M.brief, "MISSION");
+    audio.chime([392, 523, 659]);
+  }
+  function missionSay(text, good) {
+    const m = state.mission; if (!m) return;
+    m.flash = text; m.flashT = 3.2;
+    app.showToast(text, "MISSION");
+    if (good) audio.chime([523, 784]); else audio.clunk(150);
+  }
+  function missionDone(id) {
+    const m = state.mission; if (!m || m.done[id]) return;
+    m.done[id] = true;
+    const o = m.def.objectives.find((x) => x.id === id);
+    missionSay((o ? o.text : id) + " — done", true);
+    if (m.def.objectives.every((x) => m.done[x.id])) missionEnd(true, "All objectives complete.");
+  }
+  function missionEnd(won, cause) {
+    const m = state.mission; if (!m || m.over) return;
+    m.over = true; m.won = won; m.cause = cause;
+    app.showToast((won ? "MISSION COMPLETE — " : "MISSION FAILED — ") + cause, "MISSION");
+    if (won) audio.chime([523, 659, 784, 1047]); else { audio.clunk(90); audio.clunk(70); }
+  }
+
+  function missionStep(dt) {
+    const m = state.mission;
+    if (!m || m.over) return;
+    const M = m.def, q = state.q;
+    m.t += dt;
+    if (m.flashT > 0) m.flashT -= dt;
+
+    // ---- the clock
+    if (m.t > M.limitS) return missionEnd(false, "Out of time.");
+
+    // ---- distance objectives (board the tanker, reach the rig)
+    for (const o of M.objectives) if (o.atM && !m.done[o.id] && state.distanceM >= o.atM) missionDone(o.id);
+
+    // ---- reaching the end of the stage finishes it
+    if (state.distanceM >= lapLen() - 40) {
+      if (M.objectives.some((o) => o.id === "finish")) missionDone("finish");
+    }
+
+    for (const r of state.rivals || []) {
+      if (r.down) continue;
+      const rel = r.distM - state.distanceM;              // + ahead of you, - behind you
+      const close = Math.abs(rel) < 55 && Math.abs((r.lane || 0) - state.laneOffset) < 5.5;
+
+      // ---- the TARGET must stay in sight
+      if (r.role === "target" && rel > M.loseM) return missionEnd(false, "You lost the Phantom III.");
+
+      // ---- the WING GUNS: a burst on a car close ahead or alongside takes a hit off it
+      if (q.gun && q.muzzle > 0.85 && close && r.role !== "target" && rel > -30) {
+        r.hp -= 1;
+        if (r.hp <= 0) enemyDown(r, "shot out");
+      }
+
+      // ---- the SLASHERS only reach a car right alongside you
+      if (q.slash > 0.6 && Math.abs(rel) < 9 && Math.abs((r.lane || 0) - state.laneOffset) < 3.4 && !r.down) {
+        enemyDown(r, "tyres slashed");
+        if (r.role === "shooter") missionDone("mustang");
+      }
+
+      // ---- SMOKE breaks a tail: anything close behind loses you for a few seconds
+      if (q.puffs.length && rel < 0 && rel > -60) { r.hurtT = Math.max(r.hurtT || 0, 2.5); r.blinded = 3.0; }
+      if (r.blinded > 0) r.blinded -= dt;
+
+      // ---- SHOOTERS fire at you, and only the bulletproof shield stops it
+      if (r.role === "shooter" && rel < 0 && rel > -90 && !(r.blinded > 0)) {
+        r.fireT -= dt;
+        if (r.fireT <= 0) {
+          r.fireT = 1.6 + Math.random();
+          if (q.shield > 0.6) { audio.click(320); }
+          else {
+            m.hits++;
+            state.roadInputG = Math.min(2.4, (state.roadInputG || 0) + 0.7);
+            audio.clunk(120);
+            missionSay("Hit — " + m.hits + "/" + M.maxHits + ". Get the shield up.", false);
+            if (m.hits >= M.maxHits) return missionEnd(false, "Too many hits — the car is finished.");
+          }
+        }
+      }
+
+      // ---- a BOARDER latches on behind, and only the ejector seat clears it
+      if (r.role === "boarder" && rel < 0 && rel > -12 && !(r.blinded > 0)) {
+        r.boardT += dt;
+        if (r.boardT > 2.5 && !r.onBoard) {
+          r.onBoard = true;
+          missionSay("Someone is on the back of the car — eject them.", false);
+        }
+        if (r.onBoard && q.ejectT > 0.05) { enemyDown(r, "ejected"); missionDone("boarder"); }
+        if (r.onBoard && r.boardT > 12) return missionEnd(false, "Boarded — they got in.");
+      } else if (r.role === "boarder") r.boardT = Math.max(0, r.boardT - dt * 0.5);
+
+      // ---- a car that found the oil and is still spinning counts as dealt with
+      if (r.oiled && !r.spun) { r.spun = true; if (r.role === "guard") enemyDown(r, "spun in the oil"); }
+    }
+  }
+  function enemyDown(r, how) {
+    if (r.down) return;
+    r.down = true; r.hurtT = 99; r.speedMps = 0; r.lane = (r.lane || 0) + (Math.random() < 0.5 ? -6 : 6);
+    const m = state.mission;
+    app.showToast(r.name + " — " + how + ".", "MISSION");
+    audio.clunk(110);
+    if (!m) return;
+    if (r.role === "guard" || r.role === "shooter") {
+      m.guards++;
+      const o = m.def.objectives.find((x) => x.id === "guards");
+      if (o && m.guards >= o.need) missionDone("guards");
+    }
+    if (r.role === "shooter") missionDone("mustang");
+  }
+
   function qStep(dt) {
     const q = state.q, v = Math.abs(state.speedMps);
 
@@ -1337,7 +1491,7 @@ const SPEC = {
     for (const o of q.slicks) {
       for (const r of state.rivals || []) {
         if (r.gone || r.oiled) continue;
-        if (Math.abs(r.dist - o.dist) < 9 && Math.abs((r.lane || 0) - o.lane) < 2.6) {
+        if (Math.abs(r.distM - o.dist) < 9 && Math.abs((r.lane || 0) - o.lane) < 2.6) {
           r.oiled = true; r.hurtT = Math.max(r.hurtT || 0, 3.5 + Math.random() * 2.5);
           app.showToast("A car behind found the oil.", "DB5");
         }
@@ -1549,6 +1703,50 @@ const SPEC = {
      pure physics: v = sqrt(latG * 9.81 / curvature), so each car slows to a DIFFERENT,
      real speed for each bend, and the big-top-speed cars rule the straights
      while the high-grip cars (AMG ONE) rule the corners. */
+  /* ===== the two missions: enemy cars and objectives that can be failed =============
+     Roles: "target" is the car you must not lose, "shooter" fires at you (the shield is
+     the only thing that stops it), "guard" has to be disabled, "boarder" latches on
+     behind and only the ejector seat clears it. */
+  const MISSIONS = {
+    "Mission — Furka Pass, 1964": {
+      brief: "Goldfinger's Phantom III is ahead of you on the pass. Stay with it, deal with what comes at you, and reach the Auric Enterprises gate.",
+      limitS: 420, maxHits: 5, loseM: 520,
+      enemies: [
+        { name: "Rolls-Royce Phantom III · AU 1", body: "#f0e8c8", stripe: "#1a1a1a", top: 150, latG: 0.72, accel: 4.4, role: "target", at: 260 },
+        { name: "Ford Mustang · Tilly Masterson", body: "#f2f4f6", stripe: "#c8102e", top: 185, latG: 0.86, accel: 6.2, role: "shooter", at: -70, hp: 2 },
+        { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 170, latG: 0.80, accel: 5.4, role: "guard", at: -150, hp: 3 },
+        { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 168, latG: 0.80, accel: 5.3, role: "guard", at: -230, hp: 3 },
+        { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 166, latG: 0.79, accel: 5.2, role: "boarder", at: -320, hp: 3 },
+      ],
+      objectives: [
+        { id: "tail", text: "Keep the Phantom III in sight" },
+        { id: "mustang", text: "Stop the Mustang — slashers or guns" },
+        { id: "guards", text: "Disable 2 Auric guards", need: 2 },
+        { id: "boarder", text: "Eject the car that gets on your tail" },
+        { id: "finish", text: "Reach the Auric Enterprises gate" },
+      ],
+    },
+    "Mission — Docks & Rig": {
+      brief: "The tanker sails on the hour. Get aboard, cross the deck, reach the rig and bring it back to the fuel depot. They know you are coming.",
+      limitS: 330, maxHits: 4, loseM: 999999,
+      enemies: [
+        { name: "Dock patrol", body: "#1e2a36", stripe: "#e0a24a", top: 175, latG: 0.84, accel: 5.8, role: "shooter", at: -60, hp: 2 },
+        { name: "Dock patrol", body: "#1e2a36", stripe: "#e0a24a", top: 173, latG: 0.84, accel: 5.7, role: "guard", at: -140, hp: 3 },
+        { name: "Deck crew truck", body: "#3a2f22", stripe: "#c8a24a", top: 140, latG: 0.66, accel: 4.0, role: "guard", at: -220, hp: 3 },
+        { name: "Rig security", body: "#14202a", stripe: "#5fd0ea", top: 180, latG: 0.88, accel: 6.0, role: "boarder", at: -300, hp: 3 },
+        { name: "Rig security", body: "#14202a", stripe: "#5fd0ea", top: 178, latG: 0.87, accel: 5.9, role: "shooter", at: -380, hp: 2 },
+      ],
+      objectives: [
+        { id: "ramp", text: "Board the tanker (4.6 km)", atM: 4600 },
+        { id: "rig", text: "Reach the rig (8.7 km)", atM: 8700 },
+        { id: "guards", text: "Disable 2 pursuers", need: 2 },
+        { id: "boarder", text: "Eject the one that latches on" },
+        { id: "finish", text: "Make the fuel depot" },
+      ],
+    },
+  };
+  const missionOf = (name) => MISSIONS[name] || null;
+
   const GRID_CARS = [
     { name: "Bugatti Veyron Super Sport", body: "#1b1d22", stripe: "#8a1f1f", top: 431, latG: 1.15, accel: 11.6 },
     { name: "Mercedes-AMG ONE",        body: "#c8d0d6", stripe: "#16b3a6", top: 352, latG: 1.95, accel: 12.0 },
@@ -1589,6 +1787,17 @@ const SPEC = {
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
+    // On a mission the field is not a grid of hypercars — it is the enemy.
+    const M = state.route.active ? missionOf(state.route.name) : null;
+    if (M) {
+      M.enemies.forEach((e) => state.rivals.push({
+        name: e.name, body: e.body, stripe: e.stripe, topMps: e.top / 3.6, latG: e.latG, accel: e.accel,
+        role: e.role, hp: e.hp || 99, distM: state.distanceM + e.at, lane: (Math.random() - 0.5) * 3,
+        speedMps: 26, brake: 0, fireT: 1.5 + Math.random() * 2, boardT: 0,
+      }));
+      startMission(M);
+      return;
+    }
     const grid = (state.route.active && state.route.name === "Furka Pass") ? FERRARI250_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
@@ -1600,6 +1809,8 @@ const SPEC = {
   function updateRivals(dt) {
     if (!state.raceGrid || !state.rivals.length) return;
     for (const r of state.rivals) {
+      if (r.down) continue;                    // a disabled enemy is parked, not racing
+      if (r.hurtT > 0) { r.hurtT -= dt; r.speedMps = Math.max(4, r.speedMps - 9 * dt); r.distM += r.speedMps * dt; continue; }
       const v = r.speedMps;
       // look ahead a real braking distance and slow to the tightest corner in that window,
       // at this car's own grip: v_corner = sqrt(latG * g / curvature)
@@ -1746,6 +1957,7 @@ const SPEC = {
   function updatePhysics(dt) {
     updateInputs(dt);
     qStep(dt);
+    missionStep(dt);
     updateTransmission(dt);
     updateAero(dt);
     updateRivals(dt);
@@ -2571,7 +2783,62 @@ const SPEC = {
     }
   }
 
+  // the mission board: clock, hits, and every objective with its state
+  function drawMissionHud(w, h) {
+    const m = state.mission; if (!m) return;
+    const M = m.def, pad = 12, bw = Math.min(320, w * 0.28);
+    const rows = M.objectives.length;
+    const bh = 74 + rows * 19;
+    // right-hand side, below the drive-help card: the left is the HUD aside
+    const x = w - bw - pad, y = h * 0.42;
+    ctx.save();
+    ctx.fillStyle = "rgba(8,10,13,0.82)";
+    ctx.beginPath(); ctx.roundRect(x, y, bw, bh, 8); ctx.fill();
+    ctx.strokeStyle = m.over ? (m.won ? "rgba(90,220,140,0.8)" : "rgba(226,83,74,0.85)") : "rgba(200,42,34,0.6)";
+    ctx.lineWidth = 1.6; ctx.stroke();
+
+    ctx.textAlign = "left"; ctx.textBaseline = "alphabetic";
+    ctx.fillStyle = "#e08a84"; ctx.font = "700 12px ui-sans-serif";
+    ctx.fillText(m.over ? (m.won ? "MISSION COMPLETE" : "MISSION FAILED") : "MISSION", x + 12, y + 22);
+
+    const left = Math.max(0, M.limitS - m.t);
+    const mm = Math.floor(left / 60), ss = Math.floor(left % 60);
+    ctx.fillStyle = left < 45 ? "#e2534a" : "rgba(220,228,236,0.9)";
+    ctx.font = "700 13px ui-monospace, monospace";
+    ctx.fillText(mm + ":" + String(ss).padStart(2, "0"), x + bw - 52, y + 22);
+
+    // damage pips: how many hits the car has left in it
+    for (let i = 0; i < M.maxHits; i++) {
+      ctx.fillStyle = i < m.hits ? "#e2534a" : "rgba(150,160,172,0.35)";
+      ctx.beginPath(); ctx.arc(x + 16 + i * 13, y + 38, 4.2, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = "rgba(150,160,172,0.8)"; ctx.font = "10px ui-sans-serif";
+    ctx.fillText("damage", x + 16 + M.maxHits * 13 + 8, y + 42);
+
+    M.objectives.forEach((o, i) => {
+      const done = !!m.done[o.id], yy = y + 62 + i * 19;
+      ctx.fillStyle = done ? "#5adc8c" : "rgba(200,210,220,0.55)";
+      ctx.font = "11px ui-sans-serif";
+      ctx.fillText(done ? "✔" : "○", x + 14, yy);
+      ctx.fillStyle = done ? "rgba(150,220,175,0.9)" : "rgba(210,220,230,0.85)";
+      ctx.fillText(o.text, x + 30, yy);
+    });
+
+    if (m.flashT > 0 && !m.over) {
+      ctx.globalAlpha = Math.min(1, m.flashT / 0.7);
+      ctx.fillStyle = "#ffd985"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(m.flash, w / 2, h * 0.2);
+      ctx.globalAlpha = 1;
+    }
+    if (m.over) {
+      ctx.textAlign = "left"; ctx.fillStyle = "rgba(220,228,236,0.85)"; ctx.font = "10px ui-sans-serif";
+      ctx.fillText(m.cause, x + 12, y + bh - 8);
+    }
+    ctx.restore();
+  }
+
   function drawTelemetry(w, h) {
+    drawMissionHud(w, h);
     ctx.save();
     ctx.fillStyle = "rgba(156,198,255,0.85)"; ctx.font = "11px ui-monospace, monospace"; ctx.textAlign = "left";
     const x = w * 0.5 - 70, y = h * 0.1;
@@ -2948,6 +3215,7 @@ const SPEC = {
 
   function isNords(n) { return n === "Nürburgring 24h" || n === "Nordschleife" || n === "Nürburgring GP"; }
   function selectCircuit(name) {
+    state.mission = null;                       // leaving a mission route ends the mission
     const circ = CIRCUITS[name]; if (!circ) { showToast(`No ${name} on file.`, "Co-Pilot"); return; }
     state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist, arrived: false };
     state.lap = { running: true, startDist: state.distanceM, lastMs: 0, bestMs: 0, curMs: 0 };
