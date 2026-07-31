@@ -1275,7 +1275,7 @@ const SPEC = {
       if (dir > 0) { app.setGear("G", 1); return; }
       return;
     }
-    const next = clamp(state.curGear + dir, 1, 1);
+    const next = clamp(state.curGear + dir, 1, SPEC.gearRatios.length);
     if (next === state.curGear) return;
     state.shiftFrom = state.curGear; state.curGear = next; state.shiftTimer = SPEC.shiftTimeS;
     state.manualHold = 1.4;
@@ -1303,7 +1303,7 @@ const SPEC = {
     const upRpm = state.throttle > 0.6 ? m.upRpm : (m.downRpm + 1400 + state.throttle * 1200);
     const downRpm = m.downRpm + (kickdown ? 700 : 0);
     if (state.manualHold > 0) return;          // respect a just-made manual shift
-    if (!holdForCorner && rpm > upRpm && state.curGear < 1) {
+    if (!holdForCorner && rpm > upRpm && state.curGear < SPEC.gearRatios.length) {
       state.shiftFrom = state.curGear; state.curGear++; state.shiftTimer = SPEC.shiftTimeS; audio.clunk(240);
     } else if (rpm < downRpm && state.curGear > 1) {
       state.shiftFrom = state.curGear; state.curGear--; state.shiftTimer = SPEC.shiftTimeS; audio.blip(0.7);
