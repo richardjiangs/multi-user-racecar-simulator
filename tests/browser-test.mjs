@@ -45,6 +45,37 @@ const check = (label, ok, detail) => {
   if (!ok) failures++;
 };
 
+/* ---------- every car must have its OWN engine voice ----------
+   Firing frequency (rpm/60 x pulses-per-rev) was always right, but the oscillator stack
+   on top of it is the timbre, and cloning a sim copies it verbatim: at one point three
+   classics (250 GTO, F40, 917) shared a byte-identical stack, so a Colombo V12, a
+   twin-turbo V8 and an air-cooled flat-12 were one instrument at three pitches. The only
+   cars allowed to share a voice are the ones that really do share a power unit. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const { createHash } = await import("node:crypto");
+  const ALLOWED_SHARED = [
+    ["Mercedes F1 2026", "McLaren F1 2026", "Williams F1 2026", "Alpine F1 2026"],   // Mercedes PU
+    ["Ferrari F1 2026", "Haas F1 2026", "Cadillac F1 2026"],                          // Ferrari PU
+    ["Red Bull F1 2026", "Racing Bulls F1 2026"],                                     // Red Bull Ford PU
+    ["Koenigsegg Jesko", "Koenigsegg Agera RS"],                                      // same 5.0 TT V8
+  ].map((g) => g.slice().sort().join("|"));
+  const sims = readdirSync(ROOT).filter((f) => /simulator\.html$/i.test(f));
+  const byVoice = new Map();
+  for (const f of sims) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const defs = (src.match(/const defs = \[[\s\S]*?\n      \];/) || [""])[0].replace(/\/\/[^\n]*/g, "");
+    const order = (src.match(/\(s\.rpm \/ 60\) \* ([\d.]+)/) || [])[1];
+    const key = createHash("md5").update(defs + "|" + order).digest("hex");
+    const name = f.replace(/ simulator\.html/i, "");
+    byVoice.set(key, (byVoice.get(key) || []).concat(name));
+  }
+  const shared = [...byVoice.values()].filter((v) => v.length > 1).map((v) => v.slice().sort().join("|"));
+  const unexpected = shared.filter((g) => !ALLOWED_SHARED.includes(g));
+  check(`${byVoice.size} distinct engine voices across ${sims.length} cars`, unexpected.length === 0,
+    unexpected.length ? "UNEXPECTED SHARED VOICE: " + unexpected.join("  //  ") : "");
+}
+
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const pageErrors = [];

@@ -1082,12 +1082,11 @@ const SPEC = {
       // Tri-motor EV: pure tones — a soft fundamental hum with thin high inverter
       // orders gliding up with speed; no combustion buzz at all
       const defs = [
-        { type: "sine",     mul: 1.0,  gain: 0.40, toShaper: false },
-        { type: "sine",     mul: 2.0,  gain: 0.22, toShaper: false },
-        { type: "triangle", mul: 4.0,  gain: 0.16, toShaper: false },
-        { type: "sine",     mul: 6.0,  gain: 0.10, toShaper: true  },
-        { type: "sine",     mul: 6.02, gain: 0.08, toShaper: true  },
-        { type: "triangle", mul: 9.0,  gain: 0.04, toShaper: true  }
+        { type: "sine",       mul: 0.5,    gain: 0.26, toShaper: false },   // 3 drive units pulling together
+        { type: "sawtooth",   mul: 1,      gain: 0.40, toShaper: true  },   // inverter switching — the fundamental of an EV
+        { type: "triangle",   mul: 2,      gain: 0.33, toShaper: true  },   // first reduction stage
+        { type: "square",     mul: 4,      gain: 0.18, toShaper: true  },
+        { type: "sine",       mul: 6,      gain: 0.14, toShaper: false },   // rotor whine at 20,000 rpm
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;

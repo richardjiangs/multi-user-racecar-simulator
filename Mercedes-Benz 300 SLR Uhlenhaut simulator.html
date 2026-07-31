@@ -983,12 +983,11 @@ const SPEC = {
       // Carburetted desmodromic straight-eight: a hard, brassy period wail that sharpens
       // all the way to the 7,600 rpm limit
       const defs = [
-        { type: "sine",       mul: 0.5,    gain: 0.26, toShaper: false },
-        { type: "sawtooth",   mul: 1,      gain: 0.66, toShaper: true  },   // straight-eight: hard and dry
-        { type: "square",     mul: 1.5,    gain: 0.30, toShaper: true  },   // desmodromic valvegear clatter
-        { type: "sawtooth",   mul: 2,      gain: 0.34, toShaper: true  },
-        { type: "square",     mul: 3,      gain: 0.20, toShaper: true  },
-        { type: "sawtooth",   mul: 5,      gain: 0.12, toShaper: true  },   // the mechanical shriek at 7,500
+        { type: "sine",       mul: 0.5,    gain: 0.33, toShaper: false },
+        { type: "sawtooth",   mul: 1,      gain: 0.54, toShaper: true  },
+        { type: "square",     mul: 2,      gain: 0.22, toShaper: true  },   // mechanical injection: dry, no intake resonance
+        { type: "sawtooth",   mul: 3,      gain: 0.19, toShaper: true  },
+        { type: "square",     mul: 4.5,    gain: 0.09, toShaper: true  },   // the top end at 7,800 rpm
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1021,7 +1020,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 4);   // straight-eight: 4 firing pulses / rev
+      const firing = Math.max(20, (s.rpm / 60) * 4);   // desmodromic straight-eight, Bosch direct injection: 4 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);

@@ -210,8 +210,8 @@ const CARS = {
     file: "Yangwang U9 simulator.html",
     app: "U9App",
     label: "Yangwang U9",
-    marks: { 100: { target: 2.36, tol: 1e-4 } },
-    topSpeed: { kmh: 309, minT: 60 },
+    marks: { 100: { target: 1.9, tol: 1e-4 } },
+    topSpeed: { kmh: 496, minT: 60 },
     brake100: { target: 31, tol: 1.0 },
   },
   db5: {

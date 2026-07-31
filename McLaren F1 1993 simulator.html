@@ -1077,14 +1077,13 @@ const SPEC = {
       // Twin-scroll naturally-aspirated V12 (BMW S70/2): inherently balanced, smooth and creamy with a
       // hard-edged howl building to the limiter and the turbo whistling underneath
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.58, toShaper: false },   // the S70/2's twelve-cylinder bottom end
-        { type: "sine",     mul: 0.75, gain: 0.26, toShaper: false },   // the roof snorkel's induction roar over the top
-        { type: "triangle", mul: 1.0,  gain: 0.50, toShaper: true  },
-        { type: "sawtooth", mul: 1.0,  gain: 0.34, toShaper: true  },
-        { type: "sine",     mul: 2.0,  gain: 0.22, toShaper: false },
-        { type: "sawtooth", mul: 3.0,  gain: 0.20, toShaper: true  },   // the hard straight-six howl
-        { type: "triangle", mul: 4.0,  gain: 0.09, toShaper: true  },
-        { type: "sawtooth", mul: 6.0,  gain: 0.05, toShaper: true  }    // metallic edge near the limiter
+        { type: "sine",       mul: 0.5,    gain: 0.51, toShaper: false },   // twelve cylinders of bottom end
+        { type: "sawtooth",   mul: 1,      gain: 0.64, toShaper: true  },
+        { type: "sawtooth",   mul: 1.011,  gain: 0.32, toShaper: true  },   // two banks, slightly out of phase
+        { type: "triangle",   mul: 1.5,    gain: 0.30, toShaper: true  },   // individual throttle bodies: a hard induction honk
+        { type: "sawtooth",   mul: 2,      gain: 0.22, toShaper: true  },
+        { type: "sawtooth",   mul: 3,      gain: 0.19, toShaper: true  },
+        { type: "square",     mul: 6,      gain: 0.08, toShaper: true  },   // the top end at 7,500 rpm
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1117,7 +1116,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 6);   // 60° V12: 6 firing pulses / rev — the S70/2’s hard, gold-lined shriek
+      const firing = Math.max(20, (s.rpm / 60) * 6);   // BMW S70/2 V12 on twelve throttles: 6 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);

@@ -1028,12 +1028,11 @@ const SPEC = {
       // Carburetted DOHC straight-six: a hard, brassy period wail that sharpens
       // all the way to the 7,600 rpm limit
       const defs = [
-        { type: "sine",       mul: 0.5,    gain: 0.46, toShaper: false },   // the long-stroke six's weight
-        { type: "sine",       mul: 1,      gain: 0.52, toShaper: false },   // carburettors: rounded, not raspy
-        { type: "triangle",   mul: 1.5,    gain: 0.30, toShaper: true  },
-        { type: "sawtooth",   mul: 2,      gain: 0.22, toShaper: true  },   // the SU induction hiss
-        { type: "triangle",   mul: 3,      gain: 0.12, toShaper: false },
-        { type: "sine",       mul: 4,      gain: 0.05, toShaper: false }
+        { type: "sine",       mul: 0.5,    gain: 0.31, toShaper: false },
+        { type: "sine",       mul: 1,      gain: 0.54, toShaper: true  },
+        { type: "sawtooth",   mul: 2,      gain: 0.24, toShaper: true  },   // the carburettor intake hiss
+        { type: "triangle",   mul: 1.5,    gain: 0.26, toShaper: true  },
+        { type: "sawtooth",   mul: 3,      gain: 0.15, toShaper: true  }
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1066,7 +1065,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 3);   // straight-six: 3 firing pulses / rev
+      const firing = Math.max(20, (s.rpm / 60) * 3);   // straight-six on three SU HD8: 3 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
