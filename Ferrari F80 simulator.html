@@ -844,7 +844,7 @@ const SPEC = {
   idleRpm: 900,
   redlineRpm: 9200,             // 9,000 redline, 9,200 dynamic limiter
   finalDrive: 3.36,
-  gearRatios: [3.29, 2.48, 1.95, 1.58, 1.32, 1.11, 0.92, 0.74],   // 8-speed DCT
+  gearRatios: [5.305, 4.202, 3.328, 2.636, 2.088, 1.654, 1.31, 1.038],               // 8-speed DCT road car
   reverseRatio: 3.10,
   wheelRadiusM: 0.370,          // 345/30 R21 rear (Michelin Pilot Sport Cup2R)
   dragCd: 0.36,                 // downforce configuration; DRS trims the wing flat
@@ -852,8 +852,8 @@ const SPEC = {
   frontalAreaM2: 1.95,
   rollingResistance: 0.012,
   airDensity: 1.225,
-  drivelineEff: 0.699649,       // lumped gearbox loss + hybrid-deployment taper on a sustained run; calibrated -> 0–200 km/h = 5.750 s (manufacturer)
-  tractionCoeff: 1.412365,      // calibrated -> 0–100 km/h = 2.1500 s ±0.0001 with e-4WD launch (see tests/perf-test.mjs)
+  drivelineEff: 0.700328,       // lumped gearbox loss + hybrid-deployment taper on a sustained run; calibrated -> 0–200 km/h = 5.750 s (manufacturer)
+  tractionCoeff: 1.477891,      // calibrated -> 0–100 km/h = 2.1500 s ±0.0001 with e-4WD launch (see tests/perf-test.mjs)
   topSpeedKmh: 350,             // manufacturer
   topSpeedMps: 350 * KMH,
   topSpeedLimitedKmh: 350,

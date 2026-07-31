@@ -899,7 +899,7 @@ const SPEC = {
   idleRpm: 950,
   redlineRpm: 7200,
   finalDrive: 3.60,
-  gearRatios: [3.20, 2.10, 1.55, 1.20, 0.98, 0.82],   // 6-speed sequential (dog box), permanent 4WD
+  gearRatios: [6.815, 4.999, 3.667, 2.69, 1.973, 1.448],               // T1+ raid car: a low first for dunes and rock, top gear at the 170 km/h restrictor
   reverseRatio: 3.20,
   wheelRadiusM: 0.470,           // 37-inch rally-raid tyre on a beadlock 8.5×17
   dragCd: 0.55,                  // low-drag carbon body (Dacia claims ~10% less drag)
@@ -907,7 +907,7 @@ const SPEC = {
   rollingResistance: 0.030,      // knobbly all-terrain tyres on loose ground
   airDensity: 1.16,              // hot desert air
   drivelineEff: 0.90,
-  tractionCoeff: 0.650017,       // calibrated -> 0–100 km/h = 5.3000 s on a firm launch surface (see perf-test)
+  tractionCoeff: 0.696534,       // calibrated -> 0–100 km/h = 5.3000 s on a firm launch surface (see perf-test)
   topSpeedKmh: 170,              // Dakar / T1+ regulated top speed (car auto-lowers at 170 km/h)
   topSpeedMps: 170 * KMH,
   topSpeedLimitedKmh: 170,
@@ -1236,9 +1236,9 @@ const SPEC = {
   }
 
   const modeMap = {
-    wet:   { upRpm: 10000, downRpm: 5000, throttleRate: 0.0020, tc: 0.80, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 13000, downRpm: 6500, throttleRate: 0.0013, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 14600, downRpm: 7500, throttleRate: 0.0007, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+    wet:   { upRpm: 4030, downRpm: 1590, throttleRate: 0.0020, tc: 0.80, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 5690, downRpm: 2020, throttleRate: 0.0013, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 6700, downRpm: 2300, throttleRate: 0.0007, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
