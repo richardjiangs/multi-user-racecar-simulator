@@ -154,6 +154,11 @@ const CARS = {
     file: "Nissan GT-R Nismo simulator.html",
     app: "GtrApp",
     label: "Nissan GT-R Nismo",
+    rollout: true,               // Nissan quotes the GT-R with the 1-ft rollout subtracted
+                                 // (the same US drag-strip convention as Tesla). A true
+                                 // standing start on this car's own gearing is ~2.9 s:
+                                 // 2nd gear is engine-limited to 8.2 m/s², so no amount
+                                 // of grip reaches 2.7 s from a dead stop.
     marks: { 100: { target: 2.7, tol: 1e-4 } },
     topSpeed: { kmh: 315, minT: 70 },
     brake100: { target: 33, tol: 1.5 },

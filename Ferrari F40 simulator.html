@@ -852,7 +852,7 @@ const SPEC = {
   rollingResistance: 0.013,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 0.746743,          // calibrated -> 0-100 = 4.1 s
+  tractionCoeff: 0.790049,          // calibrated -> 0-100 = 4.1 s
   topSpeedKmh: 324,             // 201 mph (drag-limited)
   topSpeedMps: 324 * KMH,
   topSpeedLimitedKmh: 324,
@@ -1190,7 +1190,17 @@ const SPEC = {
   function updateTransmission(dt) {
     if (state.manualHold > 0) state.manualHold -= dt;
     if (state.shiftTimer > 0) { state.shiftTimer -= dt; return; }
-    if (state.gearMode !== "G" || state.launchActive) return;
+    if (state.gearMode !== "G") return;
+    if (state.launchActive) {
+      // A real launch runs each gear to the limiter and shifts there. Letting the box
+      // work during the launch is what stops a short-geared car (Supra, Evo, GT-R, M5)
+      // sitting on the rev limiter in 1st and then snapping 1->2->3 in one instant when
+      // launch control released at its fixed 33 m/s.
+      if (gearedRpm(state.curGear) > SPEC.redlineRpm * 0.995 && state.curGear < SPEC.gearRatios.length) {
+        state.shiftFrom = state.curGear; state.curGear++; state.shiftTimer = SPEC.shiftTimeS; audio.clunk(240);
+      }
+      return;
+    }
     const m = mode();
     const rpm = gearedRpm(state.curGear);
     const holdForCorner = Math.abs(state.curvature) > 0.013 && state.speedMps > 12;

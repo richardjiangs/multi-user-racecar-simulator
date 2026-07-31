@@ -944,13 +944,13 @@ const SPEC = {
   finalDrive: 4.06,
   gearRatios: [3.65, 2.37, 1.71, 1.29, 1.00, 0.78],               // 6-speed SST twin-clutch
   reverseRatio: 3.42,
-  wheelRadiusM: 0.318,          // 245/40 R18
+  wheelRadiusM: 0.327,         // 245/40 R18
   dragCd: 0.28,                 // Evo X saloon — Mitsubishi quote Cd 0.28
   frontalAreaM2: 2.10,
   rollingResistance: 0.013,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 0.808684,     // calibrated -> 0–100 km/h = 3.8000 s ±0.0001 (S-AWC launch; see tests/perf-test.mjs)
+  tractionCoeff: 0.883648,     // calibrated -> 0–100 km/h = 3.8000 s ±0.0001 (S-AWC launch; see tests/perf-test.mjs)
   topSpeedKmh: 252,             // 157 mph
   topSpeedMps: 252 * KMH,
   topSpeedLimitedKmh: 252,
@@ -961,7 +961,7 @@ const SPEC = {
   brakeMaxMps2: 11.7366,        // Brembo four-piston front; calibrated to 34.0 m 100-0 km/h
   brakeDist100to0M: 34,         // target 100-0 km/h braking distance
   shiftTimeS: 0.10,             // ZF 8HP torque-converter automatic
-  launchRpm: 3000,
+  launchRpm: 4000,           // SST launch control holds ~4,000 rpm
   aeroClA: 0.22,                // fixed rear wing
   aeroDragAdd: 0.04             // fixed wing — little variable trim
 };
@@ -1295,7 +1295,17 @@ const SPEC = {
   function updateTransmission(dt) {
     if (state.manualHold > 0) state.manualHold -= dt;
     if (state.shiftTimer > 0) { state.shiftTimer -= dt; return; }
-    if (state.gearMode !== "G" || state.launchActive) return;
+    if (state.gearMode !== "G") return;
+    if (state.launchActive) {
+      // A real launch runs each gear to the limiter and shifts there. Letting the box
+      // work during the launch is what stops a short-geared car (Supra, Evo, GT-R, M5)
+      // sitting on the rev limiter in 1st and then snapping 1->2->3 in one instant when
+      // launch control released at its fixed 33 m/s.
+      if (gearedRpm(state.curGear) > SPEC.redlineRpm * 0.995 && state.curGear < SPEC.gearRatios.length) {
+        state.shiftFrom = state.curGear; state.curGear++; state.shiftTimer = SPEC.shiftTimeS; audio.clunk(240);
+      }
+      return;
+    }
     const m = mode();
     const rpm = gearedRpm(state.curGear);
     const holdForCorner = Math.abs(state.curvature) > 0.013 && state.speedMps > 12;
@@ -2886,7 +2896,9 @@ const SPEC = {
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (speed >= 245) warn.push("approaching the 250 km/h limiter");
+    // this car's OWN ceiling, and it follows the top-speed mode when that is on
+    const speedCapKmh = Math.round((state.raceAero ? SPEC.topSpeedRecordMps : SPEC.topSpeedMps) * 3.6);
+    if (speed >= speedCapKmh * 0.98) warn.push(`approaching the ${speedCapKmh} km/h limiter`);   // Evo X is electronically limited
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
