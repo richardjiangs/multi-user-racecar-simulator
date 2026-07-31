@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Rimac Nevera driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Yangwang U9 driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">RN</div>
-        <h1>Rimac Nevera</h1>
-        <p>Quad-motor e⁴ platform · one motor per wheel · 960 kW · DiSus-X active body control · 1,200 V architecture.</p>
+        <div class="mark">U9</div>
+        <h1>Yangwang U9</h1>
+        <p>Quad-motor e⁴ platform · one motor per wheel · 960 kW · DiSus-X active body control · 1,200 V Blade battery.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Pull D with the right paddle, doors shut, and the Track is yours.</div>
+        <div class="warning" id="warning">Pull D with the right paddle, butterfly doors shut, and the U9 is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,8 +411,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Quad-Motor Hypercar</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Rimac blue over exposed carbon, active aero, quad-motor all-wheel drive</span></span>
+          <h2>Exterior — Butterfly Doors, Active Rear Wing</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">Skyward Blue over exposed carbon, butterfly doors, active rear wing</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -441,7 +441,7 @@
         <div class="readout-grid">
           <div class="readout"><b id="doorState">Closed</b><span>auto-present doors</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>air suspension</span></div>
-          <div class="readout"><b>265 / 305</b><span>Forged 20&quot; · Michelin PS4S</span></div>
+          <div class="readout"><b>275 / 325</b><span>Giti GitiSport e·GTR2 on forged 21″</span></div>
           <div class="readout"><b id="lightState">Auto</b><span>LED headlamps</span></div>
         </div>
       </section>
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Round wheel · triple TFT screens · carbon-and-Alcantara cabin</span>
+          <span class="small" id="cockpitStatus">Round wheel · driver display and centre touchscreen · DiSus-X body control</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -482,8 +482,8 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Drive Units — Quad-motor + 120 kWh Pack</h2>
-          <span class="small" id="engineStatus">Quad-motor EV, one motor per wheel · 1,400 kW (1,914 hp) · 2,340 Nm · 0–100 km/h 1.81 s · 412 km/h governed · 120 kWh · 2,150 kg</span>
+          <h2>Drive Units — Quad-Motor e⁴</h2>
+          <span class="small" id="engineStatus">Quad-motor e⁴ EV, one motor per wheel · 960 kW (1,306 PS) · 1,680 Nm · 0–100 km/h in 2.36 s · 309 km/h · 80 kWh Blade battery on 1,200 V · 2,475 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -491,7 +491,7 @@
           <div class="turbo" id="turboR" style="right:15%;top:22%"></div>
           <div class="turbo" style="left:15%;top:auto;bottom:104px"></div>
           <div class="turbo" style="right:15%;top:auto;bottom:104px"></div>
-          <div class="emotor" id="packArt" style="left:33%;right:33%;top:40%;bottom:auto;height:40px;background:linear-gradient(180deg,rgba(20,26,30,0.95),rgba(10,14,16,0.98));border-color:#2bb3c0;color:#2bb3c0">120 kWh STRUCTURAL PACK</div>
+          <div class="emotor" id="packArt" style="left:33%;right:33%;top:40%;bottom:auto;height:40px;background:linear-gradient(180deg,rgba(20,26,30,0.95),rgba(10,14,16,0.98));border-color:#2bb3c0;color:#2bb3c0">80 kWh STRUCTURAL PACK</div>
           <div style="position:absolute;left:37%;right:37%;bottom:20px;height:24px;border-radius:6px;background:linear-gradient(180deg,#1a1e24,#0a0c10);border:1px solid #2bb3c0;display:grid;place-items:center;color:#2bb3c0;font-size:9px;letter-spacing:2px">4 × MOTOR · INVERTERS</div>
           <div class="cover" id="engineCover">FRUNK CLOSED</div>
         </div>
@@ -512,7 +512,7 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Track drive-unit recording — it becomes the motor voice, pitched with speed">&#9835; Use a real Track recording</button>
+          <button id="engineLoadBtn" title="Load a real U9 drive-unit recording — it becomes the motor voice, pitched with speed">&#9835; Use a real Track recording</button>
           <span class="small now" id="engineSoundStatus">Motor voice: synthesised quad-motor inverter surge</span>
         </div>
       </section>
@@ -520,8 +520,8 @@
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — Single-Speed · Torque Vectoring · AWD</h2>
-          <span class="small" id="dynStatus">Track mode: adaptive dampers firm, stability trail, full 1,914 hp unlocked</span>
+          <h2>Dynamics — Single-Speed × 4 · DiSus-X · e⁴ All-Wheel Drive</h2>
+          <span class="small" id="dynStatus">Track mode: DiSus-X firm, stability trail, all four motors unlocked</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -562,7 +562,7 @@
           <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">3. Racecraft — the line changes in real time</a>
           <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">4. Braking — the countdown boards</a>
           <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">5. Vision</a>
-          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: 1.81 s and torque vectoring</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: four motors and DiSus-X</a>
           </nav>
           <div style="flex:1; font-size:13px; line-height:1.6; color:#c8d2dd; min-width:0">
         <h3 id="ls0" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">1. The racing line</h3><p style="margin:4px 0">Outside–inside–outside. Enter from the far edge, cut across the yellow apex dot, release the car to the exit kerb. This maximises the corner radius, so your minimum speed — and everything that follows it — is higher. <svg viewBox="0 0 300 150" style="width:100%;max-width:300px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
@@ -581,7 +581,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: 1.81 s and torque vectoring</h3><p style="margin:4px 0">Four motors and 2,340 Nm make the Nevera the fastest-accelerating car ever built — 0–100 in 1.81 s. All-Wheel Torque Vectoring meters torque to each wheel a hundred times a second, so it turns in flat and hard. The mass (2,150 kg) is the catch: brake far earlier than the acceleration suggests.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: four motors and DiSus-X</h3><p style="margin:4px 0">Four independent motors mean torque is placed wheel by wheel, so the U9 rotates on the throttle rather than the steering. <b>DiSus-X</b> is the other half: fully active hydraulic body control that keeps the car flat, can lift a corner clear of the road — BYD famously made a U9 <em>jump</em> — and can carry the car on three wheels after a blowout. In 2025 the 3,000 PS <b>U9 Xtreme</b> ran 496.22 km/h at ATP Papenburg, the highest speed ever recorded by a production car. Press <kbd>Z</kbd> for it.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -690,28 +690,29 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">R</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">U9</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">RN</div>
-      <h1>Nevera</h1>
+      <div class="pmark">U9</div>
+      <h1>U9</h1>
       <p>Four motors, 1,914 hp and 2,360 Nm arrive the instant your foot moves — 0-100 in 1.81 seconds, a wall of silent, ferocious thrust. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">Rimac Nevera · Sveta Nedelja, Croatia</div>
+      <div class="ring">Yangwang U9 · Sveta Nedelja, Croatia</div>
     </div>
   </div>
 
   <script type="module">
 /* ===========================================================================
-      YANGWANG U9 (browser quad-motor electric simulator)
-   Real Web-Audio quad-motor electric, factory-matched physics (0–100 km/h
-   2.36 s; 960 kW / 1306 PS / 1287 hp; 1680 Nm; 20000 rpm limit; 2475 kg;
-   309 km/h, 496 km/h with the car's own top-speed mode), DiSus-X active body control that can hop the car clear of a pothole,
-   a single-speed reduction per wheel, and a test driver who can lap for you.
+      YANGWANG U9 (browser quad-motor EV simulator)
+   Real Web-Audio quad-motor EV, factory-matched physics (0–100 km/h
+   2.36 s; 960 kW / 1305 PS / 1287 hp; 1680 Nm; 20000 rpm limit; 2475 kg;
+   309 km/h, 496 km/h in the car's own top-speed mode; active rear wing),
+   a single-speed reduction on each of the four motors, and a test driver
+   who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -809,13 +810,16 @@ const CIRCUITS = {
     ]
   },
   "Shanghai International Circuit": {
-    dist: 4168, env: "track", limitKmh: 280, loop: true, widthM: 13, corners: 10,
-    blurb: "the 5.45 km Shanghai International Circuit and its 1.2 km back straight",
-    bumps: [{ from: 2000, to: 2300, r: 0.32 }],
+    dist: 5451, env: "track", limitKmh: 330, loop: true, widthM: 15.0, corners: 16,
+    blurb: "the 5.451 km Shanghai International Circuit — the shrinking-radius Turn 1-2-3 snail and a 1.2 km back straight",
+    bumps: [{ from: 3900, to: 4300, r: 0.22 }],
     track: [
-      c(600, 1, 90, 55, "Turn 1"), c(1100, -1, 70, 70, "Turn 2"), c(1700, 1, 60, 90, "Turn 4"),
-      c(2300, -1, 110, 42, "Hairpin"), c(2900, 1, 80, 55, "Turn 7"), c(3400, -1, 75, 60, "Turn 9"),
-      c(3800, 1, 95, 50, "Turn 10")
+      c(420, 1, 95, 190, "Turn 1 (snail entry)"), c(640, 1, 110, 150, "Turn 2"), c(820, 1, 130, 90, "Turn 3"),
+      c(1180, -1, 70, 90, "Turn 4"), c(1420, 1, 55, 110, "Turn 5"), c(1720, 1, 165, 70, "Turn 6 hairpin"),
+      c(2050, -1, 60, 120, "Turn 7"), c(2260, 1, 80, 90, "Turn 8"), c(2520, 1, 95, 80, "Turn 9"),
+      c(2900, -1, 55, 130, "Turn 10"), c(3180, 1, 70, 100, "Turn 11"), c(3420, -1, 60, 110, "Turn 12"),
+      c(3700, -1, 150, 260, "Turn 13 (onto the back straight)"), c(5000, 1, 170, 70, "Turn 14 hairpin"),
+      c(5180, -1, 60, 90, "Turn 15"), c(5330, 1, 80, 90, "Turn 16")
     ]
   },
   "Prologue — Yanbu": {
@@ -914,11 +918,11 @@ const CIRCUITS = {
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
 /* ===== data: vehicle spec — EXACT Yangwang U9 figures =====
-   BYD quad-motor e⁴ platform (one motor per wheel, 960 kW):
-   960 kW (1306 PS / 1287 hp) @ 6600 rpm; 1680 Nm; 20000 rpm rev limit;
-   kerb weight 2475 kg; single-speed, quad-motor all-wheel drive.
-   0–100 km/h 2.36 s; top speed 309 km/h, 496 km/h with the car's own top-speed mode;
-   DiSus-X active body control that can hop the car clear of a pothole. */
+   quad-motor e⁴ electric drivetrain, one permanent-magnet motor per wheel:
+   960 kW (1305 PS / 1287 hp); 1680 Nm; 20000 rpm rev limit;
+   kerb weight 2475 kg; single-speed, e⁴ all-wheel drive.
+   0–100 km/h 2.36 s; top speed 309 km/h, 496 km/h in the car's own top-speed mode; active rear wing
+   with DiSus-X fully active hydraulic body control and an 80 kWh Blade battery on 1,200 V. */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
@@ -990,7 +994,7 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    trackPack: false,              // Rimac Track Mode: firm dampers, more downforce, sharper torque-vectoring
+    trackPack: false,              // Yangwang Track Mode: firm dampers, more downforce, sharper torque-vectoring
     trackPackVis: 0,               // cheetah-stance dip when Launch mode stages
     testDriver: false,
     lights: true, hazards: false, horn: false,
@@ -1478,7 +1482,7 @@ const SPEC = {
     { name: "Porsche 911 Turbo S",     body: "#e9edf0", stripe: "#d0202f", top: 330, latG: 1.25, accel: 11.5 },
     { name: "Lamborghini Huracán STO", body: "#46b14a", stripe: "#ff7a1a", top: 310, latG: 1.55, accel: 11.0 },
     { name: "Koenigsegg Jesko",        body: "#d2d6da", stripe: "#e23b2e", top: 480, latG: 1.60, accel: 13.2 },
-    { name: "Rimac Nevera",            body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
+    { name: "Yangwang U9",            body: "#1b1d22", stripe: "#2bb3c0", top: 412, latG: 1.60, accel: 14.0 },
     { name: "Aston Martin Valkyrie",   body: "#0d5c63", stripe: "#c0c4c8", top: 350, latG: 2.00, accel: 12.9 },
     { name: "Ferrari LaFerrari",       body: "#cc1417", stripe: "#0a0c10", top: 350, latG: 1.55, accel: 12.6 },
     { name: "McLaren P1",              body: "#1a1d22", stripe: "#ff6a13", top: 350, latG: 1.60, accel: 12.5 },
@@ -1488,18 +1492,18 @@ const SPEC = {
     { name: "Maserati MC20",           body: "#1f3a6e", stripe: "#c0a062", top: 325, latG: 1.42, accel: 11.4 },
     { name: "Aston Martin Valhalla",   body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 }
   ];
-  /* The Track Invitational is a Rimac-only meet — so its grid is Rimacs, with their
+  /* The Track Invitational is a Yangwang-only meet — so its grid is Yangwangs, with their
      real (or, where limited, best-known) top speeds and grip. */
   const YANGWANG_GRID = [
-    { name: "Rimac Concept One",           body: "#2bb3c0", stripe: "#0a0c10", top: 355, latG: 1.45, accel: 12.8 },
-    { name: "Rimac Concept Two",           body: "#1a1d22", stripe: "#2bb3c0", top: 412, latG: 1.55, accel: 13.6 },
+    { name: "Yangwang U8",           body: "#2bb3c0", stripe: "#0a0c10", top: 355, latG: 1.45, accel: 12.8 },
+    { name: "Yangwang U9 (development mule)",           body: "#1a1d22", stripe: "#2bb3c0", top: 412, latG: 1.55, accel: 13.6 },
     { name: "Pininfarina Battista",        body: "#0a2a55", stripe: "#c0a062", top: 350, latG: 1.55, accel: 13.4 },
     { name: "Lotus Evija",                 body: "#b6d900", stripe: "#0a0c10", top: 349, latG: 1.60, accel: 13.4 },
     { name: "Aspark Owl",                  body: "#0a0c10", stripe: "#c9cfd6", top: 413, latG: 1.45, accel: 13.6 },
-    { name: "Rimac Roadster (next gen)",   body: "#c8102e", stripe: "#0a0c10", top: 400, latG: 1.40, accel: 13.8 },
+    { name: "Yangwang U7",   body: "#c8102e", stripe: "#0a0c10", top: 400, latG: 1.40, accel: 13.8 },
     { name: "Porsche Taycan Turbo GT",     body: "#3fb2bd", stripe: "#0a0c10", top: 305, latG: 1.35, accel: 12.6 },
     { name: "McMurtry Spéirling",          body: "#16604f", stripe: "#c9cfd6", top: 240, latG: 2.20, accel: 14.2 },
-    { name: "Rimac Nevera",         body: "#e9edf0", stripe: "#c8102e", top: 322, latG: 1.10, accel: 12.8 },
+    { name: "Yangwang U9",         body: "#e9edf0", stripe: "#c8102e", top: 322, latG: 1.10, accel: 12.8 },
     { name: "Lucid Air Sapphire",          body: "#1f3a6e", stripe: "#c9cfd6", top: 330, latG: 1.15, accel: 12.4 },
     { name: "Nio EP9",                     body: "#15181d", stripe: "#2bb3c0", top: 313, latG: 1.90, accel: 13.0 },
     { name: "Maserati GranTurismo Folgore",body: "#0a2a55", stripe: "#c0a062", top: 320, latG: 1.30, accel: 11.6 },
@@ -2283,9 +2287,9 @@ const SPEC = {
   }
   // the Track driver display: a clean landscape card — huge digital speed, a power/regen
   // bar that swings cyan on regen, P·R·N·D strip, battery bar. No dials anywhere.
-  // the Nevera driver display: a round digital dial — an outer speed ring, huge central
+  // the U9 driver display: a round digital dial — an outer speed ring, huge central
   // km/h, gear and kW/regen inside; distinct from the Evija's landscape card
-  // ---- Rimac Nevera: three TFTs. The driver screen's signature is the live per-wheel
+  // ---- Yangwang U9: three TFTs. The driver screen's signature is the live per-wheel
   // TORQUE VECTORING map (one motor per wheel) plus a g-meter; a passenger screen sits right. ----
   function drawCluster(cx, cy, R) {
     const ACC = "#2bb3c0";
@@ -2333,7 +2337,7 @@ const SPEC = {
     ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
     ctx.fillText(Math.abs(state.lateralG || 0).toFixed(1) + " g", gx, gy + gr + R * 0.16);
     ctx.restore();
-    // the passenger screen — the Nevera's third TFT
+    // the passenger screen — the U9's third TFT
     const px = cx + R * 2.5, pw = R * 1.15, ph = R * 0.66;
     ctx.save();
     ctx.fillStyle = "rgba(8,12,14,0.94)"; roundRect(ctx, px - pw / 2, cy - ph / 2, pw, ph, R * 0.07); ctx.fill();
@@ -2343,7 +2347,7 @@ const SPEC = {
     ctx.fillStyle = "rgba(150,166,180,0.75)"; ctx.font = `600 ${Math.round(R * 0.08)}px ui-sans-serif`; ctx.fillText("PASSENGER", px, cy + R * 0.16);
     ctx.restore();
   }
-  // round hub carrying the Rimac 'R'
+  // round hub carrying the Yangwang 'R'
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.1; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
@@ -2454,11 +2458,11 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Rimac exterior — Nevera side profile (pearl-white five-seat hypercar, glass
+  /* Yangwang exterior — U9 side profile (pearl-white five-seat hypercar, glass
      roof, flush handles, carbon spoiler; the fastest-accelerating production hypercar) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rimac Nevera side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Yangwang U9 side">
       <defs>
         <linearGradient id="tsWhiteG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbfdff"/><stop offset="0.5" stop-color="#dbe2e8"/><stop offset="1" stop-color="#939ca6"/></linearGradient>
         <linearGradient id="tsBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0a0c10"/></linearGradient>
@@ -2537,11 +2541,11 @@ const SPEC = {
   }
   function turbine() { let s = ""; for (let a = 0; a < 360; a += 40) s += `<path d="M0,0 L${(36*Math.cos(a*Math.PI/180)).toFixed(1)},${(36*Math.sin(a*Math.PI/180)).toFixed(1)} L${(30*Math.cos((a+22)*Math.PI/180)).toFixed(1)},${(30*Math.sin((a+22)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="38" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* Rimac cockpit SVG — wheel, 17" landscape screen, white minimalist cabin, glass roof */
+  /* Yangwang cockpit SVG — wheel, 17" landscape screen, white minimalist cabin, glass roof */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Rimac Nevera cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Yangwang U9 cockpit">
       <defs>
         <linearGradient id="cabC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e24"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="cabA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
@@ -2617,7 +2621,7 @@ const SPEC = {
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Spoiler trim: AUTO — diffuser and spoiler working with speed." : "Spoiler trim fixed."); }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "EV Voice on — the Track hums out loud." : "EV Voice off — library quiet."); }
   // The Track Mode: carbon-ceramic brake kit + Zero-G wheels. With the hardware
-  // fitted, Rimac sharpens the car for the circuit.
+  // fitted, Yangwang sharpens the car for the circuit.
   function toggleTrackPack() {
     const next = !state.trackPack;
     state.trackPack = next; setActive("trackPackBtn", next);

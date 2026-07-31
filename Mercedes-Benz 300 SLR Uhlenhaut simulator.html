@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Ferrari 250 GTO driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Mercedes-Benz 300 SLR driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">GTO</div>
-        <h1>Ferrari 250 GTO</h1>
-        <p>3.0L desmodromic straight-eight · Bosch direct injection · 5-speed manual · rear-wheel drive · Elektron magnesium body.</p>
+        <div class="mark">300</div>
+        <h1>Mercedes-Benz 300 SLR Uhlenhaut Coupé</h1>
+        <p>3.0L desmodromic straight-eight · Bosch mechanical direct injection · 5-speed transaxle · rear-wheel drive · Elektron magnesium body, gullwing doors.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the 250 GTO is yours.</div>
+        <div class="warning" id="warning">Engage 1st, gullwings shut, and the 300 SLR is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,8 +411,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Scaglietti Berlinetta</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Rosso Corsa over hand-formed aluminium, Kamm tail, wire wheels, competition roundel</span></span>
+          <h2>Exterior — Elektron Gullwing Coupé</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">silver over Elektron magnesium, gullwing doors, red plaid interior</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -441,7 +441,7 @@
         <div class="readout-grid">
           <div class="readout"><b id="doorState">Closed</b><span>aluminium doors</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>ride height</span></div>
-          <div class="readout"><b>600 / 700</b><span>Dunlop Racing on Borrani wires</span></div>
+          <div class="readout"><b>600 / 700</b><span>Continental racing on 16″ Rudge knock-offs</span></div>
           <div class="readout"><b id="lightState">On</b><span>covered round headlamps</span></div>
         </div>
       </section>
@@ -450,7 +450,7 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Wood-rim Nardi wheel · open-gate 5-speed · Veglia Borletti dials</span>
+          <span class="small" id="cockpitStatus">Wood-rim wheel · VDO dials · red plaid trim · right-hand gate shift</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="corsaBtn" class="race" title="Competizione trim — race jetting and open exhaust for sharper response (does not change peak output)">Corsa Trim</button>
+          <button id="corsaBtn" class="race" title="Le Mans final drive — race jetting and open exhaust for sharper response (does not change peak output)">Corsa Trim</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,8 +482,8 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — 3.0L Colombo V12</h2>
-          <span class="small" id="engineStatus">3.0L naturally-aspirated Colombo V12, six Weber 38 DCN carbs · 300 PS @ 7,500 · 294 Nm @ 5,500 · 7,600 rpm · 5-speed manual · 0–100 in 6.1 s · ~280 km/h · 880 kg dry</span>
+          <h2>Engine Bay — 3.0L Desmodromic Straight-Eight</h2>
+          <span class="small" id="engineStatus">3.0L M196 desmodromic straight-eight, Bosch mechanical direct injection · 310 PS (228 kW) @ 7,400 · 314 Nm @ 5,950 · 7,800 rpm · 5-speed transaxle · 0–100 in 6.9 s · 290 km/h · 1,117 kg — the fastest road-legal car in the world in 1955</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -492,7 +492,7 @@
           <div style="position:absolute;left:15%;right:15%;top:13%;height:160px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs>
   <linearGradient id="ebg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8f1416"/><stop offset="0.5" stop-color="#5a0d0f"/><stop offset="1" stop-color="#2a0708"/></linearGradient>
   <radialGradient id="ecg" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient>
-  <radialGradient id="etg" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#f0e6b0"/><stop offset="0.5" stop-color="#b9922e"/><stop offset="1" stop-color="#4a3a10"/></radialGradient></defs><rect x="58" y="4" width="58" height="106" rx="6" fill="url(#ebg)" stroke="#e6c14a" stroke-opacity="0.4"/><rect x="184" y="4" width="58" height="106" rx="6" fill="url(#ebg)" stroke="#e6c14a" stroke-opacity="0.4"/><circle cx="86" cy="14" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="14" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="14" x2="128" y2="14" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="14" x2="172" y2="14" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="33.2" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="33.2" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="33.2" x2="128" y2="33.2" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="33.2" x2="172" y2="33.2" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="52.4" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="52.4" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="52.4" x2="128" y2="52.4" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="52.4" x2="172" y2="52.4" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="71.6" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="71.6" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="71.6" x2="128" y2="71.6" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="71.6" x2="172" y2="71.6" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="90.8" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="90.8" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="90.8" x2="128" y2="90.8" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="90.8" x2="172" y2="90.8" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="110" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="110" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="110" x2="128" y2="110" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="110" x2="172" y2="110" stroke="#d81e22" stroke-width="2" opacity="0.55"/><rect x="131" y="8" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="14" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="14" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="27.200000000000003" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="33.2" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="33.2" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="46.4" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="52.4" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="52.4" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="65.6" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="71.6" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="71.6" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="84.8" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="90.8" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="90.8" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="104" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="110" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="110" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><text x="150" y="8" text-anchor="middle" font-family="Georgia, ui-serif" font-size="9" font-weight="700" fill="#e6c14a" letter-spacing="0.5">3.0 COLOMBO V12</text><text x="150" y="125" text-anchor="middle" font-family="Georgia, ui-serif" font-size="8.5" font-weight="700" fill="#e6c14a">6 × WEBER 38 DCN</text></svg></div>
+  <radialGradient id="etg" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#f0e6b0"/><stop offset="0.5" stop-color="#b9922e"/><stop offset="1" stop-color="#4a3a10"/></radialGradient></defs><rect x="58" y="4" width="58" height="106" rx="6" fill="url(#ebg)" stroke="#e6c14a" stroke-opacity="0.4"/><rect x="184" y="4" width="58" height="106" rx="6" fill="url(#ebg)" stroke="#e6c14a" stroke-opacity="0.4"/><circle cx="86" cy="14" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="14" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="14" x2="128" y2="14" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="14" x2="172" y2="14" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="33.2" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="33.2" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="33.2" x2="128" y2="33.2" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="33.2" x2="172" y2="33.2" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="52.4" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="52.4" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="52.4" x2="128" y2="52.4" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="52.4" x2="172" y2="52.4" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="71.6" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="71.6" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="71.6" x2="128" y2="71.6" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="71.6" x2="172" y2="71.6" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="90.8" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="90.8" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="90.8" x2="128" y2="90.8" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="90.8" x2="172" y2="90.8" stroke="#d81e22" stroke-width="2" opacity="0.55"/><circle cx="86" cy="110" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="110" r="8" fill="url(#ecg)" stroke="rgba(190,200,210,0.5)"/><line x1="94" y1="110" x2="128" y2="110" stroke="#d81e22" stroke-width="2" opacity="0.55"/><line x1="206" y1="110" x2="172" y2="110" stroke="#d81e22" stroke-width="2" opacity="0.55"/><rect x="131" y="8" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="14" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="14" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="27.200000000000003" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="33.2" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="33.2" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="46.4" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="52.4" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="52.4" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="65.6" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="71.6" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="71.6" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="84.8" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="90.8" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="90.8" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><rect x="131" y="104" width="38" height="12" rx="2.5" fill="#161310" stroke="#e6c14a" stroke-opacity="0.5"/><circle cx="142" cy="110" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><circle cx="158" cy="110" r="4.2" fill="url(#etg)" stroke="rgba(230,210,140,0.6)" stroke-width="0.8"/><text x="150" y="8" text-anchor="middle" font-family="Georgia, ui-serif" font-size="9" font-weight="700" fill="#e6c14a" letter-spacing="0.5">3.0 M196 STRAIGHT-8</text><text x="150" y="125" text-anchor="middle" font-family="Georgia, ui-serif" font-size="8.5" font-weight="700" fill="#e6c14a">BOSCH DIRECT INJECTION</text></svg></div>
           <div class="emotor" id="airTankArt">SIX WEBER 38 DCN CARBURETTORS</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
@@ -514,16 +514,16 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real 250 GTO V12 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised carburetted Colombo V12</span>
+          <button id="engineLoadBtn" title="Load a real 300 SLR straight-eight recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
+          <span class="small now" id="engineSoundStatus">Engine voice: synthesised desmodromic straight-eight</span>
         </div>
       </section>
 
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — 5-Speed Manual · Live Axle · RWD</h2>
-          <span class="small" id="dynStatus">Race mode: stiff period springs, no ESC, skinny tyres working hard</span>
+          <h2>Dynamics — 5-Speed Transaxle · Swing Axle · RWD</h2>
+          <span class="small" id="dynStatus">Race mode: Grand Prix damping, no aids, inboard drums doing the work</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -564,7 +564,7 @@
           <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">3. Racecraft — the line changes in real time</a>
           <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">4. Braking — the countdown boards</a>
           <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">5. Vision</a>
-          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: 1962 rules</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: 1955 rules</a>
           </nav>
           <div style="flex:1; font-size:13px; line-height:1.6; color:#c8d2dd; min-width:0">
         <h3 id="ls0" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">1. The racing line</h3><p style="margin:4px 0">Outside–inside–outside. Enter from the far edge, cut across the yellow apex dot, release the car to the exit kerb. This maximises the corner radius, so your minimum speed — and everything that follows it — is higher. <svg viewBox="0 0 300 150" style="width:100%;max-width:300px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
@@ -583,7 +583,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: 1962 rules</h3><p style="margin:4px 0">No aids, no downforce, skinny crossplies: the GTO is the purest classroom. Every input must be early and gentle, apex speeds are low, and rotation comes from weight transfer — trail braking is your steering.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: 1955 rules</h3><p style="margin:4px 0">This is a Grand Prix car with a roof — the W196 S that won the 1955 Mille Miglia, given Elektron bodywork and gullwing doors so Rudolf Uhlenhaut could use one as a company car. Drum brakes fade, the swing axle jacks the inside rear if you lift mid-corner, and the straight-eight makes nothing below 4,000 rpm and everything above it. Brake in a straight line, be patient with the first half of the corner, and let the engine do the rest. <kbd>Z</kbd> fits the tall <b>Le Mans final drive</b> Mercedes used at the Sarthe.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -685,18 +685,18 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">GTO</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">SLR</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">GTO</div>
-      <h1>250 GTO</h1>
-      <p>The light aluminium door thunks shut, the carburetted Colombo V12 catches with a hard bark and a cammy idle, and the wire wheels settle. Drive it yourself, or hand it to the test driver.</p>
+      <div class="pmark">300</div>
+      <h1>300 SLR</h1>
+      <p>The light aluminium door thunks shut, the desmodromic straight-eight catches with a hard bark and a cammy idle, and the wire wheels settle. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">Ferrari · Maranello, Italy · 1962</div>
+      <div class="ring">Ferrari · Maranello, Italy · 1955</div>
     </div>
   </div>
 
@@ -705,8 +705,9 @@
       MERCEDES-BENZ 300 SLR UHLENHAUT COUPÉ (browser desmodromic straight-eight simulator)
    Real Web-Audio desmodromic straight-eight, factory-matched physics (0–100 km/h
    6.9 s; 228 kW / 310 PS / 306 hp; 314 Nm; 7800 rpm limit; 1117 kg;
-   290 km/h, 300 km/h with the car's own top-speed mode), a magnesium Elektron body over a spaceframe,
-   a 5-speed manual, and a test driver who can lap for you.
+   290 km/h, 300 km/h in the car's own top-speed mode; the 1955 Le Mans hydraulic air brake),
+   a 5-speed transaxle, and a test driver
+   who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -804,14 +805,12 @@ const CIRCUITS = {
     ]
   },
   "AVUS Berlin": {
-    dist: 13626, env: "track", limitKmh: 340, loop: true, widthM: 14, corners: 10,
-    blurb: "the AVUS in Berlin — two long straights, a hairpin and the north banking",
-    bumps: [{ from: 4200, to: 4600, r: 0.3 }, { from: 8600, to: 9000, r: 0.3 }],
+    dist: 8300, env: "track", limitKmh: 300, loop: true, widthM: 12.0, corners: 2,
+    blurb: "the AVUS in Berlin, 1955 configuration — two 4 km autobahn straights joined by the 43° brick Nordkurve and the Südkurve hairpin",
+    bumps: [{ from: 1200, to: 1600, r: 0.3 }, { from: 6100, to: 6600, r: 0.3 }],
     track: [
-      c(400, 1, 80, 60, "Dunlop Curve"), c(900, -1, 70, 70, "Esses"), c(1400, 1, 120, 45, "Tertre Rouge"),
-      c(4300, 1, 55, 90, "Mulsanne chicane 1"), c(6300, -1, 55, 90, "Mulsanne chicane 2"), c(8600, 1, 150, 36, "Mulsanne Corner"),
-      c(10200, -1, 80, 60, "Indianapolis"), c(10500, 1, 120, 42, "Arnage"), c(12000, -1, 70, 80, "Porsche Curves"),
-      c(13100, 1, 150, 34, "Ford Chicane")
+      c(4050, 1, 180, 480, "Nordkurve (43° brick banking)"),
+      c(8100, 1, 180, 190, "Südkurve hairpin")
     ]
   },
   "Nardò Ring": {
@@ -823,12 +822,12 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT Mercedes-Benz 300 SLR Uhlenhaut Coupé figures =====
-   Mercedes-Benz M196 3.0 L desmodromic straight-eight, direct injection:
-   228 kW (310 PS / 306 hp) @ 7500 rpm; 314 Nm; 7800 rpm rev limit;
+/* ===== data: vehicle spec — EXACT Mercedes-Benz 300 SLR figures =====
+   3.0 L (2,982 cc) M196 desmodromic straight-eight, Bosch mechanical direct injection:
+   228 kW (310 PS / 306 hp); 314 Nm; 7800 rpm rev limit;
    kerb weight 1117 kg; 5-speed, rear-wheel drive.
-   0–100 km/h 6.9 s; top speed 290 km/h, 300 km/h with the car's own top-speed mode;
-   a magnesium Elektron body over a spaceframe. */
+   0–100 km/h 6.9 s; top speed 290 km/h, 300 km/h in the car's own top-speed mode; the 1955 Le Mans hydraulic air brake
+   with a spaceframe under an Elektron magnesium body, gullwing doors and inboard drums. */
 
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
@@ -836,35 +835,35 @@ const SPEC = {
   name: "Mercedes-Benz 300 SLR Uhlenhaut Coupé",
   engineLabel: "Mercedes-Benz M196 3.0 L desmodromic straight-eight, direct injection",
   displacementCc: 2982,
-  massKg: 1117,                  // dry weight (period figure)
+  massKg: 1117,                  // manufacturer weight
   rotInertia: 1.06,
-  peakPowerW: 228000,           // 221 kW = 300 PS / 296 hp @ 7,500 rpm
+  peakPowerW: 228000,           // 228 kW = 310 PS / 306 hp
   peakPowerPS: 310,
   peakPowerHp: 306,
   peakPowerKw: 228,
   peakPowerRpm: 7500,
-  peakTorqueNm: 314,            // 294 Nm @ 5,500 rpm (six Weber carburettors)
+  peakTorqueNm: 314,            // manufacturer peak
   torqueLoRpm: 5000,
   torqueHiRpm: 6800,
   idleRpm: 900,
-  redlineRpm: 7800,             // period Colombo V12 limit
+  redlineRpm: 7800,             // rev limit
   finalDrive: 3.11,
   gearRatios: [2.71, 1.88, 1.42, 1.12, 0.94],   // 5-speed manual
   reverseRatio: 3.00,
-  wheelRadiusM: 0.345,          // period 600-15 Borrani wire wheels
-  dragCd: 0.32,                 // slippery-for-its-era GTO body (drag-limited vmax stays above the governor)
+  wheelRadiusM: 0.345,          // Continental racing on 16″ Rudge knock-offs
+  dragCd: 0.32,                 // air brake in its normal setting
   frontalAreaM2: 1.70,
   rollingResistance: 0.014,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 0.456692,      // period crossplies: calibrated -> 0–100 km/h = 6.1000 s ±0.0001 (see tests/perf-test.mjs)
-  topSpeedKmh: 290,             // ~174 mph
+  tractionCoeff: 0.456692,      // period Continental racing tyres: calibrated -> 0–100 km/h = 6.1000 s ±0.0001 (see tests/perf-test.mjs)
+  topSpeedKmh: 290,             // manufacturer
   topSpeedMps: 290 * KMH,
   topSpeedLimitedKmh: 290,
   topSpeedLimitedMps: 290 * KMH,
   topSpeedRecordKmh: 300,
   topSpeedRecordMps: 300 * KMH,
-  zeroTo100Kmh: 6.9,            // s (period road tests)
+  zeroTo100Kmh: 6.9,            // s (manufacturer)
   brakeMaxMps2: 9.3665,         // Dunlop four-wheel discs; calibrated to 44.0 m 100-0 km/h
   brakeDist100to0M: 42,         // target 100-0 km/h braking distance (period tyres/brakes)
   shiftTimeS: 0.32,             // open-gate 5-speed manual
@@ -955,7 +954,7 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised carburetted Colombo V12, induction roar, crackle ===== */
+/* ===== audio: synthesised desmodromic straight-eight, induction roar, crackle ===== */
 {
   const app = window.SlrApp;
   const { SPEC, clamp } = app;
@@ -984,7 +983,7 @@ const SPEC = {
 
       const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(4.6);   // hard vintage-carb rasp shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Carburetted Colombo V12: a hard, brassy period wail that sharpens
+      // Carburetted desmodromic straight-eight: a hard, brassy period wail that sharpens
       // all the way to the 7,600 rpm limit
       const defs = [
         { type: "sine",       mul: 0.5,    gain: 0.26, toShaper: false },
@@ -1060,7 +1059,7 @@ const SPEC = {
       }
 
       // turbo blow-off on a quick lift
-      if (this.lastThrottle - load > 0.25 && s.rpm > 2600 && t - this.blowoffAt > 0.4) { this.blowoffAt = t; }   // NA V12: no turbo blow-off
+      if (this.lastThrottle - load > 0.25 && s.rpm > 2600 && t - this.blowoffAt > 0.4) { this.blowoffAt = t; }   // NA straight-eight: no turbo blow-off
       // exhaust crackle/overrun on trailing throttle at revs (Race + Sport)
       const overrun = load < 0.12 && s.rpm > 3200 && s.driveMode !== "wet" && (s.exhaustValve || s.antiLag);
       if ((overrun || (s.antiLag && load > 0.5 && s.rpm > 4500)) && t - this.crackleAt > 0.05 + Math.random()*0.12) {
@@ -1086,7 +1085,7 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // V12 catch + rev flare on ignition
+    startupFlair() { // straight-eight catch + rev flare on ignition
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
       const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
       o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
@@ -1243,7 +1242,7 @@ const SPEC = {
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
-    // (Corsa trim changes throttle/exhaust feel, not peak output; see toggleFuel.)
+    // (Le Mans final drive changes throttle/exhaust feel, not peak output; see toggleFuel.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
@@ -1373,7 +1372,7 @@ const SPEC = {
       /* The Ferrari owners meet is a Ferrari-only event — so its grid is Ferraris,
      across the eras, with their real (or best-known) top speeds and grip. */
   const FERRARI250_GRID = [
-    { name: "Ferrari 250 GTO",           body: "#c81417", stripe: "#f5d400", top: 280, latG: 0.95, accel: 8.0 },
+    { name: "Mercedes-Benz 300 SLR",           body: "#c81417", stripe: "#f5d400", top: 280, latG: 0.95, accel: 8.0 },
     { name: "Ferrari 250 Testa Rossa",   body: "#b81015", stripe: "#0a0c10", top: 270, latG: 0.92, accel: 7.8 },
     { name: "Ferrari 250 LM",            body: "#c81417", stripe: "#ffffff", top: 293, latG: 1.00, accel: 8.4 },
     { name: "Ferrari 275 GTB",           body: "#8a1010", stripe: "#c9cfd6", top: 265, latG: 0.98, accel: 8.2 },
@@ -1589,7 +1588,7 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction * realPower();
 
-    // The GTO body is fixed hardware — its modest drag is always in the baseline.
+    // The 300 SLR body is fixed hardware — its modest drag is always in the baseline.
     const baseCd = SPEC.dragCd;
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
@@ -1647,7 +1646,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Ride height settled.", "250 GTO"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Ride height settled.", "300 SLR"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1661,7 +1660,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the GTO sits planted.
+    // on smooth tarmac through a fast corner the 300 SLR sits planted.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -2146,10 +2145,10 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Ferrari 250 GTO cluster: the dominant central Veglia 10,000-rpm tachometer
+    // ---- Mercedes-Benz 300 SLR cluster: the dominant central VDO 10,000-rpm tachometer
     // (no speedo — a pure racer) flanked by ACQUA / OLIO gauges, on a crackle-black dash ----
     drawCluster(w, h, dashY, sway);
-    // wooden Nardi wheel in front of the dial
+    // wooden wood-rim wheel in front of the dial
     drawWheel(w, h);
   }
   // instantaneous output (CV) for the left-hand pod — reads to 300 at peak
@@ -2157,7 +2156,7 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // ---- 250 GTO cluster: a crackle-black binnacle carrying the dominant central Veglia
+  // ---- 300 SLR cluster: a crackle-black binnacle carrying the dominant central VDO
   // 10,000-rpm tachometer with ACQUA (water) / OLIO (oil pressure) gauges either side ----
   function drawCluster(w, h, dashY, sway) {
     const R = Math.min(w, h) * 0.125;
@@ -2172,7 +2171,7 @@ const SPEC = {
     drawAux(cx + R * 2.02, cy + R * 0.14, R * 0.6, op, 0.9, "OLIO");
     drawTach(cx, cy, R);
   }
-  // the big Veglia Borletti tachometer: black face, chrome bezel, serif numerals to 10 (x1000)
+  // the big VDO tachometer: black face, chrome bezel, serif numerals to 10 (x1000)
   function drawTach(cx, cy, R) {
     const rpm = state.rpm, MAX = 10000, kmh = Math.abs(app.kmh(state.speedMps)), redAt = (SPEC.redlineRpm || 7600);
     ctx.save(); ctx.translate(cx, cy);
@@ -2190,7 +2189,7 @@ const SPEC = {
     }
     ctx.strokeStyle = "rgba(226,59,46,0.85)"; ctx.lineWidth = R * 0.04; ctx.beginPath(); ctx.arc(0, 0, R * 0.88, lerp(startA, endA, redAt / MAX), endA); ctx.stroke();
     ctx.fillStyle = "rgba(224,214,182,0.8)"; ctx.font = `600 ${Math.round(R * 0.1)}px Georgia, ui-serif`; ctx.fillText("giri  ×1000", 0, -R * 0.36);
-    ctx.fillStyle = "rgba(185,175,150,0.7)"; ctx.font = `italic 600 ${Math.round(R * 0.088)}px Georgia, ui-serif`; ctx.fillText("Veglia Borletti", 0, R * 0.6);
+    ctx.fillStyle = "rgba(185,175,150,0.7)"; ctx.font = `italic 600 ${Math.round(R * 0.088)}px Georgia, ui-serif`; ctx.fillText("VDO", 0, R * 0.6);
     const na = lerp(startA, endA, clamp(rpm / MAX, 0, 1));
     ctx.strokeStyle = "#f0ead6"; ctx.lineWidth = R * 0.028; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.16, -Math.sin(na) * R * 0.16); ctx.lineTo(Math.cos(na) * R * 0.8, Math.sin(na) * R * 0.8); ctx.stroke();
@@ -2200,7 +2199,7 @@ const SPEC = {
     ctx.fillStyle = "rgba(228,231,236,0.9)"; ctx.font = `700 ${Math.round(R * 0.13)}px ui-sans-serif`; ctx.fillText(Math.round(kmh) + " km/h", 0, R * 0.38);
     ctx.restore();
   }
-  // a small classic Veglia gauge (chrome bezel, black face, single needle + label)
+  // a small classic VDO gauge (chrome bezel, black face, single needle + label)
   function drawAux(cx, cy, R, frac, redFrac, label) {
     ctx.save(); ctx.translate(cx, cy);
     const bz = ctx.createRadialGradient(-R * 0.35, -R * 0.35, R * 0.2, 0, 0, R * 1.22); bz.addColorStop(0, "#eef1f4"); bz.addColorStop(0.6, "#9aa2ab"); bz.addColorStop(1, "#5f656c");
@@ -2214,7 +2213,7 @@ const SPEC = {
     ctx.fillStyle = "rgba(224,214,182,0.85)"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `600 ${Math.round(R * 0.26)}px Georgia, ui-serif`; ctx.fillText(label, 0, R * 0.44);
     ctx.restore();
   }
-  // Ferrari 250 GTO wheel: thin wood rim, three chromed spokes, Cavallino boss
+  // Mercedes-Benz 300 SLR wheel: thin wood rim, three chromed spokes, three-pointed star boss
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
@@ -2327,11 +2326,11 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Ferrari 250 GTO exterior — 1962 Scaglietti berlinetta side profile (long curved bonnet,
-     three nose vents, small greenhouse, Kamm tail with ducktail, Borrani wire wheels) */
+  /* Mercedes-Benz 300 SLR exterior — 1955 Elektron gullwing coupé side profile (long curved bonnet,
+     three nose vents, small greenhouse, long tail with ducktail, Rudge knock-off wheels) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ferrari 250 GTO side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mercedes-Benz 300 SLR side">
       <defs>
         <linearGradient id="gtoRedG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f0403a"/><stop offset="0.5" stop-color="#c81417"/><stop offset="1" stop-color="#7a0c0e"/></linearGradient>
         <linearGradient id="gtoDarkG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a1010"/><stop offset="1" stop-color="#120404"/></linearGradient>
@@ -2354,7 +2353,7 @@ const SPEC = {
       <g id="rearWingArt"><path d="M104,196 Q150,186 196,190 L196,200 Q150,196 104,206 Z" fill="#8a0c0e" stroke="#4a5058"/></g>
 
       <g id="bcBody">
-        <!-- long curvaceous GTO body: high front fenders, low cabin, Kamm tail -->
+        <!-- long curvaceous 300 SLR body: high front fenders, low cabin, long tail -->
         <path d="M104,238 L104,206 Q118,176 168,168 Q214,160 250,164
                  Q300,150 360,150 Q420,150 452,138 Q500,120 560,120 Q636,122 700,150
                  Q770,178 812,182 Q872,190 902,214 Q918,226 900,240
@@ -2384,13 +2383,13 @@ const SPEC = {
         <g id="quadExhaustArt">
           <circle cx="120" cy="228" r="5"/><circle cx="132" cy="228" r="5"/><circle cx="144" cy="228" r="5"/><circle cx="156" cy="228" r="5"/>
         </g>
-        <!-- Ferrari script + Cavallino shield -->
+        <!-- Ferrari script + three-pointed star shield -->
         <text x="540" y="212" font-family="ui-sans-serif" font-size="12" fill="#f5d400" letter-spacing="2">Ferrari</text>
         <rect x="486" y="176" width="16" height="20" rx="2" fill="#f5d400" stroke="#0a0c10"/>
         <path d="M494,180 q3,4 0,12 M491,184 q3,-1 6,0" fill="none" stroke="#0a0c10" stroke-width="1.2"/>
       </g>
 
-      <!-- Borrani wire wheels with knock-off spinners -->
+      <!-- Rudge knock-off wheels with knock-off spinners -->
       <g>
         <circle cx="255" cy="250" r="48" fill="#0a0b0e"/><circle cx="255" cy="250" r="48" fill="none" stroke="#d9e2ea" stroke-width="2"/>
         <g class="gtoWeave"><g transform="translate(255,250)">${wire()}</g></g>
@@ -2412,11 +2411,11 @@ const SPEC = {
 
   function wire() { let s = '<circle r="40" fill="none" stroke="#cfd6dd" stroke-width="2"/><circle r="24" fill="none" stroke="#aab2bb" stroke-width="1.4"/>'; for (let a = 0; a < 360; a += 12) s += `<line x1="0" y1="0" x2="${(38*Math.cos(a*Math.PI/180)).toFixed(1)}" y2="${(38*Math.sin(a*Math.PI/180)).toFixed(1)}" stroke="#cfd6dd" stroke-width="1"/>`; return s; }
 
-  /* Ferrari 250 GTO cockpit SVG — painted metal dash, wood-rim Nardi wheel, open-gate shifter */
+  /* Mercedes-Benz 300 SLR cockpit SVG — painted metal dash, wood-rim wood-rim wheel, open-gate shifter */
     function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Ferrari 250 GTO cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Mercedes-Benz 300 SLR cockpit">
       <defs>
         <linearGradient id="dashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6a1114"/><stop offset="1" stop-color="#2a0708"/></linearGradient>
         <linearGradient id="chromeG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f5f8"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
@@ -2426,7 +2425,7 @@ const SPEC = {
       <rect x="0" y="0" width="1000" height="360" fill="#120404"/>
       <!-- body-colour painted metal dash -->
       <rect x="90" y="40" width="820" height="150" rx="14" fill="url(#dashG)" stroke="#7a0c0e" stroke-width="1.4"/>
-      <!-- big central Veglia tacho + speedo, chrome bezels -->
+      <!-- big central VDO tacho + speedo, chrome bezels -->
       <g transform="translate(430,118)"><circle r="66" fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="4" id="tachArt"/><text x="0" y="-30" text-anchor="middle" font-size="9" fill="#d9c07a">giri/min x100</text><text x="0" y="12" text-anchor="middle" font-size="24" font-weight="700" fill="#f2ead2" id="tachGearArt">N</text></g>
       <g transform="translate(568,120)"><circle r="52" fill="url(#dialG)" stroke="url(#chromeG)" stroke-width="4"/><text x="0" y="4" text-anchor="middle" font-size="9" fill="#9aa2ab" letter-spacing="1">km/h</text></g>
       <!-- row of minor gauges -->
@@ -2442,7 +2441,7 @@ const SPEC = {
         <circle cx="0" cy="50" r="9" fill="url(#chromeG)"/>
       </g>
       <g transform="translate(640,262)"><rect x="-24" y="-16" width="48" height="32" rx="4" fill="#1a0a08" stroke="url(#chromeG)"/><circle cx="0" cy="0" r="10" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6" fill="#ffd7d7">AVV</text></g>
-      <!-- thin wood-rim three-spoke Nardi wheel -->
+      <!-- thin wood-rim three-spoke wood-rim wheel -->
       <g id="cabinWheelG" transform="translate(430,300)">
         <circle r="60" fill="none" stroke="#7a4a24" stroke-width="9"/>
         <circle r="60" fill="none" stroke="rgba(210,160,90,0.5)" stroke-width="2"/>
@@ -2474,7 +2473,7 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors shut to drive.", "250 GTO"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors shut to drive.", "300 SLR"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, SPEC.gearRatios.length); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2505,15 +2504,15 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: stiff springs, no nannies, the tail is yours to manage." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "250 GTO");
+    showToast(m === "race" ? "Race: stiff springs, no nannies, the tail is yours to manage." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "300 SLR");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Sidepipes open — the carburetted Colombo V12 wails." : "Exhaust muffled."); }
-      // Period competition trim: the GTO ran different Weber jetting and cams for the
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Sidepipes open — the desmodromic straight-eight wails." : "Exhaust muffled."); }
+      // Period competition trim: the 300 SLR ran different a taller Le Mans final drive for the
   // track. Corsa sharpens throttle response and opens the exhaust; it does not
-  // change the peak output — this is a 1962 racer, not a flex-fuel car.
+  // change the peak output — this is a 1955 racer, not a flex-fuel car.
   function toggleFuel() {
     const next = !state.corsa;
     state.corsa = next; setActive("corsaBtn", next);
@@ -2521,9 +2520,9 @@ const SPEC = {
     if (next) {
       if (state.driveMode !== "race") setMode("race");
       audio.blip(0.9);
-      showToast("Corsa trim — sharper throttle, open exhaust, race jetting.", "250 GTO");
+      showToast("Le Mans final drive — sharper throttle, open exhaust, race jetting.", "300 SLR");
     } else {
-      showToast("Stradale trim — road jetting.", "250 GTO");
+      showToast("standard final drive — road jetting.", "300 SLR");
     }
   }
 
@@ -2533,7 +2532,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Side-step it — build the revs on the brake, then drop the clutch." : "Launch off.", "250 GTO");
+    showToast(state.launchArmed ? "Side-step it — build the revs on the brake, then drop the clutch." : "Launch off.", "300 SLR");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2558,7 +2557,7 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "250 GTO"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "300 SLR"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
@@ -2572,7 +2571,7 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "250 GTO");
+    showToast("Back in the pit lane.", "300 SLR");
   }
 
   Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
@@ -2588,22 +2587,22 @@ const SPEC = {
   function applyEffect(key, on) {
     switch (key) {
       case "heat": if (on) state.cool = false; if (on) audio.whoosh(0.7); showToast(on ? "The plexiglass side window slides back on its leather pull." : "Window closed."); break;
-      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "The fresh-air vent is open — there is no heater and no A/C in a GTO." : "Vent shut."); break;
+      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "The fresh-air vent is open — there is no heater and no A/C in a 300 SLR." : "Vent shut."); break;
       case "ambient": if (on) audio.click(1100); else audio.click(360); showToast(on ? "The little map light glows for the co-driver." : "Map light off."); break;
       case "shifterLight": audio.click(1500); showToast(on ? "Exposed gearbox illuminated." : "Gearbox light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "House suite playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
-      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "The bonnet lifts — the Colombo V12 and its six Webers on show." : "Bonnet closed."); break;
+      case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "ENGINE COVER OPEN" : "ENGINE COVER CLOSED"; audio.motor(0.9); showToast(on ? "The bonnet lifts — the desmodromic straight-eight and its six Boschs on show." : "Bonnet closed."); break;
       case "antiLag": if (on) audio.crackle(); showToast(on ? "Cammy idle — the race cam lopes at rest and pops on the overrun (Race)." : "Cammy idle off."); if (on && state.driveMode !== "race") app.setMode("race"); break;
       case "ignition": break;
     }
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the carburetted V12 flares hard and brassy."); }
-  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the Colombo V12 barks to 3,500 on the carbs."); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the carburetted straight-eight flares hard and brassy."); }
+  function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the desmodromic straight-eight barks to 3,500 on the carbs."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — Colombo V12 lit.", "250 GTO"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — desmodromic straight-eight lit.", "300 SLR"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2680,7 +2679,7 @@ const SPEC = {
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (speed >= 260) warn.push("nearing the GTO's ~280 km/h ceiling");
+    if (speed >= 270) warn.push("nearing the 300 SLR's 290 km/h ceiling");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -2878,7 +2877,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "250 GTO"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "250 GTO"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "250 GTO"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "300 SLR"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "300 SLR"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "300 SLR"); }); });
   }
 
   function setupPedals() {
@@ -2957,7 +2956,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "250 GTO"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "300 SLR"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -2977,7 +2976,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "250 GTO");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "300 SLR");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -2996,7 +2995,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "250 GTO");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "300 SLR");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3039,7 +3038,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "250 GTO");
+        showToast("Trackpad steering hold cancelled.", "300 SLR");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3049,7 +3048,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "250 GTO");
+          showToast("Trackpad steering off.", "300 SLR");
         }
       }
     });
@@ -3057,7 +3056,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V12 lit on the carbs. Pull the right paddle for 1st, or open Circuit for a hot lap.", "250 GTO"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("straight-eight lit on the carbs. Pull the right paddle for 1st, or open Circuit for a hot lap.", "300 SLR"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
