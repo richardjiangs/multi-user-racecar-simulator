@@ -864,7 +864,7 @@ const CIRCUITS = {
   /* The infiltration run: a coast road out to a docked tanker, across the deck on the
      loading ramps, out the causeway to the offshore rig, then back to the fuel depot. */
   "Mission — Docks & Rig": {
-    dist: 11400, env: "street", limitKmh: 120, loop: false, widthM: 8.5, corners: 12,
+    dist: 11400, env: "ring", limitKmh: 120, loop: false, widthM: 8.5, corners: 12,
     blurb: "infiltration — coast road, tanker deck, offshore rig, fuel depot",
     bumps: [{ from: 3900, to: 4600, r: 0.5 }, { from: 7200, to: 8100, r: 0.45 }],
     track: [
@@ -2190,6 +2190,7 @@ const SPEC = {
     drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
     drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(240,200,120,0.16)" : state.heat ? null : state.cool ? null : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
+    drawSeaWorld(w, h);
     drawQBranch(w, h);
     if (state.dataHud) drawTelemetry(w, h);
     if (state.hazards && state.blinkOn) { ctx.fillStyle = "rgba(255,120,40,0.10)"; ctx.fillRect(0, horizonY, w, h - horizonY); }
@@ -2668,6 +2669,169 @@ const SPEC = {
     function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   /* --- Q Branch, drawn into the world: oil on the road, smoke behind, muzzle flash,
          the shield in the mirror and the tracker scope on the dash --- */
+  /* ===== the sea: real vessels, at real size ==========================================
+     Objects sit at a road distance and a lateral offset in METRES, and are drawn through
+     the same projection as everything else. SEA_WORLD is per mission stage. */
+  const SEA_WORLD = {
+    "Mission — Docks & Rig": [
+      { at: 1500, lane: -46, kind: "tug", head: 0.15 },          // the small boat, off to port
+      { at: 2100, lane: 58, kind: "patrol", head: -0.1 },
+      { at: 2900, lane: -70, kind: "patrol", head: 0.08 },
+      { at: 3700, lane: 44, kind: "tanker" },                     // 250 m of hull alongside
+      { at: 5200, lane: -52, kind: "tanker" },
+      { at: 6400, lane: 96, kind: "patrol", head: 0.12 },
+      { at: 8000, lane: 0, kind: "rig" },                         // the platform, dead ahead
+      { at: 9200, lane: -88, kind: "patrol", head: -0.06 },
+      { at: 10600, lane: 62, kind: "tanker" },
+    ],
+  };
+  function seaWorldFor() {
+    return (state.route.active && SEA_WORLD[state.route.name]) || null;
+  }
+
+  // px per metre at a given distance ahead — measured off the projection, not guessed
+  function metreAt(d) {
+    const a = projectAhead(d, 0), b = projectAhead(d, 1);
+    if (!a || !b || !a.fwd || a.fwd <= 1) return 0;
+    return Math.abs(b.x - a.x);
+  }
+
+  function drawSeaWorld(w, h) {
+    const list = seaWorldFor(); if (!list) return;
+    // far to near, so nearer hulls occlude the ones behind them
+    const vis = [];
+    for (const o of list) {
+      const d = o.at - state.distanceM;
+      if (d < -120 || d > 1600) continue;
+      vis.push({ o, d: Math.max(8, d) });
+    }
+    vis.sort((a, b) => b.d - a.d);
+
+    for (const { o, d } of vis) {
+      const p = projectAhead(d, o.lane);
+      if (!p || !p.fwd || p.fwd <= 1) continue;
+      const m = metreAt(d);
+      if (!m || m <= 0.00001) continue;
+      ctx.save();
+      if (o.kind === "tanker") drawTanker(p, m, o);
+      else if (o.kind === "rig") drawRig(p, m, o);
+      else if (o.kind === "patrol") drawPatrol(p, m, o);
+      else if (o.kind === "tug") drawTug(p, m, o);
+      ctx.restore();
+    }
+  }
+
+  // a 250 m tanker: hull 20 m of freeboard, accommodation block and funnel aft
+  function drawTanker(p, m, o) {
+    const L = 250 * m, HULL = 20 * m, x = p.x, y = p.y;
+    ctx.fillStyle = "#161b21";
+    ctx.beginPath();
+    ctx.moveTo(x - L / 2, y);
+    ctx.lineTo(x + L * 0.42, y);
+    ctx.lineTo(x + L / 2, y - HULL * 0.55);          // raked bow
+    ctx.lineTo(x + L * 0.44, y - HULL);
+    ctx.lineTo(x - L / 2, y - HULL);
+    ctx.closePath(); ctx.fill();
+    // boot topping and deck line
+    ctx.fillStyle = "#7a2c22"; ctx.fillRect(x - L / 2, y - HULL * 0.22, L * 0.94, HULL * 0.22);
+    ctx.fillStyle = "#2a323b"; ctx.fillRect(x - L / 2, y - HULL, L * 0.94, HULL * 0.12);
+    // accommodation block aft, 30 m tall
+    const BW = 26 * m, BH = 30 * m;
+    ctx.fillStyle = "#cdd4da"; ctx.fillRect(x - L / 2 + 6 * m, y - HULL - BH, BW, BH);
+    ctx.fillStyle = "rgba(255,220,150,0.75)";
+    for (let r = 0; r < 5; r++) for (let c = 0; c < 4; c++)
+      ctx.fillRect(x - L / 2 + (9 + c * 5.5) * m, y - HULL - BH + (4 + r * 5.5) * m, 3 * m, 2.4 * m);
+    // funnel
+    ctx.fillStyle = "#1b2027"; ctx.fillRect(x - L / 2 + 12 * m, y - HULL - BH - 12 * m, 10 * m, 12 * m);
+    // pipework along the deck
+    ctx.strokeStyle = "rgba(190,200,210,0.5)"; ctx.lineWidth = Math.max(1, 0.9 * m);
+    ctx.beginPath(); ctx.moveTo(x - L * 0.4, y - HULL - 2 * m); ctx.lineTo(x + L * 0.38, y - HULL - 2 * m); ctx.stroke();
+    // name on the hull, only when close enough to read
+    if (m > 0.55) {
+      ctx.fillStyle = "rgba(220,228,236,0.75)";
+      ctx.font = `700 ${Math.round(4.5 * m)}px ui-sans-serif`; ctx.textAlign = "left";
+      ctx.fillText("250 m TANKER", x - L * 0.30, y - HULL * 0.45);
+    }
+  }
+
+  // the platform: four 100 m legs out of the water, a 60 m deck, a 40 m derrick
+  function drawRig(p, m, o) {
+    const LEG = 100 * m, DECK = 60 * m, DH = 10 * m, x = p.x, y = p.y;
+    const legX = [-DECK * 0.42, -DECK * 0.16, DECK * 0.16, DECK * 0.42];
+    ctx.strokeStyle = "#3d454e"; ctx.lineWidth = Math.max(1.5, 3.2 * m);
+    for (const lx of legX) { ctx.beginPath(); ctx.moveTo(x + lx, y); ctx.lineTo(x + lx, y - LEG); ctx.stroke(); }
+    // cross bracing between the legs
+    ctx.strokeStyle = "rgba(70,80,92,0.85)"; ctx.lineWidth = Math.max(1, 1.6 * m);
+    for (let i = 0; i < legX.length - 1; i++) for (let b = 1; b <= 3; b++) {
+      const y0 = y - LEG * (b / 4), y1 = y - LEG * ((b + 1) / 4);
+      ctx.beginPath(); ctx.moveTo(x + legX[i], y0); ctx.lineTo(x + legX[i + 1], y1); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(x + legX[i], y1); ctx.lineTo(x + legX[i + 1], y0); ctx.stroke();
+    }
+    // deck
+    ctx.fillStyle = "#20272f"; ctx.fillRect(x - DECK / 2, y - LEG - DH, DECK, DH);
+    ctx.fillStyle = "#39424c"; ctx.fillRect(x - DECK / 2, y - LEG - DH, DECK, 2 * m);
+    // derrick, 40 m above the deck
+    const DER = 40 * m, dw = 14 * m;
+    ctx.strokeStyle = "#4a545f"; ctx.lineWidth = Math.max(1, 1.8 * m);
+    ctx.beginPath();
+    ctx.moveTo(x - dw / 2, y - LEG - DH); ctx.lineTo(x - dw * 0.16, y - LEG - DH - DER);
+    ctx.lineTo(x + dw * 0.16, y - LEG - DH - DER); ctx.lineTo(x + dw / 2, y - LEG - DH);
+    ctx.stroke();
+    for (let i = 1; i <= 5; i++) {
+      const t = i / 6, yy = y - LEG - DH - DER * t;
+      const ww = dw * (1 - t * 0.68);
+      ctx.beginPath(); ctx.moveTo(x - ww / 2, yy); ctx.lineTo(x + ww / 2, yy); ctx.stroke();
+    }
+    // flare and warning lights
+    ctx.fillStyle = "rgba(255,150,60,0.9)";
+    ctx.beginPath(); ctx.arc(x + DECK * 0.46, y - LEG - DH - 6 * m, Math.max(1.5, 2.4 * m), 0, Math.PI * 2); ctx.fill();
+    const blink = Math.floor(state.time * 1.4) % 2 === 0;
+    ctx.fillStyle = blink ? "rgba(255,70,60,0.95)" : "rgba(120,30,26,0.6)";
+    ctx.beginPath(); ctx.arc(x, y - LEG - DH - DER - 2 * m, Math.max(1.5, 2 * m), 0, Math.PI * 2); ctx.fill();
+    if (m > 0.35) {
+      ctx.fillStyle = "rgba(220,228,236,0.8)"; ctx.textAlign = "center";
+      ctx.font = `700 ${Math.round(5 * m)}px ui-sans-serif`;
+      ctx.fillText("DRILLING PLATFORM", x, y - LEG - DH - DER - 8 * m);
+    }
+  }
+
+  // a 28 m patrol boat under way, with a wake
+  function drawPatrol(p, m, o) {
+    const L = 28 * m, H = 4.5 * m, x = p.x, y = p.y;
+    ctx.fillStyle = "rgba(220,236,246,0.35)";                       // wake
+    ctx.beginPath(); ctx.moveTo(x - L * 0.5, y); ctx.lineTo(x - L * 1.6, y + 2.5 * m);
+    ctx.lineTo(x - L * 1.6, y - 1.4 * m); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#1d252d";
+    ctx.beginPath();
+    ctx.moveTo(x - L / 2, y); ctx.lineTo(x + L * 0.38, y);
+    ctx.lineTo(x + L / 2, y - H * 0.6); ctx.lineTo(x - L / 2, y - H); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#c9d2da"; ctx.fillRect(x - L * 0.14, y - H - 5 * m, 9 * m, 5 * m);   // wheelhouse
+    ctx.fillStyle = "rgba(95,208,234,0.85)"; ctx.fillRect(x - L * 0.12, y - H - 4 * m, 7 * m, 2 * m);
+    ctx.strokeStyle = "#39424c"; ctx.lineWidth = Math.max(1, 0.8 * m);                     // mast
+    ctx.beginPath(); ctx.moveTo(x, y - H - 5 * m); ctx.lineTo(x, y - H - 12 * m); ctx.stroke();
+    const blink = Math.floor(state.time * 3) % 2 === 0;
+    ctx.fillStyle = blink ? "rgba(90,180,255,0.95)" : "rgba(30,60,90,0.6)";
+    ctx.beginPath(); ctx.arc(x, y - H - 12.6 * m, Math.max(1.2, 1.4 * m), 0, Math.PI * 2); ctx.fill();
+  }
+
+  // the 25 m tug the patrol boats turn on
+  function drawTug(p, m, o) {
+    const L = 25 * m, H = 5 * m, x = p.x, y = p.y;
+    ctx.fillStyle = "#2b2118";
+    ctx.beginPath();
+    ctx.moveTo(x - L / 2, y); ctx.lineTo(x + L * 0.4, y);
+    ctx.lineTo(x + L / 2, y - H * 0.7); ctx.lineTo(x - L / 2, y - H); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#8e3a22"; ctx.fillRect(x - L / 2, y - H * 0.34, L * 0.9, H * 0.34);
+    ctx.fillStyle = "#d8dee6"; ctx.fillRect(x - L * 0.10, y - H - 6 * m, 8 * m, 6 * m);
+    ctx.fillStyle = "rgba(255,220,150,0.8)"; ctx.fillRect(x - L * 0.08, y - H - 4.8 * m, 6 * m, 2.2 * m);
+    ctx.fillStyle = "#1b2027"; ctx.fillRect(x - L * 0.30, y - H - 9 * m, 3.4 * m, 9 * m);   // funnel
+    if (m > 0.7) {
+      ctx.fillStyle = "rgba(230,238,246,0.8)"; ctx.textAlign = "center";
+      ctx.font = `700 ${Math.round(3.4 * m)}px ui-sans-serif`;
+      ctx.fillText("TUG", x, y - H - 10.5 * m);
+    }
+  }
+
   function drawQBranch(w, h) {
     const q = state.q;
 
