@@ -131,6 +131,7 @@ const CARS = {
     app: "TaycanApp",
     label: "Porsche Taycan Turbo GT",
     marks: { 100: { target: 2.2, tol: 1e-4 } },
+    quarterMile: { target: 9.4, tol: 0.06 },   // Porsche's figure for the Turbo GT
     topSpeed: { kmh: 305, minT: 60 },
     brake100: { target: 31, tol: 1.0 },
   },

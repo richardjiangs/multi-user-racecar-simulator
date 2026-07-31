@@ -711,10 +711,8 @@
       PORSCHE TAYCAN TURBO GT — "Attack Mode" (browser electric-sedan simulator)
    Real Web-Audio dual-motor inverter whine, factory-matched physics (0–100 km/h
    2.2 s with launch control and the Weissach package; 1,108 PS / 815 kW with the
-   Attack Mode overboost; 305 km/h; 2,220 kg), two-speed rear drive, one-pedal
-   regen, and a test driver
-   one-pedal regen, a single-speed
-   drive you never shift, and a test driver who can lap for you.
+   Attack Mode overboost; 305 km/h; 2,220 kg), two-speed rear drive that really
+   shifts at about 110 km/h, one-pedal regen, and a test driver who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -940,8 +938,9 @@ const SPEC = {
   torqueHiRpm: 6150,
   idleRpm: 0,                   // no idle — the motor is still when the car is
   redlineRpm: 20000,            // permanent-magnet motors: high rpm ceiling with the 2-speed
-  finalDrive: 8.5,              // rear 2-speed: short 1st reduction ≈ 8.5:1 (long 2nd for top speed)
-  gearRatios: [1.0],            // one gear — D
+  finalDrive: 8.5,              // the long 2nd-gear reduction; 1st is 1.933x shorter
+  gearRatios: [1.933, 1.0],  // REAL two-speed rear axle: 15.56:1 and 8.05:1 overall,
+                                //  a 1.933:1 step. finalDrive below is the long 2nd.
   reverseRatio: 1.0,
   wheelRadiusM: 0.355,          // 295/30 ZR21 rear (Arachnid)
   dragCd: 0.208,                // the production-car drag record holder
@@ -958,14 +957,17 @@ const SPEC = {
   topSpeedRecordKmh: 305,
   topSpeedRecordMps: 305 * KMH,
   zeroTo100Kmh: 2.2,            // s (Turbo GT with Weissach, launch control)
-  quarterMileS: 9.23,           // s (manufacturer, ET from rollout)
-  packSagStartRpm: 8000,        // ≈143 km/h: below this the pack delivers the full 760 kW
-  packSagPerRpm: 0.0000510106,  // calibrated -> 1/4 mile = 9.230 s ET (see tests/perf-test.mjs)
+  quarterMileS: 9.4,            // s — Porsche's figure for the Turbo GT with Weissach.
+                                //  (9.23 was the Tesla Plaid's number, inherited when this
+                                //   sim was cloned from it.)
+  packSagStartMps: 35.0,        // ≈126 km/h: below this the pack delivers the full 760 kW
+                                //  (keyed to ROAD SPEED, not motor rpm — the car has two ratios)
+  packSagPerMps: 0.011661,      // high-speed pack taper (see tests/perf-test.mjs)
   packSagFloor: 0.42,           // sustained high-speed output floor (enough for 305 km/h)
   regenMps2: 2.0,               // one-pedal regen deceleration at full lift
   brakeMaxMps2: 10.7980,        // PCCB carbon-ceramics; calibrated to 31.0 m 100-0 km/h
   brakeDist100to0M: 31,         // target 100-0 km/h braking distance
-  shiftTimeS: 0.0,              // nothing to shift
+  shiftTimeS: 0.02,             // the two-speed rear axle shifts almost imperceptiblynothing to shift
   launchRpm: 0,                 // launch control: torque from zero, no flare
   aeroClA: 0.5,                 // fixed carbon spoiler + diffuser (no active wing)
   aeroDragAdd: 0.10             // spoiler trim effect
@@ -1256,7 +1258,7 @@ const SPEC = {
   function engineTorque(rpm) {
     const omega = rpm * Math.PI * 2 / 60;
     const plateau = SPEC.peakTorqueNm;                         // full torque from standstill
-    const sag = Math.max(SPEC.packSagFloor, 1 - SPEC.packSagPerRpm * Math.max(0, rpm - SPEC.packSagStartRpm));
+    const sag = Math.max(SPEC.packSagFloor, 1 - SPEC.packSagPerMps * Math.max(0, Math.abs(state.speedMps) - SPEC.packSagStartMps));
     const powerCap = SPEC.peakPowerW * sag / Math.max(omega, 1);   // 760 kW, tapering on the top end
     return Math.max(0, Math.min(plateau, powerCap));
   }
@@ -1266,20 +1268,21 @@ const SPEC = {
     return wheelRps * SPEC.gearRatios[gear - 1] * SPEC.finalDrive * 60;
   }
 
-  const modeMap = {   // Normal / Sport / Sport+ (two-speed rear axle: handled by the drive unit)
-    wet:   { upRpm: 99999, downRpm: 0, throttleRate: 0.0030, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 99999, downRpm: 0, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 99999, downRpm: 0, throttleRate: 0.0004, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+  const modeMap = {   // Normal / Sport / Sport+ — the two-speed rear axle really does shift
+    wet:   { upRpm: 8500,  downRpm: 3000, throttleRate: 0.0030, tc: 0.78, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 11500, downRpm: 4200, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 13500, downRpm: 5000, throttleRate: 0.0004, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
-  /* --- single-speed drive: D is the only gear; the "paddles" just engage/park it --- */
+  /* --- two-speed rear axle: the drive unit changes ratio for you around 110 km/h,
+     so D stays D on the readout, exactly as it does in the real car --- */
   function manualShift(dir) {
     if (state.gearMode !== "G") {
       if (dir > 0) { app.setGear("G", 1); return; }
       return;
     }
-    const next = clamp(state.curGear + dir, 1, 1);
+    const next = clamp(state.curGear + dir, 1, SPEC.gearRatios.length);
     if (next === state.curGear) return;
     state.shiftFrom = state.curGear; state.curGear = next; state.shiftTimer = SPEC.shiftTimeS;
     state.manualHold = 1.4;
@@ -1307,7 +1310,7 @@ const SPEC = {
     const upRpm = state.throttle > 0.6 ? m.upRpm : (m.downRpm + 1400 + state.throttle * 1200);
     const downRpm = m.downRpm + (kickdown ? 700 : 0);
     if (state.manualHold > 0) return;          // respect a just-made manual shift
-    if (!holdForCorner && rpm > upRpm && state.curGear < 1) {
+    if (!holdForCorner && rpm > upRpm && state.curGear < SPEC.gearRatios.length) {
       state.shiftFrom = state.curGear; state.curGear++; state.shiftTimer = SPEC.shiftTimeS; audio.clunk(240);
     } else if (rpm < downRpm && state.curGear > 1) {
       state.shiftFrom = state.curGear; state.curGear--; state.shiftTimer = SPEC.shiftTimeS; audio.blip(0.7);
