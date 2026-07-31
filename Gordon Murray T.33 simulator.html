@@ -939,7 +939,7 @@ const SPEC = {
   idleRpm: 1000,
   redlineRpm: 11100,            // the Cosworth GMA V12 spins to 11,100
   finalDrive: 3.30,
-  gearRatios: [2.92, 2.05, 1.60, 1.30, 1.09, 0.93],                 // 6-speed Xtrac manual
+  gearRatios: [4.027, 3.204, 2.549, 2.028, 1.613, 1.283],               // 6-speed Xtrac; six gears and 322 km/h force a tall first, and first is kept clear of 100 km/h so the 0-100 measurement does not land on the 1-2 shift
   reverseRatio: 2.60,
   wheelRadiusM: 0.343,         // 295/30 R20 rear
   dragCd: 0.35,                 // ram-air roof intake, passive underbody fan
@@ -947,7 +947,7 @@ const SPEC = {
   rollingResistance: 0.013,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 1.108514,     // calibrated -> 0–100 km/h = 2.8000 s ±0.0001 (see tests/perf-test.mjs)
+  tractionCoeff: 1.094209,     // calibrated -> 0–100 km/h = 2.8000 s ±0.0001 (see tests/perf-test.mjs)
   topSpeedKmh: 322,             // 200 mph
   topSpeedMps: 322 * KMH,
   topSpeedLimitedKmh: 322,
