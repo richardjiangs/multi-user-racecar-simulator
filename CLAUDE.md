@@ -173,7 +173,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Lamborghini Revuelto | 747 kW / 1,015 CV combined (825 CV V12 @ 9,250 + 3 e-motors) | ~1,100 Nm combined | 2.5 s | 350 | 8-DCT | 1,772 kg (dry) |
 | Porsche 918 Spyder | 652 kW / 887 PS combined (608 PS V8 @ 8,700 + 2 e-motors) | ~1,280 Nm combined | 2.6 s | 345 | 7-PDK | 1,674 kg |
 | Porsche Taycan Turbo GT | 815 kW / 1,108 PS overboost (dual PSM, 2-speed rear) | ~1,340 Nm | 2.2 s | 305 | 2-speed | 2,220 kg |
-| Toyota Supra MK4 (A80) | 285 kW / 387 PS @ 5,800–6,500 (B58 twin-scroll turbo I6) | 500 Nm @ 1,800–5,000 | 4.1 s | 250 governed | 8-ZF auto | 1,520 kg |
+| Toyota Supra MK4 (A80) | 243 kW / 330 PS @ 5,600 (2JZ-GTE sequential twin-turbo I6) | 427 Nm @ 4,000 | 4.9 s | 250 governed | 6-Getrag manual | 1,615 kg |
 | Hennessey Venom F5 | 1,355 kW / 1,817 hp @ 8,000 (6.6 L twin-turbo 'Fury' V8) | 1,617 Nm @ 5,000 | 2.6 s | 484 (301 mph design) | 7-single-clutch | 1,360 kg (dry) |
 | Lotus Evija | 1,500 kW / 2,039 PS (quad-motor EV, one motor/wheel) | 1,704 Nm | 2.9 s | 349 governed | 1-speed | 1,680 kg |
 | Mercedes-AMG One | 782 kW / 1,063 PS combined (1.6 L V6 F1 turbo-hybrid @ 11,000 + 4 e-motors) | ~900 Nm combined | 2.9 s | 352 governed | 7-AMG SPEEDSHIFT | 1,695 kg |
@@ -189,7 +189,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | McLaren F1 (1993) | 461 kW / 627 PS @ 7,400 (6.1 L BMW S70/2 NA V12) | 651 Nm @ 5,600 | 3.2 s | 386.4 (Nardò, 1998) | 6-manual | 1,138 kg |
 | Gordon Murray T.33 | 447 kW / 615 PS @ 11,500 (3.9 L Cosworth GMA NA V12) | 451 Nm @ 9,000 | 3.0 s | 333 | 6-Xtrac manual | 1,090 kg |
 | Koenigsegg Agera RS | 865 kW / 1,176 PS @ 7,800 (5.0 L twin-turbo V8) — 1,000 kW / 1,360 PS on the 1 MW package | 1,280 Nm (1,371 on 1 MW) | 2.8 s | 429; **447.19 two-way record**, Nevada SR 160, 4 Nov 2017 | 7-DCT | 1,395 kg |
-| Yangwang U9 | 960 kW / 1,306 PS (quad-motor e⁴, one per wheel) — 2,220 kW / 3,000 PS as the U9 Xtreme | 1,680 Nm | 2.36 s | 309; **496.22 (Xtreme, Papenburg 2025)** | 1-speed × 4 | 2,475 kg |
+| Yangwang U9 **Xtreme** | 2,219 kW / 3,018 PS (four 30,000 rpm motors, one per wheel, 1,200 V) — 960 kW / 1,306 PS as the standard U9 | 1,680 Nm | 1.9 s | **496.22 (ATP Papenburg, 14 Sep 2025 — the fastest production car ever)**; 309 standard | 1-speed × 4 | 2,480 kg |
 | Aston Martin DB5 | 210 kW / 282 bhp @ 5,500 (4.0 L DOHC straight-six, three SU HD8) — 242 kW / 325 bhp in Vantage spec | 390 Nm @ 3,850 | 7.1 s | 233 (246 Vantage) | ZF 5-manual | 1,466 kg |
 | Mercedes-Benz 300 SLR Uhlenhaut Coupé | 228 kW / 310 PS @ 7,400 (3.0 L M196 desmodromic straight-eight, Bosch direct injection) | 314 Nm @ 5,950 | 6.9 s | 290 (300 on the Le Mans axle) — the fastest road-legal car of 1955 | 5-transaxle | 1,117 kg |
 | Czinger 21C | 932 kW / 1,250 hp combined (2.88 L twin-turbo flat-plane V8 to 11,000 + 2 front e-motors) — 1,007 kW / 1,350 hp as V Max | 1,210 Nm | 1.9 s | 407 (452 V Max) | 7-sequential | 1,250 kg |
@@ -199,8 +199,8 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 **The five newest road cars** each carry one *real* ultimate-speed feature on **key Z**, opt-in
 and OFF by default so `tests/perf-test.mjs` never sees it and certification is untouched:
 the Agera RS's **1 MW package** (larger turbos on E85: 1,176 → 1,360 PS, 429 → 447 km/h — the
-map that set the record), the U9's **Xtreme specification** (four 30,000 rpm motors, 3,000 PS
-on 1,200 V, 309 → 496 km/h), the DB5's **Vantage specification** (three Weber 45DCOE and a
+map that set the record), the U9's **standard specification** (the Xtreme is the car the sim now models, so Z drops
+it the other way: 3,018 → 1,306 PS, 496 → 309 km/h), the DB5's **Vantage specification** (three Weber 45DCOE and a
 hotter cam: 282 → 325 bhp), the 300 SLR's **Le Mans final drive** (3.11 → 2.76, 290 → 300 km/h)
 and the 21C's **V Max** configuration (wing flat, 1,250 → 1,350 hp, 407 → 452 km/h). Each has
 its own sound and its own on-screen flag in the cluster.
@@ -396,6 +396,37 @@ Audi fastest recharge, Red Bull slipperiest X-mode 0.34, Cadillac smallest store
 ERS bar + X-MODE/OVERRIDE flags draw in `drawTelemetry`; keys listed in the help
 panel. Perf-test never holds X/V, so the certified figures are untouched.
 
+
+
+## Engine voice — every car sounds like its own engine
+
+Firing frequency is `rpm/60 × pulses-per-rev` (I4=2, I6/V6=3, V8/straight-8=4, V10=5,
+V12/flat-12=6, W16=8, EV=inverter). That was always right. The **oscillator stack on top of
+it is the timbre**, and cloning a sim copies it verbatim — which is how the 250 GTO, F40 and
+917 once shared a byte-identical stack, so a Colombo V12, a twin-turbo V8 and an air-cooled
+flat-12 were one instrument played at three pitches. Only **24 of 47** cars had a distinct
+voice.
+
+The stack is now derived from what the engine physically is, so two engines that differ in
+reality cannot come out identical:
+
+| property | what it puts in the sound |
+|---|---|
+| **crank** | a cross-plane V8 fires unevenly — that detuned half-order pair *is* the burble. A flat-plane V8 has none of it. |
+| **layout** | two banks beat against each other; a straight-six or straight-eight has one bank and no beat, which is why an inline engine sounds smoother than a V. |
+| **induction** | carburettors breathe (rounded sines + intake hiss at 2×); turbos add spool at quarter-order; slide/ITB throttles a 1.5× honk; mechanical injection is dry with no intake resonance at all. |
+| **cooling** | an air-cooled engine has a **fan** — the 917's axial fan at ~7× is the single most recognisable thing about it. |
+| **displacement** | a 6.6 V8 has far more bottom end than a 2.88 V8 of the same layout. |
+| **revs** | an 11,000 rpm engine carries much more high-order content than a 5,750 one. |
+| **restrictor** | an FIA air restrictor strangles the top end — that is the Dakar sound. |
+| **e-motor** | a hybrid carries an inverter whine under the engine note. |
+| **EV** | no firing order at all: inverter switching + reduction-stage and rotor whine, pitched by motor speed (a 30,000 rpm U9 Xtreme rotor whines far higher than a Nevera's). |
+
+**40 of 47 cars now have a unique voice.** The four groups that still share one are the ones
+that really do share a power unit — the Mercedes, Ferrari and Red Bull Ford F1 customer
+teams, and the Jesko/Agera RS 5.0 twin-turbo V8. `tests/browser-test.mjs` hashes every
+oscillator stack and **fails on any shared voice outside that allow-list**, so this cannot
+silently regress.
 
 ## Gearbox invariants (learned the hard way — check these on every car)
 

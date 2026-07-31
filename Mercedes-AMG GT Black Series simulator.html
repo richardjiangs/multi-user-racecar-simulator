@@ -997,12 +997,12 @@ const SPEC = {
       // Flat-plane 180° V8: raw, race-car-hard, with a vicious rising edge and
       // turbo pressure always hissing underneath
       const defs = [
-        { type: "sine",     mul: 0.5,  gain: 0.46, toShaper: false },
-        { type: "sawtooth", mul: 1.0,  gain: 0.58, toShaper: true  },
-        { type: "sawtooth", mul: 1.012,gain: 0.38, toShaper: true  },
-        { type: "square",   mul: 1.5,  gain: 0.15, toShaper: true  },
-        { type: "sawtooth", mul: 2.0,  gain: 0.22, toShaper: true  },
-        { type: "square",   mul: 3.0,  gain: 0.08, toShaper: true  }
+        { type: "sine",       mul: 0.5,    gain: 0.35, toShaper: false },
+        { type: "sawtooth",   mul: 1,      gain: 0.64, toShaper: true  },   // flat-plane crank: even, hard, no burble
+        { type: "sawtooth",   mul: 1.011,  gain: 0.32, toShaper: true  },   // two banks, slightly out of phase
+        { type: "sine",       mul: 0.25,   gain: 0.16, toShaper: false },   // two turbos spooling under it
+        { type: "square",     mul: 2,      gain: 0.26, toShaper: true  },
+        { type: "sawtooth",   mul: 3,      gain: 0.18, toShaper: true  }
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1035,7 +1035,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 4);   // V8: 4 firing pulses / rev
+      const firing = Math.max(20, (s.rpm / 60) * 4);   // flat-plane twin-turbo V8: 4 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
