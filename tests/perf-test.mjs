@@ -201,7 +201,9 @@ const CARS = {
     app: "AgeraApp",
     label: "Koenigsegg Agera RS",
     marks: { 100: { target: 2.8, tol: 1e-4 } },
-    topSpeed: { kmh: 447, minT: 80 },
+    // Standard pump-petrol car. The 447.19 km/h two-way record was set on the 1 MW
+    // package, which is opt-in (key Z) and therefore never enabled here.
+    topSpeed: { kmh: 429, minT: 80 },
     brake100: { target: 30, tol: 1.0 },
   },
   u9: {

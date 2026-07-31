@@ -1,12 +1,16 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of thirty-six simulators — each a **single self-contained HTML file** —
-twenty-one road/classic cars & hypercars (incl. the Toyota Supra MK4 (A80), six later hypercars —
-Hennessey Venom F5 · Lotus Evija · Mercedes-AMG One · Rimac Nevera · Chevrolet Corvette ZR1 ·
-McLaren P1 — and two classic racers, the **Ferrari F40** and **Porsche 917K**), the full
-**2026 Formula 1 grid** (eleven teams), and four **2026 Dakar
-Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive
-Hunter). `index.html` bundles all of them together with
+A garage of forty-seven simulators — each a **single self-contained HTML file** —
+thirty-two road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
+and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
+Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
+Supra MK4 (A80), the six later hypercars (Hennessey Venom F5 · Lotus Evija · Mercedes-AMG
+One · Rimac Nevera · Chevrolet Corvette ZR1 · McLaren P1), two classic racers (**Ferrari
+F40**, **Porsche 917K**), six road cars added next (Mitsubishi Lancer Evolution X FQ-440 MR ·
+Nissan GT-R Nismo · BMW M5 G90 · Audi R8 V10 Performance · McLaren F1 1993 · Gordon Murray
+T.33), and five more after them (**Koenigsegg Agera RS** · **Yangwang U9** · **Aston Martin
+DB5** with its Q Branch equipment · **Mercedes-Benz 300 SLR Uhlenhaut Coupé** · **Czinger
+21C**). `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
@@ -56,6 +60,19 @@ Racing Bulls F1 2026 simulator.html
 Haas F1 2026 simulator.html
 Audi F1 2026 simulator.html
 Cadillac F1 2026 simulator.html
+Mitsubishi Lancer Evo X FQ-440 simulator.html  ← six road cars added after the classics (each cloned from its
+Nissan GT-R Nismo simulator.html               closest donor, then re-derived end to end — SPEC, gear ladder,
+BMW M5 simulator.html                          engine voice, body, cabin, cluster, wheel and engine bay):
+Audi R8 V10 Performance simulator.html         Evo X (2.0 4B11T, S-AWC) · GT-R Nismo (3.8 VR38DETT) ·
+McLaren F1 1993 simulator.html                 M5 G90 (4.4 S68 hybrid) · R8 (5.2 NA V10) ·
+Gordon Murray T.33 simulator.html              McLaren F1 (6.1 BMW S70/2, central seat) · T.33 (3.9 Cosworth GMA).
+Koenigsegg Agera RS simulator.html          ← five more (same rule: real SPEC, real brand circuit, unique voice,
+Yangwang U9 simulator.html                     unique art, one real ultimate-speed feature each on key Z):
+Aston Martin DB5 simulator.html                Agera RS (5.0 TT V8, Nevada SR 160, 1 MW package) ·
+Mercedes-Benz 300 SLR Uhlenhaut simulator.html U9 (quad-motor e⁴, Shanghai, Xtreme spec) ·
+Czinger 21C simulator.html                     DB5 (4.0 DOHC six, Furka Pass, Q BRANCH tab + Vantage spec) ·
+                                               300 SLR (3.0 desmo straight-eight, AVUS, Le Mans axle) ·
+                                               21C (2.88 TT flat-plane V8 + 2 e-motors, Willow Springs, V Max).
 Dacia Sandrider Dakar simulator.html        ← 2026 Dakar Rally raid cars (4, one shared T1+ Ultimate chassis SPEC):
 Ford Raptor T1+ Dakar simulator.html           Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter.
 Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound (Ford = 5.0 NA V8; the rest twin-turbo V6),
@@ -165,8 +182,38 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | McLaren P1 | 674 kW / 916 PS combined (3.8 L twin-turbo V8 @ 7,300 + IPAS e-motor) | 900 Nm @ 4,000 | 2.8 s | 350 governed | 7-DCT | 1,395 kg (dry) |
 | Ferrari F40 | 352 kW / 478 PS @ 7,000 (2.9 L IHI twin-turbo V8, F120A) | 577 Nm @ 4,000 | 4.1 s | 324 (drag-limited) | 5-manual | 1,100 kg (dry) |
 | Porsche 917K | 441 kW / ~600 PS @ 8,400 (4.9 L air-cooled flat-12, Type 912) | ~500 Nm @ 6,400 | 2.9 s | ~360 (Le Mans) | 5-manual | ~800 kg |
+| Mitsubishi Lancer Evolution X FQ-440 MR | 324 kW / 440 PS @ 6,500 (2.0 L 4B11T turbo I4) | 549 Nm @ 3,500 | 3.8 s | 250 governed | 6-SST | 1,560 kg |
+| Nissan GT-R Nismo (R35) | 441 kW / 600 PS @ 6,800 (3.8 L VR38DETT twin-turbo V6) | 652 Nm @ 3,600 | 2.7 s (1-ft rollout) | 315 | 6-DCT | 1,720 kg |
+| BMW M5 (G90) | 535 kW / 727 PS combined (4.4 L S68 twin-turbo V8 + e-motor) | 1,000 Nm | 3.5 s | 305 (M Driver) | 8-Steptronic | 2,435 kg |
+| Audi R8 V10 Performance | 456 kW / 620 PS @ 8,000 (5.2 L NA V10, dry sump) | 580 Nm @ 6,400 | 3.1 s | 331 | 7-S tronic | 1,595 kg |
+| McLaren F1 (1993) | 461 kW / 627 PS @ 7,400 (6.1 L BMW S70/2 NA V12) | 651 Nm @ 5,600 | 3.2 s | 386.4 (Nardò, 1998) | 6-manual | 1,138 kg |
+| Gordon Murray T.33 | 447 kW / 615 PS @ 11,500 (3.9 L Cosworth GMA NA V12) | 451 Nm @ 9,000 | 3.0 s | 333 | 6-Xtrac manual | 1,090 kg |
+| Koenigsegg Agera RS | 865 kW / 1,176 PS @ 7,800 (5.0 L twin-turbo V8) — 1,000 kW / 1,360 PS on the 1 MW package | 1,280 Nm (1,371 on 1 MW) | 2.8 s | 429; **447.19 two-way record**, Nevada SR 160, 4 Nov 2017 | 7-DCT | 1,395 kg |
+| Yangwang U9 | 960 kW / 1,306 PS (quad-motor e⁴, one per wheel) — 2,220 kW / 3,000 PS as the U9 Xtreme | 1,680 Nm | 2.36 s | 309; **496.22 (Xtreme, Papenburg 2025)** | 1-speed × 4 | 2,475 kg |
+| Aston Martin DB5 | 210 kW / 282 bhp @ 5,500 (4.0 L DOHC straight-six, three SU HD8) — 242 kW / 325 bhp in Vantage spec | 390 Nm @ 3,850 | 7.1 s | 233 (246 Vantage) | ZF 5-manual | 1,466 kg |
+| Mercedes-Benz 300 SLR Uhlenhaut Coupé | 228 kW / 310 PS @ 7,400 (3.0 L M196 desmodromic straight-eight, Bosch direct injection) | 314 Nm @ 5,950 | 6.9 s | 290 (300 on the Le Mans axle) — the fastest road-legal car of 1955 | 5-transaxle | 1,117 kg |
+| Czinger 21C | 932 kW / 1,250 hp combined (2.88 L twin-turbo flat-plane V8 to 11,000 + 2 front e-motors) — 1,007 kW / 1,350 hp as V Max | 1,210 Nm | 1.9 s | 407 (452 V Max) | 7-sequential | 1,250 kg |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
+
+**The five newest road cars** each carry one *real* ultimate-speed feature on **key Z**, opt-in
+and OFF by default so `tests/perf-test.mjs` never sees it and certification is untouched:
+the Agera RS's **1 MW package** (larger turbos on E85: 1,176 → 1,360 PS, 429 → 447 km/h — the
+map that set the record), the U9's **Xtreme specification** (four 30,000 rpm motors, 3,000 PS
+on 1,200 V, 309 → 496 km/h), the DB5's **Vantage specification** (three Weber 45DCOE and a
+hotter cam: 282 → 325 bhp), the 300 SLR's **Le Mans final drive** (3.11 → 2.76, 290 → 300 km/h)
+and the 21C's **V Max** configuration (wing flat, 1,250 → 1,350 hp, 407 → 452 km/h). Each has
+its own sound and its own on-screen flag in the cluster.
+
+**Q Branch (Aston Martin DB5 only)** — a `data-view="qbranch"` tab after Exterior with the
+eight pieces of special equipment fitted to chassis DP/216/1 for *Goldfinger* (1964), each on
+its own number key **1–8** and each with a real sound and a real on-track effect drawn by
+`drawQBranch`: revolving number plates (GB / CH / F), Browning .30 wing guns (104 rounds,
+muzzle flash and tracers), the bulletproof rear shield, tyre-slashing hub blades, the rear oil
+slick (rivals that drive through it lose grip), the smoke screen, the passenger ejector seat
+(the roof panel goes first) and the dash-top tracker scope, whose blip is the nearest live
+rival. `qStep(dt)` runs from `updatePhysics`; all of it is opt-in, so the certified figures
+stand.
 
 The four **2026 Dakar** cars share **one calibrated chassis SPEC** (like the F1 grid — a single
 `--calibrate dacia` certifies all four at 0-100 = 5.3 s; the FIA air-restrictor equalises T1+ power,
@@ -279,19 +326,19 @@ craned away after `scT`, "in this lap" → box → GREEN and the next incident i
 pre-rolled. A race-control board (name/status/health per car) draws in
 `drawTelemetry`; map dots get status rings. The index.html AMG card is now the
 **FIA F1 Safety Car** (inline SVG livery: silver, green stripe, light bar).
-**Learning mode (all 36 sims)**: a `data-view="learn"` tab AFTER Circuit — road
+**Learning mode (all 47 sims)**: a `data-view="learn"` tab AFTER Circuit — road
 cars "Race Car 101", AMG "Safety Car 101", F1 "Formula 1 101" — with a curriculum
 panel + `learnBtn` toggling `state.learnMode`: `drawLearningMarks()` paints
 150/100/BRAKE boards, TURN IN, a LATE APEX cone (60% through the corner) and an
 EXIT—POWER board around the next corner; the teal racing line stays on and
 `drawMap` overlays the full racing line. All opt-in → certification untouched.
 
-**v8** — width 3.75 in ALL 36 sims. `radioSay` uses cancel → setTimeout(60 ms) →
+**v8** — width 3.75 in ALL 47 sims. `radioSay` uses cancel → setTimeout(60 ms) →
 resume+speak plus a 4 s resume keepalive (Chrome silently drops queued utterances
 otherwise). Learning is a **launch mode**: the learn tab is `display:none` until the
 garage card's **Learning** button calls `app.enterLearning()` (index.html
 `openLearning` polls `getSimApp()`). Each 101 is a real course: CONTENTS quick-nav,
-two inline SVG diagrams, a per-car feature lesson (all 36 differ) and **Demo**
+two inline SVG diagrams, a per-car feature lesson (all 47 differ) and **Demo**
 buttons → `app.learnDemo()` (Suzuka, test driver, gear engaged, markers on).
 `analyseCorner()` CACHES the corner target (no board jitter) and classifies the
 apex: straight after → LATE (frac .58), hairpin → V-LINE (.62), same-direction
@@ -379,14 +426,15 @@ from the numbers perf-test certifies.
 
 ## index.html — garage + online race shell
 
-- Thirty-six `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
+- Forty-seven `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
   the six later hypercars, each with a real-photo `<img class="realcar">` slot that reveals
   a supplied photo and otherwise falls back to the SVG livery) + spec chips; buttons
   `data-practice` / `data-online` per car key (`pagani, bugatti, mclaren, ferrari,
   koenigsegg, tesla, amg, aston, gto, revuelto, porsche918, taycan, supra, venom, evija,
   amgone, nevera, zr1, p1, f40, p917, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine,
   f1williams, f1racingbulls, f1haas, f1audi, f1cadillac, dacia, fordraptor, grhilux,
-  hunter`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
+  hunter`; plus the later road cars `evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5,
+  slr300, czinger`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
 - **Lazy sim loading** (so the homepage isn't a 12 MB download): between the
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers index.html now carries only a
   tiny `SIM_FILES = {key: "filename.html"}` map. `loadEmbeddedSim` branches on

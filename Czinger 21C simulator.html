@@ -231,7 +231,7 @@
       box-shadow: inset 0 0 8px rgba(0,0,0,0.7); }
     .turbo::after { content:""; position:absolute; inset:11px; border-radius:50%;
       background: conic-gradient(from var(--turbo-rot,0deg), #aab3bc 0 18deg, #2a2f37 18deg 36deg); }
-    /* two E-TURBOS in the hot vee — MGU-H style spool with no lag */
+    /* two turbochargers on the flat-plane V8, with the e-axle filling underneath */
     .turbo.left  { left:26%; top:16%; } .turbo.right  { right:26%; top:16%; }
     .emotor { position:absolute; left:26%; right:26%; bottom:58px; height:34px; border-radius:8px;
       background: linear-gradient(180deg,#3a1c1c,#1c0d0d); border:1px solid rgba(224,36,42,0.55);
@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="drsBtn" class="race" title="Open DRS: the active wing lies flat in low-drag trim — more speed, less downforce">DRS</button>
+          <button id="drsBtn" class="race" title="Fit the V Max configuration — the wing lies flat in low-drag trim and the V8 runs its top-speed map: 1,250 hp becomes 1,350 hp, 407 km/h becomes 452">V Max</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -489,7 +489,7 @@
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL"></div>
           <div class="turbo right" id="turboR"></div>
-          <div style="position:absolute;left:12%;right:12%;top:14%;height:156px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebf80" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecf80" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="emf80" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#7fe9f0"/><stop offset="1" stop-color="#0e5a62"/></radialGradient></defs><rect x="52" y="6" width="72" height="96" rx="11" fill="url(#ebf80)" stroke="#e0242a" stroke-opacity="0.4"/><rect x="176" y="6" width="72" height="96" rx="11" fill="url(#ebf80)" stroke="#e0242a" stroke-opacity="0.4"/><rect x="126" y="10" width="48" height="88" rx="7" fill="url(#ebf80)" stroke="rgba(150,160,170,0.4)"/><line x1="126" y1="26.0" x2="106" y2="26.0" stroke="#e0242a" stroke-width="2.4" opacity="0.55"/><line x1="174" y1="26.0" x2="194" y2="26.0" stroke="#e0242a" stroke-width="2.4" opacity="0.55"/><circle cx="86" cy="26.0" r="10" fill="url(#ecf80)" stroke="rgba(190,200,210,0.5)"/><circle cx="86" cy="26.0" r="4.5" fill="#e0242a" opacity="0.6"/><circle cx="214" cy="26.0" r="10" fill="url(#ecf80)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="26.0" r="4.5" fill="#e0242a" opacity="0.6"/><line x1="126" y1="58.0" x2="106" y2="58.0" stroke="#e0242a" stroke-width="2.4" opacity="0.55"/><line x1="174" y1="58.0" x2="194" y2="58.0" stroke="#e0242a" stroke-width="2.4" opacity="0.55"/><circle cx="86" cy="58.0" r="10" fill="url(#ecf80)" stroke="rgba(190,200,210,0.5)"/><circle cx="86" cy="58.0" r="4.5" fill="#e0242a" opacity="0.6"/><circle cx="214" cy="58.0" r="10" fill="url(#ecf80)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="58.0" r="4.5" fill="#e0242a" opacity="0.6"/><line x1="126" y1="90.0" x2="106" y2="90.0" stroke="#e0242a" stroke-width="2.4" opacity="0.55"/><line x1="174" y1="90.0" x2="194" y2="90.0" stroke="#e0242a" stroke-width="2.4" opacity="0.55"/><circle cx="86" cy="90.0" r="10" fill="url(#ecf80)" stroke="rgba(190,200,210,0.5)"/><circle cx="86" cy="90.0" r="4.5" fill="#e0242a" opacity="0.6"/><circle cx="214" cy="90.0" r="10" fill="url(#ecf80)" stroke="rgba(190,200,210,0.5)"/><circle cx="214" cy="90.0" r="4.5" fill="#e0242a" opacity="0.6"/><g><circle cx="40" cy="30" r="10" fill="url(#emf80)" stroke="rgba(120,220,230,0.7)"/><text x="40" y="31" text-anchor="middle" font-size="6" font-weight="700" fill="#062a2e">MGU</text><circle cx="40" cy="66" r="10" fill="url(#emf80)" stroke="rgba(120,220,230,0.7)"/><text x="40" y="67" text-anchor="middle" font-size="6" font-weight="700" fill="#062a2e">MGU</text><circle cx="150" cy="104" r="11" fill="url(#emf80)" stroke="rgba(120,220,230,0.7)"/><text x="150" y="105" text-anchor="middle" font-size="6" font-weight="700" fill="#062a2e">MGU-K</text></g><text x="150" y="124" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#ff8f93" letter-spacing="0.4">3.0 F163CF · TWIN-TURBO V8 + E-4WD</text></svg></div>
+          <div style="position:absolute;left:12%;right:12%;top:12%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebczE" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecczE" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="etczE" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#f0b48a"/><stop offset="0.5" stop-color="#a5431f"/><stop offset="1" stop-color="#3a160a"/></radialGradient><radialGradient id="emczE" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bff3d6"/><stop offset="0.5" stop-color="#21b872"/><stop offset="1" stop-color="#0c3020"/></radialGradient><radialGradient id="esczE" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#eef4f8"/><stop offset="0.5" stop-color="#8f9aa4"/><stop offset="1" stop-color="#2a3138"/></radialGradient><radialGradient id="epczE" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bfe6f6"/><stop offset="0.5" stop-color="#2b8fc0"/><stop offset="1" stop-color="#0a2836"/></radialGradient></defs><rect x="56" y="6" width="72" height="108" rx="11" fill="url(#ebczE)" stroke="#8fa6b6" stroke-opacity="0.42"/><rect x="172" y="6" width="72" height="108" rx="11" fill="url(#ebczE)" stroke="#8fa6b6" stroke-opacity="0.42"/><rect x="132" y="10" width="36" height="100" rx="6" fill="url(#ebczE)" stroke="rgba(150,160,170,0.4)"/><circle cx="88" cy="12.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="12.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="12.0" x2="130" y2="12.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="12.0" x2="170" y2="12.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="44.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="44.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="44.0" x2="130" y2="44.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="44.0" x2="170" y2="44.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="76.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="76.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="76.0" x2="130" y2="76.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="76.0" x2="170" y2="76.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="108.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="108.0" r="9" fill="url(#ecczE)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="108.0" x2="130" y2="108.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="108.0" x2="170" y2="108.0" stroke="#8fa6b6" stroke-width="1.8" opacity="0.5"/><circle cx="150" cy="34" r="13" fill="url(#etczE)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="150" cy="34" r="5.5" fill="#2a120a"/><circle cx="150" cy="92" r="13" fill="url(#etczE)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="150" cy="92" r="5.5" fill="#2a120a"/><circle cx="26" cy="26" r="14" fill="url(#emczE)" stroke="rgba(160,240,190,0.6)" stroke-width="1.3"/><circle cx="26" cy="26" r="5" fill="#0c3020"/><circle cx="274" cy="26" r="14" fill="url(#emczE)" stroke="rgba(160,240,190,0.6)" stroke-width="1.3"/><circle cx="274" cy="26" r="5" fill="#0c3020"/><text x="150" y="20" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" fill="rgba(160,240,190,0.85)">2 × FRONT e-MOTOR · TORQUE VECTORING</text><text x="150" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#8fa6b6" letter-spacing="0.5">2.88 TWIN-TURBO FLAT-PLANE V8</text><text x="150" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#8fa6b6">11,000 rpm · 3D-PRINTED STRUCTURE</text></svg></div>
           <div class="emotor" id="eAxleArt">E-4WD FRONT AXLE · MGU-K</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
@@ -500,7 +500,7 @@
           <button id="fansBtn" class="active">Cooling Fans</button>
           <button id="blipBtn">Blip Throttle</button>
           <button id="coldStartBtn">Cold Start Flair</button>
-          <button id="antiLagBtn">E-Turbo Spool</button>
+          <button id="antiLagBtn">Turbo Spool</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
@@ -863,6 +863,7 @@ const SPEC = {
   topSpeedLimitedMps: 407 * KMH,
   topSpeedRecordKmh: 452,
   topSpeedRecordMps: 452 * KMH,
+  vmaxPowerW: 1007000,         // V Max: 1,007 kW = 1,350 hp (manufacturer)
   zeroTo100Kmh: 1.9,           // s (manufacturer)
   zeroTo200Kmh: 5.75,           // s (manufacturer)
   brakeMaxMps2: 13.4384,        // CCM-R Plus carbon-ceramic; calibrated to 28.0 m 100-0 km/h
@@ -1163,7 +1164,7 @@ const SPEC = {
     const plateau = rpm <= SPEC.torqueLoRpm
       ? 720 + 330 * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
       : SPEC.peakTorqueNm;                                     // e-axle + MGU-K fill the bottom end
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at exactly 883 kW combined
+    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at exactly 932 kW combined
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1233,7 +1234,7 @@ const SPEC = {
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
       // Standing downforce rises through mid-speed, then TRIMS FLAT toward Vmax — the 21C
-      // manages its wing between High-Downforce and Low-Drag, keeping 350 km/h on the table.
+      // manages its wing between High-Downforce and Low-Drag, keeping 407 km/h on the table.
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -1602,8 +1603,8 @@ const SPEC = {
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Governor at exactly 350 km/h — the manufacturer vmax.
-    const govMps = SPEC.topSpeedMps;
+    // Governor at exactly 407 km/h — the manufacturer vmax.
+    const govMps = state.drs ? SPEC.topSpeedRecordMps : SPEC.topSpeedLimitedMps;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -2159,55 +2160,68 @@ const SPEC = {
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
   // the 21C cluster: an enveloping wraparound digital panel — a segmented red rev
-  // arc, a big central gear + speed, e-4WD deploy + power bars, giallo DRS flag
+  // ---- Czinger 21C cluster: a race strip display. An rpm bar to 11,000 with a shift
+  // light across the top, the gear digit, and the front e-axle deploy bar beneath. ----
   function drawCluster(w, h, dashY, sway) {
-    const cx = w / 2 + sway, cy = dashY + Math.min(w, h) * 0.06, u = Math.min(w, h) * 0.1;
-    const kmh = Math.abs(app.kmh(state.speedMps)), rpmf = clamp(state.rpm / app.SPEC.redlineRpm, 0, 1);
-    const W = u * 4.3, H = u * 2.2, X = cx - W / 2, Y = cy - H / 2;
-    ctx.fillStyle = "rgba(11,6,7,0.96)"; roundRect(ctx, X, Y, W, H, u * 0.55); ctx.fill();
-    ctx.strokeStyle = "rgba(224,36,42,0.5)"; ctx.lineWidth = 1.6; roundRect(ctx, X, Y, W, H, u * 0.55); ctx.stroke();
-    // segmented red rev arc across the top
-    const aR = W * 0.42, acx = cx, acy = cy + H * 0.42, aS = Math.PI * 1.18, aE = Math.PI * 1.82;
-    ctx.strokeStyle = "rgba(255,255,255,0.07)"; ctx.lineWidth = u * 0.15; ctx.beginPath(); ctx.arc(acx, acy, aR, aS, aE); ctx.stroke();
-    const segs = 44;
-    for (let i = 0; i < segs; i++) { const f = i / segs; if (f > rpmf) break; const a = aS + (aE - aS) * f; ctx.strokeStyle = f > 0.9 ? "#ffd23c" : f > 0.72 ? "#ff5b5b" : "#e0242a"; ctx.lineWidth = u * 0.15; ctx.beginPath(); ctx.arc(acx, acy, aR, a, a + (aE - aS) / segs * 0.86); ctx.stroke(); }
+    const R = Math.min(w, h) * 0.132;
+    const cx = w / 2 + sway, cy = dashY + R * 0.32;
+    const BW = R * 4.6, BH = R * 1.5, bx = cx - BW / 2, by = cy - BH / 2;
+    ctx.save();
+    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#0a1520"); pg.addColorStop(1, "#04070b");
+    ctx.fillStyle = pg; ctx.beginPath(); ctx.roundRect(bx, by, BW, BH, R * 0.16); ctx.fill();
+    ctx.strokeStyle = "rgba(143,166,182,0.6)"; ctx.lineWidth = 1.6; ctx.stroke();
+    // the rpm bar: 11,000 rpm, green -> amber -> red, then the whole strip flashes
+    const rev = clamp(state.rpm / (SPEC.redlineRpm || 11000), 0, 1), seg = 20;
+    const sw = (BW - R * 0.5) / seg;
+    for (let i = 0; i < seg; i++) {
+      const f = i / (seg - 1), lit = rev >= f;
+      const col = f < 0.55 ? "#48d17a" : f < 0.82 ? "#e8b23a" : "#e2534a";
+      ctx.fillStyle = lit ? col : "rgba(60,76,90,0.3)";
+      ctx.fillRect(bx + R * 0.25 + i * sw + 1, by + R * 0.2, sw - 2, R * 0.13);
+    }
+    if (rev > 0.965 && Math.floor(state.tMs / 90) % 2 === 0) {
+      ctx.fillStyle = "rgba(226,83,74,0.28)"; ctx.beginPath(); ctx.roundRect(bx, by, BW, BH, R * 0.16); ctx.fill();
+    }
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = state.drs ? "#ffd23c" : "#ffffff"; ctx.font = `800 ${Math.round(u * 0.72)}px ui-sans-serif`; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy - u * 0.02);
-    ctx.fillStyle = "#f5eef0"; ctx.font = `700 ${Math.round(u * 0.24)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), cx, cy + u * 0.46);
-    ctx.fillStyle = "rgba(190,166,170,0.85)"; ctx.font = `600 ${Math.round(u * 0.1)}px ui-sans-serif`; ctx.fillText("KM/H", cx, cy + u * 0.66);
-    f80Bar(X + u * 0.55, cy, u * 1.4, clamp((state.boostBar || 0) / 1.2 * (0.55 + 0.45 * (state.throttle || 0)), 0, 1), "#35c2d4", "e-4WD");
-    f80Bar(X + W - u * 0.55, cy, u * 1.4, clamp(powerPS() / app.SPEC.peakPowerPS, 0, 1), "#e0242a", "CV");
-    if (state.drs) { ctx.fillStyle = "#ffd23c"; ctx.font = `700 ${Math.round(u * 0.11)}px ui-sans-serif`; ctx.fillText("DRS", cx, Y + u * 0.3); }
+    ctx.fillStyle = "#e8f0f6"; ctx.font = `800 ${Math.round(R * 0.62)}px ui-sans-serif`;
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy + R * 0.08);
+    ctx.textAlign = "left"; ctx.fillStyle = "rgba(105,128,143,0.95)"; ctx.font = `600 ${Math.round(R * 0.12)}px ui-sans-serif`;
+    ctx.fillText(Math.round(state.rpm) + " rpm", bx + R * 0.25, cy + R * 0.02);
+    ctx.textAlign = "right";
+    ctx.fillText(Math.round(Math.abs(app.kmh(state.speedMps))) + " km/h", bx + BW - R * 0.25, cy + R * 0.02);
+    // the front e-axle deploy bar
+    const dep = clamp((state.throttle || 0) * (1 - clamp(Math.abs(app.kmh(state.speedMps)) / 260, 0, 1)), 0, 1);
+    ctx.fillStyle = "rgba(255,255,255,0.09)"; ctx.fillRect(cx - R * 1.0, cy + R * 0.46, R * 2.0, R * 0.1);
+    ctx.fillStyle = "#8fa6b6"; ctx.fillRect(cx - R * 1.0, cy + R * 0.46, R * 2.0 * dep, R * 0.1);
+    ctx.textAlign = "center"; ctx.fillStyle = state.drs ? "#7fe0ff" : "rgba(105,128,143,0.9)";
+    ctx.font = `700 ${Math.round(R * 0.115)}px ui-sans-serif`;
+    ctx.fillText(state.drs ? "V MAX · 1,350 hp · LOW DRAG" : "E-AXLE DEPLOY · 1,250 hp", cx, cy + R * 0.68);
+    ctx.restore();
   }
-  function f80Bar(cxp, cy, h2, frac, col, label) {
-    const bw = h2 * 0.17, bh = h2, bx = cxp - bw / 2, by = cy - bh / 2;
-    ctx.fillStyle = "rgba(255,255,255,0.08)"; roundRect(ctx, bx, by, bw, bh, 3); ctx.fill();
-    const fh = bh * clamp(frac, 0, 1); ctx.fillStyle = col; roundRect(ctx, bx, by + bh - fh, bw, fh, 3); ctx.fill();
-    ctx.fillStyle = "rgba(190,170,172,0.85)"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.font = `600 ${Math.round(h2 * 0.12)}px ui-sans-serif`; ctx.fillText(label, cxp, by + bh + h2 * 0.09);
-  }
-  // 21C wheel: F1-style squared rim — flat top AND bottom, red centring stripe, LED shift row
+  // Czinger 21C wheel: a rectangular race wheel with the screen in the boss and two paddles
   function drawWheel(w, h) {
-    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    // squared rim: two side arcs joined by flat top/bottom chords
-    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 0.24, Math.PI * 0.76); ctx.stroke();            // bottom arc trimmed
-    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.24, Math.PI * 1.76); ctx.stroke();            // top arc trimmed
-    ctx.beginPath(); ctx.moveTo(-R * 0.73, -R * 0.69); ctx.lineTo(R * 0.73, -R * 0.69); ctx.stroke();  // flat top
-    ctx.beginPath(); ctx.moveTo(-R * 0.73, R * 0.69); ctx.lineTo(R * 0.73, R * 0.69); ctx.stroke();    // flat bottom
-    ctx.beginPath(); ctx.arc(0, 0, R, -Math.PI * 0.24, Math.PI * 0.24); ctx.stroke();
-    ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 0.76, Math.PI * 1.24); ctx.stroke();
-    // red centring stripe at top
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(224,36,42,0.95)"; ctx.beginPath(); ctx.moveTo(-R * 0.1, -R * 0.69); ctx.lineTo(R * 0.1, -R * 0.69); ctx.stroke();
-    // LED shift lights across the top pad
-    for (let i = 0; i < 9; i++) { const f = (i + 1) / 9, lit = state.rpm / 9200 >= f * 0.82; ctx.fillStyle = lit ? (i > 6 ? "#ff4040" : i > 3 ? "#ffd23c" : "#57e07c") : "rgba(255,255,255,0.12)"; ctx.beginPath(); ctx.arc((i - 4) * R * 0.14, -R * 0.5, R * 0.028, 0, Math.PI * 2); ctx.fill(); }
-    // spokes + hub with cavallino badge
-    ctx.strokeStyle = "#171a20"; ctx.lineWidth = R * 0.1;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.9, R * 0.06); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.66); ctx.stroke();
-    ctx.fillStyle = "#0c0e12"; ctx.beginPath(); ctx.arc(0, 0, R * 0.25, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#ffd23c"; ctx.strokeStyle = "#0a0c10"; ctx.lineWidth = R * 0.015; ctx.beginPath(); ctx.arc(0, 0, R * 0.15, 0, Math.PI * 2); ctx.fill(); ctx.stroke();
-    ctx.fillStyle = "#0a0c10"; ctx.font = `700 ${Math.round(R * 0.13)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("21C", 0, R * 0.01);
+    const R = Math.min(w, h) * 0.2, cx = w / 2, cy = h * 0.965;
+    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.5);
+    ctx.fillStyle = "#12171d"; ctx.strokeStyle = "#98a3ad"; ctx.lineWidth = R * 0.05;
+    ctx.beginPath();
+    ctx.moveTo(-R * 1.0, -R * 0.46); ctx.lineTo(-R * 0.34, -R * 0.46); ctx.lineTo(-R * 0.34, -R * 0.1);
+    ctx.lineTo(R * 0.34, -R * 0.1); ctx.lineTo(R * 0.34, -R * 0.46); ctx.lineTo(R * 1.0, -R * 0.46);
+    ctx.lineTo(R * 1.0, R * 0.34); ctx.quadraticCurveTo(R * 1.0, R * 0.6, R * 0.72, R * 0.6);
+    ctx.lineTo(-R * 0.72, R * 0.6); ctx.quadraticCurveTo(-R * 1.0, R * 0.6, -R * 1.0, R * 0.34);
+    ctx.closePath(); ctx.fill(); ctx.stroke();
+    // the screen in the boss
+    ctx.fillStyle = "#04070b"; ctx.beginPath(); ctx.roundRect(-R * 0.44, -R * 0.36, R * 0.88, R * 0.46, R * 0.06); ctx.fill();
+    ctx.strokeStyle = "rgba(143,166,182,0.7)"; ctx.lineWidth = R * 0.02; ctx.stroke();
+    ctx.fillStyle = "#a9c6da"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+    ctx.font = `800 ${Math.round(R * 0.16)}px ui-sans-serif`; ctx.fillText("21C", 0, -R * 0.13);
+    // the rotaries and the paddles behind
+    ctx.fillStyle = "#0a0d11"; ctx.strokeStyle = "#98a3ad"; ctx.lineWidth = R * 0.02;
+    for (const [x, y] of [[-R * 0.72, R * 0.06], [-R * 0.72, R * 0.3], [R * 0.72, R * 0.06], [R * 0.72, R * 0.3]]) {
+      ctx.beginPath(); ctx.roundRect(x - R * 0.16, y - R * 0.07, R * 0.32, R * 0.14, R * 0.05); ctx.fill(); ctx.stroke();
+    }
+    ctx.fillStyle = "#8fa6b6";
+    ctx.beginPath(); ctx.roundRect(-R * 1.3, -R * 0.24, R * 0.2, R * 0.52, R * 0.07); ctx.fill();
+    ctx.beginPath(); ctx.roundRect(R * 1.1, -R * 0.24, R * 0.2, R * 0.52, R * 0.07); ctx.fill();
     ctx.restore();
   }
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
@@ -2309,88 +2323,81 @@ const SPEC = {
      butterfly doors, big active rear wing on swan pylons, hexagonal tail vents) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Czinger 21C side">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Czinger 21C side">
       <defs>
-        <linearGradient id="feRossoG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f04a4e"/><stop offset="0.5" stop-color="#c8151b"/><stop offset="1" stop-color="#6e0a0e"/></linearGradient>
-        <linearGradient id="feBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="feGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#aecbe6"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
-        <radialGradient id="feHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
-        <filter id="feExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <style>
-          .feWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:translateY(calc(var(--wing-deg,12deg) * -0.5px)) rotate(calc(var(--wing-deg,12deg) * -0.4));transition:transform .42s ease;}
+        <linearGradient id="czBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f2f5f8"/><stop offset="0.52" stop-color="#c2cad2"/><stop offset="1" stop-color="#525b64"/></linearGradient>
+        <linearGradient id="czLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#06080a"/></linearGradient>
+        <linearGradient id="czGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadeef"/><stop offset="1" stop-color="#0f1a22"/></linearGradient>
+        <radialGradient id="czHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
+        <filter id="czGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="czPrint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe6ec"/><stop offset="0.5" stop-color="#98a3ad"/><stop offset="1" stop-color="#4a525b"/></linearGradient>
+        <linearGradient id="czCarbon" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#282d33"/><stop offset="0.5" stop-color="#11151a"/><stop offset="1" stop-color="#282d33"/></linearGradient><style>
+          .grWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.85));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:86% 4%;transition:transform .6s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-42deg) translateY(-8px);}
-          #quadExhaustArt circle{fill:#8b929b;}
-          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#feExhGlow);}
+          #doorArt{transform-box:fill-box;transform-origin:30% 98%;transition:transform .8s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-36deg) translate(2px,-28px);}
+          #quadExhaustArt circle{fill:#b6bec6;}
+          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#czGlow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="300" rx="392" ry="20" fill="rgba(0,0,0,0.5)"/>
-
-      <!-- active rear wing on swan-neck pylons (stands up under braking) -->
-      <path d="M148,148 q6,-34 44,-44" fill="none" stroke="#20242b" stroke-width="8"/>
-      <path d="M236,148 q6,-34 34,-44" fill="none" stroke="#20242b" stroke-width="8"/>
-      <g id="rearWingArt">
-        <rect x="108" y="92" width="200" height="13" rx="5" fill="#15181d" stroke="#5c636c"/>
-        <rect x="108" y="92" width="200" height="4" rx="2" fill="rgba(224,36,42,0.7)"/>
-      </g>
+      <ellipse cx="500" cy="366" rx="392" ry="15" fill="rgba(0,0,0,0.5)"/>
+      <!-- the rear wing sits on ONE central pylon, well above the deck -->
+      <g id="rearWingArt"><path d="M189.6,163.2 L189.6,233.4" stroke="#39404a" stroke-width="11" stroke-linecap="round"/><path d="M311.2,163.2 L311.2,216.5" stroke="#39404a" stroke-width="11" stroke-linecap="round"/><path d="M149,153.2 L351.8,150.2 L351.8,163.2 L149,166.2 Z" fill="url(#czCarbon)" stroke="#7e8892" stroke-width="1.4"/><path d="M149,156.2 L351.8,153.2" fill="none" stroke="rgba(143,166,182,0.9)" stroke-width="2.4"/></g>
 
       <g id="bcBody">
-        <!-- exposed carbon lower body -->
-        <path d="M108,252 L108,214 Q140,206 210,202 Q310,196 390,188 Q440,180 476,162
-                 Q522,128 596,120 L662,120 Q750,128 806,148 Q864,166 902,194
-                 Q922,206 916,226 L902,240 Q840,232 760,232 L290,238 Q180,242 140,248 Z"
-              fill="url(#feBodyG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- rosso upper wedge -->
-        <path d="M290,196 Q390,186 440,176 Q480,166 476,162 Q522,128 596,120 L662,120 Q750,128 806,148 Q852,164 880,186
-                 L846,190 Q760,176 662,174 L476,180 Q380,186 290,196 Z"
-              fill="url(#feRossoG)" stroke="rgba(255,120,120,0.4)" stroke-width="1"/>
-        <!-- visor-style glasshouse -->
-        <path d="M492,160 Q526,130 594,124 L658,124 Q714,132 748,154 Q612,146 492,160 Z" fill="url(#feGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <!-- carbon blade along the flank (21C aero cut) -->
-        <path d="M420,214 Q560,204 760,208 L756,222 L424,228 Z" fill="#0a0c10" stroke="rgba(224,36,42,0.3)"/>
-        <!-- butterfly door cut -->
+        <path d="M110,324.7 L110,294.3 110,294.3 Q125.6,262.1 145.1,248.7 Q164.6,235.2 203.6,227.6 Q242.6,220 289.4,215.6 Q336.2,211.1 379.1,195 Q422,178.9 457.1,174 Q492.2,169 527.3,170.4 Q562.4,171.7 597.5,190.5 Q632.6,209.3 683.3,229.5 Q734,249.6 776.9,263 Q819.8,276.4 843.2,285.4 Q866.6,294.3 878.3,306 L890,317.6 L890,324.7 L793.8,324.7 A68 99.5 0 0 0 657.8,324.7 L342.2,324.7 A68 99.5 0 0 0 206.2,324.7 L110,324.7 Z" fill="url(#czBody)" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+        <path d="M371.3,204.8 Q425.9,177.1 451.3,174 Q476.6,170.8 505.9,173.1 Q535.1,175.3 570.2,191 L605.3,206.6 Z" fill="url(#czGlass)" stroke="#7a838c" stroke-width="1.4"/>
+        <path d="M334.2,322.7 L665.8,319.7 L661.8,337.7 L338.2,340.7 Z" fill="url(#czLow)" stroke="#454b52" stroke-width="1.2"/>
+        <!-- the sidepod: a huge radiator inlet outboard of the narrow fuselage -->
+        <path d="M285.5,240.6 Q344,222.7 402.5,229 L390.8,272.8 Q336.2,265.7 287.8,280 Z" fill="#06090c" stroke="#9aa6b2" stroke-width="1.8"/>
+        <g stroke="#454e57" stroke-width="1.6"><path d="M301.1,242.4 L390.8,237"/><path d="M299.5,254.9 L392.4,249.6"/><path d="M297.2,267.5 L390.8,262.1"/></g>
+        <!-- EXPOSED 3D-PRINTED WISHBONES: the whole point of the car, so they are visible -->
+        <g stroke="url(#czPrint)" stroke-width="6" stroke-linecap="round" fill="none">
+          <path d="M280.2,283.2 L351.8,249.6"/>
+          <path d="M280.2,305.2 L344,294.3"/>
+          <path d="M719.8,283.2 L656,258.5"/>
+          <path d="M719.8,305.2 L659.9,299.7"/></g>
+        <g fill="url(#czPrint)"><circle cx="351.8" cy="249.6" r="5"/><circle cx="656" cy="258.5" r="5"/></g>
+        <!-- the fuselage is narrow: the canopy sits on the centreline in a raised spine -->
+        <path d="M363.5,205.7 Q476.6,194.1 613.1,207.5" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="2.4"/>
+        <path d="M125.6,301.5 Q476.6,291.6 866.6,305.9 L866.6,331.9 L125.6,333.7 Z" fill="url(#czCarbon)" opacity="0.85"/>
+        <path d="M206.2,324.7 A68 99.5 0 0 1 342.2,324.7" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3.4"/><path d="M657.8,324.7 A68 99.5 0 0 1 793.8,324.7" fill="none" stroke="rgba(0,0,0,0.26)" stroke-width="3.4"/>
+        <!-- nose almost on the floor: a thin LED blade and a full-width splitter -->
+        <path d="M800.3,273.7 q36,-3 50,9" fill="none" stroke="#eef4f8" stroke-width="4.6" stroke-linecap="round"/>
+        <path d="M812,283.6 q30,-2 40,7" fill="none" stroke="rgba(143,166,182,0.75)" stroke-width="2"/>
+        <path d="M734,323.8 L889.2,320.3 L886.1,338.2 L730.1,339.9 Z" fill="url(#czCarbon)" stroke="#4c545e"/>
+        <path d="M691.1,316.7 l48,8 l-2,12 l-48,-8 Z" fill="url(#czCarbon)" stroke="#4c545e"/>
+        <g id="frontFlapArt"><rect x="675.5" y="334.6" width="44" height="6" rx="3" fill="#141317" stroke="rgba(143,166,182,0.5)"/></g>
+        <!-- the canopy-style door, hinged forward at the A-pillar -->
         <g id="doorArt">
-          <path d="M512,172 Q566,142 646,144 L718,164 L716,224 L518,228 Z" fill="rgba(120,40,44,0.30)" stroke="#6c757e" stroke-width="1.4"/>
-          <path d="M544,162 Q604,148 690,154" fill="none" stroke="rgba(240,180,180,0.4)" stroke-width="2"/>
+          <path d="M390.8,199.4 Q422,178.9 476.6,170.8 L535.1,175.3 L605.3,206.6 L609.2,287.1 L394.7,288.9 Z"
+                fill="rgba(255,255,255,0.07)" stroke="rgba(150,166,180,0.65)" stroke-width="1.3"/>
+          <path d="M414.2,247.8 Q500,240.6 593.6,249.6" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2.2"/>
+          <path d="M615.4,204.8 l19,-10 l2,13 l-19,5 Z" fill="url(#czCarbon)"/>
         </g>
-        <!-- S-DUCT nose slot + black visor band -->
-        <path d="M842,196 q30,-8 56,-2 L892,208 q-26,-6 -50,-2 Z" fill="#0a0c10" stroke="rgba(255,255,255,0.15)"/>
-        <path d="M868,180 q22,-2 34,6" fill="none" stroke="#dfe9ee" stroke-width="3.4" stroke-linecap="round"/>
-        <!-- front splitter + active front flap -->
-        <rect x="826" y="242" width="88" height="7" rx="3" fill="#05070a"/>
-        <g id="frontFlapArt"><rect x="790" y="214" width="42" height="6" rx="3" fill="#15181d" stroke="rgba(255,120,120,0.35)"/></g>
-        <!-- twin round tail pipes high in the nero tail -->
-        <g id="quadExhaustArt">
-          <circle cx="128" cy="216" r="8"/><circle cx="152" cy="216" r="8"/>
-        </g>
-        <!-- diffuser fins -->
-        <g stroke="#05070a" stroke-width="3">
-          <path d="M112,246 l0,12"/><path d="M134,246 l0,12"/><path d="M156,246 l0,12"/><path d="M178,246 l0,12"/>
-        </g>
-        <!-- 21C script + scudetto -->
-        <text x="600" y="214" font-family="ui-sans-serif" font-size="12" fill="#c9cfd6" letter-spacing="3">21C</text>
-        <rect x="462" y="204" width="14" height="18" rx="3" fill="#ffd23c" stroke="#0a0c10"/>
-        <path d="M466,209 l3,8 l3,-8" fill="none" stroke="#0a0c10" stroke-width="1.4"/>
-      </g>
-
-      <!-- wheels: carbon five-spoke -->
-      <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#e0242a" stroke-width="2"/>
-        <g class="feWeave"><g transform="translate(255,250)">
-          ${turbine()}
-        </g></g>
-        <circle cx="255" cy="250" r="15" fill="url(#feHub)"/>
+        <!-- tail: LED strip, and TWO stacked round pipes high in the centre -->
+        <path d="M113.1,262.1 L113.1,287.1" stroke="rgba(255,80,60,0.9)" stroke-width="7" stroke-linecap="round"/>
+        <g id="quadExhaustArt"><circle cx="147.4" cy="273" r="11"/><circle cx="177.1" cy="259.8" r="11"/></g>
+        <text x="250.4" y="272.8" font-family="ui-sans-serif" font-size="10" fill="#7b8792" letter-spacing="2.8">DIVERGENT DAPS</text>
+        <g transform="translate(461,276.4)"><rect x="-26" y="-9" width="52" height="18" rx="3" fill="#0c1116" stroke="#8fa6b6" stroke-width="1.3"/><text x="0" y="4" text-anchor="middle" font-family="ui-sans-serif" font-size="10" font-weight="800" fill="#d6e6f0">21C</text></g>
       </g>
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/><circle cx="745" cy="250" r="52" fill="none" stroke="#e0242a" stroke-width="2"/>
-        <g class="feWeave"><g transform="translate(745,250)">
+        <circle cx="274.2" cy="287.2" r="60.8" fill="#0a0b0e"/><circle cx="274.2" cy="287.2" r="60.8" fill="none" stroke="#8fa6b6" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(274.2,287.2) scale(1.2)">
           ${turbine()}
         </g></g>
-        <circle cx="745" cy="250" r="15" fill="url(#feHub)"/>
+        <circle cx="274.2" cy="287.2" r="13.4" fill="url(#czHub)"/>
       </g>
-    </svg>`;
+      <g>
+        <circle cx="725.8" cy="287.2" r="60.8" fill="#0a0b0e"/><circle cx="725.8" cy="287.2" r="60.8" fill="none" stroke="#8fa6b6" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(725.8,287.2) scale(1.2)">
+          ${turbine()}
+        </g></g>
+        <circle cx="725.8" cy="287.2" r="13.4" fill="url(#czHub)"/>
+      </g>
+    </svg>
+    `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
@@ -2402,55 +2409,76 @@ const SPEC = {
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Czinger 21C cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Czinger 21C tandem cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="rossoSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8474c"/><stop offset="1" stop-color="#6e0a0e"/></linearGradient>
-        <linearGradient id="neroSeatG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33383f"/><stop offset="1" stop-color="#101216"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#301416"/><stop offset="1" stop-color="#0d0607"/></linearGradient>
-      </defs>
+        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#05080d"/></linearGradient>
+        <linearGradient id="czPrintI" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe6ec"/><stop offset="0.5" stop-color="#98a3ad"/><stop offset="1" stop-color="#4a525b"/></linearGradient>
+        <linearGradient id="czSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#0b0d10"/></linearGradient>
+        <linearGradient id="czScr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1520"/><stop offset="1" stop-color="#04070b"/></linearGradient></defs>
       <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.16" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-      <!-- slim F1-style cluster ahead of the driver (offset left — the “1+” asymmetry) -->
-      <rect x="150" y="52" width="420" height="104" rx="14" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-      <rect x="168" y="64" width="384" height="80" rx="8" fill="url(#screenG)" stroke="rgba(224,36,42,0.6)"/>
-      <text x="360" y="102" text-anchor="middle" font-size="26" font-weight="700" fill="#ffe9ea" id="tachGearArt">N</text>
-      <text x="360" y="132" text-anchor="middle" font-size="10" fill="#ff9a9a" letter-spacing="3">GIRI · 9000</text>
-      <circle cx="360" cy="100" r="1" fill="none" id="tachArt"/>
-      <!-- passenger side kept bare carbon (weight!) with a grab handle -->
-      <rect x="640" y="86" width="210" height="12" rx="6" fill="#15181d" stroke="rgba(255,255,255,0.14)"/>
-      <text x="745" y="128" text-anchor="middle" font-size="9" fill="#7a838d" letter-spacing="2">CARBONIO A VISTA</text>
-      <!-- driver seat: rosso, mounted forward -->
-      <g transform="translate(360,246)">
-        <rect x="-46" y="-38" width="92" height="132" rx="20" fill="url(#rossoSeatG)" stroke="rgba(0,0,0,0.35)"/>
-        <path d="M-30,-20 L30,-20 M-30,8 L30,8 M-30,36 L30,36" stroke="rgba(0,0,0,0.35)"/>
-        <text x="0" y="112" text-anchor="middle" font-size="9" fill="#c98a8d" letter-spacing="2">PILOTA</text>
+      <g opacity="0.12" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
+
+      <!-- the tub is NARROW: printed structure is visible outboard on both sides -->
+      <g stroke="url(#czPrintI)" stroke-width="7" stroke-linecap="round" fill="none">
+        <path d="M96,120 L164,196 L120,286"/><path d="M96,196 L164,196"/>
+        <path d="M904,120 L836,196 L880,286"/><path d="M904,196 L836,196"/></g>
+      <g fill="url(#czPrintI)"><circle cx="164" cy="196" r="7"/><circle cx="836" cy="196" r="7"/></g>
+      <text x="130" y="316" text-anchor="middle" font-size="6.5" fill="#6d7883" letter-spacing="1.2">PRINTED NODE</text>
+      <text x="870" y="316" text-anchor="middle" font-size="6.5" fill="#6d7883" letter-spacing="1.2">PRINTED NODE</text>
+
+      <!-- narrow dash across the centreline only -->
+      <path d="M300,64 Q500,48 700,64 L700,96 Q500,80 300,96 Z" fill="#0c1015" stroke="#2b3138" stroke-width="1.4"/>
+
+      <!-- the driver's strip display sits on the CENTRELINE, above the wheel -->
+      <g transform="translate(500,132)">
+        <rect x="-124" y="-38" width="248" height="72" rx="7" fill="url(#czScr)" stroke="rgba(143,166,182,0.6)" stroke-width="1.8" id="tachArt"/>
+        <g stroke="#2b3a46" stroke-width="5" stroke-linecap="round"><path d="M-104,-20 L104,-20"/></g>
+        <path d="M-104,-20 L26,-20" stroke="#8fa6b6" stroke-width="5" stroke-linecap="round"/>
+        <path d="M52,-20 L104,-20" stroke="#e2534a" stroke-width="5" stroke-linecap="round"/>
+        <text x="0" y="18" text-anchor="middle" font-size="28" font-weight="800" fill="#e8f0f6" id="tachGearArt">N</text>
+        <text x="-104" y="26" font-size="6.5" fill="#69808f">11,000 rpm</text>
+        <text x="104" y="26" text-anchor="end" font-size="6.5" fill="#69808f">E-AXLE · V8</text>
       </g>
-      <!-- passenger seat: nero, offset BACK into the hull -->
-      <g transform="translate(700,282)">
-        <rect x="-42" y="-26" width="84" height="104" rx="18" fill="url(#neroSeatG)" stroke="rgba(0,0,0,0.35)"/>
-        <text x="0" y="96" text-anchor="middle" font-size="8" fill="#7a838d" letter-spacing="2">PASSEGGERO +</text>
+
+      <!-- THE PASSENGER SEAT IS BEHIND THE DRIVER, not beside: drawn above and smaller -->
+      <g transform="translate(500,206) scale(0.78)">
+        <path d="M-44,-26 Q-48,-36 -32,-38 L32,-38 Q48,-36 44,-26 L48,62 L-48,62 Z" fill="url(#czSeat)" stroke="#3a3f46"/>
+        <path d="M-16,-32 L-6,50 M16,-32 L6,50" stroke="rgba(143,166,182,0.55)" stroke-width="3"/>
       </g>
-      <!-- centre bridge with the e-manettino + START -->
-      <g id="shifterArt" transform="translate(524,236)">
-        <rect x="-24" y="-36" width="48" height="110" rx="12" fill="#0c0f14" stroke="url(#aluG)" stroke-width="2"/>
-        <g fill="url(#aluG)"><circle cx="0" cy="-16" r="6"/><circle cx="0" cy="4" r="6"/><circle cx="0" cy="24" r="6"/></g>
-        <line x1="0" y1="50" x2="0" y2="8" stroke="url(#aluG)" stroke-width="5" id="leverArt"/>
-        <circle cx="0" cy="56" r="9" fill="url(#aluG)"/>
+      <text x="500" y="176" text-anchor="middle" font-size="6.5" fill="#6d7883" letter-spacing="1.4">PASSENGER — DIRECTLY BEHIND THE DRIVER</text>
+
+      <!-- the driver's seat, on the centreline, with a six-point harness -->
+      <g transform="translate(500,286)">
+        <path d="M-50,-30 Q-54,-42 -36,-44 L36,-44 Q54,-42 50,-30 L54,74 L-54,74 Z" fill="url(#czSeat)" stroke="#3a3f46"/>
+        <path d="M-20,-38 L-8,56 M20,-38 L8,56" stroke="rgba(143,166,182,0.7)" stroke-width="4"/>
+        <path d="M-8,56 L8,56" stroke="rgba(143,166,182,0.7)" stroke-width="4"/>
       </g>
-      <g transform="translate(640,232)"><rect x="-24" y="-16" width="48" height="32" rx="6" fill="#0c0f14" stroke="url(#aluG)"/><circle cx="0" cy="0" r="10" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="26" text-anchor="middle" font-size="6" fill="#9aa2ab">START</text></g>
-      <!-- 21C squared wheel, offset to the driver -->
-      <g id="cabinWheelG" transform="translate(360,300)">
-        <path d="M-56,-34 L56,-34 M-56,34 L56,34" stroke="#101216" stroke-width="14" stroke-linecap="round"/>
-        <path d="M-56,-34 A56,56 0 0 0 -56,34 M56,-34 A56,56 0 0 1 56,34" fill="none" stroke="#101216" stroke-width="14"/>
-        <path d="M-12,-34 L12,-34" stroke="#e0242a" stroke-width="6"/>
-        <line x1="0" y1="0" x2="-50" y2="4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="50" y2="4" stroke="#171a20" stroke-width="8"/>
-        <line x1="0" y1="0" x2="0" y2="30" stroke="#171a20" stroke-width="8"/>
-        <circle r="14" fill="#ffd23c" stroke="#0a0c10" stroke-width="1.6"/><text x="0" y="4" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="#0a0c10">21C</text>
+
+      <!-- sequential selector on the right-hand tub wall, with the paddles beside it -->
+      <g id="shifterArt" transform="translate(690,270)">
+        <path d="M-30,-24 L30,-24 L34,48 L-34,48 Z" fill="#0b0e12" stroke="url(#czPrintI)" stroke-width="1.4"/>
+        <rect x="-13" y="-16" width="26" height="38" rx="3" fill="#06080b" stroke="#3a424b"/>
+        <line x1="0" y1="22" x2="0" y2="-4" stroke="url(#czPrintI)" stroke-width="6" id="leverArt"/>
+        <circle cx="0" cy="-10" r="9" fill="#1a1f25" stroke="url(#czPrintI)" stroke-width="1.6"/>
+        <text x="0" y="38" text-anchor="middle" font-size="6.5" fill="#77828d">7-SPEED SEQ</text>
       </g>
-    </svg>`;
+      <g transform="translate(310,264)"><rect x="-28" y="-18" width="56" height="36" rx="4" fill="#0b0e12" stroke="url(#czPrintI)"/><circle cx="0" cy="0" r="11" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6" fill="#ffd7d7">START</text></g>
+
+      <!-- rectangular race wheel with the screen in the boss and two paddles behind it -->
+      <g id="cabinWheelG" transform="translate(500,300)">
+        <path d="M-58,-26 L-20,-26 L-20,-6 L20,-6 L20,-26 L58,-26 L58,20 Q58,34 42,34 L-42,34 Q-58,34 -58,20 Z"
+              fill="#12171d" stroke="url(#czPrintI)" stroke-width="2.4"/>
+        <rect x="-26" y="-20" width="52" height="26" rx="3" fill="url(#czScr)" stroke="rgba(143,166,182,0.7)" stroke-width="1.2"/>
+        <text x="0" y="-2" text-anchor="middle" font-size="8" font-weight="800" fill="#a9c6da">21C</text>
+        <g fill="#0a0d11" stroke="url(#czPrintI)" stroke-width="1.2">
+          <rect x="-50" y="0" width="18" height="9" rx="3"/><rect x="-50" y="14" width="18" height="9" rx="3"/>
+          <rect x="32" y="0" width="18" height="9" rx="3"/><rect x="32" y="14" width="18" height="9" rx="3"/></g>
+        <g fill="#8fa6b6"><rect x="-70" y="-14" width="12" height="30" rx="4"/><rect x="58" y="-14" width="12" height="30" rx="4"/></g>
+      </g>
+    </svg>
+    `;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -2518,13 +2546,15 @@ const SPEC = {
   function toggleDrs() {
     const next = !state.drs;
     state.drs = next; setActive("drsBtn", next);
+    SPEC.peakPowerW = next ? SPEC.vmaxPowerW : 932000;
     if (next) {
-      state.aeroAuto = true;            // wing managed (flat) by the DRS logic
-      audio.motor(0.7); audio.click(2200);
-      showToast("DRS open — wing flat, low-drag trim. Downforce is gone: brake early.", "21C");
+      state.aeroAuto = true;            // the wing is laid flat by the V Max logic
+      if (state.driveMode !== "race") setMode("race");
+      audio.motor(0.8); audio.whoosh(0.6); audio.chime([440, 587, 740, 988]);
+      showToast("V Max configuration — wing flat, 1,350 hp, geared for 452 km/h. Downforce is gone: brake much earlier.", "21C");
     } else {
-      audio.motor(0.5);
-      showToast("DRS closed — wing back to High-Downforce trim.", "21C");
+      audio.motor(0.5); audio.click(1800);
+      showToast("Track configuration — wing back up, 1,250 hp, full downforce.", "21C");
     }
   }
   function toggleLights() { state.lights = !state.lights; audio.click(state.lights ? 760 : 520); showToast(state.lights ? "Headlamps on — the beam lights the road." : "Headlamps off."); }
@@ -2675,7 +2705,7 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.drs) warn.push("DRS OPEN · wing flat — brake early");
+    if (state.drs) warn.push("V MAX");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
@@ -2728,7 +2758,7 @@ const SPEC = {
     if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
     state.drsVis = lerp(state.drsVis, state.drs ? 1 : 0, 0.1);                          // DRS wing-flat visual
-    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 ${(state.drsVis * 3).toFixed(1)}) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 255 250)`);
+    if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 ${(state.drsVis * 3).toFixed(1)}) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 274.2 287.2)`);
 
     // engine art
     const turboRot = (state.time * (400 + state.boostBar * 3400)) % 360;   // turbochargers spool instantly
@@ -2751,7 +2781,7 @@ const SPEC = {
 
     // cabin svg
     const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(360,300) rotate(${(state.steer * 90).toFixed(1)})`);
+    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(500,300) rotate(${(state.steer * 90).toFixed(1)})`);
     const leverArt = document.getElementById("leverArt"); if (leverArt) leverArt.setAttribute("transform", `rotate(${state.shiftTimer > 0 ? 10 : 0})`);
     const startArt = document.getElementById("startArt"); if (startArt) startArt.setAttribute("fill", state.ignition ? "#1f7a3a" : "#7a1f1f");
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
