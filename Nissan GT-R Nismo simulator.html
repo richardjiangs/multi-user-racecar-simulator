@@ -941,13 +941,13 @@ const SPEC = {
   finalDrive: 3.70,
   gearRatios: [4.06, 2.30, 1.60, 1.25, 1.00, 0.80],               // 6-speed GR6 dual-clutch
   reverseRatio: 3.38,
-  wheelRadiusM: 0.343,          // 285/30 ZR20 rear
+  wheelRadiusM: 0.354,         // 285/35 ZRF20 rear
   dragCd: 0.26,                 // Nissan quote Cd 0.26 for the R35
   frontalAreaM2: 2.13,
   rollingResistance: 0.013,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 1.132479,     // calibrated -> 0–100 km/h = 2.7000 s ±0.0001 (ATTESA launch control; see tests/perf-test.mjs)
+  tractionCoeff: 1.317327,     // calibrated -> 0–100 km/h = 2.7000 s ±0.0001 (ATTESA launch control; see tests/perf-test.mjs)
   topSpeedKmh: 315,             // 196 mph (Nissan)
   topSpeedMps: 315 * KMH,
   topSpeedLimitedKmh: 315,
@@ -958,7 +958,7 @@ const SPEC = {
   brakeMaxMps2: 12.1113,        // Brembo carbon-ceramic; calibrated to 33.0 m 100-0 km/h
   brakeDist100to0M: 34,         // target 100-0 km/h braking distance
   shiftTimeS: 0.10,             // ZF 8HP torque-converter automatic
-  launchRpm: 3000,
+  launchRpm: 4500,           // Nissan launch control holds ~4,500 rpm in R mode
   aeroClA: 0.22,                // fixed rear wing
   aeroDragAdd: 0.04             // fixed wing — little variable trim
 };
@@ -1292,7 +1292,17 @@ const SPEC = {
   function updateTransmission(dt) {
     if (state.manualHold > 0) state.manualHold -= dt;
     if (state.shiftTimer > 0) { state.shiftTimer -= dt; return; }
-    if (state.gearMode !== "G" || state.launchActive) return;
+    if (state.gearMode !== "G") return;
+    if (state.launchActive) {
+      // A real launch runs each gear to the limiter and shifts there. Letting the box
+      // work during the launch is what stops a short-geared car (Supra, Evo, GT-R, M5)
+      // sitting on the rev limiter in 1st and then snapping 1->2->3 in one instant when
+      // launch control released at its fixed 33 m/s.
+      if (gearedRpm(state.curGear) > SPEC.redlineRpm * 0.995 && state.curGear < SPEC.gearRatios.length) {
+        state.shiftFrom = state.curGear; state.curGear++; state.shiftTimer = SPEC.shiftTimeS; audio.clunk(240);
+      }
+      return;
+    }
     const m = mode();
     const rpm = gearedRpm(state.curGear);
     const holdForCorner = Math.abs(state.curvature) > 0.013 && state.speedMps > 12;
@@ -2910,7 +2920,9 @@ const SPEC = {
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (speed >= 245) warn.push("approaching the 250 km/h limiter");
+    // 315 km/h is the R35's real top speed, not a limiter, so there is no limiter to warn about — just the ceiling
+    const speedCapKmh = Math.round((state.raceAero ? SPEC.topSpeedRecordMps : SPEC.topSpeedMps) * 3.6);
+    if (speed >= speedCapKmh * 0.98) warn.push(`approaching ${speedCapKmh} km/h`);
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
