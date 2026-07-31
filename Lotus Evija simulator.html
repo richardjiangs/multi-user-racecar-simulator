@@ -1102,7 +1102,7 @@ const SPEC = {
       };
       this.windNode = mkNoise("lowpass", 520);  this.windGain = this.windNode.g;
       this.roadNode = mkNoise("bandpass", 190, 0.8); this.roadGain = this.roadNode.g;
-      this.turboNode = mkNoise("bandpass", 2400, 5); this.turboGain = this.turboNode.g;  // turbo whistle
+      this.turboNode = mkNoise("bandpass", 800, 1); this.turboGain = this.turboNode.g;  // no induction at all on an EV
 
       this.musicGain = c.createGain(); this.musicGain.gain.value = 0; this.musicGain.connect(this.master);
       this.ready = true;
@@ -1127,8 +1127,8 @@ const SPEC = {
 
       const engLevel = (0.02 + load * 0.26 + rpmN * 0.30) * valve * modeGain;   // quiet EV — whine rises with speed
       const cutoff = 500 + s.rpm * 0.5 + load * 2600;
-      const turbo = clamp(s.boostBar, 0, 1.4) * (0.06 + rpmN * 0.30);           // inverter hiss follows power
-      const turboFreq = 2400 + rpmN * 7600;
+      const turbo = 0;   // an electric drivetrain does not breathe
+      const turboFreq = 800 + rpmN * 520;   // intake resonance rises a little with revs
       const wind = clamp((spd - 6) / 70, 0, 1) * (s.windowsOpen ? 0.22 : 0.12);
       const windFreq = 420 + spd * 16;
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);

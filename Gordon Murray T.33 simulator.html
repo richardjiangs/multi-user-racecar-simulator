@@ -1102,7 +1102,7 @@ const SPEC = {
       };
       this.windNode = mkNoise("lowpass", 520);  this.windGain = this.windNode.g;
       this.roadNode = mkNoise("bandpass", 190, 0.8); this.roadGain = this.roadNode.g;
-      this.turboNode = mkNoise("bandpass", 2400, 5); this.turboGain = this.turboNode.g;  // turbo whistle
+      this.turboNode = mkNoise("bandpass", 700, 0.9); this.turboGain = this.turboNode.g;  // intake rush: low, broad and quiet — an NA engine has no whistle
 
       this.musicGain = c.createGain(); this.musicGain.gain.value = 0; this.musicGain.connect(this.master);
       this.ready = true;
@@ -1132,8 +1132,8 @@ const SPEC = {
       const seqHand = 4000, seqBand = 700;
       const seq = clamp((s.rpm - seqHand) / seqBand, 0, 1);            // 0 = single, 1 = both blowing
       s.seqStage = seq;                                                 // read by the HUD flag
-      const turbo = clamp(s.boostBar, 0, 1.4) * (0.10 + rpmN * 0.42) * (1 + seq * 0.55) * (s.exhaustValve ? 1 : 0.8);
-      const turboFreq = 1050 + rpmN * 2600 + s.boostBar * 800 + seq * 2100;
+      const turbo = clamp(s.throttle, 0, 1) * 0.055 * (0.15 + rpmN * 0.85) * (s.exhaustValve ? 1 : 0.8);
+      const turboFreq = 700 + rpmN * 520;   // intake resonance rises a little with revs
       const wind = clamp((spd - 6) / 70, 0, 1) * (s.windowsOpen ? 0.22 : 0.12);
       const windFreq = 420 + spd * 16;
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
