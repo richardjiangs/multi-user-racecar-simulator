@@ -5,9 +5,9 @@
 > car end-to-end, the ordering rules, and the hard-won warnings from building the 24-car garage.
 > When they disagree, `CLAUDE.md` wins and should be updated.
 
-The garage is **36 self-contained HTML simulators** + `index.html` (the garage shell that
-base64-embeds all 36). Today: **19 road cars/hypercars** then the **11-team 2026 F1 grid**
-then the **four 2026 Dakar Rally raid cars**.
+The garage is **47 self-contained HTML simulators** + `index.html` (the garage shell that
+lazily loads all 47, base64-embedding them only for `file://`). Today: **24 road cars/hypercars**
+then the **11-team 2026 F1 grid** then the **four 2026 Dakar Rally raid cars**.
 Every sim shares one template; you add a car by **cloning the closest existing sim and
 changing only the per-car deltas**, never by writing a sim from scratch.
 
@@ -161,6 +161,100 @@ Playwright resolves from the global npm root.
 
 ---
 
+
+---
+
+## 4b. GEARING — the rules a clone will otherwise get wrong
+
+Four separate bugs in one round all came from gearing copied off a donor car and never
+re-derived. Check every one of these on any car you add or clone.
+
+### The gear ladder
+
+**Rule:** the gear that carries top speed must reach the car's REAL top speed at about its
+power peak — near the rev limiter on a racing car, at peak power on a road car that cruises
+in an overdrive top. Build the rest as a geometric ladder down from it, and check where
+FIRST gear ends up: it has to be a speed a driver would really use it to.
+
+Speed at the limiter in gear `g` is
+
+    v_kmh = redlineRpm x (2 x PI x wheelRadiusM x 60 / 1000) / (g x finalDrive)
+
+Sanity numbers for first gear: a saloon or sports car 55-100 km/h; a hypercar with a long
+first 100-130; **only** the genuinely long-geared exceptions (McLaren F1 132, a Le Mans
+Porsche 917 142, an F1 car 125) go higher. If first gear runs to 150+ km/h the ladder is
+stretched and several gears will sit above the car's own top speed, unusable.
+
+Diagnostic — top-gear-at-limiter divided by real top speed:
+
+| value | meaning |
+|---|---|
+| ~1.0-1.2 | racing car, revs its top gear out. Correct. |
+| ~1.2-1.6 | road car with an overdrive top (ZF 8HP and friends). Correct. |
+| **> 1.7** | **stretched — rebuild the ladder.** |
+
+Ratios from a published table always beat ratios you invent. Where a manufacturer does not
+publish them (GMA, Czinger), derive from the rule above and say so in the comment.
+
+### Shift points
+
+`modeMap[mode].upRpm` must sit **just under `redlineRpm`** (race ~0.93x, sport ~0.79x,
+wet ~0.56x), and `downRpm` well below. A clone that keeps the donor's numbers on a
+different engine will not shift until roughly `donorRedline / newRedline` times the right
+speed. The Dakar cars carried the F1 grid's `upRpm: 14600` on a 7,200 rpm engine.
+
+### Gear count — never hardcode it
+
+Always `SPEC.gearRatios.length`, never a literal. This has bitten three times: an 8 in the
+shift logic on six-speed cars, and a 1 in all four EVs (from when every one really was
+single-speed) which silently prevented the Taycan's real two-speed axle from ever shifting.
+
+### Launch control must not block the gearbox
+
+`updateTransmission` returns early while `state.launchActive`. If launch also releases at a
+fixed speed, any car whose first gear ends before that sits on the limiter and then dumps
+two or three shifts in one instant — gear 2 appears for one `shiftTimeS` and looks skipped.
+A real launch shifts **at the limiter**, so the box is allowed to upshift during a launch.
+
+### Anything keyed to engine/motor rpm
+
+If a model uses rpm as a stand-in for something that is really a function of ROAD SPEED
+(aero load, battery draw, a speed limiter), it silently breaks the moment the gearing
+changes. The Taycan's battery taper was keyed to motor rpm and had to be re-keyed to speed
+when it gained a second ratio. Prefer road speed for anything the gearbox sits in front of.
+
+---
+
+## 4c. THE CLONE AUDIT (run it every single time)
+
+A new car starts as a copy of the closest existing sim, so **the default state of every
+value in it is "wrong until re-derived"**. After cloning, grep the new file for the donor's
+fingerprints and fix each one:
+
+```sh
+# donor engine, model and trim names
+grep -nE "2JZ|B58|VR38|S70/2|4B11|LT7|Fury|Speed Key|Track Pack|E85|Velocity|Targa" NEW.html
+# donor figures hiding in comments and toasts
+grep -nE "[0-9]{3} (PS|hp|Nm)|[0-9]\.[0-9] s|[0-9]{3} km/h" NEW.html
+# hardcoded speeds/rpm that should come from SPEC
+grep -nE "speed >= [0-9]+|> 33|upRpm: [0-9]+|curGear < [0-9]" NEW.html
+```
+
+Things that have actually shipped wrong this way: a 1993 McLaren F1 offering a "Targa Roof
+Panel" and an "8.8-inch touchscreen"; every toast in six files calling a V12 "the V6"; a
+GT-R announcing a 250 km/h limiter it does not have, from 245 km/h, forever; header
+comments citing the donor's power, torque, mass and 0-100; the Taycan carrying the Tesla's
+quarter-mile time. **Generate the header comments from the file's own SPEC** so they cannot
+drift.
+
+Also verify per car, not by eye:
+
+- **art geometry is actually different** — hash the `d="..."` attributes of the exterior and
+  cockpit SVGs across all cars; recoloured donor art hashes identically.
+- **homepage card markup matches** — the class names and child elements, not just the look.
+  A card using `class="card-actions"` where every other card uses `actions` gets no styling
+  at all.
+
 ## 5. The homepage card (`index.html`)
 
 - **Normal cars → real photo.** Use a Wikimedia Commons file via
@@ -258,7 +352,7 @@ session was made safely. Keep anchors long enough to be unique across files.
    in the map's own integration but the driving world uses the opposite sign. When placing the
    apex dot / racing line, **verify the side empirically** (project both ±offsets and compare to
    the drawn inside kerb on screen) and lock it with a regression test.
-9. **`TRACK_WIDTH_SCALE` is 3.75** in all 36 sims (×1.5 wider). Keep it consistent if you clone.
+9. **`TRACK_WIDTH_SCALE` is 3.75** in all 47 sims (×1.5 wider). Keep it consistent if you clone.
 10. **Real photos vs liveries**: never publish a page that fakes a real photo of a liveried racer;
     use SVG. (General rule: don't impersonate real orgs/records.)
 11. **Don't re-derive facts** — the numbers below and in `CLAUDE.md` are researched and calibrated.
@@ -298,6 +392,6 @@ the 101 courses, width ×1.5, per-team July-2026 data, the drive-in pit with X-r
 
 ## 11. Quick reference — factory figures already encoded
 
-See the table in `CLAUDE.md` ("The cars — factory figures encoded in `SPEC`") for all 36 cars'
+See the table in `CLAUDE.md` ("The cars — factory figures encoded in `SPEC`") for all 47 cars'
 power/torque/0-100/top-speed/box/mass, and the Real-Mode sections for the per-team constants,
 pit-crew times, garage order, reliability and ERS characters. Reuse them; only research the new car.

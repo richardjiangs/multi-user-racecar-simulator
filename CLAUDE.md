@@ -349,6 +349,34 @@ Audi fastest recharge, Red Bull slipperiest X-mode 0.34, Cadillac smallest store
 ERS bar + X-MODE/OVERRIDE flags draw in `drawTelemetry`; keys listed in the help
 panel. Perf-test never holds X/V, so the certified figures are untouched.
 
+
+## Gearbox invariants (learned the hard way — check these on every car)
+
+These four are the ones a cloned car gets wrong silently. `docs/ADDING_CARS.md` §4b has the
+full derivation; the short form:
+
+1. **The ladder** — the top-speed gear reaches the car's REAL top speed at about its power
+   peak; geometric ladder down from it; **first gear must top out somewhere a driver would
+   use it** (55-100 km/h normally, 100-130 for a long-geared hypercar, higher only for the
+   genuine exceptions: McLaren F1 132, Porsche 917 142, an F1 car 125). Diagnostic:
+   top-gear-at-limiter ÷ real top speed should be ~1.0-1.2 (racer) or ~1.2-1.6 (road car
+   with an overdrive top). **Above 1.7 the ladder is stretched** and gears sit above the
+   car's own top speed, unusable.
+2. **Shift points** — `modeMap.race.upRpm` just under `redlineRpm` (~0.93x), sport ~0.79x,
+   wet ~0.56x. A donor's numbers on a different engine shift at the wrong speed by the ratio
+   of the two redlines.
+3. **Gear count** — always `SPEC.gearRatios.length`, **never a literal**. A hardcoded 8 broke
+   six-speed cars; a hardcoded 1 in the four EVs stopped the Taycan's real two-speed axle
+   from ever shifting.
+4. **Launch control must let the box shift** (at the limiter). If it blocks shifting and
+   releases at a fixed speed, a short-geared car sits on the limiter and then dumps two or
+   three shifts at once — gear 2 flashes past in one `shiftTimeS` and looks skipped.
+
+Related: **anything keyed to engine/motor rpm that is really a function of road speed**
+(aero load, battery draw, a limiter warning) breaks when the gearing changes. Key it to
+speed. And **generate the header comments from the file's own SPEC** so they cannot drift
+from the numbers perf-test certifies.
+
 ## index.html — garage + online race shell
 
 - Thirty-six `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
