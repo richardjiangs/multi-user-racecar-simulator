@@ -76,6 +76,34 @@ const check = (label, ok, detail) => {
     unexpected.length ? "UNEXPECTED SHARED VOICE: " + unexpected.join("  //  ") : "");
 }
 
+/* ---------- no car may hiss ----------
+   Every sim carried the same induction node — band-passed white noise at 2.4 kHz, Q=5,
+   which is exactly a "shhhhh" — driven by boostBar, which the cloned physics computes on
+   EVERY car. So a naturally-aspirated 1962 Colombo V12 built 1.35 bar of imaginary boost
+   and hissed all the way, and the 0.10 floor term meant it never fully stopped. A turbo
+   whistle is narrow and high; intake rush on an NA engine is low, broad and quiet; an EV
+   has no induction at all. Assert the filter matches the engine. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const NA = /250 GTO|Porsche 917|300 SLR|DB5|R8 V10|McLaren F1 1993|T\.33|Valkyrie|Revuelto|918 Spyder|Ford Raptor/;
+  const EVc = /Tesla|Taycan|Evija|Nevera|Yangwang/;
+  const bad = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const m = src.match(/this\.turboNode = mkNoise\("bandpass", ([\d.]+), ([\d.]+)\)/);
+    const gain = (src.match(/const turbo = ([^;]*);/) || [])[1] || "";
+    const name = f.replace(/ simulator\.html/i, "");
+    if (!m) { bad.push(name + ": no induction node"); continue; }
+    const freq = +m[1], q = +m[2];
+    if (freq >= 1800 && freq <= 3200 && q >= 3) bad.push(name + ": 2.4 kHz hiss band is back");
+    if (/turboGain = this\.turboNode\.g/.test(src) === false) bad.push(name + ": turboGain assignment lost");
+    if (EVc.test(name) && !/^0\b/.test(gain.trim())) bad.push(name + ": an EV must have no induction noise");
+    if (NA.test(name) && /boostBar/.test(gain)) bad.push(name + ": naturally aspirated but driven by boost");
+    if (NA.test(name) && freq > 1200) bad.push(name + ": NA intake should be low, not a whistle");
+  }
+  check("induction noise matches each engine (no hiss, no fake turbos)", bad.length === 0, bad.join(" | "));
+}
+
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const pageErrors = [];
