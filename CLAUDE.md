@@ -223,11 +223,54 @@ hypercar grid**, and both losable:
   Furka Pass above Andermatt. Goldfinger's **Rolls-Royce Phantom III (AU 1)** is the target
   you must not lose, **Tilly Masterson's white Ford Mustang** shoots at you, and three
   **Auric Enterprises** guards follow, one of which will board you.
-- **Mission — Docks & Rig** — the infiltration run: coast road, dock gate, up the loading
-  ramp onto a tanker deck, out the causeway to an offshore rig and back to the fuel depot,
-  hunted throughout.
+- **Mission — Oil Platform, Pacific** — the **Cars 2 opening**, researched and rebuilt. This
+  one is **not a circuit** and has no corners named after scenery: it is a **ten-stage state
+  machine** (`SEA_STAGES`, module scope so the renderer sees it too) on an 11.6 km spine, and
+  each stage has its **own surface, own furniture, own rule for letting you move on and own
+  way of killing you**. See below.
 
-`MISSIONS` gives each stage a brief, a time limit, a damage allowance and five objectives;
+**The Cars 2 opening, stage by stage** — the sequence in the film: Finn is aboard the crab
+boat **Crabby**; **Tony Trihull** (a combat ship drawn from *USS Independence* LCS-2 — a
+127.4 m aluminium trimaran, 44 kn, hull number 02) puts his light and his gun on Crabby and
+orders him off; Finn is already on Tony's transom on his harpoons; at the platform he hooks
+the barrier, releases Tony, switches to **steel magnet wheels** and drives up a leg; under the
+deck he hangs and photographs **Professor Zündapp's box** and the crate holding what is left
+of **Agent Leland Turbo**; he is seen; then oil, fire, rockets, the span he drops behind him,
+the helipad, off the edge, hydrofoils, Tony's torpedo — and **four tyres left floating** so
+everyone is sure they killed him. Then the submarine.
+
+| stage | you are driving on | what has to happen | how you lose it |
+|---|---|---|---|
+| `crabby` | Crabby's timber deck, bulwarks, pots | harpoon into Tony's transom (**G**) | Tony fires on Crabby (34 s) |
+| `ride` | Tony's non-skid flight deck, both amas, the 57 mm | second harpoon onto the rig (**G**) | he carries you past the platform |
+| `climb` | the braced leg face, sea dropping away | **magnets on (M)** | magnets off ⇒ you slide and fall |
+| `lip` | the underside of the main deck, girders overhead | **camera up (P)**, frame with A/D, three shutters | magnets off, or 70 s hanging there |
+| `chase` | open steel grating, modules, floods | **oil (5) then a round through it (2)** | they run you down |
+| `bridge` | a through truss with nothing either side | **limpet (K)**, and be clear | still on the span when it goes |
+| `helipad` | the pad, the H, the deck edge | **hydrofoils down (F)** | over the edge with the wheels down |
+| `water` | open sea, foilborne, Tony astern | stay off his line | his guns |
+| `dead` | same, torpedo running | **eject the four tyres (J)** | the torpedo finds a car, not a decoy |
+| `sub` | submerged — light shafts, particulate, sonar | **dive (J)** | — |
+
+Finn's kit is **mission-only** (`seaFire(what)`, and `onSea()` gates all of it), so the
+certified DB5 figures never see it: **G** harpoon · **M** magnet wheels · **P** spy camera ·
+**B** tail rockets · **K** limpet charge · **F** hydrofoils · **J** tyres/dive. Each has its own
+synthesised sound built from the mechanism (`seaHarpoon` is a gas launch plus a wire paying
+out; `seaMagnet` is a contactor closing then a 100 Hz field; `seaShutter` is a leaf blade then
+a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
+`updatePhysics`, `stageForce()` adds the grade on the leg and the water drag on the sea,
+`stageCapMps()` caps each stage, and `drawStage(w,h,pal)` paints the surface.
+
+**The mirror** (`drawMirror`) — everything Q Branch and Finn drop happens **behind** the car,
+and the draw code used to call `projectAhead(-rel)`, a *positive* distance, so every oil slick
+and smoke puff was painted **in front of you**, receding up the road you were driving into.
+The physics was always right; only the picture lied, in every sim, for as long as the gadget
+existed. There is no rear window in this view, so it now goes where a driver actually looks:
+an interior mirror at the top of the windscreen showing the road behind, what you have
+dropped, the armed limpet, and the cars following you. `tests/browser-test.mjs` fails on any
+`projectAhead(-rel` anywhere in the garage.
+
+`MISSIONS` gives each stage a brief, a time limit, a damage allowance and its objectives;
 `missionStep(dt)` runs from `updatePhysics` and `drawMissionHud` draws the board (clock,
 damage pips, objective ticks). Enemies carry a **role** and the gadget that answers it:
 
