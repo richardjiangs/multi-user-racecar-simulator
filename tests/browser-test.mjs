@@ -110,6 +110,44 @@ const check = (label, ok, detail) => {
   check("induction noise matches each engine (no hiss, no fake turbos)", bad.length === 0, bad.join(" | "));
 }
 
+/* ---------- nothing you drop behind you may be drawn in front of you ----------
+   q.slicks / q.puffs are laid at `state.distanceM - n`, i.e. BEHIND the car, and the draw
+   code called projectAhead(-rel) — a POSITIVE distance, so every oil slick and smoke puff
+   was painted ahead of the car and receded up the road you were driving into. The physics
+   was always right (rivals behind drove through it); only the picture lied, and it lied in
+   every sim for as long as the gadget has existed. Anything laid behind now goes in the
+   mirror. This asserts nobody re-introduces the sign error. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const bad = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    if (/projectAhead\(-rel/.test(src)) bad.push(f.replace(/ simulator\.html/i, "") + ": draws its own wake ahead of itself");
+  }
+  check("nothing laid behind the car is projected in front of it", bad.length === 0, bad.join(" | "));
+}
+
+/* ---------- the DB5's Cars 2 stage is a stage, not a circuit ----------
+   It shipped once as a CIRCUITS entry with corners renamed "Tanker deck" and nothing
+   drawn — a lap of Monaco wearing a costume. It is now ten stages with ten surfaces, and
+   these are the properties that make it that rather than a track. */
+{
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync(ROOT + "/Aston Martin DB5 simulator.html", "utf8");
+  const stages = (src.match(/^const SEA_STAGES = \[[\s\S]*?\n\];/m) || [""])[0];
+  const ids = [...stages.matchAll(/id: "(\w+)"/g)].map((m) => m[1]);
+  const surfs = new Set([...stages.matchAll(/surf: "(\w+)"/g)].map((m) => m[1]));
+  const WANT = ["crabby", "ride", "climb", "lip", "chase", "bridge", "helipad", "water", "dead", "sub"];
+  check(`Cars 2 opening: ${ids.length} stages, ${surfs.size} distinct surfaces`,
+    ids.join(",") === WANT.join(",") && surfs.size === 9,
+    `ids=${ids.join(",")} surfaces=${[...surfs].join(",")}`);
+  const kit = ["seaHarpoon", "seaMagnet", "seaShutter", "seaRocket", "seaCharge", "seaFoil", "seaTorpedo", "seaDive", "seaSonar", "seaBlast", "seaClamp", "seaAlarm"];
+  const missing = kit.filter((k) => !new RegExp("\\b" + k + "\\(").test(src));
+  check("Finn's kit each has its own synthesised sound", missing.length === 0, "missing: " + missing.join(","));
+  check("the sea stage has no kerbs, racing line or start/finish",
+    /if \(pal\.env !== "sea"\) drawStartFinishLine\(\)/.test(src) && /if \(pal\.env === "sea"\) return;/.test(src));
+}
+
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const pageErrors = [];
