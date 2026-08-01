@@ -215,19 +215,31 @@ slick (rivals that drive through it lose grip), the smoke screen, the passenger 
 rival. `qStep(dt)` runs from `updatePhysics`; all of it is opt-in, so the certified figures
 stand.
 
-**DB5 Mission mode (two stages)** — the Q Branch equipment now has a job. The Circuit tab
-carries two extra routes, both point-to-point, both seeded with **enemy cars instead of a
-hypercar grid**, and both losable:
+**DB5 Mission mode — five stage missions, 33 stages** — the Circuit tab carries five
+point-to-point routes that are **not circuits**: no laps, no kerbs, no racing line, no
+start/finish, no armco, no ambient traffic. Each is a **stage machine** (`STAGE_SETS`, module
+scope so the renderer sees it too) where every stage owns its **surface, furniture, gate and
+failure**. The gate is the stage's own `met(state, kit, mission)` predicate: miss it and
+`stageStep` clamps `distanceM` and takes your speed away — you physically cannot go on. A run
+is **one-way** (braking cannot drop you back a stage, which the Matera doughnut requires).
+Enemies arrive **per stage** (`SEA_ENEMIES`/`TOK_ENEMIES`/…), and a `target` retires when its
+stage ends.
 
-- **Mission — Furka Pass, 1964** — the real *Goldfinger* chase, shot in July 1964 on the
-  Furka Pass above Andermatt. Goldfinger's **Rolls-Royce Phantom III (AU 1)** is the target
-  you must not lose, **Tilly Masterson's white Ford Mustang** shoots at you, and three
-  **Auric Enterprises** guards follow, one of which will board you.
-- **Mission — Oil Platform, Pacific** — the **Cars 2 opening**, researched and rebuilt. This
-  one is **not a circuit** and has no corners named after scenery: it is a **ten-stage state
-  machine** (`SEA_STAGES`, module scope so the renderer sees it too) on an 11.6 km spine, and
-  each stage has its **own surface, own furniture, own rule for letting you move on and own
-  way of killing you**. See below.
+| mission | film | stages | the beats |
+|---|---|---|---|
+| `Mission — Oil Platform, Pacific` | Cars 2, the opening | 10 | Crabby → Tony Trihull → magnet climb → under the deck → oil+fire → the span → helipad → hydrofoil → four tyres → submarine |
+| `Mission — Tokyo, World Grand Prix` | Cars 2, Tokyo | 7 | the party carpet → the washroom and Rod Torque Redline → the night street race → through the barrier → the alleys → the Rainbow Bridge → Haneda |
+| `Mission — London, the last race` | Cars 2, London | 5 | inside Big Bentley's movement → the circuit → the pit box and the bomb in your air filter → the rocket run out of detonator range → The Mall, five minutes, Buckingham Palace |
+| `Mission — Furka Pass & Auric Enterprises, 1964` | Goldfinger | 6 | the pass behind the Phantom III → Tilly's Mustang and the slashers → the refinery → the yard → the woods and the ejector seat → the mirror Bond drove into |
+| `Mission — Matera, 2021` | No Time to Die | 5 | the Sassi → the limestone steps → Piazza San Giovanni Battista and the 360 with the miniguns → the smoke screen → the gorge road |
+
+**27 distinct surfaces** are drawn out of six shared helpers (`deckStrip`, `seams`, `wall`,
+`handrail`, `props` — world-anchored so furniture arrives and passes rather than travelling
+with the camera — and `flood`): timber deck · warship flight deck · braced leg · under-deck
+girders · open grating · through truss · helipad · open sea · submerged · red carpet · tiled
+corridor · wet neon street · alley · suspension bridge · airport apron · clock movement ·
+London street · pit lane · The Mall · alpine pass (**the one daylight stage**) · refinery ·
+night forest · the mirror wall · Matera limestone · steps · piazza · gorge viaduct.
 
 **The Cars 2 opening, stage by stage** — the sequence in the film: Finn is aboard the crab
 boat **Crabby**; **Tony Trihull** (a combat ship drawn from *USS Independence* LCS-2 — a
