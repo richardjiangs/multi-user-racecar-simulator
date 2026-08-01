@@ -643,8 +643,11 @@
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
               <button data-circuit="Furka Pass">Furka Pass</button>
-              <button data-circuit="Mission — Furka Pass, 1964">Mission · Goldfinger 1964</button>
+              <button data-circuit="Mission — Furka Pass &amp; Auric Enterprises, 1964">Mission · Goldfinger 1964</button>
               <button data-circuit="Mission — Oil Platform, Pacific">Mission · Cars 2 Opening</button>
+              <button data-circuit="Mission — Tokyo, World Grand Prix">Mission · Cars 2 Tokyo</button>
+              <button data-circuit="Mission — London, the last race">Mission · Cars 2 London</button>
+              <button data-circuit="Mission — Matera, 2021">Mission · Matera 2021</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
             <div id="nordsRoute" style="display:none">
@@ -861,24 +864,63 @@ const CIRCUITS = {
   },
   /* The real Goldfinger chase, July 1964: the Furka Pass above Andermatt, run from the
      Rhône glacier down to Realp, with the Auric Enterprises factory approach at the end. */
-  "Mission — Furka Pass, 1964": {
-    dist: 16200, env: "track", limitKmh: 90, loop: false, widthM: 6.4, corners: 14,
-    blurb: "Goldfinger, July 1964 — tail the Phantom III down the Furka Pass to Realp",
-    bumps: [{ from: 2600, to: 3600, r: 0.42 }, { from: 9800, to: 11200, r: 0.4 }],
-    track: [
-      c(700, 1, 175, 26, "Gletsch hairpin 1"), c(1250, -1, 175, 26, "Gletsch hairpin 2"),
-      c(1900, 1, 170, 28, "Gletsch hairpin 3"), c(2700, -1, 130, 40, "Rhône Glacier"),
-      c(3500, 1, 175, 24, "Belvédère hairpin"), c(4400, -1, 110, 55, "Hotel Belvédère"),
-      c(5600, 1, 95, 70, "Furkablick"), c(6900, -1, 120, 50, "Blaue Grat"),
-      c(8100, 1, 60, 110, "Furka summit, 2,429 m"), c(9400, -1, 165, 30, "Tiefenbach hairpin"),
-      c(10800, 1, 150, 34, "Tiefengletscher"), c(12300, -1, 170, 26, "Sidelenbach hairpin"),
-      c(13900, 1, 140, 38, "Realp upper"), c(15300, -1, 105, 60, "Auric Enterprises gate")
-    ]
-  },
   /* Cars 2, the opening — the Pacific at night. This is NOT a circuit and has no laps:
      it is an 11.6 km spine that the ten stages of SEA_STAGES sit on. The only bends in it
      are the ones the sequence actually has — the turn round the rig modules, the swing off
      the helipad, and the two long dodges away from Tony's guns on the water. */
+  /* Cars 2 · Tokyo — the only race in the film run at night, on the city streets, over the
+     Rainbow Bridge and past the Imperial Palace. Then off the circuit and into the back
+     streets when the lemons work out who is carrying the device. */
+  "Mission — Tokyo, World Grand Prix": {
+    dist: 9400, env: "sea", limitKmh: 230, loop: false, widthM: 8.2, corners: 8,
+    blurb: "Cars 2 — the party, the washroom, the night race and the run to Haneda",
+    bumps: [{ from: 5000, to: 6900, r: 0.2 }],
+    track: [
+      c(1600, 1, 60, 130, "Out of the service road"), c(2400, -1, 90, 110, "Imperial Palace"),
+      c(3100, 1, 75, 140, "Hibiya"), c(3800, -1, 110, 90, "Ginza hairpin"),
+      c(5100, 1, 100, 70, "Through the barrier"), c(5700, -1, 120, 55, "First alley"),
+      c(6300, 1, 130, 50, "Second alley"), c(8500, -1, 45, 160, "Onto the apron")
+    ]
+  },
+  /* Cars 2 · London — Big Bentley, the last race, the detonator's range and the run down
+     The Mall with five minutes on a bomb that only the man who armed it can stop. */
+  "Mission — London, the last race": {
+    dist: 8600, env: "sea", limitKmh: 250, loop: false, widthM: 9.0, corners: 7,
+    blurb: "Cars 2 — the clock tower, the circuit, the rocket run and Buckingham Palace",
+    bumps: [{ from: 0, to: 820, r: 0.34 }],
+    track: [
+      c(1300, 1, 70, 120, "Parliament Square"), c(2000, -1, 85, 105, "The Embankment"),
+      c(2700, 1, 95, 95, "Tower Bridge"), c(3200, -1, 60, 120, "Pit entry"),
+      c(4600, 1, 40, 220, "Out of the park"), c(5600, -1, 50, 200, "Constitution Hill"),
+      c(7400, 1, 35, 260, "Onto The Mall")
+    ]
+  },
+  /* Goldfinger, 1964 — rebuilt. The Furka Pass above Andermatt by day, then the Auric
+     Enterprises works after dark, and the wall Bond actually hit. */
+  "Mission — Furka Pass & Auric Enterprises, 1964": {
+    dist: 8900, env: "sea", limitKmh: 240, loop: false, widthM: 7.4, corners: 10,
+    blurb: "Goldfinger — the pass, the Mustang, the refinery, the woods and the mirror",
+    bumps: [{ from: 6300, to: 7900, r: 0.24 }],
+    track: [
+      c(300, 1, 120, 70, "First hairpin"), c(700, -1, 130, 60, "Second hairpin"),
+      c(1200, 1, 95, 90, "Rhône glacier"), c(1700, -1, 110, 75, "Gletsch"),
+      c(2200, 1, 125, 60, "Belvédère"), c(3000, -1, 80, 110, "Down to the valley"),
+      c(4800, 1, 70, 120, "Into the yard"), c(5600, -1, 100, 80, "Round the tanks"),
+      c(6800, 1, 85, 100, "Into the trees"), c(7500, -1, 90, 95, "The last bend")
+    ]
+  },
+  /* No Time to Die, Matera 2021 — the Sassi, the steps, the piazza and the road out. */
+  "Mission — Matera, 2021": {
+    dist: 5200, env: "sea", limitKmh: 220, loop: false, widthM: 6.4, corners: 8,
+    blurb: "No Time to Die — the stone quarter, the steps, the doughnut and the gorge",
+    bumps: [{ from: 1500, to: 2050, r: 0.55 }],
+    track: [
+      c(300, 1, 110, 60, "Via Fiorentini"), c(700, -1, 120, 50, "Under the arch"),
+      c(1100, 1, 130, 45, "Vico Solitario"), c(1700, -1, 60, 90, "The steps"),
+      c(2500, 1, 40, 140, "Into the piazza"), c(3400, -1, 105, 70, "Out past the church"),
+      c(3900, 1, 95, 80, "Rione Malve"), c(4500, -1, 55, 150, "The gorge road")
+    ]
+  },
   "Mission — Oil Platform, Pacific": {
     dist: 11600, env: "sea", limitKmh: 220, loop: false, widthM: 9.0, corners: 6,
     blurb: "Cars 2, the opening — Crabby, Tony Trihull, the platform, and the long way down",
@@ -926,49 +968,268 @@ const SEA_STAGES = [
   { id: "crabby", to: 620, cap: 60, surf: "wood",
     name: "Aboard Crabby", where: "the Pacific, 40 miles out, 02:40",
     hint: "Tony Trihull is alongside and his gun is on Crabby. Put a harpoon into his transom — G.",
-    need: "hook1", fail: "Tony put a round through Crabby with you still on him." },
+    met: (st, q) => q.hook >= 1, clock: 34, fail: "Tony put a round through Crabby with you still on him." },
   { id: "ride", to: 2600, cap: 150, surf: "steel",
     name: "On Tony Trihull's transom", where: "under tow — 127 m of trimaran, 44 knots",
     hint: "The platform is coming up to starboard. Hook the barrier — G — and let Tony go.",
-    need: "hook2", fail: "Tony carried you straight past the platform and out into open ocean." },
+    met: (st, q) => q.hook >= 2, fail: "Tony carried you straight past the platform and out into open ocean." },
   { id: "climb", to: 3500, cap: 62, surf: "leg",
     name: "Up the leg", where: "one hundred metres of wet steel",
     hint: "Steel magnets — M. Without them the wheels have nothing to hold.",
-    need: "top", fail: "Off the leg, and a hundred metres down into the water." },
+    met: (st, q) => q.magnet, fail: "Off the leg, and a hundred metres down into the water." },
   { id: "lip", to: 3980, cap: 26, surf: "under",
     name: "Under the deck", where: "hanging off the underside on the magnets",
     hint: "Camera up — P — then shutter on P when the subject is framed. Three of them.",
-    need: "photos", fail: "You hung there too long. A deck hand came under with a lamp." },
+    met: (st, q) => q.shots >= 3, clock: 70, fail: "You hung there too long. A deck hand came under with a lamp." },
   { id: "chase", to: 6100, cap: 210, surf: "grate",
     name: "The platform", where: "seen — every lemon on the rig is awake",
     hint: "Oil behind you — 5 — then put a round through it — 2. Rockets on B.",
-    need: "burn", fail: "They ran you down on the pipe deck." },
+    met: (st, q, m) => !!m.done.burn, fail: "They ran you down on the pipe deck." },
   { id: "bridge", to: 7000, cap: 210, surf: "bridge",
     name: "The link span", where: "sixty metres of truss and nothing underneath it",
     hint: "Limpet charge on the span — K — and be off it before it goes.",
-    need: "blown", fail: "They came across the span behind you." },
+    met: (st, q) => q.blownAt != null, fail: "They came across the span behind you." },
   { id: "helipad", to: 7700, cap: 210, surf: "pad",
     name: "The helipad", where: "the top deck, thirty metres above the sea",
     hint: "The platform ends here. Foils out — F — and go over the edge.",
-    need: "foil", fail: "You went off with the wheels down. The car sank in eleven seconds." },
+    met: (st, q) => q.foil > 0.5, fail: "You went off with the wheels down. The car sank in eleven seconds." },
   { id: "water", to: 10100, cap: 150, surf: "water",
     name: "Hydrofoil", where: "open water, Tony astern and closing",
     hint: "He is shooting. Stay off his line — and keep the rockets lit.",
-    need: null, fail: "" },
+    met: null, fail: "" },
   { id: "dead", to: 10900, cap: 150, surf: "water",
     name: "Play dead", where: "torpedo running, forty seconds out",
     hint: "Let the four tyres go — J. Give them a wreck to photograph.",
-    need: "tyres", fail: "The torpedo found a car instead of a decoy." },
+    met: (st, q) => q.tyres, fail: "The torpedo found a car instead of a decoy." },
   { id: "sub", to: 11600, cap: 58, surf: "sub",
     name: "Submerged", where: "and quietly away",
     hint: "Dive — J.",
-    need: "dive", fail: "" },
+    met: (st, q) => q.sub > 0, fail: "" },
 ];
-function stageAt(d) {
-  for (const s of SEA_STAGES) if (d < s.to) return s;
-  return SEA_STAGES[SEA_STAGES.length - 1];
+/* ===== the other four stage missions ================================================
+   Same machine as the Pacific: a spine for the physics, and then ten-ish stages that each
+   own their surface, their furniture, the thing that has to happen before you may go on,
+   and the way you lose. `met` is the gate, as a predicate over (state, kit, mission), so a
+   new mission is data rather than another branch in stageStep. */
+
+/* --- CARS 2 · TOKYO. Researched: the World Grand Prix opens in Tokyo and, alone among the
+   races, runs AT NIGHT on the city streets, over the Rainbow Bridge and past the Imperial
+   Palace. At the welcome party Mater makes a scene; in the washroom the American agent Rod
+   "Torque" Redline is cornered by Grem and Acer and plants the device on him; Holley
+   mistakes Mater for the agent. During the race Finn and Holley hack the headset Mater is
+   using to call McQueen's line, Mater bolts into the streets, and the lemons follow. */
+const TOK_STAGES = [
+  { id: "party", to: 620, cap: 55, surf: "carpet",
+    name: "The welcome party", where: "Tokyo, the night before the race",
+    hint: "Down the carpet and out the back. Mind the press — a flashbulb in the mirrors and you are into the barrier.",
+    met: null, fail: "" },
+  { id: "washroom", to: 1420, cap: 34, surf: "corridor",
+    name: "The washroom corridor", where: "two lemons and one American agent",
+    hint: "Rod Torque Redline is cornered at the end. Get to him and take what he is holding — G.",
+    met: (st, q) => q.hook >= 1, clock: 48, fail: "They finished with Rod before you got there." },
+  { id: "race", to: 4200, cap: 205, surf: "neon",
+    name: "The Tokyo street race", where: "night, wet asphalt, the Imperial Palace on your left",
+    hint: "Race it. Finn is trying to reach you on the same channel Mater is using.",
+    met: null, fail: "" },
+  { id: "bolt", to: 5000, cap: 205, surf: "neon",
+    name: "Off the circuit", where: "through the barrier and into the city",
+    hint: "Straight through the barrier — the lemons have seen the device.",
+    met: null, fail: "" },
+  { id: "alley", to: 6900, cap: 155, surf: "alley",
+    name: "The back streets", where: "Grem and Acer, and no room at all",
+    hint: "Smoke — 6 — and oil — 5. Put two of them out.",
+    met: (st, q, m) => (m.guards || 0) >= 2, fail: "They boxed you in between two buildings." },
+  { id: "rainbow", to: 8200, cap: 215, surf: "suspension",
+    name: "The Rainbow Bridge", where: "1,875 m of suspension span over Tokyo Bay",
+    hint: "Nowhere to hide up here. Shield up — 3 — and keep it lit.",
+    met: null, fail: "" },
+  { id: "apron", to: 9400, cap: 205, surf: "apron",
+    name: "Haneda, the cargo apron", where: "Siddeley has the ramp down",
+    hint: "Up the ramp.", met: null, fail: "" },
+];
+const TOK_ENEMIES = {
+  washroom: [
+    { name: "Rod \"Torque\" Redline", body: "#8e1f22", stripe: "#d9dde2", top: 130, latG: 0.7, accel: 4.0, role: "target", at: 150, hp: 99 },
+    { name: "Grem · AMC Gremlin", body: "#c8641e", stripe: "#4a3524", top: 128, latG: 0.7, accel: 4.2, role: "guard", at: 190, hp: 3 },
+  ],
+  alley: [
+    { name: "Grem · AMC Gremlin", body: "#c8641e", stripe: "#4a3524", top: 158, latG: 0.86, accel: 5.6, role: "shooter", at: -40, hp: 3 },
+    { name: "Acer · AMC Pacer", body: "#4f7a34", stripe: "#c9cfd6", top: 156, latG: 0.86, accel: 5.5, role: "guard", at: -92, hp: 3 },
+    { name: "Gremlin", body: "#8d5a2b", stripe: "#2a2018", top: 150, latG: 0.82, accel: 5.1, role: "guard", at: -150, hp: 2 },
+  ],
+  rainbow: [
+    { name: "Pacer", body: "#3f6a55", stripe: "#c9cfd6", top: 168, latG: 0.84, accel: 5.6, role: "shooter", at: -60, hp: 2 },
+    { name: "Gremlin", body: "#a8551c", stripe: "#2a2018", top: 166, latG: 0.84, accel: 5.5, role: "shooter", at: -128, hp: 2 },
+  ],
+};
+
+/* --- CARS 2 · LONDON. Researched: Mater, Finn and Holley are captured and tied up inside
+   BIG BENTLEY. The final race runs through London past the tower. The lemons plant a bomb
+   in McQueen's pit as a backup — not knowing the real one is in Mater's own air filter.
+   Mater sees it, backs away from McQueen onto the circuit so as not to kill him, McQueen
+   chases and takes his tow hook, and Mater lights his rockets until the detonator reads
+   OUT OF RANGE. The bomb then becomes a five-minute timer, voice-locked to whoever armed
+   it, so the last run is to Buckingham Palace to put that question to Miles Axlerod. */
+const LON_STAGES = [
+  { id: "gears", to: 820, cap: 42, surf: "gears",
+    name: "Inside Big Bentley", where: "tied to the movement, and it is still running",
+    hint: "The train is driving you back down. Keep the power on and climb out.",
+    met: null, clock: 95, fail: "The escapement took you." },
+  { id: "street", to: 3400, cap: 215, surf: "city",
+    name: "The London circuit", where: "Westminster, the Embankment, Tower Bridge",
+    hint: "Race it, and get to your own pit.", met: null, fail: "" },
+  { id: "pits", to: 4000, cap: 95, surf: "pitlane",
+    name: "The pit box", where: "and a bomb in your own air filter",
+    hint: "McQueen is coming to say hello. Back away from him — R — then let him take the hook — G.",
+    met: (st, q) => q.hook >= 1, fail: "He got to you, and the timer did not care who was standing there." },
+  { id: "range", to: 6400, cap: 245, surf: "city",
+    name: "Out of range", where: "the detonator is line-of-sight and it has a limit",
+    hint: "Rockets — B. Nine hundred metres and the detonator gives up.",
+    met: (st, q) => q.rangeM >= 900, fail: "He pressed it while you were still in range." },
+  { id: "mall", to: 8600, cap: 215, surf: "mall",
+    name: "The Mall", where: "five minutes on the clock, and one question to ask",
+    hint: "Buckingham Palace. Whoever armed it is the only voice that can stop it.",
+    met: null, fail: "The five minutes ran out on The Mall." },
+];
+const LON_ENEMIES = {
+  street: [
+    { name: "Francesco Bernoulli", body: "#d81e22", stripe: "#f5f7fa", top: 320, latG: 1.3, accel: 11.0, role: "rival", at: 120 },
+    { name: "Lightning McQueen", body: "#c81417", stripe: "#f5d400", top: 310, latG: 1.28, accel: 10.8, role: "rival", at: 60 },
+    { name: "Shu Todoroki", body: "#e8532a", stripe: "#1a1d22", top: 305, latG: 1.24, accel: 10.4, role: "rival", at: -50 },
+    { name: "Carla Veloso", body: "#2fa05a", stripe: "#f5d400", top: 303, latG: 1.23, accel: 10.3, role: "rival", at: -120 },
+    { name: "Raoul ÇaRoule", body: "#2b62b0", stripe: "#f5f7fa", top: 300, latG: 1.26, accel: 10.2, role: "rival", at: -190 },
+    { name: "Jeff Gorvette", body: "#f5f7fa", stripe: "#2b62b0", top: 308, latG: 1.25, accel: 10.6, role: "rival", at: -250 },
+  ],
+  range: [
+    { name: "Professor Z · detonator", body: "#4f7a34", stripe: "#c9cfd6", top: 120, latG: 0.6, accel: 3.0, role: "guard", at: -300, hp: 9 },
+  ],
+};
+
+/* --- GOLDFINGER, 1964. Researched: the July 1964 alpine section on the Furka Pass above
+   Andermatt — Bond tailing Goldfinger's Rolls-Royce Phantom III (AU 1), Tilly Masterson's
+   white Mustang shooting at him, the tyre slashers that put her off the road. Then the
+   night at the Auric Enterprises works in Switzerland: Bond breaks in, Tilly trips the
+   alarm, and the whole equipment list gets used in one run — smoke screen, oil slick,
+   machine guns in short bursts, and finally the ejector seat on the man who gets in.
+   It ends with Bond chasing a pair of headlights that are his own, reflected in a mirror,
+   and putting the car into a wall. */
+const GF_STAGES = [
+  { id: "pass", to: 2400, cap: 210, surf: "alpine",
+    name: "The Furka Pass", where: "above Andermatt, July 1964",
+    hint: "The Phantom III is ahead of you. Keep it in sight — the homer is on it. Tracker on 8.",
+    met: null, fail: "" },
+  { id: "tilly", to: 3600, cap: 200, surf: "alpine",
+    name: "The white Mustang", where: "Tilly Masterson, and she is not shooting at you by accident",
+    hint: "Get alongside her and put the slashers out — 4.",
+    met: (st, q, m) => !!m.done.mustang, fail: "She got the shot she wanted." },
+  { id: "recce", to: 4500, cap: 120, surf: "refinery",
+    name: "Auric Enterprises", where: "the works, after dark",
+    hint: "Lamps off — the plates say Switzerland tonight. 1 to turn them over.",
+    met: null, fail: "" },
+  { id: "yard", to: 6300, cap: 205, surf: "refinery",
+    name: "The refinery yard", where: "the alarm is up and so are the floods",
+    hint: "Oil — 5 — and short bursts on the guns — 2. Put two of them out.",
+    met: (st, q, m) => (m.guards || 0) >= 2, fail: "They stopped the car in the yard." },
+  { id: "woods", to: 7900, cap: 200, surf: "forest",
+    name: "The wooded road", where: "one of them is on the back of the car",
+    hint: "Smoke — 6 — for the ones behind, and the seat — 7 — for the one inside.",
+    met: (st, q, m) => !!m.done.boarder, fail: "He got in and he stayed in." },
+  { id: "mirror", to: 8900, cap: 200, surf: "mirrorwall",
+    name: "The headlights coming at you", where: "and there is no other car",
+    hint: "Those are your own lamps. Stop before the wall.",
+    met: (st, q) => q.stopped, fail: "Straight into the wall, exactly as it happened." },
+];
+const GF_ENEMIES = {
+  pass: [
+    { name: "Rolls-Royce Phantom III · AU 1", body: "#f0e8c8", stripe: "#1a1a1a", top: 150, latG: 0.72, accel: 4.4, role: "target", at: 260 },
+  ],
+  tilly: [
+    { name: "Ford Mustang · Tilly Masterson", body: "#f2f4f6", stripe: "#c8102e", top: 185, latG: 0.86, accel: 6.2, role: "shooter", at: -60, hp: 2 },
+  ],
+  yard: [
+    { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 170, latG: 0.80, accel: 5.4, role: "guard", at: -70, hp: 3 },
+    { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 168, latG: 0.80, accel: 5.3, role: "shooter", at: -140, hp: 3 },
+    { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 166, latG: 0.79, accel: 5.2, role: "guard", at: -210, hp: 3 },
+  ],
+  woods: [
+    { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 172, latG: 0.81, accel: 5.5, role: "boarder", at: -30, hp: 3 },
+    { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 169, latG: 0.80, accel: 5.3, role: "shooter", at: -110, hp: 3 },
+  ],
+};
+
+/* --- NO TIME TO DIE · MATERA, 2021. Researched: Bond and Madeleine are ambushed in
+   Matera. The DB5 goes through the Sassi — the stone quarter — down a flight of steps, and
+   into Piazza San Giovanni Battista, where a Range Rover Classic rams it into a spin and
+   SPECTRE opens up with automatic weapons. The car's armoured glass holds; Bond turns the
+   car through a full 360 and a pair of miniguns come out from behind the headlamps. Then
+   the smoke screen, and out of the town. */
+const NTTD_STAGES = [
+  { id: "sassi", to: 1500, cap: 145, surf: "stone",
+    name: "The Sassi", where: "Matera, and the walls are one car wide",
+    hint: "Armoured glass will hold. Shield up — 3 — and keep moving.",
+    met: null, fail: "" },
+  { id: "steps", to: 2050, cap: 72, surf: "steps",
+    name: "The steps", where: "a flight of limestone, and the only way down",
+    hint: "Slow. The car will take it; the suspension will complain.",
+    met: null, fail: "" },
+  { id: "piazza", to: 3200, cap: 95, surf: "piazza",
+    name: "Piazza San Giovanni Battista", where: "surrounded, and a Range Rover in your door",
+    hint: "Full lock, hold the guns on — 2 — and turn the car all the way round.",
+    met: (st, q) => q.spinDeg >= 340, fail: "They took the car apart in the square." },
+  { id: "smoke", to: 4100, cap: 165, surf: "stone",
+    name: "Out of the square", where: "and something to leave behind you",
+    hint: "Smoke — 6.",
+    met: (st, q, m) => !!q.smokeUsed, fail: "They stayed on you all the way out." },
+  { id: "viaduct", to: 5200, cap: 205, surf: "viaduct",
+    name: "Out of Matera", where: "the gorge on your right, and a train to catch",
+    hint: "Go.", met: null, fail: "" },
+];
+const NTTD_ENEMIES = {
+  sassi: [
+    { name: "Maserati Quattroporte · SPECTRE", body: "#1b1d22", stripe: "#6b7280", top: 175, latG: 0.9, accel: 6.4, role: "shooter", at: -50, hp: 3 },
+    { name: "Jaguar XF · SPECTRE", body: "#22262c", stripe: "#8b9098", top: 172, latG: 0.9, accel: 6.2, role: "shooter", at: -120, hp: 3 },
+  ],
+  piazza: [
+    { name: "Range Rover Classic · SPECTRE", body: "#2e3a2c", stripe: "#c8cdd2", top: 150, latG: 0.75, accel: 5.0, role: "guard", at: -20, hp: 4 },
+    { name: "SPECTRE gunman", body: "#1b1d22", stripe: "#6b7280", top: 160, latG: 0.85, accel: 5.6, role: "shooter", at: -70, hp: 2 },
+    { name: "SPECTRE gunman", body: "#1b1d22", stripe: "#6b7280", top: 158, latG: 0.85, accel: 5.5, role: "shooter", at: -130, hp: 2 },
+  ],
+};
+
+/* Lemons come aboard per stage, not all at the start — nobody is chasing you while you
+   are still hanging under the deck. Gremlins and Pacers: the two lemon families on the
+   rig in the film, led by Grem and Acer. */
+const SEA_ENEMIES = {
+  chase: [
+    { name: "Grem · AMC Gremlin", body: "#c8641e", stripe: "#4a3524", top: 150, latG: 0.80, accel: 5.2, role: "shooter", at: -46, hp: 3 },
+    { name: "Acer · AMC Pacer", body: "#4f7a34", stripe: "#c9cfd6", top: 148, latG: 0.80, accel: 5.1, role: "guard", at: -104, hp: 3 },
+    { name: "Gremlin", body: "#8d5a2b", stripe: "#2a2018", top: 142, latG: 0.76, accel: 4.8, role: "guard", at: -168, hp: 2 },
+    { name: "Pacer", body: "#3f6a55", stripe: "#c9cfd6", top: 140, latG: 0.76, accel: 4.7, role: "boarder", at: -228, hp: 2 },
+  ],
+  bridge: [
+    { name: "Gremlin", body: "#a8551c", stripe: "#2a2018", top: 146, latG: 0.78, accel: 5.0, role: "shooter", at: -70, hp: 2 },
+    { name: "Pacer", body: "#5a7f42", stripe: "#c9cfd6", top: 144, latG: 0.78, accel: 4.9, role: "guard", at: -132, hp: 2 },
+  ],
+};
+/* every stage mission in the garage, and the film each one is from */
+const STAGE_SETS = {
+  [SEA_ROUTE]: { film: "CARS 2 · THE OPENING", stages: SEA_STAGES, enemies: SEA_ENEMIES },
+  "Mission — Tokyo, World Grand Prix": { film: "CARS 2 · TOKYO", stages: TOK_STAGES, enemies: TOK_ENEMIES },
+  "Mission — London, the last race": { film: "CARS 2 · LONDON", stages: LON_STAGES, enemies: LON_ENEMIES },
+  "Mission — Furka Pass & Auric Enterprises, 1964": { film: "GOLDFINGER · 1964", stages: GF_STAGES, enemies: GF_ENEMIES },
+  "Mission — Matera, 2021": { film: "NO TIME TO DIE · MATERA", stages: NTTD_STAGES, enemies: NTTD_ENEMIES },
+};
+// give every stage its route, its index and where it starts, so nothing has to search
+for (const [route, set] of Object.entries(STAGE_SETS)) {
+  set.stages.forEach((s, i) => { s.route = route; s.i = i; s.from = i ? set.stages[i - 1].to : 0; });
 }
-const stageStart = (s) => { const i = SEA_STAGES.indexOf(s); return i <= 0 ? 0 : SEA_STAGES[i - 1].to; };
+const stagesOf = (route) => (STAGE_SETS[route] ? STAGE_SETS[route].stages : null);
+function stageAt(route, d) {
+  const L = stagesOf(route); if (!L) return null;
+  for (const s of L) if (d < s.to) return s;
+  return L[L.length - 1];
+}
+const stageStart = (s) => (s ? s.from : 0);
 
 
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
@@ -1064,6 +1325,7 @@ const SPEC = {
       charge: null, chargeT: 0, blownAt: null, blastT: 0,
       foil: 0, tyres: false, tyreT: 0, sub: 0,
       tonyM: null, torpedoT: 0, wreckT: 0, slipT: 0, gateNagT: 0,
+      rangeM: null, outOfRange: false, bombT: 0, spinDeg: 0, stopped: false, smokeUsed: false,
     },
     stage: null, stageT: 0,
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
@@ -1580,11 +1842,12 @@ const SPEC = {
      state.mission is null off a mission route. On one it carries the clock, the hit
      count, and which objectives are done — and any of them can fail the run. */
   function startMission(M) {
-    if (M.cars2) Object.assign(state.q, {
+    if (STAGE_SETS[state.route.name]) Object.assign(state.q, {
       hook: 0, hookT: 0, hookTo: null, magnet: false, cam: 0, shots: 0, camAim: 0,
       camSubject: -9, camPhase: 0, rocket: 0, charge: null, chargeT: 0,
       blownAt: null, blastT: 0, foil: 0, tyres: false, tyreT: 0, sub: 0,
       tonyM: null, torpedoT: 0, wreckT: 0, slipT: 0, gateNagT: 0,
+      rangeM: null, outOfRange: false, bombT: 0, spinDeg: 0, stopped: false, smokeUsed: false,
       oil: 100, smoke: 100, ammo: 104, slicks: [], puffs: [],
     });
     state.stage = null; state.stageT = 0;
@@ -1703,33 +1966,27 @@ const SPEC = {
       if (o && m.guards >= o.need) missionDone("guards");
     }
     if (r.role === "shooter") missionDone("mustang");
+    if (r.role === "boarder") missionDone("boarder");
   }
 
-  /* Lemons come aboard per stage, not all at the start — nobody is chasing you while you
-     are still hanging under the deck. Gremlins and Pacers: the two lemon families on the
-     rig in the film, led by Grem and Acer. */
-  const SEA_ENEMIES = {
-    chase: [
-      { name: "Grem · AMC Gremlin", body: "#c8641e", stripe: "#4a3524", top: 150, latG: 0.80, accel: 5.2, role: "shooter", at: -46, hp: 3 },
-      { name: "Acer · AMC Pacer", body: "#4f7a34", stripe: "#c9cfd6", top: 148, latG: 0.80, accel: 5.1, role: "guard", at: -104, hp: 3 },
-      { name: "Gremlin", body: "#8d5a2b", stripe: "#2a2018", top: 142, latG: 0.76, accel: 4.8, role: "guard", at: -168, hp: 2 },
-      { name: "Pacer", body: "#3f6a55", stripe: "#c9cfd6", top: 140, latG: 0.76, accel: 4.7, role: "boarder", at: -228, hp: 2 },
-    ],
-    bridge: [
-      { name: "Gremlin", body: "#a8551c", stripe: "#2a2018", top: 146, latG: 0.78, accel: 5.0, role: "shooter", at: -70, hp: 2 },
-      { name: "Pacer", body: "#5a7f42", stripe: "#c9cfd6", top: 144, latG: 0.78, accel: 4.9, role: "guard", at: -132, hp: 2 },
-    ],
-  };
   const onSea = () => state.route.active && state.route.name === SEA_ROUTE;
+  const onStage = () => state.route.active && !!STAGE_SETS[state.route.name];
+  const enemiesFor = (st) => { const set = STAGE_SETS[st.route]; return set && set.enemies ? set.enemies[st.id] : null; };
+  const filmOf = () => { const set = STAGE_SETS[state.route.name]; return set ? set.film : "MISSION"; };
   function stageEnter(s) {
     const prev = state.stage;
     state.stage = s;
     state.stageT = 0;
     if (prev && prev.id === s.id) return;
-    app.showToast(s.name + " — " + s.where, "CARS 2");
+    app.showToast(s.name + " — " + s.where, filmOf());
     if (state.mission) { state.mission.flash = s.hint; state.mission.flashT = 6.5; }
-    // the lemons that belong to this stage come aboard now
-    const add = SEA_ENEMIES[s.id];
+    // a target belongs to one stage. When that stage ends, so does the tail.
+    for (const r of state.rivals || []) if (r.role === "target") {
+      r.role = null; r.gone = true;
+      missionDone("tail"); missionDone("device");
+    }
+    // the cars that belong to this stage arrive now
+    const add = enemiesFor(s);
     if (add) {
       audio.seaAlarm();
       add.forEach((e) => state.rivals.push({
@@ -1738,17 +1995,21 @@ const SPEC = {
         speedMps: Math.max(20, Math.abs(state.speedMps)), brake: 0, fireT: 2.2 + Math.random() * 2, boardT: 0,
       }));
     }
-    if (s.id === "climb") { audio.seaClamp(); }
+    if (s.id === "climb") audio.seaClamp();
     if (s.id === "water") { state.q.tonyM = 420; audio.seaFoil(); }
     if (s.id === "dead") { state.q.torpedoT = 26; audio.seaTorpedo(); }
     if (s.id === "sub") audio.seaSonar();
+    if (s.id === "range") { state.q.rangeM = 0; state.q.outOfRange = false; }
+    if (s.id === "piazza") { state.q.spinDeg = 0; audio.seaAlarm(); }
+    if (s.id === "mirror") audio.seaCharge();
+    if (s.id === "gears") audio.seaMagnet(false);
   }
 
   /* Everything the stage machine can want done, and what does it. Each is a real piece of
      Finn's kit, each has its own sound, and each does something you can see. */
   function seaFire(what) {
     const q = state.q, st = state.stage;
-    if (!onSea()) { app.showToast("Finn's kit is fitted for the Pacific stage only.", "CARS 2"); return; }
+    if (!onStage()) { app.showToast("The mission equipment only works on a mission.", "MISSION"); return; }
     switch (what) {
       case "hook": {
         if (q.hookT > 0) return;
@@ -1766,7 +2027,16 @@ const SPEC = {
           audio.seaHarpoon(); setTimeout(() => audio.seaClamp(), 620);
           missionDone("leg");
           app.showToast("Second hook over the rig barrier — releasing Tony.", "CARS 2");
-        } else app.showToast("Nothing in range to hook.", "CARS 2");
+        } else if (id === "washroom") {
+          const rod = (state.rivals || []).find((r) => r.role === "target");
+          if (!rod || rod.distM - state.distanceM > 26) { app.showToast("Not close enough — get up to him.", "CARS 2"); audio.click(300); return; }
+          q.hook = 1; audio.seaClamp();
+          app.showToast("Rod put it somewhere you will not find it for two days.", "CARS 2");
+        } else if (id === "pits") {
+          if (state.gearMode !== "R" && Math.abs(state.speedMps) < 2) { app.showToast("Back away from him first — R.", "CARS 2"); audio.click(300); return; }
+          q.hook = 1; audio.seaClamp(); missionDone("hook");
+          app.showToast("He has the hook. Now get him away from here.", "CARS 2");
+        } else app.showToast("Nothing in range to hook.", "MISSION");
         break;
       }
       case "magnet":
@@ -1814,9 +2084,10 @@ const SPEC = {
 
   /* the per-step machine: gates, failures, and the physics each stage adds */
   function stageStep(dt) {
-    if (!onSea()) { if (state.stage) { state.stage = null; if (state.q.magnet) { state.q.magnet = false; audio.seaMagnet(false); } if (state.q.rocket) { state.q.rocket = 0; audio.seaRocket(false); } } return; }
+    if (!onStage()) { if (state.stage) { state.stage = null; if (state.q.magnet) { state.q.magnet = false; audio.seaMagnet(false); } if (state.q.rocket) { state.q.rocket = 0; audio.seaRocket(false); } } return; }
     const q = state.q, m = state.mission;
-    const s = stageAt(state.distanceM);
+    let s = stageAt(state.route.name, state.distanceM);
+    if (state.stage && state.stage.route === s.route && s.i < state.stage.i) s = state.stage;  // never go back a stage
     if (s !== state.stage) stageEnter(s);
     state.stageT += dt;
     if (q.hookT > 0) q.hookT -= dt;      // the harpoon reload — without this the second shot never comes
@@ -1830,6 +2101,45 @@ const SPEC = {
       if (q.shots >= 3) q.cam = 0;
     }
 
+    if (onSea()) seaBeats(dt, s, q, m); else otherBeats(dt, s, q, m);
+    if (m && m.over) return;
+
+    // ---- the gate: you may not leave a stage until the thing that stage is about is done
+    const met = s.met ? !!s.met(state, q, m || { done: {} }) : true;
+    const gateM = s.to - 40;
+    if (!met && state.distanceM > gateM) {
+      state.distanceM = gateM;
+      if (Math.abs(state.speedMps) > 4) { audio.clunk(90); state.roadInputG = Math.min(2.4, (state.roadInputG || 0) + 0.5); }
+      state.speedMps = Math.min(state.speedMps, 0.6);
+      if ((q.gateNagT || 0) <= 0) { q.gateNagT = 3.4; missionSay(s.hint, false); }
+    }
+    if (q.gateNagT > 0) q.gateNagT -= dt;
+
+    // ---- the stages that also run on a clock of their own
+    if (s.clock && state.stageT > s.clock && !met) return missionEnd(false, s.fail);
+    // ---- the leg: without magnets there is nothing holding the car on
+    if (s.id === "climb" && !q.magnet) {
+      q.slipT = (q.slipT || 0) + dt;
+      state.distanceM -= (2.2 + q.slipT * 2.4) * dt;
+      if (q.slipT > 2.6 || state.distanceM < stageStart(s) - 30) return missionEnd(false, s.fail);
+    } else q.slipT = 0;
+    if (s.id === "lip" && !q.magnet) return missionEnd(false, "The magnets went off with you upside down.");
+    // ---- the clock movement drives you back down until you are out of it
+    if (s.id === "gears") {
+      q.slipT = (q.slipT || 0) + dt;
+      state.distanceM -= 1.4 * dt;
+      if (state.distanceM < stageStart(s) - 20) return missionEnd(false, s.fail);
+      if (state.distanceM > s.to - 60) missionDone("out");
+    }
+    // ---- and the finishes
+    if (s.id === "sub" && q.sub > 0 && state.distanceM > s.to - 120) missionDone("finish");
+    if ((s.id === "apron" || s.id === "mall" || s.id === "viaduct") && state.distanceM > s.to - 90) missionDone("finish");
+    if (s.id === "race" && state.distanceM > s.to - 90) missionDone("race");
+    if (s.id === "steps" && state.distanceM > s.to - 40) missionDone("steps");
+  }
+
+  /* the beats that are only true in the Pacific */
+  function seaBeats(dt, s, q, m) {
     // ---- Tony Trihull: closing on Crabby, then carrying you, then hunting you
     if (s.id === "crabby") q.tonyM = 240 - clamp(state.distanceM / 620, 0, 1) * 200;
     if (s.id === "water" || s.id === "dead") {
@@ -1911,7 +2221,48 @@ const SPEC = {
     // ---- under the deck the magnets are the only thing between you and the sea
     if (s.id === "lip" && !q.magnet) return missionEnd(false, "The magnets went off with you upside down.");
     // ---- and the finish
-    if (s.id === "sub" && q.sub > 0 && state.distanceM > s.to - 120) missionDone("finish");
+  }
+
+  /* Tokyo, London, Goldfinger and Matera */
+  function otherBeats(dt, s, q, m) {
+    q.stopped = Math.abs(state.speedMps) * 3.6 < 25;
+    // LONDON: the detonator has a real range, and once you are outside it the bomb stops
+    // being a button and starts being a five-minute clock.
+    if (s.id === "range") {
+      q.rangeM = Math.max(0, state.distanceM - s.from);
+      if (q.rangeM >= 900 && !q.outOfRange) {
+        q.outOfRange = true; q.bombT = 300; audio.seaAlarm();
+        missionDone("range");
+        app.showToast("OUT OF RANGE — and it has just turned into a five-minute clock.", "CARS 2");
+      }
+    }
+    if (q.bombT > 0) { q.bombT -= dt; if (q.bombT <= 0) return missionEnd(false, "The five minutes ran out."); }
+    // MATERA: the doughnut. Full lock, low speed, guns out — count the degrees turned.
+    if (s.id === "piazza") {
+      const lock = Math.abs(state.steer) > 0.75, slow = Math.abs(state.speedMps) < 13;
+      if (lock && slow && q.gun && q.ammo > 0) q.spinDeg = (q.spinDeg || 0) + 150 * dt;
+      else q.spinDeg = Math.max(0, (q.spinDeg || 0) - 55 * dt);
+      if (q.spinDeg >= 340 && !m.done.spin) { missionDone("spin"); audio.qGun(); }
+    }
+    // GOLDFINGER: the mirror is a wall, and it is where the film ends the chase.
+    if (s.id === "mirror") {
+      const rel = s.to - 60 - state.distanceM;
+      if (rel < 6 && !q.stopped) {
+        state.roadInputG = Math.min(2.4, (state.roadInputG || 0) + 1.8); audio.seaBlast();
+        return missionEnd(false, "Into the wall, exactly as it happened — and they took the car, and you with it.");
+      }
+      if (rel < 60 && q.stopped) missionDone("wall");
+    }
+    // the oil still burns when a round goes through it, wherever you are
+    if (q.gun && q.muzzle > 0.7) {
+      for (const o of q.slicks) if (!o.lit && Math.abs(o.dist - state.distanceM) < 70) {
+        o.lit = true; o.fire = 6.5; audio.qHiss(1.2, 320, 0.3); audio.seaBlast();
+      }
+    }
+    for (const o of q.slicks) if (o.fire > 0) {
+      o.fire -= dt;
+      for (const r of state.rivals || []) if (!r.down && Math.abs(r.distM - o.dist) < 22) enemyDown(r, "drove into the fire");
+    }
   }
 
   // the extra longitudinal force a stage adds (N) — climbing takes work, water takes more
@@ -2003,7 +2354,8 @@ const SPEC = {
         q.smoke = Math.max(0, q.smoke - 9);
         for (let i = 0; i < 7; i++)
           q.puffs.push({ dist: state.distanceM - 4 - i * 1.6, lane: (state.laneOffset || 0) + (Math.random() - 0.5) * 1.4, life: 5.5, r: 1.6 + i * 0.3 });
-        audio.qHiss(1.5, 260, 0.3);
+        audio.qHiss(1.5, 260, 0.3); q.smokeUsed = true;
+        if (state.stage && state.stage.id === "smoke") missionDone("smoke");
         app.showToast("Smoke screen away.", "Q Branch");
         break;
       case "eject":
@@ -2184,22 +2536,45 @@ const SPEC = {
      the only thing that stops it), "guard" has to be disabled, "boarder" latches on
      behind and only the ejector seat clears it. */
   const MISSIONS = {
-    "Mission — Furka Pass, 1964": {
-      brief: "Goldfinger's Phantom III is ahead of you on the pass. Stay with it, deal with what comes at you, and reach the Auric Enterprises gate.",
-      limitS: 420, maxHits: 5, loseM: 520,
-      enemies: [
-        { name: "Rolls-Royce Phantom III · AU 1", body: "#f0e8c8", stripe: "#1a1a1a", top: 150, latG: 0.72, accel: 4.4, role: "target", at: 260 },
-        { name: "Ford Mustang · Tilly Masterson", body: "#f2f4f6", stripe: "#c8102e", top: 185, latG: 0.86, accel: 6.2, role: "shooter", at: -70, hp: 2 },
-        { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 170, latG: 0.80, accel: 5.4, role: "guard", at: -150, hp: 3 },
-        { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 168, latG: 0.80, accel: 5.3, role: "guard", at: -230, hp: 3 },
-        { name: "Auric Enterprises guard", body: "#2b2f36", stripe: "#6b7280", top: 166, latG: 0.79, accel: 5.2, role: "boarder", at: -320, hp: 3 },
+    "Mission — Tokyo, World Grand Prix": {
+      brief: "An American agent is about to have a very bad night in a Tokyo washroom, and he is going to hand you what he is carrying.",
+      limitS: 900, maxHits: 6, loseM: 9e9, cars2: true, enemies: [],
+      objectives: [
+        { id: "device", text: "Take what Rod is carrying" },
+        { id: "race", text: "Run the night race" },
+        { id: "guards", text: "Put two lemons out — smoke and oil", need: 2 },
+        { id: "finish", text: "Make Siddeley's ramp at Haneda" },
       ],
+    },
+    "Mission — London, the last race": {
+      brief: "You are tied to the movement of a clock tower with a bomb in your own air filter, and the only voice that can stop it is the one that armed it.",
+      limitS: 1200, maxHits: 6, loseM: 9e9, cars2: true, enemies: [],
+      objectives: [
+        { id: "out", text: "Get out of Big Bentley" },
+        { id: "hook", text: "Take McQueen away from the pit" },
+        { id: "range", text: "Get the detonator out of range" },
+        { id: "finish", text: "Reach Buckingham Palace" },
+      ],
+    },
+    "Mission — Furka Pass & Auric Enterprises, 1964": {
+      brief: "Goldfinger's Phantom III is ahead of you on the pass, and his works are twenty miles further on. Bring the car back in one piece — he did ask.",
+      limitS: 1080, maxHits: 5, loseM: 520, enemies: [],
       objectives: [
         { id: "tail", text: "Keep the Phantom III in sight" },
-        { id: "mustang", text: "Stop the Mustang — slashers or guns" },
-        { id: "guards", text: "Disable 2 Auric guards", need: 2 },
-        { id: "boarder", text: "Eject the car that gets on your tail" },
-        { id: "finish", text: "Reach the Auric Enterprises gate" },
+        { id: "mustang", text: "Stop the Mustang — the slashers" },
+        { id: "guards", text: "Put two Auric guards out", need: 2 },
+        { id: "boarder", text: "Eject the one who gets in" },
+        { id: "wall", text: "Work out that it is a mirror" },
+      ],
+    },
+    "Mission — Matera, 2021": {
+      brief: "Matera, and SPECTRE knew you were coming. The glass will hold. The rest is up to how you use the square.",
+      limitS: 600, maxHits: 8, loseM: 9e9, enemies: [],
+      objectives: [
+        { id: "steps", text: "Get down the steps" },
+        { id: "spin", text: "Turn the car through 360° with the guns out" },
+        { id: "smoke", text: "Leave them the smoke screen" },
+        { id: "finish", text: "Out of Matera" },
       ],
     },
     /* Cars 2, the opening. The enemies arrive per stage (SEA_ENEMIES), so the field is
@@ -2594,7 +2969,7 @@ const SPEC = {
   }
 
   Object.assign(app, {
-    qFire, qStep, seaFire, stageStep, onSea,
+    qFire, qStep, seaFire, stageStep, onSea, onStage, STAGE_SETS, stageAt,
     engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN,
     buildCornersForRoute, curvatureAt, halfWidthAt, raceLineOffAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING
   });
@@ -2619,7 +2994,7 @@ const SPEC = {
     const env = state.route.active ? state.route.env : "track";
     const day = state.dayPhase;
     // Cars 2 opens at 02:40 in the Pacific — that stage is night whatever the clock says
-    const night = env === "sea" ? true : day > 0.82;
+    const night = env === "sea" ? !(state.stage && state.stage.surf === "alpine") : day > 0.82;
     const palettes = {
       track:    { road: "#1f2228", grass: "#23311d", far: "#2a3640", kerb: true,  barrier: false },
       street:   { road: "#26282d", grass: "#2c2e33", far: "#3a3f48", kerb: true,  barrier: true  },  // Monaco
@@ -2666,7 +3041,9 @@ const SPEC = {
     const w = innerWidth, h = innerHeight; horizonY = h * 0.46; const pal = envColors(); rebuildRoadTable();
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
-    drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawStage(w, h, pal); if (!onSea()) drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
+    drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawStage(w, h, pal);
+    if (!onStage()) { drawRoadside(w, h, pal); drawTraffic(w, h, pal); }
+    drawRivals(w, h, pal);
     drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(240,200,120,0.16)" : state.heat ? null : state.cool ? null : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
     drawSeaWorld(w, h);
@@ -3185,6 +3562,7 @@ const SPEC = {
   }
 
   const onSea = () => state.route.active && state.route.name === SEA_ROUTE;
+  const onStage = () => state.route.active && !!STAGE_SETS[state.route.name];
   function drawSeaWorld(w, h) {
     const list = seaWorldFor(); if (!list) return;
     // far to near, so nearer hulls occlude the ones behind them
@@ -3365,7 +3743,7 @@ const SPEC = {
   }
   function drawStage(w, h, pal) {
     const s = state.stage; if (!s) return;
-    const night = true;                                   // the whole sequence is at night
+    const night = s.surf !== "alpine";                    // only the Furka Pass is in daylight
     ctx.save();
     switch (s.surf) {
       case "wood": drawPlanks(w, h, night); break;
@@ -3377,50 +3755,784 @@ const SPEC = {
       case "pad": drawHelipad(w, h, night); break;
       case "water": drawOpenWater(w, h, night); break;
       case "sub": drawSubmerged(w, h, night); break;
+      case "carpet": drawCarpet(w, h, night); break;
+      case "corridor": drawCorridor(w, h, night); break;
+      case "neon": drawNeon(w, h, night, false); break;
+      case "alley": drawNeon(w, h, night, true); break;
+      case "suspension": drawSuspension(w, h, night); break;
+      case "apron": drawApron(w, h, night); break;
+      case "gears": drawGears(w, h, night); break;
+      case "city": drawCity(w, h, night, false); break;
+      case "mall": drawCity(w, h, night, true); break;
+      case "pitlane": drawPitlane(w, h, night); break;
+      case "alpine": drawAlpine(w, h, night); break;
+      case "refinery": drawRefinery(w, h, night); break;
+      case "forest": drawForest(w, h, night); break;
+      case "mirrorwall": drawMirrorWall(w, h, night); break;
+      case "stone": drawStone(w, h, night, false); break;
+      case "steps": drawSteps(w, h, night); break;
+      case "piazza": drawPiazza(w, h, night); break;
+      case "viaduct": drawStone(w, h, night, true); break;
     }
     drawHookLine(w, h);
     ctx.restore();
   }
 
   // CRABBY: a working crab boat. Timber deck, a bulwark you cannot drive over, pots stacked.
-  function drawPlanks(w, h, night) {
-    ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
-    drawSwell(w, h, night, 2.4);
-    // the deck itself, redrawn as timber
+  /* ===== surfaces for the other four missions ========================================
+     Built out of the same six helpers as the Pacific: deckStrip, seams, wall, handrail,
+     props (world-anchored) and flood. Each one is the place, not a recoloured road. */
+
+  // buildings either side, world-anchored, with a per-index height/colour so they persist
+  function buildings(spacingM, maxD, opt) {
+    props(spacingM, 26, maxD, (d, idx, m) => {
+      for (const sgn of [-1, 1]) {
+        const seed = ((idx * 7919 + (sgn > 0 ? 331 : 17)) % 1000) / 1000;
+        const H = halfAt(d), p = projectAhead(d, sgn * (H + (opt.gap || 5))); if (!p.fwd || p.fwd <= 1) continue;
+        const bh = (opt.minH + seed * opt.varH) * m, bw = (opt.w || 12) * m;
+        ctx.fillStyle = opt.wallCol(seed);
+        ctx.fillRect(p.x - bw / 2, p.y - bh, bw, bh);
+        if (opt.windows) {
+          for (let r = 0; r < Math.min(9, Math.floor(bh / (2.4 * m))); r++)
+            for (let c0 = 0; c0 < 3; c0++) {
+              const lit = ((idx * 31 + r * 7 + c0 * 3) % 5) > 1;
+              ctx.fillStyle = lit ? opt.windows : "rgba(14,18,24,0.9)";
+              ctx.fillRect(p.x - bw * 0.34 + c0 * bw * 0.27, p.y - bh + (1.2 + r * 2.4) * m, bw * 0.17, 1.3 * m);
+            }
+        }
+        if (opt.sign && idx % 3 === (sgn > 0 ? 0 : 1)) {
+          const sy = p.y - bh * (0.35 + seed * 0.4);
+          ctx.fillStyle = opt.sign(seed);
+          ctx.fillRect(p.x - sgn * bw * 0.5, sy, bw * 0.34, 4.2 * m);
+          ctx.save(); ctx.globalCompositeOperation = "screen";
+          const g = ctx.createRadialGradient(p.x, sy + 2 * m, 0, p.x, sy + 2 * m, 9 * m);
+          g.addColorStop(0, opt.sign(seed).replace("rgb", "rgba").replace(")", ",0.30)"));
+          g.addColorStop(1, "rgba(0,0,0,0)");
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, sy + 2 * m, 9 * m, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+      }
+    });
+  }
+  // wet asphalt: the surface plus the smeared reflections that make it read as wet
+  function wetRoad(base, sheen) {
+    deckStrip(2, 200, 4, () => base);
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    for (let i = 0; i < 16; i++) {
+      const d = 6 + i * i * 0.9; if (d > 130) break;
+      const p = projectAhead(d, ((i * 37) % 9 - 4) * 0.9), m = metreAt(d); if (!p.fwd || p.fwd <= 1 || !m) continue;
+      ctx.fillStyle = sheen;
+      ctx.fillRect(p.x - 0.6 * m, p.y, 1.2 * m, 3.4 * m);
+    }
+    ctx.restore();
+  }
+  // crowd barriers with an advertising skirt — every street circuit has them
+  function barriers(colA, colB) {
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 1.0, 3, 160, "rgba(24,28,34,0.95)", "rgba(200,210,220,0.55)");
+      props(6, 26, 150, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = idx % 2 ? colA : colB;
+        ctx.fillRect(p.x - 1.6 * m, p.y - 0.85 * m, 3.2 * m, 0.62 * m);
+      });
+    }
+  }
+
+  /* ---- CARS 2 · TOKYO ---- */
+  function drawCarpet(w, h, night) {
+    ctx.fillStyle = "#0b0f16"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 150, 4, () => "#8d1622");                        // the carpet
+    seams(3, 140, 1.8, "rgba(56,8,14,0.6)", 1);
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 0.5, 3, 140, "#1b2029", "rgba(214,182,92,0.8)");  // rope barrier kerb
+      // the press: a wall of cars with lenses, and the flashes going off
+      props(4.5, 26, 120, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) + 2.4)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = `hsl(${(idx * 47) % 360},22%,26%)`;
+        ctx.beginPath(); ctx.roundRect(p.x - 1.5 * m, p.y - 1.5 * m, 3 * m, 1.5 * m, 0.4 * m); ctx.fill();
+        ctx.fillStyle = "rgba(20,24,30,0.95)"; ctx.fillRect(p.x - 0.4 * m, p.y - 2.2 * m, 0.8 * m, 0.7 * m);
+        if (((idx * 13 + Math.floor(state.time * 6)) % 11) === 0) {
+          ctx.save(); ctx.globalCompositeOperation = "screen";
+          const g = ctx.createRadialGradient(p.x, p.y - 2 * m, 0, p.x, p.y - 2 * m, 7 * m);
+          g.addColorStop(0, "rgba(255,255,255,0.85)"); g.addColorStop(1, "rgba(255,255,255,0)");
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y - 2 * m, 7 * m, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+      });
+      // paper lanterns strung overhead
+      props(5, 24, 120, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) - 0.5)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = "rgba(240,120,80,0.9)";
+        ctx.beginPath(); ctx.ellipse(p.x, p.y - 6 * m, 0.5 * m, 0.7 * m, 0, 0, Math.PI * 2); ctx.fill();
+        flood(p.x, p.y - 6 * m, m, 5, "rgba(255,150,90,0.16)");
+      });
+    }
+    const pf = projectAhead(130, 0), mf = metreAt(130);
+    if (pf.fwd > 1 && mf) {                                        // the stage and its banner
+      ctx.fillStyle = "#141a24"; ctx.fillRect(pf.x - 9 * mf, pf.y - 7 * mf, 18 * mf, 7 * mf);
+      ctx.fillStyle = "#1c3f6e"; ctx.fillRect(pf.x - 9 * mf, pf.y - 12 * mf, 18 * mf, 5 * mf);
+      ctx.fillStyle = "rgba(240,246,252,0.9)"; ctx.textAlign = "center";
+      ctx.font = `700 ${Math.round(1.8 * mf)}px ui-sans-serif`;
+      ctx.fillText("WORLD GRAND PRIX", pf.x, pf.y - 9 * mf);
+    }
+  }
+  function drawCorridor(w, h, night) {
+    ctx.fillStyle = "#0a0d12"; ctx.fillRect(0, 0, w, h);
+    deckStrip(2, 90, 3, (d) => (Math.floor(d / 1.2) % 2 ? "#2b3038" : "#262b33"));
+    seams(3, 85, 1.2, "rgba(12,15,19,0.8)", 1.4);
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 3.2, 3, 85, "#39414c", "rgba(180,192,206,0.5)");   // tiled walls
+      props(1.2, 60, 80, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.strokeStyle = "rgba(20,24,30,0.5)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 3.2 * m); ctx.stroke();
+      });
+    }
+    // the strip lights in the ceiling, and the ceiling they are in
+    props(4, 24, 80, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.fillStyle = "#1b212a"; ctx.fillRect(e.l.x, e.l.y - 3.4 * m, e.r.x - e.l.x, 0.5 * m);
+      ctx.fillStyle = "rgba(226,240,250,0.85)";
+      ctx.fillRect((e.l.x + e.r.x) / 2 - 1.2 * m, e.l.y - 3.25 * m, 2.4 * m, 0.25 * m);
+      flood((e.l.x + e.r.x) / 2, e.l.y - 3.2 * m, m, 6, "rgba(200,226,255,0.16)");
+    });
+  }
+  function drawNeon(w, h, night, tight) {
+    ctx.fillStyle = "#070a11"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    wetRoad("#20242c", "rgba(120,190,255,0.08)");
+    seams(3, 150, tight ? 2.4 : 4.2, "rgba(228,232,240,0.16)", 1);
+    buildings(tight ? 9 : 16, tight ? 90 : 200, {
+      gap: tight ? 1.2 : 5, w: tight ? 9 : 14, minH: tight ? 14 : 22, varH: tight ? 16 : 46,
+      wallCol: (s0) => `hsl(${210 + s0 * 24},14%,${8 + s0 * 6}%)`,
+      windows: "rgba(255,214,150,0.55)",
+      sign: (s0) => (s0 > 0.66 ? "rgb(255,60,110)" : s0 > 0.33 ? "rgb(80,220,255)" : "rgb(255,190,60)"),
+    });
+    if (!tight) barriers("#c81417", "#f5f7fa");
+    else {
+      // an alley: pipework, aircon units and steam out of a vent
+      for (const sgn of [-1, 1]) props(7, 14, 80, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) + 0.6)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = "#2a3038"; ctx.fillRect(p.x - 1.1 * m, p.y - (4 + (idx % 3)) * m, 2.2 * m, 1.6 * m);
+        if (idx % 2) {
+          ctx.save(); ctx.globalAlpha = 0.30;
+          const g = ctx.createRadialGradient(p.x, p.y - 2 * m, 0, p.x, p.y - 2 * m, 5 * m);
+          g.addColorStop(0, "rgba(226,236,246,0.85)"); g.addColorStop(1, "rgba(200,210,224,0)");
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y - 2 * m - (state.time * 12 % 20), 5 * m, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+      });
+    }
+  }
+  function drawSuspension(w, h, night) {
+    ctx.fillStyle = seaFill(horizonY + 20, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
+    drawSwell(w, h, night, 1.2);
+    wetRoad("#242830", "rgba(150,200,255,0.07)");
+    seams(3, 170, 4.2, "rgba(228,232,240,0.2)", 1);
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 1.15, 3, 170, "#2b3views".length ? "#2b323b" : "#2b323b", "rgba(200,212,224,0.55)");
+      handrail(sgn, 1.9, 3, 170, "rgba(176,190,204,0.5)", 0.35);
+      // the hangers running up to the main cable, and the cable itself
+      ctx.strokeStyle = "rgba(200,212,226,0.4)";
+      props(3, 42, 170, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) + 1.6)); if (!p.fwd || p.fwd <= 1) return;
+        const ph = ((idx * 3) % 60) / 60, sag = 30 - Math.cos((ph - 0.5) * 2.6) * 22;
+        ctx.lineWidth = Math.max(0.8, 0.1 * m);
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - sag * m); ctx.stroke();
+      });
+    }
+    // the towers
+    props(160, 3, 200, (d, idx, m) => {
+      for (const sgn of [-1, 1]) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 2.4)); if (!p.fwd || p.fwd <= 1) continue;
+        ctx.fillStyle = "#3a434e"; ctx.fillRect(p.x - 1.4 * m, p.y - 62 * m, 2.8 * m, 62 * m);
+        ctx.fillStyle = "rgba(255,70,60,0.9)";
+        ctx.beginPath(); ctx.arc(p.x, p.y - 63 * m, Math.max(1.5, 0.5 * m), 0, Math.PI * 2); ctx.fill();
+      }
+      const l = projectAhead(d, -(halfAt(d) + 2.4)), r = projectAhead(d, halfAt(d) + 2.4);
+      if (l.fwd > 1 && r.fwd > 1) {
+        ctx.strokeStyle = "#3a434e"; ctx.lineWidth = Math.max(1.5, 1.2 * m);
+        ctx.beginPath(); ctx.moveTo(l.x, l.y - 46 * m); ctx.lineTo(r.x, r.y - 46 * m); ctx.stroke();
+      }
+    });
+    ctx.fillStyle = "rgba(190,214,236,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("RAINBOW BRIDGE — TOKYO BAY", w / 2, horizonY - 16);
+  }
+  function drawApron(w, h, night) {
+    ctx.fillStyle = "#0a0e14"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 200, 4, () => "#31363d");
+    seams(3, 180, 5, "rgba(18,22,27,0.7)", 2);
+    // taxiway centreline in yellow, edge lights in blue
+    ctx.strokeStyle = "rgba(240,200,60,0.85)";
+    props(10, 20, 180, (d, idx, m) => {
+      const a = projectAhead(d, 0), b = projectAhead(d + 5, 0);
+      if (!a.fwd || a.fwd <= 1 || !b.fwd || b.fwd <= 1) return;
+      ctx.lineWidth = Math.max(1, 0.3 * m);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    for (const sgn of [-1, 1]) props(8, 22, 170, (d, idx, m) => {
+      const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "rgba(90,150,255,0.9)";
+      ctx.beginPath(); ctx.arc(p.x, p.y - 0.3 * m, Math.max(1.2, 0.28 * m), 0, Math.PI * 2); ctx.fill();
+    });
+    // Siddeley, with the ramp down
+    const pf = projectAhead(150, 12), mf = metreAt(150);
+    if (pf.fwd > 1 && mf) {
+      ctx.fillStyle = "#dfe6ee";
+      ctx.beginPath();
+      ctx.moveTo(pf.x - 22 * mf, pf.y - 3 * mf); ctx.lineTo(pf.x + 18 * mf, pf.y - 3.6 * mf);
+      ctx.lineTo(pf.x + 24 * mf, pf.y - 6.4 * mf); ctx.lineTo(pf.x + 16 * mf, pf.y - 8.2 * mf);
+      ctx.lineTo(pf.x - 20 * mf, pf.y - 7.4 * mf); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#2b62b0"; ctx.fillRect(pf.x - 20 * mf, pf.y - 6 * mf, 38 * mf, 1.1 * mf);
+      ctx.fillStyle = "#c3ccd6";                                   // tail
+      ctx.beginPath(); ctx.moveTo(pf.x - 20 * mf, pf.y - 7 * mf); ctx.lineTo(pf.x - 23 * mf, pf.y - 20 * mf);
+      ctx.lineTo(pf.x - 17 * mf, pf.y - 20 * mf); ctx.lineTo(pf.x - 13 * mf, pf.y - 7 * mf); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#8d949c";                                   // the ramp
+      ctx.beginPath(); ctx.moveTo(pf.x - 22 * mf, pf.y - 3 * mf); ctx.lineTo(pf.x - 30 * mf, pf.y);
+      ctx.lineTo(pf.x - 24 * mf, pf.y); ctx.lineTo(pf.x - 18 * mf, pf.y - 3 * mf); ctx.closePath(); ctx.fill();
+      flood(pf.x, pf.y - 10 * mf, mf, 26, "rgba(220,236,255,0.14)");
+    }
+  }
+
+  /* ---- CARS 2 · LONDON ---- */
+  function drawGears(w, h, night) {
+    ctx.fillStyle = "#120e08"; ctx.fillRect(0, 0, w, h);
+    // the tooth faces you are driving on, moving the wrong way under you
+    const roll = (state.time * 1.1) % 1;
+    deckStrip(2, 110, 2.5, (d) => (Math.floor(d / 2.5 + roll * 2) % 2 ? "#7a5c23" : "#5f471a"));
+    props(2.5, 44, 100, (d, idx, m) => {                           // the teeth
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.fillStyle = "#8a6a2b";
+      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y);
+      ctx.lineTo(e.r.x - (e.r.x - e.l.x) * 0.12, e.l.y - 0.9 * m);
+      ctx.lineTo(e.l.x + (e.r.x - e.l.x) * 0.12, e.l.y - 0.9 * m); ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = "rgba(226,196,120,0.35)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y - 0.9 * m); ctx.lineTo(e.r.x, e.r.y - 0.9 * m); ctx.stroke();
+    });
+    // the great wheels either side, turning
+    for (const sgn of [-1, 1]) {
+      const p = projectAhead(46, sgn * 26), m = metreAt(46); if (!p.fwd || p.fwd <= 1 || !m) continue;
+      const R = 26 * m, a0 = state.time * 0.35 * sgn;
+      ctx.strokeStyle = "#7a5c23"; ctx.lineWidth = Math.max(2, 1.4 * m);
+      ctx.beginPath(); ctx.arc(p.x, p.y - 8 * m, R, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.arc(p.x, p.y - 8 * m, R * 0.18, 0, Math.PI * 2); ctx.stroke();
+      for (let i = 0; i < 40; i++) {
+        const a = a0 + i / 40 * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(p.x + Math.cos(a) * R, p.y - 8 * m + Math.sin(a) * R);
+        ctx.lineTo(p.x + Math.cos(a) * R * 1.07, p.y - 8 * m + Math.sin(a) * R * 1.07); ctx.stroke();
+      }
+      for (let i = 0; i < 6; i++) {
+        const a = a0 + i / 6 * Math.PI * 2;
+        ctx.lineWidth = Math.max(1.5, 0.9 * m);
+        ctx.beginPath(); ctx.moveTo(p.x, p.y - 8 * m);
+        ctx.lineTo(p.x + Math.cos(a) * R * 0.94, p.y - 8 * m + Math.sin(a) * R * 0.94); ctx.stroke();
+      }
+    }
+    // the clock face, lit from behind, dead ahead
+    const pf = projectAhead(120, 0), mf = metreAt(120);
+    if (pf.fwd > 1 && mf) {
+      const R = 22 * mf;
+      const g = ctx.createRadialGradient(pf.x, pf.y - 16 * mf, 0, pf.x, pf.y - 16 * mf, R);
+      g.addColorStop(0, "rgba(255,232,178,0.55)"); g.addColorStop(1, "rgba(255,206,120,0.10)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(pf.x, pf.y - 16 * mf, R, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "rgba(60,44,18,0.9)"; ctx.lineWidth = Math.max(2, 0.9 * mf);
+      ctx.beginPath(); ctx.arc(pf.x, pf.y - 16 * mf, R, 0, Math.PI * 2); ctx.stroke();
+      for (let i = 0; i < 12; i++) {
+        const a = i / 12 * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(pf.x + Math.cos(a) * R * 0.82, pf.y - 16 * mf + Math.sin(a) * R * 0.82);
+        ctx.lineTo(pf.x + Math.cos(a) * R * 0.96, pf.y - 16 * mf + Math.sin(a) * R * 0.96); ctx.stroke();
+      }
+      const hh = state.time * 0.2, mm2 = state.time * 2.4;
+      ctx.lineWidth = Math.max(2, 1.1 * mf);
+      ctx.beginPath(); ctx.moveTo(pf.x, pf.y - 16 * mf); ctx.lineTo(pf.x + Math.cos(hh) * R * 0.5, pf.y - 16 * mf + Math.sin(hh) * R * 0.5); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(pf.x, pf.y - 16 * mf); ctx.lineTo(pf.x + Math.cos(mm2) * R * 0.78, pf.y - 16 * mf + Math.sin(mm2) * R * 0.78); ctx.stroke();
+    }
+    ctx.fillStyle = "rgba(240,214,150,0.85)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("BIG BENTLEY — THE TRAIN IS DRIVING YOU BACK", w / 2, horizonY - 22);
+  }
+  function drawCity(w, h, night, mall) {
+    ctx.fillStyle = "#080b11"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    if (mall) { deckStrip(2, 200, 4, () => "#5a2a26"); seams(3, 180, 5, "rgba(30,14,12,0.5)", 1.4); }
+    else wetRoad("#22262e", "rgba(255,214,150,0.08)");
+    if (mall) {
+      // The Mall: plane trees down both sides, Union flags on poles
+      for (const sgn of [-1, 1]) props(11, 18, 180, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) + 3.4)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = "#3b3128"; ctx.fillRect(p.x - 0.4 * m, p.y - 8 * m, 0.8 * m, 8 * m);
+        ctx.fillStyle = "rgba(30,52,32,0.92)";
+        ctx.beginPath(); ctx.arc(p.x, p.y - 10.5 * m, 3.4 * m, 0, Math.PI * 2); ctx.fill();
+        if (idx % 2) {
+          ctx.fillStyle = "#1c3f8f"; ctx.fillRect(p.x + sgn * 0.4 * m, p.y - 13 * m, 2.2 * m, 1.3 * m);
+          ctx.fillStyle = "#c8102e"; ctx.fillRect(p.x + sgn * 0.4 * m, p.y - 12.6 * m, 2.2 * m, 0.42 * m);
+        }
+      });
+      // Buckingham Palace at the end of it
+      const pf = projectAhead(190, 0), mf = metreAt(190);
+      if (pf.fwd > 1 && mf) {
+        ctx.fillStyle = "#5a5346"; ctx.fillRect(pf.x - 26 * mf, pf.y - 17 * mf, 52 * mf, 17 * mf);
+        ctx.fillStyle = "#4a4438"; ctx.fillRect(pf.x - 26 * mf, pf.y - 19 * mf, 52 * mf, 2 * mf);
+        ctx.fillStyle = "rgba(255,222,160,0.6)";
+        for (let c0 = 0; c0 < 11; c0++) for (let r = 0; r < 2; r++)
+          ctx.fillRect(pf.x - 23 * mf + c0 * 4.4 * mf, pf.y - 14 * mf + r * 6 * mf, 2 * mf, 3.4 * mf);
+        flood(pf.x - 18 * mf, pf.y - 21 * mf, mf, 22, "rgba(255,226,170,0.14)");
+        flood(pf.x + 18 * mf, pf.y - 21 * mf, mf, 22, "rgba(255,226,170,0.14)");
+      }
+    } else {
+      buildings(15, 200, {
+        gap: 5, w: 13, minH: 16, varH: 34,
+        wallCol: (s0) => `hsl(${28 + s0 * 14},10%,${10 + s0 * 5}%)`,
+        windows: "rgba(255,226,170,0.5)", sign: null,
+      });
+      barriers("#1c3f8f", "#f5f7fa");
+      // the tower, once, well down the road
+      const pf = projectAhead(178, -34), mf = metreAt(178);
+      if (pf.fwd > 1 && mf) {
+        ctx.fillStyle = "#4a4436"; ctx.fillRect(pf.x - 4 * mf, pf.y - 58 * mf, 8 * mf, 58 * mf);
+        ctx.fillStyle = "rgba(255,232,178,0.75)";
+        ctx.beginPath(); ctx.arc(pf.x, pf.y - 52 * mf, 3.2 * mf, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#3c3729";
+        ctx.beginPath(); ctx.moveTo(pf.x - 4 * mf, pf.y - 58 * mf); ctx.lineTo(pf.x, pf.y - 70 * mf); ctx.lineTo(pf.x + 4 * mf, pf.y - 58 * mf); ctx.closePath(); ctx.fill();
+      }
+    }
+    // the bomb's clock, if it is running
+    const q = state.q;
+    if (q.bombT > 0) {
+      const mm2 = Math.floor(q.bombT / 60), ss = Math.floor(q.bombT % 60);
+      ctx.fillStyle = q.bombT < 60 ? "rgba(255,80,64,0.95)" : "rgba(255,196,90,0.95)";
+      ctx.font = "700 20px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(mm2 + ":" + String(ss).padStart(2, "0"), w / 2, horizonY + 40);
+      ctx.font = "600 11px ui-sans-serif";
+      ctx.fillText("AIR FILTER — ARMED", w / 2, horizonY + 56);
+    }
+    if (q.rangeM != null && q.rangeM < 900) {
+      ctx.fillStyle = "rgba(255,150,110,0.95)"; ctx.font = "700 15px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("DETONATOR RANGE — " + Math.round(q.rangeM) + " / 900 m", w / 2, horizonY + 20);
+    } else if (q.rangeM != null) {
+      ctx.fillStyle = "rgba(120,230,180,0.95)"; ctx.font = "700 15px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("DETONATOR — OUT OF RANGE", w / 2, horizonY + 20);
+    }
+  }
+  function drawPitlane(w, h, night) {
+    ctx.fillStyle = "#0a0e14"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 150, 4, () => "#2b3038");
+    seams(3, 140, 3.6, "rgba(228,232,240,0.18)", 1);
+    for (const sgn of [-1, 1]) {
+      if (sgn < 0) {
+        wall(sgn, 1.05, 3, 140, "#1e242c", "rgba(220,228,238,0.6)");     // the pit wall
+      } else {
+        // the garages: roof band, team colour, an open dark door, tyre stacks
+        props(14, 12, 140, (d, idx, m) => {
+          const p = projectAhead(d, sgn * (halfAt(d) + 7)); if (!p.fwd || p.fwd <= 1) return;
+          ctx.fillStyle = "#1c222a"; ctx.fillRect(p.x - 6 * m, p.y - 8 * m, 12 * m, 8 * m);
+          ctx.fillStyle = ["#c81417", "#e8532a", "#2fa05a", "#2b62b0"][idx % 4];
+          ctx.fillRect(p.x - 6 * m, p.y - 8 * m, 12 * m, 0.9 * m);
+          ctx.fillStyle = "#080b10"; ctx.fillRect(p.x - 3.6 * m, p.y - 6 * m, 7.2 * m, 6 * m);
+          ctx.fillStyle = "#15181d";
+          for (let t = 0; t < 4; t++) ctx.fillRect(p.x + 4 * m, p.y - (0.7 + t * 0.62) * m, 1.8 * m, 0.55 * m);
+          flood(p.x, p.y - 8.6 * m, m, 12);
+        });
+      }
+    }
+    ctx.fillStyle = "rgba(120,230,180,0.9)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("PIT LANE — YOUR BOX", w / 2, horizonY - 20);
+  }
+
+  /* ---- GOLDFINGER, 1964 ---- */
+  function drawAlpine(w, h, night) {
+    // the only stage in the garage's missions that happens in daylight
+    const sky = ctx.createLinearGradient(0, 0, 0, horizonY + 40);
+    sky.addColorStop(0, "#4d86bd"); sky.addColorStop(0.6, "#9fc0d6"); sky.addColorStop(1, "#d6dfe2");
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, w, horizonY + 40);
+    ctx.fillStyle = "#3d4a3a"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    // the far peaks
+    ctx.fillStyle = "#7d8b98";
+    for (let i = 0; i < 9; i++) {
+      const x = w * (i / 8) + Math.sin(i * 2.1) * 40, pk = 40 + ((i * 53) % 60);
+      ctx.beginPath(); ctx.moveTo(x - 90, horizonY); ctx.lineTo(x, horizonY - pk); ctx.lineTo(x + 90, horizonY); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(240,246,250,0.9)";
+      ctx.beginPath(); ctx.moveTo(x - 22, horizonY - pk * 0.62); ctx.lineTo(x, horizonY - pk); ctx.lineTo(x + 22, horizonY - pk * 0.62); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#7d8b98";
+    }
+    deckStrip(2, 200, 4, () => "#3b3f45");
+    seams(3, 180, 4.2, "rgba(232,228,214,0.35)", 1.4);
+    // rock face on the inside, and the drop with its guardrail on the outside
+    wall(-1, 6.5, 3, 160, "#6a655c", "rgba(140,132,118,0.6)");
+    props(4, 30, 150, (d, idx, m) => {
+      const p = projectAhead(d, -halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = `rgba(${88 + (idx % 5) * 8},${82 + (idx % 4) * 8},${74 + (idx % 3) * 8},0.85)`;
+      ctx.fillRect(p.x, p.y - (2 + (idx % 4)) * m, 1.4 * m, (2 + (idx % 4)) * m);
+    });
+    ctx.strokeStyle = "rgba(226,230,236,0.85)"; ctx.lineWidth = 2;     // Swiss stone guardrail
+    props(3.2, 34, 160, (d, idx, m) => {
+      const p = projectAhead(d, halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = idx % 2 ? "rgba(238,240,244,0.95)" : "rgba(38,44,52,0.9)";
+      ctx.fillRect(p.x - 0.22 * m, p.y - 0.95 * m, 0.44 * m, 0.95 * m);
+    });
+    // snow banks at the road edge, and the valley beyond
+    ctx.fillStyle = "rgba(238,244,250,0.85)";
+    props(2.4, 40, 150, (d, idx, m) => {
+      const p = projectAhead(d, halfAt(d) + 0.9); if (!p.fwd || p.fwd <= 1) return;
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, 1.1 * m, 0.4 * m, 0, 0, Math.PI * 2); ctx.fill();
+    });
+  }
+  function drawRefinery(w, h, night) {
+    ctx.fillStyle = "#0b0f14"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 200, 4, () => "#2f343b");
+    seams(3, 180, 5.4, "rgba(20,24,29,0.7)", 2.2);                     // concrete slab joints
+    // storage tanks, pipe gantries and the floods that light the yard
+    props(20, 12, 200, (d, idx, m) => {
+      const sgn = idx % 2 ? 1 : -1;
+      const p = projectAhead(d, sgn * (halfAt(d) + 9)); if (!p.fwd || p.fwd <= 1) return;
+      if (idx % 3 === 1) {                                             // a tank
+        const R = 8 * m, H = 11 * m;
+        ctx.fillStyle = "#3c444d"; ctx.fillRect(p.x - R, p.y - H, R * 2, H);
+        ctx.fillStyle = "#4a535d"; ctx.beginPath(); ctx.ellipse(p.x, p.y - H, R, R * 0.26, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "rgba(160,172,186,0.4)"; ctx.lineWidth = Math.max(1, 0.2 * m);
+        for (let r = 1; r < 4; r++) { ctx.beginPath(); ctx.moveTo(p.x - R, p.y - H * r / 4); ctx.lineTo(p.x + R, p.y - H * r / 4); ctx.stroke(); }
+      } else {                                                          // a gantry of pipes
+        for (let r = 0; r < 3; r++) {
+          const y = p.y - (3 + r * 1.7) * m;
+          ctx.strokeStyle = ["#7d8894", "#6b6157", "#5f7280"][r]; ctx.lineWidth = Math.max(1.4, 0.55 * m);
+          ctx.beginPath(); ctx.moveTo(p.x - 6 * m, y); ctx.lineTo(p.x + 6 * m, y); ctx.stroke();
+        }
+        ctx.strokeStyle = "rgba(120,132,146,0.8)"; ctx.lineWidth = Math.max(1, 0.3 * m);
+        for (const xx of [-5.4, 5.4]) { ctx.beginPath(); ctx.moveTo(p.x + xx * m, p.y); ctx.lineTo(p.x + xx * m, p.y - 8 * m); ctx.stroke(); }
+      }
+      const lp = projectAhead(d, sgn * (halfAt(d) + 2.2)), lm = metreAt(d);
+      if (lp.fwd > 1 && lm) {
+        ctx.fillStyle = "#39424c"; ctx.fillRect(lp.x - 0.2 * lm, lp.y - 12 * lm, 0.4 * lm, 12 * lm);
+        flood(lp.x, lp.y - 12 * lm, lm, 20);
+      }
+    });
+    // a chain-link fence along both edges
+    for (const sgn of [-1, 1]) {
+      ctx.strokeStyle = "rgba(150,162,176,0.35)"; ctx.lineWidth = 1;
+      handrail(sgn, 2.6, 3, 170, "rgba(150,162,176,0.4)", 0.5);
+    }
+  }
+  function drawForest(w, h, night) {
+    ctx.fillStyle = "#05080b"; ctx.fillRect(0, 0, w, h);
+    deckStrip(2, 130, 3, () => "#23272d");
+    seams(3, 120, 4.2, "rgba(224,220,206,0.22)", 1.2);
+    // trunks either side, close, lit only by the headlamps — so nearer is brighter
+    for (const sgn of [-1, 1]) props(3.4, 40, 120, (d, idx, m) => {
+      const p = projectAhead(d, sgn * (halfAt(d) + 0.9 + (idx % 4) * 0.7)); if (!p.fwd || p.fwd <= 1) return;
+      const lit = clamp(1 - d / 70, 0.05, 1);
+      ctx.fillStyle = `rgba(${Math.round(48 * lit + 8)},${Math.round(38 * lit + 8)},${Math.round(28 * lit + 8)},0.95)`;
+      ctx.fillRect(p.x - 0.34 * m, p.y - (9 + (idx % 5) * 3) * m, 0.68 * m, (9 + (idx % 5) * 3) * m);
+    });
+    // the canopy closing over the road
+    ctx.fillStyle = "rgba(6,10,8,0.96)";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w, 0);
+    ctx.lineTo(w, horizonY - 30); ctx.quadraticCurveTo(w / 2, horizonY - 96, 0, horizonY - 30);
+    ctx.closePath(); ctx.fill();
+    // the headlamp tunnel
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    const g = ctx.createRadialGradient(w / 2, h * 0.72, 10, w / 2, h * 0.72, w * 0.5);
+    g.addColorStop(0, "rgba(226,238,255,0.16)"); g.addColorStop(1, "rgba(200,220,245,0)");
+    ctx.fillStyle = g; ctx.fillRect(0, horizonY - 40, w, h - horizonY + 40);
+    ctx.restore();
+  }
+  function drawMirrorWall(w, h, night) {
+    drawForest(w, h, night);
+    const st = state.stage, rel = st.to - 60 - state.distanceM;
+    if (rel < -20 || rel > 220) return;
+    const dd = Math.max(4, rel), p = projectAhead(dd, 0), m = metreAt(dd);
+    if (!p.fwd || p.fwd <= 1 || !m) return;
+    // a mirrored wall across the road — and the pair of headlamps in it is your own
+    const wallW = Math.min(w * 3, 26 * m), wallH = Math.min(h * 2, 9 * m);
+    ctx.fillStyle = "rgba(30,38,46,0.92)";
+    ctx.fillRect(p.x - wallW / 2, p.y - wallH, wallW, wallH);
+    ctx.strokeStyle = "rgba(150,168,186,0.6)"; ctx.lineWidth = clamp(0.25 * m, 1, 8);
+    ctx.strokeRect(p.x - wallW / 2, p.y - wallH, wallW, wallH);
+    const lamp = clamp(0.9 * m, 3, 90);
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    for (const sgn of [-1, 1]) {
+      const lx = p.x + sgn * 2.4 * m, ly = p.y - wallH * 0.42;
+      const g = ctx.createRadialGradient(lx, ly, 0, lx, ly, lamp * 3);
+      g.addColorStop(0, "rgba(255,248,224,0.95)"); g.addColorStop(0.3, "rgba(240,240,220,0.5)"); g.addColorStop(1, "rgba(220,230,240,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(lx, ly, lamp * 3, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+    const kmh = Math.abs(state.speedMps) * 3.6;
+    ctx.fillStyle = rel < 70 && kmh > 25 ? "rgba(255,80,64,0.95)" : "rgba(226,236,246,0.9)";
+    ctx.font = "700 15px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(rel < 70 && kmh > 25 ? "THAT IS A MIRROR — STOP" : "WALL " + Math.max(0, Math.round(rel)) + " m", w / 2, horizonY - 26);
+  }
+
+  /* ---- NO TIME TO DIE · MATERA, 2021 ---- */
+  function drawStone(w, h, night, open) {
+    ctx.fillStyle = "#0a0c10"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    // limestone setts: warm, pale, and laid in courses
+    deckStrip(2, 160, 2.4, (d) => (Math.floor(d / 1.2 + state.distanceM * 0.83) % 2 ? "#6d6455" : "#645c4e"));
+    seams(3, 150, 0.8, "rgba(38,34,28,0.45)", 1);
+    if (!open) {
+      // the Sassi: stone walls right on the road, with arched openings and shuttered windows
+      for (const sgn of [-1, 1]) {
+        wall(sgn, 7.5, 3, 130, "#5b5346", "rgba(150,140,120,0.5)");
+        props(6, 22, 120, (d, idx, m) => {
+          const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+          if (idx % 3 === 0) {                                    // an arch
+            ctx.fillStyle = "#191713";
+            ctx.beginPath();
+            ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 2.2 * m);
+            ctx.quadraticCurveTo(p.x + sgn * 0.1 * m, p.y - 3.6 * m, p.x + sgn * 1.6 * m, p.y - 3.6 * m);
+            ctx.lineTo(p.x + sgn * 1.6 * m, p.y); ctx.closePath(); ctx.fill();
+          } else {                                                // a shuttered window
+            ctx.fillStyle = "#2f2a22"; ctx.fillRect(p.x, p.y - (3.4 + (idx % 3)) * m, sgn * 1.1 * m, 1.5 * m);
+            if (idx % 4 === 1) { ctx.fillStyle = "rgba(255,214,150,0.5)"; ctx.fillRect(p.x, p.y - (3.2 + (idx % 3)) * m, sgn * 0.9 * m, 1.1 * m); }
+          }
+          if (idx % 5 === 2) {                                    // a lamp on a bracket
+            const lp = projectAhead(d, sgn * (halfAt(d) - 0.3));
+            if (lp.fwd > 1) flood(lp.x, lp.y - 4.4 * m, m, 10, "rgba(255,214,150,0.20)");
+          }
+        });
+      }
+    }
+    ctx.fillStyle = "rgba(216,206,186,0.6)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(open ? "OUT OF THE SASSI" : "I SASSI DI MATERA", w / 2, horizonY - 16);
+  }
+  function drawSteps(w, h, night) {
+    ctx.fillStyle = "#0a0c10"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    // a flight of limestone: each tread its own band, each nosing catching the light
+    deckStrip(2, 90, 1.6, (d) => (Math.floor(d / 1.6) % 2 ? "#6f6657" : "#5f5749"));
+    props(1.6, 56, 85, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.fillStyle = "rgba(212,202,180,0.8)";
+      ctx.fillRect(e.l.x, e.l.y - 0.20 * m, e.r.x - e.l.x, 0.20 * m);
+      ctx.fillStyle = "rgba(26,22,18,0.55)";
+      ctx.fillRect(e.l.x, e.l.y, e.r.x - e.l.x, 0.14 * m);
+    });
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 1.2, 3, 85, "#57503f", "rgba(190,180,158,0.6)");
+      props(9, 12, 80, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) - 0.3)); if (!p.fwd || p.fwd <= 1) return;
+        flood(p.x, p.y - 2.6 * m, m, 8, "rgba(255,214,150,0.18)");
+      });
+    }
+    ctx.fillStyle = "rgba(255,200,120,0.9)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("STEPS — TAKE THEM SLOWLY", w / 2, horizonY - 20);
+  }
+  function drawPiazza(w, h, night) {
+    ctx.fillStyle = "#0a0c10"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 170, 4, () => "#6a6153");
+    // the square is laid in a fan of setts, not in lanes
+    ctx.strokeStyle = "rgba(40,35,28,0.4)"; ctx.lineWidth = 1;
+    for (let i = -9; i <= 9; i++) {
+      ctx.beginPath(); let first = true;
+      for (let d = 4; d < 120; d += 8) {
+        const p = projectAhead(d, i * 1.5 * (d / 40)); if (!p.fwd || p.fwd <= 1) break;
+        if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
+      }
+      ctx.stroke();
+    }
+    // the church façade at the head of the square
+    const pf = projectAhead(120, 0), mf = metreAt(120);
+    if (pf.fwd > 1 && mf) {
+      ctx.fillStyle = "#6b6252"; ctx.fillRect(pf.x - 13 * mf, pf.y - 20 * mf, 26 * mf, 20 * mf);
+      ctx.fillStyle = "#5c5445";
+      ctx.beginPath(); ctx.moveTo(pf.x - 13 * mf, pf.y - 20 * mf); ctx.lineTo(pf.x, pf.y - 27 * mf); ctx.lineTo(pf.x + 13 * mf, pf.y - 20 * mf); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#231f18";
+      ctx.beginPath();
+      ctx.moveTo(pf.x - 2.6 * mf, pf.y); ctx.lineTo(pf.x - 2.6 * mf, pf.y - 6 * mf);
+      ctx.quadraticCurveTo(pf.x, pf.y - 9.5 * mf, pf.x + 2.6 * mf, pf.y - 6 * mf);
+      ctx.lineTo(pf.x + 2.6 * mf, pf.y); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(255,226,170,0.5)";
+      ctx.beginPath(); ctx.arc(pf.x, pf.y - 13 * mf, 2.4 * mf, 0, Math.PI * 2); ctx.fill();
+      flood(pf.x - 9 * mf, pf.y - 2 * mf, mf, 18, "rgba(255,220,160,0.16)");
+      flood(pf.x + 9 * mf, pf.y - 2 * mf, mf, 18, "rgba(255,220,160,0.16)");
+    }
+    // the spin gauge — this stage is the doughnut, so show how far round you have got
+    const q = state.q, deg = Math.min(360, Math.round(q.spinDeg || 0));
+    const cx = w / 2, cy = horizonY + 46, R = 26;
+    ctx.strokeStyle = "rgba(120,140,158,0.5)"; ctx.lineWidth = 5;
+    ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.strokeStyle = deg >= 340 ? "rgba(120,230,170,0.95)" : "rgba(255,196,90,0.95)";
+    ctx.beginPath(); ctx.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + deg / 360 * Math.PI * 2); ctx.stroke();
+    ctx.fillStyle = "rgba(226,236,246,0.95)"; ctx.font = "700 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(deg + "°", cx, cy + 4);
+    ctx.font = "600 10px ui-sans-serif";
+    ctx.fillText("FULL LOCK + GUNS ON 2", cx, cy + R + 14);
+    // the miniguns, out from behind the headlamps
+    if (q.gun && q.ammo > 0) {
+      ctx.fillStyle = "rgba(220,228,238,0.9)";
+      for (const sgn of [-1, 1]) ctx.fillRect(w * (0.5 + sgn * 0.15) - 5, h * 0.70, 10, 26);
+    }
+  }
+  function drawViaduct(w, h, night) {
+    ctx.fillStyle = "#0a0c10"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    // the gorge on one side, the rock on the other
+    ctx.fillStyle = "#0d1114";
+    ctx.beginPath(); ctx.moveTo(w, horizonY); ctx.lineTo(w, h);
+    const g0 = projectAhead(3, 9), g1 = projectAhead(180, 9);
+    ctx.lineTo(g0.x, g0.y); ctx.lineTo(g1.x, g1.y); ctx.closePath(); ctx.fill();
+    deckStrip(2, 200, 4, () => "#3a3f45");
+    seams(3, 180, 4.2, "rgba(232,228,214,0.30)", 1.4);
+    wall(-1, 5.5, 3, 160, "#5b5346", "rgba(150,140,120,0.5)");
+    props(3.2, 34, 160, (d, idx, m) => {                          // the parapet over the gorge
+      const p = projectAhead(d, halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "rgba(120,112,96,0.95)";
+      ctx.fillRect(p.x - 0.3 * m, p.y - 1.0 * m, 0.6 * m, 1.0 * m);
+    });
+    // Matera behind you, on the far side of the gorge
+    ctx.fillStyle = "rgba(64,58,48,0.9)";
+    for (let i = 0; i < 22; i++) {
+      const x = w * 0.06 + i * w * 0.02, bh = 12 + ((i * 37) % 26);
+      ctx.fillRect(x, horizonY - bh, w * 0.016, bh);
+      if (i % 3 === 0) { ctx.fillStyle = "rgba(255,214,150,0.5)"; ctx.fillRect(x + 2, horizonY - bh * 0.6, 3, 3); ctx.fillStyle = "rgba(64,58,48,0.9)"; }
+    }
+  }
+
+  /* ---- shared surface helpers: everything below builds out of these ---- */
+  // fill the drivable strip between two distances, colour chosen per band
+  function deckStrip(d0, d1, step, colourFn) {
     let prev = null;
-    for (let d = 2; d < 150; d += 3) {
+    for (let d = d0; d < d1; d += step) {
       const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
       if (prev) {
-        const lit = Math.floor(d / 1.4 + state.distanceM * 0.7) % 2 === 0;
-        ctx.fillStyle = lit ? "#4a3520" : "#412e1b";
+        ctx.fillStyle = colourFn(d);
         ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
         ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
       }
       prev = e;
     }
-    // bulwarks: a 1.1 m timber wall each side, with the sea beyond it
-    for (const sgn of [-1, 1]) {
-      ctx.fillStyle = "#3a2a19"; ctx.strokeStyle = "rgba(220,200,160,0.25)"; ctx.lineWidth = 1;
+  }
+  // plank / panel seams running fore-and-aft, at a lateral spacing in metres
+  function seams(d0, d1, spacingM, colour, widthPx) {
+    const H0 = halfAt(4);
+    ctx.strokeStyle = colour; ctx.lineWidth = widthPx || 1;
+    for (let off = -H0 + spacingM; off < H0; off += spacingM) {
       ctx.beginPath(); let first = true;
-      for (let d = 3; d < 140; d += 6) {
-        const H = halfAt(d), p = projectAhead(d, sgn * H); if (!p.fwd || p.fwd <= 1) break;
-        const t = 1.1 * (metreAt(d) || 0);
+      for (let d = d0; d < d1; d += 6) {
+        const p = projectAhead(d, off); if (!p.fwd || p.fwd <= 1) break;
         if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
-        ctx.lineTo(p.x, p.y - t);
       }
       ctx.stroke();
     }
-    // crab pots — anchored to the deck, not to the camera, so they really do go past
-    const potBase = Math.ceil(state.distanceM / 17) * 17;
-    for (let i = 0; i < 8; i++) {
-      const idx = Math.round((potBase + i * 17) / 17);
-      const d = potBase + i * 17 - state.distanceM, sgn = idx % 2 ? 1 : -1;
-      if (d < 4 || d > 140) continue;
-      const p = projectAhead(d, sgn * (halfAt(d) - 1.4)); if (!p.fwd || p.fwd <= 1) continue;
+  }
+  // a solid wall along one edge — bulwark, kerb, pit wall — with a cap rail on top
+  function wall(sgn, hM, d0, d1, face, cap) {
+    ctx.fillStyle = face;
+    ctx.beginPath(); let first = true; const pts = [];
+    for (let d = d0; d < d1; d += 5) {
+      const p = projectAhead(d, sgn * halfAt(d)), m = metreAt(d);
+      if (!p.fwd || p.fwd <= 1 || !m) break;
+      pts.push({ x: p.x, y: p.y, t: hM * m });
+      if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
+    }
+    for (let i = pts.length - 1; i >= 0; i--) ctx.lineTo(pts[i].x, pts[i].y - pts[i].t);
+    ctx.closePath(); ctx.fill();
+    if (cap && pts.length > 1) {
+      ctx.strokeStyle = cap; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y - pts[0].t);
+      for (const p of pts) ctx.lineTo(p.x, p.y - p.t);
+      ctx.stroke();
+    }
+  }
+  // a handrail: two rails on stanchions every 2.4 m, the way offshore steel actually is
+  function handrail(sgn, hM, d0, d1, colour, offM) {
+    ctx.strokeStyle = colour; ctx.lineWidth = 1.4;
+    for (const frac of [1, 0.55]) {
+      ctx.beginPath(); let first = true;
+      for (let d = d0; d < d1; d += 5) {
+        const p = projectAhead(d, sgn * (halfAt(d) + (offM || 0))), m = metreAt(d);
+        if (!p.fwd || p.fwd <= 1 || !m) break;
+        const y = p.y - hM * frac * m;
+        if (first) { ctx.moveTo(p.x, y); first = false; } else ctx.lineTo(p.x, y);
+      }
+      ctx.stroke();
+    }
+    const base = Math.ceil(state.distanceM / 2.4) * 2.4;
+    for (let k = 0; k < 26; k++) {
+      const d = base + k * 2.4 - state.distanceM; if (d < d0 || d > d1) continue;
+      const p = projectAhead(d, sgn * (halfAt(d) + (offM || 0))), m = metreAt(d);
+      if (!p.fwd || p.fwd <= 1 || !m) continue;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - hM * m); ctx.stroke();
+    }
+  }
+  // world-anchored props: index by where they are on the route, not where the camera is
+  function props(spacingM, count, maxD, fn) {
+    const base = Math.ceil(state.distanceM / spacingM) * spacingM;
+    for (let k = 0; k < count; k++) {
+      const world = base + k * spacingM, d = world - state.distanceM;
+      if (d < 3 || d > maxD) continue;
+      const idx = Math.round(world / spacingM);
       const m = metreAt(d); if (!m) continue;
-      ctx.fillStyle = "rgba(60,50,38,0.9)"; ctx.fillRect(p.x - m, p.y - 1.6 * m, 2 * m, 1.6 * m);
-      ctx.strokeStyle = "rgba(180,170,150,0.35)"; ctx.lineWidth = 1;
-      for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(p.x - m, p.y - k * 0.4 * m); ctx.lineTo(p.x + m, p.y - k * 0.4 * m); ctx.stroke(); }
+      fn(d, idx, m);
+    }
+  }
+  // a floodlight: the lamp, and the cone of light it actually throws
+  function flood(x, y, m, radiusM, tint) {
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    const g = ctx.createRadialGradient(x, y, 0, x, y, radiusM * m);
+    g.addColorStop(0, tint || "rgba(255,214,150,0.20)"); g.addColorStop(1, "rgba(255,200,120,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, radiusM * m, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = "rgba(255,236,196,0.95)";
+    ctx.beginPath(); ctx.arc(x, y, Math.max(1.2, 0.45 * m), 0, Math.PI * 2); ctx.fill();
+  }
+
+  /* ================= CRABBY — a working crab boat's afterdeck ================= */
+  function drawPlanks(w, h, night) {
+    ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
+    drawSwell(w, h, night, 2.4);
+    // the timber: alternating planks fore-and-aft, wet and scuffed
+    deckStrip(2, 160, 3, (d) => (Math.floor(d / 1.5 + state.distanceM * 0.66) % 2 ? "#4b3722" : "#3f2d1b"));
+    seams(3, 150, 0.9, "rgba(20,13,7,0.55)", 1);
+    seams(3, 150, 0.9 * 4, "rgba(96,74,48,0.35)", 1.6);
+    // the bulwarks — a real 1.1 m timber wall with a steel cap rail, not a line
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 1.1, 3, 150, "#33240f", "rgba(196,178,148,0.6)");
+      // stanchion ribs on the inboard face
+      ctx.strokeStyle = "rgba(24,16,8,0.6)"; ctx.lineWidth = 1.2;
+      props(2.2, 30, 130, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d));
+        if (!p.fwd || p.fwd <= 1) return;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 1.1 * m); ctx.stroke();
+      });
+    }
+    // crab pots: wire cubes, stacked, with the mesh visible and a buoy on top of some
+    props(9, 16, 130, (d, idx, m) => {
+      const sgn = idx % 2 ? 1 : -1, stack = 1 + (idx % 3 === 0 ? 1 : 0);
+      const p = projectAhead(d, sgn * (halfAt(d) - 1.6)); if (!p.fwd || p.fwd <= 1) return;
+      const s0 = 1.15 * m;
+      for (let lvl = 0; lvl < stack; lvl++) {
+        const y = p.y - lvl * s0 * 1.02;
+        ctx.fillStyle = "rgba(46,38,28,0.92)";
+        ctx.fillRect(p.x - s0, y - s0, s0 * 2, s0);
+        ctx.strokeStyle = "rgba(168,158,132,0.45)"; ctx.lineWidth = Math.max(0.6, 0.09 * m);
+        for (let g0 = 1; g0 < 4; g0++) {
+          ctx.beginPath(); ctx.moveTo(p.x - s0, y - s0 * g0 / 4); ctx.lineTo(p.x + s0, y - s0 * g0 / 4); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(p.x - s0 + s0 * g0 / 2, y - s0); ctx.lineTo(p.x - s0 + s0 * g0 / 2, y); ctx.stroke();
+        }
+        ctx.strokeStyle = "rgba(210,196,168,0.7)"; ctx.lineWidth = Math.max(1, 0.14 * m);
+        ctx.strokeRect(p.x - s0, y - s0, s0 * 2, s0);
+      }
+      if (idx % 4 === 0) {                                   // a marker buoy lashed on top
+        ctx.fillStyle = "#c8552a";
+        ctx.beginPath(); ctx.arc(p.x + s0 * 0.5, p.y - stack * s0 * 1.02 - s0 * 0.4, s0 * 0.38, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    // coils of warp line on the deck
+    props(13, 10, 90, (d, idx, m) => {
+      const p = projectAhead(d, (idx % 2 ? 1 : -1) * (halfAt(d) - 3.4)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(178,158,116,0.55)"; ctx.lineWidth = Math.max(1, 0.16 * m);
+      for (let r = 1; r <= 3; r++) { ctx.beginPath(); ctx.ellipse(p.x, p.y, r * 0.26 * m, r * 0.1 * m, 0, 0, Math.PI * 2); ctx.stroke(); }
+    });
+    // Crabby's own wheelhouse and mast, forward of you, with his working lights
+    const pf = projectAhead(120, 0), mf = metreAt(120);
+    if (pf.fwd > 1 && mf) {
+      ctx.fillStyle = "#20303a"; ctx.fillRect(pf.x - 3.4 * mf, pf.y - 5.4 * mf, 6.8 * mf, 5.4 * mf);
+      ctx.fillStyle = "rgba(255,214,140,0.8)"; ctx.fillRect(pf.x - 2.6 * mf, pf.y - 4.4 * mf, 5.2 * mf, 1.9 * mf);
+      ctx.strokeStyle = "rgba(150,164,178,0.7)"; ctx.lineWidth = Math.max(1, 0.22 * mf);
+      ctx.beginPath(); ctx.moveTo(pf.x, pf.y - 5.4 * mf); ctx.lineTo(pf.x, pf.y - 12 * mf); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(pf.x - 3 * mf, pf.y - 9.5 * mf); ctx.lineTo(pf.x + 3 * mf, pf.y - 9.5 * mf); ctx.stroke();
+      flood(pf.x - 3 * mf, pf.y - 9.5 * mf, mf, 16);
+      flood(pf.x + 3 * mf, pf.y - 9.5 * mf, mf, 16);
+      ctx.fillStyle = "rgba(226,236,246,0.85)"; ctx.textAlign = "center";
+      ctx.font = `700 ${Math.round(1.5 * mf)}px ui-sans-serif`;
+      ctx.fillText("CRABBY", pf.x, pf.y - 13.4 * mf);
     }
     drawTonyLight(w, h);
   }
@@ -3431,217 +4543,308 @@ const SPEC = {
     const cx = w * (0.5 + sweep * 0.34), top = horizonY - 26;
     ctx.save(); ctx.globalCompositeOperation = "screen";
     const g = ctx.createLinearGradient(cx, top, cx, h);
-    g.addColorStop(0, "rgba(255,80,60,0.32)"); g.addColorStop(1, "rgba(255,60,40,0.02)");
+    g.addColorStop(0, "rgba(255,80,60,0.34)"); g.addColorStop(1, "rgba(255,60,40,0.02)");
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.moveTo(cx - 8, top); ctx.lineTo(cx + 8, top);
     ctx.lineTo(cx + w * 0.16, h); ctx.lineTo(cx - w * 0.16, h); ctx.closePath(); ctx.fill();
+    // the spot where it lands on the deck
+    const gy = h * 0.80, g2 = ctx.createRadialGradient(cx + sweep * w * 0.12, gy, 0, cx + sweep * w * 0.12, gy, 120);
+    g2.addColorStop(0, "rgba(255,120,90,0.30)"); g2.addColorStop(1, "rgba(255,80,60,0)");
+    ctx.fillStyle = g2; ctx.beginPath(); ctx.ellipse(cx + sweep * w * 0.12, gy, 130, 34, 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
     if (Math.floor(state.time * 2) % 2 === 0) {
-      ctx.fillStyle = "rgba(255,90,70,0.9)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillStyle = "rgba(255,90,70,0.95)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
       ctx.fillText("TONY TRIHULL 02 — GUN LAID ON CRABBY", w / 2, horizonY - 40);
     }
   }
-  // TONY TRIHULL's flight deck: non-skid, landing circle, and the two outrigger hulls
+
+  /* ============ TONY TRIHULL — the flight deck of an LCS trimaran ============ */
   function drawFlightDeck(w, h, night) {
     ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
     drawSwell(w, h, night, 1.4);
-    let prev = null;
-    for (let d = 2; d < 190; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#3b4149";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
-    // deck centreline and the landing circle, in the Navy's white
-    ctx.strokeStyle = "rgba(232,238,244,0.75)";
-    for (let d = 4; d < 170; d += 12) {
-      const a = projectAhead(d, 0), b = projectAhead(d + 6, 0);
-      if (!a.fwd || a.fwd <= 1 || !b.fwd || b.fwd <= 1) continue;
-      ctx.lineWidth = Math.max(1, 0.35 * (metreAt(d) || 0));
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-    }
-    for (const dd of [58, 132]) {
-      const p = projectAhead(dd, 0), m = metreAt(dd); if (!p.fwd || p.fwd <= 1 || !m) continue;
-      ctx.strokeStyle = "rgba(232,238,244,0.55)"; ctx.lineWidth = Math.max(1, 0.5 * m);
-      ctx.beginPath(); ctx.ellipse(p.x, p.y, 9 * m, 2.6 * m, 0, 0, Math.PI * 2); ctx.stroke();
-    }
-    // the outrigger hulls: this is a trimaran, and you can see both amas from the deck
+    deckStrip(2, 200, 4, () => "#39404a");
+    seams(3, 190, 3.2, "rgba(24,29,35,0.5)", 1);              // deck plate joints
+    // the amas — this is a trimaran, and from the deck you see both outrigger hulls
     for (const sgn of [-1, 1]) {
-      ctx.fillStyle = "rgba(24,30,37,0.95)";
-      ctx.beginPath(); let first = true;
-      for (let d = 4; d < 180; d += 8) {
-        const p = projectAhead(d, sgn * (halfAt(d) + 5.4)); if (!p.fwd || p.fwd <= 1) break;
+      ctx.fillStyle = "rgba(20,26,33,0.96)";
+      ctx.beginPath(); let first = true; const top = [];
+      for (let d = 4; d < 190; d += 8) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 5.6)), m = metreAt(d);
+        if (!p.fwd || p.fwd <= 1 || !m) break;
+        top.push({ x: p.x, y: p.y, t: 2.6 * m });
         if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
       }
-      for (let d = 176; d >= 4; d -= 8) {
-        const p = projectAhead(d, sgn * (halfAt(d) + 5.4)), m = metreAt(d); if (!p.fwd || p.fwd <= 1) continue;
-        ctx.lineTo(p.x, p.y - 2.4 * (m || 0));
+      for (let i = top.length - 1; i >= 0; i--) ctx.lineTo(top[i].x, top[i].y - top[i].t);
+      ctx.closePath(); ctx.fill();
+      // and the sheet of water each one throws at 44 knots
+      ctx.fillStyle = "rgba(214,238,248,0.30)";
+      ctx.beginPath(); first = true;
+      for (let d = 4; d < 160; d += 10) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 8.6)); if (!p.fwd || p.fwd <= 1) break;
+        const jag = Math.sin(d * 0.4 + state.time * 6) * 4;
+        if (first) { ctx.moveTo(p.x, p.y + jag); first = false; } else ctx.lineTo(p.x, p.y + jag);
+      }
+      for (let d = 156; d >= 4; d -= 10) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 6.0)); if (!p.fwd || p.fwd <= 1) continue;
+        ctx.lineTo(p.x, p.y);
       }
       ctx.closePath(); ctx.fill();
+      handrail(sgn, 1.1, 4, 170, "rgba(180,194,208,0.5)", 0.3);
     }
-    // the superstructure ahead, and the 57 mm gun on the foredeck
-    const pf = projectAhead(150, 0), mf = metreAt(150);
+    // flight-deck markings: the centreline, the landing circle, and the tie-down grid
+    ctx.strokeStyle = "rgba(238,244,250,0.8)";
+    props(12, 18, 180, (d, idx, m) => {
+      const a = projectAhead(d, 0), b = projectAhead(d + 6, 0);
+      if (!a.fwd || a.fwd <= 1 || !b.fwd || b.fwd <= 1) return;
+      ctx.lineWidth = Math.max(1, 0.35 * m);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    ctx.fillStyle = "rgba(16,20,25,0.8)";
+    props(3, 60, 110, (d, idx, m) => {                        // tie-down pad eyes
+      for (const off of [-4.5, -1.5, 1.5, 4.5]) {
+        const p = projectAhead(d, off); if (!p.fwd || p.fwd <= 1) continue;
+        ctx.beginPath(); ctx.ellipse(p.x, p.y, 0.24 * m, 0.09 * m, 0, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    for (const dd of [62, 140]) {
+      const p = projectAhead(dd, 0), m = metreAt(dd); if (!p.fwd || p.fwd <= 1 || !m) continue;
+      ctx.strokeStyle = "rgba(238,244,250,0.55)"; ctx.lineWidth = Math.max(1, 0.5 * m);
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, 9 * m, 2.6 * m, 0, 0, Math.PI * 2); ctx.stroke();
+    }
+    // the hangar and the deckhouse forward, the mast, and the 57 mm on the foredeck
+    const pf = projectAhead(158, 0), mf = metreAt(158);
     if (pf.fwd > 1 && mf) {
-      ctx.fillStyle = "#232a32"; ctx.fillRect(pf.x - 11 * mf, pf.y - 17 * mf, 22 * mf, 17 * mf);
-      ctx.fillStyle = "rgba(120,170,200,0.5)"; ctx.fillRect(pf.x - 8 * mf, pf.y - 14 * mf, 16 * mf, 3 * mf);
-      ctx.fillStyle = "#2e363f"; ctx.beginPath();
-      ctx.moveTo(pf.x - 3 * mf, pf.y - 17 * mf); ctx.lineTo(pf.x, pf.y - 27 * mf); ctx.lineTo(pf.x + 3 * mf, pf.y - 17 * mf); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#252d36";                              // hangar face, angled like the real ship
+      ctx.beginPath();
+      ctx.moveTo(pf.x - 12 * mf, pf.y); ctx.lineTo(pf.x + 12 * mf, pf.y);
+      ctx.lineTo(pf.x + 9.5 * mf, pf.y - 13 * mf); ctx.lineTo(pf.x - 9.5 * mf, pf.y - 13 * mf);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#161c23"; ctx.fillRect(pf.x - 6 * mf, pf.y - 9.5 * mf, 12 * mf, 9.5 * mf);
+      ctx.strokeStyle = "rgba(140,154,168,0.55)"; ctx.lineWidth = Math.max(1, 0.2 * mf);
+      for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo(pf.x - 6 * mf, pf.y - 9.5 * mf * i / 6); ctx.lineTo(pf.x + 6 * mf, pf.y - 9.5 * mf * i / 6); ctx.stroke(); }
+      flood(pf.x - 8 * mf, pf.y - 12 * mf, mf, 14);
+      flood(pf.x + 8 * mf, pf.y - 12 * mf, mf, 14);
+      ctx.fillStyle = "#2e363f";                              // mast
+      ctx.beginPath();
+      ctx.moveTo(pf.x - 2.4 * mf, pf.y - 13 * mf); ctx.lineTo(pf.x, pf.y - 26 * mf); ctx.lineTo(pf.x + 2.4 * mf, pf.y - 13 * mf);
+      ctx.closePath(); ctx.fill();
+      const blink = Math.floor(state.time * 1.6) % 2 === 0;
+      ctx.fillStyle = blink ? "rgba(255,70,60,0.95)" : "rgba(110,26,22,0.6)";
+      ctx.beginPath(); ctx.arc(pf.x, pf.y - 27 * mf, Math.max(1.5, 0.5 * mf), 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(226,234,242,0.7)"; ctx.textAlign = "center";
+      ctx.font = `700 ${Math.round(1.6 * mf)}px ui-sans-serif`;
+      ctx.fillText("HANGAR", pf.x, pf.y - 4 * mf);
     }
     if (state.q.hook >= 1 && state.q.hook < 2) {
       ctx.fillStyle = "rgba(180,220,255,0.75)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("USS-pattern trimaran · 127.4 m · 44 kn — hooked on and riding", w / 2, horizonY - 16);
+      ctx.fillText("trimaran littoral combat ship · 127.4 m · 44 kn — hooked on and riding", w / 2, horizonY - 16);
     }
   }
-  // THE LEG: a hundred metres of braced steel, and the sea getting further away below
+
+  /* ================== THE LEG — a hundred metres of wet steel ================== */
   function drawLeg(w, h, night) {
     const st = state.stage, base = stageStart(st), climb = clamp((state.distanceM - base) / (st.to - base), 0, 1);
     const seaY = horizonY + (1 - climb) * (h - horizonY) * 0.55;
     ctx.fillStyle = seaFill(seaY, h, night); ctx.fillRect(0, seaY, w, h - seaY);
-    ctx.fillStyle = "#070d14"; ctx.fillRect(0, horizonY - 40, w, seaY - horizonY + 40);
-    // the leg face you are on
-    let prev = null;
-    for (let d = 2; d < 130; d += 3) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = Math.floor(d / 3) % 2 ? "#2b3239" : "#262c33";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
+    ctx.fillStyle = "#060b11"; ctx.fillRect(0, horizonY - 40, w, seaY - horizonY + 40);
+    // the leg face, with weld beads across it and rust down it
+    deckStrip(2, 140, 3, (d) => (Math.floor(d / 3) % 2 ? "#2d343c" : "#272d35"));
+    props(6, 26, 130, (d, idx, m) => {                        // circumferential weld beads
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(160,172,186,0.35)"; ctx.lineWidth = Math.max(1, 0.16 * m);
+      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y); ctx.stroke();
+    });
+    seams(3, 130, 2.6, "rgba(120,70,40,0.30)", 2.2);          // rust streaks, running down
+    // marine growth on the bottom of the leg
+    if (climb < 0.28) {
+      ctx.fillStyle = "rgba(48,66,52,0.55)";
+      props(1.6, 60, 60, (d, idx, m) => {
+        for (const off of [-3.6, -1.2, 1.2, 3.6]) {
+          const p = projectAhead(d, off + ((idx * 37) % 11) * 0.1); if (!p.fwd || p.fwd <= 1) continue;
+          ctx.beginPath(); ctx.ellipse(p.x, p.y, 0.5 * m, 0.16 * m, 0, 0, Math.PI * 2); ctx.fill();
+        }
+      });
     }
-    // the X bracing, every 14 m of leg — the thing the magnets are actually gripping
-    ctx.strokeStyle = "rgba(150,164,178,0.5)";
-    const first = Math.ceil(state.distanceM / 14) * 14;
-    for (let k = 0; k < 9; k++) {
-      const dd = first + k * 14 - state.distanceM; if (dd < 3 || dd > 128) continue;
-      const a = edgePts(dd), b = edgePts(dd + 7); if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1) continue;
-      ctx.lineWidth = Math.max(1, 0.5 * (metreAt(dd) || 0));
+    // the X bracing, every 14 m — the thing the magnets are gripping
+    ctx.strokeStyle = "rgba(158,172,186,0.55)";
+    props(14, 10, 128, (d, idx, m) => {
+      const a = edgePts(d), b = edgePts(d + 7); if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1) return;
+      ctx.lineWidth = Math.max(1.2, 0.55 * m);
       ctx.beginPath(); ctx.moveTo(a.l.x, a.l.y); ctx.lineTo(b.r.x, b.r.y); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(a.r.x, a.r.y); ctx.lineTo(b.l.x, b.l.y); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(a.l.x, a.l.y); ctx.lineTo(a.r.x, a.r.y); ctx.stroke();
+      ctx.fillStyle = "rgba(190,204,218,0.5)";                // the gusset at each node
+      ctx.beginPath(); ctx.arc(a.l.x, a.l.y, Math.max(1.5, 0.5 * m), 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(a.r.x, a.r.y, Math.max(1.5, 0.5 * m), 0, Math.PI * 2); ctx.fill();
+    });
+    // a cable tray running the whole height, with its clamps
+    ctx.strokeStyle = "rgba(96,108,122,0.75)";
+    for (const off of [-2.1, -1.7]) {
+      ctx.beginPath(); let first = true;
+      for (let d = 3; d < 130; d += 6) {
+        const p = projectAhead(d, off); if (!p.fwd || p.fwd <= 1) break;
+        if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
+      }
+      ctx.lineWidth = 2; ctx.stroke();
     }
     // the deck lip you are climbing toward, coming down out of the dark
-    if (climb > 0.45) {
-      const k = (climb - 0.45) / 0.55, lip = horizonY - 30 + k * 120;
-      ctx.fillStyle = "#11161c"; ctx.fillRect(0, 0, w, lip);
-      ctx.fillStyle = "#39424c"; ctx.fillRect(0, lip - 8, w, 8);
-      ctx.fillStyle = "rgba(255,190,90,0.7)";
-      for (let i = 0; i < 5; i++) ctx.beginPath(), ctx.arc(w * (0.1 + i * 0.2), lip - 12, 3, 0, Math.PI * 2), ctx.fill();
+    if (climb > 0.42) {
+      const k = (climb - 0.42) / 0.58, lip = horizonY - 40 + k * 150;
+      ctx.fillStyle = "#0e131a"; ctx.fillRect(0, 0, w, lip);
+      ctx.fillStyle = "#39424c"; ctx.fillRect(0, lip - 10, w, 10);
+      ctx.fillStyle = "#242c34"; ctx.fillRect(0, lip - 16, w, 6);
+      ctx.strokeStyle = "rgba(120,134,148,0.5)"; ctx.lineWidth = 2;   // the underside girders showing
+      for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.moveTo(w * i / 8, lip); ctx.lineTo(w * i / 8, lip - 10); ctx.stroke(); }
+      for (let i = 0; i < 5; i++) { ctx.fillStyle = "rgba(255,196,110,0.75)"; ctx.beginPath(); ctx.arc(w * (0.1 + i * 0.2), lip - 20, 3.4, 0, Math.PI * 2); ctx.fill(); }
     }
     ctx.fillStyle = state.q.magnet ? "rgba(120,230,180,0.9)" : "rgba(255,110,90,0.95)";
     ctx.font = "700 15px ui-sans-serif"; ctx.textAlign = "center";
     ctx.fillText(state.q.magnet ? "MAGNETS — HOLDING · " + Math.round(climb * 100) + " m"
       : "MAGNETS OFF — YOU ARE SLIDING", w / 2, horizonY - 54);
   }
-  // UNDER THE DECK: girders overhead, grating light through the gaps, the sea a long way down
+
+  /* ============= UNDER THE DECK — girders overhead, sea 100 m down ============= */
   function drawUnderDeck(w, h, night) {
-    ctx.fillStyle = "#050a0f"; ctx.fillRect(0, horizonY, w, h - horizonY);
-    // the sea, 100 m below and only visible past the edge of the structure
-    ctx.fillStyle = seaFill(h * 0.86, h, night);
-    ctx.fillRect(0, h * 0.86, w * 0.16, h * 0.14); ctx.fillRect(w * 0.84, h * 0.86, w * 0.16, h * 0.14);
-    let prev = null;
-    for (let d = 2; d < 110; d += 3) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#1a2027";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#040910"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    ctx.fillStyle = seaFill(h * 0.88, h, night);              // the sea, only past the structure
+    ctx.fillRect(0, h * 0.88, w * 0.15, h * 0.12); ctx.fillRect(w * 0.85, h * 0.88, w * 0.15, h * 0.12);
+    deckStrip(2, 120, 3, () => "#161c23");
+    // the deck girders: real I-beams, so a web with a flange top and bottom
+    props(8, 16, 116, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      const y = e.l.y - 2.4 * m;
+      ctx.fillStyle = "#39424d"; ctx.fillRect(e.l.x, y - 0.9 * m, e.r.x - e.l.x, 0.28 * m);
+      ctx.fillRect(e.l.x, y + 0.6 * m, e.r.x - e.l.x, 0.28 * m);
+      ctx.fillStyle = "#262e37"; ctx.fillRect(e.l.x, y - 0.65 * m, e.r.x - e.l.x, 1.3 * m);
+      // the grating light coming down through the deck above
+      ctx.fillStyle = "rgba(255,206,132,0.10)";
+      ctx.fillRect(e.l.x, y + 0.9 * m, e.r.x - e.l.x, 0.5 * m);
+    });
+    // conduit and cable trays following the girders
+    for (const off of [-3.2, -2.8, 2.8, 3.2]) {
+      ctx.strokeStyle = "rgba(88,100,114,0.7)"; ctx.lineWidth = 2;
+      ctx.beginPath(); let first = true;
+      for (let d = 3; d < 116; d += 6) {
+        const p = projectAhead(d, off), m = metreAt(d); if (!p.fwd || p.fwd <= 1 || !m) break;
+        const y = p.y - 1.9 * m;
+        if (first) { ctx.moveTo(p.x, y); first = false; } else ctx.lineTo(p.x, y);
       }
-      prev = e;
+      ctx.stroke();
     }
-    // the deck girders you are hanging from — they run over your head, so they come DOWN
-    ctx.strokeStyle = "rgba(120,134,148,0.65)";
-    const first = Math.ceil(state.distanceM / 8) * 8;
-    for (let k = 0; k < 12; k++) {
-      const dd = first + k * 8 - state.distanceM; if (dd < 2 || dd > 108) continue;
-      const e = edgePts(dd), m = metreAt(dd); if (!e.l.fwd || e.l.fwd <= 1 || !m) continue;
-      ctx.lineWidth = Math.max(1, 0.7 * m);
-      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y - 2.2 * m); ctx.lineTo(e.r.x, e.r.y - 2.2 * m); ctx.stroke();
-      ctx.strokeStyle = "rgba(255,205,120,0.16)";
-      ctx.lineWidth = Math.max(1, 0.35 * m);
-      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y - 1.1 * m); ctx.lineTo(e.r.x, e.r.y - 1.1 * m); ctx.stroke();
-      ctx.strokeStyle = "rgba(120,134,148,0.65)";
+    // the lit hatch ahead — where Zündapp has the box open
+    const pg = projectAhead(70, 2.4), mg = metreAt(70);
+    if (pg.fwd > 1 && mg) {
+      ctx.save(); ctx.globalCompositeOperation = "screen";
+      const g = ctx.createRadialGradient(pg.x, pg.y - 2 * mg, 0, pg.x, pg.y - 2 * mg, 12 * mg);
+      g.addColorStop(0, "rgba(255,226,160,0.30)"); g.addColorStop(1, "rgba(255,210,140,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(pg.x, pg.y - 2 * mg, 12 * mg, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = "rgba(255,220,150,0.5)"; ctx.fillRect(pg.x - 1.6 * mg, pg.y - 2.6 * mg, 3.2 * mg, 0.9 * mg);
     }
     ctx.fillStyle = "rgba(200,214,228,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
     ctx.fillText("UNDERSIDE OF THE MAIN DECK — 100 m OF AIR BELOW YOU", w / 2, horizonY - 18);
   }
-  // THE PLATFORM: open grating (you can see the sea through the floor), modules, floodlights
+
+  /* ============ THE PLATFORM — open grating, pipe racks, flare, derrick ============ */
   function drawGrating(w, h, night) {
-    ctx.fillStyle = "#08111a"; ctx.fillRect(0, horizonY, w, h - horizonY);
-    let prev = null;
-    for (let d = 2; d < 200; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#2c333b";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
-    // the grating: bearing bars across, and the sea showing through between them
-    const first = Math.ceil(state.distanceM / 1.6) * 1.6;
-    for (let k = 0; k < 90; k++) {
-      const dd = first + k * 1.6 - state.distanceM; if (dd < 2) continue; if (dd > 120) break;
-      const e = edgePts(dd), m = metreAt(dd); if (!e.l.fwd || e.l.fwd <= 1 || !m) continue;
-      ctx.strokeStyle = "rgba(10,26,38,0.55)"; ctx.lineWidth = Math.max(0.6, 0.25 * m);
+    ctx.fillStyle = "#07101a"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 200, 4, () => "#303842");
+    // the grating: bearing bars across, sea showing through between them
+    props(1.6, 80, 120, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(8,24,36,0.6)"; ctx.lineWidth = Math.max(0.6, 0.26 * m);
       ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y); ctx.stroke();
-    }
-    // process modules and pipe racks — placed by where they are on the rig, not by where
-    // you are, so they arrive, pass and are gone
-    const modBase = Math.ceil(state.distanceM / 22) * 22;
-    for (let i = 0; i < 10; i++) {
-      const idx = Math.round((modBase + i * 22) / 22);
-      const d = modBase + i * 22 - state.distanceM, sgn = idx % 2 ? 1 : -1;
-      if (d < 4 || d > 200) continue;
-      const H = halfAt(d), p = projectAhead(d, sgn * (H + 7)), m = metreAt(d);
-      if (!p.fwd || p.fwd <= 1 || !m) continue;
-      const bh = (6 + (idx % 3) * 4) * m, bw = 9 * m;
-      ctx.fillStyle = "#1d242c"; ctx.fillRect(p.x - bw / 2, p.y - bh, bw, bh);
-      ctx.strokeStyle = "rgba(140,152,166,0.4)"; ctx.lineWidth = Math.max(1, 0.25 * m);
-      for (let r = 1; r < 4; r++) { ctx.beginPath(); ctx.moveTo(p.x - bw / 2, p.y - bh * r / 4); ctx.lineTo(p.x + bw / 2, p.y - bh * r / 4); ctx.stroke(); }
-      ctx.fillStyle = "rgba(255,215,150,0.85)";
-      ctx.beginPath(); ctx.arc(p.x, p.y - bh - 1.2 * m, Math.max(1.4, 0.7 * m), 0, Math.PI * 2); ctx.fill();
-      ctx.save(); ctx.globalCompositeOperation = "screen";
-      const g = ctx.createRadialGradient(p.x, p.y - bh, 0, p.x, p.y - bh, 11 * m);
-      g.addColorStop(0, "rgba(255,210,140,0.13)"); g.addColorStop(1, "rgba(255,200,120,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y - bh, 11 * m, 0, Math.PI * 2); ctx.fill();
+    });
+    seams(3, 120, 1.2, "rgba(120,134,150,0.16)", 1);          // the bearing bars the other way
+    for (const sgn of [-1, 1]) handrail(sgn, 1.1, 3, 170, "rgba(176,190,204,0.55)", 0.4);
+    // process modules and pipe racks, placed by where they are on the rig
+    props(22, 12, 200, (d, idx, m) => {
+      const sgn = idx % 2 ? 1 : -1;
+      const H = halfAt(d), p = projectAhead(d, sgn * (H + 7)); if (!p.fwd || p.fwd <= 1) return;
+      if (idx % 3 === 2) {
+        // a pipe rack: real pipes, different bores, on a steel frame
+        const rows = 4;
+        for (let r = 0; r < rows; r++) {
+          const y = p.y - (1.6 + r * 1.5) * m, bore = (0.5 + (r % 2) * 0.35) * m;
+          ctx.strokeStyle = ["#7d8894", "#6b6157", "#5f7280", "#8a7f6d"][r];
+          ctx.lineWidth = Math.max(1.4, bore);
+          ctx.beginPath(); ctx.moveTo(p.x - 5 * m, y); ctx.lineTo(p.x + 5 * m, y); ctx.stroke();
+          ctx.strokeStyle = "rgba(255,255,255,0.18)"; ctx.lineWidth = Math.max(0.6, bore * 0.3);
+          ctx.beginPath(); ctx.moveTo(p.x - 5 * m, y - bore * 0.28); ctx.lineTo(p.x + 5 * m, y - bore * 0.28); ctx.stroke();
+        }
+        ctx.strokeStyle = "rgba(120,132,146,0.8)"; ctx.lineWidth = Math.max(1, 0.3 * m);
+        for (const xx of [-4.6, 4.6]) { ctx.beginPath(); ctx.moveTo(p.x + xx * m, p.y); ctx.lineTo(p.x + xx * m, p.y - 8 * m); ctx.stroke(); }
+      } else {
+        const bh = (7 + (idx % 3) * 4) * m, bw = 10 * m;
+        ctx.fillStyle = "#1e252d"; ctx.fillRect(p.x - bw / 2, p.y - bh, bw, bh);
+        ctx.fillStyle = "#2a323b"; ctx.fillRect(p.x - bw / 2, p.y - bh, bw, 0.5 * m);
+        ctx.strokeStyle = "rgba(140,152,166,0.4)"; ctx.lineWidth = Math.max(1, 0.22 * m);
+        for (let r = 1; r < 4; r++) { ctx.beginPath(); ctx.moveTo(p.x - bw / 2, p.y - bh * r / 4); ctx.lineTo(p.x + bw / 2, p.y - bh * r / 4); ctx.stroke(); }
+        ctx.fillStyle = "rgba(255,214,150,0.55)";             // lit windows
+        for (let c0 = 0; c0 < 3; c0++) ctx.fillRect(p.x - bw * 0.32 + c0 * bw * 0.28, p.y - bh * 0.72, bw * 0.16, 0.7 * m);
+        flood(p.x, p.y - bh - 1.2 * m, m, 11);
+      }
+    });
+    // the flare boom, off to starboard, alight
+    const pfl = projectAhead(150, 78), mfl = metreAt(150);
+    if (pfl.fwd > 1 && mfl) {
+      ctx.strokeStyle = "#4a545f"; ctx.lineWidth = Math.max(1.5, 1.2 * mfl);
+      ctx.beginPath(); ctx.moveTo(pfl.x - 24 * mfl, pfl.y); ctx.lineTo(pfl.x, pfl.y - 30 * mfl); ctx.stroke();
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      const fy = pfl.y - 32 * mfl;
+      for (let i = 0; i < 4; i++) {
+        const fx = pfl.x + Math.sin(state.time * 4 + i) * 2 * mfl;
+        const g = ctx.createRadialGradient(fx, fy - i * mfl, 0, fx, fy - i * mfl, 7 * mfl);
+        g.addColorStop(0, "rgba(255,226,150,0.55)"); g.addColorStop(0.5, "rgba(255,132,40,0.3)"); g.addColorStop(1, "rgba(200,60,20,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(fx, fy - i * mfl, 7 * mfl, 0, Math.PI * 2); ctx.fill();
+      }
       ctx.restore();
     }
+    // the derrick, ahead over the drill floor
+    const pd = projectAhead(185, -14), md = metreAt(185);
+    if (pd.fwd > 1 && md) {
+      const DER = 42 * md, dw = 15 * md;
+      ctx.strokeStyle = "#4a545f"; ctx.lineWidth = Math.max(1, 0.6 * md);
+      ctx.beginPath();
+      ctx.moveTo(pd.x - dw / 2, pd.y); ctx.lineTo(pd.x - dw * 0.16, pd.y - DER);
+      ctx.lineTo(pd.x + dw * 0.16, pd.y - DER); ctx.lineTo(pd.x + dw / 2, pd.y); ctx.stroke();
+      for (let i = 1; i <= 6; i++) {
+        const t = i / 7, yy = pd.y - DER * t, ww = dw * (1 - t * 0.68);
+        ctx.beginPath(); ctx.moveTo(pd.x - ww / 2, yy); ctx.lineTo(pd.x + ww / 2, yy); ctx.stroke();
+      }
+      const blink = Math.floor(state.time * 1.4) % 2 === 0;
+      ctx.fillStyle = blink ? "rgba(255,70,60,0.95)" : "rgba(120,30,26,0.6)";
+      ctx.beginPath(); ctx.arc(pd.x, pd.y - DER - 2 * md, Math.max(1.5, 0.6 * md), 0, Math.PI * 2); ctx.fill();
+    }
   }
-  // THE LINK SPAN: a truss, and nothing at all either side of it
+
+  /* =================== THE LINK SPAN — a through truss =================== */
   function drawTruss(w, h, night) {
     ctx.fillStyle = seaFill(horizonY + 30, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
     drawSwell(w, h, night, 1.0);
-    let prev = null;
-    for (let d = 2; d < 170; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#333b44";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
-    // the truss: verticals every 6 m with the diagonals between them, both sides
-    const first = Math.ceil(state.distanceM / 6) * 6;
-    ctx.strokeStyle = "rgba(160,174,188,0.6)";
-    for (let k = 0; k < 22; k++) {
-      const dd = first + k * 6 - state.distanceM; if (dd < 2 || dd > 160) continue;
-      if (dd < 8) continue;                       // anything nearer distorts into nonsense
-      const a = edgePts(dd), b = edgePts(dd + 6), m = metreAt(dd);
-      if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1 || !m) continue;
-      ctx.lineWidth = Math.min(6, Math.max(1, 0.32 * m));
-      const TOP = 4.6 * m;
+    deckStrip(2, 170, 4, (d) => (Math.floor(d / 4) % 2 ? "#353d47" : "#30373f"));
+    seams(3, 160, 1.4, "rgba(18,22,28,0.5)", 1);
+    // the truss: verticals every 6 m, diagonals between, and a portal frame overhead
+    ctx.strokeStyle = "rgba(166,180,194,0.65)";
+    props(6, 24, 160, (d, idx, m) => {
+      if (d < 8) return;
+      const a = edgePts(d), b = edgePts(d + 6), m2 = metreAt(d + 6) || m;
+      if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1) return;
+      ctx.lineWidth = Math.min(6, Math.max(1, 0.34 * m));
+      const TOP = 4.6 * m, TOP2 = 4.6 * m2;
       for (const side of ["l", "r"]) {
         ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y); ctx.lineTo(a[side].x, a[side].y - TOP); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y - TOP); ctx.lineTo(b[side].x, b[side].y - 4.6 * (metreAt(dd + 6) || m)); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y); ctx.lineTo(b[side].x, b[side].y - 4.6 * (metreAt(dd + 6) || m)); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y - TOP); ctx.lineTo(b[side].x, b[side].y - TOP2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y); ctx.lineTo(b[side].x, b[side].y - TOP2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y - TOP); ctx.lineTo(b[side].x, b[side].y); ctx.stroke();
       }
-      // the portal frame overhead — this is a through truss, so it closes over your head
       ctx.beginPath(); ctx.moveTo(a.l.x, a.l.y - TOP); ctx.lineTo(a.r.x, a.r.y - TOP); ctx.stroke();
+      if (idx % 3 === 0) flood(a.l.x, a.l.y - TOP, m, 8, "rgba(200,226,255,0.16)");
+    });
+    if (state.q.blastT > 0) {
+      ctx.save(); ctx.globalCompositeOperation = "screen";
+      ctx.fillStyle = "rgba(255,190,110," + (state.q.blastT / 1.4 * 0.45) + ")"; ctx.fillRect(0, 0, w, h);
+      ctx.restore();
     }
     // the limpet is on the span behind you; the mirror shows it, this shows the fuse
     const q = state.q;
@@ -3651,32 +4854,23 @@ const SPEC = {
       ctx.font = "700 17px ui-sans-serif"; ctx.textAlign = "center";
       ctx.fillText("LIMPET ARMED · " + q.chargeT.toFixed(1) + " s · " + back + " m BEHIND", w / 2, horizonY + 34);
     }
-    if (q.blastT > 0) {
-      ctx.save(); ctx.globalCompositeOperation = "screen";
-      ctx.fillStyle = "rgba(255,190,110," + (q.blastT / 1.4 * 0.45) + ")"; ctx.fillRect(0, 0, w, h);
-      ctx.restore();
-    }
   }
-  // THE HELIPAD: the circle, the H, the perimeter net, and then nothing
+
+  /* ===================== THE HELIPAD — and then nothing ===================== */
   function drawHelipad(w, h, night) {
     ctx.fillStyle = seaFill(horizonY + 40, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
-    let prev = null;
-    for (let d = 2; d < 150; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#2f3a33";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
+    deckStrip(2, 150, 4, () => "#2b3630");
+    seams(3, 140, 2.0, "rgba(16,24,20,0.5)", 1);
     const st = state.stage, mid = (stageStart(st) + st.to) / 2, rel = mid - state.distanceM;
-    if (rel > -60 && rel < 190) {
-      const p = projectAhead(Math.max(6, rel), 0), m = metreAt(Math.max(6, rel));
+    // the perimeter circle and the H
+    if (rel > 14 && rel < 190) {
+      const dd = rel, p = projectAhead(dd, 0), m = metreAt(dd);
       if (p.fwd > 1 && m) {
-        ctx.strokeStyle = "rgba(238,244,250,0.85)"; ctx.lineWidth = Math.max(1.5, 0.7 * m);
+        ctx.strokeStyle = "rgba(238,244,250,0.9)"; ctx.lineWidth = clamp(0.7 * m, 1.5, 10);
         ctx.beginPath(); ctx.ellipse(p.x, p.y, 14 * m, 4.2 * m, 0, 0, Math.PI * 2); ctx.stroke();
-        ctx.lineWidth = Math.max(2, 1.1 * m);
+        ctx.strokeStyle = "rgba(255,205,110,0.7)"; ctx.lineWidth = clamp(0.35 * m, 1, 6);
+        ctx.beginPath(); ctx.ellipse(p.x, p.y, 16.5 * m, 5 * m, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = "rgba(238,244,250,0.95)"; ctx.lineWidth = clamp(1.1 * m, 2, 16);
         ctx.beginPath();
         ctx.moveTo(p.x - 5 * m, p.y - 2.4 * m); ctx.lineTo(p.x - 5 * m, p.y + 2.4 * m);
         ctx.moveTo(p.x + 5 * m, p.y - 2.4 * m); ctx.lineTo(p.x + 5 * m, p.y + 2.4 * m);
@@ -3684,71 +4878,148 @@ const SPEC = {
         ctx.stroke();
       }
     }
+    // the perimeter safety net: a mesh skirt sloping down and out from the deck edge
+    for (const sgn of [-1, 1]) {
+      ctx.strokeStyle = "rgba(150,166,180,0.45)"; ctx.lineWidth = 1;
+      props(2.5, 26, 130, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + sgn * 2.2 * m, p.y + 1.1 * m); ctx.stroke();
+      });
+      ctx.beginPath(); let first = true;
+      for (let d = 4; d < 130; d += 6) {
+        const p = projectAhead(d, sgn * halfAt(d)), m = metreAt(d); if (!p.fwd || p.fwd <= 1 || !m) break;
+        const x = p.x + sgn * 2.2 * m, y = p.y + 1.1 * m;
+        if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      // perimeter lights, green, as a helideck actually has
+      props(7, 20, 130, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) - 0.6)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = "rgba(110,240,160,0.9)";
+        ctx.beginPath(); ctx.arc(p.x, p.y - 0.3 * m, Math.max(1.2, 0.3 * m), 0, Math.PI * 2); ctx.fill();
+      });
+    }
+    // the windsock, on its pole
+    const pw = projectAhead(96, 46), mw2 = metreAt(96);
+    if (pw.fwd > 1 && mw2) {
+      ctx.strokeStyle = "#5a6470"; ctx.lineWidth = Math.max(1, 0.24 * mw2);
+      ctx.beginPath(); ctx.moveTo(pw.x, pw.y); ctx.lineTo(pw.x, pw.y - 9 * mw2); ctx.stroke();
+      const sway = Math.sin(state.time * 1.4) * 0.4;
+      ctx.fillStyle = "rgba(226,96,50,0.85)";
+      ctx.beginPath();
+      ctx.moveTo(pw.x, pw.y - 9 * mw2); ctx.lineTo(pw.x + (4 + sway) * mw2, pw.y - 8.4 * mw2);
+      ctx.lineTo(pw.x + (4 + sway) * mw2, pw.y - 7.4 * mw2); ctx.lineTo(pw.x, pw.y - 7.6 * mw2);
+      ctx.closePath(); ctx.fill();
+    }
     // the edge: past this the deck stops
     const endRel = st.to - state.distanceM;
     if (endRel > 0 && endRel < 170) {
       const e = edgePts(endRel);
       if (e.l.fwd > 1) {
-        ctx.strokeStyle = "rgba(255,190,60,0.9)"; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y); ctx.stroke();
-        ctx.fillStyle = "rgba(255,190,60,0.9)"; ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
-        ctx.fillText("DECK EDGE — 30 m", (e.l.x + e.r.x) / 2, e.l.y - 12);
+        const mm = metreAt(endRel) || 1;
+        ctx.fillStyle = "rgba(255,190,60,0.85)";              // the hazard chevrons at the lip
+        ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y);
+        ctx.lineTo(e.r.x, e.r.y - 0.55 * mm); ctx.lineTo(e.l.x, e.l.y - 0.55 * mm); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "rgba(30,26,16,0.9)";
+        for (let i = 0; i < 14; i++) {
+          const t0 = i / 14, x0 = e.l.x + (e.r.x - e.l.x) * t0, y0 = e.l.y + (e.r.y - e.l.y) * t0;
+          if (i % 2) ctx.fillRect(x0, y0 - 0.55 * mm, (e.r.x - e.l.x) / 14, 0.55 * mm);
+        }
+        ctx.fillStyle = "rgba(255,190,60,0.95)"; ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("DECK EDGE — 30 m", (e.l.x + e.r.x) / 2, e.l.y - 14);
       }
     }
     ctx.fillStyle = state.q.foil > 0.5 ? "rgba(120,230,180,0.92)" : "rgba(255,120,90,0.95)";
     ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
     ctx.fillText(state.q.foil > 0.5 ? "HYDROFOILS DOWN — GO" : "FOILS STOWED — F BEFORE THE EDGE", w / 2, horizonY - 26);
   }
-  // OPEN WATER, foilborne: swell, spray off the struts, and Tony astern in the mirror
+
+  /* ================= OPEN WATER, foilborne ================= */
   function drawOpenWater(w, h, night) {
     ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
     drawSwell(w, h, night, 3.2);
-    // the foil struts throwing water at the speed you are doing
-    const v = Math.abs(state.speedMps);
-    ctx.save(); ctx.globalAlpha = clamp(v / 40, 0.1, 0.85);
-    for (const sgn of [-1, 1]) {
-      const x = w * (0.5 + sgn * 0.29), y = h * 0.84;
-      const g = ctx.createRadialGradient(x, y, 0, x, y, 90);
-      g.addColorStop(0, "rgba(232,246,252,0.55)"); g.addColorStop(1, "rgba(210,236,248,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, 90, 34, 0, 0, Math.PI * 2); ctx.fill();
+    // the moon's glitter path, broken up by the swell
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    for (let i = 0; i < 34; i++) {
+      const t0 = i / 34, y = horizonY + t0 * t0 * (h - horizonY) * 1.1;
+      const wdt = 10 + t0 * 190, jit = Math.sin(i * 2.3 + state.time * 2.4) * wdt * 0.35;
+      ctx.fillStyle = `rgba(226,238,250,${0.16 * (1 - t0 * 0.7)})`;
+      ctx.fillRect(w * 0.72 - wdt / 2 + jit, y, wdt, Math.max(1.5, 3 * t0));
     }
     ctx.restore();
-    // Tony astern — drawn in the top of the frame because he is behind you
+    // the foil struts and the sheets of water they throw
+    const v = Math.abs(state.speedMps);
+    ctx.save(); ctx.globalAlpha = clamp(v / 40, 0.12, 0.9);
+    for (const sgn of [-1, 1]) {
+      const x = w * (0.5 + sgn * 0.29), y = h * 0.845;
+      ctx.strokeStyle = "rgba(180,200,214,0.75)"; ctx.lineWidth = 7;
+      ctx.beginPath(); ctx.moveTo(x, y + 26); ctx.lineTo(x - sgn * 6, y - 34); ctx.stroke();
+      const g = ctx.createRadialGradient(x, y, 0, x, y, 100);
+      g.addColorStop(0, "rgba(236,250,255,0.6)"); g.addColorStop(1, "rgba(210,236,248,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, 100, 36, 0, 0, Math.PI * 2); ctx.fill();
+      // the rooster tail off the strut
+      ctx.fillStyle = "rgba(232,248,255,0.42)";
+      ctx.beginPath(); ctx.moveTo(x, y);
+      for (let i = 1; i <= 6; i++) {
+        const t0 = i / 6;
+        ctx.lineTo(x + sgn * t0 * 150, y - t0 * 70 + Math.sin(state.time * 9 + i) * 8);
+      }
+      for (let i = 6; i >= 1; i--) {
+        const t0 = i / 6;
+        ctx.lineTo(x + sgn * t0 * 150, y - t0 * 40 + Math.sin(state.time * 9 + i) * 8);
+      }
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+    // Tony astern
     const q = state.q;
     if (q.tonyM != null) {
       const k = clamp(1 - (q.tonyM - 70) / 400, 0, 1), sz = 130 + k * 420;
       const x = w * 0.5, y = horizonY + 10 - (1 - k) * 14;
-      ctx.save(); ctx.globalAlpha = 0.55 + k * 0.45;
-      ctx.fillStyle = "rgba(226,240,248,0.5)";                       // the bow wave he is pushing
-      ctx.beginPath(); ctx.ellipse(x, y + sz * 0.02, sz * 0.60, sz * 0.05, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "#39434e"; ctx.strokeStyle = "rgba(180,196,212,0.55)"; ctx.lineWidth = 1.5;
+      ctx.save(); ctx.globalAlpha = 0.62 + k * 0.38;
+      ctx.fillStyle = "rgba(226,240,248,0.55)";
+      ctx.beginPath(); ctx.ellipse(x, y + sz * 0.02, sz * 0.62, sz * 0.055, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#3d4854"; ctx.strokeStyle = "rgba(186,202,218,0.6)"; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(x - sz / 2, y); ctx.lineTo(x + sz / 2, y);
       ctx.lineTo(x + sz * 0.36, y - sz * 0.16); ctx.lineTo(x - sz * 0.4, y - sz * 0.16); ctx.closePath();
       ctx.fill(); ctx.stroke();
-      ctx.fillStyle = "#4a5763"; ctx.fillRect(x - sz * 0.1, y - sz * 0.34, sz * 0.22, sz * 0.18);
-      ctx.fillStyle = "rgba(150,200,235,0.7)"; ctx.fillRect(x - sz * 0.07, y - sz * 0.30, sz * 0.16, sz * 0.05);
-      ctx.fillStyle = Math.floor(state.time * 3) % 2 ? "rgba(255,90,70,0.95)" : "rgba(120,30,26,0.6)";
-      ctx.beginPath(); ctx.arc(x, y - sz * 0.36, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#2a323b";                                   // the amas either side
+      for (const sgn of [-1, 1]) ctx.fillRect(x + sgn * sz * 0.40, y - sz * 0.09, sz * 0.10, sz * 0.09);
+      ctx.fillStyle = "#4d5a67";                                   // deckhouse
+      ctx.beginPath();
+      ctx.moveTo(x - sz * 0.12, y - sz * 0.16); ctx.lineTo(x + sz * 0.12, y - sz * 0.16);
+      ctx.lineTo(x + sz * 0.08, y - sz * 0.36); ctx.lineTo(x - sz * 0.07, y - sz * 0.36); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(160,208,240,0.75)"; ctx.fillRect(x - sz * 0.07, y - sz * 0.31, sz * 0.15, sz * 0.045);
+      ctx.fillStyle = "#39434e";
+      ctx.beginPath(); ctx.moveTo(x - sz * 0.02, y - sz * 0.36); ctx.lineTo(x + sz * 0.01, y - sz * 0.52); ctx.lineTo(x + sz * 0.03, y - sz * 0.36); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(216,232,244,0.9)"; ctx.fillRect(x + sz * 0.30, y - sz * 0.115, sz * 0.06, sz * 0.045);
+      const blink = Math.floor(state.time * 3) % 2 === 0;
+      ctx.fillStyle = blink ? "rgba(255,90,70,0.95)" : "rgba(110,30,26,0.6)";
+      ctx.beginPath(); ctx.arc(x + sz * 0.01, y - sz * 0.535, Math.max(2, sz * 0.012), 0, Math.PI * 2); ctx.fill();
       ctx.restore();
       ctx.fillStyle = "rgba(255,150,120,0.95)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("TONY TRIHULL — " + Math.round(q.tonyM) + " m ASTERN", x, y - sz * 0.46);
+      ctx.fillText("TONY TRIHULL — " + Math.round(q.tonyM) + " m ASTERN", x, y + sz * 0.12);
     }
     if (q.torpedoT > 0) {
       const k = 1 - q.torpedoT / 26;
       ctx.fillStyle = "rgba(255,90,70,0.95)"; ctx.font = "700 15px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("TORPEDO RUNNING — " + q.torpedoT.toFixed(0) + " s", w / 2, horizonY + 24);
-      ctx.strokeStyle = "rgba(232,246,252,0.5)"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(w * 0.5, horizonY + 40); ctx.lineTo(w * 0.5, horizonY + 40 + k * (h - horizonY) * 0.5); ctx.stroke();
+      ctx.fillText("TORPEDO RUNNING — " + q.torpedoT.toFixed(0) + " s", w / 2, horizonY + 40);
+      ctx.strokeStyle = "rgba(236,250,255,0.6)"; ctx.lineWidth = 3;   // its wake, closing
+      ctx.beginPath(); ctx.moveTo(w * 0.5, horizonY + 54);
+      for (let i = 1; i <= 8; i++) ctx.lineTo(w * 0.5 + Math.sin(i * 1.4 + state.time * 6) * 5, horizonY + 54 + i / 8 * k * (h - horizonY) * 0.55);
+      ctx.stroke();
     }
-    if (q.tyres) {                                    // the four tyres, floating away behind
+    if (q.tyres) {
       for (let i = 0; i < 4; i++) {
-        const t = q.tyreT + i * 0.4, x = w * (0.32 + i * 0.12) + Math.sin(t + i) * 12;
-        const y = horizonY + 30 + Math.min(120, t * 26) + Math.sin(t * 2 + i) * 4;
-        ctx.strokeStyle = "rgba(20,22,26,0.85)"; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.ellipse(x, y, 11, 4, 0, 0, Math.PI * 2); ctx.stroke();
+        const t0 = q.tyreT + i * 0.4, x = w * (0.32 + i * 0.12) + Math.sin(t0 + i) * 12;
+        const y = horizonY + 34 + Math.min(130, t0 * 26) + Math.sin(t0 * 2 + i) * 4;
+        ctx.strokeStyle = "rgba(18,20,24,0.9)"; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.ellipse(x, y, 12, 4.4, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = "rgba(226,240,250,0.35)"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.ellipse(x, y + 4, 16, 3, 0, 0, Math.PI * 2); ctx.stroke();
       }
-      ctx.fillStyle = "rgba(220,232,240,0.75)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("FOUR TYRES, FLOATING — LET THEM COUNT THEM", w / 2, horizonY + 62);
+      ctx.fillStyle = "rgba(220,232,240,0.8)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("FOUR TYRES, FLOATING — LET THEM COUNT THEM", w / 2, horizonY + 72);
     }
     if (q.wreckT > 0) {
       ctx.save(); ctx.globalCompositeOperation = "screen";
@@ -3756,31 +5027,55 @@ const SPEC = {
       ctx.restore();
     }
   }
-  // SUBMERGED: no horizon, a bright ceiling, particulate going up past you, and the sonar
+
+  /* ========================= SUBMERGED ========================= */
   function drawSubmerged(w, h, night) {
     const g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, "#0d3a4a"); g.addColorStop(0.35, "#08222e"); g.addColorStop(1, "#030d14");
+    g.addColorStop(0, "#0e4053"); g.addColorStop(0.35, "#082430"); g.addColorStop(1, "#020a10");
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    // the surface above, with the light coming through it
+    // the surface above, seen from underneath, with the light coming through it
     ctx.save(); ctx.globalCompositeOperation = "screen";
-    for (let i = 0; i < 7; i++) {
-      const x = w * (0.1 + i * 0.13) + Math.sin(state.time * 0.4 + i) * 26;
-      const gg = ctx.createLinearGradient(x, 0, x + 40, h * 0.7);
-      gg.addColorStop(0, "rgba(150,220,240,0.10)"); gg.addColorStop(1, "rgba(150,220,240,0)");
+    ctx.fillStyle = "rgba(150,220,240,0.10)";
+    ctx.beginPath(); ctx.moveTo(0, 0);
+    for (let i = 0; i <= 30; i++) ctx.lineTo(w * i / 30, 26 + Math.sin(i * 0.8 + state.time * 1.6) * 9);
+    ctx.lineTo(w, 0); ctx.closePath(); ctx.fill();
+    for (let i = 0; i < 8; i++) {
+      const x = w * (0.06 + i * 0.13) + Math.sin(state.time * 0.4 + i) * 26;
+      const gg = ctx.createLinearGradient(x, 0, x + 50, h * 0.75);
+      gg.addColorStop(0, "rgba(160,226,244,0.13)"); gg.addColorStop(1, "rgba(150,220,240,0)");
       ctx.fillStyle = gg;
-      ctx.beginPath(); ctx.moveTo(x - 18, 0); ctx.lineTo(x + 18, 0); ctx.lineTo(x + 70, h * 0.7); ctx.lineTo(x + 10, h * 0.7); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x - 20, 20); ctx.lineTo(x + 20, 20); ctx.lineTo(x + 84, h * 0.78); ctx.lineTo(x + 14, h * 0.78); ctx.closePath(); ctx.fill();
     }
     ctx.restore();
-    // particulate, rising because you are going down
-    ctx.fillStyle = "rgba(200,230,240,0.35)";
-    for (let i = 0; i < 60; i++) {
+    // particulate and the bubbles off the car, both going up because you are going down
+    ctx.fillStyle = "rgba(200,230,240,0.32)";
+    for (let i = 0; i < 70; i++) {
       const sd = (i * 97.3) % 1, x = ((i * 137.5 + state.time * 9 * sd) % w);
       const y = h - (((i * 53.7 + state.time * 46 * (0.4 + sd)) % (h + 60)) - 30);
       ctx.fillRect(x, y, 2, 2);
     }
+    ctx.strokeStyle = "rgba(226,246,252,0.5)"; ctx.lineWidth = 1.4;
+    for (let i = 0; i < 22; i++) {
+      const sd = (i * 61.7) % 1;
+      const x = w * 0.5 + (sd - 0.5) * 210 + Math.sin(state.time * 3 + i) * 9;
+      const y = h * 0.9 - ((state.time * 90 * (0.5 + sd) + i * 60) % (h * 0.85));
+      ctx.beginPath(); ctx.arc(x, y, 2 + sd * 5, 0, Math.PI * 2); ctx.stroke();
+    }
+    // the sonar return, sweeping
+    const cx = w * 0.82, cy = h * 0.60, R = Math.min(88, w * 0.075);
+    ctx.save();
+    ctx.strokeStyle = "rgba(120,230,190,0.30)"; ctx.lineWidth = 1;
+    for (const f of [0.4, 0.7, 1]) { ctx.beginPath(); ctx.arc(cx, cy, R * f, 0, Math.PI * 2); ctx.stroke(); }
+    const a = (state.time * 0.7 % 1) * Math.PI * 2;
+    const gg2 = ctx.createLinearGradient(cx, cy, cx + Math.cos(a) * R, cy + Math.sin(a) * R);
+    gg2.addColorStop(0, "rgba(120,255,190,0.5)"); gg2.addColorStop(1, "rgba(120,255,190,0)");
+    ctx.strokeStyle = gg2; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); ctx.stroke();
+    ctx.restore();
     ctx.fillStyle = "rgba(150,230,210,0.9)"; ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
-    ctx.fillText(state.q.sub ? "SUBMERGED — FINS, MASK, SCREWS" : "DIVE — J", w / 2, h * 0.2);
+    ctx.fillText(state.q.sub ? "SUBMERGED — FINS, MASK, SCREWS" : "DIVE — J", w / 2, horizonY + 30);
   }
+
   // the harpoon wire, from the nose to whatever it is holding
   function drawHookLine(w, h) {
     const q = state.q; if (!q.hookTo) return;
@@ -3840,8 +5135,8 @@ const SPEC = {
   }
   // the stage board: which stage, where you are, and the one thing that has to happen next
   function drawStageHud(w, h) {
-    const s = state.stage; if (!s || !onSea()) return;
-    const i = SEA_STAGES.indexOf(s), a = stageStart(s), k = clamp((state.distanceM - a) / (s.to - a), 0, 1);
+    const s = state.stage; if (!s || !onStage()) return;
+    const L = STAGE_SETS[s.route].stages, i = s.i, a = s.from, k = clamp((state.distanceM - a) / (s.to - a), 0, 1);
     // the centre band is the only part of the canvas the HTML panels do not cover
     const bw = Math.min(430, w * 0.4), x = (w - bw) / 2, y = 104;
     ctx.save();
@@ -3849,31 +5144,40 @@ const SPEC = {
     ctx.beginPath(); ctx.roundRect(x, y, bw, 84, 8); ctx.fill();
     ctx.strokeStyle = "rgba(120,190,220,0.35)"; ctx.lineWidth = 1; ctx.stroke();
     ctx.fillStyle = "rgba(150,215,240,0.9)"; ctx.font = "700 11px ui-sans-serif"; ctx.textAlign = "left";
-    ctx.fillText("CARS 2 · THE OPENING · STAGE " + (i + 1) + " OF " + SEA_STAGES.length, x + 12, y + 18);
+    ctx.fillText(STAGE_SETS[s.route].film + " · STAGE " + (i + 1) + " OF " + L.length, x + 12, y + 18);
     ctx.fillStyle = "#eaf2f8"; ctx.font = "700 16px ui-sans-serif";
     ctx.fillText(s.name, x + 12, y + 38);
     ctx.fillStyle = "rgba(190,208,220,0.8)"; ctx.font = "500 11px ui-sans-serif";
     ctx.fillText(s.where, x + 12, y + 54);
     // the ladder of stages, with where you are on it
     const lw = bw - 24, ly = y + 68;
-    for (let j = 0; j < SEA_STAGES.length; j++) {
-      const sw = lw / SEA_STAGES.length - 3, sx = x + 12 + j * (lw / SEA_STAGES.length);
+    for (let j = 0; j < L.length; j++) {
+      const sw = lw / L.length - 3, sx = x + 12 + j * (lw / L.length);
       ctx.fillStyle = j < i ? "rgba(120,230,170,0.85)" : j === i ? "rgba(255,205,110,0.95)" : "rgba(120,140,158,0.35)";
       ctx.fillRect(sx, ly, j === i ? sw * k + 2 : sw, 5);
       if (j === i && k < 1) { ctx.fillStyle = "rgba(120,140,158,0.35)"; ctx.fillRect(sx + sw * k + 2, ly, sw - sw * k - 2, 5); }
     }
     ctx.restore();
     // the kit that matters right now, along the bottom
-    const kit = [
-      ["G", "HARPOON", state.q.hook >= (s.id === "ride" ? 2 : 1)],
-      ["M", "MAGNETS", state.q.magnet],
-      ["P", "CAMERA", state.q.shots >= 3],
-      ["5+2", "OIL+FIRE", !!(state.mission && state.mission.done.burn)],
-      ["K", "LIMPET", state.q.blownAt != null],
-      ["F", "FOILS", state.q.foil > 0.5],
-      ["B", "ROCKETS", state.q.rocket > 0],
-      ["J", "TYRES/DIVE", state.q.sub > 0 || state.q.tyres],
-    ];
+    const q = state.q, done = (state.mission && state.mission.done) || {};
+    const KITS = {
+      [SEA_ROUTE]: [["G", "HARPOON", q.hook >= (s.id === "ride" ? 2 : 1)], ["M", "MAGNETS", q.magnet],
+        ["P", "CAMERA", q.shots >= 3], ["5+2", "OIL+FIRE", !!done.burn], ["K", "LIMPET", q.blownAt != null],
+        ["F", "FOILS", q.foil > 0.5], ["B", "ROCKETS", q.rocket > 0], ["J", "TYRES/DIVE", q.sub > 0 || q.tyres]],
+      "Mission — Tokyo, World Grand Prix": [["G", "TAKE IT", q.hook >= 1], ["6", "SMOKE", q.smokeUsed],
+        ["5", "OIL", q.oil < 100], ["2", "GUNS", q.ammo < 104], ["3", "SHIELD", q.shield > 0.5],
+        ["B", "ROCKETS", q.rocket > 0], ["8", "TRACKER", q.radar]],
+      "Mission — London, the last race": [["R", "REVERSE", state.gearMode === "R"], ["G", "TOW HOOK", q.hook >= 1],
+        ["B", "ROCKETS", q.rocket > 0], ["RANGE", (q.rangeM == null ? "—" : Math.round(q.rangeM) + " m"), !!q.outOfRange],
+        ["BOMB", (q.bombT > 0 ? Math.ceil(q.bombT) + " s" : "—"), q.bombT > 0]],
+      "Mission — Furka Pass & Auric Enterprises, 1964": [["8", "TRACKER", q.radar], ["4", "SLASHERS", !!done.mustang],
+        ["1", "PLATES", q.plate > 0], ["5", "OIL", q.oil < 100], ["2", "GUNS", q.ammo < 104],
+        ["6", "SMOKE", q.smokeUsed], ["7", "EJECTOR", !!done.boarder], ["STOP", "THE MIRROR", !!done.wall]],
+      "Mission — Matera, 2021": [["3", "GLASS", q.shield > 0.5], ["2", "MINIGUNS", q.gun],
+        ["SPIN", Math.round(q.spinDeg || 0) + "°", (q.spinDeg || 0) >= 340], ["6", "SMOKE", q.smokeUsed],
+        ["B", "ROCKETS", q.rocket > 0]],
+    };
+    const kit = KITS[s.route] || KITS[SEA_ROUTE];
     ctx.save(); ctx.font = "700 10px ui-sans-serif"; ctx.textAlign = "center";
     const kw = 76, tot = kit.length * kw, x0 = (w - tot) / 2, ky = y + 92;
     kit.forEach((kk, j) => {
@@ -4001,8 +5305,8 @@ const SPEC = {
 
     // an interior mirror sits at the top of the windscreen, so it goes in the sky just
     // above the horizon — not at y=0, which is under the HTML topbar and invisible
-    const mw = Math.min(360, w * 0.30), mh = 62, mx = (w - mw) / 2;
-    const my = Math.max(104, Math.min(h * 0.42, horizonY - 104));
+    const mw = Math.min(320, w * 0.26), mh = 56, mx = (w - mw) / 2;
+    const my = Math.max(104, Math.min(h * 0.42, horizonY - 116));
     ctx.save();
     ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 7); ctx.clip();
     const sky = ctx.createLinearGradient(0, my, 0, my + mh);

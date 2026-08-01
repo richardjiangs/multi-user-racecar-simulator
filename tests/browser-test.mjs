@@ -127,25 +127,46 @@ const check = (label, ok, detail) => {
   check("nothing laid behind the car is projected in front of it", bad.length === 0, bad.join(" | "));
 }
 
-/* ---------- the DB5's Cars 2 stage is a stage, not a circuit ----------
-   It shipped once as a CIRCUITS entry with corners renamed "Tanker deck" and nothing
-   drawn — a lap of Monaco wearing a costume. It is now ten stages with ten surfaces, and
-   these are the properties that make it that rather than a track. */
+/* ---------- the DB5 mission stages are stages, not circuits ----------
+   The sea mission shipped once as a CIRCUITS entry with corners renamed "Tanker deck" and
+   nothing drawn — a lap of Monaco in a costume. There are now five stage missions, and
+   these are the properties that make them that rather than tracks. */
 {
   const { readFileSync } = await import("node:fs");
   const src = readFileSync(ROOT + "/Aston Martin DB5 simulator.html", "utf8");
-  const stages = (src.match(/^const SEA_STAGES = \[[\s\S]*?\n\];/m) || [""])[0];
-  const ids = [...stages.matchAll(/id: "(\w+)"/g)].map((m) => m[1]);
-  const surfs = new Set([...stages.matchAll(/surf: "(\w+)"/g)].map((m) => m[1]));
-  const WANT = ["crabby", "ride", "climb", "lip", "chase", "bridge", "helipad", "water", "dead", "sub"];
-  check(`Cars 2 opening: ${ids.length} stages, ${surfs.size} distinct surfaces`,
-    ids.join(",") === WANT.join(",") && surfs.size === 9,
-    `ids=${ids.join(",")} surfaces=${[...surfs].join(",")}`);
-  const kit = ["seaHarpoon", "seaMagnet", "seaShutter", "seaRocket", "seaCharge", "seaFoil", "seaTorpedo", "seaDive", "seaSonar", "seaBlast", "seaClamp", "seaAlarm"];
+  const WANT = {
+    SEA_STAGES: ["crabby", "ride", "climb", "lip", "chase", "bridge", "helipad", "water", "dead", "sub"],
+    TOK_STAGES: ["party", "washroom", "race", "bolt", "alley", "rainbow", "apron"],
+    LON_STAGES: ["gears", "street", "pits", "range", "mall"],
+    GF_STAGES: ["pass", "tilly", "recce", "yard", "woods", "mirror"],
+    NTTD_STAGES: ["sassi", "steps", "piazza", "smoke", "viaduct"],
+  };
+  const bad = [], surfaces = new Set();
+  let total = 0;
+  for (const [name, ids] of Object.entries(WANT)) {
+    const blk = (src.match(new RegExp("^const " + name + " = \\[[\\s\\S]*?\\n\\];", "m")) || [""])[0];
+    const got = [...blk.matchAll(/id: "(\w+)"/g)].map((m) => m[1]);
+    for (const m of blk.matchAll(/surf: "(\w+)"/g)) surfaces.add(m[1]);
+    total += got.length;
+    if (got.join(",") !== ids.join(",")) bad.push(name + ": " + got.join(","));
+    // every stage must say where you are, what has to happen, and how it is drawn
+    const n = (blk.match(/name: "/g) || []).length, wh = (blk.match(/where: "/g) || []).length,
+          hn = (blk.match(/hint: "/g) || []).length, sf = (blk.match(/surf: "/g) || []).length;
+    if (n !== ids.length || wh !== ids.length || hn !== ids.length || sf !== ids.length)
+      bad.push(name + ": a stage is missing its name/where/hint/surf");
+  }
+  check("5 stage missions, " + total + " stages, " + surfaces.size + " distinct surfaces",
+    bad.length === 0 && total === 33 && surfaces.size >= 20, bad.join(" | "));
+  const kit = ["seaHarpoon", "seaMagnet", "seaShutter", "seaRocket", "seaCharge", "seaFoil",
+               "seaTorpedo", "seaDive", "seaSonar", "seaBlast", "seaClamp", "seaAlarm"];
   const missing = kit.filter((k) => !new RegExp("\\b" + k + "\\(").test(src));
-  check("Finn's kit each has its own synthesised sound", missing.length === 0, "missing: " + missing.join(","));
-  check("the sea stage has no kerbs, racing line or start/finish",
-    /if \(pal\.env !== "sea"\) drawStartFinishLine\(\)/.test(src) && /if \(pal\.env === "sea"\) return;/.test(src));
+  check("the mission equipment each has its own synthesised sound", missing.length === 0, "missing: " + missing.join(","));
+  check("no kerbs, racing line, start/finish, armco or ambient traffic on a stage",
+    /if \(pal\.env !== "sea"\) drawStartFinishLine\(\)/.test(src)
+    && /if \(pal\.env === "sea"\) return;/.test(src)
+    && /if \(!onStage\(\)\) \{ drawRoadside/.test(src));
+  check("a stage run is one-way — braking cannot drop you back a stage",
+    /s\.i < state\.stage\.i\) s = state\.stage/.test(src));
 }
 
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
