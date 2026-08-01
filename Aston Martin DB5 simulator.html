@@ -3383,44 +3383,155 @@ const SPEC = {
   }
 
   // CRABBY: a working crab boat. Timber deck, a bulwark you cannot drive over, pots stacked.
-  function drawPlanks(w, h, night) {
-    ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
-    drawSwell(w, h, night, 2.4);
-    // the deck itself, redrawn as timber
+  /* ---- shared surface helpers: everything below builds out of these ---- */
+  // fill the drivable strip between two distances, colour chosen per band
+  function deckStrip(d0, d1, step, colourFn) {
     let prev = null;
-    for (let d = 2; d < 150; d += 3) {
+    for (let d = d0; d < d1; d += step) {
       const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
       if (prev) {
-        const lit = Math.floor(d / 1.4 + state.distanceM * 0.7) % 2 === 0;
-        ctx.fillStyle = lit ? "#4a3520" : "#412e1b";
+        ctx.fillStyle = colourFn(d);
         ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
         ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
       }
       prev = e;
     }
-    // bulwarks: a 1.1 m timber wall each side, with the sea beyond it
-    for (const sgn of [-1, 1]) {
-      ctx.fillStyle = "#3a2a19"; ctx.strokeStyle = "rgba(220,200,160,0.25)"; ctx.lineWidth = 1;
+  }
+  // plank / panel seams running fore-and-aft, at a lateral spacing in metres
+  function seams(d0, d1, spacingM, colour, widthPx) {
+    const H0 = halfAt(4);
+    ctx.strokeStyle = colour; ctx.lineWidth = widthPx || 1;
+    for (let off = -H0 + spacingM; off < H0; off += spacingM) {
       ctx.beginPath(); let first = true;
-      for (let d = 3; d < 140; d += 6) {
-        const H = halfAt(d), p = projectAhead(d, sgn * H); if (!p.fwd || p.fwd <= 1) break;
-        const t = 1.1 * (metreAt(d) || 0);
+      for (let d = d0; d < d1; d += 6) {
+        const p = projectAhead(d, off); if (!p.fwd || p.fwd <= 1) break;
         if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
-        ctx.lineTo(p.x, p.y - t);
       }
       ctx.stroke();
     }
-    // crab pots — anchored to the deck, not to the camera, so they really do go past
-    const potBase = Math.ceil(state.distanceM / 17) * 17;
-    for (let i = 0; i < 8; i++) {
-      const idx = Math.round((potBase + i * 17) / 17);
-      const d = potBase + i * 17 - state.distanceM, sgn = idx % 2 ? 1 : -1;
-      if (d < 4 || d > 140) continue;
-      const p = projectAhead(d, sgn * (halfAt(d) - 1.4)); if (!p.fwd || p.fwd <= 1) continue;
+  }
+  // a solid wall along one edge — bulwark, kerb, pit wall — with a cap rail on top
+  function wall(sgn, hM, d0, d1, face, cap) {
+    ctx.fillStyle = face;
+    ctx.beginPath(); let first = true; const pts = [];
+    for (let d = d0; d < d1; d += 5) {
+      const p = projectAhead(d, sgn * halfAt(d)), m = metreAt(d);
+      if (!p.fwd || p.fwd <= 1 || !m) break;
+      pts.push({ x: p.x, y: p.y, t: hM * m });
+      if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
+    }
+    for (let i = pts.length - 1; i >= 0; i--) ctx.lineTo(pts[i].x, pts[i].y - pts[i].t);
+    ctx.closePath(); ctx.fill();
+    if (cap && pts.length > 1) {
+      ctx.strokeStyle = cap; ctx.lineWidth = 2;
+      ctx.beginPath(); ctx.moveTo(pts[0].x, pts[0].y - pts[0].t);
+      for (const p of pts) ctx.lineTo(p.x, p.y - p.t);
+      ctx.stroke();
+    }
+  }
+  // a handrail: two rails on stanchions every 2.4 m, the way offshore steel actually is
+  function handrail(sgn, hM, d0, d1, colour, offM) {
+    ctx.strokeStyle = colour; ctx.lineWidth = 1.4;
+    for (const frac of [1, 0.55]) {
+      ctx.beginPath(); let first = true;
+      for (let d = d0; d < d1; d += 5) {
+        const p = projectAhead(d, sgn * (halfAt(d) + (offM || 0))), m = metreAt(d);
+        if (!p.fwd || p.fwd <= 1 || !m) break;
+        const y = p.y - hM * frac * m;
+        if (first) { ctx.moveTo(p.x, y); first = false; } else ctx.lineTo(p.x, y);
+      }
+      ctx.stroke();
+    }
+    const base = Math.ceil(state.distanceM / 2.4) * 2.4;
+    for (let k = 0; k < 26; k++) {
+      const d = base + k * 2.4 - state.distanceM; if (d < d0 || d > d1) continue;
+      const p = projectAhead(d, sgn * (halfAt(d) + (offM || 0))), m = metreAt(d);
+      if (!p.fwd || p.fwd <= 1 || !m) continue;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - hM * m); ctx.stroke();
+    }
+  }
+  // world-anchored props: index by where they are on the route, not where the camera is
+  function props(spacingM, count, maxD, fn) {
+    const base = Math.ceil(state.distanceM / spacingM) * spacingM;
+    for (let k = 0; k < count; k++) {
+      const world = base + k * spacingM, d = world - state.distanceM;
+      if (d < 3 || d > maxD) continue;
+      const idx = Math.round(world / spacingM);
       const m = metreAt(d); if (!m) continue;
-      ctx.fillStyle = "rgba(60,50,38,0.9)"; ctx.fillRect(p.x - m, p.y - 1.6 * m, 2 * m, 1.6 * m);
-      ctx.strokeStyle = "rgba(180,170,150,0.35)"; ctx.lineWidth = 1;
-      for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(p.x - m, p.y - k * 0.4 * m); ctx.lineTo(p.x + m, p.y - k * 0.4 * m); ctx.stroke(); }
+      fn(d, idx, m);
+    }
+  }
+  // a floodlight: the lamp, and the cone of light it actually throws
+  function flood(x, y, m, radiusM, tint) {
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    const g = ctx.createRadialGradient(x, y, 0, x, y, radiusM * m);
+    g.addColorStop(0, tint || "rgba(255,214,150,0.20)"); g.addColorStop(1, "rgba(255,200,120,0)");
+    ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, radiusM * m, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+    ctx.fillStyle = "rgba(255,236,196,0.95)";
+    ctx.beginPath(); ctx.arc(x, y, Math.max(1.2, 0.45 * m), 0, Math.PI * 2); ctx.fill();
+  }
+
+  /* ================= CRABBY — a working crab boat's afterdeck ================= */
+  function drawPlanks(w, h, night) {
+    ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
+    drawSwell(w, h, night, 2.4);
+    // the timber: alternating planks fore-and-aft, wet and scuffed
+    deckStrip(2, 160, 3, (d) => (Math.floor(d / 1.5 + state.distanceM * 0.66) % 2 ? "#4b3722" : "#3f2d1b"));
+    seams(3, 150, 0.9, "rgba(20,13,7,0.55)", 1);
+    seams(3, 150, 0.9 * 4, "rgba(96,74,48,0.35)", 1.6);
+    // the bulwarks — a real 1.1 m timber wall with a steel cap rail, not a line
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 1.1, 3, 150, "#33240f", "rgba(196,178,148,0.6)");
+      // stanchion ribs on the inboard face
+      ctx.strokeStyle = "rgba(24,16,8,0.6)"; ctx.lineWidth = 1.2;
+      props(2.2, 30, 130, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d));
+        if (!p.fwd || p.fwd <= 1) return;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x, p.y - 1.1 * m); ctx.stroke();
+      });
+    }
+    // crab pots: wire cubes, stacked, with the mesh visible and a buoy on top of some
+    props(9, 16, 130, (d, idx, m) => {
+      const sgn = idx % 2 ? 1 : -1, stack = 1 + (idx % 3 === 0 ? 1 : 0);
+      const p = projectAhead(d, sgn * (halfAt(d) - 1.6)); if (!p.fwd || p.fwd <= 1) return;
+      const s0 = 1.15 * m;
+      for (let lvl = 0; lvl < stack; lvl++) {
+        const y = p.y - lvl * s0 * 1.02;
+        ctx.fillStyle = "rgba(46,38,28,0.92)";
+        ctx.fillRect(p.x - s0, y - s0, s0 * 2, s0);
+        ctx.strokeStyle = "rgba(168,158,132,0.45)"; ctx.lineWidth = Math.max(0.6, 0.09 * m);
+        for (let g0 = 1; g0 < 4; g0++) {
+          ctx.beginPath(); ctx.moveTo(p.x - s0, y - s0 * g0 / 4); ctx.lineTo(p.x + s0, y - s0 * g0 / 4); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(p.x - s0 + s0 * g0 / 2, y - s0); ctx.lineTo(p.x - s0 + s0 * g0 / 2, y); ctx.stroke();
+        }
+        ctx.strokeStyle = "rgba(210,196,168,0.7)"; ctx.lineWidth = Math.max(1, 0.14 * m);
+        ctx.strokeRect(p.x - s0, y - s0, s0 * 2, s0);
+      }
+      if (idx % 4 === 0) {                                   // a marker buoy lashed on top
+        ctx.fillStyle = "#c8552a";
+        ctx.beginPath(); ctx.arc(p.x + s0 * 0.5, p.y - stack * s0 * 1.02 - s0 * 0.4, s0 * 0.38, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    // coils of warp line on the deck
+    props(13, 10, 90, (d, idx, m) => {
+      const p = projectAhead(d, (idx % 2 ? 1 : -1) * (halfAt(d) - 3.4)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(178,158,116,0.55)"; ctx.lineWidth = Math.max(1, 0.16 * m);
+      for (let r = 1; r <= 3; r++) { ctx.beginPath(); ctx.ellipse(p.x, p.y, r * 0.26 * m, r * 0.1 * m, 0, 0, Math.PI * 2); ctx.stroke(); }
+    });
+    // Crabby's own wheelhouse and mast, forward of you, with his working lights
+    const pf = projectAhead(120, 0), mf = metreAt(120);
+    if (pf.fwd > 1 && mf) {
+      ctx.fillStyle = "#20303a"; ctx.fillRect(pf.x - 3.4 * mf, pf.y - 5.4 * mf, 6.8 * mf, 5.4 * mf);
+      ctx.fillStyle = "rgba(255,214,140,0.8)"; ctx.fillRect(pf.x - 2.6 * mf, pf.y - 4.4 * mf, 5.2 * mf, 1.9 * mf);
+      ctx.strokeStyle = "rgba(150,164,178,0.7)"; ctx.lineWidth = Math.max(1, 0.22 * mf);
+      ctx.beginPath(); ctx.moveTo(pf.x, pf.y - 5.4 * mf); ctx.lineTo(pf.x, pf.y - 12 * mf); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(pf.x - 3 * mf, pf.y - 9.5 * mf); ctx.lineTo(pf.x + 3 * mf, pf.y - 9.5 * mf); ctx.stroke();
+      flood(pf.x - 3 * mf, pf.y - 9.5 * mf, mf, 16);
+      flood(pf.x + 3 * mf, pf.y - 9.5 * mf, mf, 16);
+      ctx.fillStyle = "rgba(226,236,246,0.85)"; ctx.textAlign = "center";
+      ctx.font = `700 ${Math.round(1.5 * mf)}px ui-sans-serif`;
+      ctx.fillText("CRABBY", pf.x, pf.y - 13.4 * mf);
     }
     drawTonyLight(w, h);
   }
@@ -3431,217 +3542,308 @@ const SPEC = {
     const cx = w * (0.5 + sweep * 0.34), top = horizonY - 26;
     ctx.save(); ctx.globalCompositeOperation = "screen";
     const g = ctx.createLinearGradient(cx, top, cx, h);
-    g.addColorStop(0, "rgba(255,80,60,0.32)"); g.addColorStop(1, "rgba(255,60,40,0.02)");
+    g.addColorStop(0, "rgba(255,80,60,0.34)"); g.addColorStop(1, "rgba(255,60,40,0.02)");
     ctx.fillStyle = g;
     ctx.beginPath(); ctx.moveTo(cx - 8, top); ctx.lineTo(cx + 8, top);
     ctx.lineTo(cx + w * 0.16, h); ctx.lineTo(cx - w * 0.16, h); ctx.closePath(); ctx.fill();
+    // the spot where it lands on the deck
+    const gy = h * 0.80, g2 = ctx.createRadialGradient(cx + sweep * w * 0.12, gy, 0, cx + sweep * w * 0.12, gy, 120);
+    g2.addColorStop(0, "rgba(255,120,90,0.30)"); g2.addColorStop(1, "rgba(255,80,60,0)");
+    ctx.fillStyle = g2; ctx.beginPath(); ctx.ellipse(cx + sweep * w * 0.12, gy, 130, 34, 0, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
     if (Math.floor(state.time * 2) % 2 === 0) {
-      ctx.fillStyle = "rgba(255,90,70,0.9)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillStyle = "rgba(255,90,70,0.95)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
       ctx.fillText("TONY TRIHULL 02 — GUN LAID ON CRABBY", w / 2, horizonY - 40);
     }
   }
-  // TONY TRIHULL's flight deck: non-skid, landing circle, and the two outrigger hulls
+
+  /* ============ TONY TRIHULL — the flight deck of an LCS trimaran ============ */
   function drawFlightDeck(w, h, night) {
     ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
     drawSwell(w, h, night, 1.4);
-    let prev = null;
-    for (let d = 2; d < 190; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#3b4149";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
-    // deck centreline and the landing circle, in the Navy's white
-    ctx.strokeStyle = "rgba(232,238,244,0.75)";
-    for (let d = 4; d < 170; d += 12) {
-      const a = projectAhead(d, 0), b = projectAhead(d + 6, 0);
-      if (!a.fwd || a.fwd <= 1 || !b.fwd || b.fwd <= 1) continue;
-      ctx.lineWidth = Math.max(1, 0.35 * (metreAt(d) || 0));
-      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
-    }
-    for (const dd of [58, 132]) {
-      const p = projectAhead(dd, 0), m = metreAt(dd); if (!p.fwd || p.fwd <= 1 || !m) continue;
-      ctx.strokeStyle = "rgba(232,238,244,0.55)"; ctx.lineWidth = Math.max(1, 0.5 * m);
-      ctx.beginPath(); ctx.ellipse(p.x, p.y, 9 * m, 2.6 * m, 0, 0, Math.PI * 2); ctx.stroke();
-    }
-    // the outrigger hulls: this is a trimaran, and you can see both amas from the deck
+    deckStrip(2, 200, 4, () => "#39404a");
+    seams(3, 190, 3.2, "rgba(24,29,35,0.5)", 1);              // deck plate joints
+    // the amas — this is a trimaran, and from the deck you see both outrigger hulls
     for (const sgn of [-1, 1]) {
-      ctx.fillStyle = "rgba(24,30,37,0.95)";
-      ctx.beginPath(); let first = true;
-      for (let d = 4; d < 180; d += 8) {
-        const p = projectAhead(d, sgn * (halfAt(d) + 5.4)); if (!p.fwd || p.fwd <= 1) break;
+      ctx.fillStyle = "rgba(20,26,33,0.96)";
+      ctx.beginPath(); let first = true; const top = [];
+      for (let d = 4; d < 190; d += 8) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 5.6)), m = metreAt(d);
+        if (!p.fwd || p.fwd <= 1 || !m) break;
+        top.push({ x: p.x, y: p.y, t: 2.6 * m });
         if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
       }
-      for (let d = 176; d >= 4; d -= 8) {
-        const p = projectAhead(d, sgn * (halfAt(d) + 5.4)), m = metreAt(d); if (!p.fwd || p.fwd <= 1) continue;
-        ctx.lineTo(p.x, p.y - 2.4 * (m || 0));
+      for (let i = top.length - 1; i >= 0; i--) ctx.lineTo(top[i].x, top[i].y - top[i].t);
+      ctx.closePath(); ctx.fill();
+      // and the sheet of water each one throws at 44 knots
+      ctx.fillStyle = "rgba(214,238,248,0.30)";
+      ctx.beginPath(); first = true;
+      for (let d = 4; d < 160; d += 10) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 8.6)); if (!p.fwd || p.fwd <= 1) break;
+        const jag = Math.sin(d * 0.4 + state.time * 6) * 4;
+        if (first) { ctx.moveTo(p.x, p.y + jag); first = false; } else ctx.lineTo(p.x, p.y + jag);
+      }
+      for (let d = 156; d >= 4; d -= 10) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 6.0)); if (!p.fwd || p.fwd <= 1) continue;
+        ctx.lineTo(p.x, p.y);
       }
       ctx.closePath(); ctx.fill();
+      handrail(sgn, 1.1, 4, 170, "rgba(180,194,208,0.5)", 0.3);
     }
-    // the superstructure ahead, and the 57 mm gun on the foredeck
-    const pf = projectAhead(150, 0), mf = metreAt(150);
+    // flight-deck markings: the centreline, the landing circle, and the tie-down grid
+    ctx.strokeStyle = "rgba(238,244,250,0.8)";
+    props(12, 18, 180, (d, idx, m) => {
+      const a = projectAhead(d, 0), b = projectAhead(d + 6, 0);
+      if (!a.fwd || a.fwd <= 1 || !b.fwd || b.fwd <= 1) return;
+      ctx.lineWidth = Math.max(1, 0.35 * m);
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+    });
+    ctx.fillStyle = "rgba(16,20,25,0.8)";
+    props(3, 60, 110, (d, idx, m) => {                        // tie-down pad eyes
+      for (const off of [-4.5, -1.5, 1.5, 4.5]) {
+        const p = projectAhead(d, off); if (!p.fwd || p.fwd <= 1) continue;
+        ctx.beginPath(); ctx.ellipse(p.x, p.y, 0.24 * m, 0.09 * m, 0, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    for (const dd of [62, 140]) {
+      const p = projectAhead(dd, 0), m = metreAt(dd); if (!p.fwd || p.fwd <= 1 || !m) continue;
+      ctx.strokeStyle = "rgba(238,244,250,0.55)"; ctx.lineWidth = Math.max(1, 0.5 * m);
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, 9 * m, 2.6 * m, 0, 0, Math.PI * 2); ctx.stroke();
+    }
+    // the hangar and the deckhouse forward, the mast, and the 57 mm on the foredeck
+    const pf = projectAhead(158, 0), mf = metreAt(158);
     if (pf.fwd > 1 && mf) {
-      ctx.fillStyle = "#232a32"; ctx.fillRect(pf.x - 11 * mf, pf.y - 17 * mf, 22 * mf, 17 * mf);
-      ctx.fillStyle = "rgba(120,170,200,0.5)"; ctx.fillRect(pf.x - 8 * mf, pf.y - 14 * mf, 16 * mf, 3 * mf);
-      ctx.fillStyle = "#2e363f"; ctx.beginPath();
-      ctx.moveTo(pf.x - 3 * mf, pf.y - 17 * mf); ctx.lineTo(pf.x, pf.y - 27 * mf); ctx.lineTo(pf.x + 3 * mf, pf.y - 17 * mf); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#252d36";                              // hangar face, angled like the real ship
+      ctx.beginPath();
+      ctx.moveTo(pf.x - 12 * mf, pf.y); ctx.lineTo(pf.x + 12 * mf, pf.y);
+      ctx.lineTo(pf.x + 9.5 * mf, pf.y - 13 * mf); ctx.lineTo(pf.x - 9.5 * mf, pf.y - 13 * mf);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#161c23"; ctx.fillRect(pf.x - 6 * mf, pf.y - 9.5 * mf, 12 * mf, 9.5 * mf);
+      ctx.strokeStyle = "rgba(140,154,168,0.55)"; ctx.lineWidth = Math.max(1, 0.2 * mf);
+      for (let i = 1; i < 6; i++) { ctx.beginPath(); ctx.moveTo(pf.x - 6 * mf, pf.y - 9.5 * mf * i / 6); ctx.lineTo(pf.x + 6 * mf, pf.y - 9.5 * mf * i / 6); ctx.stroke(); }
+      flood(pf.x - 8 * mf, pf.y - 12 * mf, mf, 14);
+      flood(pf.x + 8 * mf, pf.y - 12 * mf, mf, 14);
+      ctx.fillStyle = "#2e363f";                              // mast
+      ctx.beginPath();
+      ctx.moveTo(pf.x - 2.4 * mf, pf.y - 13 * mf); ctx.lineTo(pf.x, pf.y - 26 * mf); ctx.lineTo(pf.x + 2.4 * mf, pf.y - 13 * mf);
+      ctx.closePath(); ctx.fill();
+      const blink = Math.floor(state.time * 1.6) % 2 === 0;
+      ctx.fillStyle = blink ? "rgba(255,70,60,0.95)" : "rgba(110,26,22,0.6)";
+      ctx.beginPath(); ctx.arc(pf.x, pf.y - 27 * mf, Math.max(1.5, 0.5 * mf), 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(226,234,242,0.7)"; ctx.textAlign = "center";
+      ctx.font = `700 ${Math.round(1.6 * mf)}px ui-sans-serif`;
+      ctx.fillText("HANGAR", pf.x, pf.y - 4 * mf);
     }
     if (state.q.hook >= 1 && state.q.hook < 2) {
       ctx.fillStyle = "rgba(180,220,255,0.75)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("USS-pattern trimaran · 127.4 m · 44 kn — hooked on and riding", w / 2, horizonY - 16);
+      ctx.fillText("trimaran littoral combat ship · 127.4 m · 44 kn — hooked on and riding", w / 2, horizonY - 16);
     }
   }
-  // THE LEG: a hundred metres of braced steel, and the sea getting further away below
+
+  /* ================== THE LEG — a hundred metres of wet steel ================== */
   function drawLeg(w, h, night) {
     const st = state.stage, base = stageStart(st), climb = clamp((state.distanceM - base) / (st.to - base), 0, 1);
     const seaY = horizonY + (1 - climb) * (h - horizonY) * 0.55;
     ctx.fillStyle = seaFill(seaY, h, night); ctx.fillRect(0, seaY, w, h - seaY);
-    ctx.fillStyle = "#070d14"; ctx.fillRect(0, horizonY - 40, w, seaY - horizonY + 40);
-    // the leg face you are on
-    let prev = null;
-    for (let d = 2; d < 130; d += 3) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = Math.floor(d / 3) % 2 ? "#2b3239" : "#262c33";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
+    ctx.fillStyle = "#060b11"; ctx.fillRect(0, horizonY - 40, w, seaY - horizonY + 40);
+    // the leg face, with weld beads across it and rust down it
+    deckStrip(2, 140, 3, (d) => (Math.floor(d / 3) % 2 ? "#2d343c" : "#272d35"));
+    props(6, 26, 130, (d, idx, m) => {                        // circumferential weld beads
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(160,172,186,0.35)"; ctx.lineWidth = Math.max(1, 0.16 * m);
+      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y); ctx.stroke();
+    });
+    seams(3, 130, 2.6, "rgba(120,70,40,0.30)", 2.2);          // rust streaks, running down
+    // marine growth on the bottom of the leg
+    if (climb < 0.28) {
+      ctx.fillStyle = "rgba(48,66,52,0.55)";
+      props(1.6, 60, 60, (d, idx, m) => {
+        for (const off of [-3.6, -1.2, 1.2, 3.6]) {
+          const p = projectAhead(d, off + ((idx * 37) % 11) * 0.1); if (!p.fwd || p.fwd <= 1) continue;
+          ctx.beginPath(); ctx.ellipse(p.x, p.y, 0.5 * m, 0.16 * m, 0, 0, Math.PI * 2); ctx.fill();
+        }
+      });
     }
-    // the X bracing, every 14 m of leg — the thing the magnets are actually gripping
-    ctx.strokeStyle = "rgba(150,164,178,0.5)";
-    const first = Math.ceil(state.distanceM / 14) * 14;
-    for (let k = 0; k < 9; k++) {
-      const dd = first + k * 14 - state.distanceM; if (dd < 3 || dd > 128) continue;
-      const a = edgePts(dd), b = edgePts(dd + 7); if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1) continue;
-      ctx.lineWidth = Math.max(1, 0.5 * (metreAt(dd) || 0));
+    // the X bracing, every 14 m — the thing the magnets are gripping
+    ctx.strokeStyle = "rgba(158,172,186,0.55)";
+    props(14, 10, 128, (d, idx, m) => {
+      const a = edgePts(d), b = edgePts(d + 7); if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1) return;
+      ctx.lineWidth = Math.max(1.2, 0.55 * m);
       ctx.beginPath(); ctx.moveTo(a.l.x, a.l.y); ctx.lineTo(b.r.x, b.r.y); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(a.r.x, a.r.y); ctx.lineTo(b.l.x, b.l.y); ctx.stroke();
       ctx.beginPath(); ctx.moveTo(a.l.x, a.l.y); ctx.lineTo(a.r.x, a.r.y); ctx.stroke();
+      ctx.fillStyle = "rgba(190,204,218,0.5)";                // the gusset at each node
+      ctx.beginPath(); ctx.arc(a.l.x, a.l.y, Math.max(1.5, 0.5 * m), 0, Math.PI * 2); ctx.fill();
+      ctx.beginPath(); ctx.arc(a.r.x, a.r.y, Math.max(1.5, 0.5 * m), 0, Math.PI * 2); ctx.fill();
+    });
+    // a cable tray running the whole height, with its clamps
+    ctx.strokeStyle = "rgba(96,108,122,0.75)";
+    for (const off of [-2.1, -1.7]) {
+      ctx.beginPath(); let first = true;
+      for (let d = 3; d < 130; d += 6) {
+        const p = projectAhead(d, off); if (!p.fwd || p.fwd <= 1) break;
+        if (first) { ctx.moveTo(p.x, p.y); first = false; } else ctx.lineTo(p.x, p.y);
+      }
+      ctx.lineWidth = 2; ctx.stroke();
     }
     // the deck lip you are climbing toward, coming down out of the dark
-    if (climb > 0.45) {
-      const k = (climb - 0.45) / 0.55, lip = horizonY - 30 + k * 120;
-      ctx.fillStyle = "#11161c"; ctx.fillRect(0, 0, w, lip);
-      ctx.fillStyle = "#39424c"; ctx.fillRect(0, lip - 8, w, 8);
-      ctx.fillStyle = "rgba(255,190,90,0.7)";
-      for (let i = 0; i < 5; i++) ctx.beginPath(), ctx.arc(w * (0.1 + i * 0.2), lip - 12, 3, 0, Math.PI * 2), ctx.fill();
+    if (climb > 0.42) {
+      const k = (climb - 0.42) / 0.58, lip = horizonY - 40 + k * 150;
+      ctx.fillStyle = "#0e131a"; ctx.fillRect(0, 0, w, lip);
+      ctx.fillStyle = "#39424c"; ctx.fillRect(0, lip - 10, w, 10);
+      ctx.fillStyle = "#242c34"; ctx.fillRect(0, lip - 16, w, 6);
+      ctx.strokeStyle = "rgba(120,134,148,0.5)"; ctx.lineWidth = 2;   // the underside girders showing
+      for (let i = 0; i < 8; i++) { ctx.beginPath(); ctx.moveTo(w * i / 8, lip); ctx.lineTo(w * i / 8, lip - 10); ctx.stroke(); }
+      for (let i = 0; i < 5; i++) { ctx.fillStyle = "rgba(255,196,110,0.75)"; ctx.beginPath(); ctx.arc(w * (0.1 + i * 0.2), lip - 20, 3.4, 0, Math.PI * 2); ctx.fill(); }
     }
     ctx.fillStyle = state.q.magnet ? "rgba(120,230,180,0.9)" : "rgba(255,110,90,0.95)";
     ctx.font = "700 15px ui-sans-serif"; ctx.textAlign = "center";
     ctx.fillText(state.q.magnet ? "MAGNETS — HOLDING · " + Math.round(climb * 100) + " m"
       : "MAGNETS OFF — YOU ARE SLIDING", w / 2, horizonY - 54);
   }
-  // UNDER THE DECK: girders overhead, grating light through the gaps, the sea a long way down
+
+  /* ============= UNDER THE DECK — girders overhead, sea 100 m down ============= */
   function drawUnderDeck(w, h, night) {
-    ctx.fillStyle = "#050a0f"; ctx.fillRect(0, horizonY, w, h - horizonY);
-    // the sea, 100 m below and only visible past the edge of the structure
-    ctx.fillStyle = seaFill(h * 0.86, h, night);
-    ctx.fillRect(0, h * 0.86, w * 0.16, h * 0.14); ctx.fillRect(w * 0.84, h * 0.86, w * 0.16, h * 0.14);
-    let prev = null;
-    for (let d = 2; d < 110; d += 3) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#1a2027";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#040910"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    ctx.fillStyle = seaFill(h * 0.88, h, night);              // the sea, only past the structure
+    ctx.fillRect(0, h * 0.88, w * 0.15, h * 0.12); ctx.fillRect(w * 0.85, h * 0.88, w * 0.15, h * 0.12);
+    deckStrip(2, 120, 3, () => "#161c23");
+    // the deck girders: real I-beams, so a web with a flange top and bottom
+    props(8, 16, 116, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      const y = e.l.y - 2.4 * m;
+      ctx.fillStyle = "#39424d"; ctx.fillRect(e.l.x, y - 0.9 * m, e.r.x - e.l.x, 0.28 * m);
+      ctx.fillRect(e.l.x, y + 0.6 * m, e.r.x - e.l.x, 0.28 * m);
+      ctx.fillStyle = "#262e37"; ctx.fillRect(e.l.x, y - 0.65 * m, e.r.x - e.l.x, 1.3 * m);
+      // the grating light coming down through the deck above
+      ctx.fillStyle = "rgba(255,206,132,0.10)";
+      ctx.fillRect(e.l.x, y + 0.9 * m, e.r.x - e.l.x, 0.5 * m);
+    });
+    // conduit and cable trays following the girders
+    for (const off of [-3.2, -2.8, 2.8, 3.2]) {
+      ctx.strokeStyle = "rgba(88,100,114,0.7)"; ctx.lineWidth = 2;
+      ctx.beginPath(); let first = true;
+      for (let d = 3; d < 116; d += 6) {
+        const p = projectAhead(d, off), m = metreAt(d); if (!p.fwd || p.fwd <= 1 || !m) break;
+        const y = p.y - 1.9 * m;
+        if (first) { ctx.moveTo(p.x, y); first = false; } else ctx.lineTo(p.x, y);
       }
-      prev = e;
+      ctx.stroke();
     }
-    // the deck girders you are hanging from — they run over your head, so they come DOWN
-    ctx.strokeStyle = "rgba(120,134,148,0.65)";
-    const first = Math.ceil(state.distanceM / 8) * 8;
-    for (let k = 0; k < 12; k++) {
-      const dd = first + k * 8 - state.distanceM; if (dd < 2 || dd > 108) continue;
-      const e = edgePts(dd), m = metreAt(dd); if (!e.l.fwd || e.l.fwd <= 1 || !m) continue;
-      ctx.lineWidth = Math.max(1, 0.7 * m);
-      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y - 2.2 * m); ctx.lineTo(e.r.x, e.r.y - 2.2 * m); ctx.stroke();
-      ctx.strokeStyle = "rgba(255,205,120,0.16)";
-      ctx.lineWidth = Math.max(1, 0.35 * m);
-      ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y - 1.1 * m); ctx.lineTo(e.r.x, e.r.y - 1.1 * m); ctx.stroke();
-      ctx.strokeStyle = "rgba(120,134,148,0.65)";
+    // the lit hatch ahead — where Zündapp has the box open
+    const pg = projectAhead(70, 2.4), mg = metreAt(70);
+    if (pg.fwd > 1 && mg) {
+      ctx.save(); ctx.globalCompositeOperation = "screen";
+      const g = ctx.createRadialGradient(pg.x, pg.y - 2 * mg, 0, pg.x, pg.y - 2 * mg, 12 * mg);
+      g.addColorStop(0, "rgba(255,226,160,0.30)"); g.addColorStop(1, "rgba(255,210,140,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(pg.x, pg.y - 2 * mg, 12 * mg, 0, Math.PI * 2); ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = "rgba(255,220,150,0.5)"; ctx.fillRect(pg.x - 1.6 * mg, pg.y - 2.6 * mg, 3.2 * mg, 0.9 * mg);
     }
     ctx.fillStyle = "rgba(200,214,228,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
     ctx.fillText("UNDERSIDE OF THE MAIN DECK — 100 m OF AIR BELOW YOU", w / 2, horizonY - 18);
   }
-  // THE PLATFORM: open grating (you can see the sea through the floor), modules, floodlights
+
+  /* ============ THE PLATFORM — open grating, pipe racks, flare, derrick ============ */
   function drawGrating(w, h, night) {
-    ctx.fillStyle = "#08111a"; ctx.fillRect(0, horizonY, w, h - horizonY);
-    let prev = null;
-    for (let d = 2; d < 200; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#2c333b";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
-    // the grating: bearing bars across, and the sea showing through between them
-    const first = Math.ceil(state.distanceM / 1.6) * 1.6;
-    for (let k = 0; k < 90; k++) {
-      const dd = first + k * 1.6 - state.distanceM; if (dd < 2) continue; if (dd > 120) break;
-      const e = edgePts(dd), m = metreAt(dd); if (!e.l.fwd || e.l.fwd <= 1 || !m) continue;
-      ctx.strokeStyle = "rgba(10,26,38,0.55)"; ctx.lineWidth = Math.max(0.6, 0.25 * m);
+    ctx.fillStyle = "#07101a"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 200, 4, () => "#303842");
+    // the grating: bearing bars across, sea showing through between them
+    props(1.6, 80, 120, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(8,24,36,0.6)"; ctx.lineWidth = Math.max(0.6, 0.26 * m);
       ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y); ctx.stroke();
-    }
-    // process modules and pipe racks — placed by where they are on the rig, not by where
-    // you are, so they arrive, pass and are gone
-    const modBase = Math.ceil(state.distanceM / 22) * 22;
-    for (let i = 0; i < 10; i++) {
-      const idx = Math.round((modBase + i * 22) / 22);
-      const d = modBase + i * 22 - state.distanceM, sgn = idx % 2 ? 1 : -1;
-      if (d < 4 || d > 200) continue;
-      const H = halfAt(d), p = projectAhead(d, sgn * (H + 7)), m = metreAt(d);
-      if (!p.fwd || p.fwd <= 1 || !m) continue;
-      const bh = (6 + (idx % 3) * 4) * m, bw = 9 * m;
-      ctx.fillStyle = "#1d242c"; ctx.fillRect(p.x - bw / 2, p.y - bh, bw, bh);
-      ctx.strokeStyle = "rgba(140,152,166,0.4)"; ctx.lineWidth = Math.max(1, 0.25 * m);
-      for (let r = 1; r < 4; r++) { ctx.beginPath(); ctx.moveTo(p.x - bw / 2, p.y - bh * r / 4); ctx.lineTo(p.x + bw / 2, p.y - bh * r / 4); ctx.stroke(); }
-      ctx.fillStyle = "rgba(255,215,150,0.85)";
-      ctx.beginPath(); ctx.arc(p.x, p.y - bh - 1.2 * m, Math.max(1.4, 0.7 * m), 0, Math.PI * 2); ctx.fill();
-      ctx.save(); ctx.globalCompositeOperation = "screen";
-      const g = ctx.createRadialGradient(p.x, p.y - bh, 0, p.x, p.y - bh, 11 * m);
-      g.addColorStop(0, "rgba(255,210,140,0.13)"); g.addColorStop(1, "rgba(255,200,120,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y - bh, 11 * m, 0, Math.PI * 2); ctx.fill();
+    });
+    seams(3, 120, 1.2, "rgba(120,134,150,0.16)", 1);          // the bearing bars the other way
+    for (const sgn of [-1, 1]) handrail(sgn, 1.1, 3, 170, "rgba(176,190,204,0.55)", 0.4);
+    // process modules and pipe racks, placed by where they are on the rig
+    props(22, 12, 200, (d, idx, m) => {
+      const sgn = idx % 2 ? 1 : -1;
+      const H = halfAt(d), p = projectAhead(d, sgn * (H + 7)); if (!p.fwd || p.fwd <= 1) return;
+      if (idx % 3 === 2) {
+        // a pipe rack: real pipes, different bores, on a steel frame
+        const rows = 4;
+        for (let r = 0; r < rows; r++) {
+          const y = p.y - (1.6 + r * 1.5) * m, bore = (0.5 + (r % 2) * 0.35) * m;
+          ctx.strokeStyle = ["#7d8894", "#6b6157", "#5f7280", "#8a7f6d"][r];
+          ctx.lineWidth = Math.max(1.4, bore);
+          ctx.beginPath(); ctx.moveTo(p.x - 5 * m, y); ctx.lineTo(p.x + 5 * m, y); ctx.stroke();
+          ctx.strokeStyle = "rgba(255,255,255,0.18)"; ctx.lineWidth = Math.max(0.6, bore * 0.3);
+          ctx.beginPath(); ctx.moveTo(p.x - 5 * m, y - bore * 0.28); ctx.lineTo(p.x + 5 * m, y - bore * 0.28); ctx.stroke();
+        }
+        ctx.strokeStyle = "rgba(120,132,146,0.8)"; ctx.lineWidth = Math.max(1, 0.3 * m);
+        for (const xx of [-4.6, 4.6]) { ctx.beginPath(); ctx.moveTo(p.x + xx * m, p.y); ctx.lineTo(p.x + xx * m, p.y - 8 * m); ctx.stroke(); }
+      } else {
+        const bh = (7 + (idx % 3) * 4) * m, bw = 10 * m;
+        ctx.fillStyle = "#1e252d"; ctx.fillRect(p.x - bw / 2, p.y - bh, bw, bh);
+        ctx.fillStyle = "#2a323b"; ctx.fillRect(p.x - bw / 2, p.y - bh, bw, 0.5 * m);
+        ctx.strokeStyle = "rgba(140,152,166,0.4)"; ctx.lineWidth = Math.max(1, 0.22 * m);
+        for (let r = 1; r < 4; r++) { ctx.beginPath(); ctx.moveTo(p.x - bw / 2, p.y - bh * r / 4); ctx.lineTo(p.x + bw / 2, p.y - bh * r / 4); ctx.stroke(); }
+        ctx.fillStyle = "rgba(255,214,150,0.55)";             // lit windows
+        for (let c0 = 0; c0 < 3; c0++) ctx.fillRect(p.x - bw * 0.32 + c0 * bw * 0.28, p.y - bh * 0.72, bw * 0.16, 0.7 * m);
+        flood(p.x, p.y - bh - 1.2 * m, m, 11);
+      }
+    });
+    // the flare boom, off to starboard, alight
+    const pfl = projectAhead(150, 78), mfl = metreAt(150);
+    if (pfl.fwd > 1 && mfl) {
+      ctx.strokeStyle = "#4a545f"; ctx.lineWidth = Math.max(1.5, 1.2 * mfl);
+      ctx.beginPath(); ctx.moveTo(pfl.x - 24 * mfl, pfl.y); ctx.lineTo(pfl.x, pfl.y - 30 * mfl); ctx.stroke();
+      ctx.save(); ctx.globalCompositeOperation = "lighter";
+      const fy = pfl.y - 32 * mfl;
+      for (let i = 0; i < 4; i++) {
+        const fx = pfl.x + Math.sin(state.time * 4 + i) * 2 * mfl;
+        const g = ctx.createRadialGradient(fx, fy - i * mfl, 0, fx, fy - i * mfl, 7 * mfl);
+        g.addColorStop(0, "rgba(255,226,150,0.55)"); g.addColorStop(0.5, "rgba(255,132,40,0.3)"); g.addColorStop(1, "rgba(200,60,20,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(fx, fy - i * mfl, 7 * mfl, 0, Math.PI * 2); ctx.fill();
+      }
       ctx.restore();
     }
+    // the derrick, ahead over the drill floor
+    const pd = projectAhead(185, -14), md = metreAt(185);
+    if (pd.fwd > 1 && md) {
+      const DER = 42 * md, dw = 15 * md;
+      ctx.strokeStyle = "#4a545f"; ctx.lineWidth = Math.max(1, 0.6 * md);
+      ctx.beginPath();
+      ctx.moveTo(pd.x - dw / 2, pd.y); ctx.lineTo(pd.x - dw * 0.16, pd.y - DER);
+      ctx.lineTo(pd.x + dw * 0.16, pd.y - DER); ctx.lineTo(pd.x + dw / 2, pd.y); ctx.stroke();
+      for (let i = 1; i <= 6; i++) {
+        const t = i / 7, yy = pd.y - DER * t, ww = dw * (1 - t * 0.68);
+        ctx.beginPath(); ctx.moveTo(pd.x - ww / 2, yy); ctx.lineTo(pd.x + ww / 2, yy); ctx.stroke();
+      }
+      const blink = Math.floor(state.time * 1.4) % 2 === 0;
+      ctx.fillStyle = blink ? "rgba(255,70,60,0.95)" : "rgba(120,30,26,0.6)";
+      ctx.beginPath(); ctx.arc(pd.x, pd.y - DER - 2 * md, Math.max(1.5, 0.6 * md), 0, Math.PI * 2); ctx.fill();
+    }
   }
-  // THE LINK SPAN: a truss, and nothing at all either side of it
+
+  /* =================== THE LINK SPAN — a through truss =================== */
   function drawTruss(w, h, night) {
     ctx.fillStyle = seaFill(horizonY + 30, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
     drawSwell(w, h, night, 1.0);
-    let prev = null;
-    for (let d = 2; d < 170; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#333b44";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
-    // the truss: verticals every 6 m with the diagonals between them, both sides
-    const first = Math.ceil(state.distanceM / 6) * 6;
-    ctx.strokeStyle = "rgba(160,174,188,0.6)";
-    for (let k = 0; k < 22; k++) {
-      const dd = first + k * 6 - state.distanceM; if (dd < 2 || dd > 160) continue;
-      if (dd < 8) continue;                       // anything nearer distorts into nonsense
-      const a = edgePts(dd), b = edgePts(dd + 6), m = metreAt(dd);
-      if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1 || !m) continue;
-      ctx.lineWidth = Math.min(6, Math.max(1, 0.32 * m));
-      const TOP = 4.6 * m;
+    deckStrip(2, 170, 4, (d) => (Math.floor(d / 4) % 2 ? "#353d47" : "#30373f"));
+    seams(3, 160, 1.4, "rgba(18,22,28,0.5)", 1);
+    // the truss: verticals every 6 m, diagonals between, and a portal frame overhead
+    ctx.strokeStyle = "rgba(166,180,194,0.65)";
+    props(6, 24, 160, (d, idx, m) => {
+      if (d < 8) return;
+      const a = edgePts(d), b = edgePts(d + 6), m2 = metreAt(d + 6) || m;
+      if (!a.l.fwd || a.l.fwd <= 1 || !b.l.fwd || b.l.fwd <= 1) return;
+      ctx.lineWidth = Math.min(6, Math.max(1, 0.34 * m));
+      const TOP = 4.6 * m, TOP2 = 4.6 * m2;
       for (const side of ["l", "r"]) {
         ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y); ctx.lineTo(a[side].x, a[side].y - TOP); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y - TOP); ctx.lineTo(b[side].x, b[side].y - 4.6 * (metreAt(dd + 6) || m)); ctx.stroke();
-        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y); ctx.lineTo(b[side].x, b[side].y - 4.6 * (metreAt(dd + 6) || m)); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y - TOP); ctx.lineTo(b[side].x, b[side].y - TOP2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y); ctx.lineTo(b[side].x, b[side].y - TOP2); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(a[side].x, a[side].y - TOP); ctx.lineTo(b[side].x, b[side].y); ctx.stroke();
       }
-      // the portal frame overhead — this is a through truss, so it closes over your head
       ctx.beginPath(); ctx.moveTo(a.l.x, a.l.y - TOP); ctx.lineTo(a.r.x, a.r.y - TOP); ctx.stroke();
+      if (idx % 3 === 0) flood(a.l.x, a.l.y - TOP, m, 8, "rgba(200,226,255,0.16)");
+    });
+    if (state.q.blastT > 0) {
+      ctx.save(); ctx.globalCompositeOperation = "screen";
+      ctx.fillStyle = "rgba(255,190,110," + (state.q.blastT / 1.4 * 0.45) + ")"; ctx.fillRect(0, 0, w, h);
+      ctx.restore();
     }
     // the limpet is on the span behind you; the mirror shows it, this shows the fuse
     const q = state.q;
@@ -3651,32 +3853,23 @@ const SPEC = {
       ctx.font = "700 17px ui-sans-serif"; ctx.textAlign = "center";
       ctx.fillText("LIMPET ARMED · " + q.chargeT.toFixed(1) + " s · " + back + " m BEHIND", w / 2, horizonY + 34);
     }
-    if (q.blastT > 0) {
-      ctx.save(); ctx.globalCompositeOperation = "screen";
-      ctx.fillStyle = "rgba(255,190,110," + (q.blastT / 1.4 * 0.45) + ")"; ctx.fillRect(0, 0, w, h);
-      ctx.restore();
-    }
   }
-  // THE HELIPAD: the circle, the H, the perimeter net, and then nothing
+
+  /* ===================== THE HELIPAD — and then nothing ===================== */
   function drawHelipad(w, h, night) {
     ctx.fillStyle = seaFill(horizonY + 40, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
-    let prev = null;
-    for (let d = 2; d < 150; d += 4) {
-      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) break;
-      if (prev) {
-        ctx.fillStyle = "#2f3a33";
-        ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
-        ctx.lineTo(e.r.x, e.r.y); ctx.lineTo(e.l.x, e.l.y); ctx.closePath(); ctx.fill();
-      }
-      prev = e;
-    }
+    deckStrip(2, 150, 4, () => "#2b3630");
+    seams(3, 140, 2.0, "rgba(16,24,20,0.5)", 1);
     const st = state.stage, mid = (stageStart(st) + st.to) / 2, rel = mid - state.distanceM;
-    if (rel > -60 && rel < 190) {
-      const p = projectAhead(Math.max(6, rel), 0), m = metreAt(Math.max(6, rel));
+    // the perimeter circle and the H
+    if (rel > 14 && rel < 190) {
+      const dd = rel, p = projectAhead(dd, 0), m = metreAt(dd);
       if (p.fwd > 1 && m) {
-        ctx.strokeStyle = "rgba(238,244,250,0.85)"; ctx.lineWidth = Math.max(1.5, 0.7 * m);
+        ctx.strokeStyle = "rgba(238,244,250,0.9)"; ctx.lineWidth = clamp(0.7 * m, 1.5, 10);
         ctx.beginPath(); ctx.ellipse(p.x, p.y, 14 * m, 4.2 * m, 0, 0, Math.PI * 2); ctx.stroke();
-        ctx.lineWidth = Math.max(2, 1.1 * m);
+        ctx.strokeStyle = "rgba(255,205,110,0.7)"; ctx.lineWidth = clamp(0.35 * m, 1, 6);
+        ctx.beginPath(); ctx.ellipse(p.x, p.y, 16.5 * m, 5 * m, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = "rgba(238,244,250,0.95)"; ctx.lineWidth = clamp(1.1 * m, 2, 16);
         ctx.beginPath();
         ctx.moveTo(p.x - 5 * m, p.y - 2.4 * m); ctx.lineTo(p.x - 5 * m, p.y + 2.4 * m);
         ctx.moveTo(p.x + 5 * m, p.y - 2.4 * m); ctx.lineTo(p.x + 5 * m, p.y + 2.4 * m);
@@ -3684,71 +3877,148 @@ const SPEC = {
         ctx.stroke();
       }
     }
+    // the perimeter safety net: a mesh skirt sloping down and out from the deck edge
+    for (const sgn of [-1, 1]) {
+      ctx.strokeStyle = "rgba(150,166,180,0.45)"; ctx.lineWidth = 1;
+      props(2.5, 26, 130, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(p.x + sgn * 2.2 * m, p.y + 1.1 * m); ctx.stroke();
+      });
+      ctx.beginPath(); let first = true;
+      for (let d = 4; d < 130; d += 6) {
+        const p = projectAhead(d, sgn * halfAt(d)), m = metreAt(d); if (!p.fwd || p.fwd <= 1 || !m) break;
+        const x = p.x + sgn * 2.2 * m, y = p.y + 1.1 * m;
+        if (first) { ctx.moveTo(x, y); first = false; } else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+      // perimeter lights, green, as a helideck actually has
+      props(7, 20, 130, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) - 0.6)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = "rgba(110,240,160,0.9)";
+        ctx.beginPath(); ctx.arc(p.x, p.y - 0.3 * m, Math.max(1.2, 0.3 * m), 0, Math.PI * 2); ctx.fill();
+      });
+    }
+    // the windsock, on its pole
+    const pw = projectAhead(96, 46), mw2 = metreAt(96);
+    if (pw.fwd > 1 && mw2) {
+      ctx.strokeStyle = "#5a6470"; ctx.lineWidth = Math.max(1, 0.24 * mw2);
+      ctx.beginPath(); ctx.moveTo(pw.x, pw.y); ctx.lineTo(pw.x, pw.y - 9 * mw2); ctx.stroke();
+      const sway = Math.sin(state.time * 1.4) * 0.4;
+      ctx.fillStyle = "rgba(226,96,50,0.85)";
+      ctx.beginPath();
+      ctx.moveTo(pw.x, pw.y - 9 * mw2); ctx.lineTo(pw.x + (4 + sway) * mw2, pw.y - 8.4 * mw2);
+      ctx.lineTo(pw.x + (4 + sway) * mw2, pw.y - 7.4 * mw2); ctx.lineTo(pw.x, pw.y - 7.6 * mw2);
+      ctx.closePath(); ctx.fill();
+    }
     // the edge: past this the deck stops
     const endRel = st.to - state.distanceM;
     if (endRel > 0 && endRel < 170) {
       const e = edgePts(endRel);
       if (e.l.fwd > 1) {
-        ctx.strokeStyle = "rgba(255,190,60,0.9)"; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y); ctx.stroke();
-        ctx.fillStyle = "rgba(255,190,60,0.9)"; ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
-        ctx.fillText("DECK EDGE — 30 m", (e.l.x + e.r.x) / 2, e.l.y - 12);
+        const mm = metreAt(endRel) || 1;
+        ctx.fillStyle = "rgba(255,190,60,0.85)";              // the hazard chevrons at the lip
+        ctx.beginPath(); ctx.moveTo(e.l.x, e.l.y); ctx.lineTo(e.r.x, e.r.y);
+        ctx.lineTo(e.r.x, e.r.y - 0.55 * mm); ctx.lineTo(e.l.x, e.l.y - 0.55 * mm); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "rgba(30,26,16,0.9)";
+        for (let i = 0; i < 14; i++) {
+          const t0 = i / 14, x0 = e.l.x + (e.r.x - e.l.x) * t0, y0 = e.l.y + (e.r.y - e.l.y) * t0;
+          if (i % 2) ctx.fillRect(x0, y0 - 0.55 * mm, (e.r.x - e.l.x) / 14, 0.55 * mm);
+        }
+        ctx.fillStyle = "rgba(255,190,60,0.95)"; ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("DECK EDGE — 30 m", (e.l.x + e.r.x) / 2, e.l.y - 14);
       }
     }
     ctx.fillStyle = state.q.foil > 0.5 ? "rgba(120,230,180,0.92)" : "rgba(255,120,90,0.95)";
     ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
     ctx.fillText(state.q.foil > 0.5 ? "HYDROFOILS DOWN — GO" : "FOILS STOWED — F BEFORE THE EDGE", w / 2, horizonY - 26);
   }
-  // OPEN WATER, foilborne: swell, spray off the struts, and Tony astern in the mirror
+
+  /* ================= OPEN WATER, foilborne ================= */
   function drawOpenWater(w, h, night) {
     ctx.fillStyle = seaFill(horizonY, h, night); ctx.fillRect(0, horizonY, w, h - horizonY);
     drawSwell(w, h, night, 3.2);
-    // the foil struts throwing water at the speed you are doing
-    const v = Math.abs(state.speedMps);
-    ctx.save(); ctx.globalAlpha = clamp(v / 40, 0.1, 0.85);
-    for (const sgn of [-1, 1]) {
-      const x = w * (0.5 + sgn * 0.29), y = h * 0.84;
-      const g = ctx.createRadialGradient(x, y, 0, x, y, 90);
-      g.addColorStop(0, "rgba(232,246,252,0.55)"); g.addColorStop(1, "rgba(210,236,248,0)");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, 90, 34, 0, 0, Math.PI * 2); ctx.fill();
+    // the moon's glitter path, broken up by the swell
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    for (let i = 0; i < 34; i++) {
+      const t0 = i / 34, y = horizonY + t0 * t0 * (h - horizonY) * 1.1;
+      const wdt = 10 + t0 * 190, jit = Math.sin(i * 2.3 + state.time * 2.4) * wdt * 0.35;
+      ctx.fillStyle = `rgba(226,238,250,${0.16 * (1 - t0 * 0.7)})`;
+      ctx.fillRect(w * 0.72 - wdt / 2 + jit, y, wdt, Math.max(1.5, 3 * t0));
     }
     ctx.restore();
-    // Tony astern — drawn in the top of the frame because he is behind you
+    // the foil struts and the sheets of water they throw
+    const v = Math.abs(state.speedMps);
+    ctx.save(); ctx.globalAlpha = clamp(v / 40, 0.12, 0.9);
+    for (const sgn of [-1, 1]) {
+      const x = w * (0.5 + sgn * 0.29), y = h * 0.845;
+      ctx.strokeStyle = "rgba(180,200,214,0.75)"; ctx.lineWidth = 7;
+      ctx.beginPath(); ctx.moveTo(x, y + 26); ctx.lineTo(x - sgn * 6, y - 34); ctx.stroke();
+      const g = ctx.createRadialGradient(x, y, 0, x, y, 100);
+      g.addColorStop(0, "rgba(236,250,255,0.6)"); g.addColorStop(1, "rgba(210,236,248,0)");
+      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(x, y, 100, 36, 0, 0, Math.PI * 2); ctx.fill();
+      // the rooster tail off the strut
+      ctx.fillStyle = "rgba(232,248,255,0.42)";
+      ctx.beginPath(); ctx.moveTo(x, y);
+      for (let i = 1; i <= 6; i++) {
+        const t0 = i / 6;
+        ctx.lineTo(x + sgn * t0 * 150, y - t0 * 70 + Math.sin(state.time * 9 + i) * 8);
+      }
+      for (let i = 6; i >= 1; i--) {
+        const t0 = i / 6;
+        ctx.lineTo(x + sgn * t0 * 150, y - t0 * 40 + Math.sin(state.time * 9 + i) * 8);
+      }
+      ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+    // Tony astern
     const q = state.q;
     if (q.tonyM != null) {
       const k = clamp(1 - (q.tonyM - 70) / 400, 0, 1), sz = 130 + k * 420;
       const x = w * 0.5, y = horizonY + 10 - (1 - k) * 14;
-      ctx.save(); ctx.globalAlpha = 0.55 + k * 0.45;
-      ctx.fillStyle = "rgba(226,240,248,0.5)";                       // the bow wave he is pushing
-      ctx.beginPath(); ctx.ellipse(x, y + sz * 0.02, sz * 0.60, sz * 0.05, 0, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "#39434e"; ctx.strokeStyle = "rgba(180,196,212,0.55)"; ctx.lineWidth = 1.5;
+      ctx.save(); ctx.globalAlpha = 0.62 + k * 0.38;
+      ctx.fillStyle = "rgba(226,240,248,0.55)";
+      ctx.beginPath(); ctx.ellipse(x, y + sz * 0.02, sz * 0.62, sz * 0.055, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#3d4854"; ctx.strokeStyle = "rgba(186,202,218,0.6)"; ctx.lineWidth = 1.5;
       ctx.beginPath(); ctx.moveTo(x - sz / 2, y); ctx.lineTo(x + sz / 2, y);
       ctx.lineTo(x + sz * 0.36, y - sz * 0.16); ctx.lineTo(x - sz * 0.4, y - sz * 0.16); ctx.closePath();
       ctx.fill(); ctx.stroke();
-      ctx.fillStyle = "#4a5763"; ctx.fillRect(x - sz * 0.1, y - sz * 0.34, sz * 0.22, sz * 0.18);
-      ctx.fillStyle = "rgba(150,200,235,0.7)"; ctx.fillRect(x - sz * 0.07, y - sz * 0.30, sz * 0.16, sz * 0.05);
-      ctx.fillStyle = Math.floor(state.time * 3) % 2 ? "rgba(255,90,70,0.95)" : "rgba(120,30,26,0.6)";
-      ctx.beginPath(); ctx.arc(x, y - sz * 0.36, 3, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "#2a323b";                                   // the amas either side
+      for (const sgn of [-1, 1]) ctx.fillRect(x + sgn * sz * 0.40, y - sz * 0.09, sz * 0.10, sz * 0.09);
+      ctx.fillStyle = "#4d5a67";                                   // deckhouse
+      ctx.beginPath();
+      ctx.moveTo(x - sz * 0.12, y - sz * 0.16); ctx.lineTo(x + sz * 0.12, y - sz * 0.16);
+      ctx.lineTo(x + sz * 0.08, y - sz * 0.36); ctx.lineTo(x - sz * 0.07, y - sz * 0.36); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(160,208,240,0.75)"; ctx.fillRect(x - sz * 0.07, y - sz * 0.31, sz * 0.15, sz * 0.045);
+      ctx.fillStyle = "#39434e";
+      ctx.beginPath(); ctx.moveTo(x - sz * 0.02, y - sz * 0.36); ctx.lineTo(x + sz * 0.01, y - sz * 0.52); ctx.lineTo(x + sz * 0.03, y - sz * 0.36); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(216,232,244,0.9)"; ctx.fillRect(x + sz * 0.30, y - sz * 0.115, sz * 0.06, sz * 0.045);
+      const blink = Math.floor(state.time * 3) % 2 === 0;
+      ctx.fillStyle = blink ? "rgba(255,90,70,0.95)" : "rgba(110,30,26,0.6)";
+      ctx.beginPath(); ctx.arc(x + sz * 0.01, y - sz * 0.535, Math.max(2, sz * 0.012), 0, Math.PI * 2); ctx.fill();
       ctx.restore();
       ctx.fillStyle = "rgba(255,150,120,0.95)"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("TONY TRIHULL — " + Math.round(q.tonyM) + " m ASTERN", x, y - sz * 0.46);
+      ctx.fillText("TONY TRIHULL — " + Math.round(q.tonyM) + " m ASTERN", x, y + sz * 0.12);
     }
     if (q.torpedoT > 0) {
       const k = 1 - q.torpedoT / 26;
       ctx.fillStyle = "rgba(255,90,70,0.95)"; ctx.font = "700 15px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("TORPEDO RUNNING — " + q.torpedoT.toFixed(0) + " s", w / 2, horizonY + 24);
-      ctx.strokeStyle = "rgba(232,246,252,0.5)"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.moveTo(w * 0.5, horizonY + 40); ctx.lineTo(w * 0.5, horizonY + 40 + k * (h - horizonY) * 0.5); ctx.stroke();
+      ctx.fillText("TORPEDO RUNNING — " + q.torpedoT.toFixed(0) + " s", w / 2, horizonY + 40);
+      ctx.strokeStyle = "rgba(236,250,255,0.6)"; ctx.lineWidth = 3;   // its wake, closing
+      ctx.beginPath(); ctx.moveTo(w * 0.5, horizonY + 54);
+      for (let i = 1; i <= 8; i++) ctx.lineTo(w * 0.5 + Math.sin(i * 1.4 + state.time * 6) * 5, horizonY + 54 + i / 8 * k * (h - horizonY) * 0.55);
+      ctx.stroke();
     }
-    if (q.tyres) {                                    // the four tyres, floating away behind
+    if (q.tyres) {
       for (let i = 0; i < 4; i++) {
-        const t = q.tyreT + i * 0.4, x = w * (0.32 + i * 0.12) + Math.sin(t + i) * 12;
-        const y = horizonY + 30 + Math.min(120, t * 26) + Math.sin(t * 2 + i) * 4;
-        ctx.strokeStyle = "rgba(20,22,26,0.85)"; ctx.lineWidth = 4;
-        ctx.beginPath(); ctx.ellipse(x, y, 11, 4, 0, 0, Math.PI * 2); ctx.stroke();
+        const t0 = q.tyreT + i * 0.4, x = w * (0.32 + i * 0.12) + Math.sin(t0 + i) * 12;
+        const y = horizonY + 34 + Math.min(130, t0 * 26) + Math.sin(t0 * 2 + i) * 4;
+        ctx.strokeStyle = "rgba(18,20,24,0.9)"; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.ellipse(x, y, 12, 4.4, 0, 0, Math.PI * 2); ctx.stroke();
+        ctx.strokeStyle = "rgba(226,240,250,0.35)"; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.ellipse(x, y + 4, 16, 3, 0, 0, Math.PI * 2); ctx.stroke();
       }
-      ctx.fillStyle = "rgba(220,232,240,0.75)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText("FOUR TYRES, FLOATING — LET THEM COUNT THEM", w / 2, horizonY + 62);
+      ctx.fillStyle = "rgba(220,232,240,0.8)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("FOUR TYRES, FLOATING — LET THEM COUNT THEM", w / 2, horizonY + 72);
     }
     if (q.wreckT > 0) {
       ctx.save(); ctx.globalCompositeOperation = "screen";
@@ -3756,31 +4026,55 @@ const SPEC = {
       ctx.restore();
     }
   }
-  // SUBMERGED: no horizon, a bright ceiling, particulate going up past you, and the sonar
+
+  /* ========================= SUBMERGED ========================= */
   function drawSubmerged(w, h, night) {
     const g = ctx.createLinearGradient(0, 0, 0, h);
-    g.addColorStop(0, "#0d3a4a"); g.addColorStop(0.35, "#08222e"); g.addColorStop(1, "#030d14");
+    g.addColorStop(0, "#0e4053"); g.addColorStop(0.35, "#082430"); g.addColorStop(1, "#020a10");
     ctx.fillStyle = g; ctx.fillRect(0, 0, w, h);
-    // the surface above, with the light coming through it
+    // the surface above, seen from underneath, with the light coming through it
     ctx.save(); ctx.globalCompositeOperation = "screen";
-    for (let i = 0; i < 7; i++) {
-      const x = w * (0.1 + i * 0.13) + Math.sin(state.time * 0.4 + i) * 26;
-      const gg = ctx.createLinearGradient(x, 0, x + 40, h * 0.7);
-      gg.addColorStop(0, "rgba(150,220,240,0.10)"); gg.addColorStop(1, "rgba(150,220,240,0)");
+    ctx.fillStyle = "rgba(150,220,240,0.10)";
+    ctx.beginPath(); ctx.moveTo(0, 0);
+    for (let i = 0; i <= 30; i++) ctx.lineTo(w * i / 30, 26 + Math.sin(i * 0.8 + state.time * 1.6) * 9);
+    ctx.lineTo(w, 0); ctx.closePath(); ctx.fill();
+    for (let i = 0; i < 8; i++) {
+      const x = w * (0.06 + i * 0.13) + Math.sin(state.time * 0.4 + i) * 26;
+      const gg = ctx.createLinearGradient(x, 0, x + 50, h * 0.75);
+      gg.addColorStop(0, "rgba(160,226,244,0.13)"); gg.addColorStop(1, "rgba(150,220,240,0)");
       ctx.fillStyle = gg;
-      ctx.beginPath(); ctx.moveTo(x - 18, 0); ctx.lineTo(x + 18, 0); ctx.lineTo(x + 70, h * 0.7); ctx.lineTo(x + 10, h * 0.7); ctx.closePath(); ctx.fill();
+      ctx.beginPath(); ctx.moveTo(x - 20, 20); ctx.lineTo(x + 20, 20); ctx.lineTo(x + 84, h * 0.78); ctx.lineTo(x + 14, h * 0.78); ctx.closePath(); ctx.fill();
     }
     ctx.restore();
-    // particulate, rising because you are going down
-    ctx.fillStyle = "rgba(200,230,240,0.35)";
-    for (let i = 0; i < 60; i++) {
+    // particulate and the bubbles off the car, both going up because you are going down
+    ctx.fillStyle = "rgba(200,230,240,0.32)";
+    for (let i = 0; i < 70; i++) {
       const sd = (i * 97.3) % 1, x = ((i * 137.5 + state.time * 9 * sd) % w);
       const y = h - (((i * 53.7 + state.time * 46 * (0.4 + sd)) % (h + 60)) - 30);
       ctx.fillRect(x, y, 2, 2);
     }
+    ctx.strokeStyle = "rgba(226,246,252,0.5)"; ctx.lineWidth = 1.4;
+    for (let i = 0; i < 22; i++) {
+      const sd = (i * 61.7) % 1;
+      const x = w * 0.5 + (sd - 0.5) * 210 + Math.sin(state.time * 3 + i) * 9;
+      const y = h * 0.9 - ((state.time * 90 * (0.5 + sd) + i * 60) % (h * 0.85));
+      ctx.beginPath(); ctx.arc(x, y, 2 + sd * 5, 0, Math.PI * 2); ctx.stroke();
+    }
+    // the sonar return, sweeping
+    const cx = w * 0.82, cy = h * 0.60, R = Math.min(88, w * 0.075);
+    ctx.save();
+    ctx.strokeStyle = "rgba(120,230,190,0.30)"; ctx.lineWidth = 1;
+    for (const f of [0.4, 0.7, 1]) { ctx.beginPath(); ctx.arc(cx, cy, R * f, 0, Math.PI * 2); ctx.stroke(); }
+    const a = (state.time * 0.7 % 1) * Math.PI * 2;
+    const gg2 = ctx.createLinearGradient(cx, cy, cx + Math.cos(a) * R, cy + Math.sin(a) * R);
+    gg2.addColorStop(0, "rgba(120,255,190,0.5)"); gg2.addColorStop(1, "rgba(120,255,190,0)");
+    ctx.strokeStyle = gg2; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(a) * R, cy + Math.sin(a) * R); ctx.stroke();
+    ctx.restore();
     ctx.fillStyle = "rgba(150,230,210,0.9)"; ctx.font = "700 14px ui-sans-serif"; ctx.textAlign = "center";
-    ctx.fillText(state.q.sub ? "SUBMERGED — FINS, MASK, SCREWS" : "DIVE — J", w / 2, h * 0.2);
+    ctx.fillText(state.q.sub ? "SUBMERGED — FINS, MASK, SCREWS" : "DIVE — J", w / 2, horizonY + 30);
   }
+
   // the harpoon wire, from the nose to whatever it is holding
   function drawHookLine(w, h) {
     const q = state.q; if (!q.hookTo) return;
@@ -4001,8 +4295,8 @@ const SPEC = {
 
     // an interior mirror sits at the top of the windscreen, so it goes in the sky just
     // above the horizon — not at y=0, which is under the HTML topbar and invisible
-    const mw = Math.min(360, w * 0.30), mh = 62, mx = (w - mw) / 2;
-    const my = Math.max(104, Math.min(h * 0.42, horizonY - 104));
+    const mw = Math.min(320, w * 0.26), mh = 56, mx = (w - mw) / 2;
+    const my = Math.max(104, Math.min(h * 0.42, horizonY - 116));
     ctx.save();
     ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 7); ctx.clip();
     const sky = ctx.createLinearGradient(0, my, 0, my + mh);
