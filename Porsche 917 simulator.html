@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the 250 GTO is yours.</div>
+        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the 917K is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -582,7 +582,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: 1962 rules</h3><p style="margin:4px 0">No aids, no downforce, skinny crossplies: the GTO is the purest classroom. Every input must be early and gentle, apex speeds are low, and rotation comes from weight transfer — trail braking is your steering.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: 1970 Group 5</h3><p style="margin:4px 0">Eight hundred kilos, six hundred horsepower, an air-cooled flat-12 behind your shoulders and a balsa gearknob: the 917K is the most frightening classroom there is. It was so unstable at Le Mans in 1969 that the works team cut the tail down — the K is the fix. Be early with everything, because at 360 km/h on the Mulsanne there is no such thing as a late correction.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -684,7 +684,7 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">GTO</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">917</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1587,7 +1587,7 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction * realPower();
 
-    // The GTO body is fixed hardware — its modest drag is always in the baseline.
+    // The 917K body is fixed hardware — its modest drag is always in the baseline.
     const baseCd = SPEC.dragCd;
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
@@ -1659,7 +1659,7 @@ const SPEC = {
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
     // Lateral load shows as body ROLL/lean (state.bodyRoll), the way a planted car really feels;
-    // on smooth tarmac through a fast corner the GTO sits planted.
+    // on smooth tarmac through a fast corner the 917K sits planted.
     let shakeAmp = state.cabinHeaveG * 9 * (0.6 + damp * 0.4) + (state.shiftTimer > 0 ? 0.7 : 0);
     if (state.gearMode === "G" && speedAbs < 1.2 && state.rpm > 900) shakeAmp += 0.5 * damp;   // idle thrum at rest
     state.shake.x = (Math.random() - 0.5) * shakeAmp;
@@ -2378,7 +2378,7 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Ferrari 250 GTO cluster: big central Veglia tacho, chrome bezel, on the painted dash
+    // ---- Porsche 917K cluster: big central VDO tacho, on the bare glass-fibre dash
     // with power and load pods flanking it ----
 drawCluster(w, h, dashY, sway);
         drawWheel(w, h);
@@ -2545,7 +2545,7 @@ drawCluster(w, h, dashY, sway);
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Ferrari 250 GTO exterior — 1962 Scaglietti berlinetta side profile (long curved bonnet,
+  /* Porsche 917K exterior — 1970 Kurzheck side profile (low nose, short cut-off tail,
      three nose vents, small greenhouse, Kamm tail with ducktail, Borrani wire wheels) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
@@ -2617,7 +2617,7 @@ drawCluster(w, h, dashY, sway);
 
   function wire() { let s = '<circle r="40" fill="none" stroke="#cfd6dd" stroke-width="2"/><circle r="24" fill="none" stroke="#aab2bb" stroke-width="1.4"/>'; for (let a = 0; a < 360; a += 12) s += `<line x1="0" y1="0" x2="${(38*Math.cos(a*Math.PI/180)).toFixed(1)}" y2="${(38*Math.sin(a*Math.PI/180)).toFixed(1)}" stroke="#cfd6dd" stroke-width="1"/>`; return s; }
 
-  /* Ferrari 250 GTO cockpit SVG — painted metal dash, wood-rim Nardi wheel, open-gate shifter */
+  /* Porsche 917K cockpit SVG — bare glass-fibre tub, right-hand gate, balsa gearknob */
     function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
@@ -2697,7 +2697,7 @@ drawCluster(w, h, dashY, sway);
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full V8 voice." : "Exhaust flap closed — muted."); }
-      // Period competition trim: the GTO ran different Weber jetting and cams for the
+      // Period race trim: the works 917s ran different jetting and open megaphones for the
   // track. Corsa sharpens throttle response and opens the exhaust; it does not
   // change the peak output — this is a 1962 racer, not a flex-fuel car.
   function toggleFuel() {
@@ -2825,7 +2825,7 @@ drawCluster(w, h, dashY, sway);
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “corsa trim”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “race trim”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
@@ -2862,11 +2862,11 @@ drawCluster(w, h, dashY, sway);
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.corsa) warn.push("CORSA TRIM");
+    if (state.corsa) warn.push("RACE TRIM");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (speed >= 260) warn.push("nearing the GTO's ~280 km/h ceiling");
+    if (speed >= 335) warn.push("nearing the 917K's ~360 km/h Le Mans ceiling");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 

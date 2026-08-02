@@ -166,6 +166,11 @@ const check = (label, ok, detail) => {
         if (!(l.eye < 0 && r.eye > 0)) bad.push(n + ": pods are not mounted on opposite flanks");
         if (!(l.yaw < 0 && r.yaw > 0)) bad.push(n + ": pods are not aimed outboard");
         if (!(l.fx < 0.5 && r.fx > 0.5)) bad.push(n + ": pods are not on the left and right of the screen");
+        // the HUD is an HTML panel OVER the canvas, so the canvas can never draw on top of
+        // it — a pod has to live where the panel is not. The free band is hard outboard,
+        // below the HUD aside and above the bottom bar.
+        if (!(l.fx < 0.13 && r.fx > 0.87)) bad.push(n + ": pods are inboard, under the HUD panel");
+        if (!(l.fy > 0.62 && l.fy < 0.74)) bad.push(n + ": pods are not in the clear band below the HUD (fy " + l.fy + ")");
       }
     } else {
       centre++;
@@ -221,6 +226,27 @@ const check = (label, ok, detail) => {
     && /if \(!onStage\(\)\) \{ drawRoadside/.test(src));
   check("a stage run is one-way — braking cannot drop you back a stage",
     /s\.i < state\.stage\.i\) s = state\.stage/.test(src));
+}
+
+/* ---------- a car must quote its OWN numbers ----------
+   The 917K is a clone of the 250 GTO and it inherited that car's strings: at 318 km/h it
+   was warning you that you were "nearing the GTO's ~280 km/h ceiling". Assert that the
+   speed warning names a number belonging to the car that is saying it. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const bad = [];
+  let checked = 0;
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8"), n = f.replace(/ simulator\.html/i, "");
+    const warn = src.match(/warn\.push\("nearing ([^"]*)"\)/);
+    if (!warn) continue;                      // most cars have no ceiling warning at all
+    checked++;
+    const top = +(src.match(/topSpeedKmh: (\d+)/) || [])[1];
+    const quoted = (warn[1].match(/(\d{3})\s*km\/h/) || [])[1];
+    if (!top || !quoted) { bad.push(n + ": cannot read its own ceiling"); continue; }
+    if (Math.abs(+quoted - top) > top * 0.1) bad.push(n + " warns about " + quoted + " but tops out at " + top);
+  }
+  check(checked + " ceiling warnings, each quoting its own car's top speed", bad.length === 0, bad.join(" | "));
 }
 
 const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
