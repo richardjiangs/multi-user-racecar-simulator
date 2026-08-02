@@ -127,6 +127,39 @@ const check = (label, ok, detail) => {
   check("nothing laid behind the car is projected in front of it", bad.length === 0, bad.join(" | "));
 }
 
+/* ---------- you must be able to see behind you ----------
+   Three separate faults, all of which made the world behind the car a void:
+     - drawRivals called projectAhead(Math.max(0.6, ahead)), so a car 40 m BEHIND was
+       projected 0.6 m in front of your nose, where the scale clamp squashed it out of
+       sight. Turn round and the whole field vanished until it came past you again.
+     - ROAD.BEHIND was 200 m but ROAD_OFFS — the distances the road is actually drawn at —
+       started at -80, so looking back you got 80 m of tarmac and then nothing, and a corner
+       you had just driven appeared out of thin air.
+     - the mirrors were decoration. There is now one rear-view renderer, the real projection
+       run through 180 deg and flipped, and every car has it in one of two layouts. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const SIDE = /Valkyrie|Speedtail|F1 2026/;    // camera pods / wing mirrors, always live
+  const bad = [];
+  let side = 0, centre = 0;
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8"), n = f.replace(/ simulator\.html/i, "");
+    if (/projectAhead\(Math\.max\(0\.6, o\.ahead\)/.test(src)) bad.push(n + ": rivals behind you pinned in front of you");
+    if (!/BEHIND: 240/.test(src)) bad.push(n + ": road table does not reach as far back as forward");
+    if (!/for \(let d = -240; d < -80; d \+= 12\)/.test(src)) bad.push(n + ": road is not DRAWN further back than 80 m");
+    if (!/function drawRearView\(/.test(src) || !/function rearProject\(/.test(src)) bad.push(n + ": no rear-view renderer");
+    if (!/drawMirrors\(w, h, pal\);/.test(src)) bad.push(n + ": rear view never drawn");
+    // the mirror must sample BOTH directions: reverse, or spin the car, and the glass still works
+    if (!/REAR_OFFS/.test(src)) bad.push(n + ": mirror only looks one way down the road");
+    const m = src.match(/const MIRROR_STYLE = "(\w+)"/);
+    if (!m) { bad.push(n + ": no mirror style"); continue; }
+    if (m[1] !== (SIDE.test(f) ? "side" : "centre")) bad.push(n + ": wrong mirror style " + m[1]);
+    if (m[1] === "side") side++; else centre++;
+  }
+  check(side + " cars with wing screens, " + centre + " with an interior mirror",
+    bad.length === 0 && side === 13 && centre === 34, bad.slice(0, 4).join(" | "));
+}
+
 /* ---------- the DB5 mission stages are stages, not circuits ----------
    The sea mission shipped once as a CIRCUITS entry with corners renamed "Tanker deck" and
    nothing drawn — a lap of Monaco in a costume. There are now five stage missions, and

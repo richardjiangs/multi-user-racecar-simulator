@@ -273,14 +273,42 @@ a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
 `updatePhysics`, `stageForce()` adds the grade on the leg and the water drag on the sea,
 `stageCapMps()` caps each stage, and `drawStage(w,h,pal)` paints the surface.
 
-**The mirror** (`drawMirror`) — everything Q Branch and Finn drop happens **behind** the car,
-and the draw code used to call `projectAhead(-rel)`, a *positive* distance, so every oil slick
-and smoke puff was painted **in front of you**, receding up the road you were driving into.
-The physics was always right; only the picture lied, in every sim, for as long as the gadget
-existed. There is no rear window in this view, so it now goes where a driver actually looks:
-an interior mirror at the top of the windscreen showing the road behind, what you have
-dropped, the armed limpet, and the cars following you. `tests/browser-test.mjs` fails on any
-`projectAhead(-rel` anywhere in the garage.
+**Seeing behind you (all 47 cars)** — three faults made the world behind the car a void:
+
+- `drawRivals` called `projectAhead(Math.max(0.6, ahead))`, so a rival 40 m **behind** was
+  projected 0.6 m in front of your nose, where the scale clamp squashed it out of sight.
+  Turn the car round and the entire field vanished until it came past you again. It now
+  passes the real relative distance and lets `projectRoad` decide — that already drops
+  anything behind the camera and returns it once you have turned to face it.
+- `ROAD.BEHIND` was 200 m but **`ROAD_OFFS`**, the distances the road surface is actually
+  drawn at, started at **-80**. So looking back you got 80 m of tarmac and then nothing, and
+  a corner you had just driven appeared out of thin air. Both now reach **240 m**, the same
+  as ahead.
+- the mirrors were decoration. There is now **one** rear-view renderer (`rearProject` +
+  `drawRearView`): the *same* projection as the forward view, run with the camera through
+  180° and the image flipped left-for-right the way glass does it — so the bend in the glass
+  is the bend you just drove and the cars in it are where they actually are. It samples
+  `REAR_OFFS` in **both** directions and keeps whatever has `fwd > 0`, because a mirror
+  looks opposite the nose of the car rather than "backwards along the road": reverse, or
+  spin the car, and what it shows is the road at a *positive* offset.
+
+`MIRROR_STYLE` picks the layout per car:
+
+| style | cars | behaviour |
+|---|---|---|
+| `side` | Valkyrie · Speedtail · the eleven **2026 F1** cars (13) | two wing screens, **always live** — none of these has a rear window and all really do run camera pods |
+| `centre` | every other car (34) | one interior mirror at the top of the windscreen, appearing **only when there is something in it** |
+
+Everything you drop — oil, smoke, an armed limpet — goes in the glass too, at its real
+distance, so the DB5's mirror is the same code as everyone else's rather than a bespoke one.
+Before this, the draw code called `projectAhead(-rel)`, a *positive* distance, so every slick
+and puff in every sim was painted **in front of** you, receding up the road you were driving
+into. The physics was always right; only the picture lied. A small mirror has to be legible
+before it is faithful, so the tarmac is lifted off the verge: on a street circuit `pal.road`
+and `pal.grass` are both near-black and the image came out correct and unreadable.
+`tests/browser-test.mjs` fails on any `projectAhead(-rel`, on the 0.6 m clamp, on a road
+table that does not reach 240 m back, on a sim with no rear-view renderer, and on a wrong
+mirror style.
 
 `MISSIONS` gives each stage a brief, a time limit, a damage allowance and its objectives;
 `missionStep(dt)` runs from `updatePhysics` and `drawMissionHud` draws the board (clock,
