@@ -292,12 +292,26 @@ a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
   looks opposite the nose of the car rather than "backwards along the road": reverse, or
   spin the car, and what it shows is the road at a *positive* offset.
 
-`MIRROR_STYLE` picks the layout per car:
+`MIRROR` is a per-car object — position, size, mounting and housing — so a mirror looks
+like it came off that car, the way the dashboards do. Each pod carries its own **eye**
+(where it is mounted on the flank, in metres) and **yaw** (how far outboard it is aimed),
+which is what makes a left and a right pod show genuinely *different* things: a car can be
+in one and not the other, and each shows a slice of your own bodywork on its inboard edge.
 
-| style | cars | behaviour |
+| layout | cars | where, and what it looks like |
 |---|---|---|
-| `side` | Valkyrie · Speedtail · the eleven **2026 F1** cars (13) | two wing screens, **always live** — none of these has a rear window and all really do run camera pods |
-| `centre` | every other car (34) | one interior mirror at the top of the windscreen, appearing **only when there is something in it** |
+| `side` | **Valkyrie** | two camera screens in the **dash corners** — teal bezel, scanlines, a live tally |
+| `side` | **Speedtail** | no mirrors in reality: two screens flanking the **central seat** |
+| `side` | the eleven **2026 F1** cars | small pods on **sidepod stalks**, aimed wide, team-coloured |
+| `centre` | 1950s–60s (250 GTO · DB5 · 300 SLR · 917K) | a small **chromed** oval, high on the screen |
+| `centre` | 80s–90s (F40 · McLaren F1 · Supra · Evo · GT-R) | a black **plastic** rectangle |
+| `centre` | the hypercars | a thin **carbon** blade with a woven edge |
+| `centre` | the EVs (Tesla · Taycan · Evija · Nevera · U9) | a **frameless** glass slab on a stalk |
+| `centre` | the four **Dakar** cars | a **rally** mirror, thick matte bezel, bolted to the cage |
+
+The interior mirror sits high on the windscreen (`fy` 0.11–0.26), which is **above the
+horizon** — so it never sits on the road — and below the topbar, so it never sits on the HUD.
+It appears only when there is something in it.
 
 Everything you drop — oil, smoke, an armed limpet — goes in the glass too, at its real
 distance, so the DB5's mirror is the same code as everyone else's rather than a bespoke one.
