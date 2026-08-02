@@ -2257,26 +2257,15 @@ const SPEC = {
   }
 
   /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
-  const MIRROR_STYLE = "centre";
+  /* ===== rear-view =====================================================================
+     The same projection as the forward view, run with the camera turned through 180° and
+     flipped left-for-right the way glass does it — so the bend in the glass is the bend you
+     just drove and the cars in it are where they actually are.
 
-  /* ===== rear-view ===================================================================
-     Not a decorative gradient. This is the SAME projection as the forward view, run with
-     the camera turned through 180° and the image flipped left-for-right the way glass does
-     it — so the bend in the mirror is the bend you just drove, and the cars in it are where
-     they actually are. rearProject takes a road offset (negative = behind you) and a
-     lateral offset in metres, exactly like projectAhead. */
-  function rearProject(off, lateralM, cx, cy, sc, aimM) {
-    const c = centerlineAt(off);
-    const nx = Math.cos(c.psi), nz = -Math.sin(c.psi);
-    const Xr = c.X + (lateralM || 0) * nx, Zr = c.Z + (lateralM || 0) * nz;
-    const phi = state.headingRel + Math.PI, n0 = state.laneOffset;
-    const dX = Xr - n0, dZ = Zr;
-    const fwd = dX * Math.sin(phi) + dZ * Math.cos(phi);
-    if (fwd <= 0.8) return null;
-    const rgt = dX * Math.cos(phi) - dZ * Math.sin(phi) - (aimM || 0);
-    const s = (FOCAL / fwd) * sc;
-    return { x: cx - rgt * s, y: cy + CAM_H * s, s, fwd };     // x negated: a mirror flips
-  }
+     Each mirror is a real viewpoint, not a pan: MIRROR.pods gives every pod its own lateral
+     mounting on the car (eye, in metres) and its own outward aim (yaw). That is what makes a
+     left and a right mirror show DIFFERENT things — a car can be in one and not the other. */
+  const MIRROR = {"style":"centre","frame":"frameless","tint":"#8fb6cc","flank":null,"label":"","pods":[{"fx":0.5,"fy":0.175,"fw":0.29,"ar":0.27,"eye":0,"yaw":0}]};
   const REAR_OFFS = (function () { const o = [];
     for (let d = -240; d < -90; d += 14) o.push(d);
     for (let d = -90; d < -30; d += 6) o.push(d);
@@ -2284,29 +2273,47 @@ const SPEC = {
     for (let d = 34; d <= 90; d += 6) o.push(d);
     for (let d = 96; d <= 240; d += 14) o.push(d);
     return o; })();
-  function drawRearView(mx, my, mw, mh, aimM, pal) {
-    const sc = mh * 0.0062, cx = mx + mw / 2, cy = my + mh * 0.24;
+  function rearProject(off, lateralM, cam) {
+    const c = centerlineAt(off);
+    const nx = Math.cos(c.psi), nz = -Math.sin(c.psi);
+    const Xr = c.X + (lateralM || 0) * nx, Zr = c.Z + (lateralM || 0) * nz;
+    const phi = state.headingRel + Math.PI + cam.yaw;      // aimed outboard, per pod
+    const n0 = state.laneOffset + cam.eye;                 // and mounted on that flank
+    const dX = Xr - n0, dZ = Zr;
+    const fwd = dX * Math.sin(phi) + dZ * Math.cos(phi);
+    if (fwd <= 0.8) return null;
+    const rgt = dX * Math.cos(phi) - dZ * Math.sin(phi);
+    const s = (FOCAL / fwd) * cam.sc;
+    return { x: cam.cx - rgt * s, y: cam.cy + CAM_H * s, s, fwd };   // x negated: a mirror flips
+  }
+  const cssVar = (nm, fb) => {
+    try { const v = getComputedStyle(document.documentElement).getPropertyValue(nm).trim(); return v || fb; }
+    catch (e) { return fb; }
+  };
+  const mirrorCol = (c, fb) => (c === "var-teal" ? cssVar("--teal", fb) : c === "var-body" ? cssVar("--f1body", fb) : c) || fb;
+
+  function drawRearView(mx, my, mw, mh, p, pal) {
+    const cam = { cx: mx + mw / 2, cy: my + mh * 0.26, sc: mh * 0.0062, eye: p.eye, yaw: p.yaw };
     ctx.save();
-    ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 6); ctx.clip();
+    ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, MIRROR.frame === "chrome" ? mh * 0.4 : 6); ctx.clip();
     const night = pal && pal.night;
     const sky = ctx.createLinearGradient(0, my, 0, my + mh);
     sky.addColorStop(0, night ? "rgba(14,24,40,0.98)" : "rgba(96,130,166,0.98)");
     sky.addColorStop(1, night ? "rgba(26,36,50,0.98)" : "rgba(150,176,196,0.98)");
     ctx.fillStyle = sky; ctx.fillRect(mx, my, mw, mh);
-    ctx.fillStyle = "rgba(26,32,26,0.95)"; ctx.fillRect(mx, cy, mw, my + mh - cy);
+    ctx.fillStyle = "rgba(26,32,26,0.95)"; ctx.fillRect(mx, cam.cy, mw, my + mh - cam.cy);
 
-    /* The road the mirror can see. A mirror looks opposite the car's nose, so it does NOT
-       simply mean "negative road offsets": reverse down the road, or spin the car round,
-       and what the glass shows is the road with a POSITIVE offset. Sample both ways and let
-       fwd > 0 decide — which is the only test that is true in every case. */
+    /* the road the mirror can see. A mirror looks opposite the car's nose, which is NOT the
+       same as "negative road offsets": reverse, or spin the car, and what it shows is the
+       road at a POSITIVE offset. Sample both ways and let fwd > 0 decide. */
     let prev = null;
     for (let i = 0; i < REAR_OFFS.length; i++) {
       const off = REAR_OFFS[i], H = halfAt(off);
-      const l = rearProject(off, -H, cx, cy, sc, aimM), r = rearProject(off, H, cx, cy, sc, aimM);
+      const l = rearProject(off, -H, cam), r = rearProject(off, H, cam);
       if (!l || !r) { prev = null; continue; }
       if (prev) {
-        // a small mirror image has to be legible before it is faithful: lift the tarmac off
-        // the verge, because a street circuit's road and grass are both near-black
+        // a small mirror has to be legible before it is faithful: lift the tarmac off the
+        // verge, because a street circuit's road and grass are both near-black
         ctx.fillStyle = "rgba(74,80,90,0.95)";
         ctx.beginPath(); ctx.moveTo(prev.l.x, prev.l.y); ctx.lineTo(prev.r.x, prev.r.y);
         ctx.lineTo(r.x, r.y); ctx.lineTo(l.x, l.y); ctx.closePath(); ctx.fill();
@@ -2316,41 +2323,41 @@ const SPEC = {
       }
       prev = { l, r };
     }
-    // what you have dropped, if this car drops anything
+    // anything this car drops happens behind it, so this is where you see it
     const q = state.q;
     if (q) {
       for (const o of (q.slicks || [])) {
         const d = state.distanceM - o.dist; if (!(Math.abs(d) < 200)) continue;
-        const p = rearProject(-d, o.lane, cx, cy, sc, aimM); if (!p) continue;
+        const pp = rearProject(-d, o.lane, cam); if (!pp) continue;
         if (o.fire > 0) {
           ctx.save(); ctx.globalCompositeOperation = "lighter";
-          const gg = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 9 * p.s + 4);
+          const gg = ctx.createRadialGradient(pp.x, pp.y, 0, pp.x, pp.y, 9 * pp.s + 4);
           gg.addColorStop(0, "rgba(255,226,150,0.75)"); gg.addColorStop(0.5, "rgba(255,140,40,0.4)"); gg.addColorStop(1, "rgba(190,60,20,0)");
-          ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(p.x, p.y, 9 * p.s + 4, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(pp.x, pp.y, 9 * pp.s + 4, 0, Math.PI * 2); ctx.fill();
           ctx.restore();
         } else {
           ctx.fillStyle = "rgba(12,12,18,0.9)";
-          ctx.beginPath(); ctx.ellipse(p.x, p.y, 2.6 * p.s + 1, 0.8 * p.s + 0.6, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.beginPath(); ctx.ellipse(pp.x, pp.y, 2.6 * pp.s + 1, 0.8 * pp.s + 0.6, 0, 0, Math.PI * 2); ctx.fill();
         }
       }
       for (const pf of (q.puffs || [])) {
         const d = state.distanceM - pf.dist; if (!(Math.abs(d) < 180)) continue;
-        const p = rearProject(-d, pf.lane, cx, cy, sc, aimM); if (!p) continue;
-        const rr = Math.max(3, pf.r * p.s * 1.4);
+        const pp = rearProject(-d, pf.lane, cam); if (!pp) continue;
+        const rr = Math.max(3, pf.r * pp.s * 1.4);
         ctx.save(); ctx.globalAlpha = Math.max(0, Math.min(0.8, pf.life / 5.5));
-        const gg = ctx.createRadialGradient(p.x, p.y - rr * 0.3, 0, p.x, p.y - rr * 0.3, rr);
+        const gg = ctx.createRadialGradient(pp.x, pp.y - rr * 0.3, 0, pp.x, pp.y - rr * 0.3, rr);
         gg.addColorStop(0, "rgba(228,232,238,0.95)"); gg.addColorStop(1, "rgba(200,206,214,0)");
-        ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(p.x, p.y - rr * 0.3, rr, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = gg; ctx.beginPath(); ctx.arc(pp.x, pp.y - rr * 0.3, rr, 0, Math.PI * 2); ctx.fill();
         ctx.restore();
       }
       if (q.charge != null && q.blownAt == null) {
         const d = state.distanceM - q.charge;
-        const p = d > 0 && d < 200 ? rearProject(-d, 0, cx, cy, sc, aimM) : null;
-        if (p) { ctx.fillStyle = Math.floor(state.time * 6) % 2 ? "rgba(255,70,50,0.95)" : "rgba(110,20,16,0.75)";
-          ctx.beginPath(); ctx.arc(p.x, p.y - 2 * p.s, Math.max(2, 0.7 * p.s), 0, Math.PI * 2); ctx.fill(); }
+        const pp = Math.abs(d) < 200 ? rearProject(-d, 0, cam) : null;
+        if (pp) { ctx.fillStyle = Math.floor(state.time * 6) % 2 ? "rgba(255,70,50,0.95)" : "rgba(110,20,16,0.75)";
+          ctx.beginPath(); ctx.arc(pp.x, pp.y - 2 * pp.s, Math.max(2, 0.7 * pp.s), 0, Math.PI * 2); ctx.fill(); }
       }
     }
-    // and the cars following you, at their real distance and lane
+    // and the cars, at their real distance and lane
     const seen = [];
     for (const r of (state.rivals || [])) {
       if (r.gone) continue;
@@ -2359,48 +2366,125 @@ const SPEC = {
     }
     seen.sort((a, b) => Math.abs(b.off) - Math.abs(a.off));
     for (const { r, off } of seen) {
-      const p = rearProject(off, r.lane || 0, cx, cy, sc, aimM); if (!p) continue;
-      const cw = Math.max(3, 1.9 * p.s), ch = Math.max(1.6, 1.0 * p.s);
+      const pp = rearProject(off, r.lane || 0, cam); if (!pp) continue;
+      const cw = Math.max(3, 1.9 * pp.s), ch = Math.max(1.6, 1.0 * pp.s);
       ctx.save(); ctx.globalAlpha = r.down ? 0.4 : 1;
       ctx.fillStyle = r.body || "#333";
-      ctx.beginPath(); ctx.roundRect(p.x - cw / 2, p.y - ch, cw, ch, Math.max(1, ch * 0.22)); ctx.fill();
+      ctx.beginPath(); ctx.roundRect(pp.x - cw / 2, pp.y - ch, cw, ch, Math.max(1, ch * 0.22)); ctx.fill();
       ctx.strokeStyle = "rgba(240,244,250,0.55)"; ctx.lineWidth = 1; ctx.stroke();
-      ctx.fillStyle = r.stripe || "#888"; ctx.fillRect(p.x - cw / 2, p.y - ch * 0.62, cw, Math.max(0.8, ch * 0.15));
-      ctx.fillStyle = "rgba(255,226,180,0.95)";                 // its lamps, facing you
-      ctx.fillRect(p.x - cw * 0.42, p.y - ch * 0.92, cw * 0.17, Math.max(0.8, ch * 0.2));
-      ctx.fillRect(p.x + cw * 0.25, p.y - ch * 0.92, cw * 0.17, Math.max(0.8, ch * 0.2));
+      ctx.fillStyle = r.stripe || "#888"; ctx.fillRect(pp.x - cw / 2, pp.y - ch * 0.62, cw, Math.max(0.8, ch * 0.15));
+      ctx.fillStyle = "rgba(255,226,180,0.95)";
+      ctx.fillRect(pp.x - cw * 0.42, pp.y - ch * 0.92, cw * 0.17, Math.max(0.8, ch * 0.2));
+      ctx.fillRect(pp.x + cw * 0.25, pp.y - ch * 0.92, cw * 0.17, Math.max(0.8, ch * 0.2));
       ctx.restore();
     }
-    ctx.restore();
-    ctx.save();                                                  // the housing
-    ctx.strokeStyle = "rgba(150,162,175,0.6)"; ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 6); ctx.stroke();
-    ctx.restore();
-  }
-  /* MIRROR_STYLE decides the layout. A car with no rear window and camera pods gets two
-     wing screens that are always live; everything else gets one interior mirror that only
-     appears when there is actually something behind you to see. */
-  function drawMirrors(w, h, pal) {
-    if (MIRROR_STYLE === "side") {
-      const mw = Math.min(190, w * 0.15), mh = mw * 0.44, y = 108;
-      drawRearView(w * 0.35 - mw / 2, y, mw, mh, -2.0, pal);
-      drawRearView(w * 0.65 - mw / 2, y, mw, mh, 2.0, pal);
-      ctx.fillStyle = "rgba(160,178,196,0.7)"; ctx.font = "600 9px ui-sans-serif";
-      ctx.textAlign = "center";
-      ctx.fillText("REAR L", w * 0.35, y + mh + 11);
-      ctx.fillText("REAR R", w * 0.65, y + mh + 11);
-      return;
+    // a wing mirror always has a slice of your own bodywork in the inboard edge — and it is
+    // on OPPOSITE sides of the two pods, which is half of why they never look alike
+    if (MIRROR.flank && p.eye !== 0) {
+      const inboard = p.eye < 0 ? 1 : -1;
+      const fx = inboard > 0 ? mx + mw : mx;
+      ctx.fillStyle = mirrorCol(MIRROR.flank, "#2a2e34");
+      ctx.beginPath();
+      ctx.moveTo(fx, my + mh); ctx.lineTo(fx, my + mh * 0.30);
+      ctx.quadraticCurveTo(fx - inboard * mw * 0.20, my + mh * 0.52, fx - inboard * mw * 0.26, my + mh);
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = "rgba(255,255,255,0.28)"; ctx.lineWidth = 1.2; ctx.stroke();
     }
-    // is there anything back there worth a glance?
-    let any = false;
-    for (const r of (state.rivals || [])) { if (r.gone) continue; if (Math.abs(app.rivalAhead(r)) < 200) { any = true; break; } }
-    const q = state.q;
-    if (!any && q) any = (q.slicks || []).some((o) => Math.abs(state.distanceM - o.dist) < 200)
-      || (q.puffs || []).some((p) => Math.abs(state.distanceM - p.dist) < 180)
-      || (q.charge != null && q.blownAt == null);
-    if (!any) return;
-    const mw = Math.min(320, w * 0.26), mh = 56;
-    drawRearView((w - mw) / 2, Math.max(104, Math.min(h * 0.42, horizonY - 116)), mw, mh, 0, pal);
+    ctx.restore();
+    drawMirrorFrame(mx, my, mw, mh, p);
+  }
+  /* the housing. This is the part that should look like it came off THIS car. */
+  function drawMirrorFrame(mx, my, mw, mh, p) {
+    const tint = mirrorCol(MIRROR.tint, "#2f353d");
+    ctx.save();
+    switch (MIRROR.frame) {
+      case "chrome": {                                     // 1950s/60s: a small chromed glass
+        const g = ctx.createLinearGradient(0, my - 4, 0, my + mh + 4);
+        g.addColorStop(0, "#f2f5f8"); g.addColorStop(0.45, "#9aa3ad"); g.addColorStop(1, "#e6ebef");
+        ctx.strokeStyle = g; ctx.lineWidth = 5;
+        ctx.beginPath(); ctx.roundRect(mx - 2, my - 2, mw + 4, mh + 4, mh * 0.45); ctx.stroke();
+        ctx.strokeStyle = "rgba(255,255,255,0.7)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, mh * 0.4); ctx.stroke();
+        break;
+      }
+      case "carbon": {                                     // hypercar: a thin woven blade
+        ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.roundRect(mx - 1, my - 1, mw + 2, mh + 2, 5); ctx.stroke();
+        ctx.strokeStyle = "rgba(150,160,172,0.35)"; ctx.lineWidth = 1;
+        for (let i = 0; i < 7; i++) { const x = mx + mw * i / 7;
+          ctx.beginPath(); ctx.moveTo(x, my - 3); ctx.lineTo(x + 5, my); ctx.stroke(); }
+        ctx.strokeStyle = tint; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 5); ctx.stroke();
+        break;
+      }
+      case "frameless": {                                  // EV: glass on a stalk, no bezel
+        ctx.strokeStyle = tint; ctx.lineWidth = 1.5;
+        ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 4); ctx.stroke();
+        ctx.fillStyle = "rgba(20,26,34,0.9)"; ctx.fillRect(mx + mw / 2 - 7, my + mh, 14, 5);
+        break;
+      }
+      case "rally": {                                      // bolted to the cage, and it shows
+        ctx.strokeStyle = "#12161b"; ctx.lineWidth = 7;
+        ctx.beginPath(); ctx.roundRect(mx - 3, my - 3, mw + 6, mh + 6, 4); ctx.stroke();
+        ctx.fillStyle = "rgba(180,190,200,0.8)";
+        for (const bx of [mx + 8, mx + mw - 8]) { ctx.beginPath(); ctx.arc(bx, my - 3, 2.6, 0, Math.PI * 2); ctx.fill(); }
+        break;
+      }
+      case "screen": {                                     // a camera monitor, not a mirror
+        // a RING, not a filled rect: filling it painted the bezel straight over the picture
+        ctx.fillStyle = "rgba(10,14,18,0.95)";
+        ctx.beginPath();
+        ctx.roundRect(mx - 6, my - 6, mw + 12, mh + 12, 8);
+        ctx.roundRect(mx, my, mw, mh, 5);
+        ctx.fill("evenodd");
+        ctx.strokeStyle = tint; ctx.lineWidth = 1.6;
+        ctx.beginPath(); ctx.roundRect(mx - 6, my - 6, mw + 12, mh + 12, 8); ctx.stroke();
+        ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#cfe8ff"; ctx.lineWidth = 1;
+        for (let y = my + 2; y < my + mh; y += 3) { ctx.beginPath(); ctx.moveTo(mx, y); ctx.lineTo(mx + mw, y); ctx.stroke(); }
+        ctx.restore();
+        ctx.fillStyle = tint;                              // the live tally
+        ctx.beginPath(); ctx.arc(mx + mw - 5, my + 5, 2.4, 0, Math.PI * 2); ctx.fill();
+        break;
+      }
+      case "pod": {                                        // F1: a little pod on a stalk
+        ctx.strokeStyle = mirrorCol(MIRROR.flank, "#1b1f25"); ctx.lineWidth = 5;
+        const inboard = p.eye < 0 ? 1 : -1;
+        ctx.beginPath(); ctx.moveTo(mx + (inboard > 0 ? mw : 0), my + mh * 0.55);
+        ctx.lineTo(mx + (inboard > 0 ? mw + 26 : -26), my + mh * 0.9); ctx.stroke();
+        ctx.strokeStyle = tint; ctx.lineWidth = 3;
+        ctx.beginPath(); ctx.roundRect(mx - 1, my - 1, mw + 2, mh + 2, 3); ctx.stroke();
+        break;
+      }
+      default: {
+        ctx.strokeStyle = tint; ctx.lineWidth = 4;
+        ctx.beginPath(); ctx.roundRect(mx - 1, my - 1, mw + 2, mh + 2, 5); ctx.stroke();
+        ctx.strokeStyle = "rgba(200,210,222,0.35)"; ctx.lineWidth = 1;
+        ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, 4); ctx.stroke();
+      }
+    }
+    ctx.restore();
+    if (MIRROR.label) {
+      ctx.fillStyle = "rgba(160,178,196,0.7)"; ctx.font = "600 9px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText(MIRROR.label + (p.eye < 0 ? " L" : p.eye > 0 ? " R" : ""), mx + mw / 2, my + mh + 15);
+    }
+  }
+  function drawMirrors(w, h, pal) {
+    const unit = Math.min(w, h);
+    if (MIRROR.style === "centre") {
+      // only when there is something in it — and high on the windscreen, where an interior
+      // mirror is: above the horizon so it never sits on the road, below the HUD.
+      let any = false;
+      for (const r of (state.rivals || [])) { if (r.gone) continue; if (Math.abs(app.rivalAhead(r)) < 200) { any = true; break; } }
+      const q = state.q;
+      if (!any && q) any = (q.slicks || []).some((o) => Math.abs(state.distanceM - o.dist) < 200)
+        || (q.puffs || []).some((p) => Math.abs(state.distanceM - p.dist) < 180)
+        || (q.charge != null && q.blownAt == null);
+      if (!any) return;
+    }
+    for (const p of MIRROR.pods) {
+      const mw = unit * p.fw, mh = mw * p.ar;
+      drawRearView(w * p.fx - mw / 2, h * p.fy - mh / 2, mw, mh, p, pal);
+    }
   }
 
   function drawCabinFrame(w, h, pal) {

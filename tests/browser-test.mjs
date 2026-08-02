@@ -141,7 +141,7 @@ const check = (label, ok, detail) => {
   const { readdirSync, readFileSync } = await import("node:fs");
   const SIDE = /Valkyrie|Speedtail|F1 2026/;    // camera pods / wing mirrors, always live
   const bad = [];
-  let side = 0, centre = 0;
+  let side = 0, centre = 0; const frames = new Set();
   for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
     const src = readFileSync(ROOT + "/" + f, "utf8"), n = f.replace(/ simulator\.html/i, "");
     if (/projectAhead\(Math\.max\(0\.6, o\.ahead\)/.test(src)) bad.push(n + ": rivals behind you pinned in front of you");
@@ -151,13 +151,34 @@ const check = (label, ok, detail) => {
     if (!/drawMirrors\(w, h, pal\);/.test(src)) bad.push(n + ": rear view never drawn");
     // the mirror must sample BOTH directions: reverse, or spin the car, and the glass still works
     if (!/REAR_OFFS/.test(src)) bad.push(n + ": mirror only looks one way down the road");
-    const m = src.match(/const MIRROR_STYLE = "(\w+)"/);
-    if (!m) { bad.push(n + ": no mirror style"); continue; }
-    if (m[1] !== (SIDE.test(f) ? "side" : "centre")) bad.push(n + ": wrong mirror style " + m[1]);
-    if (m[1] === "side") side++; else centre++;
+    if (!/const phi = state\.headingRel \+ Math\.PI \+ cam\.yaw/.test(src)) bad.push(n + ": pods share one viewpoint");
+    const m = src.match(/const MIRROR = (\{[\s\S]*?\});/);
+    if (!m) { bad.push(n + ": no mirror config"); continue; }
+    let cfg; try { cfg = JSON.parse(m[1]); } catch (e) { bad.push(n + ": mirror config is not data"); continue; }
+    if (cfg.style !== (SIDE.test(f) ? "side" : "centre")) bad.push(n + ": wrong mirror style " + cfg.style);
+    if (cfg.style === "side") {
+      side++;
+      // two pods that show the SAME thing are one pod drawn twice. Each must have its own
+      // mounting on the car and its own outward aim, or they are decoration again.
+      if (cfg.pods.length !== 2) bad.push(n + ": a side car needs two pods");
+      else {
+        const [l, r] = cfg.pods;
+        if (!(l.eye < 0 && r.eye > 0)) bad.push(n + ": pods are not mounted on opposite flanks");
+        if (!(l.yaw < 0 && r.yaw > 0)) bad.push(n + ": pods are not aimed outboard");
+        if (!(l.fx < 0.5 && r.fx > 0.5)) bad.push(n + ": pods are not on the left and right of the screen");
+      }
+    } else {
+      centre++;
+      if (cfg.pods.length !== 1) bad.push(n + ": an interior mirror is one mirror");
+      // high on the windscreen: above the horizon (0.46) so it never sits on the road,
+      // and below the topbar so it never sits on the HUD
+      else if (!(cfg.pods[0].fy > 0.11 && cfg.pods[0].fy < 0.26)) bad.push(n + ": interior mirror is not high on the screen (fy " + cfg.pods[0].fy + ")");
+    }
+    frames.add(cfg.frame);
   }
-  check(side + " cars with wing screens, " + centre + " with an interior mirror",
-    bad.length === 0 && side === 13 && centre === 34, bad.slice(0, 4).join(" | "));
+  // and they must not all look alike: the housings differ per car the way the dashboards do
+  check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
+    bad.length === 0 && side === 13 && centre === 34 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------
