@@ -74,6 +74,10 @@ const CARS = {
     // Attack aero: no factory top speed published — assert the drag-limited
     // vmax stays in a plausible Attack band and that E85 clearly outruns petrol.
     topSpeed: { minKmh: 350, maxKmh: 430, setup: "e85", minT: 90 },
+    // the OTHER body. Koenigsegg deletes the boomerang wing for two rear fins, adds 85 mm
+    // of tail and gets Cd 0.278 on 1.88 m²: the claim is ~531 km/h (330 mph) on E85, which
+    // no one has yet run. Y is opt-in, so this never touches the certified 0-100.
+    topSpeed2: { kmh: 531, setup: "absolutE85", minT: 150, label: "Absolut body, E85" },
     brake100: { target: 29, tol: 1.0 },
   },
   tesla: {
@@ -349,6 +353,12 @@ const PAGE_FNS = {
     if (setup === "speedKey" && app.toggleSpeedKey) app.toggleSpeedKey();
     if (setup === "velocity" && app.toggleVelocity) app.toggleVelocity();
     if (setup === "e85" && app.toggleFuel && !state.e85) app.toggleFuel();
+    // the Jesko ABSOLUT body — the wing deleted for two fins, Cd 0.278. Opt-in, so it is
+    // never on for the certified 0-100.
+    if (setup === "absolutE85") {
+      if (app.toggleAbsolut && !state.absolut) app.toggleAbsolut();
+      if (app.toggleFuel && !state.e85) app.toggleFuel();
+    }
     if (setup === "trackPack" && app.toggleTrackPack && !state.trackPack) app.toggleTrackPack();
     app.armLaunch();
     state.keys.KeyW = true;
@@ -486,6 +496,12 @@ async function verifyCar(browser, key) {
   } else {
     check(`top speed = ${fmt(vRun.topKmh, 1)} km/h (drag-limited, expected ${vs.minKmh}–${vs.maxKmh})`,
       vRun.topKmh >= vs.minKmh && vRun.topKmh <= vs.maxKmh);
+  }
+  if (car.topSpeed2) {
+    const v2 = car.topSpeed2;
+    const r2 = await page.evaluate(PAGE_FNS.launch, { appName: car.app, setup: v2.setup, maxT: v2.minT + 140, stopAtKmh: 0, assistOff: true });
+    check(`top speed = ${fmt(r2.settledKmh, 2)} km/h (${v2.label}, claimed ${v2.kmh})`,
+      Math.abs(r2.settledKmh - v2.kmh) <= 0.01);
   }
   const br = await page.evaluate(PAGE_FNS.brake, { appName: car.app });
   check(`100-0 km/h = ${fmt(br.dist, 2)} m (target ${car.brake100.target} ±${car.brake100.tol})`,

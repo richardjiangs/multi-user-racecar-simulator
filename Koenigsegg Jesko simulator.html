@@ -353,7 +353,7 @@
       <section class="brand">
         <div class="mark">KG</div>
         <h1>Koenigsegg Jesko</h1>
-        <p>5.0L twin-turbo V8 · 9-speed Light Speed Transmission · rear-wheel drive · Triplex dampers · boomerang wing · Attack aero.</p>
+        <p>5.0L twin-turbo V8 · 9-speed Light Speed Transmission · rear-wheel drive · Triplex dampers · boomerang wing · Attack aero, or the Absolut body on key Y.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -411,7 +411,7 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Attack Aero Package</h2>
+          <h2 id="extHeading">Exterior — Attack Aero Package</h2>
           <span class="small"><span class="indicator"></span><span id="paintStatus">Arctic White over carbon, tang-orange accents, boomerang wing, Autoskin body</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
@@ -470,7 +470,8 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="fuelBtn" class="race" title="Switch to E85 biofuel: 1,280 hp on petrol becomes 1,600 hp, torque rises to 1,500 Nm">E85 Fuel</button>
+          <button id="fuelBtn" class="race" title="Key Z — switch to E85 biofuel: 1,280 hp on petrol becomes 1,600 hp, torque rises to 1,500 Nm">E85 Fuel</button>
+          <button id="absolutBtn" class="race" title="Key Y — the Jesko Absolut body: boomerang wing deleted for two rear deck fins, 85 mm longer tail, aero wheel covers. Downforce 1,400 kg → 150 kg, Cd 0.278. Koenigsegg claims 531 km/h.">Absolut Body</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -483,7 +484,7 @@
       <section class="mode-panel panel-engine">
         <div class="panel-title">
           <h2>Engine Bay — 5.0L Twin-Turbo V8</h2>
-          <span class="small" id="engineStatus">5.0L twin-turbo V8, flat-plane 180° crank · 1,280 hp @ 7,800 on petrol, 1,600 hp / 1,500 Nm @ 5,100 on E85 · 8,500 rpm · 9-speed LST · 0–100 in 2.5 s · 1,420 kg</span>
+          <span class="small" id="engineStatus">5.0L twin-turbo V8, flat-plane 180° crank · 1,280 hp @ 7,800 on petrol, 1,600 hp / 1,500 Nm @ 5,100 on E85 (Z) · 8,500 rpm · 9-speed LST · 0–100 in 2.5 s · 1,420 kg · Attack or Absolut body (Y)</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -561,7 +562,7 @@
           <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">3. Racecraft — the line changes in real time</a>
           <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">4. Braking — the countdown boards</a>
           <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">5. Vision</a>
-          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: E85 and 1,600 hp</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#9fc7b4">6. This car: E85, and the Absolut body</a>
           </nav>
           <div style="flex:1; font-size:13px; line-height:1.6; color:#c8d2dd; min-width:0">
         <h3 id="ls0" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">1. The racing line</h3><p style="margin:4px 0">Outside–inside–outside. Enter from the far edge, cut across the yellow apex dot, release the car to the exit kerb. This maximises the corner radius, so your minimum speed — and everything that follows it — is higher. <svg viewBox="0 0 300 150" style="width:100%;max-width:300px;background:#0c1116;border:1px solid #223;border-radius:6px;margin:6px 0">
@@ -580,7 +581,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: E85 and 1,600 hp</h3><p style="margin:4px 0">On E85 the Jesko jumps from 1,280 to 1,600 hp and the 9-speed LST swaps gears without a torque gap. Traction is the limit everywhere below 200 km/h — feed the throttle in with the steering unwinding.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: E85, and the Absolut body</h3><p style="margin:4px 0">Two features, and they are different kinds of thing. <b>Key Z</b> is the <b>fuel map</b>: on E85 the Jesko jumps from 1,280 to 1,600 hp and 1,500 Nm, and the 9-speed LST swaps gears without a torque gap. Traction is the limit everywhere below 200 km/h — feed the throttle in with the steering unwinding.</p><p style="margin:4px 0"><b>Key Y</b> is not a setting, it is a <b>different body</b>. The <b>Jesko Absolut</b> deletes the boomerang wing and stands <b>two fins</b> on the rear deck instead, re-shapes the front splitter winglets and louvers, adds <b>85 mm of tail</b> and offers removable <b>aero wheel covers</b>. Downforce falls from <b>1,400 kg to 150 kg</b> and Cd comes out at <b>0.278</b> on 1.88 m² — under the 0.28 the programme was aiming for. You will feel the trade immediately: the Attack car is the one that corners, and the Absolut is the one that will not stop accelerating. Koenigsegg's own claim for it is <b>531 km/h</b>, in ideal conditions, and no record run has ever been made. Both are opt-in and off by default, so the certified 0–100 of 2.50 s is measured on the Attack car, as it should be.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -615,7 +616,7 @@
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <button id="realBtn" class="race" title="Real Mode — real tyre wear, damage and reliability; a failed system retires you">Real Mode: Off</button>
             <div class="voice">
-              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “switch to E85”">
+              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “switch to E85”, “absolut”">
               <button id="voiceBtn">Tell Co-Pilot</button>
             </div>
             <div class="status-list">
@@ -702,9 +703,22 @@
    KOENIGSEGG JESKO — "Spöket" (browser megacar simulator)
    Real Web-Audio flat-plane twin-turbo V8, factory-matched physics (0–100 km/h
    2.5 s; 1,280 hp @ 7,800 on petrol, 1,600 hp / 1,500 Nm @ 5,100 on E85;
-   8,500 rpm; 1,420 kg; Attack aero — top speed is genuinely drag-limited),
-   a 9-speed Light Speed Transmission with jump-shifts, and a test driver
-   who can lap for you.
+   8,500 rpm; 1,420 kg), a 9-speed Light Speed Transmission with jump-shifts,
+   and a test driver who can lap for you.
+
+   TWO BODIES, and they are different cars from the windscreen back:
+     ATTACK  (default, and what the certified figures are measured on) — the
+             boomerang wing on twin pylons, dive planes, up to 1,400 kg of
+             downforce. Koenigsegg publish no top speed for it because in this
+             aero it is genuinely drag-limited: ~425 km/h on E85 here.
+     ABSOLUT (key Y, opt-in) — the wing deleted for TWO REAR DECK FINS,
+             re-shaped front splitter winglets and louvers, 85 mm more tail,
+             removable aero wheel covers. Downforce 1,400 kg → 150 kg and
+             Cd 0.278 on 1.88 m² (the programme was aiming at 0.28). The claim
+             is ~531 km/h / 330 mph in ideal conditions; no run has been made.
+   Key Z is the FUEL MAP, which is a different axis: petrol 1,280 hp, E85 1,600.
+   Both are off by default, so the certified 0-100 = 2.5000 s is the Attack car
+   on petrol, as it should be.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -825,8 +839,8 @@ const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
    on standard petrol; 1,193 kW (1,600 hp) and 1,500 Nm @ 5,100 rpm on E85 biofuel;
    8,500 rpm rev limit; kerb weight 1,420 kg; 9-speed Light Speed Transmission;
    0–100 km/h 2.5 s; up to 1,400 kg of downforce (Attack). Koenigsegg publishes no
-   Attack top speed — in this aero configuration it is genuinely drag-limited
-   (the low-drag Absolut is the 500+ km/h car). */
+   Attack top speed — in this aero configuration it is genuinely drag-limited.
+   The low-drag ABSOLUT body is the 500+ km/h car: see SPEC.absolut and key Y. */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
@@ -849,18 +863,18 @@ const SPEC = {
   gearRatios: [3.30, 2.44, 1.93, 1.58, 1.32, 1.12, 0.96, 0.83, 0.72],   // 9-speed LST
   reverseRatio: 3.10,
   wheelRadiusM: 0.364,          // 325/30 R21 rear
-  dragCd: 0.55,                 // Attack configuration: the fixed boomerang wing + dive planes carry real drag
+  dragCd: 0.55,                 // ATTACK: the fixed boomerang wing + dive planes carry real drag (Absolut: 0.278)
   frontalAreaM2: 1.88,
   rollingResistance: 0.012,
   airDensity: 1.225,
   drivelineEff: 0.90,
   tractionCoeff: 1.202528,      // calibrated -> 0–100 km/h = 2.5000 s ±0.0001 with launch control (see tests/perf-test.mjs)
-  topSpeedKmh: 500,             // safety ceiling only (Absolut-programme bound) — the Attack is drag-limited well below
-  topSpeedMps: 500 * KMH,
-  topSpeedLimitedKmh: 500,
-  topSpeedLimitedMps: 500 * KMH,
-  topSpeedRecordKmh: 500,
-  topSpeedRecordMps: 500 * KMH,
+  topSpeedKmh: 531,             // Koenigsegg claims ~531 km/h (330 mph) for the ABSOLUT body
+  topSpeedMps: 531 * KMH,       //   in ideal conditions. No record run has ever been made.
+  topSpeedLimitedKmh: 531,      //   The Attack has no published figure because in that aero
+  topSpeedLimitedMps: 531 * KMH,//   it is genuinely drag-limited far below — ~425 km/h on E85.
+  topSpeedRecordKmh: 531,
+  topSpeedRecordMps: 531 * KMH,
   zeroTo100Kmh: 2.5,            // s (Koenigsegg)
   e85: {                        // E85 biofuel map: the official megacar numbers
     peakPowerW: 1193000,        // 1,193 kW = 1,600 hp
@@ -879,7 +893,24 @@ const SPEC = {
   shiftTimeS: 0.03,             // Light Speed Transmission — seamless multi-clutch
   launchRpm: 4000,
   aeroClA: 3.6,                 // downforce coefficient*area (lumped) — up to ~1,400 kg (Attack)
-  aeroDragAdd: 0.45             // extra CdA as the active wing element trims fully
+  aeroDragAdd: 0.45,            // extra CdA as the active wing element trims fully
+  /* The two bodies Koenigsegg actually builds. ATTACK is the default and is what the
+     certified figures are measured on; ABSOLUT is key Y, opt-in, and is a different car
+     from the windscreen back — the wing deleted for two rear fins, downforce 1,400 kg to
+     150 kg, Cd 0.278 on 1.88 m² of frontal area, and 85 mm more tail. */
+  attack: {
+    dragCd: 0.55, aeroClA: 3.6, aeroDragAdd: 0.45,
+    downforceKg: 1400, lengthMm: 4610, cdLabel: "≈0.55", ceilingKmh: 560,
+    blurb: "Attack — boomerang wing, dive planes, 1,400 kg of downforce, drag-limited",
+  },
+  absolut: {
+    dragCd: 0.278,              // measured; the programme target was 0.28
+    aeroClA: 0.386,             // 150 kg where the Attack makes 1,400 — the same ratio
+    aeroDragAdd: 0.0,           // there is no active element left to trim
+    downforceKg: 150, lengthMm: 4695, cdLabel: "0.278",
+    claimedTopKmh: 531,         // Koenigsegg's ~330 mph claim; no record run has been made
+    blurb: "Absolut — no wing, two rear fins, +85 mm tail, wheel covers, Cd 0.278",
+  }
 };
 
 /* ===== shared context ===== */
@@ -906,6 +937,8 @@ const SPEC = {
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
     e85: false,                    // running E85 biofuel: 1,280 hp becomes 1,600 hp, torque 1,500 Nm
     e85Vis: 0,                     // fuel-map swap glow on the cluster
+    absolut: false,                // Absolut bodywork: wing deleted, fins on, +85 mm tail
+    absolutVis: 0,                 // body-swap glow on the cluster
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -1611,8 +1644,9 @@ const SPEC = {
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Safety ceiling only — the Attack is drag-limited far below this in practice.
-    const govMps = SPEC.topSpeedMps;
+    // Per body. The Attack never gets near its safety number — it is drag-limited around
+    // 425 km/h on E85 — so this only ever bites on the Absolut, at Koenigsegg's own claim.
+    const govMps = (state.absolut ? SPEC.absolut.claimedTopKmh : SPEC.attack.ceilingKmh) * KMH;
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -2560,9 +2594,11 @@ const SPEC = {
       </defs>
       <ellipse cx="500" cy="300" rx="392" ry="20" fill="rgba(0,0,0,0.5)"/>
 
-      <!-- BOOMERANG wing on twin top-mounted central pylons -->
-      <path d="M180,150 L210,102" fill="none" stroke="#20242b" stroke-width="9"/>
-      <path d="M262,146 L262,102" fill="none" stroke="#20242b" stroke-width="9"/>
+      <!-- ATTACK: the boomerang wing on twin top-mounted central pylons -->
+      <g id="kgWingPylons">
+        <path d="M180,150 L210,102" fill="none" stroke="#20242b" stroke-width="9"/>
+        <path d="M262,146 L262,102" fill="none" stroke="#20242b" stroke-width="9"/>
+      </g>
       <g id="rearWingArt">
         <path d="M108,86 Q220,104 336,86 L332,100 Q220,116 112,100 Z" fill="#15181d" stroke="#5c636c"/>
         <path d="M108,86 Q220,104 336,86" fill="none" stroke="rgba(232,106,28,0.75)" stroke-width="3"/>
@@ -2570,6 +2606,31 @@ const SPEC = {
         <rect x="331" y="82" width="7" height="24" rx="2" fill="#101216"/>
       </g>
 
+      <!-- ABSOLUT: the wing is deleted and TWO FINS stand on the rear deck in its place.
+           In side profile you see the near fin's blade end-on and the far one behind it —
+           low, swept back, and doing 150 kg where the wing did 1,400. -->
+      <g id="kgAbsolutFins" style="display:none">
+        <!-- the far fin, behind and slightly inboard -->
+        <path d="M196,190 Q248,146 300,140 L308,156 Q254,164 214,194 Z" fill="#20242b" stroke="#5c636c" stroke-width="1.2"/>
+        <!-- the near fin: a swept carbon blade standing on the deck -->
+        <path d="M152,198 Q210,148 268,142 L278,160 Q216,170 172,202 Z" fill="#31363f" stroke="#8b939d" stroke-width="1.6"/>
+        <path d="M152,198 Q210,148 268,142" fill="none" stroke="#cfd6de" stroke-width="2.6" stroke-linecap="round"/>
+        <path d="M160,192 Q212,154 264,150" fill="none" stroke="rgba(232,106,28,0.9)" stroke-width="2.2" stroke-linecap="round"/>
+        <!-- the base fairings where each fin meets the rear deck -->
+        <path d="M150,198 l30,-4 l4,10 l-32,4 Z" fill="#15181d" stroke="#5c636c" stroke-width="1"/>
+        <path d="M194,190 l28,-4 l4,10 l-30,4 Z" fill="#15181d" stroke="#4a5058" stroke-width="1"/>
+        <text x="206" y="132" font-family="ui-sans-serif" font-size="11" fill="#98a2ad" letter-spacing="3">ABSOLUT</text>
+      </g>
+      <!-- ABSOLUT: 85 mm of extra tail. On this drawing the car spans ~806 units for
+           4,610 mm, so 85 mm is ~15 units — the section aft of the old rear face, with the
+           joint line where the new panel meets the old one. -->
+      <g id="kgAbsolutTail" style="display:none">
+        <path d="M110,254 L110,212 Q102,214 96,220 Q92,228 94,238 L96,252 Z"
+              fill="url(#kgBodyG)" stroke="#4a5058" stroke-width="1.2"/>
+        <path d="M110,212 L110,254" fill="none" stroke="rgba(140,150,162,0.5)" stroke-width="1"/>
+        <path d="M96,222 Q102,216 110,214" fill="none" stroke="rgba(232,106,28,0.55)" stroke-width="2"/>
+        <g stroke="#05070a" stroke-width="2.4"><path d="M98,248 l0,10"/></g>
+      </g>
       <g id="bcBody">
         <!-- carbon lower hull -->
         <path d="M110,254 L110,212 Q140,204 214,200 Q314,194 392,186 Q442,178 478,162
@@ -2625,11 +2686,22 @@ const SPEC = {
         </g></g>
         <circle cx="745" cy="250" r="12" fill="url(#kgHub)"/>
       </g>
+      <!-- ABSOLUT: the removable aerodynamic wheel covers — a smooth disc over the Aircore,
+           which is worth real drag at 500 km/h and is the first thing an owner takes off. -->
+      <g id="kgWheelCovers" style="display:none">
+        <circle cx="255" cy="250" r="47" fill="rgba(232,238,244,0.93)" stroke="#9aa3ad" stroke-width="2"/>
+        <circle cx="255" cy="250" r="47" fill="none" stroke="#e86a1c" stroke-width="1.6"/>
+        <circle cx="255" cy="250" r="14" fill="url(#kgHub)"/>
+        <circle cx="745" cy="250" r="47" fill="rgba(232,238,244,0.93)" stroke="#9aa3ad" stroke-width="2"/>
+        <circle cx="745" cy="250" r="47" fill="none" stroke="#e86a1c" stroke-width="1.6"/>
+        <circle cx="745" cy="250" r="14" fill="url(#kgHub)"/>
+      </g>
     </svg>`;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
+    app.applyBodyArt && app.applyBodyArt();   // whichever body the car is wearing right now
   }
   function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
@@ -2762,6 +2834,58 @@ const SPEC = {
       showToast("Standard petrol map — 1,280 hp @ 7,800.", "Jesko");
     }
   }
+  /* The Jesko Absolut. Not a setting — a different body. Koenigsegg deletes the boomerang
+     wing and fits two fins on the rear deck, which takes downforce from 1,400 kg to 150 kg;
+     re-shapes the front splitter winglets and louvers; adds 85 mm of tail; and offers
+     removable aerodynamic wheel covers. Cd comes out at 0.278 on 1.88 m² — under the 0.28
+     they were aiming for. The engine is untouched, which is why the voice does not change.
+     What you feel is the trade: the car will not hold on to a corner the way the Attack
+     does, and in a straight line nothing else Koenigsegg has built goes near it. */
+  function toggleAbsolut() {
+    const next = !state.absolut;
+    if (Math.abs(state.speedMps) > 5 / 3.6) {
+      showToast("The wing does not come off at speed. Stop the car first.", "Jesko"); audio.click(300); return;
+    }
+    state.absolut = next; setActive("absolutBtn", next);
+    const cfg = next ? SPEC.absolut : SPEC.attack;
+    SPEC.dragCd = cfg.dragCd; SPEC.aeroClA = cfg.aeroClA; SPEC.aeroDragAdd = cfg.aeroDragAdd;
+    applyBodyArt();
+    if (next) {
+      // the wing coming off: bolts backed out, the element lifted clear, the fins seated
+      audio.click(420); setTimeout(() => audio.click(360), 130); setTimeout(() => audio.motor(0.55), 300);
+      audio.chime([523, 698, 880]);
+      showToast("ABSOLUT — wing off, two fins on the deck, 85 mm more tail. Downforce 1,400 kg → 150 kg, Cd 0.278. Koenigsegg's own claim is 531 km/h and nobody has yet run it.", "Jesko");
+      if (state.driveMode !== "race") setMode("race");
+    } else {
+      audio.click(300); setTimeout(() => audio.motor(0.7), 160);
+      showToast("Attack bodywork back on — boomerang wing, dive planes, 1,400 kg of downforce. It will corner again.", "Jesko");
+    }
+  }
+  // the bodywork the car is actually wearing, in the Exterior tab
+  function applyBodyArt() {
+    const on = state.absolut, g = (id) => document.getElementById(id);
+    const h = g("extHeading");
+    if (h) h.textContent = on ? "Exterior — Absolut Aero Package" : "Exterior — Attack Aero Package";
+    // there is no rear wing on an Absolut, so the control that trims one cannot pretend there is
+    const wb = g("wingBtn");
+    if (wb) {
+      wb.textContent = on ? "Deck Fins (fixed)" : "Rear Wing";
+      wb.disabled = on;
+      wb.style.opacity = on ? "0.45" : "";
+      wb.title = on ? "The Absolut has no rear wing — two fixed fins on the rear deck, 150 kg of downforce, nothing to trim."
+                    : "Active rear wing / airbrake";
+    }
+    for (const id of ["rearWingArt", "kgWingPylons"]) { const n = g(id); if (n) n.style.display = on ? "none" : ""; }
+    for (const id of ["kgAbsolutFins", "kgAbsolutTail", "kgWheelCovers"]) { const n = g(id); if (n) n.style.display = on ? "" : "none"; }
+    const ps = g("paintStatus");
+    if (ps) ps.textContent = on
+      ? "Arctic White over carbon, tang-orange accents, ABSOLUT body — no wing, twin deck fins, +85 mm tail, aero wheel covers"
+      : "Arctic White over carbon, tang-orange accents, boomerang wing, Autoskin body";
+    const ds = g("dynStatus");
+    if (ds) ds.textContent = on
+      ? "Absolut: Triplex dampers firm, ESC trail, 150 kg of downforce — the car is set up to go, not to turn"
+      : "Race mode: Triplex dampers firm, ESC trail, boomerang wing hunting downforce";
+  }
   function toggleLights() { state.lights = !state.lights; audio.click(state.lights ? 760 : 520); showToast(state.lights ? "Headlamps on — the beam lights the road." : "Headlamps off."); }
   function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Nose raised for the ramp." : "Nose lowered to ride height."); }
   function armLaunch() {
@@ -2798,7 +2922,8 @@ const SPEC = {
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
     if (state.e85) { state.e85 = false; SPEC.peakPowerW = SPEC.petrol.peakPowerW; SPEC.peakPowerPS = SPEC.petrol.peakPowerPS; SPEC.peakPowerHp = SPEC.petrol.peakPowerHp; SPEC.peakTorqueNm = SPEC.petrol.peakTorqueNm; }
-    setActive("fuelBtn", false);
+    if (state.absolut) { state.absolut = false; SPEC.dragCd = SPEC.attack.dragCd; SPEC.aeroClA = SPEC.attack.aeroClA; SPEC.aeroDragAdd = SPEC.attack.aeroDragAdd; applyBodyArt(); }
+    setActive("fuelBtn", false); setActive("absolutBtn", false);
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2810,7 +2935,7 @@ const SPEC = {
     showToast("Back in the pit lane.", "Jesko");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, toggleAbsolut, applyBodyArt, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
@@ -2865,7 +2990,9 @@ const SPEC = {
     if (has("e85", "biofuel", "flex fuel", "1600", "megacar")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
-    if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
+    if (has("absolut", "no wing", "wing off", "low drag", "531", "330 mph")) { app.toggleAbsolut(); acted = true; }
+    else if (has("attack", "wing on", "put the wing back")) { if (state.absolut) app.toggleAbsolut(); acted = true; }
+    else if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
     if (has("exhaust", "valve", "louder")) { app.toggleExhaust(); acted = true; }
     if (has("door", "dihedral")) { has("open") ? app.toggleDoor("all") : app.closeAllDoors(); acted = true; }
     if (has("harness", "belt")) { app.latchHarness(true); acted = true; }
@@ -2874,7 +3001,7 @@ const SPEC = {
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “switch to E85”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “switch to E85”, “absolut”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
@@ -2912,10 +3039,13 @@ const SPEC = {
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
     if (state.e85) warn.push("E85 MAP · 1,600 hp / 1,500 Nm");
+    if (state.absolut) warn.push("ABSOLUT · Cd 0.278 · 150 kg downforce");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
     if (!state.e85 && speed >= 320) warn.push("petrol map (1,280 hp) — switch to E85 for the full 1,600");
+    if (!state.absolut && speed >= 380) warn.push("Attack aero — the wing is what is holding you here; Y for the Absolut body");
+    if (state.absolut && speed >= 480) warn.push("past 480 km/h — Koenigsegg's claim for this body is 531 and nobody has run it");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -3096,6 +3226,7 @@ const SPEC = {
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
     document.getElementById("fuelBtn").addEventListener("click", () => app.toggleFuel());
+  document.getElementById("absolutBtn").addEventListener("click", () => app.toggleAbsolut());
   }
 
   function bindMedia() {
@@ -3148,7 +3279,8 @@ const SPEC = {
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
-      if (e.code === "KeyZ" && !e.repeat) app.toggleFuel();   // Z = this car's ultimate-speed feature (E85 (1,600 hp))
+      if (e.code === "KeyZ" && !e.repeat) app.toggleFuel();     // Z = the E85 fuel map (1,280 → 1,600 hp)
+      if (e.code === "KeyY" && !e.repeat) app.toggleAbsolut();  // Y = the Absolut bodywork (wing off, Cd 0.278)
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }

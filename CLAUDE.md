@@ -151,7 +151,7 @@ frontTrack, maxAngle }` carries real per-car geometry.
 
 brand/title/colours · `SPEC` + `modeMap` shift points · engine audio osc stack
 + pulses/rev · special feature (Bugatti Speed Key 380→490.5 · Jesko E85 fuel
-1,280→1,600 hp · Speedtail Velocity mode · Tesla Track Package 262→322 &
+1,280→1,600 hp on **Z** and the **Absolut body on Y** · Speedtail Velocity mode · Tesla Track Package 262→322 &
 Drag Strip launch · F80 Boost Optimization/e-turbo) · brand track name + brand
 rival grid · exterior SVG · cockpit SVG · `drawCabinFrame` dashboard (real
 cluster per car) · steering-wheel drawing (roundel/shape; Tesla = yoke) ·
@@ -165,7 +165,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Pagani Huayra BC | 562 kW / 764 PS @ 5,900 | 1,000 Nm @ 2,500–5,600 | 2.8 s | 350 | 7-seq | 1,218 kg (dry) |
 | McLaren Speedtail | 787 kW / 1,070 PS @ 7,000 | 1,150 Nm @ 5,500–6,500 | 3.0 s (0-300 12.8 s) | 403 (Velocity) | 7-DCT | 1,430 kg (dry) |
 | Ferrari F80 | 883 kW / 1,200 cv (900 ICE + 300 e) | 850 Nm @ 5,550 + e-fill | 2.15 s (0-200 5.75) | 350 | 8-DCT | 1,525 kg (dry) |
-| Koenigsegg Jesko | 954 kW / 1,280 hp @ 7,800 (E85: 1,193 kW / 1,600 hp) | 1,000 Nm @ 2,700–6,170 (E85 1,500 @ 5,100) | 2.5 s | drag-limited (Attack aero) | 9-LST | 1,420 kg |
+| Koenigsegg Jesko | 954 kW / 1,280 hp @ 7,800 (E85: 1,193 kW / 1,600 hp) | 1,000 Nm @ 2,700–6,170 (E85 1,500 @ 5,100) | 2.5 s | ~425 drag-limited (Attack) / **531 claimed (Absolut)** | 9-LST | 1,420 kg |
 | Tesla Model S Plaid | 760 kW / 1,020 hp tri-motor | ~1,420 Nm combined | 2.1 s (w/ 1-ft rollout: 0-60 1.99 s) | 262 governed / 322 Track Pack | 1-speed | 2,162 kg |
 | Mercedes-AMG GT Black Series | 537 kW / 730 PS / 720 hp @ 6,900 (flat-plane V8) | 800 Nm @ 2,000–6,000 | 3.2 s | 325 governed | 7-DCT | 1,615 kg |
 | Aston Martin Valkyrie | 853 kW / 1,160 PS combined (1,000 hp V12 @ 10,500 + ~160 hp KERS) | 900 Nm combined | 2.5 s | 350 | 7-seq | 1,030 kg (dry) |
@@ -204,6 +204,21 @@ it the other way: 3,018 → 1,306 PS, 496 → 309 km/h), the DB5's **Vantage spe
 hotter cam: 282 → 325 bhp), the 300 SLR's **Le Mans final drive** (3.11 → 2.76, 290 → 300 km/h)
 and the 21C's **V Max** configuration (wing flat, 1,250 → 1,350 hp, 407 → 452 km/h). Each has
 its own sound and its own on-screen flag in the cluster.
+
+**The Jesko is two cars, on two different keys.** **Z** is the **fuel map** — petrol 1,280 hp,
+E85 1,600 hp / 1,500 Nm — and **Y** is the **body**, which is not a setting but a different car
+from the windscreen back. The **Attack** (default, and what the certified 0-100 = 2.5000 s is
+measured on) carries the boomerang wing on twin pylons and up to 1,400 kg of downforce;
+Koenigsegg publish no top speed for it because in that aero it is genuinely drag-limited —
+**~425 km/h on E85** here. The **Absolut** deletes the wing for **two rear-deck fins**, re-shapes
+the front splitter winglets and louvers, adds **85 mm of tail** and offers removable **aero wheel
+covers**: downforce falls to **150 kg** and Cd comes out at **0.278** on 1.88 m² (the programme was
+aiming at 0.28). Koenigsegg claim **~531 km/h / 330 mph** in ideal conditions and no run has ever
+been made — so 531 is the Absolut's governor and the Attack's ceiling (560) is never reached.
+All of it is real geometry in the exterior SVG (`kgAbsolutFins`, `kgAbsolutTail`,
+`kgWheelCovers`, `kgWingPylons`) rather than a label, the "Rear Wing" control becomes a
+disabled "Deck Fins (fixed)", and `perf-test` certifies **both** bodies — the Attack in its
+drag-limited band and the Absolut on the exact claim.
 
 **Q Branch (Aston Martin DB5 only)** — a `data-view="qbranch"` tab after Exterior with the
 eight pieces of special equipment fitted to chassis DP/216/1 for *Goldfinger* (1964), each on
