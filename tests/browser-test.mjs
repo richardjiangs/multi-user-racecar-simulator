@@ -302,6 +302,39 @@ const check = (label, ok, detail) => {
   check(checked + " titles checked — each quotes its own displacement", bad.length === 0, bad.join(" | "));
 }
 
+/* ---------- nothing in a stage can outrun the stage ----------
+   stageCapMps() clamps the PLAYER to what the place allows — 34 km/h down a washroom
+   corridor, 62 along a marina quay — but updateRivals only ever clamped a rival to its own
+   topMps. Rod left that corridor at 130 and Ivan left the quay at 118, and the gate on both
+   stages is "get to him". Fifteen enemies across seven stages could outrun the player. */
+{
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync(ROOT + "/Aston Martin DB5 simulator.html", "utf8");
+  const bad = [];
+  if (!/const sc = stageCapMps\(\);/.test(src)) bad.push("updateRivals no longer applies the stage cap");
+  if (!/r\.catchable \? 0\.82 : 1/.test(src)) bad.push("a car the stage is about catching is not held under the cap");
+  const caps = {};
+  for (const m of src.matchAll(/id: "(\w+)", to: \d+, cap: (\d+)/g)) caps[m[1]] = +m[2];
+  let stage = null, checked = 0;
+  for (const line of src.split("\n")) {
+    const k = line.match(/^  (\w+): \[$/); if (k) stage = k[1];
+    const e = line.match(/name: "([^"]*)".*top: (\d+).*role: "(\w+)"/);
+    if (!e || !stage || !caps[stage]) continue;
+    if (!["target", "guard", "shooter", "boarder"].includes(e[3])) continue;
+    checked++;
+    // the flag is what makes it fair; without the runtime clamp this would be a hard fail,
+    // so assert the clamp exists (above) AND that a CATCHABLE car is declared as one
+    // only the car the stage is ABOUT must be catchable — on the washroom stage that is Rod,
+    // not the two lemons working him over, who belong at the cap
+    const mustCatch = ["washroom", "ivan", "valet"].includes(stage)
+      && (e[3] === "target" || /tag: "/.test(line));
+    if (mustCatch && !/catchable: true/.test(line))
+      bad.push(stage + ": " + e[1] + " is the car you must reach, but is not marked catchable");
+  }
+  check(checked + " stage enemies — none can outrun the place it is standing in",
+    bad.length === 0, bad.join(" | "));
+}
+
 /* ---------- a brand circuit has to BE that circuit ----------
    Six cars cloned from the Supra never had their brand track re-derived, so six different
    buttons — Bathurst, Norisring, Dunsfold, Goodwood, Tsukuba, SUGO — all loaded FUJI

@@ -31,11 +31,8 @@ const PLAY = (route, seconds) => `(() => {
     if ((id === "sassi" || id === "rainbow" || id === "piazza") && q.shieldTarget < 0.5) a.qFire("shield");
     s.gearMode = s.gearMode === "R" ? "R" : "G";
     // --- TOKYO
-    if (id === "washroom") {
-      const rod = (s.rivals || []).find(r => r.role === "target");
-      if (rod) { rod.distM = Math.min(rod.distM, s.distanceM + 18); }
-      if (q.hook < 1) a.seaFire("hook");
-    }
+    // no teleporting: drive at him and take it when you are actually there
+    if (id === "washroom" && q.hook < 1) a.seaFire("hook");
     if (id === "alley") {
       if (!q.smokeUsed) a.qFire("smoke");
       const foes = (s.rivals || []).filter(r => !r.down && (r.role === "guard" || r.role === "shooter"));
@@ -82,14 +79,10 @@ const PLAY = (route, seconds) => `(() => {
     // --- PORTO CORSA
     if (id === "ivan") {
       const iv = (s.rivals || []).find(r => r.tag === "ivan" && !r.down);
-      if (iv) { iv.distM = s.distanceM + 14; iv.lane = s.laneOffset; }
+      if (iv) s.laneOffset = iv.lane;              // line up on him — but close it yourself
       q.gun = true; q.ammo = 104; q.muzzle = 1;
     }
-    if (id === "valet") {
-      const vh = (s.rivals || []).find(r => r.role === "target" && !r.down);
-      if (vh) vh.distM = s.distanceM + 12;
-      if (q.hook < 1) a.seaFire("hook");
-    }
+    if (id === "valet" && q.hook < 1) a.seaFire("hook");
     if (id === "floor" && q.plate === 0) { q.plateT = 0; a.qFire("plate"); }
     if (id === "meeting") {
       s.keys.KeyW = Math.abs(s.speedMps) * 3.6 < 12; s.keys.Space = Math.abs(s.speedMps) * 3.6 > 20;

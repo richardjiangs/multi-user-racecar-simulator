@@ -1109,7 +1109,7 @@ const TOK_STAGES = [
 ];
 const TOK_ENEMIES = {
   washroom: [
-    { name: "Rod \"Torque\" Redline", body: "#8e1f22", stripe: "#d9dde2", top: 130, latG: 0.7, accel: 4.0, role: "target", at: 150, hp: 99 },
+    { name: "Rod \"Torque\" Redline", body: "#8e1f22", stripe: "#d9dde2", top: 130, latG: 0.7, accel: 4.0, role: "target", at: 48, hp: 99, catchable: true },
     { name: "Grem · AMC Gremlin", body: "#c8641e", stripe: "#4a3524", top: 128, latG: 0.7, accel: 4.2, role: "guard", at: 190, hp: 3 },
   ],
   alley: [
@@ -1343,10 +1343,10 @@ const PC_STAGES = [
 ];
 const PC_ENEMIES = {
   ivan: [
-    { name: "Ivan · ZAZ tow truck", body: "#3f6a55", stripe: "#c9cfd6", top: 118, latG: 0.62, accel: 3.6, role: "guard", at: 96, hp: 3, tag: "ivan" },
+    { name: "Ivan · ZAZ tow truck", body: "#3f6a55", stripe: "#c9cfd6", top: 118, latG: 0.62, accel: 3.6, role: "guard", at: 40, hp: 3, tag: "ivan", catchable: true },
   ],
   valet: [
-    { name: "Victor Hugo · Zaporozhets", body: "#4a4f58", stripe: "#8d5a2b", top: 104, latG: 0.55, accel: 2.9, role: "target", at: 70, tag: "hook" },
+    { name: "Victor Hugo · Zaporozhets", body: "#4a4f58", stripe: "#8d5a2b", top: 104, latG: 0.55, accel: 2.9, role: "target", at: 34, tag: "hook", catchable: true },
   ],
   blown: [
     { name: "Professor Zündapp", body: "#4f7a34", stripe: "#c9cfd6", top: 132, latG: 0.6, accel: 3.4, role: "shooter", at: -34, hp: 2 },
@@ -2155,7 +2155,7 @@ const SPEC = {
       audio.seaAlarm();
       add.forEach((e) => state.rivals.push({
         name: e.name, body: e.body, stripe: e.stripe, topMps: e.top / 3.6, latG: e.latG, accel: e.accel,
-        role: e.role, hp: e.hp, tag: e.tag, distM: state.distanceM + e.at, lane: (Math.random() - 0.5) * 4,
+        role: e.role, hp: e.hp, tag: e.tag, catchable: !!e.catchable, distM: state.distanceM + e.at, lane: (Math.random() - 0.5) * 4,
         speedMps: Math.max(20, Math.abs(state.speedMps)), brake: 0, fireT: 2.2 + Math.random() * 2, boardT: 0,
       }));
     }
@@ -2930,7 +2930,12 @@ const SPEC = {
       const Lb = (v * v) / (2 * 10.5) + 12;
       let cornerV = Infinity;
       for (let d = 6; d <= Lb; d += 7) { const k = Math.abs(curvatureAt(r.distM + d)); if (k > 0.0008) cornerV = Math.min(cornerV, Math.sqrt(r.latG * 9.81 / k)); }
-      const target = Math.min(r.topMps, cornerV);          // real top speed on the straight
+      // A stage cap is what the PLACE allows, so it applies to everyone in it — a lemon
+      // cannot leave a washroom corridor at 130 km/h either. And a car this stage is about
+      // CATCHING is held under the cap, because a dead heat is a stage you cannot finish.
+      const sc = stageCapMps();
+      const capped = sc ? Math.min(r.topMps, sc * (r.catchable ? 0.82 : 1)) : r.topMps;
+      const target = Math.min(capped, cornerV);            // real top speed on the straight
       if (target < v) r.speedMps = Math.max(target, v - 12 * dt);   // brake for the corner
       else r.speedMps = Math.min(target, v + r.accel * dt);         // power out onto the straight
       r.brake = (v - r.speedMps) > 0.04 ? 1 : 0;
