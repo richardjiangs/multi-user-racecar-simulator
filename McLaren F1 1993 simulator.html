@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>McLaren F1 — 3.0 naturally-aspirated V12</title>
+  <title>McLaren F1 (1993) — 6.1 naturally-aspirated BMW V12</title>
   <style>
     :root {
       color-scheme: dark;
@@ -696,7 +696,7 @@
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">GR</div>
+      <div class="pmark">F1</div>
       <h1>F1</h1>
       <p>You climb in over the sill to the seat in the middle, the S70/2 catches through the roof snorkel with a hard induction roar, and there is no assistance of any kind between you and it. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
@@ -809,13 +809,14 @@ const CIRCUITS = {
     ]
   },
   "Goodwood Motor Circuit": {
-    dist: 4563, env: "track", limitKmh: 300, loop: true, widthM: 15, corners: 9,
-    blurb: "the 4.563 km Fuji Speedway beneath Mt. Fuji, Toyota's home circuit",
+    dist: 3809, env: "track", limitKmh: 300, loop: true, widthM: 13, corners: 9,
+    blurb: "the 3.809 km Goodwood Motor Circuit, Sussex — the 1948 layout, never altered",
     bumps: [],
     track: [
-      c(1500, 1, 90, 55, "Turn 1"), c(1900, -1, 70, 65, "Turn 2"), c(2300, 1, 80, 55, "Coca-Cola"),
-      c(2700, -1, 60, 80, "100R"), c(3100, 1, 150, 32, "Hairpin"), c(3500, -1, 70, 60, "Netz"),
-      c(3800, 1, 80, 55, "Dunlop"), c(4100, -1, 90, 50, "Panasonic"), c(4350, 1, 110, 42, "Turn 16")
+      c(500, 1, 75, 70, "Madgwick"), c(1150, 1, 30, 130, "Fordwater"),
+      c(1600, 1, 70, 65, "St Mary's"), c(2100, -1, 85, 60, "Lavant"),
+      c(2450, 1, 45, 100, "Lavant Straight kink"), c(3150, -1, 60, 75, "Chicane (in)"),
+      c(3260, 1, 60, 75, "Chicane (out)"), c(3560, 1, 70, 80, "Woodcote")
     ]
   },
   "Prologue — Yanbu": {
@@ -1502,14 +1503,14 @@ const SPEC = {
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
   const MCF1_GRID = [
-    { name: "Nissan Skyline F1 R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
-    { name: "Mazda RX-7 FD3S",               body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 11.0 },
-    { name: "Honda NSX-R (NA2)",             body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
-    { name: "Mitsubishi 3000GT VR-4",        body: "#b03030", stripe: "#15181d", top: 250, latG: 1.16, accel: 10.6 },
-    { name: "McLaren F1 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
-    { name: "Subaru Impreza 22B STi",        body: "#2a54a8", stripe: "#f0d000", top: 240, latG: 1.22, accel: 10.8 },
-    { name: "Nissan 300ZX Twin Turbo (Z32)", body: "#1b1d22", stripe: "#c0c4c8", top: 250, latG: 1.14, accel: 10.4 },
-    { name: "McLaren F1 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
+    { name: "Jaguar XJ220", body: "#5a7f8a", stripe: "#15181d", top: 349, latG: 1.05, accel: 10.4 },
+    { name: "Bugatti EB110 Super Sport", body: "#1b3a6b", stripe: "#c0c4c8", top: 351, latG: 1.12, accel: 11 },
+    { name: "Ferrari F50", body: "#d81e2c", stripe: "#f0d000", top: 325, latG: 1.16, accel: 10.8 },
+    { name: "Porsche 959", body: "#c0c4c8", stripe: "#15181d", top: 317, latG: 1.08, accel: 10 },
+    { name: "Lamborghini Diablo SV", body: "#f0d000", stripe: "#15181d", top: 330, latG: 1.06, accel: 10.5 },
+    { name: "Ferrari F40", body: "#d81e2c", stripe: "#15181d", top: 324, latG: 1.12, accel: 10.6 },
+    { name: "Cizeta-Moroder V16T", body: "#c8102e", stripe: "#c0c4c8", top: 328, latG: 1.04, accel: 10.3 },
+    { name: "Bugatti EB110 GT", body: "#2a54a8", stripe: "#c0c4c8", top: 342, latG: 1.1, accel: 10.7 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }

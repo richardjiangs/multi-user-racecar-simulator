@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Mitsubishi Lancer Evo X FQ-440 — 3.0 turbo inline-four</title>
+  <title>Mitsubishi Lancer Evolution X FQ-440 MR — 2.0 turbo inline-four</title>
   <style>
     :root {
       color-scheme: dark;
@@ -699,7 +699,7 @@
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">GR</div>
+      <div class="pmark">EVO</div>
       <h1>Evo X FQ-440</h1>
       <p>The doors shut with a thin metallic clack, the 4B11T catches on a hard four-cylinder bark, the twin-scroll turbo comes on song past 3,500 and S-AWC drags all four wheels into line. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
@@ -812,13 +812,15 @@ const CIRCUITS = {
     ]
   },
   "Tsukuba Circuit": {
-    dist: 4563, env: "track", limitKmh: 300, loop: true, widthM: 15, corners: 9,
-    blurb: "the 4.563 km Fuji Speedway beneath Mt. Fuji, Toyota's home circuit",
+    dist: 2045, env: "track", limitKmh: 240, loop: true, widthM: 12, corners: 12,
+    blurb: "the 2.045 km Tsukuba Circuit, Ibaraki — Japan's time-attack yardstick",
     bumps: [],
     track: [
-      c(1500, 1, 90, 55, "Turn 1"), c(1900, -1, 70, 65, "Turn 2"), c(2300, 1, 80, 55, "Coca-Cola"),
-      c(2700, -1, 60, 80, "100R"), c(3100, 1, 150, 32, "Hairpin"), c(3500, -1, 70, 60, "Netz"),
-      c(3800, 1, 80, 55, "Dunlop"), c(4100, -1, 90, 50, "Panasonic"), c(4350, 1, 110, 42, "Turn 16")
+      c(420, 1, 95, 45, "First corner"), c(620, 1, 80, 50, "Turn 2"),
+      c(850, -1, 120, 38, "Hairpin"), c(1050, 1, 60, 60, "Turn 4"),
+      c(1250, 1, 70, 55, "Turn 5"), c(1420, -1, 90, 45, "Dunlop"),
+      c(1600, 1, 110, 40, "Turn 8"), c(1780, -1, 65, 55, "Turn 10"),
+      c(1900, 1, 130, 34, "Final hairpin")
     ]
   },
   "Prologue — Yanbu": {
@@ -1503,14 +1505,14 @@ const SPEC = {
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
   const EVO_GRID = [
-    { name: "Nissan Skyline GT-R R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
-    { name: "Mazda RX-7 FD3S",               body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 11.0 },
-    { name: "Honda NSX-R (NA2)",             body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
-    { name: "Mitsubishi 3000GT VR-4",        body: "#b03030", stripe: "#15181d", top: 250, latG: 1.16, accel: 10.6 },
-    { name: "Mitsubishi Lancer Evo X FQ-440 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
-    { name: "Subaru Impreza 22B STi",        body: "#2a54a8", stripe: "#f0d000", top: 240, latG: 1.22, accel: 10.8 },
-    { name: "Nissan 300ZX Twin Turbo (Z32)", body: "#1b1d22", stripe: "#c0c4c8", top: 250, latG: 1.14, accel: 10.4 },
-    { name: "Mitsubishi Lancer Evo X FQ-440 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
+    { name: "Subaru Impreza WRX STI (GDB)", body: "#2a54a8", stripe: "#f0d000", top: 250, latG: 1.24, accel: 10.9 },
+    { name: "Nissan Skyline GT-R R34 V-Spec II", body: "#5a6068", stripe: "#0a0c10", top: 250, latG: 1.3, accel: 11.3 },
+    { name: "Honda Civic Type R (FK8)", body: "#c8102e", stripe: "#15181d", top: 272, latG: 1.26, accel: 10.4 },
+    { name: "Toyota GR Yaris", body: "#c0c4c8", stripe: "#c8102e", top: 230, latG: 1.25, accel: 10.6 },
+    { name: "Mazda RX-7 Spirit R (FD3S)", body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 10.8 },
+    { name: "Nissan Silvia S15 Spec-R", body: "#1b3a6b", stripe: "#c0c4c8", top: 235, latG: 1.2, accel: 10 },
+    { name: "Subaru BRZ tS", body: "#2a54a8", stripe: "#c0c4c8", top: 226, latG: 1.22, accel: 9.4 },
+    { name: "Honda NSX-R (NA2)", body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }

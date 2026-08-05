@@ -278,6 +278,82 @@ const check = (label, ok, detail) => {
   check("the Jesko carries both bodies — Z the fuel map, Y the Absolut", gaps.length === 0, gaps.join(" | "));
 }
 
+/* ---------- a <title> that names a displacement must name its OWN ----------
+   Six cars cloned from the Supra kept the 2JZ's "3.0" in the browser tab, on engines of
+   5.2, 4.4, 3.9, 6.1, 2.0 and 3.8 litres — and six wore Toyota's GR badge on the start
+   card, including a 1993 McLaren and a Gordon Murray. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const bad = [];
+  let checked = 0;
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const title = (src.match(/<title>([^<]*)<\/title>/) || [])[1] || "";
+    const litres = (title.match(/(\d\.\d)\s*(?:L\b|litre|naturally|turbo|twin-turbo|sequential|supercharged)/i) || [])[1];
+    if (!litres) continue;                     // most titles name no displacement at all
+    checked++;
+    const cc = +(src.match(/displacementCc: (\d+)/) || [])[1];
+    if (!cc) { bad.push(f + ": title says " + litres + " L but the SPEC has no displacement"); continue; }
+    // a marketing displacement is sometimes rounded and sometimes truncated: the T.33s
+    // 3,994 cc Cosworth is a "3.9" and the M5s 4,395 cc S68 is a "4.4". Accept either.
+    const want = [(Math.round(cc / 100) / 10).toFixed(1), (Math.floor(cc / 100) / 10).toFixed(1)];
+    if (!want.includes(litres)) bad.push(f.replace(/ simulator.html/i, "") + ': title says ' + litres + " L, SPEC says " + want.join(" or "));
+  }
+  check(checked + " titles checked — each quotes its own displacement", bad.length === 0, bad.join(" | "));
+}
+
+/* ---------- a brand circuit has to BE that circuit ----------
+   Six cars cloned from the Supra never had their brand track re-derived, so six different
+   buttons — Bathurst, Norisring, Dunsfold, Goodwood, Tsukuba, SUGO — all loaded FUJI
+   SPEEDWAY's geometry and quoted Fuji's blurb; and six brand rival grids were the Supra's
+   1990s JDM field with the donor's name find-replaced into it, which is where
+   "Gordon Murray T.33 RZ (A80)" and "Nissan Skyline M5 R34 V-Spec" came from. Both are
+   drawn on screen. Assert the blurb names its own circuit, that no two cars ship the same
+   brand geometry, and that no rival is named after the car it is racing. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const SHARED = /monaco|nürburgring|nordschleife|suzuka|silverstone|nardò|prologue|stage |mission/i;
+  const bad = [], geometry = new Map(), fields = new Map();
+  let checked = 0;
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8"), me = f.replace(/ simulator\.html/i, "");
+    // the brand-special circuit is the first CIRCUITS key that is not one of the shared seven
+    const keys = [...src.matchAll(/^  "([^"]+)": \{$/gm)].map((m) => m[1]).filter((k) => !SHARED.test(k));
+    if (!keys.length) continue;
+    const key = keys[0];
+    const blk = (src.match(new RegExp('  "' + key.replace(/[.*+?^${}()|[\]\\]/g, "\\/* ---------- the start card is the first thing anybody reads ----------") + '": \\{[\\s\\S]*?\\n  \\},')) || [""])[0];
+    if (!blk) continue;
+    checked++;
+    // the blurb must not name a DIFFERENT circuit than the key it sits under
+    const blurb = (blk.match(/blurb: "([^"]*)"/) || [])[1] || "";
+    const head = key.split(/[,—(]/)[0].trim().split(" ").filter((w) => w.length > 3);
+    if (head.length && !head.some((w) => blurb.toLowerCase().includes(w.toLowerCase())))
+      bad.push(me + ': "' + key + '" is described as "' + blurb.slice(0, 52) + '…"');
+    // two cars must not ship byte-identical brand geometry under different names
+    const geo = (blk.match(/c\(\d+[^)]*\)/g) || []).join("|");
+    if (geo) {
+      if (geometry.has(geo) && geometry.get(geo).key !== key)
+        bad.push(me + ' ("' + key + '") has the same layout as ' + geometry.get(geo).me + ' ("' + geometry.get(geo).key + '")');
+      else geometry.set(geo, { me, key });
+    }
+    // and two cars must not field the SAME brand grid. A car legitimately races its own
+    // siblings (a Valkyrie meets an AMR Pro, an Agera RS meets an Agera), so the name alone
+    // proves nothing — but six identical fields, differing only by a find-replaced word, is
+    // exactly the fault: "Gordon Murray T.33 RZ (A80)", "Nissan Skyline M5 R34 V-Spec".
+    const grid = (src.match(/const \w+_GRID = \[[\s\S]*?\n  \];/) || [""])[0];
+    const names = [...grid.matchAll(/name: "([^"]*)"/g)].map((m) => m[1]);
+    // normalise away the host's own name so a pure find-replace collapses to one string
+    const sig = names.map((n) => n.split(" ").filter((w) => !me.includes(w)).join(" ")).join("|");
+    if (sig.replace(/\W/g, "").length > 20) {
+      if (fields.has(sig) && fields.get(sig) !== me)
+        bad.push(me + " fields the same grid as " + fields.get(sig));
+      else fields.set(sig, me);
+    }
+  }
+  check(checked + " brand circuits — each its own layout, each its own field",
+    bad.length === 0, bad.slice(0, 8).join(" | "));
+}
+
 /* ---------- the start card is the first thing anybody reads ----------
    Eleven cars were wearing their donor's maker line: the DB5 and the 300 SLR said
    "Ferrari · Maranello", the Yangwang U9 was built in Croatia, and six cars cloned from the

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>BMW M5 — 3.0 twin-turbo V8</title>
+  <title>BMW M5 (G90) — 4.4 twin-turbo V8 hybrid</title>
   <style>
     :root {
       color-scheme: dark;
@@ -696,7 +696,7 @@
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">GR</div>
+      <div class="pmark">M</div>
       <h1>M5</h1>
       <p>It pulls away in silence on the e-motor, then the S68 wakes underneath with a deep hot-V boom and two tonnes of saloon starts moving like something much smaller. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
@@ -809,13 +809,13 @@ const CIRCUITS = {
     ]
   },
   "Norisring": {
-    dist: 4563, env: "track", limitKmh: 300, loop: true, widthM: 15, corners: 9,
-    blurb: "the 4.563 km Fuji Speedway beneath Mt. Fuji, Toyota's home circuit",
+    dist: 2300, env: "track", limitKmh: 280, loop: true, widthM: 12, corners: 8,
+    blurb: "the 2.300 km Norisring, Nuremberg — unchanged since 1972, two hairpins and the Schöller-S",
     bumps: [],
     track: [
-      c(1500, 1, 90, 55, "Turn 1"), c(1900, -1, 70, 65, "Turn 2"), c(2300, 1, 80, 55, "Coca-Cola"),
-      c(2700, -1, 60, 80, "100R"), c(3100, 1, 150, 32, "Hairpin"), c(3500, -1, 70, 60, "Netz"),
-      c(3800, 1, 80, 55, "Dunlop"), c(4100, -1, 90, 50, "Panasonic"), c(4350, 1, 110, 42, "Turn 16")
+      c(560, -1, 175, 26, "Grundigkehre"), c(980, 1, 40, 80, "Left sweeper"),
+      c(1320, 1, 55, 45, "Schöller-S (in)"), c(1420, -1, 55, 45, "Schöller-S (out)"),
+      c(1900, -1, 170, 28, "Dutzendteichkehre"), c(2140, 1, 35, 70, "Onto the Steintribüne straight")
     ]
   },
   "Prologue — Yanbu": {
@@ -1504,14 +1504,14 @@ const SPEC = {
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
   const M5_GRID = [
-    { name: "Nissan Skyline M5 R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
-    { name: "Mazda RX-7 FD3S",               body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 11.0 },
-    { name: "Honda NSX-R (NA2)",             body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
-    { name: "Mitsubishi 3000GT VR-4",        body: "#b03030", stripe: "#15181d", top: 250, latG: 1.16, accel: 10.6 },
-    { name: "BMW M5 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
-    { name: "Subaru Impreza 22B STi",        body: "#2a54a8", stripe: "#f0d000", top: 240, latG: 1.22, accel: 10.8 },
-    { name: "Nissan 300ZX Twin Turbo (Z32)", body: "#1b1d22", stripe: "#c0c4c8", top: 250, latG: 1.14, accel: 10.4 },
-    { name: "BMW M5 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
+    { name: "Mercedes-AMG E63 S", body: "#1b1d22", stripe: "#c0c4c8", top: 300, latG: 1.06, accel: 10.4 },
+    { name: "Audi RS6 Avant Performance", body: "#5a6068", stripe: "#c8102e", top: 305, latG: 1.04, accel: 10.2 },
+    { name: "Porsche Panamera Turbo S", body: "#0a1a3a", stripe: "#c8a24a", top: 315, latG: 1.1, accel: 10.6 },
+    { name: "Cadillac CT5-V Blackwing", body: "#7a1020", stripe: "#c0c4c8", top: 322, latG: 1.02, accel: 10.1 },
+    { name: "BMW M3 CS", body: "#c8102e", stripe: "#15181d", top: 302, latG: 1.14, accel: 10.3 },
+    { name: "Alpina B5 GT", body: "#1b3a6b", stripe: "#c8a24a", top: 330, latG: 1.02, accel: 10 },
+    { name: "Audi RS7 Performance", body: "#2a2f36", stripe: "#c8102e", top: 305, latG: 1.03, accel: 10.1 },
+    { name: "Mercedes-AMG GT 63 S 4-Door", body: "#c8ccd2", stripe: "#15181d", top: 315, latG: 1.08, accel: 10.5 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }

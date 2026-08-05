@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Audi R8 — 3.0 naturally-aspirated V10</title>
+  <title>Audi R8 V10 Performance — 5.2 naturally-aspirated V10</title>
   <style>
     :root {
       color-scheme: dark;
@@ -696,7 +696,7 @@
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">GR</div>
+      <div class="pmark">R8</div>
       <h1>R8</h1>
       <p>The V10 fires just behind your head with a hard flat crack, then clears its throat and spins all the way to 8,700 with nothing between you and it but a firewall. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
@@ -809,13 +809,14 @@ const CIRCUITS = {
     ]
   },
   "Mount Panorama, Bathurst": {
-    dist: 4563, env: "track", limitKmh: 300, loop: true, widthM: 15, corners: 9,
-    blurb: "the 4.563 km Fuji Speedway beneath Mt. Fuji, Toyota's home circuit",
+    dist: 6213, env: "track", limitKmh: 300, loop: true, widthM: 13, corners: 23,
+    blurb: "the 6.213 km Mount Panorama, Bathurst — 174 m of elevation, and four Bathurst 12 Hour wins for the R8 LMS",
     bumps: [],
     track: [
-      c(1500, 1, 90, 55, "Turn 1"), c(1900, -1, 70, 65, "Turn 2"), c(2300, 1, 80, 55, "Coca-Cola"),
-      c(2700, -1, 60, 80, "100R"), c(3100, 1, 150, 32, "Hairpin"), c(3500, -1, 70, 60, "Netz"),
-      c(3800, 1, 80, 55, "Dunlop"), c(4100, -1, 90, 50, "Panasonic"), c(4350, 1, 110, 42, "Turn 16")
+      c(300, 1, 130, 45, "Hell Corner"), c(1900, -1, 70, 70, "Griffins Bend"), c(2200, 1, 90, 60, "The Cutting"),
+      c(2700, -1, 60, 80, "Reid Park"), c(3050, 1, 70, 70, "McPhillamy Park"), c(3350, -1, 55, 90, "Skyline"),
+      c(3600, 1, 110, 50, "The Esses"), c(3800, -1, 120, 45, "The Dipper"), c(4050, 1, 140, 40, "Forrest's Elbow"),
+      c(5750, -1, 80, 60, "The Chase"), c(6000, 1, 90, 55, "Murray's Corner")
     ]
   },
   "Prologue — Yanbu": {
@@ -1502,14 +1503,14 @@ const SPEC = {
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
   const R8_GRID = [
-    { name: "Nissan Skyline R8 R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
-    { name: "Mazda RX-7 FD3S",               body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 11.0 },
-    { name: "Honda NSX-R (NA2)",             body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
-    { name: "Mitsubishi 3000GT VR-4",        body: "#b03030", stripe: "#15181d", top: 250, latG: 1.16, accel: 10.6 },
-    { name: "Audi R8 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
-    { name: "Subaru Impreza 22B STi",        body: "#2a54a8", stripe: "#f0d000", top: 240, latG: 1.22, accel: 10.8 },
-    { name: "Nissan 300ZX Twin Turbo (Z32)", body: "#1b1d22", stripe: "#c0c4c8", top: 250, latG: 1.14, accel: 10.4 },
-    { name: "Audi R8 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
+    { name: "Mercedes-AMG GT3", body: "#c8ccd2", stripe: "#0a0c10", top: 300, latG: 1.52, accel: 12.4 },
+    { name: "Porsche 911 GT3 R", body: "#e8e9ec", stripe: "#c8102e", top: 296, latG: 1.54, accel: 12.2 },
+    { name: "BMW M6 GT3", body: "#1b3a6b", stripe: "#c8102e", top: 298, latG: 1.5, accel: 12.1 },
+    { name: "Ferrari 488 GT3", body: "#d81e2c", stripe: "#f0d000", top: 300, latG: 1.53, accel: 12.5 },
+    { name: "Lamborghini Huracán GT3", body: "#c8d400", stripe: "#15181d", top: 299, latG: 1.53, accel: 12.3 },
+    { name: "Aston Martin Vantage GT3", body: "#0a6a52", stripe: "#d4c07a", top: 297, latG: 1.51, accel: 12 },
+    { name: "McLaren 720S GT3", body: "#f07a00", stripe: "#15181d", top: 302, latG: 1.52, accel: 12.4 },
+    { name: "Nissan GT-R Nismo GT3", body: "#c0c4c8", stripe: "#c8102e", top: 295, latG: 1.49, accel: 11.9 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
