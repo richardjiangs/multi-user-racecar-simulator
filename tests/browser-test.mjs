@@ -335,6 +335,33 @@ const check = (label, ok, detail) => {
     bad.length === 0, bad.join(" | "));
 }
 
+/* ---------- the co-pilot knows its own circuit ----------
+   The voice map's fifth entry is the BRAND slot. On seven clones it was never re-derived,
+   so "take me to Sebring" did nothing on a Corvette and the Venom F5 answered to "gotland" —
+   Koenigsegg's home, and not a circuit either car has. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const SHARED = /monaco|nürburgring|nordschleife|suzuka|silverstone|nardò|prologue|stage |mission/i;
+  const bad = [];
+  let checked = 0;
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const keys = [...src.matchAll(/^  "([^"]+)": \{$/gm)].map((m) => m[1]).filter((k) => !SHARED.test(k));
+    const map = (src.match(/const map = \[.*?\];/) || [""])[0];
+    if (!keys.length || !map) continue;
+    const entries = map.match(/\["[^"]+", \[[^\]]*\]\]/g) || [];
+    if (entries.length < 5) continue;
+    checked++;
+    const named = (entries[4].match(/^\["([^"]+)"/) || [])[1];
+    // whatever the co-pilot offers must be a circuit this car actually has
+    if (!src.includes('  "' + named + '": {'))
+      bad.push(f.replace(/ simulator.html/i, "") + ' offers "' + named + '", which it does not have');
+    else if (named !== keys[0])
+      bad.push(f.replace(/ simulator.html/i, "") + ' offers "' + named + '" instead of "' + keys[0] + '"');
+  }
+  check(checked + " co-pilots — each offers the brand circuit its own car has", bad.length === 0, bad.slice(0, 6).join(" | "));
+}
+
 /* ---------- a brand circuit has to BE that circuit ----------
    Six cars cloned from the Supra never had their brand track re-derived, so six different
    buttons — Bathurst, Norisring, Dunsfold, Goodwood, Tsukuba, SUGO — all loaded FUJI

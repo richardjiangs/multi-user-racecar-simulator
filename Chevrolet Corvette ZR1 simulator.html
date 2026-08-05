@@ -2813,7 +2813,7 @@ drawCluster(w, h, dashY, sway);
     if (/^(hi|hello|hey|hej)/.test(text)) { reply("Hej! Which circuit?"); return; }
     if (has("thank", "tack")) { reply("Varsågod."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Gotland Ring", ["gotland", "gotland ring", "sweden", "ängelholm"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Sebring International Raceway", ["sebring", "florida", "12 hours", "corvette"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
