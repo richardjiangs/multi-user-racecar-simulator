@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Audi R8 V10 Performance — 5.2 naturally-aspirated V10</title>
+  <title>Alfa Romeo 33 Stradale — 3.0 twin-turbo V6</title>
   <style>
     :root {
       color-scheme: dark;
@@ -16,7 +16,7 @@
       --line: rgba(180,194,208,0.14);
       --alu: #c9cfd6;
       --alu-d: #828a93;
-      --teal: #bb0a30;          /* Audi Sport red */
+      --teal: #c8102e;          /* Alfa Romeo rosso */
       --teal-b: #ff5a72;
       --amber: #ff5a49;         /* GR red-hot tachometer */
       --amber-b: #fae9a0;
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Audi R8 driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Alfa Romeo 33 Stradale driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">R8</div>
-        <h1>Audi R8</h1>
-        <p>5.2L NA V10 · 7-speed S tronic · quattro all-wheel drive · magnetic ride · carbon-ceramic brakes.</p>
+        <div class="mark">33</div>
+        <h1>Alfa Romeo 33 Stradale</h1>
+        <p>3.0L twin-turbo V6, mid-mounted · 8-speed DCT · rear-wheel drive · butterfly doors · aluminium body by Touring Superleggera · 33 built.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -398,7 +398,7 @@
           <div class="flap"><b id="flapRear"></b></div>
           <span class="lbl">R</span>
         </div>
-        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the R8 is yours.</div>
+        <div class="warning" id="warning">Engage 1st with the right paddle, doors shut, and the 33 Stradale is yours.</div>
         <div class="small" id="rivalGaps" style="display:none; margin-top:5px; font-variant-numeric:tabular-nums"></div>
       </aside>
 
@@ -411,8 +411,8 @@
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — Mid-Engined V10</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Ara Blue with a carbon sideblade and a fixed carbon spoiler</span></span>
+          <h2>Exterior — Touring Superleggera Aluminium</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">Rosso Villa d'Este over hand-formed aluminium, ducktail lip, no wing</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -433,16 +433,16 @@
           <button data-door="driver">Driver Door</button>
           <button data-door="passenger">Passenger Door</button>
           <button data-door="all">Both Doors</button>
-          <button id="wingBtn" class="active">Rear Wing</button>
+          <button id="wingBtn" class="active" title="A ducktail lip and a shaped floor — the 33 Stradale has no wing at all">Ducktail</button>
           <button id="exhaustBtn2" class="active">Exhaust Flap</button>
           <button id="lightsBtn2" class="active">Headlamps</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>front-hinged doors</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>butterfly doors — they take a piece of the roof</span></div>
           <div class="readout"><b id="rideHeightRead">Standard</b><span>nose-lift system</span></div>
-          <div class="readout"><b>245 / 305</b><span>Michelin Pilot Sport 4S</span></div>
-          <div class="readout"><b id="lightState">Auto</b><span>LED matrix + laser</span></div>
+          <div class="readout"><b>245 / 305</b><span>Michelin Pilot Sport Cup 2</span></div>
+          <div class="readout"><b id="lightState">Auto</b><span>full-LED, round clusters either side of the scudetto</span></div>
         </div>
       </section>
 
@@ -450,14 +450,14 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Audi Virtual Cockpit · monoposto arc · no centre display — the MMI is on the wheel</span>
+          <span class="small" id="cockpitStatus">Two dials under a hooded binnacle, a rotary on the tunnel for Strada/Pista — and no touchscreen anywhere, by design</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
           <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat bolster</span></div>
           <div class="readout"><b id="climateRead">22&deg;C</b><span>cabin climate</span></div>
           <div class="readout"><b id="beltRead">Open</b><span>safety belt</span></div>
-          <div class="readout"><b id="modeReadCab">Sport</b><span>drive select</span></div>
+          <div class="readout"><b id="modeReadCab">Strada</b><span>the tunnel rotary — Strada or Pista, and nothing else</span></div>
         </div>
         <div class="divider"></div>
         <div class="control-grid">
@@ -467,10 +467,10 @@
           <button id="heatBtn">Seat Heat</button>
           <button id="coolBtn">Climate A/C</button>
           <button id="ambientBtn" class="active">Cabin Light</button>
-          <button id="audioBtn">Bang & Olufsen</button>
+          <button id="audioBtn" title="There is no infotainment screen in this car. The audio is a switch, not a menu.">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Shift Lights</button>
-          <button id="startSwitchBtn" class="active">Wheel START</button>
-          <button id="raceAeroBtn" class="race" title="Performance mode — the R8’s dry setting: sharpest quattro split, sport exhaust flaps open, S tronic at its most aggressive">Performance Dry</button>
+          <button id="startSwitchBtn" class="active" title="The red starter is on the wheel, left spoke">Wheel START</button>
+          <button id="pistaBtn" class="race" title="Key Z — PISTA. The 33 Stradale has two modes and no touchscreen: Strada and Pista. Pista opens the exhaust bypass, puts the 8-speed DCT on its fastest map, firms the dampers and stands the electronics down. It adds no power — this engine makes 620 CV in both.">Pista Mode</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,15 +482,15 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — 5.2L Naturally-Aspirated FSI V10</h2>
-          <span class="small" id="engineStatus">5.2L naturally-aspirated FSI V10, dry-sump, 90° · 620 PS / 612 hp @ 8,000 · 580 Nm @ 6,600 · 8,700 rpm · 7-speed S tronic · quattro all-wheel drive · 0–100 in 3.1 s · 331 km/h · 1,595 kg</span>
+          <h2>Engine Bay — 3.0L Twin-Turbo 90° V6</h2>
+          <span class="small" id="engineStatus">3.0L twin-turbo 90° V6, mid-mounted · 620 CV / 612 hp @ 6,750 · 720 Nm @ 2,500–5,500 · 7,000 rpm · 8-speed DCT · rear-wheel drive · 0–100 in 3.0 s · 333 km/h · 1,500 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL" style="display:none"></div>
           <div class="turbo right" id="turboR" style="display:none"></div>
           <div style="position:absolute;left:13%;right:13%;top:12%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebr8e" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecr8e" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="etr8e" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#f0b48a"/><stop offset="0.5" stop-color="#a5431f"/><stop offset="1" stop-color="#3a160a"/></radialGradient><radialGradient id="emr8e" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bff3d6"/><stop offset="0.5" stop-color="#21b872"/><stop offset="1" stop-color="#0c3020"/></radialGradient><radialGradient id="esr8e" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#eef4f8"/><stop offset="0.5" stop-color="#8f9aa4"/><stop offset="1" stop-color="#2a3138"/></radialGradient></defs><rect x="56" y="6" width="72" height="108" rx="11" fill="url(#ebr8e)" stroke="#d24a63" stroke-opacity="0.42"/><rect x="172" y="6" width="72" height="108" rx="11" fill="url(#ebr8e)" stroke="#d24a63" stroke-opacity="0.42"/><rect x="132" y="10" width="36" height="100" rx="6" fill="url(#ebr8e)" stroke="rgba(150,160,170,0.4)"/><circle cx="88" cy="12.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="12.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="12.0" x2="130" y2="12.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="12.0" x2="170" y2="12.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="36.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="36.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="36.0" x2="130" y2="36.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="36.0" x2="170" y2="36.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="60.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="60.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="60.0" x2="130" y2="60.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="60.0" x2="170" y2="60.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="84.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="84.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="84.0" x2="130" y2="84.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="84.0" x2="170" y2="84.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><circle cx="88" cy="108.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="108.0" r="9" fill="url(#ecr8e)" stroke="rgba(190,200,210,0.5)"/><line x1="97" y1="108.0" x2="130" y2="108.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><line x1="203" y1="108.0" x2="170" y2="108.0" stroke="#d24a63" stroke-width="1.8" opacity="0.5"/><circle cx="150" cy="12.0" r="5.6" fill="url(#esr8e)" stroke="rgba(220,232,240,0.55)" stroke-width="0.8"/><circle cx="150" cy="12.0" r="2.1" fill="#0a1014"/><circle cx="150" cy="36.0" r="5.6" fill="url(#esr8e)" stroke="rgba(220,232,240,0.55)" stroke-width="0.8"/><circle cx="150" cy="36.0" r="2.1" fill="#0a1014"/><circle cx="150" cy="60.0" r="5.6" fill="url(#esr8e)" stroke="rgba(220,232,240,0.55)" stroke-width="0.8"/><circle cx="150" cy="60.0" r="2.1" fill="#0a1014"/><circle cx="150" cy="84.0" r="5.6" fill="url(#esr8e)" stroke="rgba(220,232,240,0.55)" stroke-width="0.8"/><circle cx="150" cy="84.0" r="2.1" fill="#0a1014"/><circle cx="150" cy="108.0" r="5.6" fill="url(#esr8e)" stroke="rgba(220,232,240,0.55)" stroke-width="0.8"/><circle cx="150" cy="108.0" r="2.1" fill="#0a1014"/><text x="150" y="5" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#d24a63" letter-spacing="0.5">5.2 NATURALLY-ASPIRATED V10</text><text x="150" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#d24a63">FSI · DRY SUMP · 8,700 rpm</text></svg></div>
-          <div class="emotor" id="airTankArt">NATURALLY ASPIRATED · DRY SUMP · 8,700 rpm</div>
+          <div class="emotor" id="airTankArt">TWIN-TURBO · DRY SUMP · 7,000 rpm</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
@@ -511,8 +511,8 @@
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real R8 V6 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V6 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised naturally-aspirated V10</span>
+          <button id="engineLoadBtn" title="Load a real 33 Stradale V6 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V6 recording</button>
+          <span class="small now" id="engineSoundStatus">Engine voice: synthesised twin-turbo 90° V6</span>
         </div>
       </section>
 
@@ -520,7 +520,7 @@
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
           <h2>Dynamics — 8-Speed ZF · AVS · RWD</h2>
-          <span class="small" id="dynStatus">Performance mode: magnetic ride firm, ESC in Sport, quattro rear-biased</span>
+          <span class="small" id="dynStatus">Strada: dampers supple, bypass shut, the electronics watching. Pista is the only other setting there is.</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -580,7 +580,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: slow car fast</h3><p style="margin:4px 0">387 PS is the honest teacher: the R8 rewards perfect lines because power can't paper over mistakes. This is where the racing line, trail braking and vision lessons pay off most.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: two modes, and no screen</h3><p style="margin:4px 0">The 33 Stradale gives you a rotary on the tunnel with <b>STRADA</b> and <b>PISTA</b> on it, and nothing else — Alfa fitted no touchscreen anywhere in this cabin, which is a decision, not an omission. <b>Key Z</b> is Pista: the exhaust bypass opens, the 8-speed DCT drops its shift from 60 to 45 ms, the dampers go hard and the electronics stand down. It adds <em>no power</em>, because there is no mode in which this engine makes less than 620 CV. What it does is take the filtering away. 720 Nm arrives at 2,500 rpm and stays until 5,500, so a mid-engined rear-drive car with 1,500 kg on it will step out on the throttle long before it runs out of grip — feed it in with the wheel unwinding, exactly as the earlier lessons said.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -600,7 +600,7 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="Mount Panorama, Bathurst">Mount Panorama, Bathurst</button>
+              <button data-circuit="Balocco Proving Ground">Balocco Proving Ground</button>
               <button data-circuit="Prologue — Yanbu">Prologue · Yanbu</button>
               <button data-circuit="Stage 2 — Yanbu to AlUla">S2 · Yanbu→AlUla</button>
               <button data-circuit="Stage 4 — AlUla Marathon">S4 · AlUla marathon</button>
@@ -696,21 +696,21 @@
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">R8</div>
-      <h1>R8</h1>
-      <p>The V10 fires just behind your head with a hard flat crack, then clears its throat and spins all the way to 8,700 with nothing between you and it but a firewall. Drive it yourself, or hand it to the test driver.</p>
+      <div class="pmark">33</div>
+      <h1>33 STRADALE</h1>
+      <p>The butterfly door swings up and takes a piece of the roof with it. The twin-turbo V6 lights just behind your head, hard and compact, and settles under a transparent cover. Two modes on the tunnel, no screen anywhere. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">Audi Sport · Böllinger Höfe, Neckarsulm</div>
+      <div class="ring">Alfa Romeo · body by Carrozzeria Touring Superleggera, Milano · 33 built</div>
     </div>
   </div>
 
   <script type="module">
 /* ===========================================================================
-      AUDI R8 V10 PERFORMANCE (browser naturally-aspirated V10 simulator)
-   Real Web-Audio naturally-aspirated V10, factory-matched physics (0–100 km/h
-   3.1 s; 456 kW / 620 PS / 612 hp; 580 Nm; 8700 rpm limit; 1595 kg;
+      ALFA ROMEO 33 STRADALE (browser twin-turbo V6 simulator)
+   Real Web-Audio twin-turbo 90° V6, factory-matched physics (0–100 km/h
+   3.0 s; 456 kW / 620 CV / 612 hp; 720 Nm; 7000 rpm limit; 1500 kg;
    331 km/h; fixed carbon rear spoiler),
-   a 7-speed S tronic dual-clutch with paddle shifts, and a test driver
+   an 8-speed dual-clutch with paddle shifts, and a test driver
    who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
@@ -808,15 +808,16 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Mount Panorama, Bathurst": {
-    dist: 6213, env: "track", limitKmh: 300, loop: true, widthM: 13, corners: 23,
-    blurb: "the 6.213 km Mount Panorama, Bathurst — 174 m of elevation, and four Bathurst 12 Hour wins for the R8 LMS",
+  "Balocco Proving Ground": {
+    dist: 5400, env: "track", limitKmh: 340, loop: true, widthM: 14, corners: 10,
+    blurb: "the 5.4 km Balocco Proving Ground, Vercelli — Alfa Romeo's own since 1962, and where the 33 Stradale was signed off",
     bumps: [],
     track: [
-      c(300, 1, 130, 45, "Hell Corner"), c(1900, -1, 70, 70, "Griffins Bend"), c(2200, 1, 90, 60, "The Cutting"),
-      c(2700, -1, 60, 80, "Reid Park"), c(3050, 1, 70, 70, "McPhillamy Park"), c(3350, -1, 55, 90, "Skyline"),
-      c(3600, 1, 110, 50, "The Esses"), c(3800, -1, 120, 45, "The Dipper"), c(4050, 1, 140, 40, "Forrest's Elbow"),
-      c(5750, -1, 80, 60, "The Chase"), c(6000, 1, 90, 55, "Murray's Corner")
+      c(560, 1, 80, 65, "Curva 1"), c(1100, -1, 60, 85, "Rettilineo kink"),
+      c(1620, 1, 120, 45, "Tornante"), c(2050, -1, 45, 110, "Curvone"),
+      c(2600, 1, 70, 70, "Esse (in)"), c(2760, -1, 70, 70, "Esse (out)"),
+      c(3300, 1, 90, 55, "Parabolica corta"), c(3900, -1, 55, 95, "Lungo destro"),
+      c(4500, 1, 130, 40, "Tornantino"), c(5000, -1, 65, 80, "Ultima")
     ]
   },
   "Prologue — Yanbu": {
@@ -914,54 +915,55 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT AUDI R8 V10 PERFORMANCE figures =====
-   5.2 L (5,204 cc) FSI naturally-aspirated V10, dry-sumped:
-   456 kW (620 PS / 612 hp); 580 Nm; 8700 rpm rev limit;
-   kerb weight 1595 kg; 7-speed, quattro all-wheel drive.
-   0–100 km/h 3.1 s; top speed 331 km/h; fixed carbon rear spoiler
-   with a mechanical rear differential and magnetic ride. */
-
+/* ===== data: vehicle spec — EXACT Alfa Romeo 33 Stradale (2023) figures =====
+   3.0 L (2,992 cc) twin-turbocharged 90° V6, mid-mounted, dry sump:
+   456 kW (620 CV / 612 hp) @ 6,750 rpm; 720 Nm from 2,500 to 5,500 rpm;
+   0-100 km/h under 3.0 s (Alfa quote "< 3 s"); 333 km/h; 8-speed dual-clutch;
+   rear-wheel drive; kerb weight 1,500 kg. Thirty-three cars, each body hand-formed
+   in aluminium by Carrozzeria Touring Superleggera — the same Milanese house that
+   bodied the 1967 Tipo 33 Stradale this car is named for. Two driving modes, and
+   deliberately no touchscreen anywhere in the cabin. */
 const KMH = 1 / 3.6;            // m/s per km/h
 const MPH = 0.44704;
 const SPEC = {
-  name: "Audi R8",
-  engineLabel: "Audi R8 V10 Performance 5.2 L naturally-aspirated FSI V10",
-  displacementCc: 5204,         // 5.2 FSI V10, 5,204 cc
-  massKg: 1595,                 // R8 V10 Performance quattro kerb weight
-  rotInertia: 1.06,
-  peakPowerW: 456000,           // 456 kW = 620 PS / 612 hp @ 8,000 rpm
+  name: "Alfa Romeo 33 Stradale",
+  engineLabel: "Alfa Romeo 3.0 L twin-turbo 90° V6",
+  displacementCc: 2992,         // 3.0 twin-turbo V6, 2,992 cc
+  massKg: 1500,                 // kerb weight (Alfa Romeo)
+  rotInertia: 1.05,
+  peakPowerW: 456000,           // 456 kW = 620 CV / 612 hp @ 6,750 rpm
   peakPowerPS: 620,
   peakPowerHp: 612,
   peakPowerKw: 456,
-  peakPowerRpm: 8000,
-  peakTorqueNm: 580,            // 580 Nm @ 6,600 rpm
-  torqueLoRpm: 3500,            // the 5.2 FSI already pulls hard from 3,500
-  torqueHiRpm: 7600,
-  idleRpm: 800,
-  redlineRpm: 8700,             // the 5.2 FSI V10 spins to 8,700
-  finalDrive: 3.46,            // S tronic final drive
-  gearRatios: [3.35, 2.19, 1.60, 1.30, 1.12, 1.00, 0.91],           // 7-speed S tronic — 7th puts the V10 near its 8,000 rpm power peak at Vmax
-  reverseRatio: 2.90,
-  wheelRadiusM: 0.346,         // 305/30 R20 rear
-  dragCd: 0.36,                 // mid-engined coupe with the fixed wing
-  frontalAreaM2: 2.02,
-  rollingResistance: 0.013,
+  peakPowerRpm: 6750,
+  peakTorqueNm: 720,            // 720 Nm, flat from 2,500 to 5,500
+  torqueLoRpm: 2500,
+  torqueHiRpm: 5500,
+  idleRpm: 850,
+  redlineRpm: 7000,             // the twin-turbo V6 signs off at 7,000
+  finalDrive: 3.55,
+  gearRatios: [3.20, 2.15, 1.62, 1.28, 1.05, 0.89, 0.76, 0.66],      // 8-speed DCT; 8th reaches 333 km/h near the 6,750 power peak
+  reverseRatio: 2.95,
+  wheelRadiusM: 0.348,          // 305/30 R21 rear
+  dragCd: 0.34,                 // Touring's body is shaped for beauty first, and it shows
+  frontalAreaM2: 1.94,
+  rollingResistance: 0.012,
   airDensity: 1.225,
   drivelineEff: 0.90,
-  tractionCoeff: 1.041337,     // calibrated -> 0–100 km/h = 3.1000 s ±0.0001 (quattro launch; see tests/perf-test.mjs)
-  topSpeedKmh: 331,             // 206 mph (Audi)
-  topSpeedMps: 331 * KMH,
-  topSpeedLimitedKmh: 331,
-  topSpeedLimitedMps: 331 * KMH,
-  topSpeedRecordKmh: 331,
-  topSpeedRecordMps: 331 * KMH,
-  zeroTo100Kmh: 3.1,            // s (Audi)
-  brakeMaxMps2: 12.8694,        // carbon-ceramic; calibrated to 31.0 m 100-0 km/h
-  brakeDist100to0M: 34,         // target 100-0 km/h braking distance
-  shiftTimeS: 0.10,             // ZF 8HP torque-converter automatic
-  launchRpm: 4000,           // S tronic launch control holds ~4,000 rpm
-  aeroClA: 0.22,                // fixed rear wing
-  aeroDragAdd: 0.04             // fixed wing — little variable trim
+  tractionCoeff: 1.050232,      // calibrated -> 0-100 km/h = 3.0000 s ±0.0001 (see tests/perf-test.mjs)
+  topSpeedKmh: 333,             // Alfa Romeo
+  topSpeedMps: 333 * KMH,
+  topSpeedLimitedKmh: 333,
+  topSpeedLimitedMps: 333 * KMH,
+  topSpeedRecordKmh: 333,
+  topSpeedRecordMps: 333 * KMH,
+  zeroTo100Kmh: 3.0,            // s (Alfa Romeo quote "under 3 seconds")
+  brakeMaxMps2: 12.3506,        // carbon-ceramic; calibrated to 32.0 m 100-0 km/h
+  brakeDist100to0M: 32,         // target 100-0 km/h braking distance
+  shiftTimeS: 0.06,             // 8-speed dual-clutch
+  launchRpm: 3600,
+  aeroClA: 0.24,                // a shaped underbody and a small ducktail — no wing at all
+  aeroDragAdd: 0.05
 };
 
 /* ===== shared context ===== */
@@ -986,8 +988,8 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    raceAero: false,               // manually adjustable aero set to Race (maximum downforce)
-    raceAeroVis: 0,                // aero-setting indicator
+    pista: false,               // manually adjustable aero set to Race (maximum downforce)
+    pistaVis: 0,                // aero-setting indicator
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -1033,12 +1035,12 @@ const SPEC = {
     state.toastTimer = 3.0;
   }
 
-  window.R8App = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
+  window.Alfa33App = { canvas, ctx, KMH, MPH, SPEC, state, CIRCUITS, el, clamp, lerp, kmh, approach, showToast };
 }
 
 /* ===== media status helpers ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const studioNowPlaying = document.getElementById("studioNowPlaying");
   const engineSoundStatus = document.getElementById("engineSoundStatus");
   function setNowPlaying(text, live) { if (!studioNowPlaying) return; studioNowPlaying.textContent = text; studioNowPlaying.classList.toggle("live", !!live); }
@@ -1046,9 +1048,9 @@ const SPEC = {
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised naturally-aspirated V10, spool, blow-off, crackle ===== */
+/* ===== audio: synthesised twin-turbo 90° V6, spool, blow-off, crackle ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { SPEC, clamp } = app;
 
   const audio = {
@@ -1073,18 +1075,19 @@ const SPEC = {
       this.synthGain = c.createGain(); this.synthGain.gain.value = 1.0; this.synthGain.connect(this.engFilter);
       this.recGain = c.createGain(); this.recGain.gain.value = 0.0; this.recGain.connect(this.engFilter);
 
-      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
+      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(4.4); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Twin-scroll naturally-aspirated V10 (5.2 FSI): inherently balanced, smooth and creamy with a
-      // hard-edged howl building to the limiter and the turbo whistling underneath
+      // 3.0 twin-turbo 90° V6: two banks of three, and at 90° they do NOT cancel — the
+      // half-order beat between them is what gives this engine its hard, grainy edge, quite
+      // unlike a V10's creamy howl. The turbos add a quarter-order spool and the top end
+      // stops at 7,000, so there is far less high-order content than a high-revving NA car.
       const defs = [
-        { type: "sine",       mul: 0.5,    gain: 0.37, toShaper: false },
-        { type: "sawtooth",   mul: 1,      gain: 0.64, toShaper: true  },
-        { type: "sawtooth",   mul: 1.011,  gain: 0.32, toShaper: true  },   // two banks, slightly out of phase
-        { type: "triangle",   mul: 1.5,    gain: 0.30, toShaper: true  },   // individual throttle bodies: a hard induction honk
-        { type: "sawtooth",   mul: 2,      gain: 0.22, toShaper: true  },
-        { type: "sawtooth",   mul: 3,      gain: 0.21, toShaper: true  },
-        { type: "square",     mul: 5,      gain: 0.10, toShaper: true  },   // the top end at 8,700 rpm
+        { type: "sine",       mul: 0.25,   gain: 0.20, toShaper: false },   // turbo spool, a quarter of firing order
+        { type: "sine",       mul: 0.5,    gain: 0.40, toShaper: false },   // the 90° bank beat
+        { type: "sawtooth",   mul: 1,      gain: 0.68, toShaper: true  },
+        { type: "sawtooth",   mul: 1.017,  gain: 0.36, toShaper: true  },   // the two banks, detuned against each other
+        { type: "square",     mul: 2,      gain: 0.24, toShaper: true  },   // boosted: square, not sawtooth — a flatter, harder second
+        { type: "sawtooth",   mul: 3,      gain: 0.16, toShaper: true  },
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1103,7 +1106,7 @@ const SPEC = {
       };
       this.windNode = mkNoise("lowpass", 520);  this.windGain = this.windNode.g;
       this.roadNode = mkNoise("bandpass", 190, 0.8); this.roadGain = this.roadNode.g;
-      this.turboNode = mkNoise("bandpass", 610, 0.9); this.turboGain = this.turboNode.g;  // intake rush: low, broad and quiet — an NA engine has no whistle
+      this.turboNode = mkNoise("bandpass", 5800, 14); this.turboGain = this.turboNode.g;  // two turbos: the whistle sits high and very narrow, the way the garage does turbos — the SPOOL is the quarter-order oscillator in the stack, not a hiss band
 
       this.musicGain = c.createGain(); this.musicGain.gain.value = 0; this.musicGain.connect(this.master);
       this.ready = true;
@@ -1117,7 +1120,7 @@ const SPEC = {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 5);   // naturally-aspirated V10: 5 firing pulses / rev
+      const firing = Math.max(20, (s.rpm / 60) * 3);   // 90° V6: 3 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
@@ -1183,7 +1186,7 @@ const SPEC = {
       src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
     _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
-    startupFlair() { // V10 catch + rev flare on ignition
+    startupFlair() { // V6 catch + rev flare on ignition
       if (!this.ready) return; const c = this.ctx, t = c.currentTime;
       const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
       o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
@@ -1248,7 +1251,7 @@ const SPEC = {
 
 /* ===== physics: engine, 8-speed auto, active diff, launch, world, test driver ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
   const audio = app.audio;
   const showToast = app.showToast;
@@ -1270,13 +1273,13 @@ const SPEC = {
   }
 
   const modeMap = {
-    wet:   { upRpm: 4860, downRpm: 1920, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
-    sport: { upRpm: 6910, downRpm: 2430, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
-    race:  { upRpm: 8060, downRpm: 2820, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
+    wet:   { upRpm: 3920, downRpm: 1550, throttleRate: 0.0024, tc: 0.78, exhaust: 0.6, damp: 0.45 },
+    sport: { upRpm: 5530, downRpm: 1950, throttleRate: 0.0016, tc: 0.96, exhaust: 0.82, damp: 0.7 },
+    race:  { upRpm: 6510, downRpm: 2270, throttleRate: 0.0009, tc: 1.0,  exhaust: 1.0,  damp: 1.0 }
   };
   function mode() { return modeMap[state.driveMode] || modeMap.sport; }
 
-  /* --- the 7-speed S tronic: auto-shifts for you, but the paddles always win --- */
+  /* --- the 8-speed DCT: auto-shifts for you, but the paddles always win --- */
   function manualShift(dir) {
     if (state.gearMode !== "G") {
       if (dir > 0) { app.setGear("G", 1); return; }
@@ -1341,7 +1344,7 @@ const SPEC = {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
     }
     // (Race Aero raises the downforce coefficient rather than the engine output;
-    // see toggleRaceAero.)
+    // see togglePista.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
@@ -1502,22 +1505,22 @@ const SPEC = {
   ];
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
-  const R8_GRID = [
-    { name: "Mercedes-AMG GT3", body: "#c8ccd2", stripe: "#0a0c10", top: 300, latG: 1.52, accel: 12.4 },
-    { name: "Porsche 911 GT3 R", body: "#e8e9ec", stripe: "#c8102e", top: 296, latG: 1.54, accel: 12.2 },
-    { name: "BMW M6 GT3", body: "#1b3a6b", stripe: "#c8102e", top: 298, latG: 1.5, accel: 12.1 },
-    { name: "Ferrari 488 GT3", body: "#d81e2c", stripe: "#f0d000", top: 300, latG: 1.53, accel: 12.5 },
-    { name: "Lamborghini Huracán GT3", body: "#c8d400", stripe: "#15181d", top: 299, latG: 1.53, accel: 12.3 },
-    { name: "Aston Martin Vantage GT3", body: "#0a6a52", stripe: "#d4c07a", top: 297, latG: 1.51, accel: 12 },
-    { name: "McLaren 720S GT3", body: "#f07a00", stripe: "#15181d", top: 302, latG: 1.52, accel: 12.4 },
-    { name: "Nissan GT-R Nismo GT3", body: "#c0c4c8", stripe: "#c8102e", top: 295, latG: 1.49, accel: 11.9 },
+  const ALFA_GRID = [
+    { name: "Ferrari 296 GTB", body: "#d81e2c", stripe: "#f0d000", top: 330, latG: 1.32, accel: 11.6 },
+    { name: "Maserati MC20 Cielo", body: "#0a2a5a", stripe: "#c0c4c8", top: 324, latG: 1.27, accel: 11.1 },
+    { name: "Lamborghini Huracán Tecnica", body: "#c8d400", stripe: "#15181d", top: 325, latG: 1.3, accel: 11.4 },
+    { name: "Porsche 911 Turbo S (992)", body: "#c0c4c8", stripe: "#15181d", top: 330, latG: 1.34, accel: 12.2 },
+    { name: "McLaren Artura", body: "#f07a00", stripe: "#15181d", top: 330, latG: 1.31, accel: 11.5 },
+    { name: "Aston Martin Vantage", body: "#0a6a52", stripe: "#d4c07a", top: 314, latG: 1.24, accel: 11 },
+    { name: "Alfa Romeo Giulia GTAm", body: "#c8102e", stripe: "#c0c4c8", top: 307, latG: 1.28, accel: 10.2 },
+    { name: "Alfa Romeo 8C Competizione", body: "#7a1020", stripe: "#c8b070", top: 292, latG: 1.12, accel: 9.4 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Mount Panorama, Bathurst") ? R8_GRID : GRID_CARS;
+    const grid = (state.route.active && state.route.name === "Balocco Proving Ground") ? ALFA_GRID : GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1774,7 +1777,7 @@ const SPEC = {
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "R8"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "33 Stradale"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -1843,7 +1846,7 @@ const SPEC = {
 
 /* ===== render: the driving world ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, canvas, ctx, clamp, lerp } = app;
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
@@ -2276,7 +2279,7 @@ const SPEC = {
      Each mirror is a real viewpoint, not a pan: MIRROR.pods gives every pod its own lateral
      mounting on the car (eye, in metres) and its own outward aim (yaw). That is what makes a
      left and a right mirror show DIFFERENT things — a car can be in one and not the other. */
-  const MIRROR = {"style":"centre","frame":"plastic","tint":"#2f353d","flank":null,"label":"","pods":[{"fx":0.5,"fy":0.175,"fw":0.23,"ar":0.3,"eye":0,"yaw":0}]};
+  const MIRROR = {"style":"centre","frame":"carbon","tint":"#232830","flank":null,"label":"","pods":[{"fx":0.5,"fy":0.155,"fw":0.20,"ar":0.28,"eye":0,"yaw":0}]};
   const REAR_OFFS = (function () { const o = [];
     for (let d = -240; d < -90; d += 14) o.push(d);
     for (let d = -90; d < -30; d += 6) o.push(d);
@@ -2513,7 +2516,7 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- R8 digital cluster: the A90's dominant central round tachometer (GR-red
+    // ---- 33 Stradale cluster: two hooded dials, rev counter on the left, and the
     // rev sweep, digital speed in the hub) with turbo BOOST + TEMP readouts either side ----
     drawCluster(w, h, dashY, sway);
     // GR wheel in front of the cluster
@@ -2524,9 +2527,9 @@ const SPEC = {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // ---- Audi R8: the Virtual Cockpit in Performance view — ONE enormous round tachometer
+  // ---- Alfa Romeo 33 Stradale: two dials under a single hood — a big rev counter and a
   // filling the TFT, ringed by a thin power band, with the gear in the boss and small
-  // data blocks tucked either side. Audi's is a single dial, not a pair. ----
+  // speedometer beside it, the way the 1967 car had them. No screen. ----
   function drawCluster(w, h, dashY, sway) {
     const R = Math.min(w, h) * 0.128;
     const cx = w / 2 + sway, cy = dashY + R * 0.42;
@@ -2541,12 +2544,12 @@ const SPEC = {
     r8Block(bx + BW - R * 0.52, cy, R, "g", Math.abs(state.lateralG || 0).toFixed(1));
     r8Tach(cx, cy, BH * 0.44);
   }
-  // the huge Audi tach: 0..9 (x1000), red from 8.7, thin outer power ring, gear in the boss
+  // the Alfa tach: 0..8 (x1000), red from 7.0, thin outer power ring, gear in the boss
   function r8Tach(cx, cy, R) {
-    const rpm = state.rpm, MAX = 9000, redAt = (SPEC.redlineRpm || 8700);
+    const rpm = state.rpm, MAX = 8000, redAt = (SPEC.redlineRpm || 7000);
     const a0 = Math.PI * 0.7, a1 = Math.PI * 2.3;
     ctx.save(); ctx.translate(cx, cy);
-    // outer power ring — how much of the V10 you are using
+    // outer power ring — how much of the V6 you are using
     const pwr = clamp((app.engineTorque(rpm) * (rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1)) / (SPEC.peakPowerW || 456000), 0, 1);
     ctx.strokeStyle = "rgba(255,255,255,0.07)"; ctx.lineWidth = R * 0.08;
     ctx.beginPath(); ctx.arc(0, 0, R * 1.12, a0, a1); ctx.stroke();
@@ -2570,7 +2573,7 @@ const SPEC = {
     ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.06);
     ctx.fillStyle = "rgba(180,192,204,0.9)"; ctx.font = `700 ${Math.round(R * 0.14)}px ui-sans-serif`;
     ctx.fillText(Math.round(Math.abs(app.kmh(state.speedMps))) + " km/h", 0, R * 0.2);
-    if (state.raceAero) { ctx.fillStyle = "#ffd24a"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("PERFORMANCE", 0, -R * 0.62); }
+    if (state.pista) { ctx.fillStyle = "#c8102e"; ctx.font = `700 ${Math.round(R * 0.11)}px ui-sans-serif`; ctx.fillText("PISTA", 0, -R * 0.62); }
     ctx.restore();
   }
   function r8Block(cx, cy, R, label, val) {
@@ -2581,7 +2584,7 @@ const SPEC = {
   }
   // the S-AWC centre display: drive map + live front/rear torque split
   function evoSawc(cx, cy, R) {
-    const tarmac = !!state.raceAero;
+    const tarmac = !!state.pista;
     const w2 = R * 1.28, h2 = R * 1.42, x = cx - w2 / 2, y = cy - h2 / 2;
     ctx.save();
     ctx.fillStyle = "rgba(4,6,9,0.95)"; roundRect(ctx, x, y, w2, h2, R * 0.08); ctx.fill();
@@ -2618,7 +2621,7 @@ const SPEC = {
     ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = R * 0.11;
     [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.88, R * 0.08); ctx.stroke(); });
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.8); ctx.stroke();
-    // the R8's satellite buttons: red engine start left, drive-select right
+    // the Alfa's satellite controls: red engine start left, the Strada/Pista rotary right
     ctx.fillStyle = "#bb0a30"; ctx.beginPath(); ctx.arc(-R * 0.52, R * 0.2, R * 0.1, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "#fff"; ctx.font = `800 ${Math.round(R * 0.06)}px ui-sans-serif`; ctx.fillText("START", -R * 0.52, R * 0.2);
     ctx.fillStyle = "#22272d"; ctx.beginPath(); ctx.arc(R * 0.52, R * 0.2, R * 0.1, 0, Math.PI * 2); ctx.fill();
@@ -2725,90 +2728,124 @@ const SPEC = {
     g.fillStyle = "rgba(238,241,244,0.92)"; g.font = "11px sans-serif"; g.textAlign = "center"; g.fillText(state.route.active ? state.route.name : "Free run", rw / 2, rh - 8);
   }
 
-  /* Audi R8 exterior — side profile (long clamshell bonnet, matrix LED lamps,
+  /* Alfa Romeo 33 Stradale exterior — side profile (a very long nose, the cab set right
+     back, butterfly doors, three round tail lamps a side and no wing at all — Touring
+     Superleggera formed every one of these bodies in aluminium, by hand
      mid-engined coupé: cab-forward, carbon sideblade between door and rear wheel, fixed carbon spoiler) */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Audi R8 V10 Performance side">
+    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Alfa Romeo 33 Stradale side">
       <defs>
-        <linearGradient id="auBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4497e2"/><stop offset="0.52" stop-color="#175a9d"/><stop offset="1" stop-color="#06162a"/></linearGradient>
-        <linearGradient id="auLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#06080a"/></linearGradient>
-        <linearGradient id="auGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadeef"/><stop offset="1" stop-color="#0f1a22"/></linearGradient>
-        <radialGradient id="auHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
-        <filter id="auGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <linearGradient id="auBlade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#31363d"/><stop offset="0.5" stop-color="#13161a"/><stop offset="1" stop-color="#31363d"/></linearGradient><style>
-          .grWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .42s ease;}
+        <linearGradient id="arRedG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e04a48"/><stop offset="0.42" stop-color="#a81422"/><stop offset="1" stop-color="#4a0810"/></linearGradient>
+        <linearGradient id="arLowG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="1" stop-color="#0a0c10"/></linearGradient>
+        <linearGradient id="arGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8d0e4"/><stop offset="1" stop-color="#101820"/></linearGradient>
+        <radialGradient id="arHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f0f3f6"/><stop offset="1" stop-color="#3a4048"/></radialGradient>
+        <filter id="arExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <style>
+          .arWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,6deg) * -0.30));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:14% 94%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-13deg) translate(-11px,-8px);}
-          #quadExhaustArt ellipse{fill:#9aa2ab;}
-          #quadExhaustArt.hot ellipse{fill:#ff8a3c;filter:url(#auGlow);}
+          /* butterfly doors: up and OUT, taking a piece of the roof with them */
+          #doorArt{transform-box:fill-box;transform-origin:22% 96%;transition:transform .8s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-38deg) translate(-6px,-30px);}
+          #quadExhaustArt circle{fill:#8b929b;}
+          #quadExhaustArt.hot circle{fill:#ff7a3c;filter:url(#arExhGlow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="366" rx="392" ry="15" fill="rgba(0,0,0,0.5)"/>
-      <g id="rearWingArt">
-        <path d="M113.9,195.3 Q188,157.8 285.5,157.6 L287.8,170.6 Q188,170.8 113.9,208.3 Z" fill="url(#auBlade)" stroke="#5b636d" stroke-width="1.3"/>
-        <path d="M117.8,191.9 Q188,158.8 281.6,158.7" fill="none" stroke="rgba(187,10,48,0.85)" stroke-width="2.6"/>
+      <ellipse cx="500" cy="300" rx="386" ry="19" fill="rgba(0,0,0,0.5)"/>
+
+      <g id="arBody">
+        <!-- the long low sill and rear diffuser volume, in carbon -->
+        <path d="M120,250 L120,214 Q168,206 250,202 L470,198 Q560,196 660,192 Q790,186 892,196
+                 Q916,200 912,222 L900,246 Q800,238 660,238 L300,242 Q186,246 152,250 Z"
+              fill="url(#arLowG)" stroke="#3e444c" stroke-width="1.4"/>
+
+        <!-- the body: a very long nose falling away from a cab set right back -->
+        <path d="M148,214 Q160,182 214,168 Q276,152 340,146 L432,140
+                 Q470,112 540,102 L636,100 Q706,106 744,132
+                 Q800,146 856,166 Q892,178 900,196
+                 Q800,182 660,178 L300,190 Q196,198 148,214 Z"
+              fill="url(#arRedG)" stroke="rgba(240,180,180,0.35)" stroke-width="1"/>
+
+        <!-- the wraparound glasshouse, cut off sharply at the rear pillar -->
+        <path d="M452,140 Q486,110 546,104 L632,102 Q694,110 730,132 Q590,124 452,140 Z"
+              fill="url(#arGlassG)" stroke="#7c858e" stroke-width="1.4"/>
+        <!-- the flying buttress running back from the roof to the tail -->
+        <path d="M452,140 Q414,158 372,176 L336,186 Q396,164 452,140 Z" fill="#7a1018" stroke="rgba(240,180,180,0.3)"/>
+
+        <!-- BUTTERFLY DOOR: the cut takes a section of roof, which is what makes it a butterfly -->
+        <g id="doorArt">
+          <path d="M462,138 Q510,112 566,106 L586,106 L590,196 L466,200 Z"
+                fill="rgba(224,120,120,0.26)" stroke="#8c959e" stroke-width="1.4"/>
+          <path d="M478,132 Q524,116 578,112" fill="none" stroke="rgba(240,220,220,0.45)" stroke-width="2"/>
+          <circle cx="574" cy="176" r="3.4" fill="#c8ccd2"/>
+        </g>
+
+        <!-- the side scoop feeding the V6 -->
+        <path d="M368,186 Q414,176 452,178 L444,206 L370,208 Z" fill="#06080b" stroke="rgba(232,180,60,0.28)"/>
+
+        <!-- transparent engine cover over the mid-mounted V6, with the louvre blades -->
+        <path d="M236,178 Q290,168 344,164 L338,190 Q286,194 240,200 Z" fill="rgba(150,180,205,0.28)" stroke="#6f7880" stroke-width="1.2"/>
+        <g stroke="rgba(20,24,30,0.55)" stroke-width="2.6">
+          <path d="M248,182 l86,-8"/><path d="M252,190 l84,-8"/><path d="M256,197 l82,-8"/>
+        </g>
+
+        <!-- SCUDETTO: the Alfa triangle, low in the nose between two round-lamp clusters -->
+        <path d="M884,190 L900,178 L906,206 L886,212 Z" fill="#0a0c10" stroke="#c8ccd2" stroke-width="1.6"/>
+        <path d="M888,192 L898,184 L902,204 L889,208 Z" fill="#15181d"/>
+        <g fill="#e8eef4">
+          <circle cx="866" cy="176" r="5.2"/><circle cx="852" cy="174" r="4"/>
+          <circle cx="866" cy="196" r="3.4" opacity="0.55"/>
+        </g>
+
+        <!-- splitter and the front flap -->
+        <rect x="826" y="242" width="86" height="7" rx="3" fill="#05070a"/>
+        <g id="frontFlapArt"><rect x="792" y="216" width="40" height="6" rx="3" fill="#15181d" stroke="rgba(232,180,60,0.35)"/></g>
+
+        <!-- THREE ROUND TAIL LAMPS a side — the 1967 car's signature, carried over -->
+        <g fill="#d8202a">
+          <circle cx="140" cy="196" r="6.4"/><circle cx="158" cy="194" r="6.4"/><circle cx="176" cy="192" r="6.4"/>
+        </g>
+        <g fill="rgba(255,150,140,0.55)">
+          <circle cx="140" cy="196" r="2.6"/><circle cx="158" cy="194" r="2.6"/><circle cx="176" cy="192" r="2.6"/>
+        </g>
+
+        <!-- twin round exhausts, high and central, and the diffuser strakes under them -->
+        <g id="quadExhaustArt">
+          <circle cx="196" cy="222" r="7.4"/><circle cx="216" cy="221" r="7.4"/>
+        </g>
+        <g stroke="#05070a" stroke-width="3">
+          <path d="M132,244 l0,12"/><path d="M154,244 l0,12"/><path d="M176,243 l0,12"/><path d="M198,243 l0,12"/>
+        </g>
+
+        <!-- there is no wing on this car: a ducktail lip, and that is all -->
+        <g id="rearWingArt">
+          <path d="M124,206 Q158,196 196,192 L198,200 Q160,204 126,214 Z" fill="#7a1018" stroke="rgba(240,180,180,0.35)"/>
+        </g>
+
+        <!-- 33 STRADALE script and the Quadrifoglio-green Touring shield -->
+        <text x="560" y="216" font-family="ui-serif, Georgia" font-size="13" fill="#e8c9c9" letter-spacing="4">33 STRADALE</text>
+        <rect x="470" y="204" width="15" height="19" rx="3" fill="#f2f4f6" stroke="#0a0c10"/>
+        <path d="M477,206 v15 M471,213 h13" stroke="#c8102e" stroke-width="2.4"/>
       </g>
 
-      <g id="bcBody">
-        <path d="M110,319.6 L110,225.6 110,225.6 Q133.4,199.4 160.7,195.6 Q188,191.8 281.6,190.7 L375.2,189.6 Q445.4,132.8 472.7,131.2 Q500,129.5 550.7,129.5 Q601.4,129.5 628.7,134.4 Q656,139.3 695,171.6 L734,203.8 Q812,213.6 839.3,220.7 Q866.6,227.8 878.3,242 L890,256.2 L890,319.6 L802.6,319.6 A69.1 96.2 0 0 0 664.4,319.6 L335.6,319.6 A69.1 96.2 0 0 0 197.4,319.6 L110,319.6 Z" fill="url(#auBody)" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
-        <path d="M394.7,192.8 Q461,139.3 486.4,137.7 Q511.7,136 550.7,136 Q589.7,136 617,140.4 Q644.3,144.8 679.4,173.8 L714.5,202.7 Z" fill="url(#auGlass)" stroke="#7a838c" stroke-width="1.4"/>
-        <path d="M461,136.7 Q550.7,129.9 644.3,142.1" fill="none" stroke="#0b0d10" stroke-width="10" stroke-linecap="round"/><path d="M327.6,317.6 L672.4,314.6 L668.4,332.6 L331.6,335.6 Z" fill="url(#auLow)" stroke="#454b52" stroke-width="1.2"/>
-        <!-- THE SIDEBLADE: a separate panel between the door and the rear wheel -->
-        <path d="M344,193.9 L392.4,179.7 L395.5,260.6 Q367.4,266.1 340.1,261.7 Z" fill="url(#auBlade)" stroke="#8b949d" stroke-width="1.9"/>
-        <path d="M353.4,216.9 Q375.2,216.9 390.8,224.5" fill="none" stroke="rgba(187,10,48,0.6)" stroke-width="2.2"/>
-        <!-- side intake AHEAD of the blade, feeding the V10 -->
-        <g fill="#07090c" stroke="#7c848c" stroke-width="1.1"><rect x="410.3" y="221.3" width="48" height="9" rx="4.5"/><rect x="410.3" y="236.6" width="40" height="8" rx="4"/></g>
-        <!-- slatted engine deck behind the cabin, hung off the deck surface -->
-        <g stroke="#0b0e12" stroke-width="3.4">
-          <path d="M188,199.8 l0,30"/><path d="M219.2,199.4 l0,31"/>
-          <path d="M250.4,199 l0,32"/><path d="M281.6,198.7 l0,33"/>
-          <path d="M312.8,198.3 l0,33"/><path d="M344,197.9 l0,33"/>
-        </g>
-        <!-- single crease along the flanks -->
-        <path d="M125.6,236.6 Q461,228.9 874.4,243.1" fill="none" stroke="rgba(255,255,255,0.17)" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M197.4,319.6 A69.1 96.2 0 0 1 335.6,319.6" fill="none" stroke="rgba(0,0,0,0.32)" stroke-width="4"/><path d="M664.4,319.6 A69.1 96.2 0 0 1 802.6,319.6" fill="none" stroke="rgba(0,0,0,0.32)" stroke-width="4"/>
-        <!-- short bonnet with louvres over the luggage bay -->
-        <g fill="#0d1015" stroke="#6a727a" stroke-width="1"><rect x="769.1" y="218.1" width="46" height="8" rx="4"/><rect x="823.7" y="228.7" width="32" height="7" rx="3.5"/></g>
-        <!-- single-frame nose: low wide mouth, LED blade, carbon splitter -->
-        <path d="M823.7,240.9 q34,-3 46,10" fill="none" stroke="#eef4f8" stroke-width="5.4" stroke-linecap="round"/>
-        <path d="M831.5,255.1 q26,-2 34,6" fill="none" stroke="rgba(255,120,150,0.7)" stroke-width="2.2"/>
-        <path d="M847.1,266.1 L890,258.4 L890,304.3 L843.2,307.6 Z" fill="#0a0e12" stroke="rgba(187,10,48,0.5)" stroke-width="1.2"/>
-        <path d="M753.5,309.8 L886.1,306.5 L882.2,328.3 L749.6,330.5 Z" fill="url(#auBlade)" stroke="#4c545e"/>
-        <g id="frontFlapArt"><rect x="718.4" y="324" width="42" height="7" rx="3.5" fill="#141317" stroke="rgba(187,10,48,0.5)"/></g>
-        <!-- door with the R8's deep cut-out and the blade mirror on a stalk -->
-        <g id="doorArt">
-          <path d="M482.8,192.8 L656,195 L700.5,216.9 L696.6,301 L486.7,303.2 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(150,162,175,0.6)" stroke-width="1.3"/>
-          <path d="M511.7,247.5 Q593.6,242 671.6,249.7" fill="none" stroke="rgba(0,0,0,0.24)" stroke-width="2.2"/>
-          <path d="M704.4,187.4 l22,-8 l0,14 l-22,5 Z" fill="url(#auBlade)"/>
-          <rect x="628.7" y="246.4" width="20" height="5" rx="2.5" fill="#3b4148"/>
-        </g>
-        <!-- slim wraparound tail lamp -->
-        <path d="M114.7,223.4 L170.8,204.9 L170.8,216.9 L114.7,235.5 Z" fill="rgba(187,10,48,0.8)"/>
-        <!-- two big oval tips + diffuser strakes -->
-        <g id="quadExhaustArt"><ellipse cx="141.2" cy="310.9" rx="16" ry="9"/><ellipse cx="188" cy="310.9" rx="16" ry="9"/></g>
-        <!-- decals: R8 V10 script + the four rings -->
-        <text x="500" y="278.1" font-family="ui-sans-serif" font-size="12" fill="#dcebfa" letter-spacing="4.4">R8 V10</text>
-        <g transform="translate(620.9,273.7)"><g fill="none" stroke="rgba(238,246,253,0.88)" stroke-width="1.8"><circle cx="-15" cy="0" r="7"/><circle cx="-5" cy="0" r="7"/><circle cx="5" cy="0" r="7"/><circle cx="15" cy="0" r="7"/></g></g>
-      </g>
+      <!-- wheels: multi-spoke, in the 1967 car's telephone-dial spirit -->
       <g>
-        <circle cx="266.5" cy="286.3" r="61.7" fill="#0a0b0e"/><circle cx="266.5" cy="286.3" r="61.7" fill="none" stroke="#bb0a30" stroke-width="2.2"/>
-        <g class="grWeave"><g transform="translate(266.5,286.3) scale(1.2)">
+        <circle cx="262" cy="250" r="50" fill="#0a0b0e"/><circle cx="262" cy="250" r="50" fill="none" stroke="#c8102e" stroke-width="2"/>
+        <g class="arWeave"><g transform="translate(262,250)">
           ${turbine()}
         </g></g>
-        <circle cx="266.5" cy="286.3" r="13.6" fill="url(#auHub)"/>
+        <circle cx="262" cy="250" r="12" fill="url(#arHub)"/>
       </g>
       <g>
-        <circle cx="733.5" cy="286.3" r="61.7" fill="#0a0b0e"/><circle cx="733.5" cy="286.3" r="61.7" fill="none" stroke="#bb0a30" stroke-width="2.2"/>
-        <g class="grWeave"><g transform="translate(733.5,286.3) scale(1.2)">
+        <circle cx="742" cy="250" r="50" fill="#0a0b0e"/><circle cx="742" cy="250" r="50" fill="none" stroke="#c8102e" stroke-width="2"/>
+        <g class="arWeave"><g transform="translate(742,250)">
           ${turbine()}
         </g></g>
-        <circle cx="733.5" cy="286.3" r="13.6" fill="url(#auHub)"/>
+        <circle cx="742" cy="250" r="12" fill="url(#arHub)"/>
       </g>
     </svg>
-    `;
+  `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
@@ -2816,88 +2853,85 @@ const SPEC = {
   }
   function turbine() { let s = '<circle r="41" fill="#0f1217" stroke="#23282f" stroke-width="4"/>'; for (let i = 0; i < 5; i++) { const c = i * 72 * Math.PI / 180; s += '<path d="M' + (13 * Math.cos(c)).toFixed(1) + ',' + (13 * Math.sin(c)).toFixed(1) + ' L' + (39 * Math.cos(c - 0.28)).toFixed(1) + ',' + (39 * Math.sin(c - 0.28)).toFixed(1) + ' L' + (33 * Math.cos(c)).toFixed(1) + ',' + (33 * Math.sin(c)).toFixed(1) + ' L' + (39 * Math.cos(c + 0.28)).toFixed(1) + ',' + (39 * Math.sin(c + 0.28)).toFixed(1) + ' Z" fill="#3a4149" stroke="#6e7885" stroke-width="0.7"/>'; } return s + '<circle r="41" fill="none" stroke="#767f8c" stroke-width="1.2"/>'; }
 
-  /* Audi R8 cockpit SVG — digital GR cluster, round GR wheel, R8 Command touchscreen */
+  /* Alfa Romeo 33 Stradale cockpit — two hooded dials, a machined rotary on the tunnel
+     with STRADA and PISTA on it, quilted leather, and deliberately no screen anywhere */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Audi R8 V10 Performance cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Alfa Romeo 33 Stradale cockpit">
       <defs>
-        <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#05080d"/></linearGradient>
-        <linearGradient id="auSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f36"/><stop offset="1" stop-color="#0b0e12"/></linearGradient>
-        <linearGradient id="auArc" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6d7783"/><stop offset="0.5" stop-color="#cdd6df"/><stop offset="1" stop-color="#6d7783"/></linearGradient></defs>
-      <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.10" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
+        <linearGradient id="arDashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2c2126"/><stop offset="1" stop-color="#100b0e"/></linearGradient>
+        <linearGradient id="arHideG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d1520"/><stop offset="1" stop-color="#33070d"/></linearGradient>
+        <radialGradient id="arDialG" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#20252c"/><stop offset="1" stop-color="#080a0d"/></radialGradient>
+      </defs>
+      <rect x="0" y="0" width="1000" height="360" fill="#0a0b0e"/>
 
-      <!-- the MONOPOSTO arc: a band of trim that wraps the DRIVER only -->
-      <path d="M132,214 Q120,96 262,58 Q404,26 500,86 L494,104 Q404,52 276,84 Q152,116 158,214 Z"
-            fill="none" stroke="url(#auArc)" stroke-width="7" opacity="0.85"/>
-      <!-- flat dash across the passenger side: no screen, just a vent and a grab strip -->
-      <path d="M540,88 Q740,72 900,92 L900,112 Q740,92 540,108 Z" fill="#0d1015" stroke="#2b3138" stroke-width="1.3"/>
-      <g fill="#12161b" stroke="#3a4149"><rect x="700" y="128" width="120" height="18" rx="9"/></g>
-      <g stroke="#4a525b" stroke-width="2"><path d="M712,132 l0,10"/><path d="M732,132 l0,10"/><path d="M752,132 l0,10"/><path d="M772,132 l0,10"/><path d="M792,132 l0,10"/></g>
-      <text x="760" y="164" text-anchor="middle" font-size="7" fill="#5b6670" letter-spacing="1.4">AIR VENT · MMI LIVES ON THE WHEEL</text>
+      <!-- the windscreen, and the road through it -->
+      <path d="M120,20 L880,20 L840,132 L160,132 Z" fill="#0d1520" stroke="#3a424c" stroke-width="2"/>
+      <path d="M160,132 L840,132 L820,120 L180,120 Z" fill="rgba(140,180,210,0.12)"/>
 
-      <!-- Virtual Cockpit: ONE 12.3in screen in front of the driver -->
-      <g transform="translate(300,138)">
-        <rect x="-124" y="-46" width="248" height="92" rx="10" fill="url(#screenG)" stroke="rgba(187,10,48,0.55)" stroke-width="1.8" id="tachArt"/>
-        <!-- one enormous rev dial, as the R8's Performance layout draws it -->
-        <circle cx="0" cy="2" r="40" fill="none" stroke="#151d27" stroke-width="9"/>
-        <path d="M-28,30 A40 40 0 1 1 30,28" fill="none" stroke="#d24a63" stroke-width="9" stroke-linecap="round"/>
-        <text x="0" y="8" text-anchor="middle" font-size="20" font-weight="700" fill="#eef3f9" id="tachGearArt">N</text>
-        <text x="0" y="26" text-anchor="middle" font-size="7" fill="#8d97a2" letter-spacing="1.2">V10 · 8,700</text>
-        <!-- side read-outs, no separate dials -->
-        <text x="-92" y="-16" text-anchor="middle" font-size="8" fill="#94a0ab">km/h</text>
-        <text x="-92" y="14" text-anchor="middle" font-size="7" fill="#6f7c88">quattro</text>
-        <text x="92" y="-16" text-anchor="middle" font-size="8" fill="#94a0ab">OIL</text>
-        <text x="92" y="14" text-anchor="middle" font-size="7" fill="#6f7c88">MMI</text>
+      <!-- the dash: one long leather-topped roll, no screen cut into it anywhere -->
+      <path d="M120,132 L880,132 L900,236 L100,236 Z" fill="url(#arDashG)" stroke="#3a3038" stroke-width="1.6"/>
+      <path d="M120,132 L880,132 L884,152 L116,152 Z" fill="url(#arHideG)"/>
+      <text x="500" y="147" text-anchor="middle" font-size="9" fill="rgba(240,210,210,0.55)" letter-spacing="5">33 STRADALE</text>
+
+      <!-- the binnacle: ONE hood over TWO dials, the way the 1967 car had them -->
+      <path d="M300,150 Q380,134 470,134 Q560,134 640,150 L640,224 L300,224 Z" fill="#15181d" stroke="#4a4048" stroke-width="1.6"/>
+      <g transform="translate(388,186)">
+        <circle r="44" fill="url(#arDialG)" stroke="#5c5058" stroke-width="2"/>
+        <circle r="36" fill="none" stroke="rgba(200,16,46,0.35)" stroke-width="1"/>
+        <text y="-16" text-anchor="middle" font-size="7" fill="#8d97a2" letter-spacing="1.2">giri/min x1000</text>
+        <text y="20" text-anchor="middle" font-size="16" fill="#e8eef4" font-family="ui-serif, Georgia">7</text>
+        <path d="M0,0 L26,-22" stroke="#c8102e" stroke-width="3" stroke-linecap="round"/>
+        <circle r="4" fill="#c8ccd2"/>
+      </g>
+      <g transform="translate(552,186)">
+        <circle r="44" fill="url(#arDialG)" stroke="#5c5058" stroke-width="2"/>
+        <text y="-16" text-anchor="middle" font-size="7" fill="#8d97a2" letter-spacing="1.2">km/h</text>
+        <text y="20" text-anchor="middle" font-size="16" fill="#e8eef4" font-family="ui-serif, Georgia">333</text>
+        <path d="M0,0 L-24,-24" stroke="#e8eef4" stroke-width="2.4" stroke-linecap="round"/>
+        <circle r="4" fill="#c8ccd2"/>
       </g>
 
-      <!-- R8 sport seats, diamond-quilted -->
-      <g transform="translate(178,274)">
-        <path d="M-48,-30 Q-54,-42 -36,-44 L36,-44 Q54,-42 48,-30 L52,86 L-52,86 Z" fill="url(#auSeat)" stroke="#3a424b"/>
-        <g stroke="rgba(187,10,48,0.35)"><path d="M-30,-16 L0,-2 L30,-16 M-30,10 L0,24 L30,10 M-30,36 L0,50 L30,36"/></g>
-      </g>
-      <g transform="translate(838,274)">
-        <path d="M-48,-30 Q-54,-42 -36,-44 L36,-44 Q54,-42 48,-30 L52,86 L-52,86 Z" fill="url(#auSeat)" stroke="#3a424b"/>
-        <g stroke="rgba(187,10,48,0.35)"><path d="M-30,-16 L0,-2 L30,-16 M-30,10 L0,24 L30,10"/></g>
-      </g>
-
-      <!-- console: S tronic lever + Drive Select row -->
-      <g id="shifterArt" transform="translate(506,290)">
-        <path d="M-40,-28 L40,-28 L46,60 L-46,60 Z" fill="#0d1116" stroke="#39414a" stroke-width="1.6"/>
-        <rect x="-14" y="-16" width="28" height="42" rx="9" fill="#12161c" stroke="url(#aluG)" stroke-width="1.4"/>
-        <line x1="0" y1="18" x2="0" y2="-6" stroke="url(#aluG)" stroke-width="7" id="leverArt"/>
-        <circle cx="0" cy="-12" r="9" fill="#1b1f25" stroke="url(#aluG)"/>
-        <g fill="#12161b" stroke="#4a525b"><rect x="-38" y="34" width="22" height="14" rx="3"/><rect x="-10" y="34" width="22" height="14" rx="3"/><rect x="18" y="34" width="22" height="14" rx="3"/></g>
-        <text x="0" y="58" text-anchor="middle" font-size="6.5" fill="#6b7885">DRIVE SELECT</text>
+      <!-- the flat-bottomed wheel, Quadrifoglio on the boss, and paddles behind it -->
+      <g transform="translate(470,250)">
+        <path d="M-86,-24 A88,88 0 1,1 86,-24 L74,26 Q0,52 -74,26 Z" fill="none" stroke="#1b1d22" stroke-width="17"/>
+        <path d="M-74,26 Q0,52 74,26" fill="none" stroke="#1b1d22" stroke-width="17"/>
+        <rect x="-24" y="-16" width="48" height="34" rx="7" fill="#15181d" stroke="#4a4048"/>
+        <rect x="-9" y="-11" width="18" height="24" rx="3" fill="#f2f4f6" stroke="#0a0c10"/>
+        <path d="M0,-9 v20 M-7,1 h14" stroke="#0a5a2a" stroke-width="3"/>
+        <circle cx="-52" cy="-6" r="8" fill="#c8102e" stroke="#f0c8c8" stroke-width="1.4"/>
+        <text x="-52" y="-3" text-anchor="middle" font-size="6" fill="#fff">START</text>
+        <path d="M-104,-40 l-16,-8 l0,26 l16,4 Z" fill="#2b3038" stroke="#6f7880"/>
+        <path d="M104,-40 l16,-8 l0,26 l-16,4 Z" fill="#2b3038" stroke="#6f7880"/>
       </g>
 
-      <!-- flat-bottom wheel with the R8's four SATELLITE buttons on the lower spokes -->
-      <g id="cabinWheelG" transform="translate(300,300)">
-        <circle r="58" fill="none" stroke="#12151b" stroke-width="16"/>
-        <path d="M-40,42 L40,42 L34,58 L-34,58 Z" fill="#0d1015"/>
-        <line x1="0" y1="0" x2="-52" y2="-12" stroke="#191d24" stroke-width="11"/>
-        <line x1="0" y1="0" x2="52" y2="-12" stroke="#191d24" stroke-width="11"/>
-        <line x1="0" y1="0" x2="-24" y2="42" stroke="#191d24" stroke-width="11"/>
-        <line x1="0" y1="0" x2="24" y2="42" stroke="#191d24" stroke-width="11"/>
-        <!-- satellites: START (red), drive select, exhaust, performance.
-             The R8's engine start really is on the wheel, not the console, so the
-             ignition hook lives here and turns with the rim. -->
-        <circle cx="-30" cy="30" r="12" fill="#7a1f1f" stroke="#ff7070" stroke-width="1.6" id="startArt"/>
-        <path d="M-30,24 l0,7" stroke="#ffe0e0" stroke-width="2"/><circle cx="-30" cy="33" r="4" fill="none" stroke="#ffe0e0" stroke-width="1.6"/>
-        <circle cx="30" cy="30" r="12" fill="#0e1116" stroke="#bb0a30" stroke-width="1.8"/>
-        <text x="30" y="34" text-anchor="middle" font-size="8" font-weight="700" fill="#ff7a90">P</text>
-        <circle cx="-46" cy="4" r="9" fill="#0e1116" stroke="#4a525b" stroke-width="1.6"/>
-        <circle cx="46" cy="4" r="9" fill="#0e1116" stroke="#4a525b" stroke-width="1.6"/>
-        <path d="M-74,-12 L-52,-19 L-52,-1 L-74,6 Z" fill="url(#aluG)"/>
-        <path d="M74,-12 L52,-19 L52,-1 L74,6 Z" fill="url(#aluG)"/>
-        <circle r="15" fill="#0d1015" stroke="#20252c" stroke-width="4"/>
-        <g fill="none" stroke="#e6eef6" stroke-width="1.3"><circle cx="-7.5" cy="0" r="3.6"/><circle cx="-2.5" cy="0" r="3.6"/><circle cx="2.5" cy="0" r="3.6"/><circle cx="7.5" cy="0" r="3.6"/></g>
+      <!-- the tunnel: a machined rotary with two positions on it, and nothing else -->
+      <path d="M418,236 L582,236 L604,340 L396,340 Z" fill="#181419" stroke="#3a3038" stroke-width="1.6"/>
+      <circle cx="500" cy="282" r="27" fill="#2a2f36" stroke="#8d949c" stroke-width="2.4"/>
+      <circle cx="500" cy="282" r="19" fill="#15181d" stroke="#6f7880"/>
+      <path d="M500,282 L500,264" stroke="#c8102e" stroke-width="3.4" stroke-linecap="round"/>
+      <text x="452" y="272" text-anchor="middle" font-size="8" fill="#c8ccd2" letter-spacing="1">STRADA</text>
+      <text x="552" y="272" text-anchor="middle" font-size="8" fill="#c8102e" letter-spacing="1">PISTA</text>
+      <text x="500" y="326" text-anchor="middle" font-size="7.5" fill="#6f7c88" letter-spacing="2">NESSUNO SCHERMO</text>
+
+      <!-- two seats, quilted, with the harness slots cut through them -->
+      <g fill="#4a1018" stroke="#7a2028" stroke-width="1.4">
+        <path d="M170,244 q-16,-84 22,-96 l60,0 q34,14 20,96 Z"/>
+        <path d="M760,244 q16,-84 -22,-96 l-60,0 q-34,14 -20,96 Z"/>
       </g>
+      <g stroke="rgba(240,200,200,0.22)" stroke-width="1">
+        <path d="M186,168 l70,0 M184,190 l74,0 M182,212 l78,0"/>
+        <path d="M744,168 l-70,0 M746,190 l-74,0 M748,212 l-78,0"/>
+      </g>
+      <g fill="#0a0c10"><rect x="196" y="150" width="10" height="20" rx="3"/><rect x="220" y="150" width="10" height="20" rx="3"/>
+        <rect x="724" y="150" width="10" height="20" rx="3"/><rect x="748" y="150" width="10" height="20" rx="3"/></g>
+
+      <!-- the butterfly door cut, which takes a section of roof with it -->
+      <path d="M100,236 L120,132 L60,124 L36,244 Z" fill="#1b1216" stroke="#3a3038" stroke-width="1.4"/>
+      <path d="M900,236 L880,132 L940,124 L964,244 Z" fill="#1b1216" stroke="#3a3038" stroke-width="1.4"/>
     </svg>
-    `;
+  `;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -2906,7 +2940,7 @@ const SPEC = {
 
 /* ===== UI actions ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, el, CIRCUITS, SPEC, clamp, kmh, audio } = app;
   const showToast = app.showToast;
 
@@ -2918,7 +2952,7 @@ const SPEC = {
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors close to drive.", "R8"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Doors close to drive.", "33 Stradale"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, SPEC.gearRatios.length); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2949,7 +2983,7 @@ const SPEC = {
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Track: dampers firm, VSC in Track, exhaust open, diff locked." : m === "sport" ? "Sport: balanced throttle and shifts." : "Comfort: throttle softened, traction protected.", "R8");
+    showToast(m === "race" ? "Pista calibration: dampers hard, bypass open, the electronics stood down." : m === "sport" ? "Strada, wound up: balanced throttle and shifts." : "Strada, wet: throttle softened, traction protected.", "33 Stradale");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
@@ -2958,17 +2992,24 @@ const SPEC = {
     // Sport mode firms the adaptive variable suspension, sharpens throttle and shifts,
   // locks the active differential and trims the fixed spoiler for a little more
   // rear downforce and high-speed stability. It does not change engine output.
-  function toggleRaceAero() {
-    const next = !state.raceAero;
-    state.raceAero = next; setActive("raceAeroBtn", next);
-    SPEC.aeroClA = next ? 0.55 : 0.34;
+  /* STRADA / PISTA. There is no third mode and there is no screen — the rotary on the
+     tunnel is the entire interface. Pista does not raise peak power (620 CV either way);
+     it opens the exhaust bypass, shortens the DCT's shift, firms the dampers and takes the
+     traction control out of the way, and the underbody works harder with the car lower. */
+  function togglePista() {
+    const next = !state.pista;
+    state.pista = next; setActive("pistaBtn", next);
+    SPEC.aeroClA = next ? 0.31 : 0.24;          // lower, and the flat floor works harder
+    SPEC.shiftTimeS = next ? 0.045 : 0.06;      // the DCT's quick map
     if (next) {
       if (state.driveMode !== "race") setMode("race");
-      audio.motor(0.7); audio.chime([392, 523, 659, 784]);
-      showToast("Sport — dampers firm, active diff locked, fixed spoiler trimmed (~55 kg).", "R8");
+      state.exhaustValve = true;
+      audio.motor(0.7); audio.chime([392, 523, 659]);
+      showToast("PISTA. The bypass opens, the box shifts in 45 ms, the dampers go hard and the electronics stand down. Same 620 CV — Alfa never made a mode that adds power.", "33 Stradale");
     } else {
+      SPEC.shiftTimeS = 0.06;
       audio.motor(0.5);
-      showToast("Road setting — dampers supple, diff open, fixed spoiler relaxed.", "R8");
+      showToast("STRADA. Bypass shut, the box relaxes, the dampers breathe. Two modes, and no screen anywhere in this cabin.", "33 Stradale");
     }
   }
 
@@ -2978,7 +3019,7 @@ const SPEC = {
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — build the revs on the brake, then release." : "Launch control off.", "R8");
+    showToast(state.launchArmed ? "Launch control armed — build the revs on the brake, then release." : "Launch control off.", "33 Stradale");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -3003,12 +3044,12 @@ const SPEC = {
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "R8"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "33 Stradale"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
-    if (state.raceAero) { state.raceAero = false; SPEC.aeroClA = 3.2; }
-    setActive("raceAeroBtn", false);
+    if (state.pista) { state.pista = false; SPEC.aeroClA = 0.24; SPEC.shiftTimeS = 0.06; }
+    setActive("pistaBtn", false);
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -3017,15 +3058,15 @@ const SPEC = {
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "R8");
+    showToast("Back in the pit lane.", "33 Stradale");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleRaceAero, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, togglePista, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -3048,7 +3089,7 @@ const SPEC = {
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V10 clears its throat to 3,000."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V10 lit.", "R8"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — the V6 catches behind you.", "33 Stradale"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -3056,7 +3097,7 @@ const SPEC = {
 
 /* ===== Co-Pilot voice ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, el, audio } = app;
   const showToast = app.showToast;
   function processVoice() {
@@ -3066,16 +3107,18 @@ const SPEC = {
     if (/^(hi|hello|hey|hallo)/.test(text)) { reply("Hallo! Which circuit?"); return; }
     if (has("thank", "danke")) { reply("Gern geschehen."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Mount Panorama, Bathurst", ["bathurst", "mount panorama", "panorama", "audi"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Balocco Proving Ground", ["balocco", "alfa", "proving ground", "pista di prova"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("race aero", "aero race", "splitter", "race wing")) { app.toggleRaceAero(); acted = true; }
+    if (has("race aero", "aero race", "splitter", "race wing")) { app.togglePista(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
-    if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
+    if (has("pista", "track mode", "sport mode")) { if (!state.pista) app.togglePista(); acted = true; }
+    else if (has("strada", "road mode")) { if (state.pista) app.togglePista(); acted = true; }
+    else if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
     if (has("exhaust", "valve", "louder")) { app.toggleExhaust(); acted = true; }
     if (has("door", "dihedral")) { has("open") ? app.toggleDoor("all") : app.closeAllDoors(); acted = true; }
     if (has("harness", "belt")) { app.latchHarness(true); acted = true; }
@@ -3091,7 +3134,7 @@ const SPEC = {
 
 /* ===== HUD (per frame) ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, el, SPEC, clamp, lerp, kmh } = app;
   function setActive(id, on) { const n = document.getElementById(id); if (n) n.classList.toggle("active", !!on); }
 
@@ -3121,12 +3164,12 @@ const SPEC = {
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.raceAero) warn.push("RACE AERO · maximum downforce");
+    if (state.pista) warn.push("PISTA · bypass open, 45 ms shifts, electronics down");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
     // 331 km/h is drag-limited, so there is no limiter to warn about — just the ceiling
-    const speedCapKmh = Math.round((state.raceAero ? SPEC.topSpeedRecordMps : SPEC.topSpeedMps) * 3.6);
+    const speedCapKmh = Math.round((state.pista ? SPEC.topSpeedRecordMps : SPEC.topSpeedMps) * 3.6);
     if (speed >= speedCapKmh * 0.98) warn.push(`approaching ${speedCapKmh} km/h`);
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
@@ -3175,7 +3218,7 @@ const SPEC = {
     document.documentElement.style.setProperty("--wheel-rot", `${state.wheelRotation}deg`);
     if (el.quadExhaustArt) el.quadExhaustArt.classList.toggle("hot", state.egtC > 620 && state.exhaustValve);
     state.noseLiftVis = lerp(state.noseLiftVis, state.rideHeight === 1 ? 1 : 0, 0.12);   // hydraulic nose lift
-    state.raceAeroVis = lerp(state.raceAeroVis, state.raceAero ? 1 : 0, 0.1);                          // fuel-map indicator
+    state.pistaVis = lerp(state.pistaVis, state.pista ? 1 : 0, 0.1);                          // fuel-map indicator
     if (el.bcBody) el.bcBody.setAttribute("transform", `translate(0 0) rotate(${(-state.noseLiftVis * 3.4).toFixed(2)} 266.5 286.3)`);
 
     // engine art
@@ -3210,7 +3253,7 @@ const SPEC = {
     setActive("exhaustBtn", state.exhaustValve); setActive("exhaustBtn2", state.exhaustValve); setActive("exhaustBtn3", state.exhaustValve);
     setActive("lightsBtn", state.lights); setActive("lightsBtn2", state.lights);
     setActive("liftBtn", state.rideHeight === 1);
-    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("raceAeroBtn", state.raceAero);
+    setActive("escBtn", state.esc); setActive("launchBtn", state.launchArmed); setActive("pitBtn", state.pitLimiter); setActive("pistaBtn", state.pista);
     setActive("testDriverBtn", state.testDriver);
     setActive("heatBtn", state.heat); setActive("coolBtn", state.cool); setActive("ambientBtn", state.ambient);
     setActive("audioBtn", state.audioCabin); setActive("shifterLightBtn", state.shifterLight); setActive("startSwitchBtn", state.ignition);
@@ -3227,7 +3270,7 @@ const SPEC = {
 
 /* ===== events ===== */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, el, clamp, audio } = app;
   const showToast = app.showToast;
 
@@ -3307,7 +3350,7 @@ const SPEC = {
     document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
-    document.getElementById("raceAeroBtn").addEventListener("click", () => app.toggleRaceAero());
+    document.getElementById("pistaBtn").addEventListener("click", () => app.togglePista());
   }
 
   function bindMedia() {
@@ -3325,7 +3368,7 @@ const SPEC = {
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "R8"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V10 recording loaded — pitched with the revs.", "R8"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V10 works best.", "R8"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "33 Stradale"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V6 recording loaded — pitched with the revs.", "33 Stradale"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V6 works best.", "33 Stradale"); }); });
   }
 
   function setupPedals() {
@@ -3360,7 +3403,7 @@ const SPEC = {
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
-      if (e.code === "KeyZ" && !e.repeat) app.toggleRaceAero();   // Z = this car's ultimate-speed feature (Race Aero)
+      if (e.code === "KeyZ" && !e.repeat) app.togglePista();   // Z = PISTA, the only other mode this car has
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }
@@ -3404,7 +3447,7 @@ const SPEC = {
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "R8"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "33 Stradale"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -3424,7 +3467,7 @@ const SPEC = {
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "R8");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "33 Stradale");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -3443,7 +3486,7 @@ const SPEC = {
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "R8");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "33 Stradale");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3486,7 +3529,7 @@ const SPEC = {
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "R8");
+        showToast("Trackpad steering hold cancelled.", "33 Stradale");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3496,7 +3539,7 @@ const SPEC = {
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "R8");
+          showToast("Trackpad steering off.", "33 Stradale");
         }
       }
     });
@@ -3504,7 +3547,7 @@ const SPEC = {
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V10 lit — dry sump, 8,700 rpm. Pull the right paddle for 1st, or open Circuit for a hot lap.", "R8"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("The V6 lights behind your head. Right paddle for 1st, Z for Pista, or open Circuit for a hot lap.", "33 Stradale"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();
@@ -3517,7 +3560,7 @@ const SPEC = {
    it is exactly the step the verification harness integrates at (tests/perf-test.mjs),
    so what the test proves is literally what the car does. */
 {
-  const app = window.R8App;
+  const app = window.Alfa33App;
   const { state, clamp, audio } = app;
   const FIXED_DT = 1 / 120;         // 120 Hz physics — same step the perf test calibrates at
   let accumulator = 0;

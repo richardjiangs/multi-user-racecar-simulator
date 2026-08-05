@@ -1,6 +1,6 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of forty-seven simulators — each a **single self-contained HTML file** —
+A garage of forty-eight simulators — each a **single self-contained HTML file** —
 thirty-two road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
@@ -193,6 +193,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Aston Martin DB5 | 210 kW / 282 bhp @ 5,500 (4.0 L DOHC straight-six, three SU HD8) — 242 kW / 325 bhp in Vantage spec | 390 Nm @ 3,850 | 7.1 s | 233 (246 Vantage) | ZF 5-manual | 1,466 kg |
 | Mercedes-Benz 300 SLR Uhlenhaut Coupé | 228 kW / 310 PS @ 7,400 (3.0 L M196 desmodromic straight-eight, Bosch direct injection) | 314 Nm @ 5,950 | 6.9 s | 290 (300 on the Le Mans axle) — the fastest road-legal car of 1955 | 5-transaxle | 1,117 kg |
 | Czinger 21C | 932 kW / 1,250 hp combined (2.88 L twin-turbo flat-plane V8 to 11,000 + 2 front e-motors) — 1,007 kW / 1,350 hp as V Max | 1,210 Nm | 1.9 s | 407 (452 V Max) | 7-sequential | 1,250 kg |
+| Alfa Romeo 33 Stradale | 456 kW / 620 CV / 612 hp @ 6,750 (3.0 L twin-turbo 90° V6, mid-mounted) | 720 Nm @ 2,500–5,500 | 3.0 s | 333 | 8-DCT | 1,500 kg |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 

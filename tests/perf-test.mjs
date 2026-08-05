@@ -242,6 +242,12 @@ const CARS = {
     topSpeed: { kmh: 407, minT: 80 },
     brake100: { target: 29, tol: 1.0 },
   },
+  alfa33: {
+    file: "Alfa Romeo 33 Stradale simulator.html", app: "Alfa33App", label: "Alfa Romeo 33 Stradale",
+    marks: { 100: { target: 3.0, tol: 1e-4 } },
+    topSpeed: { kmh: 333, minT: 70 },     // Alfa Romeo
+    brake100: { target: 32, tol: 1.5 },
+  },
   venom: {
     file: "Hennessey Venom F5 simulator.html", app: "VenomApp", label: "Hennessey Venom F5",
     marks: { 100: { target: 2.6, tol: 1e-4 } },
