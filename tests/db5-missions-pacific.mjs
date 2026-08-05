@@ -163,6 +163,29 @@ await run("every stage renders", async (p) => {
   return { ok: new Set(r.painted).size === 10 && !r.painted.includes("?"), msg: r.painted.join(",") };
 });
 
+/* ---- and every stage of every OTHER mission paints too, viewfinder and all ---- */
+await run("all 46 stages render, viewfinder and all", async (p) => {
+  const r = await p.evaluate(() => {
+    const a = window.Db5App, s = a.state, painted = [], threw = [];
+    for (const route of Object.keys(a.STAGE_SETS)) {
+      s.raceGrid = true; a.selectCircuit(route); a.seedRivals();
+      s.gearMode = "G"; s.curGear = 1; s.ignition = true; s.harness = true;
+      for (const st of a.STAGE_SETS[route].stages) {
+        // stand in the middle of the stage, with the camera up, so the viewfinder paints too
+        s.distanceM = (st.from + st.to) / 2; s.speedMps = 12;
+        s.q.cam = 1; s.q.camAim = 0; s.q.camPhase = 0.4; s.q.magnet = true;
+        s.q.radar = true; s.q.gun = true; s.q.plate = 1;
+        try { a.updatePhysics(1 / 120); a.drawWorld(); painted.push(st.id); }
+        catch (e) { threw.push(st.id + ": " + e.message.slice(0, 60)); }
+        s.q.cam = 0;
+      }
+    }
+    return { painted, threw };
+  });
+  return { ok: r.threw.length === 0 && r.painted.length === 46,
+           msg: r.painted.length + " stages painted" + (r.threw.length ? "  THREW " + r.threw.join(" | ") : "") };
+});
+
 await b.close();
 console.log(bad ? `\n${bad} FAILED` : "\nall green");
 process.exit(bad ? 1 : 0);

@@ -199,6 +199,8 @@ const check = (label, ok, detail) => {
     LON_STAGES: ["gears", "street", "pits", "range", "mall"],
     GF_STAGES: ["pass", "tilly", "recce", "yard", "woods", "mirror"],
     NTTD_STAGES: ["sassi", "steps", "piazza", "smoke", "viaduct"],
+    PAR_STAGES: ["boulevard", "quay", "market", "stalls", "corner"],
+    PC_STAGES: ["coast", "ivan", "valet", "floor", "meeting", "blown", "race", "getaway"],
   };
   const bad = [], surfaces = new Set();
   let total = 0;
@@ -214,18 +216,73 @@ const check = (label, ok, detail) => {
     if (n !== ids.length || wh !== ids.length || hn !== ids.length || sf !== ids.length)
       bad.push(name + ": a stage is missing its name/where/hint/surf");
   }
-  check("5 stage missions, " + total + " stages, " + surfaces.size + " distinct surfaces",
-    bad.length === 0 && total === 33 && surfaces.size >= 20, bad.join(" | "));
+  check("7 stage missions, " + total + " stages, " + surfaces.size + " distinct surfaces",
+    bad.length === 0 && total === 46 && surfaces.size >= 30, bad.join(" | "));
+  // a surface a stage names with no renderer behind it is a stage you drive through a void
+  {
+    const noDraw = [...surfaces].filter((sf) => !src.includes('case "' + sf + '":'));
+    check("every surface a stage names is actually drawn", noDraw.length === 0, "no renderer: " + noDraw.join(","));
+  }
+  // Tokyo and London were empty streets: a World Grand Prix with nobody watching it, and a
+  // city centre with no other cars in it.
+  {
+    const gaps = [];
+    const body = (name) => (src.match(new RegExp("function " + name + "\\([\\s\\S]*?\\n  \\}")) || [""])[0];
+    if (!/function crowd\(/.test(src)) gaps.push("no crowd()");
+    if (!/function traffic\(/.test(src)) gaps.push("no traffic()");
+    if (!/crowd\(/.test(body("drawNeon"))) gaps.push("the Tokyo night race has nobody watching it");
+    const city = body("drawCity");
+    if ((city.match(/crowd\(/g) || []).length < 2) gaps.push("London and The Mall are empty");
+    if (!/traffic\(/.test(city)) gaps.push("The Mall has no other cars on it");
+    if (!/traffic\(/.test(body("drawSuspension"))) gaps.push("the Rainbow Bridge is empty");
+    if (!/crowd\(/.test(body("drawPitlane")) && !/roundRect/.test(body("drawPitlane"))) gaps.push("the pit lane has no crew");
+    check("Tokyo and London are populated — crowds behind the barriers, traffic on the roads",
+      gaps.length === 0, gaps.join(" | "));
+  }
   const kit = ["seaHarpoon", "seaMagnet", "seaShutter", "seaRocket", "seaCharge", "seaFoil",
                "seaTorpedo", "seaDive", "seaSonar", "seaBlast", "seaClamp", "seaAlarm"];
   const missing = kit.filter((k) => !new RegExp("\\b" + k + "\\(").test(src));
   check("the mission equipment each has its own synthesised sound", missing.length === 0, "missing: " + missing.join(","));
-  check("no kerbs, racing line, start/finish, armco or ambient traffic on a stage",
+  check("a stage draws its own world — no circuit kerbs, racing line, start/finish or roadside",
     /if \(pal\.env !== "sea"\) drawStartFinishLine\(\)/.test(src)
     && /if \(pal\.env === "sea"\) return;/.test(src)
     && /if \(!onStage\(\)\) \{ drawRoadside/.test(src));
   check("a stage run is one-way — braking cannot drop you back a stage",
     /s\.i < state\.stage\.i\) s = state\.stage/.test(src));
+}
+
+/* ---------- the start card is the first thing anybody reads ----------
+   Eleven cars were wearing their donor's maker line: the DB5 and the 300 SLR said
+   "Ferrari · Maranello", the Yangwang U9 was built in Croatia, and six cars cloned from the
+   Supra — a 1993 McLaren among them — said "Toyota Gazoo Racing". Assert the line names the
+   marque on the badge. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  // the word in the filename that has to appear in the maker line
+  const MARQUE = {
+    "Bugatti": "Bugatti", "Pagani": "Pagani", "McLaren": "McLaren", "Ferrari": "Ferrari",
+    "Koenigsegg": "Koenigsegg", "Tesla": "Tesla", "Mercedes": "Mercedes|AMG|Daimler",
+    "Aston": "Aston Martin", "Lamborghini": "Lamborghini", "Porsche": "Porsche",
+    "Toyota": "Toyota", "Hennessey": "Hennessey", "Lotus": "Lotus", "Rimac": "Rimac",
+    "Chevrolet": "Chevrolet|Corvette", "Mitsubishi": "Mitsubishi", "Nissan": "Nissan",
+    "BMW": "BMW", "Audi": "Audi", "Gordon": "Gordon Murray", "Yangwang": "Yangwang|BYD",
+    "Czinger": "Czinger", "Dacia": "Dacia", "Ford": "Ford", "Prodrive": "Prodrive",
+    "Alpine": "Alpine", "Williams": "Williams", "Racing": "Racing Bulls", "Haas": "Haas",
+    "Cadillac": "Cadillac", "Red": "Red Bull",
+  };
+  const bad = [];
+  let checked = 0;
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const ring = (src.match(/<div class="ring">([^<]*)</) || [])[1];
+    if (!ring) { bad.push(f + ": no maker line at all"); continue; }
+    const key = Object.keys(MARQUE).find((k) => f.startsWith(k));
+    if (!key) { bad.push(f + ": unknown marque"); continue; }
+    checked++;
+    if (!new RegExp(MARQUE[key], "i").test(ring)) bad.push(f.replace(/ simulator.html/i, "") + ' says "' + ring + '"');
+  }
+  check("all " + checked + " start cards name the maker that built the car",
+    bad.length === 0, bad.slice(0, 6).join(" | "));
 }
 
 /* ---------- a car must quote its OWN numbers ----------
