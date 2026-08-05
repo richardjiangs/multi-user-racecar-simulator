@@ -861,6 +861,7 @@ const SPEC = {
   topSpeedRecordKmh: 484,
   topSpeedRecordMps: 484 * KMH,
   zeroTo100Kmh: 2.6,
+  // identical on purpose: F5 Mode is an AERO setting, not a fuel map — 1,817 hp either way
   e85: { peakPowerW: 1355000, peakPowerPS: 1842, peakPowerHp: 1817, peakTorqueNm: 1617 },
   petrol: { peakPowerW: 1355000, peakPowerPS: 1842, peakPowerHp: 1817, peakTorqueNm: 1617 },
   brakeMaxMps2: 12.6711,        // calibrated -> 30 m 100-0
@@ -893,7 +894,7 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    e85: false,                    // running E85 biofuel: 1,280 hp becomes 1,600 hp, torque 1,500 Nm
+    e85: false,                    // F5 Mode (the name is a Jesko leftover): wing flat, 45% less downforce
     e85Vis: 0,                     // fuel-map swap glow on the cluster
     testDriver: false,
     lights: true, hazards: false, horn: false,
@@ -2683,8 +2684,12 @@ drawCluster(w, h, dashY, sway);
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); showToast(state.exhaustValve ? "Exhaust flap open — full V8 voice." : "Exhaust flap closed — muted."); }
-  // E85 flex-fuel: the same engine, hotter map. On E85 biofuel the Venom F5 runs
-  // 1,600 hp and 1,500 Nm @ 5,100 rpm; on standard petrol it makes 1,280 hp.
+  /* F5 MODE — Hennessey's top-speed setting, and the button says so. The state field and
+     the function are still called e85/toggleFuel because this car was cloned from the Jesko,
+     whose Z really is a fuel map; the two SPEC maps below are deliberately IDENTICAL because
+     F5 Mode changes no power at all. What it changes is aero: updateAero sheds 45% of the
+     downforce (state.e85 ? 0.55 : 1) by flattening the active wing for minimum drag. Do not
+     read the old Jesko power figures back into this car — the Venom makes 1,817 hp either way. */
   function toggleFuel() {
     const next = !state.e85;
     state.e85 = next; setActive("fuelBtn", next);
@@ -2794,7 +2799,7 @@ drawCluster(w, h, dashY, sway);
     if (/^(hi|hello|hey|hej)/.test(text)) { reply("Hej! Which circuit?"); return; }
     if (has("thank", "tack")) { reply("Varsågod."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Gotland Ring", ["gotland", "gotland ring", "sweden", "ängelholm"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["Road America", ["road america", "elkhart", "wisconsin", "hennessey"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
