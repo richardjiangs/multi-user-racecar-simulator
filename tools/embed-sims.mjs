@@ -40,6 +40,7 @@ const FILES = {
   db5: "Aston Martin DB5 simulator.html",
   slr300: "Mercedes-Benz 300 SLR Uhlenhaut simulator.html",
   czinger: "Czinger 21C simulator.html",
+  alfa33: "Alfa Romeo 33 Stradale simulator.html",
   venom: "Hennessey Venom F5 simulator.html",
   evija: "Lotus Evija simulator.html",
   amgone: "Mercedes-AMG One simulator.html",
