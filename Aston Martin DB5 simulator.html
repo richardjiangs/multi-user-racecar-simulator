@@ -475,7 +475,7 @@
         <div class="divider"></div>
         <div class="panel-title">
           <h2 style="font-size:15px">Cars 2 — Finn McMissile's kit</h2>
-          <span class="small">Fitted for the Pacific stage only · Circuit tab → <b>Mission · Cars 2 Opening</b></span>
+          <span class="small">Fitted for the Pacific stage only · Circuit tab → <b>Mission · Cars 2 Opening</b>. The other six missions use the Q Branch equipment on keys 1–8 instead.</span>
         </div>
         <div class="control-grid">
           <button id="seaHookBtn" title="Quad harpoon gun under the nose — hook Tony Trihull, then the rig (key G)">Harpoon</button>
@@ -622,7 +622,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: 1964 rules, and Q Branch</h3><p style="margin:4px 0">No aids, no downforce, a live rear axle and 1964 tyres: everything must be early and gentle, and the car is turned with weight transfer, not grip. Trail the brakes into the corner and the nose bites; lift mid-corner and the axle steps. The <b>Q Branch</b> tab is the other half of this car — eight pieces of special equipment fitted to chassis DP/216/1 for <em>Goldfinger</em> (1964), each on its own number key.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: 1964 rules, and Q Branch</h3><p style="margin:4px 0">No aids, no downforce, a live rear axle and 1964 tyres: everything must be early and gentle, and the car is turned with weight transfer, not grip. Trail the brakes into the corner and the nose bites; lift mid-corner and the axle steps. The <b>Q Branch</b> tab is the other half of this car — eight pieces of special equipment fitted to chassis DP/216/1 for <em>Goldfinger</em> (1964), each on its own number key. The Circuit tab also carries <b>seven stage missions</b>, which are not circuits: no laps, no kerbs, no racing line. Four are <em>Cars 2</em> — the Pacific opening, Tokyo, Paris and Porto Corsa, then London — one is the Furka Pass chase from <em>Goldfinger</em>, and one is Matera from <em>No Time to Die</em>. Each stage owns its own surface, its own gate and its own way of being lost.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -647,6 +647,8 @@
               <button data-circuit="Mission — Oil Platform, Pacific">Mission · Cars 2 Opening</button>
               <button data-circuit="Mission — Tokyo, World Grand Prix">Mission · Cars 2 Tokyo</button>
               <button data-circuit="Mission — London, the last race">Mission · Cars 2 London</button>
+              <button data-circuit="Mission — Paris, the parts market">Mission · Cars 2 Paris</button>
+              <button data-circuit="Mission — Porto Corsa, the casino">Mission · Cars 2 Porto Corsa</button>
               <button data-circuit="Mission — Matera, 2021">Mission · Matera 2021</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
             </div>
@@ -740,7 +742,7 @@
       <h1>DB5</h1>
       <p>The light aluminium door thunks shut, the triple-SU DOHC straight-six catches with a hard bark and a cammy idle, and the wire wheels settle. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">Ferrari · Maranello, Italy · 1964</div>
+      <div class="ring">Aston Martin · Newport Pagnell, England · 1964</div>
     </div>
   </div>
 
@@ -931,6 +933,47 @@ const CIRCUITS = {
       c(8600, 1, 30, 420, "Off his line, to starboard"), c(9700, -1, 34, 420, "And back to port")
     ]
   },
+  /* Cars 2 · Paris — the night they go to see Tomber. In off the périphérique, along the
+     Seine, and down into the Marché aux Pièces: a parts market spread over several streets
+     under one iron-and-glass roof drawn from the Gare du Nord. */
+  "Mission — Paris, the parts market": {
+    dist: 4200, env: "sea", limitKmh: 190, loop: false, widthM: 8.6, corners: 12,
+    blurb: "Cars 2 — into Paris, the quay, the Marché aux Pièces and Tomber",
+    bumps: [{ from: 2100, to: 2800, r: 0.26 }, { from: 2800, to: 4200, r: 0.34 }],
+    /* the tight bends are the doorways — the arch into the shed, the turn into the aisles —
+       and the shed itself runs nearly straight, because it is a quarter-mile train shed */
+    track: [
+      c(420, 1, 65, 140, "Off the périphérique"), c(900, -1, 80, 110, "Place de Clichy"),
+      c(1120, 1, 60, 70, "Down to the river"), c(1400, -1, 45, 160, "Onto the quay"),
+      c(1800, 1, 55, 140, "Under the bridge"), c(2030, -1, 70, 60, "In through the arch"),
+      c(2300, 1, 20, 200, "The length of the shed"), c(2730, -1, 75, 60, "Into the aisles"),
+      c(3000, 1, 60, 120, "First aisle"), c(3300, -1, 65, 110, "Second aisle"),
+      c(3540, 1, 70, 55, "Round the last stack"), c(3850, -1, 40, 160, "The dead end")
+    ]
+  },
+  /* Cars 2 · Porto Corsa — the second race, on the Italian Riviera. The circuit leaves the
+     port, climbs the coast road, drops back down and crosses the Casino Bridge; the hairpin
+     is Loews out of Monaco. Everything between is the casino. */
+  "Mission — Porto Corsa, the casino": {
+    dist: 8300, env: "sea", limitKmh: 240, loop: false, widthM: 8.8, corners: 19,
+    blurb: "Cars 2 — the coast road, Ivan, the casino, the meeting and the Grand Prix",
+    bumps: [{ from: 1500, to: 2200, r: 0.3 }],
+    /* the hard bends are the transitions — down off the coast road, in through the doors,
+       up to the back room — and the two interior stages are nearly straight, because a
+       casino floor and a boardroom are rooms you can see the far end of */
+    track: [
+      c(500, 1, 85, 110, "Above the marina"), c(1000, -1, 100, 85, "The arched bridge"),
+      c(1420, 1, 110, 70, "Down to the quay"), c(1750, -1, 55, 130, "Along the harbour"),
+      c(2120, 1, 70, 70, "Up to the forecourt"), c(2380, -1, 40, 150, "The carpet"),
+      c(2720, 1, 65, 70, "In through the doors"), c(3000, -1, 22, 200, "Across the floor"),
+      c(3420, 1, 70, 70, "The lift at the back"), c(3700, -1, 16, 220, "The length of the table"),
+      c(4120, 1, 75, 70, "Back down to the floor"), c(4400, -1, 45, 160, "Out through the tables"),
+      c(4820, 1, 70, 70, "Out of the doors"), c(5150, -1, 65, 140, "Out of the port"),
+      c(5750, 1, 145, 40, "Loews hairpin"), c(6250, -1, 60, 150, "The tunnel"),
+      c(6800, 1, 80, 100, "Casino Bridge"), c(7200, -1, 95, 90, "Into the old town"),
+      c(7900, 1, 70, 120, "Above the port")
+    ]
+  },
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -963,7 +1006,24 @@ const SEA_SUBJECTS = [
   { at: 0.02, w: 92, h: 58, c: "#5a4530", label: "CRATE — LELAND TURBO" },
   { at: 0.58, w: 54, h: 62, c: "#3f6a4a", label: "PROF. Z" },
 ];
-const subjectAt = (i, ph) => SEA_SUBJECTS[i].at + Math.sin(ph + i * 2.1) * 0.10;
+/* the back room at Porto Corsa: the table, the professor, and the kingpin on the screen */
+const MEET_SUBJECTS = [
+  { at: -0.56, w: 96, h: 40, c: "#4a3a24", label: "THE TABLE", sway: 0.05 },
+  { at: 0.04, w: 52, h: 60, c: "#4f7a34", label: "PROF. ZÜNDAPP", sway: 0.07 },
+  { at: 0.60, w: 82, h: 56, c: "#1d2a34", label: "THE SCREEN", sway: 0.03 },
+];
+/* Paris: the photograph itself. Tomber does not care about the Rover V8 — he cares about
+   the boxes of rare parts stacked beside it, because he sold them. Frame those. */
+const PHOTO_SUBJECTS = [
+  { at: 0.44, w: 58, h: 50, c: "#6b5a38", label: "THE BOXES BESIDE IT", sway: 0.04 },
+];
+const STAGE_SUBJECTS = { lip: SEA_SUBJECTS, meeting: MEET_SUBJECTS, corner: PHOTO_SUBJECTS };
+const subjectsIn = (st) => (st && STAGE_SUBJECTS[st.id]) || SEA_SUBJECTS;
+const subjectAtIn = (st, i, ph) => {
+  const L = subjectsIn(st), s0 = L[Math.min(i, L.length - 1)];
+  return s0.at + Math.sin(ph + i * 2.1) * (s0.sway == null ? 0.10 : s0.sway);
+};
+
 const SEA_STAGES = [
   { id: "crabby", to: 620, cap: 60, surf: "wood",
     name: "Aboard Crabby", where: "the Pacific, 40 miles out, 02:40",
@@ -1211,12 +1271,110 @@ const SEA_ENEMIES = {
     { name: "Pacer", body: "#5a7f42", stripe: "#c9cfd6", top: 144, latG: 0.78, accel: 4.9, role: "guard", at: -132, hp: 2 },
   ],
 };
+/* --- CARS 2 · PARIS. The Marché aux Pièces: several streets of part dealers under one
+   iron-and-glass roof drawn from the Gare du Nord. Tomber deals in salvaged parts — plate
+   PCS NO1R, pièces noires — and he is Finn's informant, though Holley does not know it.
+   He sees Finn in a mirror and runs; boxes come down behind him; he is cornered in a dead
+   end. Then the photograph of the Rover V8, the boxes of rare parts beside it, and the
+   thing that turns the case: the bosses are meeting at Porto Corsa. */
+const PAR_STAGES = [
+  { id: "boulevard", to: 1200, cap: 175, surf: "boulevard",
+    name: "Into Paris", where: "wet stone, plane trees, and the tower over your shoulder",
+    hint: "Follow Finn. The river is at the end of this.", met: null, fail: "" },
+  { id: "quay", to: 2100, cap: 130, surf: "quay",
+    name: "The quay", where: "the Seine on your left and the market at the end of it",
+    hint: "Along the water, then in through the arch.", met: null, fail: "" },
+  { id: "market", to: 2800, cap: 48, surf: "market",
+    name: "Marché aux Pièces", where: "a mile of second-hand parts under one iron roof",
+    hint: "Find him. Tracker scope — 8. He is a rusted 2CV on three wheels.",
+    met: (st, q) => q.radar, clock: 80, fail: "He went out the far end and you never saw which way." },
+  { id: "stalls", to: 3600, cap: 105, surf: "stalls",
+    name: "He has seen you in a mirror", where: "PCS NO1R, going away from you at speed",
+    hint: "Stay with him. He will put the stock down behind him.",
+    met: null, fail: "" },
+  { id: "corner", to: 4200, cap: 42, surf: "stalls",
+    name: "Cornered", where: "a dead end, and a photograph to show him",
+    hint: "Stop, get the photograph up — P — and let him look at it.",
+    met: (st, q) => q.shots >= 1 && q.stopped, clock: 75, fail: "Holley tasered him once too often and he shut up." },
+];
+const PAR_ENEMIES = {
+  stalls: [
+    { name: "Tomber · Citroën 2CV", body: "#8a7550", stripe: "#3a3226", top: 96, latG: 0.62, accel: 3.4, role: "target", at: 105, tag: "tomber" },
+  ],
+};
+
+/* --- CARS 2 · PORTO CORSA. The Riviera, the casino on its Topolino-shaped rock, and the
+   lemon meeting in the back of it. Ivan is put out so you can take his place; Victor Hugo
+   goes in on your hook; the kingpin is a face on a screen; and when the disguise comes off
+   the whole room draws on you. Outside, Grem and Acer are working the pulse camera. */
+const PC_STAGES = [
+  { id: "coast", to: 1500, cap: 195, surf: "riviera",
+    name: "The coast road", where: "Porto Corsa, and the marina a long way below you",
+    hint: "Down into the town. The casino is the rock shaped like a Topolino.",
+    met: null, fail: "" },
+  { id: "ivan", to: 2200, cap: 62, surf: "marina",
+    name: "Ivan", where: "a Russian tow truck who works for Victor Hugo",
+    hint: "Put him out — guns on 2, or run the slashers down his flank on 4.",
+    met: (st, q, m) => !!m.done.ivan, clock: 85, fail: "Ivan reached the forecourt first, and there is only one of him." },
+  { id: "valet", to: 2800, cap: 42, surf: "carpet",
+    name: "The casino forecourt", where: "valet parking, and a great many photographers",
+    hint: "Victor Hugo goes in on your hook — G. Nobody stops a tow truck with a boss on it.",
+    met: (st, q) => q.hook >= 1, clock: 90, fail: "Victor Hugo found another truck." },
+  { id: "floor", to: 3500, cap: 34, surf: "casino",
+    name: "The casino floor", where: "and every lemon family in Europe is upstairs",
+    hint: "Not on British plates. Revolve them — 1 — and go in as somebody else.",
+    met: (st, q) => q.plate > 0, clock: 75, fail: "A doorman read BMT 216A and made a telephone call." },
+  { id: "meeting", to: 4200, cap: 26, surf: "backroom",
+    name: "The back room", where: "the bosses down one table, and their kingpin on a screen",
+    hint: "Camera up — P — and get the table, the professor and the screen.",
+    met: (st, q) => q.shots >= 3, clock: 100, fail: "The meeting broke up and the screen went dark." },
+  { id: "blown", to: 4900, cap: 95, surf: "casino",
+    name: "The disguise comes off", where: "and the room knows exactly who you are",
+    hint: "Two of them down and you are through the doors. Guns — 2.",
+    met: (st, q, m) => !!m.done.guards, clock: 110, fail: "They took the car apart on the casino floor." },
+  { id: "race", to: 7000, cap: 220, surf: "riviera",
+    name: "The Porto Corsa Grand Prix", where: "the port, the hill, the tunnel and Loews",
+    hint: "Grem and Acer have the pulse camera on the Allinol runners. Race it.",
+    met: null, fail: "" },
+  { id: "getaway", to: 8300, cap: 200, surf: "stone",
+    name: "Out over the Casino Bridge", where: "and the whole town behind you",
+    hint: "Smoke — 6 — and go.",
+    met: (st, q) => q.smokeUsed, fail: "They boxed you in on the hill above the port." },
+];
+const PC_ENEMIES = {
+  ivan: [
+    { name: "Ivan · ZAZ tow truck", body: "#3f6a55", stripe: "#c9cfd6", top: 118, latG: 0.62, accel: 3.6, role: "guard", at: 96, hp: 3, tag: "ivan" },
+  ],
+  valet: [
+    { name: "Victor Hugo · Zaporozhets", body: "#4a4f58", stripe: "#8d5a2b", top: 104, latG: 0.55, accel: 2.9, role: "target", at: 70, tag: "hook" },
+  ],
+  blown: [
+    { name: "Professor Zündapp", body: "#4f7a34", stripe: "#c9cfd6", top: 132, latG: 0.6, accel: 3.4, role: "shooter", at: -34, hp: 2 },
+    { name: "Grem · AMC Gremlin", body: "#c8641e", stripe: "#4a3524", top: 158, latG: 0.86, accel: 5.6, role: "shooter", at: -78, hp: 3 },
+    { name: "Acer · AMC Pacer", body: "#4f7a34", stripe: "#c9cfd6", top: 156, latG: 0.86, accel: 5.5, role: "guard", at: -132, hp: 3 },
+    { name: "Vladimir Trunkov · Zaporozhets", body: "#6b4f2a", stripe: "#c9cfd6", top: 140, latG: 0.72, accel: 4.4, role: "boarder", at: -186, hp: 2 },
+  ],
+  race: [
+    { name: "Lightning McQueen", body: "#c81417", stripe: "#f5d400", top: 312, latG: 1.28, accel: 10.8, role: "rival", at: 120 },
+    { name: "Francesco Bernoulli", body: "#d81e22", stripe: "#f5f7fa", top: 320, latG: 1.30, accel: 11.0, role: "rival", at: 62 },
+    { name: "Carla Veloso", body: "#2fa05a", stripe: "#f5d400", top: 303, latG: 1.23, accel: 10.3, role: "rival", at: -48 },
+    { name: "Miguel Camino", body: "#e8b23a", stripe: "#c81417", top: 300, latG: 1.24, accel: 10.2, role: "rival", at: -118 },
+    { name: "Shu Todoroki", body: "#e8402a", stripe: "#1b1d22", top: 298, latG: 1.22, accel: 10.1, role: "rival", at: -190 },
+  ],
+  getaway: [
+    { name: "Grem · AMC Gremlin", body: "#c8641e", stripe: "#4a3524", top: 162, latG: 0.88, accel: 5.8, role: "shooter", at: -44, hp: 3 },
+    { name: "Acer · AMC Pacer", body: "#4f7a34", stripe: "#c9cfd6", top: 160, latG: 0.88, accel: 5.7, role: "guard", at: -100, hp: 3 },
+  ],
+};
+
 /* every stage mission in the garage, and the film each one is from */
 const STAGE_SETS = {
   [SEA_ROUTE]: { film: "CARS 2 · THE OPENING", stages: SEA_STAGES, enemies: SEA_ENEMIES },
   "Mission — Tokyo, World Grand Prix": { film: "CARS 2 · TOKYO", stages: TOK_STAGES, enemies: TOK_ENEMIES },
   "Mission — London, the last race": { film: "CARS 2 · LONDON", stages: LON_STAGES, enemies: LON_ENEMIES },
   "Mission — Furka Pass & Auric Enterprises, 1964": { film: "GOLDFINGER · 1964", stages: GF_STAGES, enemies: GF_ENEMIES },
+  "Mission — Paris, the parts market": { film: "CARS 2 · PARIS", stages: PAR_STAGES, enemies: PAR_ENEMIES },
+  "Mission — Porto Corsa, the casino": { film: "CARS 2 · PORTO CORSA", stages: PC_STAGES, enemies: PC_ENEMIES },
   "Mission — Matera, 2021": { film: "NO TIME TO DIE · MATERA", stages: NTTD_STAGES, enemies: NTTD_ENEMIES },
 };
 // give every stage its route, its index and where it starts, so nothing has to search
@@ -1326,6 +1484,7 @@ const SPEC = {
       foil: 0, tyres: false, tyreT: 0, sub: 0,
       tonyM: null, torpedoT: 0, wreckT: 0, slipT: 0, gateNagT: 0,
       rangeM: null, outOfRange: false, bombT: 0, spinDeg: 0, stopped: false, smokeUsed: false,
+      plate: 0, plateT: 0, empT: 9, empHit: null, empT2: 0, boxes: [], boxT: 6, mirrorSeen: false,
     },
     stage: null, stageT: 0,
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
@@ -1904,7 +2063,7 @@ const SPEC = {
       const close = Math.abs(rel) < 55 && Math.abs((r.lane || 0) - state.laneOffset) < 5.5;
 
       // ---- the TARGET must stay in sight
-      if (r.role === "target" && rel > M.loseM) return missionEnd(false, "You lost the Phantom III.");
+      if (r.role === "target" && rel > M.loseM) return missionEnd(false, M.loseMsg || "You lost the Phantom III.");
 
       // ---- the WING GUNS: a burst on a car close ahead or alongside takes a hit off it
       if (q.gun && q.muzzle > 0.85 && close && r.role !== "target" && rel > -30) {
@@ -1960,6 +2119,7 @@ const SPEC = {
     app.showToast(r.name + " — " + how + ".", "MISSION");
     audio.clunk(110);
     if (!m) return;
+    if (r.tag) missionDone(r.tag);            // an enemy that IS an objective — Ivan, at Porto Corsa
     if (r.role === "guard" || r.role === "shooter") {
       m.guards++;
       const o = m.def.objectives.find((x) => x.id === "guards");
@@ -1971,6 +2131,10 @@ const SPEC = {
 
   const onSea = () => state.route.active && state.route.name === SEA_ROUTE;
   const onStage = () => state.route.active && !!STAGE_SETS[state.route.name];
+  // what the camera is pointed at depends on the stage: three things under the deck in the
+  // Pacific, three in the back room at Porto Corsa, one in the photograph in Paris
+  const subjectsFor = () => subjectsIn(state.stage);
+  const subjectAt = (i, ph) => subjectAtIn(state.stage, i, ph);
   const enemiesFor = (st) => { const set = STAGE_SETS[st.route]; return set && set.enemies ? set.enemies[st.id] : null; };
   const filmOf = () => { const set = STAGE_SETS[state.route.name]; return set ? set.film : "MISSION"; };
   function stageEnter(s) {
@@ -1991,7 +2155,7 @@ const SPEC = {
       audio.seaAlarm();
       add.forEach((e) => state.rivals.push({
         name: e.name, body: e.body, stripe: e.stripe, topMps: e.top / 3.6, latG: e.latG, accel: e.accel,
-        role: e.role, hp: e.hp, distM: state.distanceM + e.at, lane: (Math.random() - 0.5) * 4,
+        role: e.role, hp: e.hp, tag: e.tag, distM: state.distanceM + e.at, lane: (Math.random() - 0.5) * 4,
         speedMps: Math.max(20, Math.abs(state.speedMps)), brake: 0, fireT: 2.2 + Math.random() * 2, boardT: 0,
       }));
     }
@@ -2003,6 +2167,12 @@ const SPEC = {
     if (s.id === "piazza") { state.q.spinDeg = 0; audio.seaAlarm(); }
     if (s.id === "mirror") audio.seaCharge();
     if (s.id === "gears") audio.seaMagnet(false);
+    if (s.id === "meeting") { state.q.shots = 0; state.q.cam = 0; audio.qServo(true); }   // a fresh film for the back room
+    if (s.id === "corner") { state.q.shots = 0; state.q.cam = 0; }                        // and one exposure for Tomber
+    if (s.id === "blown") { audio.seaAlarm(); audio.qGun(); }
+    if (s.id === "race") { state.q.empT = 9; state.q.empHit = null; }
+    if (s.id === "stalls") { state.q.boxes = []; state.q.boxT = 5; }
+    if (s.id === "market") state.q.mirrorSeen = false;
   }
 
   /* Everything the stage machine can want done, and what does it. Each is a real piece of
@@ -2032,6 +2202,11 @@ const SPEC = {
           if (!rod || rod.distM - state.distanceM > 26) { app.showToast("Not close enough — get up to him.", "CARS 2"); audio.click(300); return; }
           q.hook = 1; audio.seaClamp();
           app.showToast("Rod put it somewhere you will not find it for two days.", "CARS 2");
+        } else if (id === "valet") {
+          const vh = (state.rivals || []).find((r) => r.role === "target");
+          if (!vh || Math.abs(vh.distM - state.distanceM) > 24) { app.showToast("Get up behind him first — he will not walk in.", "CARS 2"); audio.click(300); return; }
+          q.hook = 1; audio.seaClamp(); missionDone("hook");
+          app.showToast("Victor Hugo is on the hook. Straight up the carpet — you are staff.", "CARS 2");
         } else if (id === "pits") {
           if (state.gearMode !== "R" && Math.abs(state.speedMps) < 2) { app.showToast("Back away from him first — R.", "CARS 2"); audio.click(300); return; }
           q.hook = 1; audio.seaClamp(); missionDone("hook");
@@ -2046,11 +2221,21 @@ const SPEC = {
       case "cam":
         if (!q.cam) { q.cam = 1; q.camAim = 0; audio.qServo(true); app.showToast("Camera up. Frame it, then P again for the shutter.", "CARS 2"); break; }
         // shutter: only counts if a subject is inside the frame and steady
+        const subs = subjectsFor(), id0 = st ? st.id : "";
+        const LINES = {
+          lip: ["Zündapp's box — got it.", "The crate. That is Leland.", "Zündapp himself. Enough."],
+          meeting: ["Every boss in Europe at one table.", "Professor Zündapp, and what he is holding.", "The screen. Whoever that is, nobody in this room has met him."],
+          corner: ["Tomber has stopped talking. He sold those boxes — by telephone, to a car he has never seen."],
+        };
+        const MISS = {
+          corner: "“The worst motor ever made.” He is not looking at the engine — pan to what is stacked beside it.",
+        };
         if (q.camSubject > -1.5 && Math.abs(q.camAim - q.camSubject) < 0.13 && Math.abs(state.speedMps) < 6) {
           q.shots++; audio.seaShutter();
-          app.showToast(["Zündapp's box — got it.", "The crate. That is Leland.", "Zündapp himself. Enough."][Math.min(2, q.shots - 1)], "CARS 2");
-          if (q.shots >= 3) missionDone("photo");
-        } else { audio.seaShutter(); app.showToast("Blurred — hold still and put it in the frame.", "CARS 2"); }
+          const L0 = LINES[id0] || LINES.lip;
+          app.showToast(L0[Math.min(L0.length - 1, q.shots - 1)], "CARS 2");
+          if (q.shots >= subs.length) missionDone("photo");
+        } else { audio.seaShutter(); app.showToast(MISS[id0] || "Blurred — hold still and put it in the frame.", "CARS 2"); }
         break;
       case "rocket":
         q.rocket = q.rocket > 0 ? 0 : 1; audio.seaRocket(q.rocket > 0);
@@ -2097,8 +2282,9 @@ const SPEC = {
     if (q.cam) {
       q.camAim = clamp(q.camAim + ((state.keys.KeyA || state.keys.ArrowLeft) ? -1 : (state.keys.KeyD || state.keys.ArrowRight) ? 1 : 0) * dt * 0.85, -1, 1);
       q.camPhase = (q.camPhase || 0) + dt * 0.5;                  // the rig moves, so they move
-      q.camSubject = q.shots < 3 ? subjectAt(q.shots, q.camPhase) : -9;
-      if (q.shots >= 3) q.cam = 0;
+      const nSub = subjectsFor().length;
+      q.camSubject = q.shots < nSub ? subjectAt(q.shots, q.camPhase) : -9;
+      if (q.shots >= nSub) q.cam = 0;
     }
 
     if (onSea()) seaBeats(dt, s, q, m); else otherBeats(dt, s, q, m);
@@ -2133,7 +2319,8 @@ const SPEC = {
     }
     // ---- and the finishes
     if (s.id === "sub" && q.sub > 0 && state.distanceM > s.to - 120) missionDone("finish");
-    if ((s.id === "apron" || s.id === "mall" || s.id === "viaduct") && state.distanceM > s.to - 90) missionDone("finish");
+    if ((s.id === "apron" || s.id === "mall" || s.id === "viaduct" || s.id === "getaway") && state.distanceM > s.to - 90) missionDone("finish");
+    if (s.id === "corner" && (m && m.done.photo)) missionDone("finish");
     if (s.id === "race" && state.distanceM > s.to - 90) missionDone("race");
     if (s.id === "steps" && state.distanceM > s.to - 40) missionDone("steps");
   }
@@ -2223,7 +2410,8 @@ const SPEC = {
     // ---- and the finish
   }
 
-  /* Tokyo, London, Goldfinger and Matera */
+  const M_MAXHITS = (m) => (m && m.def ? m.def.maxHits : 6);
+  /* Tokyo, London, Paris, Porto Corsa, Goldfinger and Matera */
   function otherBeats(dt, s, q, m) {
     q.stopped = Math.abs(state.speedMps) * 3.6 < 25;
     // LONDON: the detonator has a real range, and once you are outside it the bomb stops
@@ -2252,6 +2440,57 @@ const SPEC = {
         return missionEnd(false, "Into the wall, exactly as it happened — and they took the car, and you with it.");
       }
       if (rel < 60 && q.stopped) missionDone("wall");
+    }
+    // PORTO CORSA · the race: Grem and Acer are working the pulse camera from the pit
+    // wall. It only touches the cars running Allinol — which is every racer out there and
+    // not you — so what you see is a rival lighting up and going round.
+    if (s.id === "race") {
+      q.empT -= dt;
+      if (q.empT <= 0) {
+        q.empT = 11 + Math.random() * 9;
+        const runners = (state.rivals || []).filter((r) => !r.down && !r.gone && r.role === "rival" && !r.empd);
+        if (runners.length > 1) {                       // never the last one: somebody has to win it
+          const v = runners[Math.floor(Math.random() * runners.length)];
+          v.empd = true; v.hurtT = Math.max(v.hurtT || 0, 4.5 + Math.random() * 3);
+          v.lane = (v.lane || 0) + (Math.random() < 0.5 ? -5 : 5);
+          q.empHit = { name: v.name, t: 3.2 };
+          audio.seaAlarm();
+          app.showToast(v.name + " is round — that is the camera on the pit wall, not the fuel.", "CARS 2");
+        }
+      }
+      if (q.empHit && q.empHit.t > 0) q.empHit.t -= dt;
+    }
+    // PARIS · the chase: Tomber brings a stack of stock down behind him about every six
+    // seconds. Hit one and it costs you the front of the car.
+    if (s.id === "stalls") {
+      q.boxT -= dt;
+      if (q.boxT <= 0) {
+        q.boxT = 5 + Math.random() * 3;
+        const t0 = (state.rivals || []).find((r) => r.role === "target" && !r.down);
+        const at = t0 ? t0.distM - 14 : state.distanceM + 60;
+        q.boxes.push({ dist: at, lane: (t0 ? (t0.lane || 0) : 0) + (Math.random() - 0.5) * 3, life: 26, t: 0 });
+        audio.clunk(130);
+        app.showToast("He has put a stack of stock across the aisle.", "CARS 2");
+      }
+      for (const b of q.boxes) {
+        b.life -= dt; b.t += dt;
+        if (b.hit || b.life <= 0) continue;
+        if (Math.abs(b.dist - state.distanceM) < 4.5 && Math.abs(b.lane - (state.laneOffset || 0)) < 2.6 && Math.abs(state.speedMps) > 6) {
+          b.hit = true; m.hits++;
+          state.roadInputG = Math.min(2.4, (state.roadInputG || 0) + 1.0);
+          state.speedMps *= 0.55; audio.clunk(95);
+          missionSay("Straight through the boxes — " + m.hits + "/" + M_MAXHITS(m) + ".", false);
+          if (m.hits >= m.def.maxHits) return missionEnd(false, "The car is buried in second-hand parts.");
+        }
+      }
+      q.boxes = q.boxes.filter((b) => b.life > 0);
+    }
+    // PARIS · the market: he catches your reflection in a mirror the moment the scope finds
+    // him, which is the moment he runs.
+    if (s.id === "market" && q.radar && !q.mirrorSeen) {
+      q.mirrorSeen = true; audio.qPing();
+      missionDone("tomber");
+      app.showToast("PCS NO1R — pièces noires. And he has just seen you in a wing mirror.", "CARS 2");
     }
     // the oil still burns when a round goes through it, wherever you are
     if (q.gun && q.muzzle > 0.7) {
@@ -2565,6 +2804,35 @@ const SPEC = {
         { id: "guards", text: "Put two Auric guards out", need: 2 },
         { id: "boarder", text: "Eject the one who gets in" },
         { id: "wall", text: "Work out that it is a mirror" },
+      ],
+    },
+    /* Paris. Tomber is not an enemy — he is Finn's informant, and the only role in the
+       mission is "do not lose him", which is exactly what the film is. */
+    "Mission — Paris, the parts market": {
+      brief: "There is one car in Europe who knows who bought those parts, and he is under an iron roof in the tenth arrondissement pretending he has never met me.",
+      limitS: 780, maxHits: 4, loseM: 150, loseMsg: "Tomber went out through the stalls and you lost him.",
+      enemies: [],
+      objectives: [
+        { id: "tomber", text: "Find Tomber among the stalls" },
+        { id: "tail", text: "Stay with him through the market" },
+        { id: "photo", text: "Show him the photograph" },
+        { id: "finish", text: "Get what he knows" },
+      ],
+    },
+    /* Porto Corsa. The photo objective is the meeting, so cars2 is on: missionStep counts
+       the three exposures into the objective text the way it does in the Pacific. */
+    "Mission — Porto Corsa, the casino": {
+      brief: "Every lemon boss in Europe is in the back of that casino, and the one none of them has ever seen will be on a screen. Get in as somebody else, and bring back a photograph.",
+      limitS: 1200, maxHits: 7, loseM: 260, cars2: true,
+      loseMsg: "Victor Hugo got off the hook, and without him you are a tow truck with no reason to be there.",
+      enemies: [],
+      objectives: [
+        { id: "ivan", text: "Put the real Ivan out and take his place" },
+        { id: "hook", text: "Tow Victor Hugo into the casino" },
+        { id: "photo", text: "Photograph what Zündapp has" },
+        { id: "guards", text: "Shoot your way off the casino floor", need: 2 },
+        { id: "race", text: "Run the Porto Corsa Grand Prix" },
+        { id: "finish", text: "Out over the Casino Bridge" },
       ],
     },
     "Mission — Matera, 2021": {
@@ -2994,7 +3262,7 @@ const SPEC = {
     const env = state.route.active ? state.route.env : "track";
     const day = state.dayPhase;
     // Cars 2 opens at 02:40 in the Pacific — that stage is night whatever the clock says
-    const night = env === "sea" ? !(state.stage && state.stage.surf === "alpine") : day > 0.82;
+    const night = env === "sea" ? !(state.stage && DAY_SURFACES.has(state.stage.surf)) : day > 0.82;
     const palettes = {
       track:    { road: "#1f2228", grass: "#23311d", far: "#2a3640", kerb: true,  barrier: false },
       street:   { road: "#26282d", grass: "#2c2e33", far: "#3a3f48", kerb: true,  barrier: true  },  // Monaco
@@ -3796,6 +4064,10 @@ const SPEC = {
 
   const onSea = () => state.route.active && state.route.name === SEA_ROUTE;
   const onStage = () => state.route.active && !!STAGE_SETS[state.route.name];
+  // what the camera is pointed at depends on the stage: three things under the deck in the
+  // Pacific, three in the back room at Porto Corsa, one in the photograph in Paris
+  const subjectsFor = () => subjectsIn(state.stage);
+  const subjectAt = (i, ph) => subjectAtIn(state.stage, i, ph);
   function drawSeaWorld(w, h) {
     const list = seaWorldFor(); if (!list) return;
     // far to near, so nearer hulls occlude the ones behind them
@@ -3974,9 +4246,11 @@ const SPEC = {
     }
     ctx.restore();
   }
+  // the daylight stages: the Furka Pass in Goldfinger, and the whole Porto Corsa Riviera
+  const DAY_SURFACES = new Set(["alpine", "riviera", "marina"]);
   function drawStage(w, h, pal) {
     const s = state.stage; if (!s) return;
-    const night = s.surf !== "alpine";                    // only the Furka Pass is in daylight
+    const night = !DAY_SURFACES.has(s.surf);              // the Furka Pass and the Riviera are in daylight
     ctx.save();
     switch (s.surf) {
       case "wood": drawPlanks(w, h, night); break;
@@ -4006,6 +4280,14 @@ const SPEC = {
       case "steps": drawSteps(w, h, night); break;
       case "piazza": drawPiazza(w, h, night); break;
       case "viaduct": drawStone(w, h, night, true); break;
+      case "riviera": drawRiviera(w, h, night); break;
+      case "marina": drawMarina(w, h, night); break;
+      case "casino": drawCasino(w, h, night); break;
+      case "backroom": drawBackRoom(w, h, night); break;
+      case "boulevard": drawBoulevard(w, h, night); break;
+      case "quay": drawQuay(w, h, night); break;
+      case "market": drawMarket(w, h, night); break;
+      case "stalls": drawStalls(w, h, night); break;
     }
     drawHookLine(w, h);
     ctx.restore();
@@ -4092,6 +4374,8 @@ const SPEC = {
           ctx.restore();
         }
       });
+      // and the public behind the press, held back by the rope
+      crowd(sgn, 110, { rows: 2, gap: 6.2, spacing: 3.6, sat: 40, lum: 30 });
       // paper lanterns strung overhead
       props(5, 24, 120, (d, idx, m) => {
         const p = projectAhead(d, sgn * (halfAt(d) - 0.5)); if (!p.fwd || p.fwd <= 1) return;
@@ -4140,8 +4424,11 @@ const SPEC = {
       windows: "rgba(255,214,150,0.55)",
       sign: (s0) => (s0 > 0.66 ? "rgb(255,60,110)" : s0 > 0.33 ? "rgb(80,220,255)" : "rgb(255,190,60)"),
     });
-    if (!tight) barriers("#c81417", "#f5f7fa");
-    else {
+    if (!tight) {
+      barriers("#c81417", "#f5f7fa");
+      // the World Grand Prix is the biggest thing that has ever happened to this street
+      for (const sgn of [-1, 1]) crowd(sgn, 140, { rows: 4, gap: 1.9, spacing: 2.8, sat: 54, lum: 32, flags: ["#f5f7fa", "#bc002d"] });
+    } else {
       // an alley: pipework, aircon units and steam out of a vent
       for (const sgn of [-1, 1]) props(7, 14, 80, (d, idx, m) => {
         const p = projectAhead(d, sgn * (halfAt(d) + 0.6)); if (!p.fwd || p.fwd <= 1) return;
@@ -4187,6 +4474,8 @@ const SPEC = {
         ctx.beginPath(); ctx.moveTo(l.x, l.y - 46 * m); ctx.lineTo(r.x, r.y - 46 * m); ctx.stroke();
       }
     });
+    // it is a road bridge in the middle of a city at night: it is not empty
+    traffic(28, 170, { oncoming: true, speed: 11, gaps: 0.34, lum: 24 });
     ctx.fillStyle = "rgba(190,214,236,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
     ctx.fillText("RAINBOW BRIDGE — TOKYO BAY", w / 2, horizonY - 16);
   }
@@ -4206,6 +4495,22 @@ const SPEC = {
       const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
       ctx.fillStyle = "rgba(90,150,255,0.9)";
       ctx.beginPath(); ctx.arc(p.x, p.y - 0.3 * m, Math.max(1.2, 0.28 * m), 0, Math.PI * 2); ctx.fill();
+    });
+    // ground crew and their tugs, working the apron either side of the taxiway
+    for (const sgn of [-1, 1]) props(13, 14, 160, (d, idx, m) => {
+      const p = projectAhead(d, sgn * (halfAt(d) + 5.5)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = idx % 2 ? "#c9a227" : "#2b62b0";                 // a tug or a baggage train
+      ctx.beginPath(); ctx.roundRect(p.x - 1.5 * m, p.y - 1.3 * m, 3 * m, 1.3 * m, 0.3 * m); ctx.fill();
+      ctx.fillStyle = "rgba(255,180,60,0.9)";                          // the beacon on the roof
+      if (Math.floor(state.time * 2 + idx) % 2 === 0)
+        { ctx.beginPath(); ctx.arc(p.x, p.y - 1.6 * m, Math.max(1.2, 0.24 * m), 0, Math.PI * 2); ctx.fill(); }
+      if (idx % 3 === 0) {                                             // a marshaller with wands
+        ctx.fillStyle = "rgba(240,120,40,0.95)";
+        ctx.fillRect(p.x + 2.4 * m, p.y - 1.5 * m, 0.5 * m, 1.5 * m);
+        ctx.fillStyle = "rgba(255,140,60,0.9)";
+        const sw = Math.sin(state.time * 3 + idx) * 0.8 * m;
+        ctx.fillRect(p.x + 2.2 * m + sw, p.y - 3.0 * m, 0.9 * m, 0.22 * m);
+      }
     });
     // Siddeley, with the ramp down
     const pf = projectAhead(150, 12), mf = metreAt(150);
@@ -4300,6 +4605,10 @@ const SPEC = {
           ctx.fillStyle = "#c8102e"; ctx.fillRect(p.x + sgn * 0.4 * m, p.y - 12.6 * m, 2.2 * m, 0.42 * m);
         }
       });
+      // The Mall on the day of the last race: five deep behind the rail, all the way down
+      for (const sgn of [-1, 1]) crowd(sgn, 180, { rows: 5, gap: 5.2, spacing: 2.5, sat: 46, lum: 31, flags: ["#1c3f8f", "#c8102e"] });
+      // and the cars still trying to get somewhere on a road that is about to be closed
+      traffic(40, 170, { oncoming: true, speed: 6, gaps: 0.62, lum: 22 });
       // Buckingham Palace at the end of it
       const pf = projectAhead(190, 0), mf = metreAt(190);
       if (pf.fwd > 1 && mf) {
@@ -4318,6 +4627,8 @@ const SPEC = {
         windows: "rgba(255,226,170,0.5)", sign: null,
       });
       barriers("#1c3f8f", "#f5f7fa");
+      // the last race of the World Grand Prix, in the middle of London
+      for (const sgn of [-1, 1]) crowd(sgn, 150, { rows: 4, gap: 1.9, spacing: 2.7, sat: 50, lum: 33, flags: ["#1c3f8f", "#c8102e"] });
       // the tower, once, well down the road
       const pf = projectAhead(178, -34), mf = metreAt(178);
       if (pf.fwd > 1 && mf) {
@@ -4353,6 +4664,12 @@ const SPEC = {
     for (const sgn of [-1, 1]) {
       if (sgn < 0) {
         wall(sgn, 1.05, 3, 140, "#1e242c", "rgba(220,228,238,0.6)");     // the pit wall
+        props(5.5, 24, 130, (d, idx, m) => {                             // the team on top of it
+          const p = projectAhead(d, sgn * (halfAt(d) + 1.4)); if (!p.fwd || p.fwd <= 1) return;
+          ctx.fillStyle = "hsl(" + ((idx * 97) % 360) + ",28%,30%)";
+          ctx.beginPath(); ctx.roundRect(p.x - 0.8 * m, p.y - 2.4 * m, 1.6 * m, 0.95 * m, 0.26 * m); ctx.fill();
+          if (idx % 3 === 0) { ctx.fillStyle = "rgba(120,200,255,0.55)"; ctx.fillRect(p.x - 0.5 * m, p.y - 3.1 * m, 1.0 * m, 0.6 * m); }
+        });
       } else {
         // the garages: roof band, team colour, an open dark door, tyre stacks
         props(14, 12, 140, (d, idx, m) => {
@@ -4363,6 +4680,16 @@ const SPEC = {
           ctx.fillStyle = "#080b10"; ctx.fillRect(p.x - 3.6 * m, p.y - 6 * m, 7.2 * m, 6 * m);
           ctx.fillStyle = "#15181d";
           for (let t = 0; t < 4; t++) ctx.fillRect(p.x + 4 * m, p.y - (0.7 + t * 0.62) * m, 1.8 * m, 0.55 * m);
+          // the car in the box, and the crew stood over it in the team colour
+          ctx.fillStyle = ["#c81417", "#e8532a", "#2fa05a", "#2b62b0"][idx % 4];
+          ctx.beginPath(); ctx.roundRect(p.x - 2.0 * m, p.y - 2.2 * m, 4.0 * m, 1.5 * m, 0.4 * m); ctx.fill();
+          ctx.fillStyle = "rgba(150,180,205,0.45)"; ctx.fillRect(p.x - 1.1 * m, p.y - 2.15 * m, 2.2 * m, 0.5 * m);
+          for (let k = 0; k < 5; k++) {
+            const a = k * 1.24 + idx, r0 = 3.1 * m;
+            const cxp = p.x + Math.cos(a) * r0, cyp = p.y - 1.4 * m + Math.sin(a) * 1.1 * m;
+            ctx.fillStyle = "hsl(" + ((idx * 71 + k * 43) % 360) + ",30%,32%)";
+            ctx.beginPath(); ctx.ellipse(cxp, cyp, 0.62 * m, 0.34 * m, 0, 0, Math.PI * 2); ctx.fill();
+          }
           flood(p.x, p.y - 8.6 * m, m, 12);
         });
       }
@@ -4615,6 +4942,574 @@ const SPEC = {
       ctx.fillRect(x, horizonY - bh, w * 0.016, bh);
       if (i % 3 === 0) { ctx.fillStyle = "rgba(255,214,150,0.5)"; ctx.fillRect(x + 2, horizonY - bh * 0.6, 3, 3); ctx.fillStyle = "rgba(64,58,48,0.9)"; }
     }
+  }
+
+  /* a crowd. Real spectators are a wall of cars parked nose-in behind the barrier, packed
+     tighter at the corners, all slightly different, and some of them are taking pictures.
+     World-anchored: someone you have passed does not come back. */
+  function crowd(sgn, maxD, opt) {
+    const o = opt || {};
+    props(o.spacing || 3.2, 46, maxD, (d, idx, m) => {
+      const rows = o.rows || 3;
+      for (let r = 0; r < rows; r++) {
+        const seed = ((idx * 7717 + r * 613 + (sgn > 0 ? 91 : 7)) % 1000) / 1000;
+        if (seed < (o.gaps || 0.12)) continue;                       // the crowd is never solid
+        const off = sgn * (halfAt(d) + (o.gap == null ? 1.6 : o.gap) + r * 2.3);
+        const p = projectAhead(d, off); if (!p.fwd || p.fwd <= 1) continue;
+        const lift = r * 0.75 * m;                                   // banked back, so the far rows show
+        const cw = (1.9 + seed * 0.7) * m, ch = (1.1 + seed * 0.35) * m;
+        const bob = Math.sin(state.time * (1.6 + seed) + idx + r) * 0.11 * m;
+        ctx.fillStyle = "hsl(" + Math.round(seed * 360) + "," + (o.sat || 46) + "%," + Math.round((o.lum || 34) + seed * 14) + "%)";
+        ctx.beginPath(); ctx.roundRect(p.x - cw / 2, p.y - lift - ch + bob, cw, ch, 0.32 * m); ctx.fill();
+        ctx.fillStyle = "rgba(150,180,205,0.45)";                    // a windscreen, facing you
+        ctx.fillRect(p.x - cw * 0.28, p.y - lift - ch + bob + 0.12 * m, cw * 0.56, ch * 0.34);
+        // camera flashes, a few every second across the whole grandstand
+        if (((idx * 17 + r * 5 + Math.floor(state.time * 7)) % 61) === 0) {
+          ctx.save(); ctx.globalCompositeOperation = "screen";
+          const g = ctx.createRadialGradient(p.x, p.y - lift - ch, 0, p.x, p.y - lift - ch, 6 * m);
+          g.addColorStop(0, "rgba(255,255,255,0.8)"); g.addColorStop(1, "rgba(255,255,255,0)");
+          ctx.fillStyle = g; ctx.beginPath(); ctx.arc(p.x, p.y - lift - ch, 6 * m, 0, Math.PI * 2); ctx.fill();
+          ctx.restore();
+        }
+        if (o.flags && ((idx + r) % 9) === 0) {                      // flags over the back row
+          ctx.fillStyle = o.flags[0]; ctx.fillRect(p.x - 0.9 * m, p.y - lift - ch - 2.2 * m + bob, 1.8 * m, 1.1 * m);
+          ctx.fillStyle = o.flags[1]; ctx.fillRect(p.x - 0.9 * m, p.y - lift - ch - 1.75 * m + bob, 1.8 * m, 0.36 * m);
+        }
+      }
+    });
+  }
+  /* ambient traffic: cars that live on the route rather than on the camera, each with its
+     own speed, so you close on the slow ones and the oncoming ones go past properly. */
+  function traffic(spacingM, maxD, opt) {
+    const o = opt || {};
+    props(spacingM, 30, maxD, (d, idx, m) => {
+      const seed = ((idx * 6151) % 1000) / 1000;
+      if (seed < (o.gaps == null ? 0.45 : o.gaps)) return;
+      const onc = o.oncoming && seed > 0.72;
+      // each car drifts along the route at its own pace; the modulo keeps it in its lane slot
+      const roll = ((state.time * (o.speed == null ? 9 : o.speed) * (onc ? -1 : 1) * (0.6 + seed)) % spacingM);
+      const dd = d + roll; if (dd < 3 || dd > maxD) return;
+      const lane = onc ? -(halfAt(dd) * 0.52) : (halfAt(dd) * (seed > 0.5 ? 0.5 : 0.16));
+      const p = projectAhead(dd, lane), mm = metreAt(dd); if (!p.fwd || p.fwd <= 1 || !mm) return;
+      const cw = 4.3 * mm, ch = 2.5 * mm;
+      ctx.fillStyle = "rgba(0,0,0,0.34)";
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, cw * 0.55, ch * 0.17, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "hsl(" + Math.round(seed * 360) + ",30%," + (o.lum || 26) + "%)";
+      ctx.beginPath(); ctx.roundRect(p.x - cw / 2, p.y - ch, cw, ch * 0.78, 0.5 * mm); ctx.fill();
+      ctx.fillStyle = "rgba(120,150,175,0.5)";
+      ctx.fillRect(p.x - cw * 0.3, p.y - ch, cw * 0.6, ch * 0.32);
+      if (onc) {
+        ctx.fillStyle = "rgba(255,248,214,0.85)";
+        ctx.fillRect(p.x - cw * 0.42, p.y - ch * 0.46, cw * 0.15, ch * 0.15);
+        ctx.fillRect(p.x + cw * 0.27, p.y - ch * 0.46, cw * 0.15, ch * 0.15);
+        flood(p.x, p.y - ch * 0.4, mm, 3.5, "rgba(255,244,206,0.10)");
+      } else {
+        ctx.fillStyle = "rgba(255,70,70,0.9)";
+        ctx.fillRect(p.x - cw * 0.44, p.y - ch * 0.52, cw * 0.13, ch * 0.13);
+        ctx.fillRect(p.x + cw * 0.31, p.y - ch * 0.52, cw * 0.13, ch * 0.13);
+      }
+    });
+  }
+
+  /* ---- CARS 2 · PORTO CORSA ---- */
+  // the Ligurian coast road: the sea a long way down on one side, terraced pastel houses
+  // stacked up the hill on the other, and the casino on its rock ahead of you.
+  function drawRiviera(w, h, night) {
+    // the sea, from the horizon down to the verge on the seaward side
+    const g = ctx.createLinearGradient(0, horizonY, 0, h);
+    g.addColorStop(0, "#2f7fa0"); g.addColorStop(1, "#14455c");
+    ctx.fillStyle = g; ctx.fillRect(0, horizonY, w, h - horizonY);
+    ctx.save(); ctx.globalCompositeOperation = "screen";     // sun on the water
+    for (let i = 0; i < 26; i++) {
+      const y = horizonY + 4 + i * 3.2, a = 0.10 - i * 0.0032; if (a <= 0) break;
+      ctx.fillStyle = "rgba(255,246,214," + a.toFixed(3) + ")";
+      ctx.fillRect(w * 0.58 - i * 1.6, y, 60 + i * 4, 1.6);
+    }
+    ctx.restore();
+    deckStrip(2, 200, 4, () => "#4a4f57");
+    seams(3, 190, 4.4, "rgba(236,232,220,0.5)", 1.4);
+    // the seaward parapet, and the hillside on the other
+    wall(1, 1.0, 3, 180, "#cdc6b2", "rgba(250,248,240,0.85)");
+    wall(-1, 8.0, 3, 150, "#6f6350", "rgba(180,168,140,0.5)");
+    // terraced houses up the hill: ochre, rose, cream, with green shutters
+    props(9, 22, 160, (d, idx, m) => {
+      const seed = ((idx * 4111) % 1000) / 1000;
+      const p = projectAhead(d, -(halfAt(d) + 5)); if (!p.fwd || p.fwd <= 1) return;
+      const bh = (11 + seed * 13) * m, bw = 8 * m, lift = (3 + seed * 9) * m;
+      ctx.fillStyle = ["#c98a4b", "#c96f62", "#d8c08a", "#b9754e"][idx % 4];
+      ctx.fillRect(p.x - bw / 2, p.y - lift - bh, bw, bh);
+      ctx.fillStyle = "#8a4a32";                                  // pantile roof
+      ctx.fillRect(p.x - bw * 0.56, p.y - lift - bh - 0.7 * m, bw * 1.12, 0.7 * m);
+      ctx.fillStyle = "#3f5f42";                                  // shutters
+      for (let r = 0; r < 3; r++) for (let c0 = 0; c0 < 2; c0++)
+        ctx.fillRect(p.x - bw * 0.3 + c0 * bw * 0.4, p.y - lift - bh + (1.6 + r * 3.4) * m, bw * 0.19, 1.9 * m);
+    });
+    // palms on the seaward verge
+    props(14, 14, 170, (d, idx, m) => {
+      const p = projectAhead(d, halfAt(d) + 1.4); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "#6b5636"; ctx.fillRect(p.x - 0.22 * m, p.y - 7 * m, 0.44 * m, 7 * m);
+      ctx.fillStyle = "rgba(46,92,52,0.95)";
+      for (let f = 0; f < 6; f++) {
+        const a = -Math.PI / 2 + (f - 2.5) * 0.46;
+        ctx.beginPath(); ctx.moveTo(p.x, p.y - 7 * m);
+        ctx.quadraticCurveTo(p.x + Math.cos(a) * 2.4 * m, p.y - 7 * m + Math.sin(a) * 2.4 * m - 1.2 * m,
+          p.x + Math.cos(a) * 4.2 * m, p.y - 7 * m + Math.sin(a) * 4.2 * m + 0.6 * m);
+        ctx.lineWidth = Math.max(1.5, 0.5 * m); ctx.strokeStyle = "rgba(46,92,52,0.95)"; ctx.stroke();
+      }
+    });
+    // the race stages get a crowd behind the parapet; the coast road in does not
+    const racing = state.stage && state.stage.id === "race";
+    if (racing) {
+      crowd(-1, 130, { rows: 3, gap: 9.5, spacing: 3.0, sat: 52, lum: 40, flags: ["#008c45", "#cd212a"] });
+      for (const sgn of [-1, 1]) props(6, 26, 150, (d, idx, m) => {   // the advertising skirt
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = idx % 2 ? "#008c45" : "#f5f7fa";
+        ctx.fillRect(p.x - 1.6 * m, p.y - 0.9 * m, 3.2 * m, 0.6 * m);
+      });
+    }
+    // the casino, on its rock, ahead
+    const pf = projectAhead(185, -22), mf = metreAt(185);
+    if (pf.fwd > 1 && mf) {
+      ctx.fillStyle = "#7b6c52";                                    // the outcrop
+      ctx.beginPath(); ctx.moveTo(pf.x - 30 * mf, pf.y);
+      ctx.lineTo(pf.x - 22 * mf, pf.y - 16 * mf); ctx.lineTo(pf.x + 24 * mf, pf.y - 18 * mf);
+      ctx.lineTo(pf.x + 32 * mf, pf.y); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#e6d9b4";                                    // the building
+      ctx.fillRect(pf.x - 20 * mf, pf.y - 34 * mf, 40 * mf, 17 * mf);
+      ctx.fillStyle = "#b9a97f";
+      ctx.fillRect(pf.x - 22 * mf, pf.y - 36 * mf, 44 * mf, 2.2 * mf);
+      ctx.fillStyle = "#5e7f6a";                                    // two domes
+      for (const sgn of [-1, 1]) {
+        ctx.beginPath(); ctx.arc(pf.x + sgn * 13 * mf, pf.y - 36 * mf, 5 * mf, Math.PI, 0); ctx.fill();
+      }
+      ctx.fillStyle = "rgba(74,54,26,0.75)";
+      for (let c0 = 0; c0 < 9; c0++) ctx.fillRect(pf.x - 17 * mf + c0 * 4.2 * mf, pf.y - 30 * mf, 2 * mf, 5 * mf);
+      ctx.fillStyle = "rgba(28,24,18,0.9)"; ctx.font = "700 " + Math.round(1.7 * mf) + "px ui-serif, Georgia";
+      ctx.textAlign = "center"; ctx.fillText("CASINO", pf.x, pf.y - 20.5 * mf);
+    }
+    ctx.fillStyle = "rgba(28,40,50,0.75)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(racing ? "PORTO CORSA — GRAN PREMIO" : "PORTO CORSA — LIGURIA", w / 2, horizonY - 16);
+  }
+  // the quayside: cobbles, bollards, nets, and a harbour full of boats
+  function drawMarina(w, h, night) {
+    const g = ctx.createLinearGradient(0, horizonY, 0, h);
+    g.addColorStop(0, "#2b6f8c"); g.addColorStop(1, "#123c50");
+    ctx.fillStyle = g; ctx.fillRect(0, horizonY, w, h - horizonY);
+    deckStrip(2, 140, 2.2, (d) => (Math.floor(d / 1.1 + state.distanceM * 0.9) % 2 ? "#6a6558" : "#615c50"));
+    seams(3, 130, 1.1, "rgba(38,34,28,0.4)", 1);
+    // the harbour edge on the right: bollards, rings, and the boats behind them
+    wall(1, 0.55, 3, 130, "#8d8470", "rgba(226,220,200,0.8)");
+    props(5, 24, 120, (d, idx, m) => {
+      const p = projectAhead(d, halfAt(d) + 0.5); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "#3c3a34";                                    // bollard
+      ctx.beginPath(); ctx.roundRect(p.x - 0.28 * m, p.y - 1.1 * m, 0.56 * m, 1.1 * m, 0.2 * m); ctx.fill();
+      if (idx % 2) {                                                // a boat, hull and mast
+        const bp = projectAhead(d, halfAt(d) + 5 + (idx % 3) * 2.4); if (!bp.fwd || bp.fwd <= 1) return;
+        ctx.fillStyle = ["#eef2f6", "#dce6ee", "#f2ede2"][idx % 3];
+        ctx.beginPath(); ctx.moveTo(bp.x - 3.2 * m, bp.y - 1.2 * m); ctx.lineTo(bp.x + 3.2 * m, bp.y - 1.2 * m);
+        ctx.lineTo(bp.x + 2.2 * m, bp.y); ctx.lineTo(bp.x - 2.4 * m, bp.y); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = "#1f3d52"; ctx.fillRect(bp.x - 3.2 * m, bp.y - 1.5 * m, 6.4 * m, 0.34 * m);
+        ctx.strokeStyle = "rgba(226,232,238,0.85)"; ctx.lineWidth = Math.max(1, 0.14 * m);
+        ctx.beginPath(); ctx.moveTo(bp.x, bp.y - 1.5 * m); ctx.lineTo(bp.x + Math.sin(state.time * 0.6 + idx) * 0.4 * m, bp.y - 13 * m); ctx.stroke();
+      }
+    });
+    // the town side: shopfronts, awnings, stacked crates and nets
+    wall(-1, 6.5, 3, 120, "#c08a55", "rgba(210,190,150,0.6)");
+    props(7, 18, 110, (d, idx, m) => {
+      const p = projectAhead(d, -(halfAt(d) - 0.2)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = ["#c2413c", "#2f6f52", "#c9a227"][idx % 3];   // awning
+      ctx.beginPath(); ctx.moveTo(p.x, p.y - 3.4 * m); ctx.lineTo(p.x - 2.6 * m, p.y - 2.4 * m);
+      ctx.lineTo(p.x - 2.6 * m, p.y - 2.0 * m); ctx.lineTo(p.x, p.y - 3.0 * m); ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "#3a3226";                                    // crates
+      for (let k = 0; k < 3; k++) ctx.fillRect(p.x - 1.4 * m, p.y - (0.8 + k * 0.7) * m, 1.3 * m, 0.62 * m);
+      if (idx % 3 === 1) {                                          // a net over the wall
+        ctx.strokeStyle = "rgba(180,166,120,0.55)"; ctx.lineWidth = 1;
+        for (let k = 0; k < 6; k++) { ctx.beginPath(); ctx.moveTo(p.x - 2.4 * m + k * 0.45 * m, p.y - 4.4 * m); ctx.lineTo(p.x - 1.8 * m + k * 0.45 * m, p.y - 1.2 * m); ctx.stroke(); }
+      }
+    });
+    ctx.fillStyle = "rgba(28,40,50,0.75)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("PORTO CORSA — THE QUAY", w / 2, horizonY - 16);
+  }
+  // the casino floor: patterned carpet, tables, chandeliers, gilt.
+  function drawCasino(w, h, night) {
+    ctx.fillStyle = "#120c14"; ctx.fillRect(0, 0, w, h);
+    deckStrip(2, 110, 2.4, (d) => (Math.floor(d / 2.4 + state.distanceM * 0.4) % 2 ? "#5c1630" : "#4d1228"));
+    // the carpet pattern: gold medallions down the middle, borders either side
+    props(4.8, 26, 100, (d, idx, m) => {
+      const p = projectAhead(d, 0); if (!p.fwd || p.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(201,162,39,0.55)"; ctx.lineWidth = Math.max(1, 0.14 * m);
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, 1.5 * m, 0.62 * m, 0, 0, Math.PI * 2); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(p.x, p.y, 0.75 * m, 0.3 * m, 0, 0, Math.PI * 2); ctx.stroke();
+    });
+    seams(3, 100, 3.4, "rgba(201,162,39,0.35)", 1.4);
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 5.5, 3, 100, "#2a1c22", "rgba(201,162,39,0.6)");
+      // gilt columns with a lamp on each
+      props(8, 16, 95, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = "#3d2e26"; ctx.fillRect(p.x - 0.42 * m, p.y - 5.5 * m, 0.84 * m, 5.5 * m);
+        ctx.fillStyle = "rgba(201,162,39,0.85)";
+        ctx.fillRect(p.x - 0.56 * m, p.y - 5.7 * m, 1.12 * m, 0.34 * m);
+        ctx.fillRect(p.x - 0.56 * m, p.y - 0.34 * m, 1.12 * m, 0.34 * m);
+        flood(p.x, p.y - 4.3 * m, m, 7, "rgba(255,206,120,0.20)");
+      });
+      // gaming tables just off the aisle: green baize, a dealer, a ring of players
+      props(11, 12, 90, (d, idx, m) => {
+        const p = projectAhead(d, sgn * (halfAt(d) - 2.2)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.fillStyle = "#1f5c3a";
+        ctx.beginPath(); ctx.ellipse(p.x, p.y - 0.9 * m, 2.2 * m, 0.9 * m, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "rgba(140,104,52,0.9)"; ctx.lineWidth = Math.max(1, 0.16 * m); ctx.stroke();
+        for (let k = 0; k < 5; k++) {                                // the players, seen from above
+          const a = Math.PI * (0.15 + k * 0.175);
+          ctx.fillStyle = "hsl(" + ((idx * 53 + k * 61) % 360) + ",26%,30%)";
+          ctx.beginPath();
+          ctx.ellipse(p.x + Math.cos(a) * 3.0 * m, p.y - 0.9 * m + Math.sin(a) * 1.3 * m, 0.85 * m, 0.44 * m, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.fillStyle = "rgba(226,232,240,0.75)";                    // chips
+        for (let k = 0; k < 4; k++) ctx.fillRect(p.x - 0.9 * m + k * 0.5 * m, p.y - 1.15 * m, 0.3 * m, 0.14 * m);
+      });
+    }
+    // chandeliers down the middle of the ceiling
+    props(9, 12, 90, (d, idx, m) => {
+      const p = projectAhead(d, 0); if (!p.fwd || p.fwd <= 1) return;
+      ctx.strokeStyle = "rgba(120,100,60,0.7)"; ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(p.x, p.y - 8.4 * m); ctx.lineTo(p.x, p.y - 6.6 * m); ctx.stroke();
+      ctx.fillStyle = "rgba(255,226,160,0.9)";
+      for (let k = -2; k <= 2; k++) {
+        ctx.beginPath(); ctx.arc(p.x + k * 0.62 * m, p.y - 6.3 * m + Math.abs(k) * 0.2 * m, Math.max(1, 0.2 * m), 0, Math.PI * 2); ctx.fill();
+      }
+      flood(p.x, p.y - 6.3 * m, m, 11, "rgba(255,216,150,0.22)");
+    });
+    // slot machines against the far wall
+    const pf = projectAhead(96, 0), mf = metreAt(96);
+    if (pf.fwd > 1 && mf) {
+      for (let k = -5; k <= 5; k++) {
+        ctx.fillStyle = "#2b2028"; ctx.fillRect(pf.x + k * 2.4 * mf - 0.9 * mf, pf.y - 3.4 * mf, 1.8 * mf, 3.4 * mf);
+        ctx.fillStyle = ((k + Math.floor(state.time * 3)) % 3 === 0) ? "rgba(255,120,90,0.9)" : "rgba(201,162,39,0.75)";
+        ctx.fillRect(pf.x + k * 2.4 * mf - 0.6 * mf, pf.y - 2.9 * mf, 1.2 * mf, 0.7 * mf);
+      }
+    }
+    // whose plates you are wearing decides whether you are supposed to be here
+    const q = state.q, ok = q.plate > 0;
+    ctx.fillStyle = ok ? "rgba(120,230,170,0.95)" : "rgba(255,120,90,0.95)";
+    ctx.font = "700 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(ok ? "PLATES: " + ["GB", "CH", "F"][q.plate] + " — YOU ARE NOBODY IN PARTICULAR"
+      : "PLATES: GB · BMT 216A — EVERY DOORMAN HERE KNOWS THAT NUMBER", w / 2, horizonY + 40);
+  }
+  // the back room: one long table, the bosses down it, and the kingpin on a screen
+  function drawBackRoom(w, h, night) {
+    ctx.fillStyle = "#0b0a0e"; ctx.fillRect(0, 0, w, h);
+    deckStrip(2, 70, 2, (d) => (Math.floor(d / 2) % 2 ? "#2a2028" : "#251c23"));
+    seams(3, 66, 2.2, "rgba(201,162,39,0.22)", 1);
+    for (const sgn of [-1, 1]) wall(sgn, 4.6, 3, 66, "#241b21", "rgba(140,110,60,0.55)");
+    // the table, running away from you up the middle
+    props(2.4, 26, 62, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      const cx = (e.l.x + e.r.x) / 2, tw = (e.r.x - e.l.x) * 0.42;
+      ctx.fillStyle = "#4a3524"; ctx.fillRect(cx - tw / 2, e.l.y - 1.05 * m, tw, 0.34 * m);
+      ctx.fillStyle = "rgba(30,22,16,0.8)"; ctx.fillRect(cx - tw / 2, e.l.y - 0.71 * m, tw, 0.16 * m);
+      // a boss either side of it, and the paper in front of them
+      for (const sgn of [-1, 1]) {
+        if ((idx + (sgn > 0 ? 0 : 1)) % 2) continue;
+        const seed = ((idx * 3301 + (sgn > 0 ? 71 : 5)) % 1000) / 1000;
+        const bx = cx + sgn * tw * 0.78;
+        ctx.fillStyle = ["#c8641e", "#4f7a34", "#6b4f2a", "#8d5a2b"][idx % 4];   // Gremlin, Pacer, Hugo, Trunkov
+        ctx.beginPath(); ctx.roundRect(bx - 1.05 * m, e.l.y - 2.0 * m, 2.1 * m, 1.25 * m, 0.3 * m); ctx.fill();
+        ctx.fillStyle = "rgba(150,180,205,0.4)"; ctx.fillRect(bx - 0.6 * m, e.l.y - 1.98 * m, 1.2 * m, 0.42 * m);
+        ctx.fillStyle = "rgba(232,226,206,0.75)";
+        ctx.fillRect(bx - sgn * 1.5 * m - 0.35 * m, e.l.y - 1.12 * m, 0.7 * m, 0.4 * m);
+        if (seed > 0.8) flood(bx, e.l.y - 3.4 * m, m, 4, "rgba(255,206,120,0.16)");
+      }
+    });
+    // low pendant lamps over the table
+    props(6, 12, 60, (d, idx, m) => {
+      const p = projectAhead(d, 0); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "#1a1418"; ctx.beginPath();
+      ctx.moveTo(p.x - 1.1 * m, p.y - 3.2 * m); ctx.lineTo(p.x + 1.1 * m, p.y - 3.2 * m);
+      ctx.lineTo(p.x + 0.4 * m, p.y - 3.9 * m); ctx.lineTo(p.x - 0.4 * m, p.y - 3.9 * m); ctx.closePath(); ctx.fill();
+      flood(p.x, p.y - 3.1 * m, m, 8, "rgba(255,208,130,0.22)");
+    });
+    // THE SCREEN at the head of the table: whoever that is, nobody in the room has met him
+    const pf = projectAhead(64, 0), mf = metreAt(64);
+    if (pf.fwd > 1 && mf) {
+      ctx.fillStyle = "#0d1116"; ctx.fillRect(pf.x - 9 * mf, pf.y - 12 * mf, 18 * mf, 9.4 * mf);
+      const flick = 0.62 + Math.sin(state.time * 13) * 0.05 + Math.sin(state.time * 3.1) * 0.04;
+      ctx.fillStyle = "rgba(96,150,190," + flick.toFixed(3) + ")";
+      ctx.fillRect(pf.x - 8.4 * mf, pf.y - 11.5 * mf, 16.8 * mf, 8.4 * mf);
+      ctx.fillStyle = "rgba(10,16,22,0.85)";                       // a silhouette, and nothing else
+      ctx.beginPath(); ctx.ellipse(pf.x, pf.y - 6.6 * mf, 4.6 * mf, 3.0 * mf, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.save(); ctx.globalAlpha = 0.25; ctx.fillStyle = "#000";  // scanlines
+      for (let y = 0; y < 9; y++) ctx.fillRect(pf.x - 8.4 * mf, pf.y - 11.5 * mf + y * 0.95 * mf, 16.8 * mf, 0.4 * mf);
+      ctx.restore();
+      ctx.fillStyle = "rgba(226,236,246,0.85)"; ctx.font = "600 " + Math.round(1.2 * mf) + "px ui-monospace, monospace";
+      ctx.textAlign = "center"; ctx.fillText("VOICE ONLY — NO IDENT", pf.x, pf.y - 1.4 * mf);
+      flood(pf.x, pf.y - 7 * mf, mf, 16, "rgba(120,170,220,0.14)");
+    }
+    ctx.fillStyle = "rgba(226,236,246,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("ALLINOL — AND WHICH ONE OF THEM DIES FOR IT", w / 2, horizonY - 16);
+  }
+
+  /* ---- CARS 2 · PARIS ---- */
+  // a wet boulevard: Haussmann stone, plane trees, a Métro entrance, the tower lit behind
+  function drawBoulevard(w, h, night) {
+    ctx.fillStyle = "#0a0d14"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    wetRoad("#26282e", "rgba(255,214,150,0.09)");
+    seams(3, 170, 4.6, "rgba(228,232,240,0.18)", 1);
+    // the pavé strip down the centre — Paris keeps its setts under the asphalt
+    props(1.4, 60, 120, (d, idx, m) => {
+      const p = projectAhead(d, 0); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = idx % 2 ? "rgba(60,62,70,0.55)" : "rgba(52,54,62,0.55)";
+      ctx.fillRect(p.x - 1.5 * m, p.y - 0.6 * m, 3 * m, 0.6 * m);
+    });
+    // Haussmann façades: cream stone, iron balconies at the second and fifth floors
+    props(13, 20, 190, (d, idx, m) => {
+      for (const sgn of [-1, 1]) {
+        const p = projectAhead(d, sgn * (halfAt(d) + 4.2)); if (!p.fwd || p.fwd <= 1) continue;
+        const seed = ((idx * 5171 + (sgn > 0 ? 211 : 13)) % 1000) / 1000;
+        const bh = (20 + seed * 6) * m, bw = 12 * m;
+        ctx.fillStyle = "hsl(38,16%," + Math.round(15 + seed * 5) + "%)";
+        ctx.fillRect(p.x - bw / 2, p.y - bh, bw, bh);
+        ctx.fillStyle = "#22262c";                                    // zinc mansard
+        ctx.beginPath(); ctx.moveTo(p.x - bw / 2, p.y - bh); ctx.lineTo(p.x + bw / 2, p.y - bh);
+        ctx.lineTo(p.x + bw * 0.36, p.y - bh - 2.6 * m); ctx.lineTo(p.x - bw * 0.36, p.y - bh - 2.6 * m);
+        ctx.closePath(); ctx.fill();
+        for (let r = 0; r < 6; r++) {
+          const y = p.y - bh + (2.2 + r * 3.0) * m;
+          for (let c0 = 0; c0 < 4; c0++) {
+            const lit = ((idx * 29 + r * 11 + c0 * 7) % 5) > 2;
+            ctx.fillStyle = lit ? "rgba(255,214,150,0.55)" : "rgba(16,18,24,0.9)";
+            ctx.fillRect(p.x - bw * 0.38 + c0 * bw * 0.24, y, bw * 0.14, 1.9 * m);
+          }
+          if (r === 1 || r === 4) {                                   // the iron balcony
+            ctx.strokeStyle = "rgba(28,30,36,0.9)"; ctx.lineWidth = Math.max(1, 0.14 * m);
+            ctx.beginPath(); ctx.moveTo(p.x - bw * 0.44, y + 2.1 * m); ctx.lineTo(p.x + bw * 0.44, y + 2.1 * m); ctx.stroke();
+          }
+        }
+        ctx.fillStyle = "rgba(226,222,206,0.6)";                      // the shop light at street level
+        if (idx % 2 === 0) { ctx.fillRect(p.x - bw * 0.3, p.y - 3 * m, bw * 0.6, 2.2 * m); flood(p.x, p.y - 2 * m, m, 8, "rgba(255,226,170,0.14)"); }
+      }
+    });
+    // plane trees and the pale globes of the streetlamps
+    for (const sgn of [-1, 1]) props(10, 18, 170, (d, idx, m) => {
+      const p = projectAhead(d, sgn * (halfAt(d) + 1.5)); if (!p.fwd || p.fwd <= 1) return;
+      if (idx % 2) {
+        ctx.fillStyle = "#4a4034"; ctx.fillRect(p.x - 0.32 * m, p.y - 6.5 * m, 0.64 * m, 6.5 * m);
+        ctx.fillStyle = "rgba(30,44,30,0.9)";
+        ctx.beginPath(); ctx.arc(p.x, p.y - 8.4 * m, 2.9 * m, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.fillStyle = "#1e2228"; ctx.fillRect(p.x - 0.16 * m, p.y - 5.2 * m, 0.32 * m, 5.2 * m);
+        flood(p.x, p.y - 5.5 * m, m, 9, "rgba(250,238,206,0.22)");
+      }
+    });
+    // a Métro entrance: the green Guimard arch and its yellow lamps
+    props(64, 4, 170, (d, idx, m) => {
+      const p = projectAhead(d, -(halfAt(d) + 2.4)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.strokeStyle = "#2f5c3c"; ctx.lineWidth = Math.max(1.5, 0.22 * m);
+      ctx.beginPath(); ctx.moveTo(p.x - 1.6 * m, p.y); ctx.lineTo(p.x - 1.6 * m, p.y - 2.6 * m);
+      ctx.quadraticCurveTo(p.x, p.y - 4.2 * m, p.x + 1.6 * m, p.y - 2.6 * m);
+      ctx.lineTo(p.x + 1.6 * m, p.y); ctx.stroke();
+      ctx.fillStyle = "rgba(255,208,90,0.9)";
+      for (const sgn of [-1, 1]) { ctx.beginPath(); ctx.arc(p.x + sgn * 1.6 * m, p.y - 3.0 * m, Math.max(1.2, 0.3 * m), 0, Math.PI * 2); ctx.fill(); }
+      ctx.fillStyle = "rgba(210,226,214,0.8)"; ctx.font = "700 " + Math.round(0.8 * m) + "px ui-sans-serif";
+      ctx.textAlign = "center"; ctx.fillText("MÉTROPOLITAIN", p.x, p.y - 4.6 * m);
+    });
+    traffic(26, 190, { oncoming: true, speed: 8, gaps: 0.34, lum: 24 });
+    // the tower, off to the left, doing its thing
+    const tp = projectAhead(220, -70), tm = metreAt(220);
+    if (tp.fwd > 1 && tm) {
+      ctx.strokeStyle = "rgba(214,172,96,0.75)"; ctx.lineWidth = Math.max(1.5, 0.5 * tm);
+      for (const sgn of [-1, 1]) {
+        ctx.beginPath(); ctx.moveTo(tp.x + sgn * 9 * tm, tp.y);
+        ctx.quadraticCurveTo(tp.x + sgn * 2.6 * tm, tp.y - 40 * tm, tp.x + sgn * 0.9 * tm, tp.y - 86 * tm); ctx.stroke();
+      }
+      ctx.beginPath(); ctx.moveTo(tp.x - 6 * tm, tp.y - 16 * tm); ctx.lineTo(tp.x + 6 * tm, tp.y - 16 * tm); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(tp.x - 3 * tm, tp.y - 44 * tm); ctx.lineTo(tp.x + 3 * tm, tp.y - 44 * tm); ctx.stroke();
+      if (Math.floor(state.time * 6) % 3 === 0) flood(tp.x, tp.y - 88 * tm, tm, 14, "rgba(255,244,214,0.28)");
+    }
+    ctx.fillStyle = "rgba(214,200,170,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("PARIS — TENTH ARRONDISSEMENT", w / 2, horizonY - 16);
+  }
+  // the Seine quay: the river on the left, bouquiniste boxes on the parapet, a bridge arch
+  function drawQuay(w, h, night) {
+    ctx.fillStyle = "#07090e"; ctx.fillRect(0, horizonY, w, h - horizonY);
+    // the river, and the lights lying on it
+    ctx.fillStyle = "#0b1a26";
+    ctx.beginPath(); ctx.moveTo(0, horizonY); ctx.lineTo(0, h);
+    const r0 = projectAhead(3, -11), r1 = projectAhead(200, -11);
+    ctx.lineTo(r0.x, r0.y); ctx.lineTo(r1.x, r1.y); ctx.closePath(); ctx.fill();
+    ctx.save(); ctx.globalCompositeOperation = "screen";
+    for (let i = 0; i < 22; i++) {
+      const d = 8 + i * i * 0.7; if (d > 180) break;
+      const p = projectAhead(d, -14 - (i % 4) * 2), m = metreAt(d); if (!p.fwd || p.fwd <= 1 || !m) continue;
+      ctx.fillStyle = "rgba(255,220,150,0.10)";
+      ctx.fillRect(p.x - 1.4 * m, p.y + Math.sin(state.time * 1.4 + i) * 0.2 * m, 2.8 * m, 0.9 * m);
+    }
+    ctx.restore();
+    wetRoad("#24272d", "rgba(255,214,150,0.08)");
+    seams(3, 170, 4.4, "rgba(228,232,240,0.16)", 1);
+    // the river parapet, with the bouquinistes' green boxes shut for the night
+    wall(-1, 1.1, 3, 170, "#6d6656", "rgba(216,208,186,0.75)");
+    props(4.2, 30, 150, (d, idx, m) => {
+      const p = projectAhead(d, -halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "#1f4a34";
+      ctx.fillRect(p.x - 1.5 * m, p.y - 1.85 * m, 3 * m, 0.75 * m);
+      ctx.fillStyle = "rgba(16,32,24,0.9)"; ctx.fillRect(p.x - 1.5 * m, p.y - 1.85 * m, 3 * m, 0.16 * m);
+    });
+    // the buildings on the town side
+    buildings(15, 180, {
+      gap: 4, w: 12, minH: 17, varH: 10,
+      wallCol: (s0) => "hsl(38,14%," + Math.round(12 + s0 * 5) + "%)",
+      windows: "rgba(255,214,150,0.5)", sign: null,
+    });
+    for (const sgn of [-1, 1]) props(11, 16, 160, (d, idx, m) => {
+      const p = projectAhead(d, sgn * (halfAt(d) + 0.8)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "#1e2228"; ctx.fillRect(p.x - 0.16 * m, p.y - 5 * m, 0.32 * m, 5 * m);
+      flood(p.x, p.y - 5.3 * m, m, 9, "rgba(250,238,206,0.2)");
+    });
+    traffic(30, 160, { oncoming: true, speed: 7, gaps: 0.5, lum: 22 });
+    // a stone bridge arch across the road, well ahead — the way into the market
+    const bp = projectAhead(150, 0), bm = metreAt(150);
+    if (bp.fwd > 1 && bm) {
+      ctx.fillStyle = "#4e4a3e";
+      ctx.beginPath();
+      ctx.moveTo(bp.x - 22 * bm, bp.y); ctx.lineTo(bp.x - 22 * bm, bp.y - 16 * bm);
+      ctx.lineTo(bp.x + 22 * bm, bp.y - 16 * bm); ctx.lineTo(bp.x + 22 * bm, bp.y);
+      ctx.lineTo(bp.x + 7 * bm, bp.y);
+      ctx.quadraticCurveTo(bp.x + 7 * bm, bp.y - 9 * bm, bp.x, bp.y - 9 * bm);
+      ctx.quadraticCurveTo(bp.x - 7 * bm, bp.y - 9 * bm, bp.x - 7 * bm, bp.y);
+      ctx.closePath(); ctx.fill();
+      ctx.fillStyle = "rgba(214,208,188,0.5)"; ctx.fillRect(bp.x - 22 * bm, bp.y - 17 * bm, 44 * bm, 1 * bm);
+      flood(bp.x - 7 * bm, bp.y - 8 * bm, bm, 8, "rgba(255,226,170,0.14)");
+      flood(bp.x + 7 * bm, bp.y - 8 * bm, bm, 8, "rgba(255,226,170,0.14)");
+    }
+    ctx.fillStyle = "rgba(200,214,226,0.65)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("QUAI DE LA SEINE — MARCHÉ AUX PIÈCES AHEAD", w / 2, horizonY - 16);
+  }
+  // the market itself: a Gare du Nord train shed full of second-hand parts
+  function drawMarket(w, h, night) {
+    ctx.fillStyle = "#080a0e"; ctx.fillRect(0, 0, w, h);
+    deckStrip(2, 120, 2.2, (d) => (Math.floor(d / 1.1 + state.distanceM * 0.9) % 2 ? "#3b3a36" : "#353430"));
+    seams(3, 110, 1.1, "rgba(20,20,18,0.5)", 1);
+    for (const sgn of [-1, 1]) wall(sgn, 0.45, 3, 110, "#2a2a26", "rgba(150,146,132,0.4)");
+    // the shed: riveted iron arches overhead, glazing between them, and the night above it
+    props(9, 16, 110, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      const cx = (e.l.x + e.r.x) / 2, span = (e.r.x - e.l.x) * 1.7;
+      ctx.strokeStyle = "#2f3238"; ctx.lineWidth = Math.max(1.5, 0.32 * m);
+      ctx.beginPath();
+      ctx.moveTo(cx - span / 2, e.l.y - 2 * m);
+      ctx.quadraticCurveTo(cx, e.l.y - 20 * m, cx + span / 2, e.l.y - 2 * m);
+      ctx.stroke();
+      // the tie bar and the lattice under the arch
+      ctx.lineWidth = 1;
+      ctx.beginPath(); ctx.moveTo(cx - span / 2, e.l.y - 12 * m); ctx.lineTo(cx + span / 2, e.l.y - 12 * m); ctx.stroke();
+      for (let k = -4; k <= 4; k++) {
+        const x0 = cx + k * span * 0.11;
+        ctx.beginPath(); ctx.moveTo(x0, e.l.y - 12 * m);
+        ctx.lineTo(x0, e.l.y - (12 + 6 * Math.cos(k * 0.36)) * m); ctx.stroke();
+      }
+      // the glazing bays between the arches, faintly lit from the street outside
+      ctx.fillStyle = "rgba(60,80,100,0.14)";
+      ctx.fillRect(cx - span * 0.42, e.l.y - 18 * m, span * 0.84, 5.4 * m);
+      // the lamps hung from the tie bar
+      if (idx % 2) flood(cx, e.l.y - 11.4 * m, m, 13, "rgba(255,214,150,0.20)");
+    });
+    // the stalls: engines on chains, tyre stacks, benches of parts, a card over each
+    for (const sgn of [-1, 1]) props(6, 20, 100, (d, idx, m) => {
+      const p = projectAhead(d, sgn * (halfAt(d) + 2.6)); if (!p.fwd || p.fwd <= 1) return;
+      ctx.fillStyle = "#3a352c"; ctx.fillRect(p.x - 2.4 * m, p.y - 1.5 * m, 4.8 * m, 0.28 * m);   // bench
+      ctx.fillStyle = "#4a443a"; ctx.fillRect(p.x - 2.2 * m, p.y - 1.22 * m, 0.28 * m, 1.22 * m);
+      ctx.fillStyle = "#4a443a"; ctx.fillRect(p.x + 1.94 * m, p.y - 1.22 * m, 0.28 * m, 1.22 * m);
+      const kind = idx % 3;
+      if (kind === 0) {                                            // a block on a chain
+        ctx.strokeStyle = "rgba(140,140,132,0.8)"; ctx.lineWidth = Math.max(1, 0.1 * m);
+        ctx.beginPath(); ctx.moveTo(p.x, p.y - 6.4 * m); ctx.lineTo(p.x, p.y - 3.4 * m); ctx.stroke();
+        ctx.fillStyle = "#5a5a56";
+        ctx.fillRect(p.x - 0.9 * m, p.y - 3.4 * m, 1.8 * m, 1.5 * m);
+        ctx.fillStyle = "#6e6e68";
+        for (let k = 0; k < 4; k++) ctx.fillRect(p.x - 0.75 * m + k * 0.42 * m, p.y - 3.75 * m, 0.28 * m, 0.4 * m);
+      } else if (kind === 1) {                                     // tyres
+        ctx.fillStyle = "#1a1a1c";
+        for (let k = 0; k < 4; k++) { ctx.beginPath(); ctx.ellipse(p.x, p.y - (0.3 + k * 0.5) * m, 1.0 * m, 0.4 * m, 0, 0, Math.PI * 2); ctx.fill(); }
+      } else {                                                     // crates and small parts
+        ctx.fillStyle = "#6b5a38";
+        for (let k = 0; k < 5; k++) ctx.fillRect(p.x - 2.0 * m + (k % 3) * 1.4 * m, p.y - 2.3 * m - Math.floor(k / 3) * 0.75 * m, 1.2 * m, 0.7 * m);
+      }
+      ctx.fillStyle = "rgba(226,216,180,0.75)";                    // the dealer's card
+      ctx.fillRect(p.x - 1.1 * m, p.y - 2.9 * m, 2.2 * m, 0.62 * m);
+      ctx.fillStyle = "rgba(30,26,20,0.9)"; ctx.font = "700 " + Math.max(7, Math.round(0.42 * m)) + "px ui-sans-serif";
+      ctx.textAlign = "center"; ctx.fillText(["PIÈCES", "OCCASION", "MOTEURS", "PNEUS"][idx % 4], p.x, p.y - 2.43 * m);
+    });
+    // the mirror he sees you in — a big wing mirror propped against a stall, and your lamps in it
+    const q = state.q, mp = projectAhead(58, -(halfAt(58) + 1.1)), mm = metreAt(58);
+    if (mp.fwd > 1 && mm) {
+      ctx.fillStyle = "#2b2f36";
+      ctx.beginPath(); ctx.roundRect(mp.x - 1.5 * mm, mp.y - 3.6 * mm, 3 * mm, 2.4 * mm, 0.4 * mm); ctx.fill();
+      ctx.fillStyle = q.mirrorSeen ? "rgba(196,220,236,0.85)" : "rgba(120,140,156,0.55)";
+      ctx.beginPath(); ctx.roundRect(mp.x - 1.25 * mm, mp.y - 3.4 * mm, 2.5 * mm, 2.0 * mm, 0.3 * mm); ctx.fill();
+      if (q.mirrorSeen) {                                          // two headlamps, coming
+        ctx.fillStyle = "rgba(255,248,214,0.95)";
+        for (const sgn of [-1, 1]) { ctx.beginPath(); ctx.arc(mp.x + sgn * 0.5 * mm, mp.y - 2.5 * mm, Math.max(1.2, 0.2 * mm), 0, Math.PI * 2); ctx.fill(); }
+      }
+    }
+    ctx.fillStyle = "rgba(214,206,182,0.75)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(q.radar ? "PCS NO1R — HE IS TWO AISLES OVER" : "MARCHÉ AUX PIÈCES — SCOPE ON 8", w / 2, horizonY - 16);
+  }
+  // the aisles: tight, stacked to the roof, and everything in them can come down
+  function drawStalls(w, h, night) {
+    ctx.fillStyle = "#07080b"; ctx.fillRect(0, 0, w, h);
+    deckStrip(2, 90, 2, (d) => (Math.floor(d / 1.0 + state.distanceM) % 2 ? "#33322e" : "#2d2c29"));
+    seams(3, 85, 1.0, "rgba(18,18,16,0.55)", 1);
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 6.5, 3, 80, "#2a2823", "rgba(120,116,104,0.4)");
+      // racking either side, packed with parts, right up to the roof
+      props(3.2, 30, 78, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.strokeStyle = "rgba(120,86,44,0.8)"; ctx.lineWidth = Math.max(1, 0.16 * m);
+        for (let r = 0; r < 4; r++) {
+          const y = p.y - (1.4 + r * 1.5) * m;
+          ctx.beginPath(); ctx.moveTo(p.x, y); ctx.lineTo(p.x + sgn * 2.6 * m, y); ctx.stroke();
+          for (let k = 0; k < 3; k++) {
+            const seed = ((idx * 811 + r * 97 + k * 31) % 1000) / 1000;
+            if (seed < 0.25) continue;
+            ctx.fillStyle = ["#6b5a38", "#4a4d52", "#5a3a2a", "#3f4a3a"][(idx + r + k) % 4];
+            ctx.fillRect(p.x + sgn * (0.25 + k * 0.8) * m, y - 0.72 * m, 0.66 * m, 0.72 * m);
+          }
+        }
+        if (idx % 4 === 0) flood(p.x + sgn * 0.6 * m, p.y - 7 * m, m, 8, "rgba(255,214,150,0.18)");
+      });
+    }
+    // strip lights in the roof of the aisle
+    props(5, 18, 78, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.fillStyle = "rgba(226,236,246,0.7)";
+      ctx.fillRect((e.l.x + e.r.x) / 2 - 1.4 * m, e.l.y - 7.3 * m, 2.8 * m, 0.22 * m);
+      flood((e.l.x + e.r.x) / 2, e.l.y - 7.2 * m, m, 7, "rgba(214,232,248,0.16)");
+    });
+    // what he has put down behind him, at its real distance
+    const q = state.q;
+    for (const b of q.boxes || []) {
+      const rel = b.dist - state.distanceM;
+      const p = projectAhead(rel, b.lane), m = metreAt(rel);
+      if (!p.fwd || p.fwd <= 1 || !m) continue;
+      const spill = Math.min(1, b.t * 1.8);                        // they are still falling when he does it
+      for (let k = 0; k < 9; k++) {
+        const seed = ((k * 313) % 100) / 100;
+        const dx = (seed - 0.5) * 4.2 * spill * m, dy = -(1.4 - spill * 1.2) * (1 + seed) * m;
+        ctx.fillStyle = b.hit ? "rgba(90,76,52,0.55)" : ["#6b5a38", "#7a6642", "#5a4a30"][k % 3];
+        ctx.save(); ctx.translate(p.x + dx, p.y + dy);
+        ctx.rotate((seed - 0.5) * spill * 1.6);
+        ctx.fillRect(-0.6 * m, -0.6 * m, 1.2 * m, 1.2 * m);
+        ctx.restore();
+      }
+      if (!b.hit && rel > 0 && rel < 60) {
+        ctx.fillStyle = "rgba(255,180,80,0.9)"; ctx.font = "700 11px ui-sans-serif"; ctx.textAlign = "center";
+        ctx.fillText("STOCK DOWN", p.x, p.y - 3.2 * m);
+      }
+    }
+    ctx.fillStyle = "rgba(214,206,182,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(state.stage && state.stage.id === "corner" ? "DEAD END — STOP, AND SHOW HIM THE PHOTOGRAPH" : "AFTER HIM", w / 2, horizonY - 16);
   }
 
   /* ---- shared surface helpers: everything below builds out of these ---- */
@@ -5338,7 +6233,7 @@ const SPEC = {
     ctx.fillStyle = "rgba(6,14,10,0.30)"; ctx.fillRect(x, y, bw, bh);
     // what you are looking at: Zündapp's box, the crate, and Zündapp
     const cx = x + bw / 2 - q.camAim * bw * 0.42, base = y + bh * 0.72;
-    SEA_SUBJECTS.forEach((s0, i) => {
+    subjectsFor().forEach((s0, i) => {
       const sx = cx + subjectAt(i, q.camPhase || 0) * bw * 0.42;
       if (sx < x - 60 || sx > x + bw + 60) return;
       ctx.fillStyle = s0.c; ctx.fillRect(sx - s0.w / 2, base - s0.h, s0.w, s0.h);
@@ -5363,15 +6258,18 @@ const SPEC = {
     ctx.font = "700 12px ui-sans-serif"; ctx.textAlign = "left";
     ctx.fillText(framed && steady ? "FOCUS LOCKED — P" : steady ? "PAN WITH A / D" : "TOO FAST TO HOLD IT", x + 10, y + bh - 12);
     ctx.textAlign = "right";
-    ctx.fillText("EXP " + q.shots + "/3", x + bw - 10, y + bh - 12);
+    ctx.fillText("EXP " + q.shots + "/" + subjectsFor().length, x + bw - 10, y + bh - 12);
     ctx.restore();
   }
   // the stage board: which stage, where you are, and the one thing that has to happen next
   function drawStageHud(w, h) {
     const s = state.stage; if (!s || !onStage()) return;
     const L = STAGE_SETS[s.route].stages, i = s.i, a = s.from, k = clamp((state.distanceM - a) / (s.to - a), 0, 1);
-    // the centre band is the only part of the canvas the HTML panels do not cover
-    const bw = Math.min(430, w * 0.4), x = (w - bw) / 2, y = 104;
+    // the centre band is the only part of the canvas the HTML panels do not cover — but the
+    // interior mirror lives there too (fy 0.165, ar 0.34), so the board starts below its
+    // bottom edge rather than straight through it
+    const bw = Math.min(430, w * 0.4), x = (w - bw) / 2;
+    const y = Math.round(h * (MIRROR.pods[0].fy || 0.165) + w * (MIRROR.pods[0].fw || 0.17) * (MIRROR.pods[0].ar || 0.34) / 2) + 16;
     ctx.save();
     ctx.fillStyle = "rgba(6,10,14,0.84)";
     ctx.beginPath(); ctx.roundRect(x, y, bw, 84, 8); ctx.fill();
@@ -5406,6 +6304,10 @@ const SPEC = {
       "Mission — Furka Pass & Auric Enterprises, 1964": [["8", "TRACKER", q.radar], ["4", "SLASHERS", !!done.mustang],
         ["1", "PLATES", q.plate > 0], ["5", "OIL", q.oil < 100], ["2", "GUNS", q.ammo < 104],
         ["6", "SMOKE", q.smokeUsed], ["7", "EJECTOR", !!done.boarder], ["STOP", "THE MIRROR", !!done.wall]],
+      "Mission — Paris, the parts market": [["8", "SCOPE", q.radar], ["P", "PHOTO", q.shots >= 1],
+        ["1", "PLATES", q.plate > 0], ["6", "SMOKE", q.smokeUsed]],
+      "Mission — Porto Corsa, the casino": [["2", "GUNS", q.ammo < 104], ["G", "TOW HOOK", q.hook >= 1],
+        ["1", "PLATES", q.plate > 0], ["P", "CAMERA", q.shots >= 3], ["6", "SMOKE", q.smokeUsed]],
       "Mission — Matera, 2021": [["3", "GLASS", q.shield > 0.5], ["2", "MINIGUNS", q.gun],
         ["SPIN", Math.round(q.spinDeg || 0) + "°", (q.spinDeg || 0) >= 340], ["6", "SMOKE", q.smokeUsed],
         ["B", "ROCKETS", q.rocket > 0]],
@@ -5559,10 +6461,13 @@ const SPEC = {
       ctx.fillText(o.text, x + 30, yy);
     });
 
-    if (m.flashT > 0 && !m.over) {
+    // the stage board already prints the stage's own hint under the kit row, and h*0.2 is
+    // exactly where the board's "where" line sits — so this used to draw the same sentence
+    // twice, once of them straight through the board
+    if (m.flashT > 0 && !m.over && !(state.stage && m.flash === state.stage.hint)) {
       ctx.globalAlpha = Math.min(1, m.flashT / 0.7);
       ctx.fillStyle = "#ffd985"; ctx.font = "700 13px ui-sans-serif"; ctx.textAlign = "center";
-      ctx.fillText(m.flash, w / 2, h * 0.2);
+      ctx.fillText(m.flash, w / 2, onStage() ? 268 : h * 0.2);
       ctx.globalAlpha = 1;
     }
     if (m.over) {

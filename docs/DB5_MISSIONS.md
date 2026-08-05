@@ -113,3 +113,87 @@ should not be asked to supply it.
 
 Build from sources, not from a summary. Both times this went wrong it was because I wrote
 from a recollection of a plot rather than checking it, and each pass cost a release.
+
+---
+
+## Paris and Porto Corsa — the two Cars 2 locations that were missing
+
+Researched, not remembered. Sources: the Pixar Cars wiki pages for
+[Tomber](https://pixarcars.fandom.com/wiki/Tomber), the
+[Marché Aux Pièces](https://pixarcars.fandom.com/wiki/March%C3%A9_Aux_Pi%C3%A8ces),
+[Porto Corsa](https://pixarcars.fandom.com/wiki/Porto_Corsa) and the
+[Porto Corsa Grand Prix](https://pixarcars.fandom.com/wiki/Porto_Corsa_Grand_Prix).
+
+### Paris — `Mission — Paris, the parts market`, 5 stages
+
+The **Marché aux Pièces** is a parts market spread over several streets inside one
+iron-and-glass shed drawn from the **Gare du Nord**. **Tomber** is a rusted three-wheeled
+**Citroën 2CV** who deals in salvaged parts; his plate is **PCS NO1R** — *pièces noires*. He
+is Finn's informant, which Holley does not know.
+
+What happens, in order: they drive into Paris at night; Tomber catches **Finn's reflection in
+a mirror** and bolts; there is a chase through the stalls in which he **brings a stack of
+boxes down** behind him; **Holley corners him and tasers him** before Finn can stop her. Then
+the photograph — a **Rover V8**, which Tomber calls *"the worst motor ever made"* — except
+that he is not looking at the engine. He is looking at the **boxes of rare parts stacked
+beside it**, which he sold, by telephone, to a car he has never seen. He names the lemon
+families — **Gremlins, Pacers, Hugos, Trunkovs** — and tells them the bosses are meeting at
+**Porto Corsa**, and that the kingpin will be there, because he has just shipped him parts.
+
+| stage | you are driving on | what has to happen | how you lose it |
+|---|---|---|---|
+| `boulevard` | wet Paris pavé, Haussmann stone, a Guimard Métro arch, the tower lit | — | — |
+| `quay` | the Seine on your left, bouquiniste boxes shut on the parapet | — | — |
+| `market` | the train shed: riveted arches, glazing, engines on chains | **tracker scope (8)** finds him — and he sees you in the mirror | 80 s and he is out the far end |
+| `stalls` | aisles racked to the roof, his stock coming down across them | stay inside 150 m of him | he gets away |
+| `corner` | a dead end | **stop**, camera up (**P**), and frame *the boxes*, not the engine | 75 s |
+
+The camera beat is the film's beat: framing the Rover V8 gets you *"the worst motor ever
+made"*; framing what is stacked beside it gets you the case.
+
+### Porto Corsa — `Mission — Porto Corsa, the casino`, 8 stages
+
+An Italian Riviera town built on **Monaco** with Portofino in it: hilly, arched bridges, a
+marina full of boats, and a **casino on a rock shaped like a 1948 Fiat 500 Topolino**. The
+circuit leaves the port, climbs the coast road, drops, crosses the **Casino Bridge** and comes
+back to the port; the hairpin is **Loews**.
+
+**Ivan** — a Russian tow truck who works for **Victor Hugo** — is put out so you can take his
+place and tow Victor Hugo into the casino. In the back room the **kingpin speaks through a
+screen**: the plan is to make the world turn its back on **Allinol** by making it look as
+though it is destroying the racers, and they pick **Lightning McQueen** to kill. The disguise
+comes off, the room draws, and outside **Grem and Acer are working the electromagnetic pulse
+camera** on the Allinol runners. McQueen wins it, from Francesco.
+
+| stage | you are driving on | what has to happen | how you lose it |
+|---|---|---|---|
+| `coast` | the Ligurian coast road, sea below, terraced houses above | — | — |
+| `ivan` | the quayside: cobbles, bollards, nets, boats | put **Ivan** out — guns (**2**) or slashers (**4**) | 85 s and he reaches the forecourt |
+| `valet` | the casino carpet, and a great many photographers | **Victor Hugo on the hook (G)** | 90 s |
+| `floor` | patterned carpet, gaming tables, chandeliers, gilt | **revolve the plates (1)** — not on BMT 216A | 75 s, or a doorman reads the number |
+| `meeting` | the back room: one long table, the bosses down it | **three exposures (P)** — the table, the professor, the screen | 100 s |
+| `blown` | the same floor, and everyone in it armed | **two of them down** | 110 s |
+| `race` | the Riviera circuit, in daylight, with a crowd | run it — the pulse camera picks runners off around you | — |
+| `getaway` | the old town above the port | **smoke (6)** | they box you in |
+
+The camera has **per-stage subjects** (`STAGE_SUBJECTS`): three under the deck in the Pacific,
+three in the back room, one in the photograph in Paris. That indirection is also where a real
+fault lived — see below.
+
+### Two faults the tests found, and the tests that now hold them
+
+**`subjectsFor` was defined in the physics block and used in the render block.** The sim's
+module is a run of sibling `{ }` blocks — physics in one, rendering in the next — and neither
+can see the other's consts, which is why `onSea`/`onStage` are already declared twice. The
+mission logic was perfect and the *picture* threw `ReferenceError` the moment the viewfinder
+was painted. The logic now lives at module scope (`subjectsIn`/`subjectAtIn`) with a one-line
+binding per block, and **`all 46 stages render, viewfinder and all`** paints every stage of
+every mission with the camera up.
+
+**Eleven start cards named the wrong maker.** The clone audit read the ignition prompt, the
+toasts, the wheel hub and the 101 course — but not the `<div class="ring">` maker line, which
+is the first thing anybody sees. The DB5 and the 300 SLR said *"Ferrari · Maranello"*, the
+Yangwang U9 was built in Croatia, and six cars cloned from the Supra — a 1993 McLaren among
+them — said *"Toyota Gazoo Racing"*, which post-dates that car by fourteen years. All eleven
+now name the plant that built them, the audit reads the start card, and
+**`all 47 start cards name the maker that built the car`** asserts the positive form.

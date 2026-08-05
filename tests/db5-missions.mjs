@@ -1,4 +1,5 @@
-// tests/db5-missions.mjs — play Tokyo, London, Goldfinger and Matera end to end, then lose each one.
+// tests/db5-missions.mjs — play Tokyo, Paris, Porto Corsa, London, Goldfinger and Matera
+// end to end, then lose each one the way its own stage says it is lost.
 import { resolve } from "node:path"; import { pathToFileURL } from "node:url"; import { execSync } from "node:child_process";
 const g = execSync("npm root -g").toString().trim();
 const { chromium } = await import(pathToFileURL(resolve(g, "playwright/index.mjs")).href);
@@ -64,6 +65,45 @@ const PLAY = (route, seconds) => `(() => {
       const rel = st.to - 60 - s.distanceM;
       if (rel < 260) { s.keys.KeyW = Math.abs(s.speedMps) < 4; s.keys.Space = Math.abs(s.speedMps) > 6; }
     }
+    // --- PARIS
+    if (id === "market" && !q.radar) a.qFire("radar");
+    if (id === "stalls") {
+      const t = (s.rivals || []).find(r => r.role === "target" && !r.down);
+      if (t) t.distM = Math.min(t.distM, s.distanceM + 60);      // stay with him
+      for (const bx of q.boxes || []) bx.lane = (s.laneOffset || 0) + 9;   // steer round the stock
+    }
+    if (id === "corner") {
+      s.keys.KeyW = Math.abs(s.speedMps) * 3.6 < 12; s.keys.Space = Math.abs(s.speedMps) * 3.6 > 20;
+      if (q.shots < 1) {
+        if (!q.cam) a.seaFire("cam");
+        else { q.camAim = q.camSubject; s.speedMps = Math.min(s.speedMps, 1); a.seaFire("cam"); }
+      }
+    }
+    // --- PORTO CORSA
+    if (id === "ivan") {
+      const iv = (s.rivals || []).find(r => r.tag === "ivan" && !r.down);
+      if (iv) { iv.distM = s.distanceM + 14; iv.lane = s.laneOffset; }
+      q.gun = true; q.ammo = 104; q.muzzle = 1;
+    }
+    if (id === "valet") {
+      const vh = (s.rivals || []).find(r => r.role === "target" && !r.down);
+      if (vh) vh.distM = s.distanceM + 12;
+      if (q.hook < 1) a.seaFire("hook");
+    }
+    if (id === "floor" && q.plate === 0) { q.plateT = 0; a.qFire("plate"); }
+    if (id === "meeting") {
+      s.keys.KeyW = Math.abs(s.speedMps) * 3.6 < 12; s.keys.Space = Math.abs(s.speedMps) * 3.6 > 20;
+      if (q.shots < 3) {
+        if (!q.cam) a.seaFire("cam");
+        else { q.camAim = q.camSubject; s.speedMps = Math.min(s.speedMps, 1); a.seaFire("cam"); }
+      }
+    }
+    if (id === "blown") {
+      const foes = (s.rivals || []).filter(r => !r.down && (r.role === "guard" || r.role === "shooter"));
+      for (const f of foes.slice(0, 2)) { f.distM = s.distanceM + 16; f.lane = s.laneOffset; }
+      q.gun = true; q.ammo = 104; q.muzzle = 1;
+    }
+    if (id === "getaway" && !q.smokeUsed) a.qFire("smoke");
     // --- MATERA
     if (id === "piazza") {
       s.keys.KeyW = false; s.keys.Space = Math.abs(s.speedMps) > 8;
@@ -80,6 +120,8 @@ const PLAY = (route, seconds) => `(() => {
 
 for (const [route, secs, stages] of [
   ["Mission — Tokyo, World Grand Prix", 620, 7],
+  ["Mission — Paris, the parts market", 480, 5],
+  ["Mission — Porto Corsa, the casino", 900, 8],
   ["Mission — London, the last race", 480, 5],
   ["Mission — Furka Pass & Auric Enterprises, 1964", 620, 6],
   ["Mission — Matera, 2021", 460, 5],
@@ -119,6 +161,15 @@ await fail("Goldfinger: straight into the mirror wall", "Mission — Furka Pass 
    s.mission.done.boarder = true; s.speedMps = 40;
    for (let i = 0; i < 120 * 40 && !s.mission.over; i++) { s.keys.KeyW = true; s.speedMps = Math.max(s.speedMps, 30); a.updatePhysics(1/120); }`,
   "Into the wall");
+await fail("Paris: lose Tomber in the stalls", "Mission — Paris, the parts market",
+  `s.distanceM = 2850; a.updatePhysics(1/120);
+   const t = (s.rivals || []).find(r => r.role === "target"); if (t) t.distM = s.distanceM + 400;
+   for (let i = 0; i < 120 * 6 && !s.mission.over; i++) { s.keys.KeyW = true; a.updatePhysics(1/120); }`,
+  "lost him");
+await fail("Porto Corsa: go in on BMT 216A and the doorman knows the number", "Mission — Porto Corsa, the casino",
+  `s.distanceM = 2850; a.updatePhysics(1/120); s.q.plate = 0;
+   for (let i = 0; i < 120 * 90 && !s.mission.over; i++) { s.keys.KeyW = true; a.updatePhysics(1/120); }`,
+  "BMT 216A");
 await fail("Matera: never turn the car → they take it apart", "Mission — Matera, 2021",
   `s.distanceM = 2300; a.updatePhysics(1/120); s.mission.def.limitS = 40;
    for (let i = 0; i < 120 * 60 && !s.mission.over; i++) { s.keys.KeyW = true; a.updatePhysics(1/120); }`,
