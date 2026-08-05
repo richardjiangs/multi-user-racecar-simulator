@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Gordon Murray T.33 — 3.0 naturally-aspirated V12</title>
+  <title>Gordon Murray T.33 — 3.9 naturally-aspirated Cosworth V12</title>
   <style>
     :root {
       color-scheme: dark;
@@ -696,7 +696,7 @@
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">GR</div>
+      <div class="pmark">GMA</div>
       <h1>T.33</h1>
       <p>Nothing here has a screen. The Cosworth V12 lights with a clean mechanical yowl, the ram-air slot in the roof feeds it, and the open linkage clicks under your hand. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
@@ -809,13 +809,14 @@ const CIRCUITS = {
     ]
   },
   "Dunsfold Park": {
-    dist: 4563, env: "track", limitKmh: 300, loop: true, widthM: 15, corners: 9,
-    blurb: "the 4.563 km Fuji Speedway beneath Mt. Fuji, Toyota's home circuit",
+    dist: 2820, env: "track", limitKmh: 290, loop: true, widthM: 14, corners: 9,
+    blurb: "the 2.82 km Dunsfold Park aerodrome, Surrey — GMA's own doorstep, and the Top Gear track",
     bumps: [],
     track: [
-      c(1500, 1, 90, 55, "Turn 1"), c(1900, -1, 70, 65, "Turn 2"), c(2300, 1, 80, 55, "Coca-Cola"),
-      c(2700, -1, 60, 80, "100R"), c(3100, 1, 150, 32, "Hairpin"), c(3500, -1, 70, 60, "Netz"),
-      c(3800, 1, 80, 55, "Dunlop"), c(4100, -1, 90, 50, "Panasonic"), c(4350, 1, 110, 42, "Turn 16")
+      c(420, 1, 45, 90, "Crooner Curve"), c(760, -1, 130, 45, "Wilson Bend"),
+      c(1080, 1, 100, 55, "Chicago"), c(1320, -1, 165, 30, "Hammerhead"),
+      c(1700, 1, 30, 140, "Follow-Through"), c(2050, -1, 70, 70, "Bentley"),
+      c(2260, 1, 60, 75, "Bacharach"), c(2560, -1, 150, 34, "Gambon")
     ]
   },
   "Prologue — Yanbu": {
@@ -1502,14 +1503,14 @@ const SPEC = {
     /* The Fuji Speedway is a Toyota Gazoo Racing event — so its grid is Toyota / GR / Lexus
      machines, with their real (or, where limited, best-known) top speeds and grip. */
   const T33_GRID = [
-    { name: "Nissan Skyline F1 R34 V-Spec", body: "#2f6fd0", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.3 },
-    { name: "Mazda RX-7 FD3S",               body: "#e8e9ec", stripe: "#d81e2c", top: 250, latG: 1.28, accel: 11.0 },
-    { name: "Honda NSX-R (NA2)",             body: "#e0e3e6", stripe: "#c8102e", top: 270, latG: 1.34, accel: 10.9 },
-    { name: "Mitsubishi 3000GT VR-4",        body: "#b03030", stripe: "#15181d", top: 250, latG: 1.16, accel: 10.6 },
-    { name: "Gordon Murray T.33 RZ (A80)",     body: "#e04a2e", stripe: "#0a0c10", top: 250, latG: 1.30, accel: 11.2 },
-    { name: "Subaru Impreza 22B STi",        body: "#2a54a8", stripe: "#f0d000", top: 240, latG: 1.22, accel: 10.8 },
-    { name: "Nissan 300ZX Twin Turbo (Z32)", body: "#1b1d22", stripe: "#c0c4c8", top: 250, latG: 1.14, accel: 10.4 },
-    { name: "Gordon Murray T.33 Turbo (JZA80)", body: "#d81e2c", stripe: "#15181d", top: 250, latG: 1.28, accel: 11.1 },
+    { name: "Ferrari 296 GTB", body: "#d81e2c", stripe: "#f0d000", top: 330, latG: 1.32, accel: 11.6 },
+    { name: "Porsche 911 S/T", body: "#e8e9ec", stripe: "#c8102e", top: 300, latG: 1.28, accel: 10.9 },
+    { name: "McLaren 750S", body: "#f07a00", stripe: "#15181d", top: 332, latG: 1.33, accel: 11.8 },
+    { name: "Aston Martin Valour", body: "#0a3a2a", stripe: "#d4c07a", top: 322, latG: 1.2, accel: 10.8 },
+    { name: "Lotus Emira V6", body: "#f0d000", stripe: "#0a5a3a", top: 290, latG: 1.22, accel: 10.2 },
+    { name: "Maserati MC20", body: "#0a2a5a", stripe: "#c0c4c8", top: 325, latG: 1.28, accel: 11.2 },
+    { name: "Pagani Utopia", body: "#5a5048", stripe: "#c8a24a", top: 350, latG: 1.3, accel: 11.5 },
+    { name: "Koenigsegg CC850", body: "#c0c4c8", stripe: "#e86a1c", top: 330, latG: 1.31, accel: 11.9 },
   ];
 
   function lapLen() { return (state.route.active && state.route.totalM) ? state.route.totalM : 4000; }
