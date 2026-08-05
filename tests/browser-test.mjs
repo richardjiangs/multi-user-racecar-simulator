@@ -251,6 +251,33 @@ const check = (label, ok, detail) => {
     /s\.i < state\.stage\.i\) s = state\.stage/.test(src));
 }
 
+/* ---------- the Jesko is two cars ----------
+   Z is the FUEL MAP (petrol 1,280 hp / E85 1,600) and Y is the BODY: the Attack, with the
+   boomerang wing and 1,400 kg of downforce, or the Absolut, with the wing deleted for two
+   rear-deck fins, 85 mm more tail and Cd 0.278. They are different axes and both are opt-in,
+   so the certified 0-100 is the Attack car on petrol. Assert all of that stays true. */
+{
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync(ROOT + "/Koenigsegg Jesko simulator.html", "utf8");
+  const gaps = [];
+  if (!/KeyZ" && !e\.repeat\) app\.toggleFuel\(\)/.test(src)) gaps.push("Z is no longer the fuel map");
+  if (!/KeyY" && !e\.repeat\) app\.toggleAbsolut\(\)/.test(src)) gaps.push("Y is not the Absolut body");
+  if (!/dragCd: 0\.278/.test(src)) gaps.push("the Absolut has lost Cd 0.278");
+  if (!/downforceKg: 150/.test(src)) gaps.push("the Absolut has lost its 150 kg");
+  if (!/downforceKg: 1400/.test(src)) gaps.push("the Attack has lost its 1,400 kg");
+  if (!/claimedTopKmh: 531/.test(src)) gaps.push("the 531 km/h claim is gone");
+  // the body has to be real geometry, not a label
+  for (const id of ["kgAbsolutFins", "kgAbsolutTail", "kgWheelCovers", "kgWingPylons"])
+    if (!src.includes('id="' + id + '"')) gaps.push("no " + id + " in the exterior art");
+  // both start hidden and both are off by default, or perf-test would see them
+  if (!/absolut: false/.test(src)) gaps.push("the Absolut is on by default");
+  if (!/e85: false/.test(src)) gaps.push("E85 is on by default");
+  // applyBodyArt is in a different { } block from injectExterior — it must go through app
+  if (/\n    applyBodyArt\(\);\s+\/\/ whichever body/.test(src))
+    gaps.push("injectExterior calls applyBodyArt across a block boundary");
+  check("the Jesko carries both bodies — Z the fuel map, Y the Absolut", gaps.length === 0, gaps.join(" | "));
+}
+
 /* ---------- the start card is the first thing anybody reads ----------
    Eleven cars were wearing their donor's maker line: the DB5 and the 300 SLR said
    "Ferrari · Maranello", the Yangwang U9 was built in Croatia, and six cars cloned from the
