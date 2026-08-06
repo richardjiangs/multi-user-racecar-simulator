@@ -25,7 +25,7 @@ const PLAY = (route, seconds) => `(() => {
   s.doors = { driver: false, passenger: false };
   let last = "", frames = 0;
   for (let i = 0; i < 120 * ${seconds} && !(s.mission && s.mission.over); i++) {
-    const st = s.stage, id = st ? st.id : "", q = s.q;
+    const st = s.stage, id = st ? (st.base || st.id) : "", q = s.q;
     if (id !== last) { log.push(id + "@" + Math.round(s.distanceM)); last = id; }
     s.keys.KeyW = true; s.keys.Space = false; s.keys.KeyA = false; s.keys.KeyD = false;
     if ((id === "sassi" || id === "rainbow" || id === "piazza") && q.shieldTarget < 0.5) a.qFire("shield");
@@ -61,6 +61,32 @@ const PLAY = (route, seconds) => `(() => {
     if (id === "mirror") {
       const rel = st.to - 60 - s.distanceM;
       if (rel < 260) { s.keys.KeyW = Math.abs(s.speedMps) < 4; s.keys.Space = Math.abs(s.speedMps) > 6; }
+    }
+    // --- THE PACIFIC (the campaign's opening leg — Finn's kit, not Q Branch's)
+    if (id === "crabby" && q.hook < 1 && s.distanceM > 305) a.seaFire("hook");
+    if (id === "ride" && q.hook < 2 && s.distanceM > 2190) a.seaFire("hook");
+    if ((id === "climb" || id === "lip") && !q.magnet) a.seaFire("magnet");
+    if (id === "lip" && q.shots < 3) {
+      s.keys.KeyW = false; s.keys.Space = Math.abs(s.speedMps) > 2;
+      if (!q.cam) a.seaFire("cam");
+      else { q.camAim = q.camSubject; s.speedMps = Math.min(s.speedMps, 1); a.seaFire("cam"); }
+    }
+    if (id === "chase") {
+      if (!q.slicks.length) a.qFire("oil");
+      q.gun = true; q.ammo = 104; q.muzzle = 1;
+      const foes = (s.rivals || []).filter(r => !r.down && (r.role === "guard" || r.role === "shooter" || r.role === "boarder"));
+      for (const f of foes.slice(0, 2)) { f.distM = s.distanceM + 16; f.lane = s.laneOffset; }
+    } else if (id !== "ivan" && id !== "blown" && id !== "alley" && id !== "yard") { q.gun = false; q.muzzle = 0; }
+    if (id === "bridge" && q.charge == null && s.distanceM > st.from + 120) a.seaFire("charge");
+    if (id === "helipad" && q.foil < 0.5) a.seaFire("foil");
+    if (id === "dead" && !q.tyres) a.seaFire("sub");
+    if (id === "sub" && !q.sub) a.seaFire("sub");
+
+    // --- SIDDELEY: up the ramp, stop, hand it over / put the case on the table
+    if (id === "hold" || id === "brief") {
+      s.keys.KeyW = Math.abs(s.speedMps) * 3.6 < 9;
+      s.keys.Space = Math.abs(s.speedMps) * 3.6 > 11;
+      if (Math.abs(s.speedMps) * 3.6 < 11) a.seaFire("hook");
     }
     // --- PARIS
     if (id === "market" && !q.radar) a.qFire("radar");
@@ -107,12 +133,15 @@ const PLAY = (route, seconds) => `(() => {
     a.updatePhysics(1 / 120); frames++;
   }
   return { log, over: !!(s.mission && s.mission.over), won: !!(s.mission && s.mission.won),
+           missing: s.mission ? s.mission.def.objectives.filter(o => !s.mission.done[o.id]).map(o => o.id) : [],
+           hits: s.mission ? s.mission.hits : -1, stage: s.stage ? s.stage.id : "-",
            cause: s.mission ? s.mission.cause : "", secs: Math.round(frames / 120),
            done: s.mission ? Object.keys(s.mission.done) : [], objs: s.mission ? s.mission.def.objectives.length : 0 };
 })()`;
 
 for (const [route, secs, stages] of [
-  ["Mission — Tokyo, World Grand Prix", 620, 7],
+  ["Mission — Tokyo, World Grand Prix", 700, 8],
+  ["Mission — Cars 2, the whole thing", 4200, 40],
   ["Mission — Paris, the parts market", 480, 5],
   ["Mission — Porto Corsa, the casino", 900, 8],
   ["Mission — London, the last race", 480, 5],
@@ -122,7 +151,7 @@ for (const [route, secs, stages] of [
   await run(route.replace("Mission — ", "") + ": played to the end", async (p) => {
     const r = await p.evaluate(PLAY(route, secs));
     return { ok: r.won && r.log.length === stages,
-             msg: `${r.log.length}/${stages} stages in ${r.secs}s · ${r.done.length}/${r.objs} objectives · ${r.log.join(" → ")}` +
+             msg: `${r.log.length}/${stages} stages in ${r.secs}s · ${r.done.length}/${r.objs} objectives · at=${r.stage} hits=${r.hits} missing=[${r.missing}] · ${r.log.slice(-3).join(" → ")}` +
                   (r.won ? "" : `  LOST: ${r.cause}`) };
   });
 }

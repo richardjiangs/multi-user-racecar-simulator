@@ -195,7 +195,7 @@ const check = (label, ok, detail) => {
   const src = readFileSync(ROOT + "/Aston Martin DB5 simulator.html", "utf8");
   const WANT = {
     SEA_STAGES: ["crabby", "ride", "climb", "lip", "chase", "bridge", "helipad", "water", "dead", "sub"],
-    TOK_STAGES: ["party", "washroom", "race", "bolt", "alley", "rainbow", "apron"],
+    TOK_STAGES: ["party", "washroom", "race", "bolt", "alley", "rainbow", "apron", "hold"],
     LON_STAGES: ["gears", "street", "pits", "range", "mall"],
     GF_STAGES: ["pass", "tilly", "recce", "yard", "woods", "mirror"],
     NTTD_STAGES: ["sassi", "steps", "piazza", "smoke", "viaduct"],
@@ -217,7 +217,23 @@ const check = (label, ok, detail) => {
       bad.push(name + ": a stage is missing its name/where/hint/surf");
   }
   check("7 stage missions, " + total + " stages, " + surfaces.size + " distinct surfaces",
-    bad.length === 0 && total === 46 && surfaces.size >= 30, bad.join(" | "));
+    bad.length === 0 && total === 47 && surfaces.size >= 30, bad.join(" | "));
+  // and the EIGHTH route: the campaign, built by cloning the five Cars 2 legs end to end
+  {
+    const gaps = [];
+    if (!/"Mission — Cars 2, the whole thing"/.test(src)) gaps.push("the campaign route is gone");
+    if (!/function buildCampaign\(\)/.test(src)) gaps.push("the campaign is no longer built from the five legs");
+    // it must CLONE, not re-declare: the five missions have to keep working on their own
+    if (!/s2\.id = pre \+ ":" \+ s2\.base;/.test(src)) gaps.push("campaign stages are not prefixed clones");
+    if (!/s2\.leg = pre;/.test(src)) gaps.push("campaign stages do not carry their leg");
+    // the Pacific beats must run on the campaign's opening leg, which is a different route
+    if (!/state\.stage \? state\.stage\.leg === "sea"/.test(src)) gaps.push("onSea still asks the route, not the stage");
+    // and "finish" must mean the END OF THE ROUTE, or Porto Corsa ends the campaign early
+    if (!/const isLastStage = /.test(src)) gaps.push("no isLastStage — finish will fire on a leg");
+    const loose = (src.match(/^\s*missionDone\("finish"\);/gm) || []).length;
+    if (loose) gaps.push(loose + " ungated missionDone(\"finish\")");
+    check("the campaign chains all five Cars 2 legs without breaking them", gaps.length === 0, gaps.join(" | "));
+  }
   // a surface a stage names with no renderer behind it is a stage you drive through a void
   {
     const noDraw = [...surfaces].filter((sf) => !src.includes('case "' + sf + '":'));

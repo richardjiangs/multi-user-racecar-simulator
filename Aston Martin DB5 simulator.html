@@ -647,6 +647,7 @@
               <button data-circuit="Mission — Oil Platform, Pacific">Mission · Cars 2 Opening</button>
               <button data-circuit="Mission — Tokyo, World Grand Prix">Mission · Cars 2 Tokyo</button>
               <button data-circuit="Mission — London, the last race">Mission · Cars 2 London</button>
+              <button data-circuit="Mission — Cars 2, the whole thing" style="border-color:#c8641e;color:#f0b070">Mission · CARS 2 — THE WHOLE THING</button>
               <button data-circuit="Mission — Paris, the parts market">Mission · Cars 2 Paris</button>
               <button data-circuit="Mission — Porto Corsa, the casino">Mission · Cars 2 Porto Corsa</button>
               <button data-circuit="Mission — Matera, 2021">Mission · Matera 2021</button>
@@ -874,14 +875,15 @@ const CIRCUITS = {
      Rainbow Bridge and past the Imperial Palace. Then off the circuit and into the back
      streets when the lemons work out who is carrying the device. */
   "Mission — Tokyo, World Grand Prix": {
-    dist: 9400, env: "sea", limitKmh: 230, loop: false, widthM: 8.2, corners: 8,
+    dist: 9400, env: "sea", limitKmh: 230, loop: false, widthM: 8.2, corners: 9,
     blurb: "Cars 2 — the party, the washroom, the night race and the run to Haneda",
     bumps: [{ from: 5000, to: 6900, r: 0.2 }],
     track: [
       c(1600, 1, 60, 130, "Out of the service road"), c(2400, -1, 90, 110, "Imperial Palace"),
       c(3100, 1, 75, 140, "Hibiya"), c(3800, -1, 110, 90, "Ginza hairpin"),
       c(5100, 1, 100, 70, "Through the barrier"), c(5700, -1, 120, 55, "First alley"),
-      c(6300, 1, 130, 50, "Second alley"), c(8500, -1, 45, 160, "Onto the apron")
+      c(6300, 1, 130, 50, "Second alley"), c(8300, -1, 45, 160, "Onto the apron"),
+      c(8840, 1, 30, 70, "Line up on the ramp")
     ]
   },
   /* Cars 2 · London — Big Bentley, the last race, the detonator's range and the run down
@@ -981,6 +983,26 @@ const CIRCUITS = {
     track: [c(0, 1, 360, 12600, "Banked circle")]
   }
 };
+/* Cars 2, the whole thing — the five locations end to end, with Siddeley between them.
+   dist and track are assembled from the five real routes, offset exactly the way the stages
+   are, so every corner still lands where its stage expects it. Built AFTER the CIRCUITS
+   literal closes, because it reads the five routes back out of it. */
+CIRCUITS["Mission — Cars 2, the whole thing"] = (function () {
+    const LEGS = ["Mission — Oil Platform, Pacific", "Mission — Tokyo, World Grand Prix",
+                  "Mission — Paris, the parts market", "Mission — Porto Corsa, the casino",
+                  "Mission — London, the last race"];
+    const track = [], bumps = []; let off = 0, n = 0;
+    for (const key of LEGS) {
+      const r = CIRCUITS[key];
+      for (const t of r.track) track.push(c(t.at + off, t.dir, t.deg, t.len, t.name));
+      for (const b of (r.bumps || [])) bumps.push({ from: b.from + off, to: b.to + off, r: b.r });
+      off += r.dist;
+      if (n++ < 4) { track.push(c(off + 280, n % 2 ? 1 : -1, 14, 220, "Siddeley, in the air")); off += 600; }
+    }
+    return { dist: off, env: "sea", limitKmh: 250, loop: false, widthM: 8.6, corners: track.length,
+      blurb: "Cars 2 end to end — the Pacific, Tokyo, Paris, Porto Corsa and London, flown between in Siddeley",
+      bumps, track };
+  })();
 /* ===== Cars 2, the opening — the run, in ten stages ==================================
    Researched, not remembered. The film opens in the Pacific at night. Finn McMissile is
    aboard the crab boat CRABBY. TONY TRIHULL — a combat ship drawn from USS Independence
@@ -1018,7 +1040,7 @@ const PHOTO_SUBJECTS = [
   { at: 0.44, w: 58, h: 50, c: "#6b5a38", label: "THE BOXES BESIDE IT", sway: 0.04 },
 ];
 const STAGE_SUBJECTS = { lip: SEA_SUBJECTS, meeting: MEET_SUBJECTS, corner: PHOTO_SUBJECTS };
-const subjectsIn = (st) => (st && STAGE_SUBJECTS[st.id]) || SEA_SUBJECTS;
+const subjectsIn = (st) => (st && STAGE_SUBJECTS[st.base || st.id]) || SEA_SUBJECTS;
 const subjectAtIn = (st, i, ph) => {
   const L = subjectsIn(st), s0 = L[Math.min(i, L.length - 1)];
   return s0.at + Math.sin(ph + i * 2.1) * (s0.sway == null ? 0.10 : s0.sway);
@@ -1103,9 +1125,13 @@ const TOK_STAGES = [
     name: "The Rainbow Bridge", where: "1,875 m of suspension span over Tokyo Bay",
     hint: "Nowhere to hide up here. Shield up — 3 — and keep it lit.",
     met: null, fail: "" },
-  { id: "apron", to: 9400, cap: 205, surf: "apron",
-    name: "Haneda, the cargo apron", where: "Siddeley has the ramp down",
-    hint: "Up the ramp.", met: null, fail: "" },
+  { id: "apron", to: 8900, cap: 205, surf: "apron",
+    name: "Haneda, the cargo apron", where: "Siddeley is at the far end with the ramp down",
+    hint: "Down the taxiway to him. The ramp is at the end of it.", met: null, fail: "" },
+  { id: "hold", to: 9400, cap: 34, surf: "hold",
+    name: "Up the ramp, into Siddeley", where: "cargo netting, tie-downs, and two agents waiting",
+    hint: "Straight up and in. Then hand over what Rod gave you — G.",
+    met: (st, q) => q.handed, clock: 90, fail: "Siddeley could not hold the slot any longer." },
 ];
 const TOK_ENEMIES = {
   washroom: [
@@ -1367,7 +1393,68 @@ const PC_ENEMIES = {
   ],
 };
 
+/* ===== CARS 2, THE WHOLE THING ======================================================
+   The five locations in the film's own order — the Pacific, Tokyo, Paris, Porto Corsa,
+   London — flown between in Siddeley, whose hold is where the case comes out and where you
+   find out where you are going next. Built by CLONING the five stage lists: each stage keeps
+   its 'base' (so every beat, gate and failure in the game still recognises it) and gets a
+   prefixed 'id' and an offset 'to', because one route cannot have two stages called "race". */
+const BRIEFS = [
+  { id: "brief1", name: "Siddeley, over the Pacific", where: "wet, and four tyres lighter than you should be",
+    hint: "Stop, and put the photographs on the table — G.",
+    say: "Zündapp's box, the crate, and the professor himself. Whatever that engine part is, somebody is buying a great many of them." },
+  { id: "brief2", name: "Siddeley, Tokyo to Paris", where: "and the thing Rod died holding is on the scanner",
+    hint: "Stop, and open it up — G.",
+    say: "It is not a bomb. It is an engine part — and there is exactly one dealer in Europe who moves that many of them." },
+  { id: "brief3", name: "Siddeley, Paris to Porto Corsa", where: "with Tomber's answer, and nobody happy about it",
+    hint: "Stop, and lay it out — G.",
+    say: "Gremlins, Pacers, Hugos, Trunkovs. Every family, one buyer, and all of them at Porto Corsa on Sunday." },
+  { id: "brief4", name: "Siddeley, Porto Corsa to London", where: "and a photograph of a screen with nobody on it",
+    hint: "Stop, and put the film up — G.",
+    say: "A voice, no ident, and a room full of bosses taking orders from it. The last race is in London. So is he." },
+];
+function c2Stage(src, pre, off) {
+  const s2 = Object.assign({}, src);
+  s2.base = src.base || src.id;
+  s2.id = pre + ":" + s2.base;
+  s2.leg = pre;
+  s2.to = src.to + off;
+  return s2;
+}
+function buildCampaign() {
+  const LEGS = [["sea", SEA_STAGES], ["tok", TOK_STAGES], ["par", PAR_STAGES], ["pc", PC_STAGES], ["lon", LON_STAGES]];
+  const out = [], enemies = {};
+  let off = 0, b = 0;
+  for (let L = 0; L < LEGS.length; L++) {
+    const [pre, list] = LEGS[L];
+    for (const st of list) {
+      const cl = c2Stage(st, pre, off);
+      out.push(cl);
+      const src = STAGE_SETS_SRC[pre];
+      if (src && src[cl.base]) enemies[cl.id] = src[cl.base];
+    }
+    off = out[out.length - 1].to;
+    // between legs: the hold, where the case comes out and the next leg is decided
+    if (b < BRIEFS.length) {
+      const br = BRIEFS[b++];
+      // NOTE the gate signature: met(state, kit, mission) — the first argument is STATE,
+      // not the stage, so the ordinal has to be closed over rather than read off `st`.
+      const nth = b;                       // 1..4, already incremented above
+      out.push({
+        id: "brief:" + br.id, base: "brief", nth, to: off + 600, cap: 30, surf: "hold",
+        name: br.name, where: br.where, hint: br.hint, say: br.say,
+        met: (st, q) => (q.brief || 0) >= nth, clock: 120,
+        fail: "Siddeley had to put down before you got round to it.",
+      });
+      off += 600;
+    }
+  }
+  return { stages: out, enemies };
+}
+
 /* every stage mission in the garage, and the film each one is from */
+const STAGE_SETS_SRC = { sea: SEA_ENEMIES, tok: TOK_ENEMIES, par: PAR_ENEMIES, pc: PC_ENEMIES, lon: LON_ENEMIES };
+const C2 = buildCampaign();
 const STAGE_SETS = {
   [SEA_ROUTE]: { film: "CARS 2 · THE OPENING", stages: SEA_STAGES, enemies: SEA_ENEMIES },
   "Mission — Tokyo, World Grand Prix": { film: "CARS 2 · TOKYO", stages: TOK_STAGES, enemies: TOK_ENEMIES },
@@ -1375,13 +1462,24 @@ const STAGE_SETS = {
   "Mission — Furka Pass & Auric Enterprises, 1964": { film: "GOLDFINGER · 1964", stages: GF_STAGES, enemies: GF_ENEMIES },
   "Mission — Paris, the parts market": { film: "CARS 2 · PARIS", stages: PAR_STAGES, enemies: PAR_ENEMIES },
   "Mission — Porto Corsa, the casino": { film: "CARS 2 · PORTO CORSA", stages: PC_STAGES, enemies: PC_ENEMIES },
+  "Mission — Cars 2, the whole thing": { film: "CARS 2 · THE WHOLE THING", stages: C2.stages, enemies: C2.enemies },
   "Mission — Matera, 2021": { film: "NO TIME TO DIE · MATERA", stages: NTTD_STAGES, enemies: NTTD_ENEMIES },
 };
 // give every stage its route, its index and where it starts, so nothing has to search
 for (const [route, set] of Object.entries(STAGE_SETS)) {
-  set.stages.forEach((s, i) => { s.route = route; s.i = i; s.from = i ? set.stages[i - 1].to : 0; });
+  set.stages.forEach((s, i) => {
+    s.route = route; s.i = i; s.from = i ? set.stages[i - 1].to : 0;
+    // 'id' must be unique inside a route (the campaign concatenates five missions, so it
+    // prefixes them); 'base' is what the stage IS, and it is what the beat code switches on;
+    // 'leg' is which of the five films' locations it came from, which is how the Pacific
+    // beats know to run inside the campaign as well as on their own route
+    s.base = s.base || s.id;
+    s.leg = s.leg || (route === SEA_ROUTE ? "sea" : null);
+  });
 }
 const stagesOf = (route) => (STAGE_SETS[route] ? STAGE_SETS[route].stages : null);
+// the last stage of a route — what "finish" actually means, in a campaign as much as a leg
+const isLastStage = (s) => { const L = s && STAGE_SETS[s.route]; return !!L && s.i === L.stages.length - 1; };
 function stageAt(route, d) {
   const L = stagesOf(route); if (!L) return null;
   for (const s of L) if (d < s.to) return s;
@@ -1486,6 +1584,7 @@ const SPEC = {
       tonyM: null, torpedoT: 0, wreckT: 0, slipT: 0, gateNagT: 0,
       rangeM: null, outOfRange: false, bombT: 0, spinDeg: 0, stopped: false, smokeUsed: false,
       plate: 0, plateT: 0, empT: 9, empHit: null, empT2: 0, boxes: [], boxT: 6, mirrorSeen: false,
+      handed: false, brief: 0, briefT: 0,
     },
     stage: null, stageT: 0,
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
@@ -2027,7 +2126,18 @@ const SPEC = {
   function missionDone(id) {
     const m = state.mission; if (!m || m.done[id]) return;
     const o = m.def.objectives.find((x) => x.id === id);
-    if (!o) return;             // the shared enemy code ticks "mustang"/"guards"; the Pacific
+    // RECORD it either way. Stage gates read m.done — the Pacific's `chase` gate is
+    // need:"burn" — so refusing to record a flag just because the mission does not ADVERTISE
+    // it as an objective deadlocks that stage. Only the announcement is conditional.
+    if (!o) { m.done[id] = true; return; }
+                                // the shared enemy code ticks "mustang"/"guards"; the Pacific
+    // an objective with a 'need' has to happen that many times (the four hold briefings)
+    if (o.need) {
+      m.counts = m.counts || {};
+      m.counts[id] = (m.counts[id] || 0) + 1;
+      o.text = o.text.replace(/ \(\d+\/\d+\)$/, "") + " (" + m.counts[id] + "/" + o.need + ")";
+      if (m.counts[id] < o.need) { missionSay(o.text, true); return; }
+    }
     m.done[id] = true;          // stage has neither, and must not announce objectives it lacks
     missionSay(o.text + " — done", true);
     if (m.def.objectives.every((x) => m.done[x.id])) missionEnd(true, "All objectives complete.");
@@ -2053,8 +2163,11 @@ const SPEC = {
     // ---- distance objectives (board the tanker, reach the rig)
     for (const o of M.objectives) if (o.atM && !m.done[o.id] && state.distanceM >= o.atM) missionDone(o.id);
 
-    // ---- reaching the end of the stage finishes it
-    if (state.distanceM >= lapLen() - 40) {
+    // ---- reaching the end of the ROUTE finishes it. This used to compare distanceM against
+    // lapLen(), which on a 44.5 km campaign is not the number it thinks it is — so "finish"
+    // ticked a third of the way through and the run ended in Siddeley's hold over Italy.
+    if (state.stage ? isLastStage(state.stage) && state.distanceM >= state.stage.to - 40
+                    : state.distanceM >= lapLen() - 40) {
       if (M.objectives.some((o) => o.id === "finish")) missionDone("finish");
     }
 
@@ -2123,14 +2236,20 @@ const SPEC = {
     if (r.tag) missionDone(r.tag);            // an enemy that IS an objective — Ivan, at Porto Corsa
     if (r.role === "guard" || r.role === "shooter") {
       m.guards++;
+      // same trap as missionDone: a stage gate reads m.done.guards, so a mission that does
+      // not ADVERTISE "guards" as an objective must still be able to satisfy it — the
+      // campaign's casino shootout is gated on exactly this
       const o = m.def.objectives.find((x) => x.id === "guards");
-      if (o && m.guards >= o.need) missionDone("guards");
+      if (m.guards >= (o ? o.need : 2)) missionDone("guards");
     }
     if (r.role === "shooter") missionDone("mustang");
     if (r.role === "boarder") missionDone("boarder");
   }
 
-  const onSea = () => state.route.active && state.route.name === SEA_ROUTE;
+  // the Pacific beats belong to the Pacific STAGES, not to one route: they have to run on
+  // the opening leg of the campaign too, which is the same stages under a different name
+  const onSea = () => state.route.active &&
+    (state.stage ? state.stage.leg === "sea" : state.route.name === SEA_ROUTE);
   const onStage = () => state.route.active && !!STAGE_SETS[state.route.name];
   // what the camera is pointed at depends on the stage: three things under the deck in the
   // Pacific, three in the back room at Porto Corsa, one in the photograph in Paris
@@ -2160,24 +2279,24 @@ const SPEC = {
         speedMps: Math.max(20, Math.abs(state.speedMps)), brake: 0, fireT: 2.2 + Math.random() * 2, boardT: 0,
       }));
     }
-    if (s.id === "climb") audio.seaClamp();
-    if (s.id === "water") { state.q.tonyM = 420; audio.seaFoil(); }
-    if (s.id === "dead") { state.q.torpedoT = 26; audio.seaTorpedo(); }
-    if (s.id === "sub") audio.seaSonar();
-    if (s.id === "range") { state.q.rangeM = 0; state.q.outOfRange = false; }
-    if (s.id === "piazza") {
+    if (s.base === "climb") audio.seaClamp();
+    if (s.base === "water") { state.q.tonyM = 420; audio.seaFoil(); }
+    if (s.base === "dead") { state.q.torpedoT = 26; audio.seaTorpedo(); }
+    if (s.base === "sub") audio.seaSonar();
+    if (s.base === "range") { state.q.rangeM = 0; state.q.outOfRange = false; }
+    if (s.base === "piazza") {
       state.q.spinDeg = 0; audio.seaAlarm();
       // the miniguns behind the headlamps are their own pair, freshly belted
       state.q.ammo = Math.max(state.q.ammo, 104); audio.qServo(true);
     }
-    if (s.id === "mirror") audio.seaCharge();
-    if (s.id === "gears") audio.seaMagnet(false);
-    if (s.id === "meeting") { state.q.shots = 0; state.q.cam = 0; audio.qServo(true); }   // a fresh film for the back room
-    if (s.id === "corner") { state.q.shots = 0; state.q.cam = 0; }                        // and one exposure for Tomber
-    if (s.id === "blown") { audio.seaAlarm(); audio.qGun(); }
-    if (s.id === "race") { state.q.empT = 9; state.q.empHit = null; }
-    if (s.id === "stalls") { state.q.boxes = []; state.q.boxT = 5; }
-    if (s.id === "market") state.q.mirrorSeen = false;
+    if (s.base === "mirror") audio.seaCharge();
+    if (s.base === "gears") audio.seaMagnet(false);
+    if (s.base === "meeting") { state.q.shots = 0; state.q.cam = 0; audio.qServo(true); }   // a fresh film for the back room
+    if (s.base === "corner") { state.q.shots = 0; state.q.cam = 0; }                        // and one exposure for Tomber
+    if (s.base === "blown") { audio.seaAlarm(); audio.qGun(); }
+    if (s.base === "race") { state.q.empT = 9; state.q.empHit = null; }
+    if (s.base === "stalls") { state.q.boxes = []; state.q.boxT = 5; }
+    if (s.base === "market") state.q.mirrorSeen = false;
   }
 
   /* Everything the stage machine can want done, and what does it. Each is a real piece of
@@ -2188,7 +2307,7 @@ const SPEC = {
     switch (what) {
       case "hook": {
         if (q.hookT > 0) return;
-        const id = st ? st.id : "";
+        const id = st ? (st.base || st.id) : "";
         if (id === "crabby") {
           // Tony has to be alongside: he closes from 240 m and is abeam from 300 m of road
           if (state.distanceM < 300) { app.showToast("Too early — he is still astern of us.", "CARS 2"); audio.click(300); return; }
@@ -2207,6 +2326,19 @@ const SPEC = {
           if (!rod || rod.distM - state.distanceM > 26) { app.showToast("Not close enough — get up to him.", "CARS 2"); audio.click(300); return; }
           q.hook = 1; audio.seaClamp();
           app.showToast("Rod put it somewhere you will not find it for two days.", "CARS 2");
+        } else if (id === "brief") {
+          if (Math.abs(state.speedMps) * 3.6 > 12) { app.showToast("Stop first — Finn is not shouting over the engine.", "CARS 2"); audio.click(300); return; }
+          if ((q.brief || 0) >= st.nth) { app.showToast("Already been over it. Get some sleep.", "CARS 2"); return; }
+          q.brief = st.nth; q.briefT = 6;
+          audio.qServo(true); setTimeout(() => audio.chime([392, 523, 659]), 320);
+          missionDone("brief");
+          app.showToast(st.say, "FINN McMISSILE");
+        } else if (id === "hold") {
+          if (q.hook < 1) { app.showToast("You have nothing to hand over — Rod never gave it to you.", "CARS 2"); audio.click(300); return; }
+          if (Math.abs(state.speedMps) * 3.6 > 12) { app.showToast("Stop the car first. Holley is not chasing you round the hold.", "CARS 2"); audio.click(300); return; }
+          q.handed = true; audio.qServo(true); setTimeout(() => audio.chime([523, 659, 784]), 300);
+          if (isLastStage(st)) missionDone("finish");
+          app.showToast("Holley takes it off you and puts it under the scanner. Whatever Rod was carrying, it is now Finn's problem.", "CARS 2");
         } else if (id === "valet") {
           const vh = (state.rivals || []).find((r) => r.role === "target");
           if (!vh || Math.abs(vh.distM - state.distanceM) > 24) { app.showToast("Get up behind him first — he will not walk in.", "CARS 2"); audio.click(300); return; }
@@ -2226,7 +2358,7 @@ const SPEC = {
       case "cam":
         if (!q.cam) { q.cam = 1; q.camAim = 0; audio.qServo(true); app.showToast("Camera up. Frame it, then P again for the shutter.", "CARS 2"); break; }
         // shutter: only counts if a subject is inside the frame and steady
-        const subs = subjectsFor(), id0 = st ? st.id : "";
+        const subs = subjectsFor(), id0 = st ? (st.base || st.id) : "";
         const LINES = {
           lip: ["Zündapp's box — got it.", "The crate. That is Leland.", "Zündapp himself. Enough."],
           meeting: ["Every boss in Europe at one table.", "Professor Zündapp, and what he is holding.", "The screen. Whoever that is, nobody in this room has met him."],
@@ -2248,7 +2380,7 @@ const SPEC = {
         break;
       case "charge":
         if (q.charge != null) { app.showToast("The limpet is already down.", "CARS 2"); return; }
-        if (!st || st.id !== "bridge") { app.showToast("Nothing structural to put it on.", "CARS 2"); audio.click(300); return; }
+        if (!st || st.base !== "bridge") { app.showToast("Nothing structural to put it on.", "CARS 2"); audio.click(300); return; }
         q.charge = state.distanceM - 8; q.chargeT = 4.2; audio.seaCharge();
         app.showToast("Limpet on the truss — four seconds. Move.", "CARS 2");
         break;
@@ -2258,14 +2390,14 @@ const SPEC = {
         break;
       case "sub":
         if (!st) return;
-        if (st.id === "dead" && !q.tyres) {
+        if (st.base === "dead" && !q.tyres) {
           q.tyres = true; q.tyreT = 0; audio.qEject();
           app.showToast("Four tyres away — let them find those.", "CARS 2");
           missionDone("dead");
-        } else if (st.id === "sub" && !q.sub) {
+        } else if (st.base === "sub" && !q.sub) {
           q.sub = 1; audio.seaDive(); setTimeout(() => audio.seaSonar(), 1600);
           app.showToast("Tanks flooding. Fins, mask, screws — and gone.", "CARS 2");
-          missionDone("finish");
+          if (isLastStage(st)) missionDone("finish");   // stage 10 of 40 in the campaign
         } else app.showToast("Not yet.", "CARS 2");
         break;
     }
@@ -2318,34 +2450,35 @@ const SPEC = {
     // ---- the stages that also run on a clock of their own
     if (s.clock && state.stageT > s.clock && !met) return missionEnd(false, s.fail);
     // ---- the leg: without magnets there is nothing holding the car on
-    if (s.id === "climb" && !q.magnet) {
+    if (s.base === "climb" && !q.magnet) {
       q.slipT = (q.slipT || 0) + dt;
       state.distanceM -= (2.2 + q.slipT * 2.4) * dt;
       if (q.slipT > 2.6 || state.distanceM < stageStart(s) - 30) return missionEnd(false, s.fail);
     } else q.slipT = 0;
-    if (s.id === "lip" && !q.magnet) return missionEnd(false, "The magnets went off with you upside down.");
+    if (s.base === "lip" && !q.magnet) return missionEnd(false, "The magnets went off with you upside down.");
     // ---- the clock movement drives you back down until you are out of it
-    if (s.id === "gears") {
+    if (s.base === "gears") {
       q.slipT = (q.slipT || 0) + dt;
       state.distanceM -= 1.4 * dt;
       if (state.distanceM < stageStart(s) - 20) return missionEnd(false, s.fail);
       if (state.distanceM > s.to - 60) missionDone("out");
     }
     // ---- and the finishes
-    if (s.id === "sub" && q.sub > 0 && state.distanceM > s.to - 120) missionDone("finish");
-    if ((s.id === "apron" || s.id === "mall" || s.id === "viaduct" || s.id === "getaway") && state.distanceM > s.to - 90) missionDone("finish");
-    if (s.id === "corner" && (m && m.done.photo)) missionDone("finish");
-    if (s.id === "race" && state.distanceM > s.to - 90) missionDone("race");
-    if (s.id === "steps" && state.distanceM > s.to - 40) missionDone("steps");
+    if (s.base === "sub" && q.sub > 0 && isLastStage(s) && state.distanceM > s.to - 120) missionDone("finish");
+    // "finish" means the END OF THE ROUTE, not the end of a leg. Keying it off stage ids
+    // made Porto Corsa's getaway finish the whole campaign three legs early.
+    if (isLastStage(s) && state.distanceM > s.to - 90) missionDone("finish");
+    if (s.base === "race" && state.distanceM > s.to - 90) missionDone("race");
+    if (s.base === "steps" && state.distanceM > s.to - 40) missionDone("steps");
   }
 
   /* the beats that are only true in the Pacific */
   function seaBeats(dt, s, q, m) {
     // ---- Tony Trihull: closing on Crabby, then carrying you, then hunting you
-    if (s.id === "crabby") q.tonyM = 240 - clamp(state.distanceM / 620, 0, 1) * 200;
-    if (s.id === "water" || s.id === "dead") {
+    if (s.base === "crabby") q.tonyM = 240 - clamp(state.distanceM / 620, 0, 1) * 200;
+    if (s.base === "water" || s.base === "dead") {
       q.tonyM = Math.max(70, (q.tonyM == null ? 420 : q.tonyM) - (26 - Math.abs(state.speedMps)) * dt);
-      if (q.tonyM <= 78 && s.id === "water") { q.tonyM = 78; }
+      if (q.tonyM <= 78 && s.base === "water") { q.tonyM = 78; }
     }
 
     // ---- the limpet
@@ -2414,16 +2547,16 @@ const SPEC = {
     if (q.gateNagT > 0) q.gateNagT -= dt;
 
     // ---- the two stages that run on a clock of their own
-    if (s.id === "crabby" && state.stageT > 34 && !metL) return missionEnd(false, s.fail);
-    if (s.id === "lip" && state.stageT > 70 && !metL) return missionEnd(false, s.fail);
+    if (s.base === "crabby" && state.stageT > 34 && !metL) return missionEnd(false, s.fail);
+    if (s.base === "lip" && state.stageT > 70 && !metL) return missionEnd(false, s.fail);
     // ---- the leg: without magnets there is nothing holding the car on
-    if (s.id === "climb" && !q.magnet) {
+    if (s.base === "climb" && !q.magnet) {
       q.slipT = (q.slipT || 0) + dt;
       state.distanceM -= (2.2 + q.slipT * 2.4) * dt;
       if (q.slipT > 2.6 || state.distanceM < stageStart(s) - 30) return missionEnd(false, s.fail);
     } else q.slipT = 0;
     // ---- under the deck the magnets are the only thing between you and the sea
-    if (s.id === "lip" && !q.magnet) return missionEnd(false, "The magnets went off with you upside down.");
+    if (s.base === "lip" && !q.magnet) return missionEnd(false, "The magnets went off with you upside down.");
     // ---- and the finish
   }
 
@@ -2433,7 +2566,7 @@ const SPEC = {
     q.stopped = Math.abs(state.speedMps) * 3.6 < 25;
     // LONDON: the detonator has a real range, and once you are outside it the bomb stops
     // being a button and starts being a five-minute clock.
-    if (s.id === "range") {
+    if (s.base === "range") {
       q.rangeM = Math.max(0, state.distanceM - s.from);
       if (q.rangeM >= 900 && !q.outOfRange) {
         q.outOfRange = true; q.bombT = 300; audio.seaAlarm();
@@ -2443,14 +2576,14 @@ const SPEC = {
     }
     if (q.bombT > 0) { q.bombT -= dt; if (q.bombT <= 0) return missionEnd(false, "The five minutes ran out."); }
     // MATERA: the doughnut. Full lock, low speed, guns out — count the degrees turned.
-    if (s.id === "piazza") {
+    if (s.base === "piazza") {
       const lock = Math.abs(state.steer) > 0.75, slow = Math.abs(state.speedMps) < 13;
       if (lock && slow && q.gun && q.ammo > 0) q.spinDeg = (q.spinDeg || 0) + 150 * dt;
       else q.spinDeg = Math.max(0, (q.spinDeg || 0) - 55 * dt);
       if (q.spinDeg >= 340 && !m.done.spin) { missionDone("spin"); audio.qGun(); }
     }
     // GOLDFINGER: the mirror is a wall, and it is where the film ends the chase.
-    if (s.id === "mirror") {
+    if (s.base === "mirror") {
       const rel = s.to - 60 - state.distanceM;
       if (rel < 6 && !q.stopped) {
         state.roadInputG = Math.min(2.4, (state.roadInputG || 0) + 1.8); audio.seaBlast();
@@ -2461,7 +2594,7 @@ const SPEC = {
     // PORTO CORSA · the race: Grem and Acer are working the pulse camera from the pit
     // wall. It only touches the cars running Allinol — which is every racer out there and
     // not you — so what you see is a rival lighting up and going round.
-    if (s.id === "race") {
+    if (s.base === "race") {
       q.empT -= dt;
       if (q.empT <= 0) {
         q.empT = 11 + Math.random() * 9;
@@ -2479,7 +2612,7 @@ const SPEC = {
     }
     // PARIS · the chase: Tomber brings a stack of stock down behind him about every six
     // seconds. Hit one and it costs you the front of the car.
-    if (s.id === "stalls") {
+    if (s.base === "stalls") {
       q.boxT -= dt;
       if (q.boxT <= 0) {
         q.boxT = 5 + Math.random() * 3;
@@ -2504,10 +2637,18 @@ const SPEC = {
     }
     // PARIS · the market: he catches your reflection in a mirror the moment the scope finds
     // him, which is the moment he runs.
-    if (s.id === "market" && q.radar && !q.mirrorSeen) {
+    if (s.base === "market" && q.radar && !q.mirrorSeen) {
       q.mirrorSeen = true; audio.qPing();
       missionDone("tomber");
       app.showToast("PCS NO1R — pièces noires. And he has just seen you in a wing mirror.", "CARS 2");
+    }
+    // SIDDELEY'S HOLD, between legs: the case comes out on the table, and what you brought
+    // back off the last location is what decides the next one.
+    if (s.base === "brief") {
+      if (q.briefT > 0) q.briefT -= dt;
+      if (!q.stopped && state.distanceM > s.to - 120 && (q.gateNagT || 0) <= 0) {
+        q.gateNagT = 3.4; missionSay("Stop the car. This is the only quiet hour any of us get.", false);
+      }
     }
     // the oil still burns when a round goes through it, wherever you are
     if (q.gun && q.muzzle > 0.7) {
@@ -2611,7 +2752,7 @@ const SPEC = {
         for (let i = 0; i < 7; i++)
           q.puffs.push({ dist: state.distanceM - 4 - i * 1.6, lane: (state.laneOffset || 0) + (Math.random() - 0.5) * 1.4, life: 5.5, r: 1.6 + i * 0.3 });
         audio.qHiss(1.5, 260, 0.3); q.smokeUsed = true;
-        if (state.stage && state.stage.id === "smoke") missionDone("smoke");
+        if (state.stage && state.stage.base === "smoke") missionDone("smoke");
         app.showToast("Smoke screen away.", "Q Branch");
         break;
       case "eject":
@@ -2799,7 +2940,7 @@ const SPEC = {
         { id: "device", text: "Take what Rod is carrying" },
         { id: "race", text: "Run the night race" },
         { id: "guards", text: "Put two lemons out — smoke and oil", need: 2 },
-        { id: "finish", text: "Make Siddeley's ramp at Haneda" },
+        { id: "finish", text: "Get up the ramp and hand it to Holley" },
       ],
     },
     "Mission — London, the last race": {
@@ -2825,6 +2966,22 @@ const SPEC = {
     },
     /* Paris. Tomber is not an enemy — he is Finn's informant, and the only role in the
        mission is "do not lose him", which is exactly what the film is. */
+    /* The campaign. Every beat of the five missions still runs — they are the same stage
+       objects, cloned — so the harpoon, the doughnut, the pulse camera and the bomb all work
+       exactly as they do alone. What is added is the hold between them. */
+    "Mission — Cars 2, the whole thing": {
+      brief: "Leland Turbo went dark in the Pacific. Whatever he found, it ends in London — and you are going to fly the whole way with us.",
+      limitS: 5400, maxHits: 22, loseM: 9e9, cars2: true, loseMsg: "You lost the car you were following.",
+      enemies: [],
+      objectives: [
+        { id: "aboard", text: "The Pacific — get aboard, and get out alive" },
+        { id: "device", text: "Tokyo — take what Rod is carrying" },
+        { id: "brief", text: "Read the case in the hold, four times", need: 4 },
+        { id: "tomber", text: "Paris — find Tomber" },
+        { id: "photo", text: "Porto Corsa — photograph the meeting" },
+        { id: "finish", text: "London — Buckingham Palace" },
+      ],
+    },
     "Mission — Paris, the parts market": {
       brief: "There is one car in Europe who knows who bought those parts, and he is under an iron roof in the tenth arrondissement pretending he has never met me.",
       limitS: 780, maxHits: 4, loseM: 150, loseMsg: "Tomber went out through the stalls and you lost him.",
@@ -4080,7 +4237,10 @@ const SPEC = {
     return Math.abs(b.x - a.x);
   }
 
-  const onSea = () => state.route.active && state.route.name === SEA_ROUTE;
+  // the Pacific beats belong to the Pacific STAGES, not to one route: they have to run on
+  // the opening leg of the campaign too, which is the same stages under a different name
+  const onSea = () => state.route.active &&
+    (state.stage ? state.stage.leg === "sea" : state.route.name === SEA_ROUTE);
   const onStage = () => state.route.active && !!STAGE_SETS[state.route.name];
   // what the camera is pointed at depends on the stage: three things under the deck in the
   // Pacific, three in the back room at Porto Corsa, one in the photograph in Paris
@@ -4286,6 +4446,7 @@ const SPEC = {
       case "alley": drawNeon(w, h, night, true); break;
       case "suspension": drawSuspension(w, h, night); break;
       case "apron": drawApron(w, h, night); break;
+      case "hold": drawHold(w, h, night); break;
       case "gears": drawGears(w, h, night); break;
       case "city": drawCity(w, h, night, false); break;
       case "mall": drawCity(w, h, night, true); break;
@@ -4547,6 +4708,76 @@ const SPEC = {
       ctx.lineTo(pf.x - 24 * mf, pf.y); ctx.lineTo(pf.x - 18 * mf, pf.y - 3 * mf); ctx.closePath(); ctx.fill();
       flood(pf.x, pf.y - 10 * mf, mf, 26, "rgba(220,236,255,0.14)");
     }
+  }
+
+  // inside Siddeley: the ramp behind you, the hold in front, and the two of them waiting
+  function drawHold(w, h, night) {
+    ctx.fillStyle = "#07090d"; ctx.fillRect(0, 0, w, h);
+    // the floor: ribbed aluminium with seat tracks running fore and aft
+    deckStrip(2, 70, 2, (d) => (Math.floor(d / 2) % 2 ? "#3c4149" : "#353a41"));
+    seams(3, 66, 1.1, "rgba(18,22,27,0.75)", 1.6);
+    props(1.2, 60, 64, (d, idx, m) => {                      // the ribs across the floor
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      ctx.fillStyle = "rgba(190,200,212,0.16)";
+      ctx.fillRect(e.l.x, e.l.y - 0.06 * m, e.r.x - e.l.x, 0.06 * m);
+    });
+    for (const sgn of [-1, 1]) {
+      wall(sgn, 1.5, 3, 64, "#252a31", "rgba(150,162,176,0.5)");
+      // cargo netting up the sides, and the tie-down rings along the floor
+      props(2.4, 28, 60, (d, idx, m) => {
+        const p = projectAhead(d, sgn * halfAt(d)); if (!p.fwd || p.fwd <= 1) return;
+        ctx.strokeStyle = "rgba(190,170,90,0.45)"; ctx.lineWidth = 1;
+        for (let k = 0; k < 4; k++) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y - (1.5 + k * 0.9) * m);
+          ctx.lineTo(p.x + sgn * 1.4 * m, p.y - (1.0 + k * 0.9) * m);
+          ctx.stroke();
+        }
+        ctx.fillStyle = "#8d949c";
+        ctx.beginPath(); ctx.arc(p.x - sgn * 0.3 * m, p.y - 0.1 * m, Math.max(1.2, 0.14 * m), 0, Math.PI * 2); ctx.fill();
+      });
+    }
+    // the curved roof close overhead, with its frames and the strip lights between them
+    props(3, 22, 60, (d, idx, m) => {
+      const e = edgePts(d); if (!e.l.fwd || e.l.fwd <= 1) return;
+      const cx = (e.l.x + e.r.x) / 2, span = (e.r.x - e.l.x);
+      ctx.strokeStyle = "#2f353d"; ctx.lineWidth = Math.max(1.5, 0.26 * m);
+      ctx.beginPath();
+      ctx.moveTo(cx - span * 0.52, e.l.y - 1.4 * m);
+      ctx.quadraticCurveTo(cx, e.l.y - 6.4 * m, cx + span * 0.52, e.l.y - 1.4 * m);
+      ctx.stroke();
+      if (idx % 2) {
+        ctx.fillStyle = "rgba(226,236,246,0.8)";
+        ctx.fillRect(cx - 1.1 * m, e.l.y - 5.5 * m, 2.2 * m, 0.16 * m);
+        flood(cx, e.l.y - 5.4 * m, m, 6, "rgba(206,226,246,0.14)");
+      }
+    });
+    // the ramp behind you, and the apron lights outside it, seen in the mirror
+    // (drawn as the daylight wedge at the very bottom of the bay)
+    const rp = projectAhead(4, 0), rm = metreAt(4);
+    if (rp.fwd > 1 && rm) flood(rp.x, rp.y - 1.4 * rm, rm, 5, "rgba(120,150,190,0.10)");
+    // Finn and Holley at the far end, and the case on a strap between them
+    const pf = projectAhead(58, 0), mf = metreAt(58);
+    if (pf.fwd > 1 && mf) {
+      ctx.fillStyle = "#2a5f8a";                                  // Finn
+      ctx.beginPath(); ctx.roundRect(pf.x - 3.4 * mf, pf.y - 1.5 * mf, 2.6 * mf, 1.4 * mf, 0.35 * mf); ctx.fill();
+      ctx.fillStyle = "#7a3f6a";                                  // Holley
+      ctx.beginPath(); ctx.roundRect(pf.x + 0.8 * mf, pf.y - 1.4 * mf, 2.4 * mf, 1.3 * mf, 0.35 * mf); ctx.fill();
+      ctx.fillStyle = "rgba(150,180,205,0.5)";
+      ctx.fillRect(pf.x - 2.9 * mf, pf.y - 1.48 * mf, 1.6 * mf, 0.45 * mf);
+      ctx.fillRect(pf.x + 1.3 * mf, pf.y - 1.38 * mf, 1.5 * mf, 0.42 * mf);
+      // the scanner table they work off
+      ctx.fillStyle = "#1b2028"; ctx.fillRect(pf.x - 2.2 * mf, pf.y - 2.6 * mf, 4.4 * mf, 0.3 * mf);
+      ctx.fillStyle = "rgba(120,200,240,0.55)"; ctx.fillRect(pf.x - 1.6 * mf, pf.y - 2.9 * mf, 3.2 * mf, 0.3 * mf);
+      flood(pf.x, pf.y - 3.4 * mf, mf, 8, "rgba(120,190,240,0.16)");
+    }
+    const q = state.q;
+    ctx.fillStyle = q.handed ? "rgba(120,230,170,0.95)" : "rgba(255,205,110,0.95)";
+    ctx.font = "700 12px ui-sans-serif"; ctx.textAlign = "center";
+    ctx.fillText(q.handed ? "HANDED OVER — HOLLEY HAS IT UNDER THE SCANNER"
+      : (q.hook >= 1 ? "STOP, AND HAND IT OVER — G" : "YOU CAME UP THE RAMP WITH NOTHING"), w / 2, horizonY + 40);
+    ctx.fillStyle = "rgba(190,206,222,0.7)"; ctx.font = "600 12px ui-sans-serif";
+    ctx.fillText("SIDDELEY — CARGO HOLD", w / 2, horizonY - 16);
   }
 
   /* ---- CARS 2 · LONDON ---- */
@@ -5076,7 +5307,7 @@ const SPEC = {
       }
     });
     // the race stages get a crowd behind the parapet; the coast road in does not
-    const racing = state.stage && state.stage.id === "race";
+    const racing = state.stage && state.stage.base === "race";
     if (racing) {
       crowd(-1, 130, { rows: 3, gap: 9.5, spacing: 3.0, sat: 52, lum: 40, flags: ["#008c45", "#cd212a"] });
       for (const sgn of [-1, 1]) props(6, 26, 150, (d, idx, m) => {   // the advertising skirt
@@ -5527,7 +5758,7 @@ const SPEC = {
       }
     }
     ctx.fillStyle = "rgba(214,206,182,0.7)"; ctx.font = "600 12px ui-sans-serif"; ctx.textAlign = "center";
-    ctx.fillText(state.stage && state.stage.id === "corner" ? "DEAD END — STOP, AND SHOW HIM THE PHOTOGRAPH" : "AFTER HIM", w / 2, horizonY - 16);
+    ctx.fillText(state.stage && state.stage.base === "corner" ? "DEAD END — STOP, AND SHOW HIM THE PHOTOGRAPH" : "AFTER HIM", w / 2, horizonY - 16);
   }
 
   /* ---- shared surface helpers: everything below builds out of these ---- */
@@ -6226,7 +6457,7 @@ const SPEC = {
   function drawHookLine(w, h) {
     const q = state.q; if (!q.hookTo) return;
     const s = state.stage; if (!s) return;
-    const showing = (q.hookTo === "tony" && s.id === "crabby") || (q.hookTo === "rig" && (s.id === "ride" || s.id === "climb"));
+    const showing = (q.hookTo === "tony" && s.base === "crabby") || (q.hookTo === "rig" && (s.base === "ride" || s.base === "climb"));
     if (!showing && !(q.hookT > 0)) return;
     const t = clamp(1 - q.hookT / 0.9, 0, 1);
     const x0 = w * 0.5, y0 = h * 0.78;
@@ -6310,10 +6541,10 @@ const SPEC = {
     // the kit that matters right now, along the bottom
     const q = state.q, done = (state.mission && state.mission.done) || {};
     const KITS = {
-      [SEA_ROUTE]: [["G", "HARPOON", q.hook >= (s.id === "ride" ? 2 : 1)], ["M", "MAGNETS", q.magnet],
+      [SEA_ROUTE]: [["G", "HARPOON", q.hook >= (s.base === "ride" ? 2 : 1)], ["M", "MAGNETS", q.magnet],
         ["P", "CAMERA", q.shots >= 3], ["5+2", "OIL+FIRE", !!done.burn], ["K", "LIMPET", q.blownAt != null],
         ["F", "FOILS", q.foil > 0.5], ["B", "ROCKETS", q.rocket > 0], ["J", "TYRES/DIVE", q.sub > 0 || q.tyres]],
-      "Mission — Tokyo, World Grand Prix": [["G", "TAKE IT", q.hook >= 1], ["6", "SMOKE", q.smokeUsed],
+      "Mission — Tokyo, World Grand Prix": [["G", "TAKE IT / HAND OVER", q.handed || q.hook >= 1], ["6", "SMOKE", q.smokeUsed],
         ["5", "OIL", q.oil < 100], ["2", "GUNS", q.ammo < 104], ["3", "SHIELD", q.shield > 0.5],
         ["B", "ROCKETS", q.rocket > 0], ["8", "TRACKER", q.radar]],
       "Mission — London, the last race": [["R", "REVERSE", state.gearMode === "R"], ["G", "TOW HOOK", q.hook >= 1],
@@ -6322,6 +6553,9 @@ const SPEC = {
       "Mission — Furka Pass & Auric Enterprises, 1964": [["8", "TRACKER", q.radar], ["4", "SLASHERS", !!done.mustang],
         ["1", "PLATES", q.plate > 0], ["5", "OIL", q.oil < 100], ["2", "GUNS", q.ammo < 104],
         ["6", "SMOKE", q.smokeUsed], ["7", "EJECTOR", !!done.boarder], ["STOP", "THE MIRROR", !!done.wall]],
+      "Mission — Cars 2, the whole thing": [["G", "HARPOON / HAND OVER", q.hook >= 1 || q.handed],
+        ["M", "MAGNETS", q.magnet], ["P", "CAMERA", q.shots >= 3], ["1", "PLATES", q.plate > 0],
+        ["6", "SMOKE", q.smokeUsed], ["BRIEF", (q.brief || 0) + "/4", (q.brief || 0) >= 4]],
       "Mission — Paris, the parts market": [["8", "SCOPE", q.radar], ["P", "PHOTO", q.shots >= 1],
         ["1", "PLATES", q.plate > 0], ["6", "SMOKE", q.smokeUsed]],
       "Mission — Porto Corsa, the casino": [["2", "GUNS", q.ammo < 104], ["G", "TOW HOOK", q.hook >= 1],
