@@ -2516,98 +2516,109 @@ const SPEC = {
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- 33 Stradale cluster: two hooded dials, rev counter on the left, and the
-    // rev sweep, digital speed in the hub) with turbo BOOST + TEMP readouts either side ----
+    // ---- 33 Stradale cluster: two analogue dials under one hood — rev counter left,
+    // speedometer right, the gear between them, and no screen anywhere in this car ----
     drawCluster(w, h, dashY, sway);
-    // GR wheel in front of the cluster
+    // the flat-bottomed wheel in front of the cluster
     drawWheel(w, h);
   }
-  // instantaneous output (PS) for the left-hand pod — reads to 387 at peak
-  function powerPS() {
-    const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
-    return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
-  }
-  // ---- Alfa Romeo 33 Stradale: two dials under a single hood — a big rev counter and a
-  // filling the TFT, ringed by a thin power band, with the gear in the boss and small
-  // speedometer beside it, the way the 1967 car had them. No screen. ----
+  /* TWO DIALS UNDER ONE HOOD. Not a screen: the 33 Stradale's binnacle carries a rev
+     counter and a speedometer side by side, exactly as the 1967 car did, with the gear
+     between them. Alfa fitted no display in this cabin at all, so there is nothing here to
+     put one in — which is why this cluster has no TFT, no power ring and no data pods. */
   function drawCluster(w, h, dashY, sway) {
-    const R = Math.min(w, h) * 0.128;
-    const cx = w / 2 + sway, cy = dashY + R * 0.42;
-    const BW = R * 4.3, BH = R * 2.0, bx = cx - BW / 2, by = cy - BH / 2;
+    const R = Math.min(w, h) * 0.096;                 // one dial's radius
+    const gap = R * 1.26;                             // they sit close, under a single hood
+    const cx = w / 2 + sway, cy = dashY + R * 0.62;
+    const BW = R * 5.0, BH = R * 2.5, bx = cx - BW / 2, by = cy - BH * 0.56;
+
     ctx.save();
-    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#0b0e13"); pg.addColorStop(1, "#05070a");
-    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.fill();
-    ctx.strokeStyle = "rgba(187,10,48,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.stroke();
+    // the hood: a rounded shroud over both dials, in the dash's leather
+    ctx.beginPath();
+    ctx.moveTo(bx, by + BH);
+    ctx.lineTo(bx, by + BH * 0.42);
+    ctx.quadraticCurveTo(bx + BW * 0.16, by - BH * 0.10, cx, by - BH * 0.10);
+    ctx.quadraticCurveTo(bx + BW * 0.84, by - BH * 0.10, bx + BW, by + BH * 0.42);
+    ctx.lineTo(bx + BW, by + BH);
+    ctx.closePath();
+    const hg = ctx.createLinearGradient(0, by - BH * 0.1, 0, by + BH);
+    hg.addColorStop(0, "#2c2126"); hg.addColorStop(1, "#0a0b0e");
+    ctx.fillStyle = hg; ctx.fill();
+    ctx.strokeStyle = "rgba(200,16,46,0.30)"; ctx.lineWidth = 1.4; ctx.stroke();
     ctx.restore();
-    // side data blocks
-    r8Block(bx + R * 0.52, cy, R, "OIL", Math.round(88 + state.rpm / 400) + "°");
-    r8Block(bx + BW - R * 0.52, cy, R, "g", Math.abs(state.lateralG || 0).toFixed(1));
-    r8Tach(cx, cy, BH * 0.44);
-  }
-  // the Alfa tach: 0..8 (x1000), red from 7.0, thin outer power ring, gear in the boss
-  function r8Tach(cx, cy, R) {
-    const rpm = state.rpm, MAX = 8000, redAt = (SPEC.redlineRpm || 7000);
-    const a0 = Math.PI * 0.7, a1 = Math.PI * 2.3;
-    ctx.save(); ctx.translate(cx, cy);
-    // outer power ring — how much of the V6 you are using
-    const pwr = clamp((app.engineTorque(rpm) * (rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1)) / (SPEC.peakPowerW || 456000), 0, 1);
-    ctx.strokeStyle = "rgba(255,255,255,0.07)"; ctx.lineWidth = R * 0.08;
-    ctx.beginPath(); ctx.arc(0, 0, R * 1.12, a0, a1); ctx.stroke();
-    ctx.strokeStyle = "#bb0a30"; ctx.beginPath(); ctx.arc(0, 0, R * 1.12, a0, lerp(a0, a1, pwr)); ctx.stroke();
-    ctx.fillStyle = "#05070a"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    for (let v = 0; v <= MAX; v += 250) {
-      const f = v / MAX, a = lerp(a0, a1, f), major = v % 1000 === 0, red = v >= redAt, on = rpm >= v;
-      ctx.strokeStyle = red ? "#ff3b30" : (on ? "#ffffff" : "rgba(210,218,228,0.45)");
-      ctx.lineWidth = major ? 2.4 : 1; const r1 = R * (major ? 0.72 : 0.83), r2 = R * 0.95;
-      ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
-      if (major) { ctx.fillStyle = red ? "#ff8078" : "#eef2f7"; ctx.font = `600 ${Math.round(R * 0.15)}px ui-sans-serif`;
-        ctx.fillText(String(v / 1000), Math.cos(a) * R * 0.58, Math.sin(a) * R * 0.58); }
-    }
-    const na = lerp(a0, a1, clamp(rpm / MAX, 0, 1));
-    ctx.strokeStyle = "#bb0a30"; ctx.lineWidth = R * 0.045; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.12, -Math.sin(na) * R * 0.12); ctx.lineTo(Math.cos(na) * R * 0.88, Math.sin(na) * R * 0.88); ctx.stroke();
-    // the boss: gear + digital speed
-    ctx.fillStyle = "#12151a"; ctx.beginPath(); ctx.arc(0, 0, R * 0.4, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.34)}px ui-sans-serif`;
-    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, 0, -R * 0.06);
-    ctx.fillStyle = "rgba(180,192,204,0.9)"; ctx.font = `700 ${Math.round(R * 0.14)}px ui-sans-serif`;
-    ctx.fillText(Math.round(Math.abs(app.kmh(state.speedMps))) + " km/h", 0, R * 0.2);
-    if (state.pista) { ctx.fillStyle = "#c8102e"; ctx.font = `700 ${Math.round(R * 0.11)}px ui-sans-serif`; ctx.fillText("PISTA", 0, -R * 0.62); }
-    ctx.restore();
-  }
-  function r8Block(cx, cy, R, label, val) {
+
+    alfaDial(cx - gap, cy, R, {
+      max: 8, redFrom: 7, value: state.rpm / 1000, label: "giri/min", sub: "x1000",
+      needle: "#c8102e", step: 1, minor: 4,
+    });
+    alfaDial(cx + gap, cy, R, {
+      max: 340, redFrom: 999, value: Math.abs(app.kmh(state.speedMps)), label: "km/h", sub: "",
+      needle: "#e8eef4", step: 40, minor: 2,
+    });
+
+    // between the two: the gear, and which of the two modes the rotary is on
     ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = "rgba(150,166,180,0.8)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(label, cx, cy - R * 0.2);
-    ctx.fillStyle = "#eef2f7"; ctx.font = `700 ${Math.round(R * 0.19)}px ui-sans-serif`; ctx.fillText(val, cx, cy + R * 0.02);
+    ctx.fillStyle = "#0a0c10";
+    ctx.beginPath(); ctx.roundRect(cx - R * 0.34, cy - R * 0.46, R * 0.68, R * 0.9, R * 0.12); ctx.fill();
+    ctx.strokeStyle = "rgba(200,16,46,0.5)"; ctx.lineWidth = 1.2; ctx.stroke();
+    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.42)}px ui-serif, Georgia`;
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy - R * 0.08);
+    ctx.fillStyle = state.pista ? "#ff5a49" : "rgba(150,162,176,0.85)";
+    ctx.font = `700 ${Math.round(R * 0.15)}px ui-sans-serif`;
+    ctx.fillText(state.pista ? "PISTA" : "STRADA", cx, cy + R * 0.30);
     ctx.restore();
   }
-  // the S-AWC centre display: drive map + live front/rear torque split
-  function evoSawc(cx, cy, R) {
-    const tarmac = !!state.pista;
-    const w2 = R * 1.28, h2 = R * 1.42, x = cx - w2 / 2, y = cy - h2 / 2;
-    ctx.save();
-    ctx.fillStyle = "rgba(4,6,9,0.95)"; roundRect(ctx, x, y, w2, h2, R * 0.08); ctx.fill();
-    ctx.strokeStyle = "rgba(200,16,46,0.45)"; ctx.lineWidth = 1.2; roundRect(ctx, x, y, w2, h2, R * 0.08); ctx.stroke();
+
+  /* one dial. A real instrument: a black face, a chromed bezel, painted numerals on the
+     inside of the ring and a single needle pivoting on a domed boss. */
+  function alfaDial(cx, cy, R, o) {
+    const a0 = Math.PI * 0.74, a1 = Math.PI * 2.26;
+    ctx.save(); ctx.translate(cx, cy);
+    // chromed bezel
+    const bz = ctx.createLinearGradient(0, -R, 0, R);
+    bz.addColorStop(0, "#e6eaef"); bz.addColorStop(0.45, "#8d949c"); bz.addColorStop(1, "#3a4048");
+    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.08, 0, Math.PI * 2); ctx.fill();
+    // the face
+    const fg = ctx.createRadialGradient(-R * 0.25, -R * 0.3, R * 0.1, 0, 0, R);
+    fg.addColorStop(0, "#1b1f26"); fg.addColorStop(1, "#05070a");
+    ctx.fillStyle = fg; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
+
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = tarmac ? "#ff5a49" : "rgba(170,182,194,0.85)"; ctx.font = `800 ${Math.round(R * 0.115)}px ui-sans-serif`;
-    ctx.fillText("S-AWC", cx, y + R * 0.17);
-    ctx.fillStyle = tarmac ? "#ffd24a" : "rgba(150,162,176,0.8)"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`;
-    ctx.fillText(tarmac ? "TARMAC" : "NORMAL", cx, y + R * 0.36);
-    // live torque split — weight shifts rearward on power, forward on the brakes
-    const rear = clamp(0.5 + clamp(state.throttle, 0, 1) * 0.28 - clamp(state.brake, 0, 1) * 0.2, 0.2, 0.85);
-    const bx2 = cx - R * 0.42, bw = R * 0.84, byy = y + R * 0.56, bh = R * 0.1;
-    ctx.fillStyle = "rgba(255,255,255,0.1)"; ctx.fillRect(bx2, byy, bw, bh);
-    ctx.fillStyle = "#4aa3ff"; ctx.fillRect(bx2, byy, bw * (1 - rear), bh);
-    ctx.fillStyle = "#ff5a49"; ctx.fillRect(bx2 + bw * (1 - rear), byy, bw * rear, bh);
-    ctx.fillStyle = "rgba(170,182,194,0.85)"; ctx.font = `600 ${Math.round(R * 0.082)}px ui-sans-serif`;
-    ctx.fillText(Math.round((1 - rear) * 100) + " : " + Math.round(rear * 100), cx, byy + R * 0.24);
-    ctx.fillText("F : R", cx, byy + R * 0.4);
-    // gear
-    ctx.fillStyle = "#ff5a49"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`;
-    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, y + h2 - R * 0.18);
+    const N = o.max / o.step;
+    for (let k = 0; k <= N * o.minor; k++) {
+      const v = (k / o.minor) * o.step, f = v / o.max;
+      if (f > 1) break;
+      const a = lerp(a0, a1, f), major = k % o.minor === 0, red = v >= o.redFrom;
+      ctx.strokeStyle = red ? "#ff3b30" : "rgba(226,234,244,0.85)";
+      ctx.lineWidth = major ? 2.2 : 1;
+      const r1 = R * (major ? 0.76 : 0.86), r2 = R * 0.94;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
+      if (major) {
+        ctx.fillStyle = red ? "#ff8078" : "#e8eef4";
+        ctx.font = `600 ${Math.round(R * 0.17)}px ui-serif, Georgia`;
+        ctx.fillText(String(Math.round(v)), Math.cos(a) * R * 0.60, Math.sin(a) * R * 0.60);
+      }
+    }
+    // the maker's name on the face, where an Alfa puts it
+    ctx.fillStyle = "rgba(170,182,196,0.7)"; ctx.font = `600 ${Math.round(R * 0.11)}px ui-sans-serif`;
+    ctx.fillText(o.label, 0, -R * 0.34);
+    if (o.sub) ctx.fillText(o.sub, 0, R * 0.40);
+
+    // the needle
+    const f = clamp(o.value / o.max, 0, 1), na = lerp(a0, a1, f);
+    ctx.strokeStyle = o.needle; ctx.lineWidth = R * 0.05; ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(-Math.cos(na) * R * 0.14, -Math.sin(na) * R * 0.14);
+    ctx.lineTo(Math.cos(na) * R * 0.86, Math.sin(na) * R * 0.86);
+    ctx.stroke();
+    // domed boss
+    const bg2 = ctx.createRadialGradient(-R * 0.04, -R * 0.05, 0, 0, 0, R * 0.15);
+    bg2.addColorStop(0, "#c8ccd2"); bg2.addColorStop(1, "#2a2f36");
+    ctx.fillStyle = bg2; ctx.beginPath(); ctx.arc(0, 0, R * 0.13, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
+
+
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);

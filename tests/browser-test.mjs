@@ -302,6 +302,34 @@ const check = (label, ok, detail) => {
   check(checked + " titles checked — each quotes its own displacement", bad.length === 0, bad.join(" | "));
 }
 
+/* ---------- a stage gate latches ----------
+   Reported: the Matera 360 never registered as passed. It did — missionDone("spin") fired —
+   but the GATE re-read q.spinDeg >= 340 every frame, and q.spinDeg decays at 55 deg/s the
+   moment you stop holding full lock with the guns live. Your magazine is 5.2 s and the spin
+   needs 2.3 s of it, so the objective ticked, the guns ran dry, the counter fell back under
+   340, and the gate shut behind the player and asked for the 360 again with nothing to fire.
+   Five gates read a value that can go back down: spinDeg, the revolving plates (GB->CH->F->GB),
+   the tracker scope, the hydrofoils, and q.stopped. Doing the thing must not be un-doable by
+   the readout that measured it. */
+{
+  const { readFileSync } = await import("node:fs");
+  const src = readFileSync(ROOT + "/Aston Martin DB5 simulator.html", "utf8");
+  const bad = [];
+  if (!/if \(s\.met && rawMet\) state\.gatePassed\[gk\] = true;/.test(src)) bad.push("the shared gate no longer latches");
+  if (!/const met = rawMet \|\| \(s\.met \? !!state\.gatePassed\[gk\] : true\);/.test(src)) bad.push("the shared gate does not read the latch");
+  if (!/if \(s\.need && met\) state\.gatePassed\[gk\] = true;/.test(src)) bad.push("the Pacific gate no longer latches");
+  if (!/const metL = met \|\| \(s\.need \? !!state\.gatePassed\[gk\] : true\);/.test(src)) bad.push("the Pacific gate does not read the latch");
+  // and the latch must only remember a gate that EXISTS: latching the `true` that means
+  // "this stage has no gate" marked the Pacific stages passed before they had been
+  if (/if \(rawMet\) state\.gatePassed/.test(src)) bad.push("the latch fires on stages that have no gate");
+  if (!/state\.stage = null; state\.stageT = 0; state\.gatePassed = \{\};/.test(src)) bad.push("the latch is not cleared when a mission starts");
+  // the miniguns behind the headlamps are their own pair — arriving dry must not block it
+  if (!/state\.q\.ammo = Math\.max\(state\.q\.ammo, 104\)/.test(src)) bad.push("the piazza no longer re-belts the miniguns");
+  // and the Paris gate must not re-close once you drive away from the photograph
+  if (/q\.shots >= 1 && q\.stopped/.test(src)) bad.push("the Paris gate still re-reads q.stopped");
+  check("a stage gate latches — doing the thing cannot be un-done by the readout", bad.length === 0, bad.join(" | "));
+}
+
 /* ---------- nothing in a stage can outrun the stage ----------
    stageCapMps() clamps the PLAYER to what the place allows — 34 km/h down a washroom
    corridor, 62 along a marina quay — but updateRivals only ever clamped a rival to its own
