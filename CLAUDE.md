@@ -1,6 +1,6 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of forty-nine simulators — each a **single self-contained HTML file** —
+A garage of fifty simulators — each a **single self-contained HTML file** —
 thirty-two road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
@@ -195,6 +195,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Czinger 21C | 932 kW / 1,250 hp combined (2.88 L twin-turbo flat-plane V8 to 11,000 + 2 front e-motors) — 1,007 kW / 1,350 hp as V Max | 1,210 Nm | 1.9 s | 407 (452 V Max) | 7-sequential | 1,250 kg |
 | Alfa Romeo 33 Stradale | 456 kW / 620 CV / 612 hp @ 6,750 (3.0 L twin-turbo 90° V6, mid-mounted) | 720 Nm @ 2,500–5,500 | 3.0 s | 333 | 8-DCT | 1,500 kg |
 | SSC Tuatara | 1,007 kW / 1,350 hp on 91 octane, **1,305 kW / 1,750 hp on E85** (5.9 L twin-turbo flat-plane V8, Nelson Racing Engines) | 1,735 Nm | 2.5 s | **474.8 recorded** (295.0 mph, Launch and Landing Facility, 14 May 2022); 455.3 two-way | 7-CIMA | 1,247 kg dry |
+| Gordon Murray T.50s Niki Lauda | 541 kW / 725 bhp @ 11,500 (3.9 L Cosworth GMA NA V12, 12,100 rpm) | 485 Nm | **2.6 s — DERIVED, not a factory figure** (GMA publish none for a track-only car) | ~318 drag-limited, fan + delta wing + fin | 6-Xtrac paddle | **852 kg** |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 

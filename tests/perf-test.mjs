@@ -242,6 +242,14 @@ const CARS = {
     topSpeed: { kmh: 407, minT: 80 },
     brake100: { target: 29, tol: 1.0 },
   },
+  t50s: {
+    file: "Gordon Murray T50s Niki Lauda simulator.html", app: "T50sApp", label: "Gordon Murray T.50s Niki Lauda",
+    // GMA publish NO 0-100 for a track-only car. 2.6 s is DERIVED from the published
+    // 725 bhp, the published 852 kg and slick launch grip — see SPEC.derivedZeroTo100.
+    marks: { 100: { target: 2.6, tol: 1e-4 } },
+    topSpeed: { minKmh: 290, maxKmh: 330, minT: 70 },   // drag-limited: a fan, a delta wing and a fin
+    brake100: { target: 28, tol: 1.5 },
+  },
   tuatara: {
     file: "SSC Tuatara simulator.html", app: "TuataraApp", label: "SSC Tuatara",
     marks: { 100: { target: 2.5, tol: 1e-4 } },
