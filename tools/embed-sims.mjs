@@ -41,6 +41,7 @@ const FILES = {
   slr300: "Mercedes-Benz 300 SLR Uhlenhaut simulator.html",
   czinger: "Czinger 21C simulator.html",
   alfa33: "Alfa Romeo 33 Stradale simulator.html",
+  tuatara: "SSC Tuatara simulator.html",
   venom: "Hennessey Venom F5 simulator.html",
   evija: "Lotus Evija simulator.html",
   amgone: "Mercedes-AMG One simulator.html",

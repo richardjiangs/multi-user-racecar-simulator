@@ -242,6 +242,13 @@ const CARS = {
     topSpeed: { kmh: 407, minT: 80 },
     brake100: { target: 29, tol: 1.0 },
   },
+  tuatara: {
+    file: "SSC Tuatara simulator.html", app: "TuataraApp", label: "SSC Tuatara",
+    marks: { 100: { target: 2.5, tol: 1e-4 } },
+    // 474.8 km/h recorded one way at the Launch and Landing Facility, 14 May 2022, on E85
+    topSpeed: { kmh: 474.8, setup: "e85", minT: 110 },
+    brake100: { target: 30, tol: 1.5 },
+  },
   alfa33: {
     file: "Alfa Romeo 33 Stradale simulator.html", app: "Alfa33App", label: "Alfa Romeo 33 Stradale",
     marks: { 100: { target: 3.0, tol: 1e-4 } },
