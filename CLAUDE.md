@@ -231,7 +231,7 @@ slick (rivals that drive through it lose grip), the smoke screen, the passenger 
 rival. `qStep(dt)` runs from `updatePhysics`; all of it is opt-in, so the certified figures
 stand.
 
-**DB5 Mission mode — seven stage missions, 46 stages** — the Circuit tab carries seven
+**DB5 Mission mode — seven stage missions, 47 stages, plus the campaign** — the Circuit tab carries seven
 point-to-point routes that are **not circuits**: no laps, no kerbs, no racing line, no
 start/finish, no armco, and none of the shared roadside furniture — a stage draws its own
 world instead. Each is a **stage machine** (`STAGE_SETS`, module
@@ -250,6 +250,7 @@ stage ends.
 | `Mission — Porto Corsa, the casino` | Cars 2, Porto Corsa | 8 | the Ligurian coast road → put the real Ivan out → tow Victor Hugo up the carpet → the casino floor on somebody else's plates → the back room, the bosses and the kingpin on a screen → the disguise comes off → the Grand Prix and the pulse camera → out over the Casino Bridge |
 | `Mission — London, the last race` | Cars 2, London | 5 | inside Big Bentley's movement → the circuit → the pit box and the bomb in your air filter → the rocket run out of detonator range → The Mall, five minutes, Buckingham Palace |
 | `Mission — Furka Pass & Auric Enterprises, 1964` | Goldfinger | 6 | the pass behind the Phantom III → Tilly's Mustang and the slashers → the refinery → the yard → the woods and the ejector seat → the mirror Bond drove into |
+| `Mission — Cars 2, the whole thing` | Cars 2, all of it | 40 | the five locations end to end in the film's order, flown between in **Siddeley** — whose hold is where the case comes out, where you look at what you brought back, and where you are told the next place |
 | `Mission — Matera, 2021` | No Time to Die | 5 | the Sassi → the limestone steps → Piazza San Giovanni Battista and the 360 with the miniguns → the smoke screen → the gorge road |
 
 **35 distinct surfaces** are drawn out of six shared helpers (`deckStrip`, `seams`, `wall`,

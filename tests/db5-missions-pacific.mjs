@@ -59,8 +59,11 @@ const PLAYER = `
 
 await run("full play-through — all ten stages, mission complete", async (p) => {
   const r = await p.evaluate(`(() => { const SEA = "Mission — Oil Platform, Pacific"; ${PLAYER} })()`);
-  return { ok: r.won && r.done.length === 7 && r.log.length === 10,
-           msg: `${r.log.length} stages in ${r.secs}s · ${r.done.length}/7 objectives · ${r.log.join(" → ")}` };
+  // m.done also carries flags the mission does not advertise (stage gates read them, e.g.
+  // the chase's "burn"), so count the DECLARED objectives, not every key
+  const got = r.done.filter((k) => ["aboard","leg","photo","burn","span","dead","finish"].includes(k)).length;
+  return { ok: r.won && got === 7 && r.log.length === 10,
+           msg: `${r.log.length} stages in ${r.secs}s · ${got}/7 objectives · ${r.log.join(" → ")}` };
 });
 
 /* ---- the failure paths, one page each ---- */
@@ -164,7 +167,7 @@ await run("every stage renders", async (p) => {
 });
 
 /* ---- and every stage of every OTHER mission paints too, viewfinder and all ---- */
-await run("all 46 stages render, viewfinder and all", async (p) => {
+await run("every stage of every route renders, viewfinder and all", async (p) => {
   const r = await p.evaluate(() => {
     const a = window.Db5App, s = a.state, painted = [], threw = [];
     for (const route of Object.keys(a.STAGE_SETS)) {
@@ -182,8 +185,8 @@ await run("all 46 stages render, viewfinder and all", async (p) => {
     }
     return { painted, threw };
   });
-  return { ok: r.threw.length === 0 && r.painted.length === 46,
-           msg: r.painted.length + " stages painted" + (r.threw.length ? "  THREW " + r.threw.join(" | ") : "") };
+  return { ok: r.threw.length === 0 && r.painted.length === 87,
+           msg: r.painted.length + " stages painted (47 across the seven missions + 40 in the campaign)" + (r.threw.length ? "  THREW " + r.threw.join(" | ") : "") };
 });
 
 await b.close();
