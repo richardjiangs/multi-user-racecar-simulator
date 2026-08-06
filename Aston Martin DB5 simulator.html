@@ -1295,7 +1295,7 @@ const PAR_STAGES = [
   { id: "corner", to: 4200, cap: 42, surf: "stalls",
     name: "Cornered", where: "a dead end, and a photograph to show him",
     hint: "Stop, get the photograph up — P — and let him look at it.",
-    met: (st, q) => q.shots >= 1 && q.stopped, clock: 75, fail: "Holley tasered him once too often and he shut up." },
+    met: (st, q) => q.shots >= 1, clock: 75, fail: "Holley tasered him once too often and he shut up." },
 ];
 const PAR_ENEMIES = {
   stalls: [
@@ -1451,6 +1451,7 @@ const SPEC = {
   const state = {
     time: 0, lastTime: performance.now(),
     speedMps: 0, distanceM: 0,
+    gatePassed: {},                 // stage gates that have already been satisfied — they latch
     laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, noseLiftVis: 0,
     padThrottle: 0, padBrake: 0,
     cruiseSetKmh: 120, adaptiveCruise: false,
@@ -2009,7 +2010,7 @@ const SPEC = {
       rangeM: null, outOfRange: false, bombT: 0, spinDeg: 0, stopped: false, smokeUsed: false,
       oil: 100, smoke: 100, ammo: 104, slicks: [], puffs: [],
     });
-    state.stage = null; state.stageT = 0;
+    state.stage = null; state.stageT = 0; state.gatePassed = {};
     state.mission = {
       def: M, t: 0, hits: 0, done: {}, guards: 0, over: false, won: false,
       cause: "", flash: "", flashT: 0, announced: false,
@@ -2164,7 +2165,11 @@ const SPEC = {
     if (s.id === "dead") { state.q.torpedoT = 26; audio.seaTorpedo(); }
     if (s.id === "sub") audio.seaSonar();
     if (s.id === "range") { state.q.rangeM = 0; state.q.outOfRange = false; }
-    if (s.id === "piazza") { state.q.spinDeg = 0; audio.seaAlarm(); }
+    if (s.id === "piazza") {
+      state.q.spinDeg = 0; audio.seaAlarm();
+      // the miniguns behind the headlamps are their own pair, freshly belted
+      state.q.ammo = Math.max(state.q.ammo, 104); audio.qServo(true);
+    }
     if (s.id === "mirror") audio.seaCharge();
     if (s.id === "gears") audio.seaMagnet(false);
     if (s.id === "meeting") { state.q.shots = 0; state.q.cam = 0; audio.qServo(true); }   // a fresh film for the back room
@@ -2290,8 +2295,17 @@ const SPEC = {
     if (onSea()) seaBeats(dt, s, q, m); else otherBeats(dt, s, q, m);
     if (m && m.over) return;
 
-    // ---- the gate: you may not leave a stage until the thing that stage is about is done
-    const met = s.met ? !!s.met(state, q, m || { done: {} }) : true;
+    // ---- the gate: you may not leave a stage until the thing that stage is about is done.
+    // A gate LATCHES. q.spinDeg decays, the plates revolve back round to GB, the scope and
+    // the hydrofoils are toggles — none of which un-does the thing you have already done,
+    // and re-reading them live is what shut the Matera gate behind the player.
+    const gk = s.route + "|" + s.id;
+    const rawMet = s.met ? !!s.met(state, q, m || { done: {} }) : true;
+    // only latch a REAL predicate: rawMet is also true when a stage simply has no gate, and
+    // latching that would mark the Pacific stages passed before they had been (their gate
+    // lives in seaBeats under s.need, not s.met)
+    if (s.met && rawMet) state.gatePassed[gk] = true;
+    const met = rawMet || (s.met ? !!state.gatePassed[gk] : true);
     const gateM = s.to - 40;
     if (!met && state.distanceM > gateM) {
       state.distanceM = gateM;
@@ -2388,7 +2402,10 @@ const SPEC = {
       case "dive": met = q.sub > 0; break;
       default: met = true;
     }
-    if (!met && state.distanceM > gateM) {
+    const gk = s.route + "|" + s.id;                          // gates latch here too
+    if (s.need && met) state.gatePassed[gk] = true;
+    const metL = met || (s.need ? !!state.gatePassed[gk] : true);
+    if (!metL && state.distanceM > gateM) {
       state.distanceM = gateM;
       if (Math.abs(state.speedMps) > 4) { audio.clunk(90); state.roadInputG = Math.min(2.4, (state.roadInputG || 0) + 0.5); }
       state.speedMps = Math.min(state.speedMps, 0.6);
@@ -2397,8 +2414,8 @@ const SPEC = {
     if (q.gateNagT > 0) q.gateNagT -= dt;
 
     // ---- the two stages that run on a clock of their own
-    if (s.id === "crabby" && state.stageT > 34 && !met) return missionEnd(false, s.fail);
-    if (s.id === "lip" && state.stageT > 70 && !met) return missionEnd(false, s.fail);
+    if (s.id === "crabby" && state.stageT > 34 && !metL) return missionEnd(false, s.fail);
+    if (s.id === "lip" && state.stageT > 70 && !metL) return missionEnd(false, s.fail);
     // ---- the leg: without magnets there is nothing holding the car on
     if (s.id === "climb" && !q.magnet) {
       q.slipT = (q.slipT || 0) + dt;
