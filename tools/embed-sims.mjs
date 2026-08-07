@@ -44,6 +44,7 @@ const FILES = {
   tuatara: "SSC Tuatara simulator.html",
   t50s: "Gordon Murray T50s Niki Lauda simulator.html",
   project8: "Jaguar XE SV Project 8 simulator.html",
+  s2000: "Honda S2000 simulator.html",
   venom: "Hennessey Venom F5 simulator.html",
   evija: "Lotus Evija simulator.html",
   amgone: "Mercedes-AMG One simulator.html",

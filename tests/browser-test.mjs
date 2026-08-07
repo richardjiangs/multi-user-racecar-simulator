@@ -183,7 +183,7 @@ const check = (label, ok, detail) => {
   }
   // and they must not all look alike: the housings differ per car the way the dashboards do
   check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
-    bad.length === 0 && side === 13 && centre === 38 && frames.size >= 6, bad.slice(0, 4).join(" | "));
+    bad.length === 0 && side === 13 && centre === 39 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------
@@ -503,6 +503,7 @@ const check = (label, ok, detail) => {
     "Czinger": "Czinger", "Dacia": "Dacia", "Ford": "Ford", "Prodrive": "Prodrive",
     "Alpine": "Alpine", "Williams": "Williams", "Racing": "Racing Bulls", "Haas": "Haas",
     "Cadillac": "Cadillac", "Red": "Red Bull", "Alfa": "Alfa Romeo", "SSC": "SSC", "Jaguar": "Jaguar",
+    "Honda": "Honda",
   };
   const bad = [];
   let checked = 0;
@@ -547,7 +548,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("fifty-one car cards render", await page.locator(".car-card").count() === 51);
+check("fifty-two car cards render", await page.locator(".car-card").count() === 52);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- every card must be WIRED, not just rendered ----------
@@ -557,7 +558,7 @@ check("host board present", await page.locator("#activeHostList").count() === 1)
    `if (!car) return;` and every button on them was inert — and this file never tried
    them, because they were not in the list. Derive, never enumerate. */
 const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
-check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 51);
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 52);
 
 const wiring = await page.evaluate((keys) => keys.map((k) => ({
   key: k,

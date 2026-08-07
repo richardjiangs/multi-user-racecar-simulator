@@ -257,6 +257,13 @@ const CARS = {
     topSpeed: { kmh: 474.8, setup: "e85", minT: 110 },
     brake100: { target: 30, tol: 1.5 },
   },
+  s2000: {
+    file: "Honda S2000 simulator.html", app: "S2000App", label: "Honda S2000 (AP1)",
+    marks: { 100: { target: 6.2, tol: 1e-4 } },
+    // 241 km/h is reached, not governed: the F20C runs out of gearing and drag together
+    topSpeed: { kmh: 241, minT: 60 },
+    brake100: { target: 36, tol: 1.5 },
+  },
   project8: {
     file: "Jaguar XE SV Project 8 simulator.html", app: "Project8App", label: "Jaguar XE SV Project 8",
     marks: { 100: { target: 3.7, tol: 1e-4 } },
