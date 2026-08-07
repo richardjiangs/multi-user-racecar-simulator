@@ -1240,8 +1240,7 @@ const SPEC = {
     let frontT, rearT;
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
-      // Standing downforce rises through mid-speed — the Agera RS aero package package holds its trim
-      // (this is the downforce car; the low-drag record car is the Absolut).
+      // Standing downforce rises through mid-speed as the aero loads up.
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -2143,7 +2142,7 @@ const SPEC = {
     return `rgb(${ch2((n >> 16) & 255)},${ch2((n >> 8) & 255)},${ch2(n & 255)})`;
   }
 
-  /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
+  /* first-person cockpit frame: this car's own pillars, scuttle and dash */
   /* ===== rear-view =====================================================================
      The same projection as the forward view, run with the camera turned through 180° and
      flipped left-for-right the way glass does it — so the bend in the glass is the bend you

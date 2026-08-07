@@ -1230,8 +1230,7 @@ const SPEC = {
     let frontT, rearT;
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
-      // Standing downforce rises through mid-speed — the Attack package holds its trim
-      // (this is the downforce car; the low-drag record car is the Absolut).
+      // Standing downforce rises through mid-speed as the aero loads up.
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -2134,7 +2133,7 @@ const SPEC = {
     return `rgb(${ch2((n >> 16) & 255)},${ch2((n >> 8) & 255)},${ch2(n & 255)})`;
   }
 
-  /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
+  /* first-person cockpit frame: this car's own pillars, scuttle and dash */
   /* ===== rear-view =====================================================================
      The same projection as the forward view, run with the camera turned through 180° and
      flipped left-for-right the way glass does it — so the bend in the glass is the bend you
@@ -2434,20 +2433,29 @@ drawCluster(w, h, dashY, sway);
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineWidth = R * 0.08; ctx.strokeStyle = "#7a4a24"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(210,160,90,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    ctx.lineWidth = R * 0.02; ctx.strokeStyle = "rgba(245,212,0,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.47, Math.PI * 1.53); ctx.stroke();
-    // three chromed spokes
-    ctx.strokeStyle = "#cfd6dd"; ctx.lineWidth = R * 0.05;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.9, R * 0.34); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -R * 0.9); ctx.stroke();
-    // chrome boss with yellow shield
-    ctx.fillStyle = "#1a0a08"; ctx.beginPath(); ctx.arc(0, 0, R * 0.2, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "#cfd6dd"; ctx.lineWidth = R * 0.02; ctx.stroke();
-    ctx.fillStyle = "#f5d400"; ctx.font = `700 ${Math.round(R * 0.11)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("Ferrari", 0, R * 0.02);
+    // suede rim, and the seam you can feel through your gloves
+    ctx.lineWidth = R * 0.11; ctx.strokeStyle = "#1b1a1c"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
+    ctx.lineWidth = R * 0.012; ctx.strokeStyle = "rgba(200,190,190,0.28)"; ctx.setLineDash([R * 0.028, R * 0.05]);
+    ctx.beginPath(); ctx.arc(0, 0, R * 0.965, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]);
+    // three drilled aluminium spokes
+    ctx.strokeStyle = "#8e959d"; ctx.lineWidth = R * 0.085; ctx.lineCap = "butt";
+    [[0, -1], [-0.87, 0.5], [0.87, 0.5]].forEach(([dx, dy]) => {
+      ctx.beginPath(); ctx.moveTo(dx * R * 0.2, dy * R * 0.2); ctx.lineTo(dx * R * 0.94, dy * R * 0.94); ctx.stroke();
+      for (let k = 0.42; k < 0.9; k += 0.16) {
+        ctx.fillStyle = "#0c0d10"; ctx.beginPath();
+        ctx.arc(dx * R * k, dy * R * k, R * 0.022, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+    // the yellow shield in the boss
+    ctx.fillStyle = "#111316"; ctx.beginPath(); ctx.arc(0, 0, R * 0.21, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "#8e959d"; ctx.lineWidth = R * 0.016; ctx.stroke();
+    ctx.fillStyle = "#f2c200"; ctx.beginPath();
+    ctx.moveTo(-R * 0.075, -R * 0.1); ctx.lineTo(R * 0.075, -R * 0.1);
+    ctx.lineTo(R * 0.075, R * 0.03); ctx.quadraticCurveTo(0, R * 0.15, -R * 0.075, R * 0.03); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#12140f"; ctx.font = `800 ${Math.round(R * 0.075)}px ui-serif, Georgia`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("F", 0, -R * 0.015);
     ctx.restore();
   }
-
     function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();

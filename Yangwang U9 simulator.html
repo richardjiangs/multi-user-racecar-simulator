@@ -2257,7 +2257,7 @@ const SPEC = {
     return `rgb(${ch2((n >> 16) & 255)},${ch2((n >> 8) & 255)},${ch2(n & 255)})`;
   }
 
-  /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
+  /* first-person cockpit frame: this car's own pillars, scuttle and dash */
   /* ===== rear-view =====================================================================
      The same projection as the forward view, run with the camera turned through 180° and
      flipped left-for-right the way glass does it — so the bend in the glass is the bend you
@@ -2490,29 +2490,28 @@ const SPEC = {
 
   function drawCabinFrame(w, h, pal) {
     const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
-    ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
-    // carbon dash cowl
+    ctx.fillStyle = pal.night ? "#080a0e" : "#0e1116";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.19, 0); ctx.lineTo(w * 0.08, h * 0.61); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.81, 0); ctx.lineTo(w * 0.92, h * 0.61); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = pal.night ? "#06070a" : "#0a0c10"; ctx.fillRect(0, 0, w, h * 0.05);
+    // the butterfly cut: it takes a slice of the roof with it, so there is a seam in the rail
+    ctx.strokeStyle = "rgba(95,208,234,0.45)"; ctx.lineWidth = 2;
+    [-1, 1].forEach((s) => { ctx.beginPath();
+      ctx.moveTo(w / 2 + s * w * 0.19, 0); ctx.lineTo(w / 2 + s * w * 0.34, h * 0.05);
+      ctx.lineTo(w / 2 + s * w * 0.40, h * 0.60); ctx.stroke(); });
     const dashY = h * 0.66 + sway * 0.2;
     const dg = ctx.createLinearGradient(0, dashY, 0, h);
-    dg.addColorStop(0, "#15181d"); dg.addColorStop(0.5, "#0c0e12"); dg.addColorStop(1, "#080a0d");
-    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY); ctx.lineTo(w * 0.98 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
-    // carbon weave hint on the dash
-    ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
-    for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
-    ctx.restore();
-    // ---- Track glass: the 12.3\" driver display behind the wheel and the 17\"
-    // landscape centre screen floating to the right ----
-    const R = Math.min(w, h) * 0.118;
-    const cy = dashY + R * 0.66;
-    const cx = w / 2 + sway;
-    drawCluster(cx, cy, R);
-    // the wheel
+    dg.addColorStop(0, "#151a20"); dg.addColorStop(0.4, "#0c0f14"); dg.addColorStop(1, "#07080b");
+    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(0, dashY); ctx.lineTo(w, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
+    // one screen, all the way across
+    const scr = ctx.createLinearGradient(0, dashY + h * 0.012, 0, dashY + h * 0.085);
+    scr.addColorStop(0, "#0a1520"); scr.addColorStop(1, "#04070c");
+    ctx.fillStyle = scr; ctx.fillRect(w * 0.08 + sway, dashY + h * 0.012, w * 0.84, h * 0.073);
+    ctx.strokeStyle = "rgba(95,208,234,0.3)"; ctx.lineWidth = 1.2;
+    ctx.strokeRect(w * 0.08 + sway, dashY + h * 0.012, w * 0.84, h * 0.073);
+    drawCluster(w, h, dashY, sway);
     drawWheel(w, h);
-  }
-  // instantaneous combined output (hp) — all four motors together
+  }  // instantaneous combined output (hp) — all four motors together
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);

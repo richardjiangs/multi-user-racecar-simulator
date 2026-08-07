@@ -2256,7 +2256,7 @@ const SPEC = {
     return `rgb(${ch2((n >> 16) & 255)},${ch2((n >> 8) & 255)},${ch2(n & 255)})`;
   }
 
-  /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
+  /* first-person cockpit frame: this car's own pillars, scuttle and dash */
   /* ===== rear-view =====================================================================
      The same projection as the forward view, run with the camera turned through 180° and
      flipped left-for-right the way glass does it — so the bend in the glass is the bend you
@@ -2489,23 +2489,28 @@ const SPEC = {
 
   function drawCabinFrame(w, h, pal) {
     const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
-    ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
-    // carbon dash cowl
-    const dashY = h * 0.66 + sway * 0.2;
+    // the pillars are thin and raked hard: this car is mostly glass
+    ctx.fillStyle = pal.night ? "#0b0d10" : "#12151a";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.11, 0); ctx.lineTo(w * 0.045, h * 0.60); ctx.lineTo(0, h * 0.64); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.89, 0); ctx.lineTo(w * 0.955, h * 0.60); ctx.lineTo(w, h * 0.64); ctx.closePath(); ctx.fill();
+    // the glass roof: a tinted band rather than a header rail
+    const rg = ctx.createLinearGradient(0, 0, 0, h * 0.06);
+    rg.addColorStop(0, pal.night ? "rgba(12,16,22,0.95)" : "rgba(20,28,38,0.9)"); rg.addColorStop(1, "rgba(20,28,38,0)");
+    ctx.fillStyle = rg; ctx.fillRect(0, 0, w, h * 0.06);
+    // the dash: one flat plane, one seam, no cowl over anything
+    const dashY = h * 0.68 + sway * 0.2;
     const dg = ctx.createLinearGradient(0, dashY, 0, h);
-    dg.addColorStop(0, "#15181d"); dg.addColorStop(0.5, "#0c0e12"); dg.addColorStop(1, "#080a0d");
-    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY); ctx.lineTo(w * 0.98 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
-    // carbon weave hint on the dash
-    ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
-    for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
-    ctx.restore();
+    dg.addColorStop(0, "#1a1d21"); dg.addColorStop(0.35, "#101215"); dg.addColorStop(1, "#0a0b0d");
+    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(0, dashY); ctx.lineTo(w, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
+    // the open-pore wood seam that runs the whole width
+    const wood = ctx.createLinearGradient(0, dashY + h * 0.035, 0, dashY + h * 0.075);
+    wood.addColorStop(0, "#4a3a2c"); wood.addColorStop(0.5, "#2e241b"); wood.addColorStop(1, "#1b1510");
+    ctx.fillStyle = wood; ctx.fillRect(0, dashY + h * 0.035, w, h * 0.04);
+    ctx.strokeStyle = "rgba(210,225,240,0.10)"; ctx.lineWidth = 1;
+    ctx.beginPath(); ctx.moveTo(0, dashY + h * 0.035); ctx.lineTo(w, dashY + h * 0.035); ctx.stroke();
     drawCluster(w, h, dashY, sway);
     drawWheel(w, h);
   }
-
   /* the instrument pack, lifted out of the cockpit frame so the Cockpit tab can render
      the very same instruments live instead of showing a picture of them */
   function drawCluster(w, h, dashY, sway) {
