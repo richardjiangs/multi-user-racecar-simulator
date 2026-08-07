@@ -242,6 +242,34 @@ const CARS = {
     topSpeed: { kmh: 407, minT: 80 },
     brake100: { target: 29, tol: 1.0 },
   },
+  t50s: {
+    file: "Gordon Murray T50s Niki Lauda simulator.html", app: "T50sApp", label: "Gordon Murray T.50s Niki Lauda",
+    // GMA publish NO 0-100 for a track-only car. 2.6 s is DERIVED from the published
+    // 725 bhp, the published 852 kg and slick launch grip — see SPEC.derivedZeroTo100.
+    marks: { 100: { target: 2.6, tol: 1e-4 } },
+    topSpeed: { minKmh: 290, maxKmh: 330, minT: 70 },   // drag-limited: a fan, a delta wing and a fin
+    brake100: { target: 28, tol: 1.5 },
+  },
+  tuatara: {
+    file: "SSC Tuatara simulator.html", app: "TuataraApp", label: "SSC Tuatara",
+    marks: { 100: { target: 2.5, tol: 1e-4 } },
+    // 474.8 km/h recorded one way at the Launch and Landing Facility, 14 May 2022, on E85
+    topSpeed: { kmh: 474.8, setup: "e85", minT: 110 },
+    brake100: { target: 30, tol: 1.5 },
+  },
+  s2000: {
+    file: "Honda S2000 simulator.html", app: "S2000App", label: "Honda S2000 (AP1)",
+    marks: { 100: { target: 6.2, tol: 1e-4 } },
+    // 241 km/h is reached, not governed: the F20C runs out of gearing and drag together
+    topSpeed: { kmh: 241, minT: 60 },
+    brake100: { target: 36, tol: 1.5 },
+  },
+  project8: {
+    file: "Jaguar XE SV Project 8 simulator.html", app: "Project8App", label: "Jaguar XE SV Project 8",
+    marks: { 100: { target: 3.7, tol: 1e-4 } },
+    topSpeed: { kmh: 322, minT: 70 },     // 200 mph (Jaguar)
+    brake100: { target: 33, tol: 1.5 },
+  },
   alfa33: {
     file: "Alfa Romeo 33 Stradale simulator.html", app: "Alfa33App", label: "Alfa Romeo 33 Stradale",
     marks: { 100: { target: 3.0, tol: 1e-4 } },

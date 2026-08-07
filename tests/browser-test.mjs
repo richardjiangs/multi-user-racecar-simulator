@@ -183,7 +183,7 @@ const check = (label, ok, detail) => {
   }
   // and they must not all look alike: the housings differ per car the way the dashboards do
   check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
-    bad.length === 0 && side === 13 && centre === 35 && frames.size >= 6, bad.slice(0, 4).join(" | "));
+    bad.length === 0 && side === 13 && centre === 39 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------
@@ -406,6 +406,33 @@ const check = (label, ok, detail) => {
   check(checked + " co-pilots — each offers the brand circuit its own car has", bad.length === 0, bad.slice(0, 6).join(" | "));
 }
 
+/* ---------- a rival cannot wear the host car's marque on somebody else's model ----------
+   Cloning the T.33 find-replaced "McLaren Automotive" into "Gordon Murray Automotive", so a
+   765LT and a P1 raced under Murray's name — in every sim downstream. The tell is a rival
+   whose marque is the HOST car's but whose model belongs to a different maker. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const MODELS = { "765LT": "McLaren", "P1": "McLaren", "Senna": "McLaren", "Artura": "McLaren",
+    "Huracán": "Lamborghini", "Revuelto": "Lamborghini", "Regera": "Koenigsegg",
+    "Nevera": "Rimac", "Valkyrie": "Aston Martin", "LaFerrari": "Ferrari", "SF90": "Ferrari",
+    "Veyron": "Bugatti", "MC20": "Maserati", "918": "Porsche" };
+  const bad = [];
+  let checked = 0;
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    for (const m of src.matchAll(/name: "([^"]+)"/g)) {
+      const n = m[1];
+      for (const [model, maker] of Object.entries(MODELS)) {
+        // whole word only: "P1" must not match "P100D"
+        if (!new RegExp("(^|[^A-Za-z0-9])" + model.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "([^A-Za-z0-9]|$)").test(n)) continue;
+        checked++;
+        if (!n.includes(maker)) bad.push(f.replace(/ simulator.html/i, "") + ' fields "' + n + '" — a ' + maker);
+      }
+    }
+  }
+  check(checked + " rival names checked — each model wears its own maker", bad.length === 0, [...new Set(bad)].slice(0, 6).join(" | "));
+}
+
 /* ---------- a brand circuit has to BE that circuit ----------
    Six cars cloned from the Supra never had their brand track re-derived, so six different
    buttons — Bathurst, Norisring, Dunsfold, Goodwood, Tsukuba, SUGO — all loaded FUJI
@@ -475,7 +502,8 @@ const check = (label, ok, detail) => {
     "BMW": "BMW", "Audi": "Audi", "Gordon": "Gordon Murray", "Yangwang": "Yangwang|BYD",
     "Czinger": "Czinger", "Dacia": "Dacia", "Ford": "Ford", "Prodrive": "Prodrive",
     "Alpine": "Alpine", "Williams": "Williams", "Racing": "Racing Bulls", "Haas": "Haas",
-    "Cadillac": "Cadillac", "Red": "Red Bull", "Alfa": "Alfa Romeo",
+    "Cadillac": "Cadillac", "Red": "Red Bull", "Alfa": "Alfa Romeo", "SSC": "SSC", "Jaguar": "Jaguar",
+    "Honda": "Honda",
   };
   const bad = [];
   let checked = 0;
@@ -520,7 +548,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("forty-eight car cards render", await page.locator(".car-card").count() === 48);
+check("fifty-two car cards render", await page.locator(".car-card").count() === 52);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- every card must be WIRED, not just rendered ----------
@@ -530,7 +558,7 @@ check("host board present", await page.locator("#activeHostList").count() === 1)
    `if (!car) return;` and every button on them was inert — and this file never tried
    them, because they were not in the list. Derive, never enumerate. */
 const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
-check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 48);
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 52);
 
 const wiring = await page.evaluate((keys) => keys.map((k) => ({
   key: k,
