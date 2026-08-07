@@ -972,7 +972,7 @@ const SPEC = {
 /* ===== shared context ===== */
 {
   const canvas = document.getElementById("worldCanvas");
-  const ctx = canvas.getContext("2d");
+  let ctx = canvas.getContext("2d");   // re-pointed for a moment while the cockpit pack is drawn
 
   const state = {
     time: 0, lastTime: performance.now(),
@@ -1833,7 +1833,8 @@ const SPEC = {
 /* ===== render: the driving world ===== */
 {
   const app = window.U9App;
-  const { state, canvas, ctx, clamp, lerp } = app;
+  const { state, canvas, clamp, lerp } = app;
+  let ctx = app.ctx;   // re-pointed for a moment while the cockpit pack is drawn
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
   function resizeCanvas() {
@@ -2256,7 +2257,7 @@ const SPEC = {
     return `rgb(${ch2((n >> 16) & 255)},${ch2((n >> 8) & 255)},${ch2(n & 255)})`;
   }
 
-  /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
+  /* first-person cockpit frame: this car's own pillars, scuttle and dash */
   /* ===== rear-view =====================================================================
      The same projection as the forward view, run with the camera turned through 180° and
      flipped left-for-right the way glass does it — so the bend in the glass is the bend you
@@ -2489,29 +2490,28 @@ const SPEC = {
 
   function drawCabinFrame(w, h, pal) {
     const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
-    ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
-    // carbon dash cowl
+    ctx.fillStyle = pal.night ? "#080a0e" : "#0e1116";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.19, 0); ctx.lineTo(w * 0.08, h * 0.61); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.81, 0); ctx.lineTo(w * 0.92, h * 0.61); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = pal.night ? "#06070a" : "#0a0c10"; ctx.fillRect(0, 0, w, h * 0.05);
+    // the butterfly cut: it takes a slice of the roof with it, so there is a seam in the rail
+    ctx.strokeStyle = "rgba(95,208,234,0.45)"; ctx.lineWidth = 2;
+    [-1, 1].forEach((s) => { ctx.beginPath();
+      ctx.moveTo(w / 2 + s * w * 0.19, 0); ctx.lineTo(w / 2 + s * w * 0.34, h * 0.05);
+      ctx.lineTo(w / 2 + s * w * 0.40, h * 0.60); ctx.stroke(); });
     const dashY = h * 0.66 + sway * 0.2;
     const dg = ctx.createLinearGradient(0, dashY, 0, h);
-    dg.addColorStop(0, "#15181d"); dg.addColorStop(0.5, "#0c0e12"); dg.addColorStop(1, "#080a0d");
-    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY); ctx.lineTo(w * 0.98 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
-    // carbon weave hint on the dash
-    ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
-    for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
-    ctx.restore();
-    // ---- Track glass: the 12.3\" driver display behind the wheel and the 17\"
-    // landscape centre screen floating to the right ----
-    const R = Math.min(w, h) * 0.118;
-    const cy = dashY + R * 0.66;
-    const cx = w / 2 + sway;
-    drawCluster(cx, cy, R);
-    // the wheel
+    dg.addColorStop(0, "#151a20"); dg.addColorStop(0.4, "#0c0f14"); dg.addColorStop(1, "#07080b");
+    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(0, dashY); ctx.lineTo(w, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
+    // one screen, all the way across
+    const scr = ctx.createLinearGradient(0, dashY + h * 0.012, 0, dashY + h * 0.085);
+    scr.addColorStop(0, "#0a1520"); scr.addColorStop(1, "#04070c");
+    ctx.fillStyle = scr; ctx.fillRect(w * 0.08 + sway, dashY + h * 0.012, w * 0.84, h * 0.073);
+    ctx.strokeStyle = "rgba(95,208,234,0.3)"; ctx.lineWidth = 1.2;
+    ctx.strokeRect(w * 0.08 + sway, dashY + h * 0.012, w * 0.84, h * 0.073);
+    drawCluster(w, h, dashY, sway);
     drawWheel(w, h);
-  }
-  // instantaneous combined output (hp) — all four motors together
+  }  // instantaneous combined output (hp) — all four motors together
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
@@ -2835,12 +2835,67 @@ const SPEC = {
         <circle r="15" fill="#08171e" stroke="rgba(95,208,234,0.8)" stroke-width="2"/>
         <text x="0" y="4" text-anchor="middle" font-size="9" font-weight="800" fill="#9fe8fb">U9</text>
       </g>
-    </svg>
+          <!-- the box the live instrument pack is drawn into: geometry only -->
+      <rect id="cabPack" x="170" y="88" width="454" height="122" fill="none" pointer-events="none"/>
+      </svg>
     `;
+    if (!document.getElementById("cabLive")) {
+      const cv = document.createElement("canvas");
+      cv.id = "cabLive";
+      cv.style.cssText = "position:absolute;pointer-events:none;left:0;top:0";
+      app.el.cabinArt.appendChild(cv);
+    }
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; return s; }
 
-  Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect });
+  /* THE COCKPIT TAB'S INSTRUMENT PACK IS THE CAR'S OWN, AND IT IS LIVE.
+     It used to be a painted picture: the speed and the revs in the Cockpit tab never moved, in
+     any of the 52 cars. Rather than freeze a second copy of every dial into the SVG, the pack
+     area is measured out of the drawing (#cabPack, or #tachArt's own box) and the car's REAL
+     drawCluster — the same one the windscreen view uses — is rendered into it. */
+  function drawCabinLive() {
+    const cv = document.getElementById("cabLive");
+    const pack = document.getElementById("cabPack") || document.getElementById("tachArt");
+    // a car whose instruments sit on the steering wheel opts out: painting an upright
+    // canvas over a wheel that turns would be worse than the static art it replaces
+    if (!cv || !pack || pack.dataset.nolive || !document.body.classList.contains("view-cockpit")) return;
+    const wrap = cv.parentElement, wr = wrap.getBoundingClientRect();
+    if (wr.width < 40) return;
+    // #cabPack, when a car declares one, is the exact box. Otherwise the pack is centred on
+    // whatever #tachArt occupies and given a share of the cabin width, because a car whose
+    // instrument art is a single small dial would otherwise get a postage-stamp cluster.
+    const pr = pack.getBoundingClientRect();
+    const fixed = pack.id === "cabPack";
+    const bw = fixed ? Math.max(60, pr.width) : Math.max(180, wr.width * 0.46);
+    const bh = fixed ? Math.max(30, pr.height) : Math.max(64, bw * 0.30);
+    const cxp = pr.left + pr.width / 2 - wr.left, cyp = pr.top + pr.height / 2 - wr.top;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.style.left = (fixed ? pr.left - wr.left : cxp - bw / 2) + "px";
+    cv.style.top = (fixed ? pr.top - wr.top : cyp - bh / 2) + "px";
+    cv.style.width = bw + "px"; cv.style.height = bh + "px";
+    if (cv.width !== Math.round(bw * dpr) || cv.height !== Math.round(bh * dpr)) {
+      cv.width = Math.round(bw * dpr); cv.height = Math.round(bh * dpr);
+    }
+    const c2 = cv.getContext("2d");
+    c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c2.clearRect(0, 0, bw, bh);
+    const saved = ctx;
+    ctx = c2;
+    try {
+      // drawCluster works in its own units (R = min(w,h)/8, the pack about 4.5R wide). Draw it
+      // in a fixed logical space and scale that space into the pack box, so each car's cluster
+      // lands inside its own instrument surround at the right size.
+      const LW = 1000, LR = 125, scale = bw / 620;
+      c2.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+      c2.translate((bw / scale - LW) / 2, 0);
+      // two shapes of cluster live in this garage: the dash-mounted (w, h, dashY, sway) and
+      // the EVs' free-floating (cx, cy, R). Call whichever this car actually declares.
+      if (drawCluster.length >= 4) drawCluster(LW, LW, bh / scale / 2 - LR * 0.3, 0);
+      else drawCluster(LW / 2, bh / scale / 2, LR * 1.28);
+    } catch (e) { /* a cluster that cannot draw here must never take the frame down with it */ }
+    ctx = saved;
+  }
+  Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect, drawCabinLive });
 }
 
 /* ===== UI actions ===== */
@@ -3135,7 +3190,46 @@ const SPEC = {
 
     // cabin svg
     const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? "D" : state.gearMode;
-    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(320,300) rotate(${(state.steer * 90).toFixed(1)})`);
+    // the wheel turns about where it actually IS: the home transform is read out of the SVG
+    // the first time we see it, so a redrawn cabin can never leave a stale translate behind
+    const cabinWheel = document.getElementById("cabinWheelG");
+    if (cabinWheel) {
+      if (!cabinWheel.dataset.home) {
+        const t0 = cabinWheel.getAttribute("transform") || "";
+        cabinWheel.dataset.home = (t0.match(/translate\([^)]*\)/) || ["translate(0,0)"])[0];
+      }
+      cabinWheel.setAttribute("transform", cabinWheel.dataset.home + ` rotate(${(state.steer * 52).toFixed(1)})`);
+    }
+    // ---- the instrument pack is LIVE. Each car tags its own drawing with the ids it has. ----
+    {
+      const spd = Math.round(Math.abs(kmh(state.speedMps)));
+      const rev = clamp(state.rpm / (SPEC.redlineRpm || 8000), 0, 1);
+      const put = (id, v) => { const e = document.getElementById(id); if (e && e.textContent !== v) e.textContent = v; };
+      put("cabSpeedArt", String(spd));
+      put("cabRpmArt", String(Math.round(state.rpm)));
+      put("cabGearArt", state.gearMode === "G" ? String(state.curGear) : state.gearMode);
+      const bar = document.getElementById("cabRevBar");
+      if (bar) {
+        if (!bar.dataset.w) bar.dataset.w = bar.getAttribute("width");
+        bar.setAttribute("width", (parseFloat(bar.dataset.w) * rev).toFixed(2));
+      }
+      const sweep = (id, f) => {
+        const g = document.getElementById(id); if (!g) return;
+        const a0 = parseFloat(g.dataset.a0 || 0), a1 = parseFloat(g.dataset.a1 || 270);
+        g.setAttribute("transform", `rotate(${(a0 + (a1 - a0) * clamp(f, 0, 1)).toFixed(1)},${g.dataset.cx || 0},${g.dataset.cy || 0})`);
+      };
+      sweep("cabRevNeedle", rev);
+      const sn = document.getElementById("cabSpeedNeedle");
+      if (sn) sweep("cabSpeedNeedle", spd / (parseFloat(sn.dataset.max) || 300));
+      const segs = document.getElementById("cabRevSegs");
+      if (segs) {
+        const n = segs.children.length, lit = Math.round(rev * n);
+        const redAt = Math.round((parseFloat(segs.dataset.red) || 0.86) * n);
+        const on = segs.dataset.on || "#ffb245", off = segs.dataset.off || "rgba(120,110,90,0.3)";
+        const red = segs.dataset.redcol || "#ff4436", offRed = segs.dataset.redoff || "rgba(120,40,34,0.35)";
+        for (let i = 0; i < n; i++) segs.children[i].setAttribute("fill", i < lit ? (i >= redAt ? red : on) : (i >= redAt ? offRed : off));
+      }
+    }
     const leverArt = document.getElementById("leverArt"); if (leverArt) leverArt.setAttribute("transform", `rotate(${state.shiftTimer > 0 ? 10 : 0})`);
     const startArt = document.getElementById("startArt"); if (startArt) startArt.setAttribute("fill", state.ignition ? "#1f7a3a" : "#7a1f1f");
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
@@ -3469,7 +3563,7 @@ const SPEC = {
       steps++;
     }
     if (steps >= 60) accumulator = 0;
-    app.drawWorld(); if (audio.ready) audio.update(state, frame); app.updateUi();
+    app.drawWorld(); if (audio.ready) audio.update(state, frame); app.updateUi(); app.drawCabinLive();
     requestAnimationFrame(gameLoop);
   }
   app.resizeCanvas(); app.injectArt(); app.buildCornersForRoute(); app.seedWorld(); app.updateDoorArt(); app.updateGearButtons(); app.setMode("race");

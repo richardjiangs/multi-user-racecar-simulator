@@ -76,6 +76,114 @@ const check = (label, ok, detail) => {
     unexpected.length ? "UNEXPECTED SHARED VOICE: " + unexpected.join("  //  ") : "");
 }
 
+
+/* ---------- the cockpit is not a photograph ----------
+   Every one of the 52 cars drew its instrument pack into the Cockpit tab as literal text in
+   the SVG: the speed and the revs never moved while you drove. The pack is now rendered from
+   the car's own drawCluster, so these four things have to stay true. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const sims = readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x));
+  const gaps = [];
+  for (const f of sims) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const n = f.replace(/ simulator\.html/i, "");
+    if (!/function drawCabinLive\(\)/.test(src)) gaps.push(n + ": no live cockpit pack");
+    if (!/app\.drawCabinLive\(\)/.test(src)) gaps.push(n + ": the live pack is never called from the loop");
+    if (!/cv\.id = "cabLive"/.test(src)) gaps.push(n + ": no canvas for the live pack");
+    if (!/id="cabPack"/.test(src)) gaps.push(n + ": no declared instrument box");
+    // the renderer has to be able to re-point the drawing context, or it silently draws nothing
+    if (/  const ctx = canvas\.getContext/.test(src)) gaps.push(n + ": ctx is const — the live pack cannot borrow it");
+    if (/const \{ state, canvas, ctx, clamp, lerp \} = app;/.test(src)) gaps.push(n + ": the render block destructures ctx as const");
+    // and every car must actually HAVE a cluster to render (or opt out on the wheel)
+    const nolive = /data-nolive/.test(src);
+    if (!nolive && !/function drawCluster\(/.test(src)) gaps.push(n + ": no drawCluster to render");
+  }
+  check(sims.length + " cockpits render the car's own instruments, live", gaps.length === 0, gaps.slice(0, 6).join(" | "));
+}
+
+/* ---------- the cabin wheel turns about where it actually is ----------
+   The updater used to rewrite the wheel group's transform with a translate hard-coded from
+   whichever donor the car was cloned from. Five cars snapped the wheel across the picture the
+   moment you steered; three had no wheel group at all and never turned it. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const bad = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const n = f.replace(/ simulator\.html/i, "");
+    if (!/id="cabinWheelG"/.test(src)) bad.push(n + ": the cabin has no steering wheel to turn");
+    if (!/cabinWheel\.dataset\.home/.test(src)) bad.push(n + ": the wheel's home position is not read from the SVG");
+    if (/cabinWheel\.setAttribute\("transform", `translate\(/.test(src)) bad.push(n + ": the wheel still carries a hard-coded translate");
+  }
+  check("every cabin wheel turns about its own centre", bad.length === 0, bad.slice(0, 6).join(" | "));
+}
+
+/* ---------- no car may wear another car's cockpit ----------
+   drawCabinFrame is the windscreen you drive through, drawCluster is the instrument pack and
+   drawWheel is what you hold. A clone copies all three verbatim, and recolouring one is not
+   re-deriving it. Only cars that genuinely share a chassis may share them. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const { createHash } = await import("node:crypto");
+  const F1 = ["Alpine F1 2026", "Aston Martin F1 2026", "Audi F1 2026", "Cadillac F1 2026", "Ferrari F1 2026",
+    "Haas F1 2026", "McLaren F1 2026", "Mercedes F1 2026", "Racing Bulls F1 2026", "Red Bull F1 2026", "Williams F1 2026"];
+  const DAKAR = ["Dacia Sandrider Dakar", "Ford Raptor T1+ Dakar", "Prodrive Hunter Dakar", "Toyota GR DKR Hilux"];
+  const ALLOWED = [F1, DAKAR].map((g) => g.slice().sort().join("|"));   // one shared chassis each
+  const body = (src, name) => {
+    const i = src.indexOf("function " + name + "(");
+    if (i < 0) return null;
+    let d = 0, st = src.indexOf("{", i), j = st;
+    for (; j < src.length; j++) { if (src[j] === "{") d++; else if (src[j] === "}") { d--; if (!d) break; } }
+    return src.slice(st, j).replace(/\s+/g, " ").replace(/#[0-9a-fA-F]{3,8}/g, "C")
+      .replace(/rgba?\([^)]*\)/g, "C").replace(/"[^"]*"/g, "S");     // colour and copy are not design
+  };
+  const problems = [];
+  for (const fn of ["drawCabinFrame", "drawCluster", "drawWheel"]) {
+    const byShape = new Map();
+    for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+      const b = body(readFileSync(ROOT + "/" + f, "utf8"), fn);
+      if (b === null) continue;
+      const k = createHash("md5").update(b).digest("hex");
+      byShape.set(k, (byShape.get(k) || []).concat(f.replace(/ simulator\.html/i, "")));
+    }
+    for (const v of byShape.values()) {
+      if (v.length < 2) continue;
+      const key = v.slice().sort().join("|");
+      if (!ALLOWED.includes(key)) problems.push(fn + " shared by " + v.join(", "));
+    }
+  }
+  check("no car wears another car's cockpit, cluster or wheel", problems.length === 0, problems.slice(0, 4).join("  //  "));
+}
+
+/* ---------- a clone may not keep the donor's features ----------
+   The SSC Tuatara shipped with the Venom F5's "F5 Mode" on key Z — button, voice command, both
+   HUD warnings, the wheel boss, the header comment — and, worse, with the Venom's aero coupling
+   still wired to it, so choosing E85 cut the Tuatara's drag by 16%. A fuel map cannot do that. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  // a string that names a car, and the only file allowed to contain it outside a rival grid
+  const OWNED = {
+    "F5 Mode": /Venom F5/, "HENNESSEY": /Venom F5/, "Speed Key": /Chiron/, "Absolut": /Jesko/,
+    "2JZ": /Supra MK4/, "Getrag V160": /Supra MK4/, "S68": /BMW M5/, "xDrive": /BMW M5/,
+    "Colombo": /250 GTO|F40/, "4B11T": /Lancer Evo/, "VR38DETT": /GT-R Nismo/, "AJ133": /Project 8/,
+    "F20C": /S2000/, "F22C1": /S2000/, "S70\/2": /McLaren F1 1993/,
+  };
+  const BENIGN = /\{ name: "|GRID = \[|short-geared car|distinct from|RADIO_LINES/;
+  const bad = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const n = f.replace(/ simulator\.html/i, "");
+    const lines = readFileSync(ROOT + "/" + f, "utf8").split("\n");
+    for (const [needle, owner] of Object.entries(OWNED)) {
+      if (owner.test(n)) continue;
+      const re = new RegExp(needle);
+      const hit = lines.findIndex((l) => re.test(l) && !BENIGN.test(l));
+      if (hit >= 0) bad.push(n + ' keeps "' + needle + '" (line ' + (hit + 1) + ")");
+    }
+  }
+  check("no car keeps a feature that belongs to the car it was cloned from", bad.length === 0, bad.slice(0, 6).join(" | "));
+}
+
 /* ---------- no car may hiss ----------
    Every sim carried the same induction node — band-passed white noise at 2.4 kHz, Q=5,
    which is exactly a "shhhhh" — driven by boostBar, which the cloned physics computes on

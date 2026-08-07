@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="fuelBtn" class="race" title="F5 Mode — the top-speed setting: the active rear wing flattens to minimum drag for the run toward 500 km/h">F5 Mode</button>
+          <button id="fuelBtn" class="race" title="E85 — the race-fuel map: 1,350 hp becomes 1,750 and torque goes to 1,735 Nm. Both of the Tuatara’s records were set on it">E85 Map</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -701,7 +701,7 @@
 
   <script type="module">
 /* ===========================================================================
-   HENNESSEY VENOM F5 (browser hypercar simulator)
+   SSC TUATARA (browser hypercar simulator)
    Real Web-Audio 5.9 L twin-turbo FLAT-PLANE V8, factory-matched physics (0–100 km/h
    2.5 s; 1,350 hp on pump fuel and 1,750 hp on E85, 1,735 Nm; 8,800 rpm; 1,247 kg dry;
    Cd 0.279 body
@@ -891,7 +891,7 @@ const SPEC = {
 /* ===== shared context ===== */
 {
   const canvas = document.getElementById("worldCanvas");
-  const ctx = canvas.getContext("2d");
+  let ctx = canvas.getContext("2d");   // re-pointed for a moment while the cockpit pack is drawn
 
   const state = {
     time: 0, lastTime: performance.now(),
@@ -910,7 +910,7 @@ const SPEC = {
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    e85: false,                    // F5 Mode (the name is a Jesko leftover): wing flat, 45% less downforce
+    e85: false,                    // the race-fuel map: 1,350 hp -> 1,750 hp, 1,735 Nm
     e85Vis: 0,                     // fuel-map swap glow on the cluster
     testDriver: false,
     lights: true, hazards: false, horn: false,
@@ -1253,8 +1253,7 @@ const SPEC = {
     let frontT, rearT;
     if (state.aeroAuto) {
       const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
-      // Standing downforce rises through mid-speed — the Attack package holds its trim
-      // (this is the downforce car; the low-drag record car is the Absolut).
+      // Standing downforce rises through mid-speed as the aero loads up.
       const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
       const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
       const speedComp = rise * (0.10 + 0.42 * topTaper);
@@ -1271,7 +1270,7 @@ const SPEC = {
     state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
     state.frontFlap = state.aeroFrontDeploy;
     const avg = (state.aeroFrontDeploy + state.aeroRearDeploy) / 2;
-    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;   // a fuel map does not change the aero — the Venom's F5-Mode coupling does not belong here
+    state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;   // a fuel map does not change the aero
   }
 
   // ---- Real Mode (opt-in): real per-system damage + reliability. OFF by default; realPower/realGrip
@@ -1606,8 +1605,10 @@ const SPEC = {
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction * realPower();
 
-    // Attack aero: the boomerang wing is fixed hardware — its drag is always in the baseline.
-    const baseCd = SPEC.dragCd * (state.e85 ? 0.84 : 1);   // F5 Mode: active wing flat -> less drag
+    // Cd 0.279 is the body, and the body does not change. A FUEL MAP CANNOT CHANGE DRAG:
+    // this was the Venom F5's active-wing coupling, carried in by the clone, and on the
+    // Tuatara it was quietly handing E85 a 16% drag cut it has no way to earn.
+    const baseCd = SPEC.dragCd;
     const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
@@ -1733,7 +1734,8 @@ const SPEC = {
 /* ===== render: the driving world ===== */
 {
   const app = window.TuataraApp;
-  const { state, canvas, ctx, clamp, lerp } = app;
+  const { state, canvas, clamp, lerp } = app;
+  let ctx = app.ctx;   // re-pointed for a moment while the cockpit pack is drawn
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
   function resizeCanvas() {
@@ -2151,7 +2153,7 @@ const SPEC = {
     return `rgb(${ch2((n >> 16) & 255)},${ch2((n >> 8) & 255)},${ch2(n & 255)})`;
   }
 
-  /* first-person cockpit frame: low carbon dash, four-spoke wheel, the Chiron's central dial */
+  /* first-person cockpit frame: this car's own pillars, scuttle and dash */
   /* ===== rear-view =====================================================================
      The same projection as the forward view, run with the camera turned through 180° and
      flipped left-for-right the way glass does it — so the bend in the glass is the bend you
@@ -2488,24 +2490,26 @@ drawCluster(w, h, dashY, sway);
   function drawWheel(w, h) {
     const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    ctx.lineWidth = R * 0.12; ctx.strokeStyle = "#101216"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // tang-orange centring mark
-    ctx.lineWidth = R * 0.05; ctx.strokeStyle = "rgba(47,127,224,0.9)"; ctx.beginPath(); ctx.arc(0, 0, R, Math.PI * 1.45, Math.PI * 1.55); ctx.stroke();
-    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(120,130,140,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.stroke();
-    // flat bottom
-    ctx.fillStyle = "#08090c"; ctx.fillRect(-R * 0.52, R * 0.82, R * 1.04, R * 0.4);
-    // horizontal spokes carrying the wheel TOUCH PADS
-    ctx.strokeStyle = "#14171d"; ctx.lineWidth = R * 0.1;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.92, -R * 0.03); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, R * 0.9); ctx.stroke();
-    [-1, 1].forEach(s => { ctx.fillStyle = "#0e1116"; ctx.strokeStyle = "rgba(47,127,224,0.5)"; ctx.lineWidth = R * 0.014;
-      const px = s * R * 0.56; ctx.beginPath(); ctx.roundRect ? ctx.roundRect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2, R * 0.03) : ctx.rect(px - R * 0.11, -R * 0.14, R * 0.22, R * 0.2); ctx.fill(); ctx.stroke(); });
-    // hub kept open — the driver display sits on the column behind it
-    ctx.strokeStyle = "#1a1e24"; ctx.lineWidth = R * 0.05; ctx.beginPath(); ctx.arc(0, 0, R * 0.24, 0, Math.PI * 2); ctx.stroke();
-    ctx.fillStyle = "#9fc8ff"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("HENNESSEY", 0, R * 0.99 - R * 0.99 + R * 0.34);
+    // squared off top AND bottom — the Tuatara's rim is a squircle, not a circle
+    ctx.lineWidth = R * 0.13; ctx.strokeStyle = "#0f1115"; ctx.beginPath();
+    ctx.moveTo(-R * 0.46, -R * 0.94); ctx.lineTo(R * 0.46, -R * 0.94);
+    ctx.quadraticCurveTo(R, -R * 0.72, R, 0); ctx.quadraticCurveTo(R, R * 0.7, R * 0.46, R * 0.9);
+    ctx.lineTo(-R * 0.46, R * 0.9); ctx.quadraticCurveTo(-R, R * 0.7, -R, 0);
+    ctx.quadraticCurveTo(-R, -R * 0.72, -R * 0.46, -R * 0.94); ctx.stroke();
+    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(200,16,46,0.55)"; ctx.stroke();
+    // two horizontal spokes only, meeting a wide flat boss
+    ctx.strokeStyle = "#161a20"; ctx.lineWidth = R * 0.15;
+    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, R * 0.02); ctx.lineTo(s * R * 0.9, R * 0.02); ctx.stroke(); });
+    ctx.fillStyle = "#0c0f13"; ctx.beginPath();
+    ctx.roundRect ? ctx.roundRect(-R * 0.3, -R * 0.16, R * 0.6, R * 0.36, R * 0.07) : ctx.rect(-R * 0.3, -R * 0.16, R * 0.6, R * 0.36);
+    ctx.fill(); ctx.strokeStyle = "rgba(200,16,46,0.7)"; ctx.lineWidth = R * 0.016; ctx.stroke();
+    // the SSC shield
+    ctx.fillStyle = "#c8102e"; ctx.beginPath();
+    ctx.moveTo(0, -R * 0.1); ctx.lineTo(R * 0.09, -R * 0.03); ctx.lineTo(0, R * 0.11); ctx.lineTo(-R * 0.09, -R * 0.03); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.075)}px ui-sans-serif`;
+    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("SSC", 0, R * 0.28);
     ctx.restore();
-  }
-  function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
+  }  function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
     ctx.fillStyle = "rgba(156,198,255,0.85)"; ctx.font = "11px ui-monospace, monospace"; ctx.textAlign = "left";
@@ -2745,7 +2749,7 @@ drawCluster(w, h, dashY, sway);
       <rect x="486" y="220" width="28" height="6" rx="2" fill="#ff6a3c"/>
 
       <!-- flat-bottomed wheel with the SSC shield -->
-      <g transform="translate(500,262)">
+      <g id="cabinWheelG" transform="translate(500,262)">
         <path d="M-84,-22 A86,86 0 1,1 84,-22 L72,26 Q0,50 -72,26 Z" fill="none" stroke="#15181d" stroke-width="17"/>
         <path d="M-72,26 Q0,50 72,26" fill="none" stroke="#15181d" stroke-width="17"/>
         <rect x="-22" y="-14" width="44" height="30" rx="6" fill="#0d1116" stroke="#4a535d"/>
@@ -2763,12 +2767,66 @@ drawCluster(w, h, dashY, sway);
       <g fill="#c8102e"><rect x="196" y="152" width="9" height="18" rx="3"/><rect x="220" y="152" width="9" height="18" rx="3"/>
         <rect x="771" y="152" width="9" height="18" rx="3"/><rect x="795" y="152" width="9" height="18" rx="3"/></g>
       <text x="500" y="330" text-anchor="middle" font-size="8" fill="#5e6670" letter-spacing="4">Cd 0.279 · 1.86 m²</text>
-    </svg>
+          <!-- the box the live instrument pack is drawn into: geometry only -->
+      <rect id="cabPack" x="306" y="150" width="388" height="92" fill="none" pointer-events="none"/>
+      </svg>
   `;
+    if (!document.getElementById("cabLive")) {
+      const cv = document.createElement("canvas");
+      cv.id = "cabLive";
+      cv.style.cssText = "position:absolute;pointer-events:none;left:0;top:0";
+      app.el.cabinArt.appendChild(cv);
+    }
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
-  Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect });
+  /* THE COCKPIT TAB'S INSTRUMENT PACK IS THE CAR'S OWN, AND IT IS LIVE.
+     It used to be a painted picture: the speed and the revs in the Cockpit tab never moved, in
+     any of the 52 cars. Rather than freeze a second copy of every dial into the SVG, the pack
+     area is measured out of the drawing (#cabPack, or #tachArt's own box) and the car's REAL
+     drawCluster — the same one the windscreen view uses — is rendered into it. */
+  function drawCabinLive() {
+    const cv = document.getElementById("cabLive");
+    const pack = document.getElementById("cabPack") || document.getElementById("tachArt");
+    // a car whose instruments sit on the steering wheel opts out: painting an upright
+    // canvas over a wheel that turns would be worse than the static art it replaces
+    if (!cv || !pack || pack.dataset.nolive || !document.body.classList.contains("view-cockpit")) return;
+    const wrap = cv.parentElement, wr = wrap.getBoundingClientRect();
+    if (wr.width < 40) return;
+    // #cabPack, when a car declares one, is the exact box. Otherwise the pack is centred on
+    // whatever #tachArt occupies and given a share of the cabin width, because a car whose
+    // instrument art is a single small dial would otherwise get a postage-stamp cluster.
+    const pr = pack.getBoundingClientRect();
+    const fixed = pack.id === "cabPack";
+    const bw = fixed ? Math.max(60, pr.width) : Math.max(180, wr.width * 0.46);
+    const bh = fixed ? Math.max(30, pr.height) : Math.max(64, bw * 0.30);
+    const cxp = pr.left + pr.width / 2 - wr.left, cyp = pr.top + pr.height / 2 - wr.top;
+    const dpr = Math.min(2, window.devicePixelRatio || 1);
+    cv.style.left = (fixed ? pr.left - wr.left : cxp - bw / 2) + "px";
+    cv.style.top = (fixed ? pr.top - wr.top : cyp - bh / 2) + "px";
+    cv.style.width = bw + "px"; cv.style.height = bh + "px";
+    if (cv.width !== Math.round(bw * dpr) || cv.height !== Math.round(bh * dpr)) {
+      cv.width = Math.round(bw * dpr); cv.height = Math.round(bh * dpr);
+    }
+    const c2 = cv.getContext("2d");
+    c2.setTransform(dpr, 0, 0, dpr, 0, 0);
+    c2.clearRect(0, 0, bw, bh);
+    const saved = ctx;
+    ctx = c2;
+    try {
+      // drawCluster works in its own units (R = min(w,h)/8, the pack about 4.5R wide). Draw it
+      // in a fixed logical space and scale that space into the pack box, so each car's cluster
+      // lands inside its own instrument surround at the right size.
+      const LW = 1000, LR = 125, scale = bw / 620;
+      c2.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
+      c2.translate((bw / scale - LW) / 2, 0);
+      // two shapes of cluster live in this garage: the dash-mounted (w, h, dashY, sway) and
+      // the EVs' free-floating (cx, cy, R). Call whichever this car actually declares.
+      if (drawCluster.length >= 4) drawCluster(LW, LW, bh / scale / 2 - LR * 0.3, 0);
+      else drawCluster(LW / 2, bh / scale / 2, LR * 1.28);
+    } catch (e) { /* a cluster that cannot draw here must never take the frame down with it */ }
+    ctx = saved;
+  }  Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect, drawCabinLive });
 }
 
 /* ===== UI actions ===== */
@@ -2939,7 +2997,7 @@ drawCluster(w, h, dashY, sway);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("f5 mode", "f5", "top speed", "low drag", "max")) { app.toggleFuel(); acted = true; }
+    if (has("e85", "race fuel", "ethanol", "top speed", "max")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2988,11 +3046,11 @@ drawCluster(w, h, dashY, sway);
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.e85) warn.push("F5 MODE · LOW DRAG");
+    if (state.e85) warn.push("E85 · 1,750 hp");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.e85 && speed >= 320) warn.push("Sport aero — engage F5 Mode for the top-speed run");
+    if (!state.e85 && speed >= 320) warn.push("91 octane — switch to the E85 map for the top-speed run");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -3064,7 +3122,46 @@ drawCluster(w, h, dashY, sway);
 
     // cabin svg
     const tachGearArt = document.getElementById("tachGearArt"); if (tachGearArt) tachGearArt.textContent = state.gearMode === "G" ? String(state.curGear) : state.gearMode;
-    const cabinWheel = document.getElementById("cabinWheelG"); if (cabinWheel) cabinWheel.setAttribute("transform", `translate(360,300) rotate(${(state.steer * 90).toFixed(1)})`);
+    // the wheel turns about where it actually IS: the home transform is read out of the SVG
+    // the first time we see it, so a redrawn cabin can never leave a stale translate behind
+    const cabinWheel = document.getElementById("cabinWheelG");
+    if (cabinWheel) {
+      if (!cabinWheel.dataset.home) {
+        const t0 = cabinWheel.getAttribute("transform") || "";
+        cabinWheel.dataset.home = (t0.match(/translate\([^)]*\)/) || ["translate(0,0)"])[0];
+      }
+      cabinWheel.setAttribute("transform", cabinWheel.dataset.home + ` rotate(${(state.steer * 52).toFixed(1)})`);
+    }
+    // ---- the instrument pack is LIVE. Each car tags its own drawing with the ids it has. ----
+    {
+      const spd = Math.round(Math.abs(kmh(state.speedMps)));
+      const rev = clamp(state.rpm / (SPEC.redlineRpm || 8000), 0, 1);
+      const put = (id, v) => { const e = document.getElementById(id); if (e && e.textContent !== v) e.textContent = v; };
+      put("cabSpeedArt", String(spd));
+      put("cabRpmArt", String(Math.round(state.rpm)));
+      put("cabGearArt", state.gearMode === "G" ? String(state.curGear) : state.gearMode);
+      const bar = document.getElementById("cabRevBar");
+      if (bar) {
+        if (!bar.dataset.w) bar.dataset.w = bar.getAttribute("width");
+        bar.setAttribute("width", (parseFloat(bar.dataset.w) * rev).toFixed(2));
+      }
+      const sweep = (id, f) => {
+        const g = document.getElementById(id); if (!g) return;
+        const a0 = parseFloat(g.dataset.a0 || 0), a1 = parseFloat(g.dataset.a1 || 270);
+        g.setAttribute("transform", `rotate(${(a0 + (a1 - a0) * clamp(f, 0, 1)).toFixed(1)},${g.dataset.cx || 0},${g.dataset.cy || 0})`);
+      };
+      sweep("cabRevNeedle", rev);
+      const sn = document.getElementById("cabSpeedNeedle");
+      if (sn) sweep("cabSpeedNeedle", spd / (parseFloat(sn.dataset.max) || 300));
+      const segs = document.getElementById("cabRevSegs");
+      if (segs) {
+        const n = segs.children.length, lit = Math.round(rev * n);
+        const redAt = Math.round((parseFloat(segs.dataset.red) || 0.86) * n);
+        const on = segs.dataset.on || "#ffb245", off = segs.dataset.off || "rgba(120,110,90,0.3)";
+        const red = segs.dataset.redcol || "#ff4436", offRed = segs.dataset.redoff || "rgba(120,40,34,0.35)";
+        for (let i = 0; i < n; i++) segs.children[i].setAttribute("fill", i < lit ? (i >= redAt ? red : on) : (i >= redAt ? offRed : off));
+      }
+    }
     const leverArt = document.getElementById("leverArt"); if (leverArt) leverArt.setAttribute("transform", `rotate(${state.shiftTimer > 0 ? 10 : 0})`);
     const startArt = document.getElementById("startArt"); if (startArt) startArt.setAttribute("fill", state.ignition ? "#1f7a3a" : "#7a1f1f");
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
@@ -3398,7 +3495,7 @@ drawCluster(w, h, dashY, sway);
       steps++;
     }
     if (steps >= 60) accumulator = 0;
-    app.drawWorld(); if (audio.ready) audio.update(state, frame); app.updateUi();
+    app.drawWorld(); if (audio.ready) audio.update(state, frame); app.updateUi(); app.drawCabinLive();
     requestAnimationFrame(gameLoop);
   }
   app.resizeCanvas(); app.injectArt(); app.buildCornersForRoute(); app.seedWorld(); app.updateDoorArt(); app.updateGearButtons(); app.setMode("race");
