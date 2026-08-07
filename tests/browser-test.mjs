@@ -79,8 +79,10 @@ const check = (label, ok, detail) => {
 
 /* ---------- the cockpit is not a photograph ----------
    Every one of the 52 cars drew its instrument pack into the Cockpit tab as literal text in
-   the SVG: the speed and the revs never moved while you drove. The pack is now rendered from
-   the car's own drawCluster, so these four things have to stay true. */
+   the SVG: the speed and the revs never moved while you drove. The first attempt at fixing it
+   rendered the car's cluster into a canvas laid OVER the drawing, which read exactly like a
+   sticker stuck on the dashboard. The instruments are now the car's own SVG elements, tagged
+   with the ids the updater drives, so what moves is the picture itself. */
 {
   const { readdirSync, readFileSync } = await import("node:fs");
   const sims = readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x));
@@ -88,18 +90,37 @@ const check = (label, ok, detail) => {
   for (const f of sims) {
     const src = readFileSync(ROOT + "/" + f, "utf8");
     const n = f.replace(/ simulator\.html/i, "");
-    if (!/function drawCabinLive\(\)/.test(src)) gaps.push(n + ": no live cockpit pack");
-    if (!/app\.drawCabinLive\(\)/.test(src)) gaps.push(n + ": the live pack is never called from the loop");
-    if (!/cv\.id = "cabLive"/.test(src)) gaps.push(n + ": no canvas for the live pack");
-    if (!/id="cabPack"/.test(src)) gaps.push(n + ": no declared instrument box");
-    // the renderer has to be able to re-point the drawing context, or it silently draws nothing
-    if (/  const ctx = canvas\.getContext/.test(src)) gaps.push(n + ": ctx is const — the live pack cannot borrow it");
-    if (/const \{ state, canvas, ctx, clamp, lerp \} = app;/.test(src)) gaps.push(n + ": the render block destructures ctx as const");
-    // and every car must actually HAVE a cluster to render (or opt out on the wheel)
-    const nolive = /data-nolive/.test(src);
-    if (!nolive && !/function drawCluster\(/.test(src)) gaps.push(n + ": no drawCluster to render");
+    // the readout contract has to be in the updater
+    if (!/num\("cabSpeedArt", spd\)/.test(src)) gaps.push(n + ": no live-readout contract");
+    if (!/getElementById\("cabRevSegs"\)/.test(src)) gaps.push(n + ": the contract is incomplete");
+    // and the car's own drawing has to declare at least one live instrument
+    if (!/id="(cabSpeedArt|cabRpmArt|cabRevSegs|cabRevNeedle|cabSpeedNeedle|cabRevBar)"/.test(src))
+      gaps.push(n + ": the cabin drawing has no live instrument");
+    // no canvas may be laid over the cabin art again
+    if (/cabLive|drawCabinLive/.test(src)) gaps.push(n + ": a canvas is pasted over the cabin art");
   }
-  check(sims.length + " cockpits render the car's own instruments, live", gaps.length === 0, gaps.slice(0, 6).join(" | "));
+  check(sims.length + " cockpits: the car's own instruments, and they move", gaps.length === 0, gaps.slice(0, 6).join(" | "));
+}
+
+/* ---------- downforce is a function of speed ----------
+   updateAero computed its speed and cornering terms only when a driver aid was switched on.
+   Turn the steering assist off — which is what anyone actually driving does — and the wing
+   stopped working: the readout fell to 0 kg, the grip went with it, and so did the drag, so
+   the car then ran well past its own top speed. Reported on the T.50s; it was in every car. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const bad = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const n = f.replace(/ simulator\.html/i, "");
+    if (/assistedDriving/.test(src)) bad.push(n + ": aero still gated on the driver aids");
+    // and an opt-in setting must restore the car it was built as, not a number typed by hand
+    if (!/const AERO0 = \{ aeroClA: SPEC\.aeroClA/.test(src)) bad.push(n + ": no AERO0 baseline");
+    if (/SPEC\.aeroClA = next \? [\d.]+ : [\d.]+;/.test(src)) bad.push(n + ": a setting restores a hand-typed aeroClA");
+    if (/SPEC\.dragCd = next \? [\d.]+ : [\d.]+;/.test(src)) bad.push(n + ": a setting restores a hand-typed dragCd");
+    if (/state\.raceAero = false; SPEC\.aeroClA = [\d.]+/.test(src)) bad.push(n + ": resetCar writes a hand-typed aeroClA");
+  }
+  check("downforce follows speed, and every setting restores the car as built", bad.length === 0, bad.slice(0, 6).join(" | "));
 }
 
 /* ---------- the cabin wheel turns about where it actually is ----------

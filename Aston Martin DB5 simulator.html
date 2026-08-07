@@ -1541,6 +1541,11 @@ const SPEC = {
   aeroDragAdd: 0.10
 };
 
+/* the car AS BUILT. Every opt-in setting restores to exactly this, so pressing a
+   button and pressing it again can never leave you with a different car from the
+   one tests/perf-test.mjs certifies. */
+const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg };
+
 /* ===== shared context ===== */
 {
   const canvas = document.getElementById("worldCanvas");
@@ -2807,12 +2812,16 @@ const SPEC = {
     const spd = Math.abs(state.speedMps);
     let frontT, rearT;
     if (state.aeroAuto) {
-      const assistedDriving = state.assist || state.testDriver || (state.adaptiveCruise && state.gearMode === "G");
       // Standing downforce rises through mid-speed as the aero loads up.
-      const rise = assistedDriving ? clamp((spd - 16) / 70, 0, 1) : 0;
-      const topTaper = clamp((118 - spd) / 40, 0, 1);       // ~1 below 300 km/h, → 0 approaching Vmax
-      const speedComp = rise * (0.10 + 0.42 * topTaper);
-      const corner = assistedDriving ? clamp(Math.abs(state.lateralG) / 1.4, 0, 1) * 0.6 : 0;
+      const rise = clamp((spd - 16) / 70, 0, 1);          // air does not care about driver aids
+      // ACTIVE AERO TRIMS FOR THE RUN. A wing that stays loaded at maximum speed is a wing
+      // no manufacturer would fit: the whole point of movable aero is that it flattens as
+      // the car approaches its own top speed. This used to taper toward a hard-coded 425
+      // km/h, which is meaningless on a 240 km/h car, so it is keyed to THIS car's Vmax.
+      const vmax = SPEC.topSpeedRecordMps || SPEC.topSpeedMps || 100;
+      const topTaper = clamp((vmax * 0.88 - spd) / (vmax * 0.28), 0, 1);
+      const speedComp = rise * (0.06 + 0.46 * topTaper);
+      const corner = clamp(Math.abs(state.lateralG) / 1.4, 0, 1) * 0.6;
       rearT  = clamp(Math.max(speedComp,        state.brake * 1.00, corner),       0, 1);
       frontT = clamp(Math.max(speedComp * 0.85, state.brake * 0.30, corner * 0.8), 0, 1);
     } else {
@@ -6942,7 +6951,7 @@ const SPEC = {
         <path d="M-64,-2 L-88,-24" stroke="#d8c98a" stroke-width="2.6" stroke-linecap="round"/>
         <text x="-64" y="24" text-anchor="middle" font-size="7" fill="#9b9382" letter-spacing="1">R.P.M. x100</text>
         <circle cx="64" cy="-2" r="40" fill="url(#dbDial)" stroke="url(#dbChr)" stroke-width="2.6"/>
-        <text x="64" y="6" text-anchor="middle" font-size="17" font-weight="700" fill="#e9e2cd" id="tachGearArt">N</text>
+        <text x="64" y="-2.8" text-anchor="middle" font-size="13.3" font-weight="700" fill="#e9e2cd" id="tachGearArt">N</text><text x="64" y="13.8" text-anchor="middle" font-size="12.2" font-weight="800" fill="#e9e2cd" id="cabSpeedArt">0</text><text x="64" y="21.6" text-anchor="middle" font-size="5.1" fill="#e9e2cd" opacity="0.65">KM/H</text>
         <text x="64" y="24" text-anchor="middle" font-size="7" fill="#9b9382">M.P.H.</text>
         <!-- the small centre gauges: oil, water, fuel, amps -->
         <g fill="url(#dbDial)" stroke="url(#dbChr)" stroke-width="1.4">
@@ -6954,7 +6963,7 @@ const SPEC = {
         <rect x="-52" y="-40" width="104" height="82" rx="6" fill="#0b0f0c" stroke="url(#dbChr)" stroke-width="2"/>
         <circle cx="0" cy="0" r="32" fill="#04140a" stroke="#2f5a3a" stroke-width="1.4"/>
         <g stroke="rgba(120,240,150,0.35)" stroke-width="1" fill="none"><circle r="11"/><circle r="21"/><circle r="31"/></g>
-        <path d="M0,0 L22,-22" stroke="rgba(120,240,150,0.85)" stroke-width="2"/>
+        <g id="cabRevNeedle" data-a0="-128" data-a1="128" data-cx="0" data-cy="0"><path d="M0,0 L0,-31" stroke="rgba(120,240,150,0.85)" stroke-width="2" stroke-linecap="round"/></g>
         <circle cx="14" cy="-9" r="3.4" fill="#8dff9f"/>
         <text x="0" y="52" text-anchor="middle" font-size="6.5" fill="#7fae8c" letter-spacing="1.4">TRACKER SCOPE</text>
       </g>
@@ -7017,67 +7026,12 @@ const SPEC = {
         <!-- the Aston Martin wings -->
         <g fill="#d9dee3"><path d="M-13,0 l9,-4 l4,4 l-4,4 Z"/><path d="M13,0 l-9,-4 l-4,4 l4,4 Z"/></g>
       </g>
-          <!-- the box the live instrument pack is drawn into: geometry only -->
-      <rect id="cabPack" x="158" y="78" width="422" height="96" fill="none" pointer-events="none"/>
       </svg>
     `;
-    if (!document.getElementById("cabLive")) {
-      const cv = document.createElement("canvas");
-      cv.id = "cabLive";
-      cv.style.cssText = "position:absolute;pointer-events:none;left:0;top:0";
-      app.el.cabinArt.appendChild(cv);
-    }
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
-  /* THE COCKPIT TAB'S INSTRUMENT PACK IS THE CAR'S OWN, AND IT IS LIVE.
-     It used to be a painted picture: the speed and the revs in the Cockpit tab never moved, in
-     any of the 52 cars. Rather than freeze a second copy of every dial into the SVG, the pack
-     area is measured out of the drawing (#cabPack, or #tachArt's own box) and the car's REAL
-     drawCluster — the same one the windscreen view uses — is rendered into it. */
-  function drawCabinLive() {
-    const cv = document.getElementById("cabLive");
-    const pack = document.getElementById("cabPack") || document.getElementById("tachArt");
-    // a car whose instruments sit on the steering wheel opts out: painting an upright
-    // canvas over a wheel that turns would be worse than the static art it replaces
-    if (!cv || !pack || pack.dataset.nolive || !document.body.classList.contains("view-cockpit")) return;
-    const wrap = cv.parentElement, wr = wrap.getBoundingClientRect();
-    if (wr.width < 40) return;
-    // #cabPack, when a car declares one, is the exact box. Otherwise the pack is centred on
-    // whatever #tachArt occupies and given a share of the cabin width, because a car whose
-    // instrument art is a single small dial would otherwise get a postage-stamp cluster.
-    const pr = pack.getBoundingClientRect();
-    const fixed = pack.id === "cabPack";
-    const bw = fixed ? Math.max(60, pr.width) : Math.max(180, wr.width * 0.46);
-    const bh = fixed ? Math.max(30, pr.height) : Math.max(64, bw * 0.30);
-    const cxp = pr.left + pr.width / 2 - wr.left, cyp = pr.top + pr.height / 2 - wr.top;
-    const dpr = Math.min(2, window.devicePixelRatio || 1);
-    cv.style.left = (fixed ? pr.left - wr.left : cxp - bw / 2) + "px";
-    cv.style.top = (fixed ? pr.top - wr.top : cyp - bh / 2) + "px";
-    cv.style.width = bw + "px"; cv.style.height = bh + "px";
-    if (cv.width !== Math.round(bw * dpr) || cv.height !== Math.round(bh * dpr)) {
-      cv.width = Math.round(bw * dpr); cv.height = Math.round(bh * dpr);
-    }
-    const c2 = cv.getContext("2d");
-    c2.setTransform(dpr, 0, 0, dpr, 0, 0);
-    c2.clearRect(0, 0, bw, bh);
-    const saved = ctx;
-    ctx = c2;
-    try {
-      // drawCluster works in its own units (R = min(w,h)/8, the pack about 4.5R wide). Draw it
-      // in a fixed logical space and scale that space into the pack box, so each car's cluster
-      // lands inside its own instrument surround at the right size.
-      const LW = 1000, LR = 125, scale = bw / 620;
-      c2.setTransform(dpr * scale, 0, 0, dpr * scale, 0, 0);
-      c2.translate((bw / scale - LW) / 2, 0);
-      // two shapes of cluster live in this garage: the dash-mounted (w, h, dashY, sway) and
-      // the EVs' free-floating (cx, cy, R). Call whichever this car actually declares.
-      if (drawCluster.length >= 4) drawCluster(LW, LW, bh / scale / 2 - LR * 0.3, 0);
-      else drawCluster(LW / 2, bh / scale / 2, LR * 1.28);
-    } catch (e) { /* a cluster that cannot draw here must never take the frame down with it */ }
-    ctx = saved;
-  }
-  Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect, drawCabinLive });
+  Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect });
 }
 
 /* ===== UI actions ===== */
@@ -7419,8 +7373,16 @@ const SPEC = {
       const spd = Math.round(Math.abs(kmh(state.speedMps)));
       const rev = clamp(state.rpm / (SPEC.redlineRpm || 8000), 0, 1);
       const put = (id, v) => { const e = document.getElementById(id); if (e && e.textContent !== v) e.textContent = v; };
-      put("cabSpeedArt", String(spd));
-      put("cabRpmArt", String(Math.round(state.rpm)));
+      // a readout can be scaled and rounded by the dial it sits in: a face marked "x1000"
+      // carries data-div="1000" data-fixed="1" and reads 6.2, not 6200
+      const num = (id, val) => {
+        const e = document.getElementById(id); if (!e) return;
+        const t = (val / (parseFloat(e.dataset.div) || 1)).toFixed(parseInt(e.dataset.fixed || "0", 10));
+        if (e.textContent !== t) e.textContent = t;
+      };
+      num("cabSpeedArt", spd);
+      num("cabRpmArt", state.rpm);
+      num("cabDownforceArt", (state.downforceN || 0) / 9.81);
       put("cabGearArt", state.gearMode === "G" ? String(state.curGear) : state.gearMode);
       const bar = document.getElementById("cabRevBar");
       if (bar) {
@@ -7806,7 +7768,7 @@ const SPEC = {
       steps++;
     }
     if (steps >= 60) accumulator = 0;
-    app.drawWorld(); if (audio.ready) audio.update(state, frame); app.updateUi(); app.drawCabinLive();
+    app.drawWorld(); if (audio.ready) audio.update(state, frame); app.updateUi();
     requestAnimationFrame(gameLoop);
   }
   app.resizeCanvas(); app.injectArt(); app.buildCornersForRoute(); app.seedWorld(); app.updateDoorArt(); app.updateGearButtons(); app.setMode("race");
