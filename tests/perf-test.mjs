@@ -257,6 +257,12 @@ const CARS = {
     topSpeed: { kmh: 474.8, setup: "e85", minT: 110 },
     brake100: { target: 30, tol: 1.5 },
   },
+  project8: {
+    file: "Jaguar XE SV Project 8 simulator.html", app: "Project8App", label: "Jaguar XE SV Project 8",
+    marks: { 100: { target: 3.7, tol: 1e-4 } },
+    topSpeed: { kmh: 322, minT: 70 },     // 200 mph (Jaguar)
+    brake100: { target: 33, tol: 1.5 },
+  },
   alfa33: {
     file: "Alfa Romeo 33 Stradale simulator.html", app: "Alfa33App", label: "Alfa Romeo 33 Stradale",
     marks: { 100: { target: 3.0, tol: 1e-4 } },
