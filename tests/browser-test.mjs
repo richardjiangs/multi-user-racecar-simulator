@@ -77,6 +77,25 @@ const check = (label, ok, detail) => {
 }
 
 
+/* ---------- the hand-drawn exteriors are not the generator's to overwrite ----------
+   Eleven cars — the Evo through to the Czinger — were drawn by hand, car by car, and they are
+   the standard the rest are trying to reach. A generator run flattened six of them into its own
+   output. They are restored; this makes sure they stay that way. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const HAND = ["Mitsubishi Lancer Evo", "Nissan GT-R", "BMW M5", "Audi R8", "McLaren F1 1993",
+    "Gordon Murray T.33", "Koenigsegg Agera", "Yangwang U9", "Aston Martin DB5",
+    "300 SLR", "Czinger 21C"];
+  const lost = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    if (!HAND.some((h) => f.includes(h))) continue;
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    if (/drawn from the car's own published dimensions/.test(src)) lost.push(f.replace(/ simulator\.html/i, ""));
+  }
+  check(HAND.length + " hand-drawn exteriors kept out of the generator's reach", lost.length === 0,
+    lost.length ? "OVERWRITTEN BY THE GENERATOR: " + lost.join(", ") : "");
+}
+
 /* ---------- a body is not a lozenge with the wheels stuck on ----------
    Every exterior in the garage used to be one blob with the wheels painted on top of it, and
    NONE of them had a wheel arch. With no arch there is no relationship between the body and the
