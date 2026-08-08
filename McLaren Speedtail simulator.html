@@ -2556,95 +2556,93 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* McLaren exterior — Speedtail side profile (five-metre teardrop, canopy cockpit,
      static carbon front-wheel covers, flexible tail ailerons, retractable cameras) */
+  /* McLaren Speedtail — drawn from the car's own published dimensions: 5137 mm long
+     on a 2720 mm wheelbase, 1120 mm tall, 1010/1407 mm
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
+  /* McLaren Speedtail — drawn from the car's own published dimensions: 5137 mm long
+     on a 2720 mm wheelbase, 1120 mm tall, 1010/1407 mm
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
+  /* McLaren Speedtail — drawn from the car's own published dimensions: 5137 mm long
+     on a 2720 mm wheelbase, 1120 mm tall, 1010/1407 mm
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren Speedtail side">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren Speedtail side">
       <defs>
-        <linearGradient id="mcSilverG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9edf1"/><stop offset="0.5" stop-color="#aeb6bf"/><stop offset="1" stop-color="#5e6670"/></linearGradient>
-        <linearGradient id="mcBodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2f37"/><stop offset="0.5" stop-color="#15181d"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="mcGlassG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b8d4e8"/><stop offset="1" stop-color="#0e161c"/></linearGradient>
-        <radialGradient id="mcHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#363c44"/></radialGradient>
-        <filter id="mcExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="bkmclarenPaint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#d8dee6"/><stop offset="0.45" stop-color="#8b97a4"/><stop offset="1" stop-color="#2a3138"/>
+        </linearGradient>
+        <linearGradient id="bkmclarenGlass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#cfe0f0" stop-opacity="0.92"/><stop offset="0.55" stop-color="#4a6376" stop-opacity="0.85"/><stop offset="1" stop-color="#0d151c"/>
+        </linearGradient>
+        <linearGradient id="bkmclarenLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
+        <radialGradient id="bkmclarenHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
+        <linearGradient id="bkmclarenShine" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="bkmclarenGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="bkmclarenClip"><path d="M78.0,219.7 Q74.0,282.2 88.0,294.2 L244.0,313.6 A65.2,61.3 0 0 1 374.4,313.6 L694.3,313.6 A61.7,58.0 0 0 1 817.8,313.6 L912.0,302.2 Q922.0,296.5 922.0,269.8 L922.0,243.2 Q892.5,243.2 862.9,223.1 Q829.2,223.1 795.4,203.0 Q761.6,203.0 727.9,182.9 Q698.3,182.9 668.8,162.7 Q635.0,162.7 601.3,149.3 Q559.1,149.3 516.9,156.0 Q466.2,156.0 415.6,176.2 Q356.5,176.2 297.4,196.3 Q238.4,196.3 179.3,209.7 Q128.6,209.7 78.0,219.7 Z"/></clipPath>
         <style>
-          .mcWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:20% 100%;transform:rotate(calc(var(--wing-deg,10deg) * 0.6));transition:transform .42s ease;}
+          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:88% 8%;transition:transform .6s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-38deg) translateY(-8px);}
-          #quadExhaustArt rect{fill:#6d747d;}
-          #quadExhaustArt.hot rect{fill:#ff8a3c;filter:url(#mcExhGlow);}
+          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-26deg) translate(-11px,-4px);}
+          #quadExhaustArt *{fill:#a7aeb6;}
+          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkmclarenGlow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="300" rx="420" ry="20" fill="rgba(0,0,0,0.5)"/>
-
+      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
       <g id="bcBody">
-        <!-- teardrop silhouette: needle tail at the left, cab-forward canopy, clean nose right -->
-        <path d="M42,236 Q140,208 240,196 Q360,184 430,164 Q490,130 570,122 L640,122 Q740,130 806,150
-                 Q866,168 906,196 Q924,208 918,226 L904,240 Q840,232 760,232 L260,240 Q120,242 60,242 Z"
-              fill="url(#mcBodyG)" stroke="#4a5058" stroke-width="1.5"/>
-        <!-- upper silver body panel over carbon -->
-        <path d="M240,196 Q360,184 430,164 Q490,130 570,122 L640,122 Q740,130 806,150 Q852,166 884,190
-                 L850,194 Q760,180 640,178 L430,186 Q330,190 240,196 Z"
-              fill="url(#mcSilverG)" stroke="rgba(200,210,220,0.5)" stroke-width="1"/>
-        <!-- teardrop canopy glasshouse -->
-        <path d="M446,162 Q492,128 566,124 L638,124 Q700,130 742,152 Q600,146 446,162 Z" fill="url(#mcGlassG)" stroke="#6c757e" stroke-width="1.5"/>
-        <!-- flexible carbon AILERON on the tail clamshell (deploys with speed / braking) -->
-        <g id="rearWingArt">
-          <path d="M44,232 L150,214 L152,222 L46,240 Z" fill="#15181d" stroke="#5c636c"/>
-          <path d="M44,232 L150,214" fill="none" stroke="rgba(255,192,138,0.6)" stroke-width="2"/>
-        </g>
-        <!-- dihedral door cut -->
+        <path d="M78.0,219.7 Q74.0,282.2 88.0,294.2 L244.0,313.6 A65.2,61.3 0 0 1 374.4,313.6 L694.3,313.6 A61.7,58.0 0 0 1 817.8,313.6 L912.0,302.2 Q922.0,296.5 922.0,269.8 L922.0,243.2 Q892.5,243.2 862.9,223.1 Q829.2,223.1 795.4,203.0 Q761.6,203.0 727.9,182.9 Q698.3,182.9 668.8,162.7 Q635.0,162.7 601.3,149.3 Q559.1,149.3 516.9,156.0 Q466.2,156.0 415.6,176.2 Q356.5,176.2 297.4,196.3 Q238.4,196.3 179.3,209.7 Q128.6,209.7 78.0,219.7 Z" fill="url(#bkmclarenPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <g clip-path="url(#bkmclarenClip)">
+        <path d="M78.0,196.3 Q500.0,176.2 922.0,196.3 L922.0,213.0 Q500.0,192.9 78.0,216.4 Z" fill="url(#bkmclarenShine)"/>
+        <rect x="0" y="302.5" width="1000" height="184.0" fill="rgba(0,0,0,0.16)"/>
+      </g>
+        <path d="M241.8,313.6 A67.4,63.6 0 0 1 376.5,313.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
+  <path d="M241.8,313.6 A67.4,63.6 0 0 1 376.5,313.6" fill="none" stroke="#c9d6e4" stroke-width="1.4" opacity="0.45"/>
+        <path d="M692.4,313.6 A63.7,60.1 0 0 1 819.7,313.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
+  <path d="M692.4,313.6 A63.7,60.1 0 0 1 819.7,313.6" fill="none" stroke="#c9d6e4" stroke-width="1.4" opacity="0.45"/>
+        <g clip-path="url(#bkmclarenClip)">
+        <path d="M685.7,196.3 L668.8,166.1 Q635.0,166.1 601.3,152.7 Q559.1,152.7 516.9,159.4 L432.5,196.3 Z" fill="url(#bkmclarenGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M92.0,220.4 Q500.0,213.4 902.0,216.4" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M375.1,309.9 L693.7,307.9 L690.9,321.9 L378.1,323.9 Z" fill="url(#bkmclarenLow)" stroke="rgba(120,132,146,0.35)"/>
+        <path d="M668.8,196.3 L665.8,307.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
+        <path d="M500.0,196.3 L497.0,307.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
         <g id="doorArt">
-          <path d="M470,172 Q530,142 616,144 L700,164 L700,228 L478,232 Z" fill="rgba(120,132,146,0.28)" stroke="#6c757e" stroke-width="1.4"/>
-          <path d="M506,160 Q570,146 664,152" fill="none" stroke="rgba(210,224,238,0.4)" stroke-width="2"/>
-          <!-- retractable rear-view CAMERA pod (replaces mirrors; slides in for Velocity mode) -->
-          <rect id="cameraPod" x="486" y="146" width="18" height="7" rx="3" fill="#0c0e12" stroke="rgba(53,194,212,0.6)"/>
-        </g>
-        <!-- slim LED headlamp + nose blade -->
-        <path d="M872,182 q26,-2 40,6" fill="none" stroke="#dfe9ee" stroke-width="4" stroke-linecap="round"/>
-        <path d="M872,182 q26,-2 40,6" fill="none" stroke="#ffc08a" stroke-width="1.4" stroke-linecap="round"/>
-        <!-- front splitter + active front trim -->
-        <rect x="836" y="242" width="82" height="7" rx="3" fill="#05070a"/>
-        <g id="frontFlapArt"><rect x="800" y="216" width="40" height="6" rx="3" fill="#15181d" stroke="rgba(255,192,138,0.35)"/></g>
-        <!-- hidden low exhaust exit under the tail -->
-        <g id="quadExhaustArt">
-          <rect x="60" y="244" width="52" height="7" rx="3"/>
-        </g>
-        <!-- diffuser strakes -->
-        <g stroke="#05070a" stroke-width="3">
-          <path d="M96,250 l0,10"/><path d="M126,250 l0,10"/><path d="M156,250 l0,10"/>
-        </g>
-        <!-- SPEEDTAIL script + M roundel -->
-        <text x="600" y="216" font-family="ui-sans-serif" font-size="12" fill="#c9cfd6" letter-spacing="3">SPEEDTAIL</text>
-        <circle cx="452" cy="212" r="9" fill="#15181d" stroke="#ff7b1a" stroke-width="1.6"/>
-        <text x="452" y="216" text-anchor="middle" font-family="ui-sans-serif" font-size="9" fill="#ff9a4d">M</text>
+        <path d="M500.0,203.0 L668.8,199.6 L664.8,303.6 L498.0,305.6 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
+        <rect x="572.4" y="229.8" width="24" height="5" rx="2.5" fill="#3c434b"/>
       </g>
-
-      <!-- rear wheel: exposed 10-spoke -->
+        <path d="M850.3,203.0 q42.2,-2 52.3,9" fill="none" stroke="#f2f6fa" stroke-width="5" stroke-linecap="round"/>
+        <path d="M82.0,203.0 L137.1,198.0 L137.1,211.0 L82.0,216.0 Z" fill="rgba(200,20,40,0.82)"/>
+        <path d="M693.7,287.6 l-26,-4 l0,16 l26,4 Z" fill="#0b0f14" stroke="rgba(201,214,228,0.45)"/>
+        </g>
+        <g id="frontFlapArt"><rect x="833.4" y="319.6" width="71.7" height="6" rx="3" fill="#101318" stroke="#c9d6e4" stroke-opacity="0.5"/></g>
+        <g id="quadExhaustArt"><circle cx="124.4" cy="323.6" r="6"/><circle cx="139.4" cy="323.6" r="6"/></g>
+      </g>
       <g>
-        <circle cx="255" cy="250" r="52" fill="#0a0b0e"/><circle cx="255" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
-        <g class="mcWeave"><g transform="translate(255,250)">
-          ${turbine()}
-        </g></g>
-        <circle cx="255" cy="250" r="15" fill="url(#mcHub)"/>
-      </g>
-      <!-- FRONT wheel: static carbon aero cover (the Speedtail signature) — the cover
-           stays still while the tyre turns behind it -->
+      <circle cx="309.16760755304654" cy="270.03114658360914" r="60.0" fill="#0a0b0e"/>
+      <circle cx="309.16760755304654" cy="270.03114658360914" r="60.0" fill="none" stroke="#1b1f25" stroke-width="7.8"/>
+      <circle cx="309.16760755304654" cy="270.03114658360914" r="54.0" fill="none" stroke="#c9d6e4" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="309.16760755304654" cy="270.03114658360914" r="37.2" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="309.16760755304654" cy="270.03114658360914" r="37.2" fill="#20252c"/><circle cx="309.16760755304654" cy="270.03114658360914" r="23.1" fill="none" stroke="#c9d6e4" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="309.16760755304654" cy="270.03114658360914" r="7.8" fill="url(#bkmclarenHub)"/>
+    </g>
       <g>
-        <circle cx="745" cy="250" r="52" fill="#0a0b0e"/>
-        <circle cx="745" cy="250" r="49" fill="#101318" stroke="#3a4048" stroke-width="2"/>
-        <path d="M745,206 A44,44 0 0 1 789,250 L745,250 Z" fill="rgba(233,237,241,0.10)"/>
-        <circle cx="745" cy="250" r="52" fill="none" stroke="#ff7b1a" stroke-width="2"/>
-        <circle cx="745" cy="250" r="7" fill="url(#mcHub)"/>
-        <text x="745" y="286" text-anchor="middle" font-size="8" fill="#7a838d">STATIC AERO COVER</text>
-      </g>
-    </svg>`;
+      <circle cx="756.0587891765622" cy="273.31711115437025" r="56.7" fill="#0a0b0e"/>
+      <circle cx="756.0587891765622" cy="273.31711115437025" r="56.7" fill="none" stroke="#1b1f25" stroke-width="7.4"/>
+      <circle cx="756.0587891765622" cy="273.31711115437025" r="51.0" fill="none" stroke="#c9d6e4" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="756.0587891765622" cy="273.31711115437025" r="35.1" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="756.0587891765622" cy="273.31711115437025" r="35.1" fill="#20252c"/><circle cx="756.0587891765622" cy="273.31711115437025" r="21.8" fill="none" stroke="#c9d6e4" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="756.0587891765622" cy="273.31711115437025" r="7.4" fill="url(#bkmclarenHub)"/>
+    </g>
+    </svg>
+    `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }
-  function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* McLaren cockpit SVG — CENTRAL driving seat, two passenger benches, three-screen dash */
   function injectArt() {
