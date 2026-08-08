@@ -155,6 +155,53 @@ const check = (label, ok, detail) => {
   check("every body has wheel arches cut into it and paint on it", gaps.length === 0, gaps.slice(0, 6).join(" | "));
 }
 
+/* ---------- a silhouette is not a car ----------
+   The right proportions with one grey polygon for glass and nothing else was still described as
+   "a half-bitten banana coloured in fifty-two ways", and that was fair: what you actually
+   recognise a car by is the furniture. A 250 GTO has an egg-crate mouth, faired round lamps, a
+   chrome window surround, wing louvres, a roundel and Borrani wires; a Chiron has a horseshoe and
+   a C-line. This checks each generated car carries a front end, a tail and a flank of its own,
+   and that no two wear the identical set. */
+{
+  const { SPECS } = await import("../tools/bodykit/specs.mjs");
+  const keys = Object.keys(SPECS).filter((k) => !SPECS[k].skip);
+  const bare = [], seen = new Map(), twins = [];
+  for (const k of keys) {
+    const s = SPECS[k];
+    const miss = [];
+    if (!s.glass || (!s.glass.none && s.glass.cowl == null)) miss.push("no daylight opening");
+    if (!s.front || !s.front.lamp) miss.push("no headlamp");
+    if (!s.rear || !s.rear.lamp) miss.push("no tail lamp");
+    if (!s.side || !s.side.length) miss.push("nothing on the flanks");
+    if (miss.length) bare.push(k + ": " + miss.join(", "));
+    // the whole kit, not one field of it — two cars may share a grille and still look different
+    const kit = JSON.stringify([s.front && s.front.grille, s.front && s.front.lamp,
+      s.rear && s.rear.lamp, s.rear && s.rear.vent, s.rim,
+      (s.side || []).map((x) => (Array.isArray(x) ? x[0] : x)).sort()]);
+    if (seen.has(kit)) twins.push(seen.get(kit) + " / " + k); else seen.set(kit, k);
+  }
+  check(`${keys.length} bodies wear their own front end, tail and flank kit (${seen.size} distinct)`,
+    bare.length === 0 && twins.length === 0,
+    bare.concat(twins.map((t) => "identical kit: " + t)).slice(0, 6).join(" | "));
+}
+
+/* ---------- the generator has to be safe to run twice ----------
+   The generated SVG carries its own <style> block, so a brace counter walking out of
+   injectExterior() stops in the wrong place and swallows the next function — which is how six
+   sims once ended up with "Unexpected identifier 'turbine'". The block is fenced now, but the
+   first fix hand-counted the closing delimiter and lost a character per run: the damage was
+   invisible for four runs and then split a token. Two runs, byte-identical, or it is broken. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const { execFileSync } = await import("node:child_process");
+  const sims = readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x));
+  const before = new Map(sims.map((f) => [f, readFileSync(ROOT + "/" + f, "utf8")]));
+  execFileSync(process.execPath, [ROOT + "/tools/bodykit/apply.mjs"], { cwd: ROOT });
+  const moved = sims.filter((f) => readFileSync(ROOT + "/" + f, "utf8") !== before.get(f));
+  check("running the body generator again changes nothing", moved.length === 0,
+    moved.length ? "NOT IDEMPOTENT — these files drifted on a second run: " + moved.slice(0, 5).join(", ") : "");
+}
+
 /* ---------- the cockpit is not a photograph ----------
    Every one of the 52 cars drew its instrument pack into the Cockpit tab as literal text in
    the SVG: the speed and the revs never moved while you drove. The first attempt at fixing it

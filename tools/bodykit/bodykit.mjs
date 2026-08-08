@@ -82,28 +82,9 @@ export function bodyPath(spec, P) {
   return d.join(" ");
 }
 
-/* the glasshouse: screen, side glass and rear screen, taken from the same roofline */
-export function glassPath(spec, P) {
-  if (!spec.glass) return null;
-  const [aFrac, bFrac] = spec.glass.span;           // fractions of length, front then rear
-  const inset = spec.glass.inset != null ? spec.glass.inset : 0.02;
-  const base = P.yAt(spec.glass.base != null ? spec.glass.base : 0.34);
-  const pts = spec.roof.filter(([xf]) => xf >= aFrac - 0.001 && xf <= bFrac + 0.001);
-  if (pts.length < 2) return null;
-  const d = [`M${P.xAt(aFrac).toFixed(1)},${base.toFixed(1)}`];
-  for (let i = 0; i < pts.length; i++) {
-    const x = P.xAt(pts[i][0]), y = P.yAt(pts[i][1] + inset);
-    if (i === 0) d.push(`L${x.toFixed(1)},${y.toFixed(1)}`);
-    else {
-      const px = P.xAt(pts[i - 1][0]), py = P.yAt(pts[i - 1][1] + inset);
-      d.push(`Q${((px + x) / 2).toFixed(1)},${py.toFixed(1)} ${x.toFixed(1)},${y.toFixed(1)}`);
-    }
-  }
-  d.push(`L${P.xAt(bFrac).toFixed(1)},${base.toFixed(1)} Z`);
-  return d.join(" ");
-}
-
-/* a wheel: tyre, rim face and the car's own spoke pattern */
+/* a wheel: tyre, rim face and the car's own spoke pattern.
+   A wheel design is one of the things people actually recognise a car by — a Fuchs is not a
+   BBS mesh is not a Borrani wire — so this carries the real families rather than a spoke count. */
 export function wheel(cx, cy, r, style, accent, hubId) {
   const rim = r * 0.62;
   let spokes = "";
@@ -112,14 +93,44 @@ export function wheel(cx, cy, r, style, accent, hubId) {
     const p = (ang, rr) => `${(cx + Math.cos(ang) * rr).toFixed(1)},${(cy + Math.sin(ang) * rr).toFixed(1)}`;
     return `M${p(a - w, r1)} L${p(a - w * 0.35, r2)} L${p(a + w * 0.35, r2)} L${p(a + w, r1)} Z`;
   };
-  if (style === "wire") {
+  const pt = (ang, rr) => `${(cx + Math.cos(ang) * rr).toFixed(1)},${(cy + Math.sin(ang) * rr).toFixed(1)}`;
+  if (style === "wire") {                              // a Borrani: 36 tension spokes and a knock-off
     for (let i = 0; i < 36; i++) {
       const a = (i * 10 * Math.PI) / 180;
       spokes += `<line x1="${(cx + Math.cos(a) * r * 0.14).toFixed(1)}" y1="${(cy + Math.sin(a) * r * 0.14).toFixed(1)}" x2="${(cx + Math.cos(a + 0.22) * rim).toFixed(1)}" y2="${(cy + Math.sin(a + 0.22) * rim).toFixed(1)}" stroke="#c9d2dc" stroke-width="1.1"/>`;
     }
-  } else if (style === "dish") {                       // a smooth aero cover
+  } else if (style === "dish") {                       // a smooth aero cover, seen on record cars
     spokes = `<circle cx="${cx}" cy="${cy}" r="${rim.toFixed(1)}" fill="#20252c"/>` +
       `<circle cx="${cx}" cy="${cy}" r="${(rim * 0.62).toFixed(1)}" fill="none" stroke="${accent}" stroke-width="1.6" opacity="0.55"/>`;
+  } else if (style === "mesh") {                       // a BBS-style woven mesh: crossed thin spokes
+    for (let i = 0; i < 20; i++) {
+      const a = (i * 18 * Math.PI) / 180;
+      spokes += `<line x1="${pt(a, r * 0.2).split(",")[0]}" y1="${pt(a, r * 0.2).split(",")[1]}" x2="${pt(a + 0.55, rim).split(",")[0]}" y2="${pt(a + 0.55, rim).split(",")[1]}" stroke="#39414a" stroke-width="2"/>`;
+      spokes += `<line x1="${pt(a, r * 0.2).split(",")[0]}" y1="${pt(a, r * 0.2).split(",")[1]}" x2="${pt(a - 0.55, rim).split(",")[0]}" y2="${pt(a - 0.55, rim).split(",")[1]}" stroke="#2a3138" stroke-width="2"/>`;
+    }
+  } else if (style === "fuchs") {                      // a Fuchs: five broad leaves with a raised rib
+    for (let i = 0; i < 5; i++) {
+      const a = ((i * 72) * Math.PI) / 180;
+      spokes += `<path d="${P(a, r * 0.18, rim * 0.98, 26)}" fill="#333b43"/>`;
+      spokes += `<path d="M${pt(a, r * 0.24)} L${pt(a, rim * 0.9)}" stroke="#c3ccd4" stroke-width="2.4"/>`;
+    }
+  } else if (style === "basket") {                     // a modern forged basket: ten thin paired spokes
+    for (let i = 0; i < 10; i++) {
+      const a = ((i * 36) * Math.PI) / 180;
+      spokes += `<path d="${P(a - 0.06, r * 0.17, rim, 9)}" fill="#2e353d"/>`;
+      spokes += `<path d="${P(a + 0.06, r * 0.17, rim, 9)}" fill="#252b32"/>`;
+    }
+  } else if (style === "telephone") {                  // a 1980s telephone-dial: five round cut-outs
+    spokes = `<circle cx="${cx}" cy="${cy}" r="${rim.toFixed(1)}" fill="#2f363e"/>`;
+    for (let i = 0; i < 5; i++) {
+      const a = ((i * 72 + 18) * Math.PI) / 180;
+      spokes += `<circle cx="${(cx + Math.cos(a) * rim * 0.55).toFixed(1)}" cy="${(cy + Math.sin(a) * rim * 0.55).toFixed(1)}" r="${(rim * 0.26).toFixed(1)}" fill="#0d1116"/>`;
+    }
+  } else if (style === "split") {                      // a Y-spoke: five spokes that fork at the rim
+    for (let i = 0; i < 5; i++) {
+      const a = ((i * 72) * Math.PI) / 180;
+      spokes += `<path d="M${pt(a, r * 0.18)} L${pt(a - 0.17, rim)} L${pt(a - 0.10, rim)} L${pt(a, r * 0.3)} L${pt(a + 0.10, rim)} L${pt(a + 0.17, rim)} Z" fill="#2b3138"/>`;
+    }
   } else {
     const n = style === "five" ? 5 : style === "ten" ? 10 : style === "turbine" ? 12 : 7;
     for (let i = 0; i < n; i++) {
