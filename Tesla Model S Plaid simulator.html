@@ -2733,12 +2733,6 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   /* Tesla Model S Plaid — drawn from the car's own published dimensions: 4979 mm long
      on a 2960 mm wheelbase, 1445 mm tall, 920/1099 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Tesla Model S Plaid — drawn from the car's own published dimensions: 4979 mm long
-     on a 2960 mm wheelbase, 1445 mm tall, 920/1099 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Tesla Model S Plaid — drawn from the car's own published dimensions: 4979 mm long
-     on a 2960 mm wheelbase, 1445 mm tall, 920/1099 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Tesla Model S Plaid side">
@@ -2755,7 +2749,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkteslaGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkteslaClip"><path d="M78.0,209.9 Q74.0,281.0 88.0,291.3 L198.9,308.0 A65.4,61.5 0 0 1 329.7,308.0 L700.6,308.0 A65.4,61.5 0 0 1 831.5,308.0 L912.0,298.2 Q922.0,293.3 922.0,269.4 L922.0,245.5 Q888.2,245.5 854.5,223.3 Q820.7,223.3 787.0,205.4 Q753.2,205.4 719.4,183.1 Q689.9,183.1 660.4,138.6 Q613.9,138.6 567.5,96.2 Q516.9,96.2 466.2,89.5 Q415.6,89.5 365.0,116.3 Q305.9,116.3 246.8,165.3 Q196.2,165.3 145.5,196.5 Q111.8,196.5 78.0,209.9 Z"/></clipPath>
+        <clipPath id="bkteslaClip"><path d="M78.0,214.3 Q74.0,281.0 88.0,291.3 L198.9,308.0 A65.4,61.5 0 0 1 329.7,308.0 L700.6,308.0 A65.4,61.5 0 0 1 831.5,308.0 L912.0,298.2 Q922.0,293.3 922.0,273.9 L922.0,254.5 Q884.0,254.5 846.0,232.2 Q808.1,232.2 770.1,214.3 Q736.3,214.3 702.6,187.6 Q673.0,187.6 643.5,138.6 Q597.1,138.6 550.6,94.0 Q500.0,94.0 449.4,91.7 Q398.7,91.7 348.1,120.7 Q293.2,120.7 238.4,169.8 Q191.9,169.8 145.5,201.0 Q111.8,201.0 78.0,214.3 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2768,7 +2762,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       </defs>
       <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
       <g id="bcBody">
-        <path d="M78.0,209.9 Q74.0,281.0 88.0,291.3 L198.9,308.0 A65.4,61.5 0 0 1 329.7,308.0 L700.6,308.0 A65.4,61.5 0 0 1 831.5,308.0 L912.0,298.2 Q922.0,293.3 922.0,269.4 L922.0,245.5 Q888.2,245.5 854.5,223.3 Q820.7,223.3 787.0,205.4 Q753.2,205.4 719.4,183.1 Q689.9,183.1 660.4,138.6 Q613.9,138.6 567.5,96.2 Q516.9,96.2 466.2,89.5 Q415.6,89.5 365.0,116.3 Q305.9,116.3 246.8,165.3 Q196.2,165.3 145.5,196.5 Q111.8,196.5 78.0,209.9 Z" fill="url(#bkteslaPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,214.3 Q74.0,281.0 88.0,291.3 L198.9,308.0 A65.4,61.5 0 0 1 329.7,308.0 L700.6,308.0 A65.4,61.5 0 0 1 831.5,308.0 L912.0,298.2 Q922.0,293.3 922.0,273.9 L922.0,254.5 Q884.0,254.5 846.0,232.2 Q808.1,232.2 770.1,214.3 Q736.3,214.3 702.6,187.6 Q673.0,187.6 643.5,138.6 Q597.1,138.6 550.6,94.0 Q500.0,94.0 449.4,91.7 Q398.7,91.7 348.1,120.7 Q293.2,120.7 238.4,169.8 Q191.9,169.8 145.5,201.0 Q111.8,201.0 78.0,214.3 Z" fill="url(#bkteslaPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkteslaClip)">
         <path d="M78.0,151.9 Q500.0,125.2 922.0,151.9 L922.0,174.2 Q500.0,147.5 78.0,178.7 Z" fill="url(#bkteslaShine)"/>
         <rect x="0" y="293.3" width="1000" height="244.9" fill="rgba(0,0,0,0.16)"/>
@@ -2778,7 +2772,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <path d="M698.1,308.0 A67.9,64.1 0 0 1 834.0,308.0" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M698.1,308.0 A67.9,64.1 0 0 1 834.0,308.0" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkteslaClip)">
-        <path d="M685.7,183.1 L660.4,145.2 Q613.9,145.2 567.5,102.9 Q516.9,102.9 466.2,96.2 Q415.6,96.2 365.0,122.9 L314.3,183.1 Z" fill="url(#bkteslaGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M685.7,183.1 L643.5,145.2 Q597.1,145.2 550.6,100.7 Q500.0,100.7 449.4,98.4 Q398.7,98.4 348.1,127.4 L314.3,183.1 Z" fill="url(#bkteslaGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M668.8,183.1 L678.8,100.7" stroke="#12161b" stroke-width="6"/>
         <path d="M500.0,183.1 L510.0,100.7" stroke="#12161b" stroke-width="6"/>
         <path d="M92.0,213.9 Q500.0,206.9 902.0,209.9" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
@@ -2820,7 +2814,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 40) s += `<path d="M0,0 L${(36*Math.cos(a*Math.PI/180)).toFixed(1)},${(36*Math.sin(a*Math.PI/180)).toFixed(1)} L${(30*Math.cos((a+22)*Math.PI/180)).toFixed(1)},${(30*Math.sin((a+22)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="38" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 40) s += `<path d="M0,0 L${(36*Math.cos(a*Math.PI/180)).toFixed(1)},${(36*Math.sin(a*Math.PI/180)).toFixed(1)} L${(30*Math.cos((a+22)*Math.PI/180)).toFixed(1)},${(30*Math.sin((a+22)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="38" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* Tesla cockpit SVG — yoke, 17" landscape screen, white minimalist cabin, glass roof */
   function injectArt() {

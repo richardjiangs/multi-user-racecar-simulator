@@ -2565,12 +2565,6 @@ drawCluster(w, h, dashY, sway);
   /* Ferrari F40 — drawn from the car's own published dimensions: 4358 mm long
      on a 2450 mm wheelbase, 1124 mm tall, 1000/908 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Ferrari F40 — drawn from the car's own published dimensions: 4358 mm long
-     on a 2450 mm wheelbase, 1124 mm tall, 1000/908 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Ferrari F40 — drawn from the car's own published dimensions: 4358 mm long
-     on a 2450 mm wheelbase, 1124 mm tall, 1000/908 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ferrari F40 side">
@@ -2587,7 +2581,7 @@ drawCluster(w, h, dashY, sway);
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkf40Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkf40Clip"><path d="M78.0,195.2 Q74.0,277.1 88.0,289.5 L175.1,309.7 A78.8,74.1 0 0 1 332.6,309.7 L653.9,309.7 A74.4,70.0 0 0 1 802.8,309.7 L912.0,297.8 Q922.0,291.9 922.0,267.2 L922.0,242.6 Q879.8,242.6 837.6,218.9 Q787.0,218.9 736.3,199.2 Q694.1,199.2 651.9,179.4 Q626.6,179.4 601.3,136.0 Q559.1,136.0 516.9,120.2 Q474.7,120.2 432.5,136.0 Q381.8,136.0 331.2,171.5 Q263.7,171.5 196.2,187.3 Q137.1,187.3 78.0,195.2 Z"/></clipPath>
+        <clipPath id="bkf40Clip"><path d="M78.0,195.2 Q74.0,277.1 88.0,289.5 L175.1,309.7 A78.8,74.1 0 0 1 332.6,309.7 L653.9,309.7 A74.4,70.0 0 0 1 802.8,309.7 L912.0,297.8 Q922.0,291.9 922.0,263.3 L922.0,234.7 Q867.1,234.7 812.3,222.8 Q757.4,222.8 702.6,214.9 Q660.4,214.9 618.2,207.0 Q597.1,207.0 576.0,147.8 Q529.5,147.8 483.1,132.1 Q440.9,132.1 398.7,147.8 Q348.1,147.8 297.4,183.4 Q238.4,183.4 179.3,191.3 Q128.6,191.3 78.0,195.2 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2606,7 +2600,7 @@ drawCluster(w, h, dashY, sway);
         <path d="M78.0,156.8 L246.8,151.8" stroke="#ffd24a" stroke-width="2" opacity="0.75"/>
       </g>
       <g id="bcBody">
-        <path d="M78.0,195.2 Q74.0,277.1 88.0,289.5 L175.1,309.7 A78.8,74.1 0 0 1 332.6,309.7 L653.9,309.7 A74.4,70.0 0 0 1 802.8,309.7 L912.0,297.8 Q922.0,291.9 922.0,267.2 L922.0,242.6 Q879.8,242.6 837.6,218.9 Q787.0,218.9 736.3,199.2 Q694.1,199.2 651.9,179.4 Q626.6,179.4 601.3,136.0 Q559.1,136.0 516.9,120.2 Q474.7,120.2 432.5,136.0 Q381.8,136.0 331.2,171.5 Q263.7,171.5 196.2,187.3 Q137.1,187.3 78.0,195.2 Z" fill="url(#bkf40Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,195.2 Q74.0,277.1 88.0,289.5 L175.1,309.7 A78.8,74.1 0 0 1 332.6,309.7 L653.9,309.7 A74.4,70.0 0 0 1 802.8,309.7 L912.0,297.8 Q922.0,291.9 922.0,263.3 L922.0,234.7 Q867.1,234.7 812.3,222.8 Q757.4,222.8 702.6,214.9 Q660.4,214.9 618.2,207.0 Q597.1,207.0 576.0,147.8 Q529.5,147.8 483.1,132.1 Q440.9,132.1 398.7,147.8 Q348.1,147.8 297.4,183.4 Q238.4,183.4 179.3,191.3 Q128.6,191.3 78.0,195.2 Z" fill="url(#bkf40Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkf40Clip)">
         <path d="M78.0,171.5 Q500.0,147.8 922.0,171.5 L922.0,191.3 Q500.0,167.6 78.0,195.2 Z" fill="url(#bkf40Shine)"/>
         <rect x="0" y="296.6" width="1000" height="217.7" fill="rgba(0,0,0,0.16)"/>
@@ -2616,7 +2610,7 @@ drawCluster(w, h, dashY, sway);
         <path d="M654.8,309.7 A73.6,69.4 0 0 1 801.9,309.7" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M654.8,309.7 A73.6,69.4 0 0 1 801.9,309.7" fill="none" stroke="#ffd24a" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkf40Clip)">
-        <path d="M618.2,175.5 L601.3,139.9 Q559.1,139.9 516.9,124.2 Q474.7,124.2 432.5,139.9 L415.6,175.5 Z" fill="url(#bkf40Glass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M618.2,175.5 L618.2,211.0 Q597.1,211.0 576.0,151.8 Q529.5,151.8 483.1,136.0 L415.6,175.5 Z" fill="url(#bkf40Glass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M609.7,175.5 L618.7,126.1" stroke="#12161b" stroke-width="5"/>
         <path d="M92.0,203.2 Q500.0,196.2 902.0,199.2" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M326.3,305.3 L660.2,303.3 L657.1,317.3 L329.6,319.3 Z" fill="url(#bkf40Low)" stroke="rgba(120,132,146,0.35)"/>
@@ -2658,7 +2652,7 @@ drawCluster(w, h, dashY, sway);
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   function wire() { let s = '<circle r="40" fill="none" stroke="#cfd6dd" stroke-width="2"/><circle r="24" fill="none" stroke="#aab2bb" stroke-width="1.4"/>'; for (let a = 0; a < 360; a += 12) s += `<line x1="0" y1="0" x2="${(38*Math.cos(a*Math.PI/180)).toFixed(1)}" y2="${(38*Math.sin(a*Math.PI/180)).toFixed(1)}" stroke="#cfd6dd" stroke-width="1"/>`; return s; }
 

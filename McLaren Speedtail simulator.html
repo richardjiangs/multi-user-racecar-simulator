@@ -2559,12 +2559,6 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   /* McLaren Speedtail — drawn from the car's own published dimensions: 5137 mm long
      on a 2720 mm wheelbase, 1120 mm tall, 1010/1407 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* McLaren Speedtail — drawn from the car's own published dimensions: 5137 mm long
-     on a 2720 mm wheelbase, 1120 mm tall, 1010/1407 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* McLaren Speedtail — drawn from the car's own published dimensions: 5137 mm long
-     on a 2720 mm wheelbase, 1120 mm tall, 1010/1407 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren Speedtail side">
@@ -2581,7 +2575,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkmclarenGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkmclarenClip"><path d="M78.0,219.7 Q74.0,282.2 88.0,294.2 L244.0,313.6 A65.2,61.3 0 0 1 374.4,313.6 L694.3,313.6 A61.7,58.0 0 0 1 817.8,313.6 L912.0,302.2 Q922.0,296.5 922.0,269.8 L922.0,243.2 Q892.5,243.2 862.9,223.1 Q829.2,223.1 795.4,203.0 Q761.6,203.0 727.9,182.9 Q698.3,182.9 668.8,162.7 Q635.0,162.7 601.3,149.3 Q559.1,149.3 516.9,156.0 Q466.2,156.0 415.6,176.2 Q356.5,176.2 297.4,196.3 Q238.4,196.3 179.3,209.7 Q128.6,209.7 78.0,219.7 Z"/></clipPath>
+        <clipPath id="bkmclarenClip"><path d="M78.0,229.8 Q74.0,282.2 88.0,294.2 L244.0,313.6 A65.2,61.3 0 0 1 374.4,313.6 L694.3,313.6 A61.7,58.0 0 0 1 817.8,313.6 L912.0,302.2 Q922.0,296.5 922.0,276.5 L922.0,256.6 Q888.2,256.6 854.5,223.1 Q820.7,223.1 787.0,189.6 Q753.2,189.6 719.4,162.7 Q689.9,162.7 660.4,149.3 Q622.4,149.3 584.4,159.4 Q533.8,159.4 483.1,176.2 Q428.3,176.2 373.4,192.9 Q314.3,192.9 255.2,209.7 Q208.8,209.7 162.4,219.7 Q120.2,219.7 78.0,229.8 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2594,7 +2588,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       </defs>
       <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
       <g id="bcBody">
-        <path d="M78.0,219.7 Q74.0,282.2 88.0,294.2 L244.0,313.6 A65.2,61.3 0 0 1 374.4,313.6 L694.3,313.6 A61.7,58.0 0 0 1 817.8,313.6 L912.0,302.2 Q922.0,296.5 922.0,269.8 L922.0,243.2 Q892.5,243.2 862.9,223.1 Q829.2,223.1 795.4,203.0 Q761.6,203.0 727.9,182.9 Q698.3,182.9 668.8,162.7 Q635.0,162.7 601.3,149.3 Q559.1,149.3 516.9,156.0 Q466.2,156.0 415.6,176.2 Q356.5,176.2 297.4,196.3 Q238.4,196.3 179.3,209.7 Q128.6,209.7 78.0,219.7 Z" fill="url(#bkmclarenPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,229.8 Q74.0,282.2 88.0,294.2 L244.0,313.6 A65.2,61.3 0 0 1 374.4,313.6 L694.3,313.6 A61.7,58.0 0 0 1 817.8,313.6 L912.0,302.2 Q922.0,296.5 922.0,276.5 L922.0,256.6 Q888.2,256.6 854.5,223.1 Q820.7,223.1 787.0,189.6 Q753.2,189.6 719.4,162.7 Q689.9,162.7 660.4,149.3 Q622.4,149.3 584.4,159.4 Q533.8,159.4 483.1,176.2 Q428.3,176.2 373.4,192.9 Q314.3,192.9 255.2,209.7 Q208.8,209.7 162.4,219.7 Q120.2,219.7 78.0,229.8 Z" fill="url(#bkmclarenPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkmclarenClip)">
         <path d="M78.0,196.3 Q500.0,176.2 922.0,196.3 L922.0,213.0 Q500.0,192.9 78.0,216.4 Z" fill="url(#bkmclarenShine)"/>
         <rect x="0" y="302.5" width="1000" height="184.0" fill="rgba(0,0,0,0.16)"/>
@@ -2604,7 +2598,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <path d="M692.4,313.6 A63.7,60.1 0 0 1 819.7,313.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M692.4,313.6 A63.7,60.1 0 0 1 819.7,313.6" fill="none" stroke="#c9d6e4" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkmclarenClip)">
-        <path d="M685.7,196.3 L668.8,166.1 Q635.0,166.1 601.3,152.7 Q559.1,152.7 516.9,159.4 L432.5,196.3 Z" fill="url(#bkmclarenGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M685.7,196.3 L660.4,152.7 Q622.4,152.7 584.4,162.7 Q533.8,162.7 483.1,179.5 L432.5,196.3 Z" fill="url(#bkmclarenGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M92.0,220.4 Q500.0,213.4 902.0,216.4" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M375.1,309.9 L693.7,307.9 L690.9,321.9 L378.1,323.9 Z" fill="url(#bkmclarenLow)" stroke="rgba(120,132,146,0.35)"/>
         <path d="M668.8,196.3 L665.8,307.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
@@ -2642,7 +2636,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* McLaren cockpit SVG — CENTRAL driving seat, two passenger benches, three-screen dash */
   function injectArt() {

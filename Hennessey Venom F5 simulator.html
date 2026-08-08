@@ -2547,12 +2547,6 @@ drawCluster(w, h, dashY, sway);
   /* Hennessey Venom F5 — drawn from the car's own published dimensions: 4666 mm long
      on a 2807 mm wheelbase, 1130 mm tall, 940/919 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Hennessey Venom F5 — drawn from the car's own published dimensions: 4666 mm long
-     on a 2807 mm wheelbase, 1130 mm tall, 940/919 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Hennessey Venom F5 — drawn from the car's own published dimensions: 4666 mm long
-     on a 2807 mm wheelbase, 1130 mm tall, 940/919 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Hennessey Venom F5 side">
@@ -2569,7 +2563,7 @@ drawCluster(w, h, dashY, sway);
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkvenomGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkvenomClip"><path d="M78.0,204.5 Q74.0,282.4 88.0,294.2 L167.0,313.4 A77.2,72.6 0 0 1 321.5,313.4 L679.7,313.4 A72.3,67.9 0 0 1 824.2,313.4 L912.0,302.1 Q922.0,296.5 922.0,267.4 L922.0,238.3 Q888.2,238.3 854.5,215.7 Q816.5,215.7 778.5,193.2 Q740.5,193.2 702.6,170.7 Q673.0,170.7 643.5,144.4 Q605.5,144.4 567.5,129.4 Q521.1,129.4 474.7,142.5 Q419.8,142.5 365.0,174.4 Q297.4,174.4 229.9,193.2 Q154.0,193.2 78.0,204.5 Z"/></clipPath>
+        <clipPath id="bkvenomClip"><path d="M78.0,223.2 Q74.0,282.4 88.0,294.2 L167.0,313.4 A77.2,72.6 0 0 1 321.5,313.4 L679.7,313.4 A72.3,67.9 0 0 1 824.2,313.4 L912.0,302.1 Q922.0,296.5 922.0,269.2 L922.0,242.0 Q862.9,242.0 803.8,227.0 Q744.8,227.0 685.7,212.0 Q635.0,212.0 584.4,189.4 Q550.6,189.4 516.9,151.9 Q483.1,151.9 449.4,129.4 Q415.6,129.4 381.8,148.1 Q335.4,148.1 289.0,185.7 Q234.1,185.7 179.3,208.2 Q128.6,208.2 78.0,223.2 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2582,7 +2576,7 @@ drawCluster(w, h, dashY, sway);
       </defs>
       <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
       <g id="bcBody">
-        <path d="M78.0,204.5 Q74.0,282.4 88.0,294.2 L167.0,313.4 A77.2,72.6 0 0 1 321.5,313.4 L679.7,313.4 A72.3,67.9 0 0 1 824.2,313.4 L912.0,302.1 Q922.0,296.5 922.0,267.4 L922.0,238.3 Q888.2,238.3 854.5,215.7 Q816.5,215.7 778.5,193.2 Q740.5,193.2 702.6,170.7 Q673.0,170.7 643.5,144.4 Q605.5,144.4 567.5,129.4 Q521.1,129.4 474.7,142.5 Q419.8,142.5 365.0,174.4 Q297.4,174.4 229.9,193.2 Q154.0,193.2 78.0,204.5 Z" fill="url(#bkvenomPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,223.2 Q74.0,282.4 88.0,294.2 L167.0,313.4 A77.2,72.6 0 0 1 321.5,313.4 L679.7,313.4 A72.3,67.9 0 0 1 824.2,313.4 L912.0,302.1 Q922.0,296.5 922.0,269.2 L922.0,242.0 Q862.9,242.0 803.8,227.0 Q744.8,227.0 685.7,212.0 Q635.0,212.0 584.4,189.4 Q550.6,189.4 516.9,151.9 Q483.1,151.9 449.4,129.4 Q415.6,129.4 381.8,148.1 Q335.4,148.1 289.0,185.7 Q234.1,185.7 179.3,208.2 Q128.6,208.2 78.0,223.2 Z" fill="url(#bkvenomPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkvenomClip)">
         <path d="M78.0,181.9 Q500.0,159.4 922.0,181.9 L922.0,200.7 Q500.0,178.2 78.0,204.5 Z" fill="url(#bkvenomShine)"/>
         <rect x="0" y="301.1" width="1000" height="204.4" fill="rgba(0,0,0,0.16)"/>
@@ -2592,7 +2586,7 @@ drawCluster(w, h, dashY, sway);
         <path d="M679.2,313.4 A72.8,68.6 0 0 1 824.7,313.4" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M679.2,313.4 A72.8,68.6 0 0 1 824.7,313.4" fill="none" stroke="#9fc8ff" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkvenomClip)">
-        <path d="M660.4,181.9 L643.5,148.1 Q605.5,148.1 567.5,133.1 Q521.1,133.1 474.7,146.3 L415.6,181.9 Z" fill="url(#bkvenomGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M660.4,181.9 L584.4,193.2 Q550.6,193.2 516.9,155.6 Q483.1,155.6 449.4,133.1 L415.6,181.9 Z" fill="url(#bkvenomGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M651.9,181.9 L659.9,138.7" stroke="#12161b" stroke-width="5"/>
         <path d="M92.0,208.5 Q500.0,201.5 902.0,204.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M317.9,309.3 L683.3,307.3 L680.2,321.3 L321.2,323.3 Z" fill="url(#bkvenomLow)" stroke="rgba(120,132,146,0.35)"/>
@@ -2632,7 +2626,7 @@ drawCluster(w, h, dashY, sway);
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* Hennessey cockpit SVG — driver display on the column, centre screen portrait screen */
   function injectArt() {

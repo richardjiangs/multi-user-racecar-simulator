@@ -77,6 +77,38 @@ const check = (label, ok, detail) => {
 }
 
 
+/* ---------- one template with the numbers nudged is not 26 cars ----------
+   The first generated set measured a mean roofline difference of 0.070 with 98 of 496 pairs
+   inside 0.03 of identical — one pair in five was the same silhouette. I had described those
+   rooflines as written per car. They were not. This measures it instead of taking my word. */
+{
+  const { SPECS } = await import("../tools/bodykit/specs.mjs");
+  const keys = Object.keys(SPECS).filter((k) => !SPECS[k].skip);
+  const at = (roof, x) => {
+    for (let i = 1; i < roof.length; i++) {
+      if (roof[i][0] >= x) {
+        const a = roof[i - 1], b = roof[i];
+        return a[1] + ((x - a[0]) / (b[0] - a[0])) * (b[1] - a[1]);
+      }
+    }
+    return roof[roof.length - 1][1];
+  };
+  const XS = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9];
+  const V = keys.map((k) => ({ k, v: XS.map((x) => at(SPECS[k].roof, x)) }));
+  let sum = 0, n = 0, min = 9, worst = "";
+  for (let i = 0; i < V.length; i++) {
+    for (let j = i + 1; j < V.length; j++) {
+      const d = Math.sqrt(V[i].v.reduce((s, a, q) => s + (a - V[j].v[q]) ** 2, 0) / XS.length);
+      sum += d; n++;
+      if (d < min) { min = d; worst = V[i].k + " / " + V[j].k; }
+    }
+  }
+  const mean = sum / n;
+  check(`${keys.length} rooflines differ: mean ${mean.toFixed(3)}, closest pair ${min.toFixed(3)} (${worst})`,
+    mean >= 0.115 && min >= 0.038,
+    mean < 0.115 ? "the set has collapsed back toward one template" : "two cars share a silhouette: " + worst);
+}
+
 /* ---------- the hand-drawn exteriors are not the generator's to overwrite ----------
    Eleven cars — the Evo through to the Czinger — were drawn by hand, car by car, and they are
    the standard the rest are trying to reach. A generator run flattened six of them into its own

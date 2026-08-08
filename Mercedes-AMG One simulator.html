@@ -2564,12 +2564,6 @@ drawCluster(w, h, dashY, sway);
   /* Mercedes-AMG One — drawn from the car's own published dimensions: 4800 mm long
      on a 2720 mm wheelbase, 1160 mm tall, 1030/1050 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Mercedes-AMG One — drawn from the car's own published dimensions: 4800 mm long
-     on a 2720 mm wheelbase, 1160 mm tall, 1030/1050 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Mercedes-AMG One — drawn from the car's own published dimensions: 4800 mm long
-     on a 2720 mm wheelbase, 1160 mm tall, 1030/1050 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mercedes-AMG One side">
@@ -2586,7 +2580,7 @@ drawCluster(w, h, dashY, sway);
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkamgoneGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkamgoneClip"><path d="M78.0,201.3 Q74.0,283.1 88.0,295.0 L186.9,314.2 A75.7,71.2 0 0 1 338.4,314.2 L669.1,314.2 A71.8,67.5 0 0 1 812.7,314.2 L912.0,302.9 Q922.0,297.2 922.0,270.0 L922.0,242.7 Q888.2,242.7 854.5,220.1 Q816.5,220.1 778.5,197.5 Q740.5,197.5 702.6,175.0 Q673.0,175.0 643.5,148.6 Q605.5,148.6 567.5,129.8 Q525.3,129.8 483.1,141.1 Q440.9,141.1 398.7,167.4 Q331.2,167.4 263.7,190.0 Q170.8,190.0 78.0,201.3 Z"/></clipPath>
+        <clipPath id="bkamgoneClip"><path d="M78.0,190.0 Q74.0,283.1 88.0,295.0 L186.9,314.2 A75.7,71.2 0 0 1 338.4,314.2 L669.1,314.2 A71.8,67.5 0 0 1 812.7,314.2 L912.0,302.9 Q922.0,297.2 922.0,285.0 L922.0,272.8 Q896.7,272.8 871.4,231.4 Q846.0,231.4 820.7,190.0 Q791.2,190.0 761.6,156.1 Q736.3,156.1 711.0,133.6 Q681.5,133.6 651.9,127.9 Q605.5,127.9 559.1,152.4 Q495.8,152.4 432.5,175.0 Q360.7,175.0 289.0,182.5 Q234.1,182.5 179.3,186.2 Q128.6,186.2 78.0,190.0 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2605,7 +2599,7 @@ drawCluster(w, h, dashY, sway);
         <path d="M78.0,146.1 L280.6,141.1" stroke="#00d2be" stroke-width="2" opacity="0.75"/>
       </g>
       <g id="bcBody">
-        <path d="M78.0,201.3 Q74.0,283.1 88.0,295.0 L186.9,314.2 A75.7,71.2 0 0 1 338.4,314.2 L669.1,314.2 A71.8,67.5 0 0 1 812.7,314.2 L912.0,302.9 Q922.0,297.2 922.0,270.0 L922.0,242.7 Q888.2,242.7 854.5,220.1 Q816.5,220.1 778.5,197.5 Q740.5,197.5 702.6,175.0 Q673.0,175.0 643.5,148.6 Q605.5,148.6 567.5,129.8 Q525.3,129.8 483.1,141.1 Q440.9,141.1 398.7,167.4 Q331.2,167.4 263.7,190.0 Q170.8,190.0 78.0,201.3 Z" fill="url(#bkamgonePaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,190.0 Q74.0,283.1 88.0,295.0 L186.9,314.2 A75.7,71.2 0 0 1 338.4,314.2 L669.1,314.2 A71.8,67.5 0 0 1 812.7,314.2 L912.0,302.9 Q922.0,297.2 922.0,285.0 L922.0,272.8 Q896.7,272.8 871.4,231.4 Q846.0,231.4 820.7,190.0 Q791.2,190.0 761.6,156.1 Q736.3,156.1 711.0,133.6 Q681.5,133.6 651.9,127.9 Q605.5,127.9 559.1,152.4 Q495.8,152.4 432.5,175.0 Q360.7,175.0 289.0,182.5 Q234.1,182.5 179.3,186.2 Q128.6,186.2 78.0,190.0 Z" fill="url(#bkamgonePaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkamgoneClip)">
         <path d="M78.0,182.5 Q500.0,159.9 922.0,182.5 L922.0,201.3 Q500.0,178.7 78.0,205.1 Z" fill="url(#bkamgoneShine)"/>
         <rect x="0" y="301.9" width="1000" height="204.0" fill="rgba(0,0,0,0.16)"/>
@@ -2615,7 +2609,7 @@ drawCluster(w, h, dashY, sway);
         <path d="M668.9,314.2 A72.0,67.9 0 0 1 812.9,314.2" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M668.9,314.2 A72.0,67.9 0 0 1 812.9,314.2" fill="none" stroke="#00d2be" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkamgoneClip)">
-        <path d="M660.4,182.5 L643.5,152.4 Q605.5,152.4 567.5,133.6 Q525.3,133.6 483.1,144.8 L432.5,182.5 Z" fill="url(#bkamgoneGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M660.4,182.5 L651.9,131.7 Q605.5,131.7 559.1,156.1 Q495.8,156.1 432.5,178.7 L432.5,182.5 Z" fill="url(#bkamgoneGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M651.9,182.5 L658.9,139.2" stroke="#12161b" stroke-width="5"/>
         <path d="M92.0,209.1 Q500.0,202.1 902.0,205.1" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M333.2,310.1 L674.2,308.1 L671.1,322.1 L336.4,324.1 Z" fill="url(#bkamgoneLow)" stroke="rgba(120,132,146,0.35)"/>
@@ -2656,7 +2650,7 @@ drawCluster(w, h, dashY, sway);
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 72) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(30*Math.cos((a+30)*Math.PI/180)).toFixed(1)},${(30*Math.sin((a+30)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 72) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(30*Math.cos((a+30)*Math.PI/180)).toFixed(1)},${(30*Math.sin((a+30)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* Mercedes-AMG One cockpit SVG — two-seat carbon F1 tub, teal detailing */
   function injectArt() {

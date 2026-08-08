@@ -2551,12 +2551,6 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   /* Pagani Huayra BC — drawn from the car's own published dimensions: 4605 mm long
      on a 2795 mm wheelbase, 1169 mm tall, 940/870 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Pagani Huayra BC — drawn from the car's own published dimensions: 4605 mm long
-     on a 2795 mm wheelbase, 1169 mm tall, 940/870 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Pagani Huayra BC — drawn from the car's own published dimensions: 4605 mm long
-     on a 2795 mm wheelbase, 1169 mm tall, 940/870 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Pagani Huayra BC side">
@@ -2573,7 +2567,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkpaganiGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkpaganiClip"><path d="M78.0,202.4 Q74.0,280.1 88.0,292.5 L157.2,312.6 A80.2,75.4 0 0 1 317.7,312.6 L674.5,312.6 A75.2,70.7 0 0 1 824.9,312.6 L912.0,300.8 Q922.0,294.9 922.0,266.3 L922.0,237.8 Q888.2,237.8 854.5,214.2 Q816.5,214.2 778.5,194.5 Q740.5,194.5 702.6,174.8 Q673.0,174.8 643.5,143.3 Q605.5,143.3 567.5,121.7 Q525.3,121.7 483.1,131.5 Q436.7,131.5 390.3,163.0 Q327.0,163.0 263.7,186.6 Q170.8,186.6 78.0,202.4 Z"/></clipPath>
+        <clipPath id="bkpaganiClip"><path d="M78.0,218.1 Q74.0,280.1 88.0,292.5 L157.2,312.6 A80.2,75.4 0 0 1 317.7,312.6 L674.5,312.6 A75.2,70.7 0 0 1 824.9,312.6 L912.0,300.8 Q922.0,294.9 922.0,274.2 L922.0,253.5 Q896.7,253.5 871.4,194.5 Q841.8,194.5 812.3,166.9 Q774.3,166.9 736.3,159.1 Q698.3,159.1 660.4,153.1 Q626.6,153.1 592.8,123.6 Q559.1,123.6 525.3,119.7 Q487.3,119.7 449.4,139.4 Q398.7,139.4 348.1,182.7 Q280.6,182.7 213.0,206.3 Q145.5,206.3 78.0,218.1 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2586,7 +2580,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       </defs>
       <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
       <g id="bcBody">
-        <path d="M78.0,202.4 Q74.0,280.1 88.0,292.5 L157.2,312.6 A80.2,75.4 0 0 1 317.7,312.6 L674.5,312.6 A75.2,70.7 0 0 1 824.9,312.6 L912.0,300.8 Q922.0,294.9 922.0,266.3 L922.0,237.8 Q888.2,237.8 854.5,214.2 Q816.5,214.2 778.5,194.5 Q740.5,194.5 702.6,174.8 Q673.0,174.8 643.5,143.3 Q605.5,143.3 567.5,121.7 Q525.3,121.7 483.1,131.5 Q436.7,131.5 390.3,163.0 Q327.0,163.0 263.7,186.6 Q170.8,186.6 78.0,202.4 Z" fill="url(#bkpaganiPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,218.1 Q74.0,280.1 88.0,292.5 L157.2,312.6 A80.2,75.4 0 0 1 317.7,312.6 L674.5,312.6 A75.2,70.7 0 0 1 824.9,312.6 L912.0,300.8 Q922.0,294.9 922.0,274.2 L922.0,253.5 Q896.7,253.5 871.4,194.5 Q841.8,194.5 812.3,166.9 Q774.3,166.9 736.3,159.1 Q698.3,159.1 660.4,153.1 Q626.6,153.1 592.8,123.6 Q559.1,123.6 525.3,119.7 Q487.3,119.7 449.4,139.4 Q398.7,139.4 348.1,182.7 Q280.6,182.7 213.0,206.3 Q145.5,206.3 78.0,218.1 Z" fill="url(#bkpaganiPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkpaganiClip)">
         <path d="M78.0,174.8 Q500.0,151.2 922.0,174.8 L922.0,194.5 Q500.0,170.9 78.0,198.4 Z" fill="url(#bkpaganiShine)"/>
         <rect x="0" y="299.7" width="1000" height="214.3" fill="rgba(0,0,0,0.16)"/>
@@ -2596,7 +2590,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <path d="M675.1,312.6 A74.6,70.4 0 0 1 824.4,312.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M675.1,312.6 A74.6,70.4 0 0 1 824.4,312.6" fill="none" stroke="#8ff0e4" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkpaganiClip)">
-        <path d="M660.4,178.7 L643.5,149.2 Q605.5,149.2 567.5,127.6 Q525.3,127.6 483.1,137.4 L415.6,178.7 Z" fill="url(#bkpaganiGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M660.4,178.7 L660.4,159.1 Q626.6,159.1 592.8,129.5 Q559.1,129.5 525.3,125.6 Q487.3,125.6 449.4,145.3 L415.6,178.7 Z" fill="url(#bkpaganiGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M651.9,178.7 L659.9,129.5" stroke="#12161b" stroke-width="5"/>
         <path d="M92.0,206.4 Q500.0,199.4 902.0,202.4" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M311.5,308.3 L680.6,306.3 L677.4,320.3 L314.9,322.3 Z" fill="url(#bkpaganiLow)" stroke="rgba(120,132,146,0.35)"/>
@@ -2636,7 +2630,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 30) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+14)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+14)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 30) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+14)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+14)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* Pagani cockpit SVG */
   function injectArt() {
