@@ -3085,74 +3085,83 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* 2026 Formula 1 car exterior — open-wheel side profile (front + rear wings, halo, airbox,
      sidepods, exposed slick tyres, single tailpipe, driver number on the airbox) */
+  /* Haas VF-26 — drawn as the kind of car it actually is, not a road car with
+     bits removed: the floor, the sidepod, the halo and the exposed suspension are most of
+     what you can see of one of these from the side. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="2026 Formula 1 car side">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Haas VF-26 side">
       <defs>
-        <linearGradient id="f1BodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--f1body)"/><stop offset="0.5" stop-color="var(--f1body)"/><stop offset="1" stop-color="#0a0c10"/></linearGradient>
-        <linearGradient id="f1DarkG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22252b"/><stop offset="1" stop-color="#0a0b0e"/></linearGradient>
-        <radialGradient id="f1Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2a2f37"/></radialGradient>
-        <filter id="f1ExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <style>
-          .f1Weave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:0% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.9));transition:transform .3s ease;}
-          #frontFlapArt{transform-box:fill-box;transform-origin:100% 100%;transform:rotate(calc(var(--flap-deg,0deg) * -0.6));transition:transform .3s ease;}
-          #doorArt{opacity:0.001;}
-          #quadExhaustArt circle{fill:#8b929b;}
-          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#f1ExhGlow);}
+        <linearGradient id="f1f1haasBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8102e"/><stop offset="0.4" stop-color="#e6e6e6"/><stop offset="1" stop-color="#0d1116"/></linearGradient>
+        <linearGradient id="f1f1haasFloor" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1f26"/><stop offset="1" stop-color="#07090c"/></linearGradient>
+        <radialGradient id="f1f1haasHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.5));transition:transform .4s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
         </style>
       </defs>
-      <ellipse cx="500" cy="292" rx="430" ry="16" fill="rgba(0,0,0,0.5)"/>
-
-      <!-- rear wing on end-plate, DRS flap opens (far left / rear) -->
-      <rect x="78" y="120" width="10" height="86" rx="2" fill="#15181d"/>
-      <path d="M60,118 L150,110 L150,120 L60,128 Z" fill="var(--teal)" stroke="#0a0c10"/>
-      <g id="rearWingArt"><path d="M62,128 L150,122 L150,134 L62,140 Z" fill="#15181d" stroke="#5c636c"/></g>
-      <!-- beam wing + exhaust -->
-      <path d="M70,168 L150,164 L150,172 L70,176 Z" fill="#20242b"/>
-      <g id="quadExhaustArt"><circle cx="70" cy="150" r="9"/></g>
-
-      <g id="bcBody">
-        <!-- slim central tub: engine cover to airbox, tapering nose to the right -->
-        <path d="M120,196 L150,182 Q220,176 300,178 L470,180 Q560,176 610,176 L720,182 Q820,186 900,206
-                 L920,214 L900,222 Q800,222 700,218 L470,216 Q300,214 150,214 Z"
-              fill="url(#f1BodyG)" stroke="#0a0c10" stroke-width="1.4"/>
-        <!-- engine cover shark-fin + airbox intake above the driver -->
-        <path d="M300,178 Q340,120 386,124 L392,178 Z" fill="var(--teal)" stroke="#0a0c10"/>
-        <path d="M360,132 Q374,120 392,128 L392,150 L364,150 Z" fill="#06080b"/>
-        <!-- halo over the cockpit: hoop + the single central pillar at its FRONT (real place) -->
-        <path d="M392,150 Q470,96 548,150" fill="none" stroke="#0a0c10" stroke-width="9"/>
-        <path d="M392,150 Q470,96 548,150" fill="none" stroke="#23272d" stroke-width="4"/>
-        <path d="M523,148 L508,110" stroke="#0a0c10" stroke-width="7"/>
-        <!-- cockpit opening -->
-        <path d="M398,160 Q470,146 542,160 L540,178 L400,178 Z" fill="#05070a"/>
-        <!-- sidepod with radiator inlet -->
-        <path d="M230,190 Q300,184 360,188 L356,212 L232,212 Z" fill="url(#f1DarkG)" stroke="var(--teal)" stroke-width="0.8"/>
-        <path d="M300,192 L352,190 L350,206 L300,208 Z" fill="#06080b"/>
-        <!-- team accent flash along the body -->
-        <path d="M160,206 Q470,196 890,210" fill="none" stroke="var(--teal-b)" stroke-width="3" stroke-linecap="round"/>
-        <!-- long nose + front wing (far right) -->
-        <path d="M760,196 Q840,198 900,206 L918,214 L898,220 Q840,214 764,212 Z" fill="url(#f1BodyG)" stroke="#0a0c10"/>
-        <g id="frontFlapArt"><path d="M876,214 L980,210 L980,220 L876,224 Z" fill="var(--teal)" stroke="#0a0c10"/></g>
-        <path d="M884,224 L980,220 L980,230 L884,234 Z" fill="#15181d"/>
-        <rect x="978" y="204" width="8" height="34" rx="2" fill="#15181d"/>
-        <!-- driver number on the airbox -->
-        <text x="336" y="168" font-family="ui-sans-serif" font-size="18" font-weight="800" fill="#f2f5f8">20</text>
-        <!-- no doors on an F1 car -->
-        <g id="doorArt"></g>
+      <ellipse cx="500.0" cy="335.0" rx="388.2" ry="7" fill="rgba(0,0,0,0.5)"/>
+      <path d="M828.2,315.9 L312.4,320.6 L156.1,319.1
+      L124.9,278.4 L203.0,290.9 L734.4,303.4 Z"
+      fill="url(#f1f1haasFloor)" stroke="rgba(150,166,182,0.35)" stroke-width="1.2"/>
+      <g id="frontFlapArt">
+        <path d="M854.8,320.6 l-65.6,-14.0 l0,10 l65.6,14 Z" fill="#e6e6e6" stroke="rgba(0,0,0,0.4)" stroke-width="0.8"/>
+        <path d="M868.9,312.0 l-65.6,-14.0 l0,10 l65.6,14 Z" fill="#c8102e" stroke="rgba(0,0,0,0.4)" stroke-width="0.8"/>
+        <path d="M882.9,303.4 l-65.6,-14.0 l0,10 l65.6,14 Z" fill="#e6e6e6" stroke="rgba(0,0,0,0.4)" stroke-width="0.8"/>
+        <path d="M897.0,294.8 l-65.6,-14.0 l0,10 l65.6,14 Z" fill="#c8102e" stroke="rgba(0,0,0,0.4)" stroke-width="0.8"/>
+        <rect x="834.5" y="319.1" width="7" height="9.4" fill="#0d1116"/>
       </g>
-
-      <!-- exposed slick tyres -->
-      <g><circle cx="255" cy="242" r="66" fill="#0b0c0e"/><circle cx="255" cy="242" r="66" fill="none" stroke="#2a2f37" stroke-width="10"/><circle cx="255" cy="242" r="40" fill="#111"/><g class="f1Weave"><g transform="translate(255,242)">${turbine()}</g></g><circle cx="255" cy="242" r="12" fill="url(#f1Hub)"/><path d="M226,214 A40 40 0 0 1 284,214" fill="none" stroke="var(--teal)" stroke-width="3"/></g>
-      <g><circle cx="745" cy="248" r="60" fill="#0b0c0e"/><circle cx="745" cy="248" r="60" fill="none" stroke="#2a2f37" stroke-width="9"/><circle cx="745" cy="248" r="36" fill="#111"/><g class="f1Weave"><g transform="translate(745,248)">${turbine()}</g></g><circle cx="745" cy="248" r="11" fill="url(#f1Hub)"/><path d="M719,222 A36 36 0 0 1 771,222" fill="none" stroke="var(--teal)" stroke-width="3"/></g>
+      <g id="bcBody">
+        <path d="M856.4,294.1
+      Q781.3,290.9 687.6,278.4
+      L593.8,267.5 L539.1,262.8
+      L375.0,242.5 L265.6,248.7 L179.6,283.1
+      L156.1,306.6 L312.4,312.0 L703.2,301.9 Z"
+      fill="url(#f1f1haasBody)" stroke="rgba(255,255,255,0.4)" stroke-width="1.1"/>
+        <path d="M531.3,283.1 L359.3,262.8 L234.3,278.4
+      L218.7,306.6 L500.0,303.4 Z" fill="#e6e6e6" stroke="rgba(255,255,255,0.28)"/>
+        <path d="M531.3,283.1 l-26,-6 l0,-90 l26,-6 Z" fill="#05080c" stroke="#c8102e" stroke-width="1.4"/>
+        <path d="M500.0,301.9 Q359.3,306.6 234.3,298.7" fill="none" stroke="#c8102e" stroke-width="2.4" opacity="0.85"/>
+        <path d="M539.1,262.8 Q468.7,248.7 382.8,242.5 L382.8,256.5 Q460.9,261.2 531.3,269.0 Z" fill="#05080c"/>
+        <path d="M531.3,256.5 Q515.6,220.6 437.5,217.5 Q382.8,219.0 378.1,242.5" fill="none" stroke="#161c24" stroke-width="8" stroke-linecap="round"/>
+        <path d="M531.3,256.5 Q515.6,220.6 437.5,217.5 Q382.8,219.0 378.1,242.5" fill="none" stroke="#c8102e" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M375.0,242.5 Q356.2,200.3 324.9,201.8 L249.9,242.5 L234.3,262.8 L359.3,256.5 Z" fill="url(#f1f1haasBody)" stroke="rgba(255,255,255,0.32)"/>
+        <path d="M312.4,211.2 L156.1,242.5 L156.1,262.8 L281.2,242.5 Z" fill="#e6e6e6" opacity="0.92" stroke="rgba(255,255,255,0.22)"/>
+        <text x="445.3" y="230.0" text-anchor="middle" font-family="ui-sans-serif" font-size="15" font-weight="800" fill="#c8102e">20</text>
+      </g>
+        <path d="M711.0,294.1 L757.9,273.7" stroke="#20262e" stroke-width="6" stroke-linecap="round"/>
+        <path d="M695.4,308.1 L757.9,273.7" stroke="#20262e" stroke-width="5" stroke-linecap="round"/>
+        <path d="M234.3,262.8 L226.5,273.3" stroke="#20262e" stroke-width="6" stroke-linecap="round"/>
+        <path d="M210.9,298.7 L226.5,273.3" stroke="#20262e" stroke-width="5" stroke-linecap="round"/>
+      <g id="rearWingArt">
+      <rect x="117.1" y="223.7" width="8" height="46.9" fill="#12171e"/>
+      <path d="M85.8,189.3 L148.3,194.0 L148.3,200.3 L85.8,195.6 Z" fill="#e6e6e6" stroke="rgba(255,255,255,0.4)"/>
+      <path d="M85.8,201.8 L143.6,206.5 L143.6,211.2 L85.8,206.5 Z" fill="#c8102e" stroke="rgba(0,0,0,0.35)"/>
+      <path d="M96.8,262.8 L148.3,265.9 L148.3,270.6 L96.8,267.5 Z" fill="#171d25" stroke="#c8102e" stroke-width="1"/>
+    </g>
+      <g>
+      <circle cx="226.48148148148147" cy="273.3425925925926" r="56.7" fill="#0a0b0e"/>
+      <circle cx="226.48148148148147" cy="273.3425925925926" r="56.7" fill="none" stroke="#1b1f25" stroke-width="7.4"/>
+      <circle cx="226.48148148148147" cy="273.3425925925926" r="51.0" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="226.48148148148147" cy="273.3425925925926" r="35.1" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="226.48148148148147" cy="273.3425925925926" r="35.1" fill="#20252c"/><circle cx="226.48148148148147" cy="273.3425925925926" r="21.8" fill="none" stroke="#c8102e" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="226.48148148148147" cy="273.3425925925926" r="7.4" fill="url(#f1f1haasHub)"/>
+    </g>
+      <g>
+      <circle cx="757.8888888888889" cy="273.73333333333335" r="56.3" fill="#0a0b0e"/>
+      <circle cx="757.8888888888889" cy="273.73333333333335" r="56.3" fill="none" stroke="#1b1f25" stroke-width="7.3"/>
+      <circle cx="757.8888888888889" cy="273.73333333333335" r="50.6" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="757.8888888888889" cy="273.73333333333335" r="34.9" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="757.8888888888889" cy="273.73333333333335" r="34.9" fill="#20252c"/><circle cx="757.8888888888889" cy="273.73333333333335" r="21.6" fill="none" stroke="#c8102e" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="757.8888888888889" cy="273.73333333333335" r="7.3" fill="url(#f1f1haasHub)"/>
+    </g>
+      <g id="quadExhaustArt"><circle cx="121.8" cy="262.8" r="7"/></g>
     </svg>
     `;
-    // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }
-  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* 2026 Formula 1 cockpit SVG — survival cell, halo hoop, detachable wheel with a colour display */
   function injectArt() {

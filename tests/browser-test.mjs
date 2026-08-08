@@ -77,6 +77,33 @@ const check = (label, ok, detail) => {
 }
 
 
+/* ---------- a body is not a lozenge with the wheels stuck on ----------
+   Every exterior in the garage used to be one blob with the wheels painted on top of it, and
+   NONE of them had a wheel arch. With no arch there is no relationship between the body and the
+   wheel, so there are no proportions, so every car is the same shape in a different colour.
+   Hashing the exteriors for duplicates said they were all distinct, which was true and useless.
+   These are the checks that actually catch it. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const gaps = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const n = f.replace(/ simulator\.html/i, "");
+    const i = src.indexOf("function injectExterior()");
+    if (i < 0) { gaps.push(n + ": no exterior at all"); continue; }
+    const art = src.slice(i, i + 26000);
+    // an arch is an elliptical arc in the body outline: "A rx,ry 0 0 1" over the wheel centre.
+    // A raid car hangs its arches off a spaceframe and an open-wheel car has none at all, so
+    // those two declare themselves instead.
+    const openWheel = /2026 Formula 1|halo|F1 R26|MCL40|FW48|VCARB|VF-26|SF-26|RB22|W17|AMR26|A526|C26/.test(art);
+    const raid = /T1\+|Sandrider|GR DKR|HUNTER|RAPTOR/.test(art);
+    if (!openWheel && !raid && !/ 0 0 1 /.test(art)) gaps.push(n + ": the body has no wheel arch");
+    // and the paint must be the car's own, not one flat fill
+    if (!/linearGradient/.test(art)) gaps.push(n + ": the body has no paint, just a flat fill");
+  }
+  check("every body has wheel arches cut into it and paint on it", gaps.length === 0, gaps.slice(0, 6).join(" | "));
+}
+
 /* ---------- the cockpit is not a photograph ----------
    Every one of the 52 cars drew its instrument pack into the Cockpit tab as literal text in
    the SVG: the speed and the revs never moved while you drove. The first attempt at fixing it

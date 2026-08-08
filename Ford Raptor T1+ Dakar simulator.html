@@ -3205,75 +3205,87 @@ x, y, ww, hh, r) { r = Math.min(r, ww / 2, hh / 2); ctx.beginPath(); ctx.moveTo(
 
   /* 2026 Dakar T1+ raid car exterior — closed pickup/SUV side profile (cab, roll cage, snorkel,
      sidepods, exposed slick tyres, single tailpipe, driver number on the airbox) */
+  /* Ford Raptor T1+ — drawn as the kind of car it actually is, not a road car with
+     bits removed: the floor, the sidepod, the halo and the exposed suspension are most of
+     what you can see of one of these from the side. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 320" preserveAspectRatio="xMidYMid meet" role="img" aria-label="2026 Dakar Rally T1+ raid car side">
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ford Raptor T1+ side">
       <defs>
-        <linearGradient id="f1BodyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--f1body)"/><stop offset="0.58" stop-color="var(--f1body)"/><stop offset="1" stop-color="#0a0c10"/></linearGradient>
-        <linearGradient id="f1DarkG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#22252b"/><stop offset="1" stop-color="#0a0b0e"/></linearGradient>
-        <radialGradient id="f1Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2a2f37"/></radialGradient>
-        <filter id="f1ExhGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <style>
-          .f1Weave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt,#frontFlapArt{opacity:0.001;}
-          #doorArt{opacity:0.001;}
-          #quadExhaustArt circle{fill:#8b929b;}
-          #quadExhaustArt.hot circle{fill:#ff8a3c;filter:url(#f1ExhGlow);}
+        <linearGradient id="rdfordraptorBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff6a1a"/><stop offset="0.45" stop-color="#0d3f8f"/><stop offset="1" stop-color="#0c1016"/></linearGradient>
+        <linearGradient id="rdfordraptorGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b9cede"/><stop offset="1" stop-color="#131b22"/></linearGradient>
+        <radialGradient id="rdfordraptorHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#e8edf3"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.05));}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));}
+          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-16deg) translate(-12px,-4px);}
         </style>
       </defs>
-      <ellipse cx="500" cy="292" rx="430" ry="16" fill="rgba(0,0,0,0.5)"/>
-
-      <!-- unused aero placeholders (no wings on a raid car) -->
-      <g id="rearWingArt"></g><g id="frontFlapArt"></g>
-
+      <ellipse cx="500.0" cy="358.0" rx="371.4" ry="9" fill="rgba(0,0,0,0.5)"/>
+        <path d="M758.5,112.2 L742.5,261.8" stroke="#8e979f" stroke-width="7" stroke-linecap="round"/>
+  <path d="M780.5,112.2 L762.5,261.8" stroke="#c8a24a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M708.5,252.3 L768.5,261.8" stroke="#20262e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M828.5,252.3 L768.5,261.8" stroke="#20262e" stroke-width="8" stroke-linecap="round"/>
+        <path d="M183.1,112.2 L167.1,261.8" stroke="#8e979f" stroke-width="7" stroke-linecap="round"/>
+  <path d="M205.1,112.2 L187.1,261.8" stroke="#c8a24a" stroke-width="7" stroke-linecap="round"/>
+  <path d="M133.1,252.3 L193.1,261.8" stroke="#20262e" stroke-width="8" stroke-linecap="round"/>
+  <path d="M253.1,252.3 L193.1,261.8" stroke="#20262e" stroke-width="8" stroke-linecap="round"/>
       <g id="bcBody">
-        <!-- lower chassis / sill + skid plates -->
-        <path d="M138,238 L902,238 L910,214 Q800,208 700,208 L150,208 Q138,214 138,238 Z" fill="url(#f1DarkG)" stroke="#0a0c10" stroke-width="1.2"/>
-        <!-- main body: bed, cab and long bonnet -->
-        <path d="M150,210 L150,190 Q152,182 176,180 L404,178 L428,122 Q436,114 600,114 L620,126 L664,180
-                 Q772,180 880,204 L906,214 Q906,222 890,224 L664,216 L150,216 Z"
-              fill="url(#f1BodyG)" stroke="#0a0c10" stroke-width="1.6"/>
-        <!-- side glass + raked windscreen (dark) -->
-        <path d="M436,126 L508,126 L508,176 L440,176 Z" fill="#0b1420"/>
-        <path d="M516,126 L616,126 L662,176 L516,176 Z" fill="#0b1420"/>
-        <!-- roll-cage bar seen through the glass -->
-        <path d="M440,130 L616,130" stroke="#3a4048" stroke-width="3"/>
-        <path d="M512,130 L512,176" stroke="#3a4048" stroke-width="3"/>
-        <!-- roof light bar -->
-        <rect x="470" y="104" width="120" height="9" rx="2" fill="#101318"/>
-        <g fill="#fff4c2"><rect x="478" y="106" width="12" height="5"/><rect x="496" y="106" width="12" height="5"/><rect x="514" y="106" width="12" height="5"/><rect x="532" y="106" width="12" height="5"/><rect x="550" y="106" width="12" height="5"/><rect x="568" y="106" width="12" height="5"/></g>
-        <!-- snorkel up the rear pillar -->
-        <path d="M416,122 L432,122 L432,192 L416,192 Z" fill="#101318" stroke="#0a0c10"/>
-        <path d="M414,116 Q424,104 436,116 L436,124 L414,124 Z" fill="#101318"/>
-        <!-- team accent wrap along the flank -->
-        <path d="M150,210 L176,182 L340,180 L326,210 Z" fill="var(--teal)" opacity="0.92"/>
-        <path d="M664,180 Q772,180 880,204 L862,210 Q764,190 660,196 Z" fill="var(--teal)" opacity="0.5"/>
-        <path d="M170,204 Q500,196 884,210" fill="none" stroke="var(--teal-b)" stroke-width="3" stroke-linecap="round"/>
-        <!-- spare wheel on the bed -->
-        <circle cx="238" cy="176" r="24" fill="#101216" stroke="#2a2f37" stroke-width="5"/><circle cx="238" cy="176" r="9" fill="#1a1d22"/>
-        <!-- bull bar / front bash plate -->
-        <path d="M900,206 L924,204 L924,232 L900,230 Z" fill="#15181d"/>
-        <path d="M904,214 L930,214 L930,220 L904,220 Z" fill="#2a2f37"/>
-        <!-- number board on the door + class -->
-        <rect x="352" y="182" width="52" height="30" rx="3" fill="#f2f2ee"/><text x="378" y="204" text-anchor="middle" font-family="ui-sans-serif" font-size="17" font-weight="800" fill="#15181d">T1</text>
-        <text x="470" y="234" font-family="ui-sans-serif" font-size="12" font-weight="800" fill="var(--teal-b)" letter-spacing="2">T1+ ULTIMATE</text>
-        <g id="doorArt"></g>
+        <path d="M787.7,275.3 L212.3,275.3 L200.8,261.8 L795.4,261.8 Z" fill="#2a3038" stroke="#6b757f" stroke-width="1.2"/>
+        <path d="M826.1,217.7
+      L701.4,206.2 L634.3,125.7 L528.8,112.2
+      L337.0,112.2 L279.4,160.2 L183.5,171.7
+      L164.3,217.7 L173.9,261.8 L814.6,261.8 Z"
+      fill="url(#rdfordraptorBody)" stroke="rgba(255,255,255,0.45)" stroke-width="1.2"/>
+        <g stroke="#c9d2dc" stroke-width="4" fill="none" opacity="0.9">
+      <path d="M528.8,112.2 L630.4,125.7 L638.1,244.6"/>
+      <path d="M337.0,112.2 L281.3,158.3 L273.7,244.6"/>
+      <path d="M528.8,112.2 L337.0,112.2"/>
+      <path d="M638.1,183.2 L273.7,183.2"/>
+    </g>
+        <path d="M337.0,116.1 L283.2,158.3 L277.5,206.2 L335.0,202.4 Z" fill="url(#rdfordraptorGlass)" stroke="#7b8792"/>
+        <g id="doorArt">
+      <path d="M519.2,125.7 L346.5,125.7 L342.7,244.6 L515.3,244.6 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(0,0,0,0.35)" stroke-width="1.3"/>
+      <path d="M503.8,133.3 L365.7,133.3 L363.8,179.4 L501.9,179.4 Z" fill="#0a0f14" stroke="#59636d"/>
+      <text x="432.9" y="217.7" text-anchor="middle" font-family="ui-sans-serif" font-size="17" font-weight="800" fill="#ff6a1a">201</text>
+    </g>
+        <path d="M500.0,112.2 l0,-46 l-49.9,0 l0,46 Z" fill="#161c24" stroke="#ff6a1a" stroke-width="1.4"/>
+        <g id="rearWingArt"><rect x="335.0" y="96.9" width="122.8" height="9" rx="3" fill="#12171e" stroke="#59636d"/>
+      <g fill="#ffe9a8"><circle cx="342.7" cy="97.6" r="4.5"/><circle cx="363.8" cy="97.6" r="4.5"/><circle cx="384.9" cy="97.6" r="4.5"/><circle cx="406.0" cy="97.6" r="4.5"/><circle cx="427.1" cy="97.6" r="4.5"/><circle cx="448.2" cy="97.6" r="4.5"/></g></g>
+        <path d="M622.8,125.7 l6,-61.4" stroke="#9aa3ad" stroke-width="2"/>
+  <path d="M603.6,127.6 l6,-53.7" stroke="#9aa3ad" stroke-width="2"/>
+        <circle cx="776.2" cy="187.0" r="55.9" fill="#0a0b0e" stroke="#1b1f25" stroke-width="7"/>
+  <circle cx="776.2" cy="187.0" r="27.0" fill="#20262e"/>
+        <rect x="158.6" y="206.2" width="34.5" height="23.0" rx="4" fill="#f2f6fa" opacity="0.92"/>
+        <rect x="814.6" y="206.2" width="23.0" height="17.3" rx="3" fill="rgba(200,20,40,0.85)"/>
+        <g id="frontFlapArt"><rect x="145.1" y="269.5" width="49.9" height="7" rx="3" fill="#171d24" stroke="#ff6a1a" stroke-opacity="0.6"/></g>
+        <path d="M98.4,346.0 l-16,0 l0,-42.2 l16,0 Z" fill="#12171e"/>
+        <text x="432.9" y="252.3" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="rgba(255,255,255,0.72)" letter-spacing="4">RAPTOR T1+</text>
       </g>
-
-      <!-- side exhaust behind the rear wheel -->
-      <g id="quadExhaustArt"><circle cx="150" cy="200" r="7"/></g>
-
-      <!-- knobbly rally-raid tyres with beadlock hubs -->
-      <g><circle cx="255" cy="242" r="66" fill="#0b0c0e"/><circle cx="255" cy="242" r="66" fill="none" stroke="#181b1f" stroke-width="16" stroke-dasharray="10 7"/><circle cx="255" cy="242" r="52" fill="none" stroke="#2a2f37" stroke-width="6"/><circle cx="255" cy="242" r="40" fill="#111"/><g class="f1Weave"><g transform="translate(255,242)">${turbine()}</g></g><circle cx="255" cy="242" r="12" fill="url(#f1Hub)"/><g stroke="var(--teal)" stroke-width="2"><circle cx="255" cy="242" r="18" fill="none"/></g></g>
-      <g><circle cx="745" cy="248" r="60" fill="#0b0c0e"/><circle cx="745" cy="248" r="60" fill="none" stroke="#181b1f" stroke-width="15" stroke-dasharray="9 6"/><circle cx="745" cy="248" r="47" fill="none" stroke="#2a2f37" stroke-width="6"/><circle cx="745" cy="248" r="36" fill="#111"/><g class="f1Weave"><g transform="translate(745,248)">${turbine()}</g></g><circle cx="745" cy="248" r="11" fill="url(#f1Hub)"/><g stroke="var(--teal)" stroke-width="2"><circle cx="745" cy="248" r="16" fill="none"/></g></g>
+      <g id="quadExhaustArt"><rect x="634.3" y="233.1" width="26" height="10" rx="5"/></g>
+      <g>
+      <circle cx="193.09090909090907" cy="261.8454545454546" r="90.2" fill="#0a0b0e"/>
+      <circle cx="193.09090909090907" cy="261.8454545454546" r="90.2" fill="none" stroke="#1b1f25" stroke-width="11.7"/>
+      <circle cx="193.09090909090907" cy="261.8454545454546" r="81.1" fill="none" stroke="#ff6a1a" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="193.09090909090907" cy="261.8454545454546" r="55.9" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M206.8,257.5 L248.7,255.9 L248.7,267.8 L206.8,266.2 Z" fill="#2b3138"/><path d="M205.1,269.9 L232.4,301.6 L223.1,309.0 L198.3,275.3 Z" fill="#2b3138"/><path d="M194.3,276.2 L186.5,317.4 L174.9,314.7 L185.8,274.3 Z" fill="#2b3138"/><path d="M182.6,271.7 L145.6,291.3 L140.4,280.6 L178.8,263.9 Z" fill="#2b3138"/><path d="M178.8,259.8 L140.4,243.1 L145.6,232.4 L182.6,252.0 Z" fill="#2b3138"/><path d="M185.8,249.4 L174.9,209.0 L186.5,206.3 L194.3,247.5 Z" fill="#2b3138"/><path d="M198.3,248.4 L223.1,214.7 L232.4,222.1 L205.1,253.8 Z" fill="#2b3138"/></g>
+      <circle cx="193.09090909090907" cy="261.8454545454546" r="11.7" fill="url(#rdfordraptorHub)"/>
+    </g>
+      <g>
+      <circle cx="768.5454545454545" cy="261.8454545454546" r="90.2" fill="#0a0b0e"/>
+      <circle cx="768.5454545454545" cy="261.8454545454546" r="90.2" fill="none" stroke="#1b1f25" stroke-width="11.7"/>
+      <circle cx="768.5454545454545" cy="261.8454545454546" r="81.1" fill="none" stroke="#ff6a1a" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="768.5454545454545" cy="261.8454545454546" r="55.9" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M782.3,257.5 L824.1,255.9 L824.1,267.8 L782.3,266.2 Z" fill="#2b3138"/><path d="M780.5,269.9 L807.9,301.6 L798.5,309.0 L773.7,275.3 Z" fill="#2b3138"/><path d="M769.7,276.2 L762.0,317.4 L750.4,314.7 L761.3,274.3 Z" fill="#2b3138"/><path d="M758.0,271.7 L721.1,291.3 L715.9,280.6 L754.3,263.9 Z" fill="#2b3138"/><path d="M754.3,259.8 L715.9,243.1 L721.1,232.4 L758.0,252.0 Z" fill="#2b3138"/><path d="M761.3,249.4 L750.4,209.0 L762.0,206.3 L769.7,247.5 Z" fill="#2b3138"/><path d="M773.7,248.4 L798.5,214.7 L807.9,222.1 L780.5,253.8 Z" fill="#2b3138"/></g>
+      <circle cx="768.5454545454545" cy="261.8454545454546" r="11.7" fill="url(#rdfordraptorHub)"/>
+    </g>
     </svg>
     `;
     app.el.doorArt = document.getElementById("doorArt");
-
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }
-  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* 2026 Dakar T1+ raid cockpit SVG — roll cage, dashboard, co-driver + roadbook, round wheel */
   function injectArt() {
