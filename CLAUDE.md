@@ -324,6 +324,39 @@ a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
 `updatePhysics`, `stageForce()` adds the grade on the leg and the water drag on the sea,
 `stageCapMps()` caps each stage, and `drawStage(w,h,pal)` paints the surface.
 
+**Exteriors — a silhouette is not a car (all 52)** — the bodies are drawn by `tools/bodykit/`
+from each car's REAL dimensions (length, wheelbase, height, both overhangs, wheel diameters) with the
+wheel arches **cut into** the body, and one `roof: [[xFromFront, yFromRoofPeak], …]` array per car
+carrying the identity. That gave the right proportions and stopped there, which is why the set was
+fairly described as "a half-bitten banana coloured in fifty-two ways": one grey polygon for glass and
+nothing else on the whole car.
+
+`tools/bodykit/detail.mjs` adds the **furniture**, which is what a viewer actually recognises a car by:
+
+| part | what it carries |
+|---|---|
+| **daylight opening** | a real windscreen, side glass and backlight, following the roofline with the same quadratics the body uses, with a surround (chrome · satin · gloss black · none), painted A/C pillars, B-pillar splits for the saloons, a vent window and a drip rail for the pre-1970 cars |
+| **front end** | the grille as a distinct object — `horseshoe` (Bugatti) · `eggcrate` (250 GTO, 33 Stradale) · `singleframe` · `kidney` · `slot` (F40) · `mouth` · `shark` (917K, Valkyrie, T.50s) · `mesh` · none (the EVs) — plus the lamp (`round` · `coveredRound` · `quadRound` · `pop` · `strip` · `boomerang` · `slit` · `cluster`), the lower intake, a chrome bumper and the bonnet shutline |
+| **rear end** | `roundPair` / `roundSingle` / `bar` / `stack` / `slim` lamps, the engine vent (`louvre` · `mesh` · `glassEngine`), a finned diffuser and a ducktail or lip |
+| **flanks** | `naca` · `blade` · `gill` · `strake` · `skirt` · `intake` · `cline` · `louvre` · `scoop` · `sidepipe` · `fuelcap` · `chargeport` · `coveredRear` · `sideNumber` · `stripe` · `fin` · `tunnel` (Evija) · `fan` (T.50s) · `topexit` (918) · `airbox` · `rollhoop` |
+| **wheels** | `wire` (Borrani) · `fuchs` · `mesh` (BBS) · `telephone` · `split` · `basket` · `dish` · `five`/`seven`/`ten`/`turbine`, each with the car's own rim colour |
+
+Furniture that lies **flat** on a panel is drawn under the body's clip; furniture that stands
+**proud** of it (a fin, a roof airbox, roll hoops, the fan, a faired-in rear wheel) is drawn on top,
+because the clip cuts it in half. Everything at the nose and tail is placed as a **fraction of
+length** and hung off the body's own surface at that station — placing it in frame pixels is what
+left every lamp clipped to a white sliver hanging past the bumper.
+
+**Eleven exteriors are hand-drawn and off limits** (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 ·
+T.33 · Agera RS · U9 · DB5 · 300 SLR · Czinger 21C). `apply.mjs` refuses to touch them and
+`tests/browser-test.mjs` fails if it ever does — the generator flattened six of them once.
+
+The generated block is **fenced** (`BODYKIT:BEGIN` … `BODYKIT:END`) so `apply.mjs` can be re-run:
+the SVG carries its own `<style>` block, so a brace counter walking out of `injectExterior()` stops
+in the wrong place and swallows the next function. `browser-test` runs the generator a second time
+and fails on any byte of drift, and measures the roofline set (mean pairwise difference ≥ 0.115, no
+pair closer than 0.038) and the furniture set (no two cars wearing the identical kit).
+
 **Seeing behind you (all 52 cars)** — three faults made the world behind the car a void:
 
 - `drawRivals` called `projectAhead(Math.max(0.6, ahead))`, so a rival 40 m **behind** was

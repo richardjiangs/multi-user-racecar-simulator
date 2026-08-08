@@ -2727,9 +2727,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* Porsche 918 Spyder exterior — open two-seat Spyder side profile (very low body, low
      wraparound screen, signature top-exit exhaust pipes on the deck, rear wing, 5-spoke wheels) */
-  /* Porsche 918 Spyder — drawn from the car's own published dimensions: 4643 mm long
+  /* BODYKIT:BEGIN Porsche 918 Spyder — drawn from the car's own published dimensions: 4643 mm long
      on a 2730 mm wheelbase, 1167 mm tall, 1000/913 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
+     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Porsche 918 Spyder side">
@@ -2738,7 +2739,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           <stop offset="0" stop-color="#eef1f4"/><stop offset="0.45" stop-color="#a4aeb8"/><stop offset="1" stop-color="#2a3138"/>
         </linearGradient>
         <linearGradient id="bkporsche918Glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#cfe0f0" stop-opacity="0.92"/><stop offset="0.55" stop-color="#4a6376" stop-opacity="0.85"/><stop offset="1" stop-color="#0d151c"/>
+          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
         </linearGradient>
         <linearGradient id="bkporsche918Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
         <radialGradient id="bkporsche918Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
@@ -2747,6 +2748,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         </linearGradient>
         <filter id="bkporsche918Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         <clipPath id="bkporsche918Clip"><path d="M78.0,203.2 Q74.0,279.8 88.0,292.0 L168.3,311.8 A75.6,71.1 0 0 1 319.6,311.8 L668.6,311.8 A71.6,67.3 0 0 1 811.8,311.8 L912.0,300.2 Q922.0,294.4 922.0,264.3 L922.0,234.2 Q875.6,234.2 829.2,214.8 Q782.7,214.8 736.3,203.2 Q689.9,203.2 643.5,195.4 Q609.7,195.4 576.0,176.1 Q542.2,176.1 508.4,148.9 Q474.7,148.9 440.9,160.5 Q394.5,160.5 348.1,179.9 Q280.6,179.9 213.0,191.6 Q145.5,191.6 78.0,203.2 Z"/></clipPath>
+        <clipPath id="bkporsche918Dlo"><path d="M626.6,176.1 L559.1,173.1 Q533.8,173.1 508.4,152.8 Q478.9,152.8 449.4,163.0 L398.7,176.1 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2769,29 +2771,57 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <path d="M668.2,311.8 A72.1,68.0 0 0 1 812.3,311.8" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M668.2,311.8 A72.1,68.0 0 0 1 812.3,311.8" fill="none" stroke="#c8e400" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkporsche918Clip)">
-        <path d="M643.5,176.1 L643.5,199.3 Q609.7,199.3 576.0,179.9 Q542.2,179.9 508.4,152.8 Q474.7,152.8 440.9,164.4 L432.5,176.1 Z" fill="url(#bkporsche918Glass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
-        <path d="M626.6,176.1 L634.6,131.4" stroke="#12161b" stroke-width="5"/>
         <path d="M92.0,207.2 Q500.0,200.2 902.0,203.2" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M315.9,307.6 L672.2,305.6 L669.1,319.6 L319.2,321.6 Z" fill="url(#bkporsche918Low)" stroke="rgba(120,132,146,0.35)"/>
+        <path d="M415.6,205.4 q-28.8,-4.0 -52.3,3.0 l3.0,31.8 q26.2,-5.0 49.7,-6.0 Z" fill="#0b1016"/>
+      <path d="M415.6,205.4 q-28.8,-4.0 -52.3,3.0" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
+      <path d="M410.4,232.1 q20.9,-4.0 42.9,-5.0" fill="none" stroke="#c8e400" stroke-width="1.6" opacity="0.55"/>
         <path d="M626.6,176.1 L623.6,305.8" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
         <path d="M466.2,176.1 L463.2,305.8" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
         <g id="doorArt">
         <path d="M466.2,183.8 L626.6,179.9 L622.6,301.8 L464.2,303.8 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
         <rect x="534.4" y="214.8" width="24" height="5" rx="2.5" fill="#3c434b"/>
       </g>
-        <path d="M850.3,187.7 q42.2,-2 52.3,9" fill="none" stroke="#f2f6fa" stroke-width="5" stroke-linecap="round"/>
-        <path d="M82.0,187.7 L137.1,182.7 L137.1,195.7 L82.0,200.7 Z" fill="rgba(200,20,40,0.82)"/>
+        <path d="M626.6,176.1 L559.1,173.1 Q533.8,173.1 508.4,152.8 Q478.9,152.8 449.4,163.0 L398.7,176.1 Z" fill="url(#bkporsche918Glass)"/>
+      <path d="M626.6,176.1 L559.1,173.1 Q533.8,173.1 508.4,152.8 Q478.9,152.8 449.4,163.0 L398.7,176.1 Z" fill="none" clip-path="none" opacity="0"/>
+      <g clip-path="url(#bkporsche918Dlo)">
+      <path d="M630.6,176.1 L553.1,169.3 L573.1,169.3 L652.6,176.1 Z" fill="rgba(255,255,255,0.30)"/>
+      <path d="M439.4,176.1 L469.4,159.1 L477.4,159.1 L451.4,176.1 Z" fill="rgba(255,255,255,0.13)"/>
+    </g>
+      <path d="M626.6,176.1 L559.1,173.1" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
+      <path d="M398.7,176.1 L449.4,163.0" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
+      <path d="M626.6,176.1 L559.1,173.1 Q533.8,173.1 508.4,152.8 Q478.9,152.8 449.4,163.0 L398.7,176.1 Z" fill="none" stroke="#0c1015" stroke-width="2.8" stroke-linejoin="round"/>
+        <path d="M888.5,264.0 q-45.6,13.4 -72.2,36.3 l15.2,13.4 q34.2,-22.9 60.8,-28.6 Z" fill="#080b0f" stroke="rgba(255,255,255,0.28)"/>
+      <path d="M886.5,290.6 L820.7,297.0 L823.3,309.8 L884.5,307.8 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
+      <circle cx="854.5" cy="242.1" r="11.7" fill="#9fb6c8" stroke="#e2ebf2" stroke-width="1.8"/>
+      <circle cx="854.5" cy="242.1" r="5.8" fill="#dfeaf2"/>
+      <circle cx="851.0" cy="238.6" r="2.3" fill="#ffffff" opacity="0.85"/>
+      <path d="M922.0,239.2 L829.2,219.8 L736.3,208.2 L643.5,200.4" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
+        <path d="M90.1,231.2 l42.2,-1.0 l0,9 l-42.2,2 Z" fill="#e0223c"/>
+      <path d="M280.6,168.3 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M269.6,170.7 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M258.6,173.1 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M247.6,175.5 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M236.6,177.9 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M105.0,292.5 l71.7,-2.0 l0,29.3 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
+      <path d="M122.9,292.5 l0,28.3" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
+      <path d="M140.9,292.5 l0,28.3" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
+      <path d="M158.8,292.5 l0,28.3" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
         <text x="533.8" y="226.5" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">918</text>
-        <g fill="#a7aeb6"><ellipse cx="365.0" cy="164.4" rx="9" ry="6"/><ellipse cx="331.2" cy="166.4" rx="9" ry="6"/></g>
         </g>
+        <ellipse cx="348.1" cy="201.0" rx="9" ry="5" fill="#b8bfc7" stroke="#5d666f" stroke-width="1.4"/>
+      <ellipse cx="326.1" cy="203.0" rx="9" ry="5" fill="#b8bfc7" stroke="#5d666f" stroke-width="1.4"/>
+      <path d="M415.6,197.9 a18.6,19.1 0 0 1 37.1,0 Z" fill="#a4aeb8" stroke="rgba(255,255,255,0.32)"/>
+      <path d="M373.4,197.9 a18.6,19.1 0 0 1 37.1,0 Z" fill="#2a3138" stroke="rgba(255,255,255,0.22)"/>
+        
         <g id="frontFlapArt"><rect x="833.4" y="317.8" width="71.7" height="6" rx="3" fill="#101318" stroke="#c8e400" stroke-opacity="0.5"/></g>
         <g id="quadExhaustArt"></g>
-        <path d="M640.6,168.3 l9,-6 l17,-3 l1,13 l-25,4 Z" fill="#0b0e12"/>
+        <path d="M632.6,178.1 l7,-2 l13,-4 l1,10 l-19,3 Z" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
       </g>
       <g>
       <circle cx="243.96424725393064" cy="264.5595520137842" r="65.4" fill="#0a0b0e"/>
       <circle cx="243.96424725393064" cy="264.5595520137842" r="65.4" fill="none" stroke="#1b1f25" stroke-width="8.5"/>
-      <circle cx="243.96424725393064" cy="264.5595520137842" r="58.9" fill="none" stroke="#c8e400" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="243.96424725393064" cy="264.5595520137842" r="58.9" fill="none" stroke="#c8d4e0" stroke-width="1.4" opacity="0.5"/>
       <circle cx="243.96424725393064" cy="264.5595520137842" r="40.6" fill="#14181d"/>
       <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M253.5,260.2 L284.1,258.5 L284.1,270.6 L253.5,268.9 Z" fill="#2b3138"/><path d="M251.0,272.3 L262.1,300.8 L250.6,304.6 L242.8,275.0 Z" fill="#2b3138"/><path d="M238.8,273.7 L215.1,293.0 L208.0,283.3 L233.7,266.7 Z" fill="#2b3138"/><path d="M233.7,262.5 L208.0,245.9 L215.1,236.1 L238.8,255.4 Z" fill="#2b3138"/><path d="M242.8,254.2 L250.6,224.5 L262.1,228.3 L251.0,256.8 Z" fill="#2b3138"/></g>
       <circle cx="243.96424725393064" cy="264.5595520137842" r="8.5" fill="url(#bkporsche918Hub)"/>
@@ -2799,7 +2829,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       <g>
       <circle cx="740.2209778160673" cy="268.1951324574628" r="61.8" fill="#0a0b0e"/>
       <circle cx="740.2209778160673" cy="268.1951324574628" r="61.8" fill="none" stroke="#1b1f25" stroke-width="8.0"/>
-      <circle cx="740.2209778160673" cy="268.1951324574628" r="55.6" fill="none" stroke="#c8e400" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="740.2209778160673" cy="268.1951324574628" r="55.6" fill="none" stroke="#c8d4e0" stroke-width="1.4" opacity="0.5"/>
       <circle cx="740.2209778160673" cy="268.1951324574628" r="38.3" fill="#14181d"/>
       <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M749.2,264.1 L778.1,262.5 L778.1,273.9 L749.2,272.3 Z" fill="#2b3138"/><path d="M746.9,275.5 L757.4,302.5 L746.5,306.0 L739.1,278.0 Z" fill="#2b3138"/><path d="M735.3,276.8 L712.9,295.1 L706.2,285.8 L730.5,270.2 Z" fill="#2b3138"/><path d="M730.5,266.2 L706.2,250.5 L712.9,241.3 L735.3,259.6 Z" fill="#2b3138"/><path d="M739.1,258.4 L746.5,230.4 L757.4,233.9 L746.9,260.9 Z" fill="#2b3138"/></g>
       <circle cx="740.2209778160673" cy="268.1951324574628" r="8.0" fill="url(#bkporsche918Hub)"/>
@@ -2810,7 +2840,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }
+  /* BODYKIT:END */  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* Porsche 918 Spyder cockpit SVG — five-dial cluster with central tacho, rising console, round wheel */
   function injectArt() {

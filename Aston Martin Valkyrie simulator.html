@@ -2577,9 +2577,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* Aston Martin Valkyrie exterior — Le-Mans-prototype side profile (teardrop cockpit, roof
      induction snorkel, venturi tunnels, huge rear wing on end-plates and a vast diffuser) */
-  /* Aston Martin Valkyrie — drawn from the car's own published dimensions: 4530 mm long
+  /* BODYKIT:BEGIN Aston Martin Valkyrie — drawn from the car's own published dimensions: 4530 mm long
      on a 2740 mm wheelbase, 1100 mm tall, 1000/790 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
+     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Aston Martin Valkyrie side">
@@ -2588,7 +2589,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           <stop offset="0" stop-color="#8fe04a"/><stop offset="0.45" stop-color="#2f7a24"/><stop offset="1" stop-color="#0c2810"/>
         </linearGradient>
         <linearGradient id="bkastonGlass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#cfe0f0" stop-opacity="0.92"/><stop offset="0.55" stop-color="#4a6376" stop-opacity="0.85"/><stop offset="1" stop-color="#0d151c"/>
+          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
         </linearGradient>
         <linearGradient id="bkastonLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
         <radialGradient id="bkastonHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
@@ -2597,6 +2598,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         </linearGradient>
         <filter id="bkastonGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
         <clipPath id="bkastonClip"><path d="M78.0,224.1 Q74.0,273.6 88.0,289.6 L141.5,315.5 A83.7,78.7 0 0 1 308.9,315.5 L656.3,315.5 A79.4,74.6 0 0 1 815.1,315.5 L912.0,300.2 Q922.0,292.6 922.0,290.7 L922.0,288.8 Q875.6,288.8 829.2,246.9 Q782.7,246.9 736.3,208.8 Q698.3,208.8 660.4,166.9 Q626.6,166.9 592.8,136.5 Q559.1,136.5 525.3,127.0 Q491.6,127.0 457.8,147.9 Q415.6,147.9 373.4,193.6 Q310.1,193.6 246.8,212.6 Q162.4,212.6 78.0,224.1 Z"/></clipPath>
+        <clipPath id="bkastonDlo"><path d="M635.0,174.6 L584.4,139.1 Q554.9,139.1 525.3,130.8 Q512.7,130.8 500.0,138.6 L432.5,174.6 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2625,37 +2627,61 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <path d="M656.7,315.5 A79.0,74.6 0 0 1 814.7,315.5" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M656.7,315.5 A79.0,74.6 0 0 1 814.7,315.5" fill="none" stroke="#b6ff5c" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkastonClip)">
-        <path d="M635.0,174.6 L592.8,140.3 Q559.1,140.3 525.3,130.8 Q491.6,130.8 457.8,151.7 L449.4,174.6 Z" fill="url(#bkastonGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M92.0,212.8 Q500.0,205.8 902.0,208.8" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M300.0,311.4 L665.0,309.4 L661.8,323.4 L303.4,325.4 Z" fill="url(#bkastonLow)" stroke="rgba(120,132,146,0.35)"/>
+        <ellipse cx="246.8" cy="257.9" rx="42.2" ry="26.6" fill="#05070a" stroke="#b6ff5c" stroke-width="2"/>
+      <ellipse cx="240.8" cy="257.9" rx="27.0" ry="17.4" fill="#0e141b"/>
         <path d="M651.9,182.2 L648.9,309.5" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
         <path d="M483.1,182.2 L480.1,309.5" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
         <g id="doorArt">
         <path d="M483.1,189.8 L651.9,186.0 L647.9,305.5 L481.1,307.5 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
         <rect x="555.5" y="220.3" width="24" height="5" rx="2.5" fill="#3c434b"/>
       </g>
-        <path d="M850.3,201.2 q42.2,-2 52.3,9" fill="none" stroke="#f2f6fa" stroke-width="5" stroke-linecap="round"/>
-        <path d="M82.0,201.2 L137.1,196.2 L137.1,209.2 L82.0,214.2 Z" fill="rgba(200,20,40,0.82)"/>
+        <path d="M635.0,174.6 L584.4,139.1 Q554.9,139.1 525.3,130.8 Q512.7,130.8 500.0,138.6 L432.5,174.6 Z" fill="url(#bkastonGlass)"/>
+      <path d="M635.0,174.6 L584.4,139.1 Q554.9,139.1 525.3,130.8 Q512.7,130.8 500.0,138.6 L432.5,174.6 Z" fill="none" clip-path="none" opacity="0"/>
+      <g clip-path="url(#bkastonDlo)">
+      <path d="M639.0,174.6 L578.4,135.3 L598.4,135.3 L661.0,174.6 Z" fill="rgba(255,255,255,0.30)"/>
+      <path d="M490.0,174.6 L520.0,134.8 L528.0,134.8 L502.0,174.6 Z" fill="rgba(255,255,255,0.13)"/>
+    </g>
+      <path d="M635.0,174.6 L584.4,139.1" stroke="#10141a" stroke-width="3" stroke-linecap="butt"/>
+      <path d="M432.5,174.6 L500.0,138.6" stroke="#10141a" stroke-width="3" stroke-linecap="butt"/>
+        <path d="M886.5,304.6 l-76.0,12.3 l0,20.5 l76.0,-8.2 Z" fill="#080b0f" stroke="rgba(255,255,255,0.22)"/>
+      <path d="M886.5,295.0 L820.7,301.1 L823.3,313.5 L884.5,311.5 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
+      <path d="M863.5,272.1 l-27.1,3.4" stroke="#dff0ff" stroke-width="3.2" stroke-linecap="round"/>
+      <path d="M922.0,293.8 L829.2,251.9 L736.3,213.8 L660.4,171.9" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
+        <circle cx="111.2" cy="250.2" r="16.9" fill="#e0223c" stroke="rgba(0,0,0,0.45)"/>
+      <path d="M263.7,170.8 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M252.7,173.2 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M241.7,175.6 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M230.7,178.0 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
+      <path d="M105.0,296.9 l71.7,-2.0 l0,28.5 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
+      <path d="M122.9,296.9 l0,27.5" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
+      <path d="M140.9,296.9 l0,27.5" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
+      <path d="M158.8,296.9 l0,27.5" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
         <path d="M398.7,309.5 l151.9,2 l-12,18 l-151.9,-2 Z" fill="#07100a" stroke="rgba(182,255,92,0.45)"/>
         </g>
+        <path d="M398.7,193.5 L103.3,205.7 L103.3,238.5 L398.7,226.2 Z" fill="#2f7a24" opacity="0.95" stroke="rgba(255,255,255,0.3)"/>
+      <path d="M500.0,142.0 q-16.9,-26.6 -46.4,-20.5 l-25.3,18.4 Z" fill="#2f7a24" stroke="rgba(255,255,255,0.35)"/>
+      <ellipse cx="456.1" cy="130.8" rx="5" ry="10.2" fill="#05080c"/>
+        
         <g id="frontFlapArt"><rect x="833.4" y="321.5" width="71.7" height="6" rx="3" fill="#101318" stroke="#b6ff5c" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"><circle cx="124.4" cy="325.5" r="6"/></g>
-        <path d="M665.9,174.6 l9,-6 l17,-3 l1,13 l-25,4 Z" fill="#0b0e12"/>
+        <g id="quadExhaustArt"><circle cx="96.7" cy="323.5" r="6"/></g>
+        <path d="M641.0,176.6 l7,-2 l13,-4 l1,10 l-19,3 Z" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
       </g>
       <g>
       <circle cx="225.1876379690949" cy="261.9955849889625" r="68.0" fill="#0a0b0e"/>
       <circle cx="225.1876379690949" cy="261.9955849889625" r="68.0" fill="none" stroke="#1b1f25" stroke-width="8.8"/>
-      <circle cx="225.1876379690949" cy="261.9955849889625" r="61.2" fill="none" stroke="#b6ff5c" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="225.1876379690949" cy="261.9955849889625" r="61.2" fill="none" stroke="#9ef0d8" stroke-width="1.4" opacity="0.5"/>
       <circle cx="225.1876379690949" cy="261.9955849889625" r="42.2" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="225.1876379690949" cy="261.9955849889625" r="42.2" fill="#20252c"/><circle cx="225.1876379690949" cy="261.9955849889625" r="26.1" fill="none" stroke="#b6ff5c" stroke-width="1.6" opacity="0.55"/></g>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="225.1876379690949" cy="261.9955849889625" r="42.2" fill="#20252c"/><circle cx="225.1876379690949" cy="261.9955849889625" r="26.1" fill="none" stroke="#9ef0d8" stroke-width="1.6" opacity="0.55"/></g>
       <circle cx="225.1876379690949" cy="261.9955849889625" r="8.8" fill="url(#bkastonHub)"/>
     </g>
       <g>
       <circle cx="735.6865342163355" cy="265.72185430463577" r="64.3" fill="#0a0b0e"/>
       <circle cx="735.6865342163355" cy="265.72185430463577" r="64.3" fill="none" stroke="#1b1f25" stroke-width="8.4"/>
-      <circle cx="735.6865342163355" cy="265.72185430463577" r="57.9" fill="none" stroke="#b6ff5c" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="735.6865342163355" cy="265.72185430463577" r="57.9" fill="none" stroke="#9ef0d8" stroke-width="1.4" opacity="0.5"/>
       <circle cx="735.6865342163355" cy="265.72185430463577" r="39.9" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="735.6865342163355" cy="265.72185430463577" r="39.9" fill="#20252c"/><circle cx="735.6865342163355" cy="265.72185430463577" r="24.7" fill="none" stroke="#b6ff5c" stroke-width="1.6" opacity="0.55"/></g>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="735.6865342163355" cy="265.72185430463577" r="39.9" fill="#20252c"/><circle cx="735.6865342163355" cy="265.72185430463577" r="24.7" fill="none" stroke="#9ef0d8" stroke-width="1.6" opacity="0.55"/></g>
       <circle cx="735.6865342163355" cy="265.72185430463577" r="8.4" fill="url(#bkastonHub)"/>
     </g>
     </svg>
@@ -2664,7 +2690,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }
+  /* BODYKIT:END */  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* Aston Martin Valkyrie cockpit SVG — exposed carbon tub, F1-style wheel with a central screen */
   function injectArt() {
