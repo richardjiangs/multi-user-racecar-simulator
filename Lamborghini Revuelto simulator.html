@@ -2718,9 +2718,6 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   /* Lamborghini Revuelto — drawn from the car's own published dimensions: 4947 mm long
      on a 2779 mm wheelbase, 1160 mm tall, 1010/1158 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Lamborghini Revuelto — drawn from the car's own published dimensions: 4947 mm long
-     on a 2779 mm wheelbase, 1160 mm tall, 1010/1158 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lamborghini Revuelto side">
@@ -2737,7 +2734,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkrevueltoGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkrevueltoClip"><path d="M78.0,220.3 Q74.0,284.4 88.0,295.0 L203.1,312.1 A72.5,68.2 0 0 1 348.1,312.1 L681.6,312.1 A68.1,64.0 0 0 1 817.8,312.1 L912.0,302.0 Q922.0,297.0 922.0,277.5 L922.0,258.1 Q896.7,258.1 871.4,247.3 Q837.6,247.3 803.8,236.5 Q761.6,236.5 719.4,222.1 Q689.9,222.1 660.4,200.5 Q639.3,200.5 618.2,157.3 Q580.2,157.3 542.2,141.1 Q508.4,141.1 474.7,151.9 Q432.5,151.9 390.3,184.3 Q339.6,184.3 289.0,202.3 Q234.1,202.3 179.3,209.5 Q128.6,209.5 78.0,220.3 Z"/></clipPath>
+        <clipPath id="bkrevueltoClip"><path d="M78.0,200.5 Q74.0,284.4 88.0,295.0 L203.1,312.1 A72.5,68.2 0 0 1 348.1,312.1 L681.6,312.1 A68.1,64.0 0 0 1 817.8,312.1 L912.0,302.0 Q922.0,297.0 922.0,282.9 L922.0,268.9 Q896.7,268.9 871.4,250.9 Q833.4,250.9 795.4,232.9 Q757.4,232.9 719.4,214.9 Q694.1,214.9 668.8,175.3 Q643.5,175.3 618.2,139.3 Q584.4,139.3 550.6,146.5 Q512.7,146.5 474.7,171.7 Q419.8,171.7 365.0,182.5 Q293.2,182.5 221.5,189.7 Q149.7,189.7 78.0,200.5 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2756,7 +2753,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <path d="M94.9,173.1 L263.7,168.1" stroke="#ffb35c" stroke-width="2" opacity="0.75"/>
       </g>
       <g id="bcBody">
-        <path d="M78.0,220.3 Q74.0,284.4 88.0,295.0 L203.1,312.1 A72.5,68.2 0 0 1 348.1,312.1 L681.6,312.1 A68.1,64.0 0 0 1 817.8,312.1 L912.0,302.0 Q922.0,297.0 922.0,277.5 L922.0,258.1 Q896.7,258.1 871.4,247.3 Q837.6,247.3 803.8,236.5 Q761.6,236.5 719.4,222.1 Q689.9,222.1 660.4,200.5 Q639.3,200.5 618.2,157.3 Q580.2,157.3 542.2,141.1 Q508.4,141.1 474.7,151.9 Q432.5,151.9 390.3,184.3 Q339.6,184.3 289.0,202.3 Q234.1,202.3 179.3,209.5 Q128.6,209.5 78.0,220.3 Z" fill="url(#bkrevueltoPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,200.5 Q74.0,284.4 88.0,295.0 L203.1,312.1 A72.5,68.2 0 0 1 348.1,312.1 L681.6,312.1 A68.1,64.0 0 0 1 817.8,312.1 L912.0,302.0 Q922.0,297.0 922.0,282.9 L922.0,268.9 Q896.7,268.9 871.4,250.9 Q833.4,250.9 795.4,232.9 Q757.4,232.9 719.4,214.9 Q694.1,214.9 668.8,175.3 Q643.5,175.3 618.2,139.3 Q584.4,139.3 550.6,146.5 Q512.7,146.5 474.7,171.7 Q419.8,171.7 365.0,182.5 Q293.2,182.5 221.5,189.7 Q149.7,189.7 78.0,200.5 Z" fill="url(#bkrevueltoPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkrevueltoClip)">
         <path d="M78.0,186.1 Q500.0,164.5 922.0,186.1 L922.0,204.1 Q500.0,182.5 78.0,207.7 Z" fill="url(#bkrevueltoShine)"/>
         <rect x="0" y="300.2" width="1000" height="197.9" fill="rgba(0,0,0,0.16)"/>
@@ -2766,7 +2763,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <path d="M680.8,312.1 A68.9,65.0 0 0 1 818.6,312.1" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M680.8,312.1 A68.9,65.0 0 0 1 818.6,312.1" fill="none" stroke="#ffb35c" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkrevueltoClip)">
-        <path d="M660.4,200.5 L660.4,205.9 Q639.3,205.9 618.2,162.7 Q580.2,162.7 542.2,146.5 Q508.4,146.5 474.7,157.3 Q432.5,157.3 390.3,189.7 L390.3,200.5 Z" fill="url(#bkrevueltoGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M660.4,200.5 L618.2,144.7 Q584.4,144.7 550.6,151.9 Q512.7,151.9 474.7,177.1 L390.3,200.5 Z" fill="url(#bkrevueltoGlass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M651.9,200.5 L660.9,144.7" stroke="#12161b" stroke-width="6"/>
         <path d="M92.0,222.5 Q500.0,215.5 902.0,218.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M345.0,308.1 L684.7,306.1 L681.7,320.1 L348.2,322.1 Z" fill="url(#bkrevueltoLow)" stroke="rgba(120,132,146,0.35)"/>
@@ -2807,7 +2804,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  } function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* Lamborghini Revuelto cockpit SVG — hexagonal dash, triple screens, squared wheel, START cover */
   function injectArt() {

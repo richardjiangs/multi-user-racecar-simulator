@@ -2544,12 +2544,6 @@ drawCluster(w, h, dashY, sway);
   /* McLaren P1 — drawn from the car's own published dimensions: 4588 mm long
      on a 2670 mm wheelbase, 1188 mm tall, 990/928 mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* McLaren P1 — drawn from the car's own published dimensions: 4588 mm long
-     on a 2670 mm wheelbase, 1188 mm tall, 990/928 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* McLaren P1 — drawn from the car's own published dimensions: 4588 mm long
-     on a 2670 mm wheelbase, 1188 mm tall, 990/928 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren P1 side">
@@ -2566,7 +2560,7 @@ drawCluster(w, h, dashY, sway);
           <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
         <filter id="bkp1Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkp1Clip"><path d="M78.0,195.9 Q74.0,279.3 88.0,292.0 L170.0,312.5 A78.7,74.0 0 0 1 327.4,312.5 L666.3,312.5 A73.6,69.2 0 0 1 813.5,312.5 L912.0,300.5 Q922.0,294.4 922.0,267.3 L922.0,240.1 Q888.2,240.1 854.5,212.0 Q816.5,212.0 778.5,187.9 Q740.5,187.9 702.6,163.7 Q673.0,163.7 643.5,135.6 Q605.5,135.6 567.5,115.5 Q525.3,115.5 483.1,127.5 Q432.5,127.5 381.8,163.7 Q314.3,163.7 246.8,183.8 Q162.4,183.8 78.0,195.9 Z"/></clipPath>
+        <clipPath id="bkp1Clip"><path d="M78.0,220.0 Q74.0,279.3 88.0,292.0 L170.0,312.5 A78.7,74.0 0 0 1 327.4,312.5 L666.3,312.5 A73.6,69.2 0 0 1 813.5,312.5 L912.0,300.5 Q922.0,294.4 922.0,275.3 L922.0,256.2 Q892.5,256.2 862.9,203.9 Q829.2,203.9 795.4,167.8 Q761.6,167.8 727.9,143.6 Q698.3,143.6 668.8,123.5 Q626.6,123.5 584.4,115.5 Q533.8,115.5 483.1,131.6 Q432.5,131.6 381.8,179.8 Q314.3,179.8 246.8,203.9 Q162.4,203.9 78.0,220.0 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
@@ -2585,7 +2579,7 @@ drawCluster(w, h, dashY, sway);
         <path d="M86.4,136.6 L272.1,131.6" stroke="#ffcf7a" stroke-width="2" opacity="0.75"/>
       </g>
       <g id="bcBody">
-        <path d="M78.0,195.9 Q74.0,279.3 88.0,292.0 L170.0,312.5 A78.7,74.0 0 0 1 327.4,312.5 L666.3,312.5 A73.6,69.2 0 0 1 813.5,312.5 L912.0,300.5 Q922.0,294.4 922.0,267.3 L922.0,240.1 Q888.2,240.1 854.5,212.0 Q816.5,212.0 778.5,187.9 Q740.5,187.9 702.6,163.7 Q673.0,163.7 643.5,135.6 Q605.5,135.6 567.5,115.5 Q525.3,115.5 483.1,127.5 Q432.5,127.5 381.8,163.7 Q314.3,163.7 246.8,183.8 Q162.4,183.8 78.0,195.9 Z" fill="url(#bkp1Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <path d="M78.0,220.0 Q74.0,279.3 88.0,292.0 L170.0,312.5 A78.7,74.0 0 0 1 327.4,312.5 L666.3,312.5 A73.6,69.2 0 0 1 813.5,312.5 L912.0,300.5 Q922.0,294.4 922.0,275.3 L922.0,256.2 Q892.5,256.2 862.9,203.9 Q829.2,203.9 795.4,167.8 Q761.6,167.8 727.9,143.6 Q698.3,143.6 668.8,123.5 Q626.6,123.5 584.4,115.5 Q533.8,115.5 483.1,131.6 Q432.5,131.6 381.8,179.8 Q314.3,179.8 246.8,203.9 Q162.4,203.9 78.0,220.0 Z" fill="url(#bkp1Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
         <g clip-path="url(#bkp1Clip)">
         <path d="M78.0,171.8 Q500.0,147.6 922.0,171.8 L922.0,191.9 Q500.0,167.8 78.0,195.9 Z" fill="url(#bkp1Shine)"/>
         <rect x="0" y="299.4" width="1000" height="218.5" fill="rgba(0,0,0,0.16)"/>
@@ -2595,7 +2589,7 @@ drawCluster(w, h, dashY, sway);
         <path d="M666.2,312.5 A73.7,69.5 0 0 1 813.6,312.5" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
   <path d="M666.2,312.5 A73.7,69.5 0 0 1 813.6,312.5" fill="none" stroke="#ffcf7a" stroke-width="1.4" opacity="0.45"/>
         <g clip-path="url(#bkp1Clip)">
-        <path d="M660.4,171.8 L643.5,139.6 Q605.5,139.6 567.5,119.5 Q525.3,119.5 483.1,131.6 L415.6,171.8 Z" fill="url(#bkp1Glass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M660.4,171.8 L584.4,119.5 Q533.8,119.5 483.1,135.6 L415.6,171.8 Z" fill="url(#bkp1Glass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
         <path d="M651.9,171.8 L659.9,125.5" stroke="#12161b" stroke-width="5"/>
         <path d="M92.0,199.9 Q500.0,192.9 902.0,195.9" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
         <path d="M322.1,308.2 L671.6,306.2 L668.5,320.2 L325.4,322.2 Z" fill="url(#bkp1Low)" stroke="rgba(120,132,146,0.35)"/>
@@ -2634,7 +2628,7 @@ drawCluster(w, h, dashY, sway);
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
+  }  function turbine() { let s = ""; for (let a = 0; a < 360; a += 36) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(34*Math.cos((a+16)*Math.PI/180)).toFixed(1)},${(34*Math.sin((a+16)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
   /* McLaren cockpit SVG — CENTRAL driving seat, two passenger benches, three-screen dash */
   function injectArt() {
