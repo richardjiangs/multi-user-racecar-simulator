@@ -2733,101 +2733,97 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* BMW M5 exterior — side profile (long clamshell bonnet, matrix LED lamps,
      five-metre saloon: very long bonnet, Hofmeister kink, M gills, boot-lip spoiler, quad tips) */
+  /* BMW M5 (G90) — drawn from the car's own published dimensions: 5096 mm long
+     on a 2995 mm wheelbase, 1510 mm tall, 930/1171 mm
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
+  /* BMW M5 (G90) — drawn from the car's own published dimensions: 5096 mm long
+     on a 2995 mm wheelbase, 1510 mm tall, 930/1171 mm
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
+  /* BMW M5 (G90) — drawn from the car's own published dimensions: 5096 mm long
+     on a 2995 mm wheelbase, 1510 mm tall, 930/1171 mm
+     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="BMW M5 (G90) side">
       <defs>
-        <linearGradient id="bmBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#42956f"/><stop offset="0.52" stop-color="#215540"/><stop offset="1" stop-color="#0a1b14"/></linearGradient>
-        <linearGradient id="bmLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#06080a"/></linearGradient>
-        <linearGradient id="bmGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadeef"/><stop offset="1" stop-color="#0f1a22"/></linearGradient>
-        <radialGradient id="bmHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
-        <filter id="bmGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <linearGradient id="bmTri" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#3fa2e0"/><stop offset="0.5" stop-color="#2b3f8f"/><stop offset="1" stop-color="#c8102e"/></linearGradient><style>
-          .grWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.1));transition:transform .42s ease;}
+        <linearGradient id="bkm5Paint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#3fa06e"/><stop offset="0.45" stop-color="#1c5c42"/><stop offset="1" stop-color="#08201a"/>
+        </linearGradient>
+        <linearGradient id="bkm5Glass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#cfe0f0" stop-opacity="0.92"/><stop offset="0.55" stop-color="#4a6376" stop-opacity="0.85"/><stop offset="1" stop-color="#0d151c"/>
+        </linearGradient>
+        <linearGradient id="bkm5Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
+        <radialGradient id="bkm5Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
+        <linearGradient id="bkm5Shine" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        </linearGradient>
+        <filter id="bkm5Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="bkm5Clip"><path d="M78.0,206.5 Q74.0,283.6 88.0,292.1 L205.9,306.0 A66.1,62.1 0 0 1 338.0,306.0 L701.9,306.0 A66.1,62.1 0 0 1 834.0,306.0 L912.0,297.8 Q922.0,293.8 922.0,268.2 L922.0,242.7 Q888.2,242.7 854.5,220.1 Q820.7,220.1 787.0,206.5 Q753.2,206.5 719.4,192.9 Q694.1,192.9 668.8,129.6 Q609.7,129.6 550.6,89.0 Q483.1,89.0 415.6,93.5 Q365.0,93.5 314.3,138.7 Q272.1,138.7 229.9,188.4 Q187.7,188.4 145.5,197.5 Q111.8,197.5 78.0,206.5 Z"/></clipPath>
+        <style>
+          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-15deg) translate(-13px,-4px);}
-          #quadExhaustArt rect{fill:#9aa2ab;}
-          #quadExhaustArt.hot rect{fill:#ff8a3c;filter:url(#bmGlow);}
+          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-13deg) translate(-11px,-4px);}
+          #quadExhaustArt *{fill:#a7aeb6;}
+          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkm5Glow);}
         </style>
       </defs>
-      <ellipse cx="500" cy="366" rx="392" ry="15" fill="rgba(0,0,0,0.5)"/>
-      <g id="rearWingArt">
-        <path d="M113.9,213.2 Q172.4,182.7 254.3,176.8 L254.3,188.8 Q172.4,194.7 113.9,225.2 Z" fill="#0f1216" stroke="#4a5058" stroke-width="1.3"/>
-        <path d="M117.8,209 Q172.4,183.7 250.4,181.8" fill="none" stroke="url(#bmTri)" stroke-width="2.8"/>
-      </g>
-
+      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
       <g id="bcBody">
-        <path d="M110,318 L110,232.4 110,232.4 Q125.6,211.6 141.2,206.4 Q156.8,201.2 203.6,199.5 L250.4,197.8 Q328.4,119.2 367.4,118.1 Q406.4,116.9 480.5,116.9 Q554.6,116.9 580,119.2 Q605.3,121.5 634.6,161.4 L663.8,201.2 Q780.8,203.5 819.8,206.4 Q858.8,209.3 874.4,220.9 L890,232.4 L890,318 L790.9,318 A61.7 81.3 0 0 0 667.5,318 L332.5,318 A61.7 81.3 0 0 0 209.1,318 L110,318 Z" fill="url(#bmBody)" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
-        <path d="M269.9,201.2 Q340.1,127.3 377.2,126.2 Q414.2,125 478.6,125 Q542.9,125 566.3,127.3 Q589.7,129.6 617,166 L644.3,202.4 Z" fill="url(#bmGlass)" stroke="#7a838c" stroke-width="1.4"/>
-        <path d="M340.1,124.5 Q478.6,118.5 589.7,126.8" fill="none" stroke="#0b0d10" stroke-width="12" stroke-linecap="round"/><path d="M324.5,316 L675.5,313 L671.5,331 L328.5,334 Z" fill="url(#bmLow)" stroke="#454b52" stroke-width="1.2"/>
-        <!-- the HOFMEISTER KINK: the rear glass drops then kicks FORWARD at its base -->
-        <path d="M342.4,129.6 Q314.4,170 326.1,194.3 Q344,203.5 381.4,200.5 L363.5,140 Z" fill="#171a1f" stroke="#2a2f36" stroke-width="1.1"/>
-        <path d="M422,126.1 L410.3,200.1" stroke="#171a1f" stroke-width="8"/>
-        <path d="M519.5,125 L519.5,201.2" stroke="#171a1f" stroke-width="6"/>
-        <!-- bright window surround -->
-        <path d="M271.5,201.2 L341.7,127.3 Q422,122.7 544.5,123.8 Q591.3,128.4 642.7,201.2" fill="none" stroke="rgba(228,240,250,0.62)" stroke-width="1.8"/>
-        <!-- twin swage lines -->
-        <path d="M125.6,222 Q461,225.5 874.4,224.3" fill="none" stroke="rgba(255,255,255,0.17)" stroke-width="2.4" stroke-linecap="round"/>
-        <path d="M141.2,268.3 Q484.4,269.4 858.8,266" fill="none" stroke="rgba(0,0,0,0.22)" stroke-width="2.2"/>
-        <path d="M209.1,318 A61.7 81.3 0 0 1 332.5,318" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="4"/><path d="M667.5,318 A61.7 81.3 0 0 1 790.9,318" fill="none" stroke="rgba(0,0,0,0.3)" stroke-width="4"/>
-        <!-- M gill in the front fender -->
-        <g transform="translate(683.3,237.1)">
-          <path d="M0,0 q26,-5 42,7 l-9,11 q-17,-9 -35,-6 Z" fill="#0a0d11" stroke="#c9d2db" stroke-width="1.4"/>
-          <path d="M5,5 q22,-4 33,6" fill="none" stroke="url(#bmTri)" stroke-width="2"/>
-        </g>
-        <!-- long bonnet shut lines -->
-        <path d="M698.9,210.3 Q788.6,211.1 862.7,219.2" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2.2"/>
-        <path d="M706.7,222.5 Q796.4,223.7 862.7,231.2" fill="none" stroke="rgba(255,255,255,0.10)" stroke-width="1.8"/>
-        <!-- shark nose: tall kidney face, laser lamp, lower intake, splitter -->
-        <path d="M823.7,222 q34,-3 44,11" fill="none" stroke="#eef4f8" stroke-width="6" stroke-linecap="round"/>
-        <path d="M831.5,235.9 q24,-2 32,6" fill="none" stroke="rgba(120,200,255,0.75)" stroke-width="2.2"/>
-        <path d="M847.1,246.3 L890,238.2 L890,305.2 L843.2,308.7 Z" fill="#0a0e12" stroke="rgba(0,102,177,0.55)" stroke-width="1.3"/>
-        <g stroke="#2b3138" stroke-width="1.7"><path d="M852.6,255.6 l34,6"/><path d="M852.6,271.7 l34,6"/><path d="M852.6,287.9 l34,6"/></g>
-        <path d="M757.4,313.3 L886.1,309.9 L882.2,329.5 L753.5,331.8 Z" fill="#05070a" stroke="rgba(0,102,177,0.3)"/>
-        <g id="frontFlapArt"><rect x="722.3" y="322.6" width="42" height="7" rx="3.5" fill="#141317" stroke="rgba(0,102,177,0.5)"/></g>
-        <!-- front door + the M mirror on twin stalks -->
+        <path d="M78.0,206.5 Q74.0,283.6 88.0,292.1 L205.9,306.0 A66.1,62.1 0 0 1 338.0,306.0 L701.9,306.0 A66.1,62.1 0 0 1 834.0,306.0 L912.0,297.8 Q922.0,293.8 922.0,268.2 L922.0,242.7 Q888.2,242.7 854.5,220.1 Q820.7,220.1 787.0,206.5 Q753.2,206.5 719.4,192.9 Q694.1,192.9 668.8,129.6 Q609.7,129.6 550.6,89.0 Q483.1,89.0 415.6,93.5 Q365.0,93.5 314.3,138.7 Q272.1,138.7 229.9,188.4 Q187.7,188.4 145.5,197.5 Q111.8,197.5 78.0,206.5 Z" fill="url(#bkm5Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
+        <g clip-path="url(#bkm5Clip)">
+        <path d="M78.0,147.7 Q500.0,120.6 922.0,147.7 L922.0,170.3 Q500.0,143.2 78.0,174.9 Z" fill="url(#bkm5Shine)"/>
+        <rect x="0" y="291.0" width="1000" height="250.1" fill="rgba(0,0,0,0.16)"/>
+      </g>
+        <path d="M204.0,306.0 A67.9,64.1 0 0 1 339.9,306.0" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
+  <path d="M204.0,306.0 A67.9,64.1 0 0 1 339.9,306.0" fill="none" stroke="#0066b1" stroke-width="1.4" opacity="0.45"/>
+        <path d="M700.1,306.0 A67.9,64.1 0 0 1 835.9,306.0" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
+  <path d="M700.1,306.0 A67.9,64.1 0 0 1 835.9,306.0" fill="none" stroke="#0066b1" stroke-width="1.4" opacity="0.45"/>
+        <g clip-path="url(#bkm5Clip)">
+        <path d="M685.7,183.9 L668.8,136.4 Q609.7,136.4 550.6,95.7 Q483.1,95.7 415.6,100.3 Q365.0,100.3 314.3,145.5 L314.3,183.9 Z" fill="url(#bkm5Glass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
+        <path d="M668.8,183.9 L677.8,95.7" stroke="#12161b" stroke-width="6"/>
+        <path d="M500.0,183.9 L509.0,95.7" stroke="#12161b" stroke-width="6"/>
+        <path d="M92.0,215.0 Q500.0,208.0 902.0,211.0" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
+        <path d="M338.4,301.0 L701.5,299.0 L698.5,313.0 L341.5,315.0 Z" fill="url(#bkm5Low)" stroke="rgba(120,132,146,0.35)"/>
+        <path d="M651.9,147.7 L648.9,300.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
+        <path d="M516.9,147.7 L513.9,300.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
+        <path d="M381.8,147.7 L378.8,300.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
         <g id="doorArt">
-          <path d="M519.5,202.4 L628.7,203.5 L638.8,287.9 L523.4,289.1 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(140,152,164,0.6)" stroke-width="1.3"/>
-          <path d="M539,248.6 Q581.9,244 628.7,247.5" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="2.2"/>
-          <path d="M642,195.5 l8,-6 l17,-4 l2,14 l-25,4 Z" fill="#0b0d10"/>
-          <rect x="605.3" y="249.8" width="20" height="5" rx="2.5" fill="#3b4148"/>
+        <path d="M516.9,156.8 L651.9,152.3 L647.9,296.0 L514.9,298.0 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
+        <rect x="572.4" y="192.9" width="24" height="5" rx="2.5" fill="#3c434b"/>
+      </g>
+        <path d="M850.3,188.4 q42.2,-2 52.3,9" fill="none" stroke="#f2f6fa" stroke-width="5" stroke-linecap="round"/>
+        <path d="M82.0,188.4 L137.1,183.4 L137.1,196.4 L82.0,201.4 Z" fill="rgba(200,20,40,0.82)"/>
+        <text x="567.5" y="206.5" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">M5</text>
         </g>
-        <!-- L-shaped tail lamps -->
-        <path d="M112.3,238.2 L156.8,229 L156.8,246.3 L112.3,255.6 Z" fill="rgba(200,16,46,0.75)"/>
-        <path d="M119.4,240.5 L147.4,234.3" stroke="rgba(255,180,180,0.6)" stroke-width="3.4"/>
-        <!-- four trapezoid tips (two pairs) -->
-        <g id="quadExhaustArt">
-          <rect x="124" y="301.8" width="22" height="14" rx="3.5"/><rect x="151.3" y="301.8" width="22" height="14" rx="3.5"/>
-          <rect x="191.9" y="301.8" width="22" height="14" rx="3.5"/><rect x="219.2" y="301.8" width="22" height="14" rx="3.5"/>
-        </g>
-        <!-- decals -->
-        <text x="336.2" y="241.7" font-family="ui-sans-serif" font-size="12" fill="#daf1e6" letter-spacing="5.4">M5</text>
-        <g transform="translate(457.1,276.4)"><rect x="-32" y="-9" width="64" height="18" rx="3" fill="#0a0c10" stroke="#0066b1" stroke-width="1.3"/><text x="0" y="4" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="800" fill="#5ab0ff">M xDRIVE</text></g>
+        <g id="frontFlapArt"><rect x="833.4" y="312.0" width="71.7" height="6" rx="3" fill="#101318" stroke="#0066b1" stroke-opacity="0.5"/></g>
+        <g id="quadExhaustArt"><circle cx="124.4" cy="316.0" r="6"/><circle cx="139.4" cy="316.0" r="6"/><circle cx="162.4" cy="316.0" r="6"/><circle cx="177.4" cy="316.0" r="6"/></g>
+        <path d="M665.9,138.7 l9,-6 l17,-3 l1,13 l-25,4 Z" fill="#0b0e12"/>
       </g>
       <g>
-        <circle cx="270.8" cy="292.9" r="55.1" fill="#0a0b0e"/><circle cx="270.8" cy="292.9" r="55.1" fill="none" stroke="#0066b1" stroke-width="2.2"/>
-        <g class="grWeave"><g transform="translate(270.8,292.9) scale(1.1)">
-          ${turbine()}
-        </g></g>
-        <circle cx="270.8" cy="292.9" r="12.1" fill="url(#bmHub)"/>
-      </g>
+      <circle cx="271.94113029827315" cy="269.5486656200942" r="60.5" fill="#0a0b0e"/>
+      <circle cx="271.94113029827315" cy="269.5486656200942" r="60.5" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
+      <circle cx="271.94113029827315" cy="269.5486656200942" r="54.4" fill="none" stroke="#0066b1" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="271.94113029827315" cy="269.5486656200942" r="37.5" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M281.5,267.8 L309.3,267.2 L309.3,271.9 L281.5,271.3 Z" fill="#2b3138"/><path d="M281.0,272.8 L305.5,286.2 L303.2,290.3 L279.3,275.8 Z" fill="#2b3138"/><path d="M278.2,276.9 L292.7,300.8 L288.6,303.1 L275.2,278.6 Z" fill="#2b3138"/><path d="M273.7,279.1 L274.3,307.0 L269.6,307.0 L270.2,279.1 Z" fill="#2b3138"/><path d="M268.7,278.6 L255.3,303.1 L251.2,300.8 L265.7,276.9 Z" fill="#2b3138"/><path d="M264.6,275.8 L240.7,290.3 L238.4,286.2 L262.8,272.8 Z" fill="#2b3138"/><path d="M262.4,271.3 L234.5,271.9 L234.5,267.2 L262.4,267.8 Z" fill="#2b3138"/><path d="M262.8,266.3 L238.4,252.9 L240.7,248.8 L264.6,263.3 Z" fill="#2b3138"/><path d="M265.7,262.2 L251.2,238.3 L255.3,236.0 L268.7,260.4 Z" fill="#2b3138"/><path d="M270.2,260.0 L269.6,232.1 L274.3,232.1 L273.7,260.0 Z" fill="#2b3138"/><path d="M275.2,260.4 L288.6,236.0 L292.7,238.3 L278.2,262.2 Z" fill="#2b3138"/><path d="M279.3,263.3 L303.2,248.8 L305.5,252.9 L281.0,266.3 Z" fill="#2b3138"/></g>
+      <circle cx="271.94113029827315" cy="269.5486656200942" r="7.9" fill="url(#bkm5Hub)"/>
+    </g>
       <g>
-        <circle cx="729.2" cy="292.9" r="55.1" fill="#0a0b0e"/><circle cx="729.2" cy="292.9" r="55.1" fill="none" stroke="#0066b1" stroke-width="2.2"/>
-        <g class="grWeave"><g transform="translate(729.2,292.9) scale(1.1)">
-          ${turbine()}
-        </g></g>
-        <circle cx="729.2" cy="292.9" r="12.1" fill="url(#bmHub)"/>
-      </g>
+      <circle cx="767.9733124018838" cy="269.5486656200942" r="60.5" fill="#0a0b0e"/>
+      <circle cx="767.9733124018838" cy="269.5486656200942" r="60.5" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
+      <circle cx="767.9733124018838" cy="269.5486656200942" r="54.4" fill="none" stroke="#0066b1" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="767.9733124018838" cy="269.5486656200942" r="37.5" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M777.5,267.8 L805.4,267.2 L805.4,271.9 L777.5,271.3 Z" fill="#2b3138"/><path d="M777.1,272.8 L801.5,286.2 L799.2,290.3 L775.4,275.8 Z" fill="#2b3138"/><path d="M774.2,276.9 L788.7,300.8 L784.7,303.1 L771.2,278.6 Z" fill="#2b3138"/><path d="M769.7,279.1 L770.3,307.0 L765.6,307.0 L766.3,279.1 Z" fill="#2b3138"/><path d="M764.7,278.6 L751.3,303.1 L747.2,300.8 L761.7,276.9 Z" fill="#2b3138"/><path d="M760.6,275.8 L736.7,290.3 L734.4,286.2 L758.9,272.8 Z" fill="#2b3138"/><path d="M758.5,271.3 L730.6,271.9 L730.6,267.2 L758.5,267.8 Z" fill="#2b3138"/><path d="M758.9,266.3 L734.4,252.9 L736.7,248.8 L760.6,263.3 Z" fill="#2b3138"/><path d="M761.7,262.2 L747.2,238.3 L751.3,236.0 L764.7,260.4 Z" fill="#2b3138"/><path d="M766.3,260.0 L765.6,232.1 L770.3,232.1 L769.7,260.0 Z" fill="#2b3138"/><path d="M771.2,260.4 L784.7,236.0 L788.7,238.3 L774.2,262.2 Z" fill="#2b3138"/><path d="M775.4,263.3 L799.2,248.8 L801.5,252.9 L777.1,266.3 Z" fill="#2b3138"/></g>
+      <circle cx="767.9733124018838" cy="269.5486656200942" r="7.9" fill="url(#bkm5Hub)"/>
+    </g>
     </svg>
     `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }
-  function turbine() { let s = '<circle r="41" fill="#0d1015" stroke="#1e232a" stroke-width="4"/>'; for (let i = 0; i < 5; i++) { const c = i * 72 * Math.PI / 180; for (const o of [-0.2, 0.2]) { const a = c + o; s += '<path d="M' + (14 * Math.cos(c)).toFixed(1) + ',' + (14 * Math.sin(c)).toFixed(1) + ' L' + (38 * Math.cos(a - 0.07)).toFixed(1) + ',' + (38 * Math.sin(a - 0.07)).toFixed(1) + ' L' + (38 * Math.cos(a + 0.07)).toFixed(1) + ',' + (38 * Math.sin(a + 0.07)).toFixed(1) + ' Z" fill="#31373f"/>'; } } return s + '<circle r="40" fill="none" stroke="#8b949f" stroke-width="2.2"/>'; }
+  }function turbine() { let s = '<circle r="41" fill="#0d1015" stroke="#1e232a" stroke-width="4"/>'; for (let i = 0; i < 5; i++) { const c = i * 72 * Math.PI / 180; for (const o of [-0.2, 0.2]) { const a = c + o; s += '<path d="M' + (14 * Math.cos(c)).toFixed(1) + ',' + (14 * Math.sin(c)).toFixed(1) + ' L' + (38 * Math.cos(a - 0.07)).toFixed(1) + ',' + (38 * Math.sin(a - 0.07)).toFixed(1) + ' L' + (38 * Math.cos(a + 0.07)).toFixed(1) + ',' + (38 * Math.sin(a + 0.07)).toFixed(1) + ' Z" fill="#31373f"/>'; } } return s + '<circle r="40" fill="none" stroke="#8b949f" stroke-width="2.2"/>'; }
 
   /* BMW M5 cockpit SVG — digital GR cluster, round GR wheel, M5 Command touchscreen */
   function injectArt() {

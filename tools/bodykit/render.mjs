@@ -66,6 +66,7 @@ export function renderCar(spec) {
   g.push(lip(P.axRear, P.rR * (spec.archLift || 1.06)));
   g.push(lip(P.axFront, P.rF * (spec.archLift || 1.06)));
 
+  g.push(`  <g clip-path="url(#${ID("Clip")})">`);   // details belong to the body, not to the air
   // the glasshouse
   if (glass) {
     g.push(`  <path d="${glass}" fill="url(#${ID("Glass")})" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>`);
@@ -100,48 +101,46 @@ export function renderCar(spec) {
         <rect x="${f1((xa + xb) / 2 - 12)}" y="${f1(P.yAt(0.50))}" width="24" height="5" rx="2.5" fill="#3c434b"/>
       </g>`);
   }
+  // lamps live in the bodywork too
+  {
+    const lampY0 = P.yAt(spec.lampY != null ? spec.lampY : 0.36);
+    if (spec.headlamp === "round") {
+      g.push(`  <circle cx="${f1(FRAME.x1 - P.drawL * 0.045)}" cy="${f1(lampY0)}" r="${f1(P.bodyH * 0.085)}" fill="#eef4f8" stroke="#b7c2cc" stroke-width="1.6"/>`);
+    } else if (spec.headlamp === "pop") {
+      g.push(`  <rect x="${f1(FRAME.x1 - P.drawL * 0.10)}" y="${f1(lampY0 - 3)}" width="${f1(P.drawL * 0.06)}" height="6" rx="2" fill="#20262d" stroke="#8e979f"/>`);
+    } else {
+      g.push(`  <path d="M${f1(FRAME.x1 - P.drawL * 0.085)},${f1(lampY0)} q${f1(P.drawL * 0.05)},-2 ${f1(P.drawL * 0.062)},9" fill="none" stroke="#f2f6fa" stroke-width="5" stroke-linecap="round"/>`);
+    }
+    g.push(`  <path d="M${f1(FRAME.x0 + 4)},${f1(lampY0)} L${f1(FRAME.x0 + P.drawL * 0.07)},${f1(lampY0 - 5)} L${f1(FRAME.x0 + P.drawL * 0.07)},${f1(lampY0 + 8)} L${f1(FRAME.x0 + 4)},${f1(lampY0 + 13)} Z" fill="${spec.tailLamp || "rgba(200,20,40,0.82)"}"/>`);
+  }
+  // the badge / name on the flank
+  if (spec.badge) {
+    g.push(`  <text x="${f1(P.xAt(spec.badgeX != null ? spec.badgeX : 0.5))}" y="${f1(P.yAt(0.56))}" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">${spec.badge}</text>`);
+  }
+  if (spec.extra) g.push("  " + spec.extra(P, f1));
+  g.push(`  </g>`);                                   // end of the clipped bodywork
+  // the splitter and the pipes are hardware bolted to the car, so they sit outside the paint
+  g.push(`  <g id="frontFlapArt"><rect x="${f1(FRAME.x1 - P.drawL * 0.105)}" y="${f1(P.sillY + 6)}" width="${f1(P.drawL * 0.085)}" height="6" rx="3" fill="#101318" stroke="${acc}" stroke-opacity="0.5"/></g>`);
+  {
+    const ex = spec.exhaust || { kind: "twin", n: 2 };
+    const exY = P.sillY + 10, ex0 = FRAME.x0 + P.drawL * 0.055;
+    let exs = "";
+    if (ex.kind === "quad" || ex.kind === "twin" || ex.kind === "single") {
+      const n = ex.n || (ex.kind === "quad" ? 4 : ex.kind === "twin" ? 2 : 1);
+      for (let i = 0; i < n; i++) exs += `<circle cx="${f1(ex0 + i * 15 + (i >= 2 ? 8 : 0))}" cy="${f1(exY)}" r="6"/>`;
+    } else if (ex.kind === "side") {
+      for (let i = 0; i < (ex.n || 6); i++) exs += `<rect x="${f1(P.axRear + P.rR * 1.25 + i * 13)}" y="${f1(exY - 6)}" width="9" height="7" rx="2"/>`;
+    } else if (ex.kind === "stack") {
+      exs += `<rect x="${f1(ex0)}" y="${f1(exY - 10)}" width="30" height="9" rx="4"/><rect x="${f1(ex0)}" y="${f1(exY + 2)}" width="30" height="9" rx="4"/>`;
+    }
+    g.push(`  <g id="quadExhaustArt">${exs}</g>`);
+  }
   // the mirror, on its stalk, at the front of the door
   if (spec.mirror !== false && doorFront != null) {
     const mx = P.xAt(doorFront) + 14, my = P.yAt(0.26);
     g.push(`  <path d="M${f1(mx)},${f1(my)} l9,-6 l17,-3 l1,13 l-25,4 Z" fill="#0b0e12"/>`);
   }
 
-  // lamps
-  const lampY = P.yAt(spec.lampY != null ? spec.lampY : 0.36);
-  if (spec.headlamp === "round") {
-    g.push(`  <circle cx="${f1(FRAME.x1 - P.drawL * 0.035)}" cy="${f1(lampY)}" r="${f1(P.bodyH * 0.09)}" fill="#eef4f8" stroke="#b7c2cc" stroke-width="1.6"/>`);
-  } else if (spec.headlamp === "pop") {
-    g.push(`  <rect x="${f1(FRAME.x1 - P.drawL * 0.09)}" y="${f1(lampY - 3)}" width="${f1(P.drawL * 0.06)}" height="5" rx="2" fill="#20262d" stroke="#8e979f"/>`);
-  } else {
-    g.push(`  <path d="M${f1(FRAME.x1 - P.drawL * 0.075)},${f1(lampY)} q${f1(P.drawL * 0.055)},-2 ${f1(P.drawL * 0.07)},9" fill="none" stroke="#f2f6fa" stroke-width="5" stroke-linecap="round"/>
-  <path d="M${f1(FRAME.x1 - P.drawL * 0.07)},${f1(lampY + 10)} q${f1(P.drawL * 0.045)},-2 ${f1(P.drawL * 0.058)},7" fill="none" stroke="${acc}" stroke-width="2" opacity="0.85"/>`);
-  }
-  // tail lamp
-  g.push(`  <path d="M${f1(FRAME.x0 + 4)},${f1(lampY)} L${f1(FRAME.x0 + P.drawL * 0.07)},${f1(lampY - 5)} L${f1(FRAME.x0 + P.drawL * 0.07)},${f1(lampY + 8)} L${f1(FRAME.x0 + 4)},${f1(lampY + 13)} Z" fill="${spec.tailLamp || "rgba(200,20,40,0.82)"}"/>`);
-
-  // front splitter / flap
-  g.push(`  <g id="frontFlapArt"><rect x="${f1(FRAME.x1 - P.drawL * 0.10)}" y="${f1(P.sillY + 8)}" width="${f1(P.drawL * 0.085)}" height="6" rx="3" fill="#101318" stroke="${acc}" stroke-opacity="0.5"/></g>`);
-
-  // exhausts
-  const ex = spec.exhaust || { kind: "twin", n: 2 };
-  const exY = P.sillY + 10, ex0 = FRAME.x0 + P.drawL * 0.06;
-  let exs = "";
-  if (ex.kind === "quad" || ex.kind === "twin" || ex.kind === "single") {
-    const n = ex.n || (ex.kind === "quad" ? 4 : ex.kind === "twin" ? 2 : 1);
-    for (let i = 0; i < n; i++) exs += `<circle cx="${f1(ex0 + i * 15 + (i >= 2 ? 8 : 0))}" cy="${f1(exY)}" r="6"/>`;
-  } else if (ex.kind === "side") {
-    for (let i = 0; i < (ex.n || 6); i++) exs += `<rect x="${f1(P.axRear + P.rR * 1.2 + i * 12)}" y="${f1(exY - 4)}" width="8" height="7" rx="2"/>`;
-  } else if (ex.kind === "stack") {
-    exs += `<rect x="${f1(ex0)}" y="${f1(exY - 10)}" width="30" height="9" rx="4"/><rect x="${f1(ex0)}" y="${f1(exY + 2)}" width="30" height="9" rx="4"/>`;
-  }
-  g.push(`  <g id="quadExhaustArt">${exs}</g>`);
-
-  // the badge / name on the flank
-  if (spec.badge) {
-    g.push(`  <text x="${f1(P.xAt(spec.badgeX != null ? spec.badgeX : 0.5))}" y="${f1(P.yAt(0.56))}" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">${spec.badge}</text>`);
-  }
-  // whatever else is peculiar to this car
-  if (spec.extra) g.push("  " + spec.extra(P, f1));
   g.push(`</g>`);
 
   /* ---- the wheels, drawn last so they sit in the arch mouths ---- */
