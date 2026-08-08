@@ -5,6 +5,11 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { renderCar } from "./render.mjs";
 import { SPECS } from "./specs.mjs";
 
+// HANDS OFF. These eleven were drawn by hand, car by car, and they are the standard the rest
+// are trying to reach: evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5, slr300, czinger.
+// The generator overwrote six of them once. It does not get a second go.
+const HAND_DRAWN = ["evo", "gtr", "m5", "r8", "mclarenf1", "t33", "agera", "u9", "db5", "slr300", "czinger"];
+
 const FILES = {
   bugatti: "Bugatti Chiron Super Sport 300+ simulator.html",
   aston: "Aston Martin Valkyrie simulator.html",
@@ -28,12 +33,6 @@ const FILES = {
   amg: "Mercedes-AMG GT Black Series simulator.html",
   porsche918: "Porsche 918 Spyder simulator.html",
   supra: "Toyota Supra MK4 simulator.html",
-  evo: "Mitsubishi Lancer Evo X FQ-440 simulator.html",
-  gtr: "Nissan GT-R Nismo simulator.html",
-  m5: "BMW M5 simulator.html",
-  r8: "Audi R8 V10 Performance simulator.html",
-  mclarenf1: "McLaren F1 1993 simulator.html",
-  t33: "Gordon Murray T.33 simulator.html",
   t50s: "Gordon Murray T50s Niki Lauda simulator.html",
   alfa33: "Alfa Romeo 33 Stradale simulator.html",
   project8: "Jaguar XE SV Project 8 simulator.html",
@@ -42,9 +41,16 @@ const FILES = {
 
 let done = 0;
 for (const [key, file] of Object.entries(FILES)) {
+  if (HAND_DRAWN.includes(key)) { console.log("refusing to touch hand-drawn art: " + key); continue; }
   const spec = SPECS[key];
   if (!spec || spec.skip) { console.log("no spec: " + key); continue; }
   let s = readFileSync(file, "utf8");
+  // running this twice corrupts the file: the generated SVG contains a <style> block, and the
+  // brace matcher below counts ITS braces too, so the second pass finds the wrong closing brace
+  // and swallows whatever function follows. Once is once.
+  if (s.includes("drawn from the car's own published dimensions")) {
+    console.log("already generated, skipping: " + key); continue;
+  }
   const i = s.indexOf("  function injectExterior() {");
   if (i < 0) { console.log("no injectExterior: " + file); continue; }
   let d = 0, j = s.indexOf("{", i), end = j;

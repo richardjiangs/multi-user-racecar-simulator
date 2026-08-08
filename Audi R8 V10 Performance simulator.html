@@ -2736,95 +2736,94 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* Audi R8 exterior — side profile (long clamshell bonnet, matrix LED lamps,
      mid-engined coupé: cab-forward, carbon sideblade between door and rear wheel, fixed carbon spoiler) */
-  /* Audi R8 V10 Performance — drawn from the car's own published dimensions: 4426 mm long
-     on a 2650 mm wheelbase, 1240 mm tall, 900/876 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Audi R8 V10 Performance — drawn from the car's own published dimensions: 4426 mm long
-     on a 2650 mm wheelbase, 1240 mm tall, 900/876 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
-  /* Audi R8 V10 Performance — drawn from the car's own published dimensions: 4426 mm long
-     on a 2650 mm wheelbase, 1240 mm tall, 900/876 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Audi R8 V10 Performance side">
       <defs>
-        <linearGradient id="bkr8Paint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#3f8fe0"/><stop offset="0.45" stop-color="#1a4f9c"/><stop offset="1" stop-color="#08203f"/>
-        </linearGradient>
-        <linearGradient id="bkr8Glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#cfe0f0" stop-opacity="0.92"/><stop offset="0.55" stop-color="#4a6376" stop-opacity="0.85"/><stop offset="1" stop-color="#0d151c"/>
-        </linearGradient>
-        <linearGradient id="bkr8Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bkr8Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bkr8Shine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bkr8Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkr8Clip"><path d="M78.0,188.4 Q74.0,278.2 88.0,290.0 L169.9,309.0 A75.1,70.6 0 0 1 320.2,309.0 L677.3,309.0 A73.1,68.7 0 0 1 823.5,309.0 L912.0,297.8 Q922.0,292.2 922.0,264.0 L922.0,235.8 Q884.0,235.8 846.0,209.9 Q803.8,209.9 761.6,188.4 Q723.7,188.4 685.7,162.5 Q656.1,162.5 626.6,123.7 Q584.4,123.7 542.2,102.2 Q495.8,102.2 449.4,110.8 Q398.7,110.8 348.1,149.6 Q280.6,149.6 213.0,175.4 Q145.5,175.4 78.0,188.4 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
+        <linearGradient id="auBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4497e2"/><stop offset="0.52" stop-color="#175a9d"/><stop offset="1" stop-color="#06162a"/></linearGradient>
+        <linearGradient id="auLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#24282e"/><stop offset="1" stop-color="#06080a"/></linearGradient>
+        <linearGradient id="auGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadeef"/><stop offset="1" stop-color="#0f1a22"/></linearGradient>
+        <radialGradient id="auHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
+        <filter id="auGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3.2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <linearGradient id="auBlade" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#31363d"/><stop offset="0.5" stop-color="#13161a"/><stop offset="1" stop-color="#31363d"/></linearGradient><style>
+          .grWeave{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .42s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-13deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkr8Glow);}
+          #doorArt{transform-box:fill-box;transform-origin:14% 94%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-13deg) translate(-11px,-8px);}
+          #quadExhaustArt ellipse{fill:#9aa2ab;}
+          #quadExhaustArt.hot ellipse{fill:#ff8a3c;filter:url(#auGlow);}
         </style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+      <ellipse cx="500" cy="366" rx="392" ry="15" fill="rgba(0,0,0,0.5)"/>
+      <g id="rearWingArt">
+        <path d="M113.9,195.3 Q188,157.8 285.5,157.6 L287.8,170.6 Q188,170.8 113.9,208.3 Z" fill="url(#auBlade)" stroke="#5b636d" stroke-width="1.3"/>
+        <path d="M117.8,191.9 Q188,158.8 281.6,158.7" fill="none" stroke="rgba(187,10,48,0.85)" stroke-width="2.6"/>
+      </g>
+
       <g id="bcBody">
-        <path d="M78.0,188.4 Q74.0,278.2 88.0,290.0 L169.9,309.0 A75.1,70.6 0 0 1 320.2,309.0 L677.3,309.0 A73.1,68.7 0 0 1 823.5,309.0 L912.0,297.8 Q922.0,292.2 922.0,264.0 L922.0,235.8 Q884.0,235.8 846.0,209.9 Q803.8,209.9 761.6,188.4 Q723.7,188.4 685.7,162.5 Q656.1,162.5 626.6,123.7 Q584.4,123.7 542.2,102.2 Q495.8,102.2 449.4,110.8 Q398.7,110.8 348.1,149.6 Q280.6,149.6 213.0,175.4 Q145.5,175.4 78.0,188.4 Z" fill="url(#bkr8Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bkr8Clip)">
-        <path d="M78.0,158.2 Q500.0,132.3 922.0,158.2 L922.0,179.7 Q500.0,153.9 78.0,184.0 Z" fill="url(#bkr8Shine)"/>
-        <rect x="0" y="294.8" width="1000" height="236.5" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M168.6,309.0 A76.4,72.1 0 0 1 321.5,309.0" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M168.6,309.0 A76.4,72.1 0 0 1 321.5,309.0" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.45"/>
-        <path d="M676.2,309.0 A74.2,70.0 0 0 1 824.6,309.0" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M676.2,309.0 A74.2,70.0 0 0 1 824.6,309.0" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bkr8Clip)">
-        <path d="M643.5,166.8 L626.6,128.0 Q584.4,128.0 542.2,106.5 Q495.8,106.5 449.4,115.1 L398.7,166.8 Z" fill="url(#bkr8Glass)" stroke="rgba(220,236,250,0.5)" stroke-width="1.2"/>
-        <path d="M626.6,166.8 L634.6,108.6" stroke="#12161b" stroke-width="5"/>
-        <path d="M92.0,196.7 Q500.0,189.7 902.0,192.7" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M318.5,304.3 L679.1,302.3 L675.8,316.3 L321.8,318.3 Z" fill="url(#bkr8Low)" stroke="rgba(120,132,146,0.35)"/>
-        <path d="M626.6,158.2 L623.6,303.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M457.8,158.2 L454.8,303.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M457.8,166.8 L626.6,162.5 L622.6,299.0 L455.8,301.0 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="530.2" y="201.3" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M850.3,175.4 q42.2,-2 52.3,9" fill="none" stroke="#f2f6fa" stroke-width="5" stroke-linecap="round"/>
-        <path d="M82.0,175.4 L137.1,170.4 L137.1,183.4 L82.0,188.4 Z" fill="rgba(200,20,40,0.82)"/>
-        <path d="M466.2,145.3 L567.5,153.9 L567.5,201.3 L466.2,188.4 Z" fill="rgba(10,16,24,0.5)" stroke="rgba(226,232,240,0.5)" stroke-width="1.6"/>
+        <path d="M110,319.6 L110,225.6 110,225.6 Q133.4,199.4 160.7,195.6 Q188,191.8 281.6,190.7 L375.2,189.6 Q445.4,132.8 472.7,131.2 Q500,129.5 550.7,129.5 Q601.4,129.5 628.7,134.4 Q656,139.3 695,171.6 L734,203.8 Q812,213.6 839.3,220.7 Q866.6,227.8 878.3,242 L890,256.2 L890,319.6 L802.6,319.6 A69.1 96.2 0 0 0 664.4,319.6 L335.6,319.6 A69.1 96.2 0 0 0 197.4,319.6 L110,319.6 Z" fill="url(#auBody)" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+        <path d="M394.7,192.8 Q461,139.3 486.4,137.7 Q511.7,136 550.7,136 Q589.7,136 617,140.4 Q644.3,144.8 679.4,173.8 L714.5,202.7 Z" fill="url(#auGlass)" stroke="#7a838c" stroke-width="1.4"/>
+        <path d="M461,136.7 Q550.7,129.9 644.3,142.1" fill="none" stroke="#0b0d10" stroke-width="10" stroke-linecap="round"/><path d="M327.6,317.6 L672.4,314.6 L668.4,332.6 L331.6,335.6 Z" fill="url(#auLow)" stroke="#454b52" stroke-width="1.2"/>
+        <!-- THE SIDEBLADE: a separate panel between the door and the rear wheel -->
+        <path d="M344,193.9 L392.4,179.7 L395.5,260.6 Q367.4,266.1 340.1,261.7 Z" fill="url(#auBlade)" stroke="#8b949d" stroke-width="1.9"/>
+        <path d="M353.4,216.9 Q375.2,216.9 390.8,224.5" fill="none" stroke="rgba(187,10,48,0.6)" stroke-width="2.2"/>
+        <!-- side intake AHEAD of the blade, feeding the V10 -->
+        <g fill="#07090c" stroke="#7c848c" stroke-width="1.1"><rect x="410.3" y="221.3" width="48" height="9" rx="4.5"/><rect x="410.3" y="236.6" width="40" height="8" rx="4"/></g>
+        <!-- slatted engine deck behind the cabin, hung off the deck surface -->
+        <g stroke="#0b0e12" stroke-width="3.4">
+          <path d="M188,199.8 l0,30"/><path d="M219.2,199.4 l0,31"/>
+          <path d="M250.4,199 l0,32"/><path d="M281.6,198.7 l0,33"/>
+          <path d="M312.8,198.3 l0,33"/><path d="M344,197.9 l0,33"/>
         </g>
-        <g id="frontFlapArt"><rect x="833.4" y="315.0" width="71.7" height="6" rx="3" fill="#101318" stroke="#c8102e" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"><circle cx="124.4" cy="319.0" r="6"/><circle cx="139.4" cy="319.0" r="6"/></g>
-        <path d="M640.6,149.6 l9,-6 l17,-3 l1,13 l-25,4 Z" fill="#0b0e12"/>
+        <!-- single crease along the flanks -->
+        <path d="M125.6,236.6 Q461,228.9 874.4,243.1" fill="none" stroke="rgba(255,255,255,0.17)" stroke-width="2.4" stroke-linecap="round"/>
+        <path d="M197.4,319.6 A69.1 96.2 0 0 1 335.6,319.6" fill="none" stroke="rgba(0,0,0,0.32)" stroke-width="4"/><path d="M664.4,319.6 A69.1 96.2 0 0 1 802.6,319.6" fill="none" stroke="rgba(0,0,0,0.32)" stroke-width="4"/>
+        <!-- short bonnet with louvres over the luggage bay -->
+        <g fill="#0d1015" stroke="#6a727a" stroke-width="1"><rect x="769.1" y="218.1" width="46" height="8" rx="4"/><rect x="823.7" y="228.7" width="32" height="7" rx="3.5"/></g>
+        <!-- single-frame nose: low wide mouth, LED blade, carbon splitter -->
+        <path d="M823.7,240.9 q34,-3 46,10" fill="none" stroke="#eef4f8" stroke-width="5.4" stroke-linecap="round"/>
+        <path d="M831.5,255.1 q26,-2 34,6" fill="none" stroke="rgba(255,120,150,0.7)" stroke-width="2.2"/>
+        <path d="M847.1,266.1 L890,258.4 L890,304.3 L843.2,307.6 Z" fill="#0a0e12" stroke="rgba(187,10,48,0.5)" stroke-width="1.2"/>
+        <path d="M753.5,309.8 L886.1,306.5 L882.2,328.3 L749.6,330.5 Z" fill="url(#auBlade)" stroke="#4c545e"/>
+        <g id="frontFlapArt"><rect x="718.4" y="324" width="42" height="7" rx="3.5" fill="#141317" stroke="rgba(187,10,48,0.5)"/></g>
+        <!-- door with the R8's deep cut-out and the blade mirror on a stalk -->
+        <g id="doorArt">
+          <path d="M482.8,192.8 L656,195 L700.5,216.9 L696.6,301 L486.7,303.2 Z" fill="rgba(255,255,255,0.05)" stroke="rgba(150,162,175,0.6)" stroke-width="1.3"/>
+          <path d="M511.7,247.5 Q593.6,242 671.6,249.7" fill="none" stroke="rgba(0,0,0,0.24)" stroke-width="2.2"/>
+          <path d="M704.4,187.4 l22,-8 l0,14 l-22,5 Z" fill="url(#auBlade)"/>
+          <rect x="628.7" y="246.4" width="20" height="5" rx="2.5" fill="#3b4148"/>
+        </g>
+        <!-- slim wraparound tail lamp -->
+        <path d="M114.7,223.4 L170.8,204.9 L170.8,216.9 L114.7,235.5 Z" fill="rgba(187,10,48,0.8)"/>
+        <!-- two big oval tips + diffuser strakes -->
+        <g id="quadExhaustArt"><ellipse cx="141.2" cy="310.9" rx="16" ry="9"/><ellipse cx="188" cy="310.9" rx="16" ry="9"/></g>
+        <!-- decals: R8 V10 script + the four rings -->
+        <text x="500" y="278.1" font-family="ui-sans-serif" font-size="12" fill="#dcebfa" letter-spacing="4.4">R8 V10</text>
+        <g transform="translate(620.9,273.7)"><g fill="none" stroke="rgba(238,246,253,0.88)" stroke-width="1.8"><circle cx="-15" cy="0" r="7"/><circle cx="-5" cy="0" r="7"/><circle cx="5" cy="0" r="7"/><circle cx="15" cy="0" r="7"/></g></g>
       </g>
       <g>
-      <circle cx="245.04563940352463" cy="263.258020786263" r="66.7" fill="#0a0b0e"/>
-      <circle cx="245.04563940352463" cy="263.258020786263" r="66.7" fill="none" stroke="#1b1f25" stroke-width="8.7"/>
-      <circle cx="245.04563940352463" cy="263.258020786263" r="60.1" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="245.04563940352463" cy="263.258020786263" r="41.4" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M254.8,258.8 L286.0,257.1 L286.0,269.4 L254.8,267.7 Z" fill="#2b3138"/><path d="M252.3,271.1 L263.6,300.3 L251.8,304.1 L243.8,273.9 Z" fill="#2b3138"/><path d="M239.8,272.6 L215.6,292.3 L208.3,282.3 L234.6,265.4 Z" fill="#2b3138"/><path d="M234.6,261.1 L208.3,244.2 L215.6,234.2 L239.8,254.0 Z" fill="#2b3138"/><path d="M243.8,252.6 L251.8,222.4 L263.6,226.2 L252.3,255.4 Z" fill="#2b3138"/></g>
-      <circle cx="245.04563940352463" cy="263.258020786263" r="8.7" fill="url(#bkr8Hub)"/>
-    </g>
+        <circle cx="266.5" cy="286.3" r="61.7" fill="#0a0b0e"/><circle cx="266.5" cy="286.3" r="61.7" fill="none" stroke="#bb0a30" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(266.5,286.3) scale(1.2)">
+          ${turbine()}
+        </g></g>
+        <circle cx="266.5" cy="286.3" r="13.6" fill="url(#auHub)"/>
+      </g>
       <g>
-      <circle cx="750.3777677361048" cy="265.16493447808404" r="64.8" fill="#0a0b0e"/>
-      <circle cx="750.3777677361048" cy="265.16493447808404" r="64.8" fill="none" stroke="#1b1f25" stroke-width="8.4"/>
-      <circle cx="750.3777677361048" cy="265.16493447808404" r="58.4" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="750.3777677361048" cy="265.16493447808404" r="40.2" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M759.8,260.9 L790.1,259.2 L790.1,271.2 L759.8,269.5 Z" fill="#2b3138"/><path d="M757.4,272.8 L768.4,301.1 L757.0,304.8 L749.2,275.5 Z" fill="#2b3138"/><path d="M745.3,274.2 L721.7,293.4 L714.7,283.7 L740.2,267.2 Z" fill="#2b3138"/><path d="M740.2,263.1 L714.7,246.6 L721.7,237.0 L745.3,256.1 Z" fill="#2b3138"/><path d="M749.2,254.9 L757.0,225.5 L768.4,229.2 L757.4,257.5 Z" fill="#2b3138"/></g>
-      <circle cx="750.3777677361048" cy="265.16493447808404" r="8.4" fill="url(#bkr8Hub)"/>
-    </g>
+        <circle cx="733.5" cy="286.3" r="61.7" fill="#0a0b0e"/><circle cx="733.5" cy="286.3" r="61.7" fill="none" stroke="#bb0a30" stroke-width="2.2"/>
+        <g class="grWeave"><g transform="translate(733.5,286.3) scale(1.2)">
+          ${turbine()}
+        </g></g>
+        <circle cx="733.5" cy="286.3" r="13.6" fill="url(#auHub)"/>
+      </g>
     </svg>
     `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
     app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
     app.el.bcBody = document.getElementById("bcBody");
-  }function turbine() { let s = '<circle r="41" fill="#0f1217" stroke="#23282f" stroke-width="4"/>'; for (let i = 0; i < 5; i++) { const c = i * 72 * Math.PI / 180; s += '<path d="M' + (13 * Math.cos(c)).toFixed(1) + ',' + (13 * Math.sin(c)).toFixed(1) + ' L' + (39 * Math.cos(c - 0.28)).toFixed(1) + ',' + (39 * Math.sin(c - 0.28)).toFixed(1) + ' L' + (33 * Math.cos(c)).toFixed(1) + ',' + (33 * Math.sin(c)).toFixed(1) + ' L' + (39 * Math.cos(c + 0.28)).toFixed(1) + ',' + (39 * Math.sin(c + 0.28)).toFixed(1) + ' Z" fill="#3a4149" stroke="#6e7885" stroke-width="0.7"/>'; } return s + '<circle r="41" fill="none" stroke="#767f8c" stroke-width="1.2"/>'; }
+  }
+  function turbine() { let s = '<circle r="41" fill="#0f1217" stroke="#23282f" stroke-width="4"/>'; for (let i = 0; i < 5; i++) { const c = i * 72 * Math.PI / 180; s += '<path d="M' + (13 * Math.cos(c)).toFixed(1) + ',' + (13 * Math.sin(c)).toFixed(1) + ' L' + (39 * Math.cos(c - 0.28)).toFixed(1) + ',' + (39 * Math.sin(c - 0.28)).toFixed(1) + ' L' + (33 * Math.cos(c)).toFixed(1) + ',' + (33 * Math.sin(c)).toFixed(1) + ' L' + (39 * Math.cos(c + 0.28)).toFixed(1) + ',' + (39 * Math.sin(c + 0.28)).toFixed(1) + ' Z" fill="#3a4149" stroke="#6e7885" stroke-width="0.7"/>'; } return s + '<circle r="41" fill="none" stroke="#767f8c" stroke-width="1.2"/>'; }
 
   /* Audi R8 cockpit SVG — digital GR cluster, round GR wheel, R8 Command touchscreen */
   function injectArt() {

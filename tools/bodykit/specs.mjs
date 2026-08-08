@@ -328,7 +328,8 @@ export const SPECS = {
     headlamp: "strip", lampY: 0.40, rim: "five", badge: "", exhaust: { kind: "single", n: 1 },
     wing: { x: 0.88, y: 0.28, w: 0.18, drop: 0.14 },
   },
-  evo: {
+  evo: { skip: true },   // hand-drawn — the generator must not touch it
+  evoOLD: {
     name: "Mitsubishi Lancer Evolution X",
     lengthMm: 4505, wheelbaseMm: 2650, heightMm: 1480, frontOverhangMm: 890, rearOverhangMm: 965,
     wheelDiaFrontMm: 660, wheelDiaRearMm: 660, sillMm: 145,
@@ -341,7 +342,8 @@ export const SPECS = {
     headlamp: "strip", lampY: 0.48, rim: "ten", badge: "", exhaust: { kind: "single", n: 1 },
     wing: { x: 0.86, y: 0.24, w: 0.20, drop: 0.20 },
   },
-  gtr: {
+  gtr: { skip: true },   // hand-drawn — the generator must not touch it
+  gtrOLD: {
     name: "Nissan GT-R Nismo",
     lengthMm: 4690, wheelbaseMm: 2780, heightMm: 1370, frontOverhangMm: 940, rearOverhangMm: 970,
     wheelDiaFrontMm: 690, wheelDiaRearMm: 700, sillMm: 130,
@@ -355,7 +357,8 @@ export const SPECS = {
     wing: { x: 0.88, y: 0.34, w: 0.18, drop: 0.10 },
     extra: (P, f) => `<g fill="rgba(200,16,46,0.85)">${[0, 1].map((i) => `<circle cx="${f(P.xAt(0.96 - i * 0.035))}" cy="${f(P.yAt(0.52))}" r="8"/>`).join("")}</g>`,
   },
-  m5: {
+  m5: { skip: true },   // hand-drawn — the generator must not touch it
+  m5OLD: {
     name: "BMW M5 (G90)",
     lengthMm: 5096, wheelbaseMm: 2995, heightMm: 1510, frontOverhangMm: 930, rearOverhangMm: 1171,
     wheelDiaFrontMm: 730, wheelDiaRearMm: 730, sillMm: 145,
@@ -366,7 +369,8 @@ export const SPECS = {
     doors: [0.32, 0.48, 0.64], creaseY: 0.58, archLift: 1.06, flareMm: 12, endLift: 0.18,
     headlamp: "strip", lampY: 0.48, rim: "turbine", badge: "M5", badgeX: 0.42, exhaust: { kind: "quad", n: 4 },
   },
-  r8: {
+  r8: { skip: true },   // hand-drawn — the generator must not touch it
+  r8OLD: {
     name: "Audi R8 V10 Performance",
     lengthMm: 4426, wheelbaseMm: 2650, heightMm: 1240, frontOverhangMm: 900, rearOverhangMm: 876,
     wheelDiaFrontMm: 680, wheelDiaRearMm: 700, sillMm: 110,
@@ -379,7 +383,8 @@ export const SPECS = {
     // the sideblade: the R8's one unmistakable feature
     extra: (P, f) => `<path d="M${f(P.xAt(0.54))},${f(P.yAt(0.24))} L${f(P.xAt(0.42))},${f(P.yAt(0.28))} L${f(P.xAt(0.42))},${f(P.yAt(0.50))} L${f(P.xAt(0.54))},${f(P.yAt(0.44))} Z" fill="rgba(10,16,24,0.5)" stroke="rgba(226,232,240,0.5)" stroke-width="1.6"/>`,
   },
-  mclarenf1: {
+  mclarenf1: { skip: true },   // hand-drawn — the generator must not touch it
+  mclarenf1OLD: {
     name: "McLaren F1 (1993)",
     lengthMm: 4287, wheelbaseMm: 2718, heightMm: 1140, frontOverhangMm: 800, rearOverhangMm: 769,
     wheelDiaFrontMm: 630, wheelDiaRearMm: 665, sillMm: 105,
@@ -392,7 +397,8 @@ export const SPECS = {
     // the roof snorkel that feeds the BMW V12
     extra: (P, f) => `<path d="M${f(P.xAt(0.50))},${f(P.yAt(0.03))} l-14,-10 l-14,10 Z" fill="#0c1116" stroke="rgba(255,208,138,0.6)"/>`,
   },
-  t33: {
+  t33: { skip: true },   // hand-drawn — the generator must not touch it
+  t33OLD: {
     name: "Gordon Murray T.33",
     lengthMm: 4399, wheelbaseMm: 2650, heightMm: 1131, frontOverhangMm: 890, rearOverhangMm: 859,
     wheelDiaFrontMm: 660, wheelDiaRearMm: 700, sillMm: 100,
