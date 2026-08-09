@@ -1,6 +1,6 @@
 // render.mjs — turn one car's real dimensions into its side-profile SVG.
 import { FRAME, profile, bodyPath, wheel } from "./bodykit.mjs";
-import { greenhouse, dloPath, frontEnd, rearEnd, rearSpoiler, sideKit } from "./detail.mjs";
+import { greenhouse, dloPath, frontEnd, rearEnd, rearSpoiler, sideKit, livery } from "./detail.mjs";
 
 const f1 = (n) => Number(n).toFixed(1);
 
@@ -85,6 +85,12 @@ export function renderCar(spec) {
     const y = P.sillY - P.bodyH * 0.02;
     g.push(`  <path d="M${f1(P.axRear + P.rR * 1.1)},${f1(y)} L${f1(P.axFront - P.rF * 1.1)},${f1(y - 2)} L${f1(P.axFront - P.rF * 1.15)},${f1(y + 12)} L${f1(P.axRear + P.rR * 1.15)},${f1(y + 14)} Z" fill="url(#${ID("Low")})" stroke="rgba(120,132,146,0.35)"/>`);
   }
+
+  // the car's real launch livery — stripes, a carbon lower half, Le Mans hoops, a two-tone break.
+  // Thirteen mid-engined two-seaters of near-identical dimensions will always share a silhouette;
+  // what tells a Chiron 300+ from a Nevera at a glance is that one of them is black with orange
+  // stripes. Every body in here was one flat colour top to bottom.
+  g.push("  " + livery(spec, P, ID, acc));
 
   // the flank furniture that lies flat on the panel — ducts, blades, gills, strakes, stripes
   g.push("  " + sideKit(spec, P, ID, acc, "flat"));

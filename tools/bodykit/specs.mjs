@@ -12,7 +12,7 @@ export const SPECS = {
     name: "Bugatti Chiron Super Sport 300+",
     lengthMm: 4994, wheelbaseMm: 2711, heightMm: 1212, frontOverhangMm: 1020, rearOverhangMm: 1263,
     wheelDiaFrontMm: 700, wheelDiaRearMm: 745, sillMm: 115,
-    paint: ["#5b9ae8", "#173f7e", "#061932"], accent: "#9cc6ff",
+    paint: ["#3a4048", "#191d23", "#07090c"], accent: "#ff7a1c",
     roof: [[0.00, 0.46], [0.09, 0.33], [0.19, 0.24], [0.29, 0.19, "c"], 
            [0.37, 0.09], [0.46, 0.02], [0.55, 0.05], [0.64, 0.16, "c"], 
            [0.75, 0.29, "c"], [0.88, 0.36, "c"], [1.00, 0.41, "c"]],
@@ -24,6 +24,7 @@ export const SPECS = {
     rear: {lamp: "bar", vent: "louvre", ventX: 0.78, ventY: 0.3, ventN: 5, diffuser: true},
     side: [["cline", 0.42, 0.34], ["intake", 0.64, 0.42], ["fuelcap", 0.7, 0.3]],
     rimCol: "#9cc6ff",
+    livery: {kind: "stripes", col: "#ff7a1c", w: 8, gap: 8}, noseDrop: 0.34, tailDrop: 0.24,
   },
   pagani: {
     name: "Pagani Huayra BC",
@@ -42,6 +43,7 @@ export const SPECS = {
     rear: {lamp: "roundPair", vent: "glassEngine", ventX: 0.72, ventY: 0.22, diffuser: true},
     side: [["intake", 0.6, 0.36], ["gill", 0.24, 0.44]],
     rimCol: "#8ff0e4",
+    livery: {kind: "lower", at: 0.52, col: "#13181d", op: 0.92}, noseDrop: 0.26, tailDrop: 0.3,
   },
   mclaren: {
     name: "McLaren Speedtail",
@@ -61,6 +63,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "none", diffuser: true},
     side: [["coveredRear"], ["strake", 0.55, 0.6]],
     rimCol: "#c9d6e4",
+    livery: {kind: "split", at: 0.46, col: "#4a535d", op: 0.5}, noseDrop: 0.18, tailDrop: 0.14,
   },
   ferrari: {
     name: "Ferrari F80",
@@ -80,6 +83,7 @@ export const SPECS = {
     rear: {lamp: "bar", vent: "louvre", ventX: 0.74, ventY: 0.26, ventN: 6, diffuser: true},
     side: [["intake", 0.62, 0.36], ["skirt"]],
     rimCol: "#ffd24a",
+    livery: {kind: "upper", at: 0.24, col: "#14171c", op: 0.95}, noseDrop: 0.42, tailDrop: 0.3,
   },
   koenigsegg: {
     name: "Koenigsegg Jesko",
@@ -115,6 +119,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "louvre", ventX: 0.76, ventY: 0.22, ventN: 5, diffuser: true},
     side: [["intake", 0.62, 0.36], ["gill", 0.26, 0.42]],
     rimCol: "#8fd4ff",
+    livery: {kind: "lower", at: 0.58, col: "#161b21", op: 0.9}, noseDrop: 0.3, tailDrop: 0.26,
   },
   venom: {
     name: "Hennessey Venom F5",
@@ -131,6 +136,7 @@ export const SPECS = {
     rear: {lamp: "roundSingle", vent: "mesh", ventX: 0.74, ventY: 0.24, diffuser: true},
     side: [["intake", 0.62, 0.36], ["naca", 0.5, 0.36]],
     rimCol: "#8fb4ff",
+    livery: {kind: "lower", at: 0.6, col: "#12161b", op: 0.88}, noseDrop: 0.36, tailDrop: 0.28,
   },
   amgone: {
     name: "Mercedes-AMG One",
@@ -151,6 +157,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "louvre", ventX: 0.8, ventY: 0.26, ventN: 5, diffuser: true},
     side: [["airbox", 0.54, 0.06], ["fin", 0.62, 0.14], ["intake", 0.64, 0.38]],
     rimCol: "#00d7c4",
+    livery: {kind: "stripes", col: "#00d7c4", w: 5, gap: 5}, noseDrop: 0.4, tailDrop: 0.22,
   },
   p1: {
     name: "McLaren P1",
@@ -168,6 +175,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "mesh", ventX: 0.74, ventY: 0.24, diffuser: true},
     side: [["intake", 0.62, 0.34], ["skirt"]],
     rimCol: "#ff8a3c",
+    livery: {kind: "lower", at: 0.62, col: "#101418", op: 0.9}, noseDrop: 0.32, tailDrop: 0.24,
   },
   zr1: {
     name: "Chevrolet Corvette ZR1",
@@ -185,6 +193,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "glassEngine", ventX: 0.7, ventY: 0.2, diffuser: true, spoiler: "lip"},
     side: [["intake", 0.6, 0.36], ["gill", 0.26, 0.44]],
     rimCol: "#ffd23a",
+    livery: {kind: "upper", at: 0.2, col: "#141619", op: 0.95}, noseDrop: 0.28, tailDrop: 0.26,
   },
   evija: {
     name: "Lotus Evija",
@@ -201,6 +210,7 @@ export const SPECS = {
     rear: {lamp: "bar", lampCol: "#ff3a5c", vent: "none", diffuser: true},
     side: [["tunnel", 0.76, 0.34], ["chargeport", 0.4, 0.36]],
     rimCol: "#c8ff5a",
+    livery: {kind: "lower", at: 0.5, col: "#14181c", op: 0.94}, noseDrop: 0.22, tailDrop: 0.18,
   },
   nevera: {
     name: "Rimac Nevera",
@@ -216,6 +226,7 @@ export const SPECS = {
     rear: {lamp: "bar", vent: "mesh", ventX: 0.76, ventY: 0.26, diffuser: true},
     side: [["chargeport", 0.38, 0.34], ["intake", 0.62, 0.4]],
     rimCol: "#7fd8ff",
+    livery: {kind: "upper", at: 0.26, col: "#0f1419", op: 0.9}, noseDrop: 0.24, tailDrop: 0.22,
   },
   tuatara: {
     name: "SSC Tuatara",
@@ -233,6 +244,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "mesh", ventX: 0.76, ventY: 0.22, diffuser: true},
     side: [["fin", 0.66, 0.12], ["intake", 0.62, 0.38]],
     rimCol: "#d8e4f0",
+    livery: {kind: "upper", at: 0.22, col: "#0d1116", op: 0.95}, noseDrop: 0.26, tailDrop: 0.16,
   },
 
   aston: {
@@ -254,6 +266,7 @@ export const SPECS = {
     rear: {lamp: "roundSingle", vent: "louvre", ventX: 0.78, ventY: 0.24, ventN: 4, diffuser: true},
     side: [["fin", 0.62, 0.1], ["tunnel", 0.8, 0.44], ["airbox", 0.5, 0.04]],
     rimCol: "#9ef0d8",
+    livery: {kind: "lower", at: 0.56, col: "#0e1214", op: 0.92}, noseDrop: 0.46, tailDrop: 0.34,
   },
   revuelto: {
     name: "Lamborghini Revuelto",
@@ -275,6 +288,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "glassEngine", ventX: 0.72, ventY: 0.24, diffuser: true},
     side: [["intake", 0.6, 0.42], ["gill", 0.24, 0.48]],
     rimCol: "#c8ff2a",
+    livery: {kind: "lower", at: 0.66, col: "#101317", op: 0.88}, noseDrop: 0.3, tailDrop: 0.32,
   },
   /* ---------------- the classics ---------------- */
   gto: {
@@ -293,6 +307,7 @@ export const SPECS = {
     side: [["gill", 0.3, 0.48], ["fuelcap", 0.76, 0.34], ["sideNumber", 0.52, 0.42]],
     rimCol: "#e6eef4",
     raceNo: "24",
+    livery: {kind: "lower", at: 0.74, col: "#2b0508", op: 0.5}, noseDrop: 0.16, tailDrop: 0.18,
   },
   f40: {
     name: "Ferrari F40",
@@ -313,6 +328,7 @@ export const SPECS = {
     rear: {lamp: "roundPair", vent: "louvre", ventX: 0.74, ventY: 0.2, ventN: 7, diffuser: false},
     side: [["naca", 0.52, 0.4], ["intake", 0.64, 0.42]],
     rimCol: "#e8e8e8",
+    livery: {kind: "lower", at: 0.7, col: "#12100f", op: 0.85}, noseDrop: 0.24, tailDrop: 0.2,
   },
   p917: {
     name: "Porsche 917K",
@@ -332,6 +348,7 @@ export const SPECS = {
     rimCol: "#e8a33c",
     raceNo: "20",
     stripeCol: "#f07a1a",
+    livery: {kind: "hoops", col: "#f07a1a", at: [0.26, 0.6]}, noseDrop: 0.2, tailDrop: 0.16,
   },
   slr300: { skip: true },        // already drawn to standard
   db5: { skip: true },
@@ -356,6 +373,7 @@ export const SPECS = {
     rear: {lamp: "bar", vent: "none", diffuser: false},
     side: [["chargeport", 0.14, 0.42]],
     rimCol: "#b9c6d4",
+    livery: {kind: "lower", at: 0.8, col: "#14181d", op: 0.6}, noseDrop: 0.14, tailDrop: 0.14,
   },
   taycan: {
     name: "Porsche Taycan Turbo GT",
@@ -372,6 +390,7 @@ export const SPECS = {
     rear: {lamp: "bar", vent: "none", diffuser: false, spoiler: "lip"},
     side: [["chargeport", 0.18, 0.4], ["gill", 0.26, 0.5]],
     rimCol: "#d8e0e8",
+    livery: {kind: "lower", at: 0.8, col: "#14181d", op: 0.6}, noseDrop: 0.16, tailDrop: 0.16,
   },
   amg: {
     name: "Mercedes-AMG GT Black Series",
@@ -391,6 +410,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "none", diffuser: true},
     side: [["gill", 0.28, 0.44], ["strake", 0.5, 0.66]],
     rimCol: "#ffd23a",
+    livery: {kind: "lower", at: 0.72, col: "#101317", op: 0.8}, noseDrop: 0.3, tailDrop: 0.26,
   },
   porsche918: {
     name: "Porsche 918 Spyder",
@@ -409,6 +429,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "louvre", ventX: 0.76, ventY: 0.26, ventN: 5, diffuser: true},
     side: [["topexit", 0.68, 0.16], ["intake", 0.6, 0.38], ["rollhoop", 0.6, 0.22]],
     rimCol: "#c8d4e0",
+    livery: {kind: "stripes", col: "#c8102e", w: 5, gap: 5}, noseDrop: 0.26, tailDrop: 0.2,
   },
   supra: {
     name: "Toyota Supra MK4",
@@ -427,6 +448,7 @@ export const SPECS = {
     rear: {lamp: "roundPair", vent: "none", diffuser: false},
     side: [["fuelcap", 0.2, 0.4], ["gill", 0.26, 0.5]],
     rimCol: "#e0e6ec",
+    livery: {kind: "lower", at: 0.8, col: "#161a1f", op: 0.55}, noseDrop: 0.18, tailDrop: 0.18,
   },
   evo: { skip: true },   // hand-drawn — the generator must not touch it
   gtr: { skip: true },   // hand-drawn — the generator must not touch it
@@ -450,6 +472,7 @@ export const SPECS = {
     rear: {lamp: "roundPair", vent: "louvre", ventX: 0.72, ventY: 0.22, ventN: 5, diffuser: true},
     side: [["airbox", 0.52, 0.02], ["fan", 0.94, 0.4], ["intake", 0.62, 0.38]],
     rimCol: "#c8d0d8",
+    livery: {kind: "stripes", col: "#c8102e", w: 6, gap: 6}, noseDrop: 0.3, tailDrop: 0.22,
   },
   alfa33: {
     name: "Alfa Romeo 33 Stradale",
@@ -466,6 +489,7 @@ export const SPECS = {
     rear: {lamp: "roundPair", vent: "glassEngine", ventX: 0.74, ventY: 0.22, diffuser: true},
     side: [["intake", 0.62, 0.38], ["fuelcap", 0.7, 0.32]],
     rimCol: "#c8b088",
+    livery: {kind: "lower", at: 0.72, col: "#2a0a0d", op: 0.55}, noseDrop: 0.22, tailDrop: 0.24,
   },
   project8: {
     name: "Jaguar XE SV Project 8",
@@ -485,6 +509,7 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "none", diffuser: true},
     side: [["gill", 0.26, 0.52], ["strake", 0.5, 0.72]],
     rimCol: "#e8b23a",
+    livery: {kind: "lower", at: 0.78, col: "#101418", op: 0.7}, noseDrop: 0.2, tailDrop: 0.2,
   },
   s2000: {
     name: "Honda S2000",
@@ -503,5 +528,6 @@ export const SPECS = {
     rear: {lamp: "slim", vent: "none", diffuser: false, spoiler: "lip"},
     side: [["rollhoop", 0.64, 0.3], ["fuelcap", 0.22, 0.44]],
     rimCol: "#d0d8e0",
+    livery: {kind: "lower", at: 0.82, col: "#161a1f", op: 0.5}, noseDrop: 0.16, tailDrop: 0.16,
   },
 };

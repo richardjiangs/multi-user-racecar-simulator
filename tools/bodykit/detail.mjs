@@ -396,3 +396,44 @@ export function sideKit(spec, P, ID, acc, layer) {
   }
   return o.join("\n      ");
 }
+
+/* ------------------------------------------------------------------ *
+ * livery                                                             *
+ * ------------------------------------------------------------------ */
+
+/* Thirteen mid-engined two-seaters of near-identical dimensions will always share a silhouette —
+   a Chiron, a Nevera and a Tuatara really are the same box in life. What tells them apart at a
+   glance is the LIVERY, and every one of these was drawn in one flat colour top to bottom. These
+   are the real launch schemes: the 300+ record car is black with its orange stripes, the Evija
+   wears its exposed-carbon lower half, the 917K its Gulf hoops. */
+export function livery(spec, P, ID, acc) {
+  const L = spec.livery;
+  if (!L) return "";
+  const o = [];
+  const y = (t) => P.roofY + t * (P.sillY - P.roofY);
+  if (L.kind === "stripes") {
+    // a pair of longitudinal stripes over the spine, as on the Chiron 300+ and the Ford GT
+    const w = L.w || 9, gap = L.gap || 7;
+    for (const off of [-gap, gap]) {
+      const d = spec.roof.map(([xf, yf], i) =>
+        `${i ? "L" : "M"}${f(P.xAt(xf))},${f(P.yAt(yf) + off + 26)}`).join(" ");
+      o.push(`<path d="${d}" fill="none" stroke="${L.col}" stroke-width="${w}" opacity="0.95"/>`);
+    }
+  } else if (L.kind === "lower") {
+    // the lower half in a second material — exposed carbon on the Evija, black on the Valkyrie
+    o.push(`<rect x="0" y="${f(y(L.at || 0.55))}" width="1000" height="${f(P.bodyH)}" fill="${L.col}" opacity="${L.op || 0.9}"/>`);
+    o.push(`<path d="M0,${f(y(L.at || 0.55))} L1000,${f(y((L.at || 0.55) - 0.03))}" stroke="${acc}" stroke-width="1.6" opacity="0.7"/>`);
+  } else if (L.kind === "upper") {
+    // a contrasting roof and screen surround, the way a two-tone GT is painted
+    o.push(`<rect x="0" y="0" width="1000" height="${f(y(L.at || 0.34))}" fill="${L.col}" opacity="${L.op || 0.92}"/>`);
+  } else if (L.kind === "hoops") {
+    // Le Mans hoops: two transverse bands over the whole body, as on the Gulf 917
+    for (const xf of L.at || [0.30, 0.62]) {
+      o.push(`<path d="M${f(P.xAt(xf))},0 L${f(P.xAt(xf + 0.075))},0 L${f(P.xAt(xf + 0.075))},400 L${f(P.xAt(xf))},400 Z" fill="${L.col}" opacity="0.95"/>`);
+    }
+  } else if (L.kind === "split") {
+    // a diagonal two-tone break, as on the Speedtail's tail and the Agera's split
+    o.push(`<path d="M${f(P.xAt(L.at || 0.55))},0 L1000,0 L1000,400 L${f(P.xAt((L.at || 0.55) - 0.10))},400 Z" fill="${L.col}" opacity="${L.op || 0.9}"/>`);
+  }
+  return o.join("\n      ");
+}
