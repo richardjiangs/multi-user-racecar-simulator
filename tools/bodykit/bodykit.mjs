@@ -14,8 +14,15 @@
 
 export const FRAME = { w: 1000, h: 400, x0: 78, x1: 922, ground: 330 };
 
-/* the roofline is given as [xFromFront (fraction of length), y (fraction of height)],
-   front to back, y measured DOWN from the roof peak: 0 = highest point, 1 = at the sill */
+/* The roofline is given as [xFromFront (fraction of length), y (fraction of height)], front to
+   back, y measured DOWN from the roof peak: 0 = highest point, 1 = at the sill.
+
+   A THIRD element marks the point as a HARD CORNER: [x, y, "c"]. This matters more than any
+   other single thing here. Smoothing every point into its neighbour — which is what this did —
+   makes the whole top of the car one unbroken curve, so a 250 GTO, an F40 and a Model S all come
+   out as the same rounded loaf with two bites taken out of the bottom for the arches. Real cars
+   are full of hard creases: the base of a windscreen, the cut of a Kamm tail, the step down onto
+   a boot lid, the shoulder over a rear arch. Those corners ARE the shape. */
 export function profile(spec) {
   const { lengthMm, wheelbaseMm, heightMm, frontOverhangMm, rearOverhangMm } = spec;
   const drawL = FRAME.x1 - FRAME.x0;
@@ -51,11 +58,26 @@ export function bodyPath(spec, P) {
   const noseX = FRAME.x1 - (spec.noseInset != null ? spec.noseInset : 0) * P.drawL;
   const tailY = P.yAt(spec.roof[spec.roof.length - 1][1]);
 
-  const top = spec.roof.map(([xf, yf]) => [P.xAt(xf), P.yAt(yf)]);
+  const top = spec.roof.map(([xf, yf, k]) => [P.xAt(xf), P.yAt(yf), k === "c"]);
 
   // the underside is not a plank: it lifts away from the road at both ends, which is what
   // stops a body reading as a slab with wheels stuck to it
   const lift = (spec.endLift != null ? spec.endLift : 0.30) * (P.sillY - P.roofY);
+  // the sill between the arches. A mid-engined car pinches in above the floor, a saloon runs
+  // straight, a car on a spaceframe steps. Left as one straight line for all 26 it was the other
+  // half of the loaf — nothing between the two arch bites ever varied.
+  const rocker = spec.rocker || "flat";
+  const tuck = rocker === "tuck" ? P.bodyH * 0.055 : rocker === "step" ? P.bodyH * 0.03 : 0;
+  const midX = (P.axRear + P.axFront) / 2;
+  const between = (x0, x1) => {
+    if (rocker === "step") {
+      return `L${(x0 + (x1 - x0) * 0.12).toFixed(1)},${(P.sillY + tuck).toFixed(1)} ` +
+        `L${(x0 + (x1 - x0) * 0.88).toFixed(1)},${(P.sillY + tuck).toFixed(1)} L${x1.toFixed(1)},${P.sillY.toFixed(1)}`;
+    }
+    if (rocker === "tuck") return `Q${midX.toFixed(1)},${(P.sillY + tuck).toFixed(1)} ${x1.toFixed(1)},${P.sillY.toFixed(1)}`;
+    return `L${x1.toFixed(1)},${P.sillY.toFixed(1)}`;
+  };
+
   const d = [];
   d.push(`M${tailX.toFixed(1)},${tailY.toFixed(1)}`);
   // down the tail panel, then forward under the rear overhang, rising as it goes back
@@ -63,18 +85,20 @@ export function bodyPath(spec, P) {
   d.push(`L${(P.axRear - rearMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
   // REAR ARCH — over the wheel, not behind it
   d.push(`A${rearMouth.toFixed(1)},${(rearMouth * 0.94).toFixed(1)} 0 0 1 ${(P.axRear + rearMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
-  d.push(`L${(P.axFront - frontMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
+  d.push(between(P.axRear + rearMouth, P.axFront - frontMouth));
   // FRONT ARCH
   d.push(`A${frontMouth.toFixed(1)},${(frontMouth * 0.94).toFixed(1)} 0 0 1 ${(P.axFront + frontMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
   d.push(`L${(noseX - 10).toFixed(1)},${(P.sillY - lift * 0.20).toFixed(1)}`);
   // round the bottom corner of the bumper, then run UP its face to meet the bonnet line
   const noseTop = P.yAt(spec.roof[0][1]);
   d.push(`Q${noseX.toFixed(1)},${(P.sillY - lift * 0.30).toFixed(1)} ${noseX.toFixed(1)},${((P.sillY - lift * 0.30 + noseTop) / 2).toFixed(1)}`);
-  // up the face of the front bumper to the first roof point, then back along the top
+  // up the face of the front bumper to the first roof point, then back along the top —
+  // straight into and out of every point marked as a corner, smoothed through the rest
   for (let i = 0; i < top.length; i++) {
-    const [x, y] = top[i];
+    const [x, y, corner] = top[i];
     if (i === 0) { d.push(`L${x.toFixed(1)},${y.toFixed(1)}`); continue; }
-    const [px, py] = top[i - 1];
+    const [px, py, pCorner] = top[i - 1];
+    if (corner || pCorner) { d.push(`L${x.toFixed(1)},${y.toFixed(1)}`); continue; }
     const cx = (px + x) / 2;
     d.push(`Q${cx.toFixed(1)},${py.toFixed(1)} ${x.toFixed(1)},${y.toFixed(1)}`);
   }

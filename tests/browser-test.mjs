@@ -185,6 +185,42 @@ const check = (label, ok, detail) => {
     bare.concat(twins.map((t) => "identical kit: " + t)).slice(0, 6).join(" | "));
 }
 
+/* ---------- one loaf with two bites out of it is not twenty-six cars ----------
+   The top of every body was one unbroken chain of quadratics and the bottom was a straight line
+   between two circular arch cut-outs. No car had a single hard crease anywhere — no windscreen
+   base, no Kamm cut, no step onto a boot lid — so a 250 GTO, an F40 and a Model S came out as the
+   same rounded mass in different colours. Those creases are the shape. */
+{
+  const { SPECS } = await import("../tools/bodykit/specs.mjs");
+  const keys = Object.keys(SPECS).filter((k) => !SPECS[k].skip);
+  const creased = keys.filter((k) => SPECS[k].roof.some((p) => p[2] === "c"));
+  const shaped = keys.filter((k) => SPECS[k].rocker && SPECS[k].rocker !== "flat");
+  check(`${creased.length}/${keys.length} bodies have hard creases, ${shaped.length} a shaped rocker`,
+    creased.length >= 18 && shaped.length >= 14,
+    "the outlines have gone back to one smooth loaf — creases: " + creased.length + ", rockers: " + shaped.length);
+}
+
+/* ---------- an instrument pack drawn with the wrong arguments lands off the screen ----------
+   The U9 and the Nevera declared drawCluster(cx, cy, R) and drawCabinFrame still called them with
+   the donor's four-argument (w, h, dashY, sway) form. cx became the canvas WIDTH and R became
+   dashY, so the pack was drawn five times too big, centred on the bottom-right corner, over the
+   road. It looked like a gear letter the height of the window. */
+{
+  const { readdirSync, readFileSync } = await import("node:fs");
+  const bad = [];
+  for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const dec = src.match(/function drawCluster\(([^)]*)\)/);
+    if (!dec) continue;                      // the F1 cars carry their instruments on the wheel
+    const want = dec[1].split(",").filter((x) => x.trim()).length;
+    for (const m of src.matchAll(/(?<!function )\bdrawCluster\(([^;]*?)\);/g)) {
+      const got = m[1].split(",").length;
+      if (got !== want) bad.push(`${f.replace(/ simulator\.html/i, "")}: declared ${want} args, called with ${got}`);
+    }
+  }
+  check("every cluster is called with the arguments it declares", bad.length === 0, bad.join(" | "));
+}
+
 /* ---------- the generator has to be safe to run twice ----------
    The generated SVG carries its own <style> block, so a brace counter walking out of
    injectExterior() stops in the wrong place and swallows the next function — which is how six

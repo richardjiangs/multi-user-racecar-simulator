@@ -43,16 +43,18 @@ export function dloPath(spec, P, G) {
   const beltY = P.yAt(G.base);
   const inset = G.inset != null ? G.inset : 0.03;
   const dh = P.bodyH - P.sillH;
-  const pts = [[P.xAt(G.roofF), roofAt(spec, P, G.roofF) + inset * dh]];
-  for (const [xf, yf] of spec.roof) {
-    if (xf > G.roofF + 0.001 && xf < G.roofR - 0.001) pts.push([P.xAt(xf), P.yAt(yf + inset)]);
+  const pts = [[P.xAt(G.roofF), roofAt(spec, P, G.roofF) + inset * dh, false]];
+  for (const [xf, yf, k] of spec.roof) {
+    if (xf > G.roofF + 0.001 && xf < G.roofR - 0.001) pts.push([P.xAt(xf), P.yAt(yf + inset), k === "c"]);
   }
-  pts.push([P.xAt(G.roofR), roofAt(spec, P, G.roofR) + inset * dh]);
+  pts.push([P.xAt(G.roofR), roofAt(spec, P, G.roofR) + inset * dh, false]);
 
   const d = [`M${f(P.xAt(G.cowl))},${f(beltY)}`, `L${f(pts[0][0])},${f(pts[0][1])}`];
   for (let i = 1; i < pts.length; i++) {
-    const [px, py] = pts[i - 1], [x, y] = pts[i];
-    d.push(`Q${f((px + x) / 2)},${f(py)} ${f(x)},${f(y)}`);
+    const [px, py, pCorner] = pts[i - 1], [x, y, corner] = pts[i];
+    // the glass follows the same corners the body does, or the roof creases and the glass does not
+    if (corner || pCorner) d.push(`L${f(x)},${f(y)}`);
+    else d.push(`Q${f((px + x) / 2)},${f(py)} ${f(x)},${f(y)}`);
   }
   d.push(`L${f(P.xAt(G.deck))},${f(beltY)} Z`);
   return d.join(" ");
