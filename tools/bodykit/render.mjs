@@ -61,11 +61,16 @@ export function renderCar(spec) {
         <rect x="0" y="${f1(P.sillY - P.bodyH * 0.06)}" width="1000" height="${f1(P.bodyH)}" fill="rgba(0,0,0,0.16)"/>
       </g>`);
 
-  // the arch mouths, drawn as dark lips so the wheel sits INSIDE the body
-  const lip = (cx, r) => `  <path d="M${f1(cx - r * 1.06)},${f1(P.sillY)} A${f1(r * 1.06)},${f1(r)} 0 0 1 ${f1(cx + r * 1.06)},${f1(P.sillY)}" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M${f1(cx - r * 1.06)},${f1(P.sillY)} A${f1(r * 1.06)},${f1(r)} 0 0 1 ${f1(cx + r * 1.06)},${f1(P.sillY)}" fill="none" stroke="${acc}" stroke-width="1.4" opacity="0.45"/>`;
-  g.push(lip(P.axRear, P.rR * (spec.archLift || 1.06)));
-  g.push(lip(P.axFront, P.rF * (spec.archLift || 1.06)));
+  // the arch mouths, drawn as dark lips so the wheel sits INSIDE the body. Same tall ellipse as
+  // the body outline uses — a lip drawn as a semicircle sat below the tyre and framed the bite.
+  const lip = (cx, cy, r) => {
+    const a = spec.archLift || 1.06, rx = r * a + (spec.flareMm || 0) * P.k, ry = P.sillY - (cy - r * a);
+    const arc = `M${f1(cx - rx)},${f1(P.sillY)} A${f1(rx)},${f1(ry)} 0 0 1 ${f1(cx + rx)},${f1(P.sillY)}`;
+    return `  <path d="${arc}" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
+  <path d="${arc}" fill="none" stroke="${acc}" stroke-width="1.4" opacity="0.45"/>`;
+  };
+  g.push(lip(P.axRear, P.cyR, P.rR));
+  g.push(lip(P.axFront, P.cyF, P.rF));
 
   g.push(`  <g clip-path="url(#${ID("Clip")})">`);   // details belong to the body, not to the air
 

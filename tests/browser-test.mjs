@@ -185,6 +185,26 @@ const check = (label, ok, detail) => {
     bare.concat(twins.map((t) => "identical kit: " + t)).slice(0, 6).join(" | "));
 }
 
+/* ---------- the tyre has to sit INSIDE the arch ----------
+   This was the whole "half-eaten" complaint, and it was arithmetic, not taste. The arch was drawn
+   as a near-circle springing from the sill — rx and ry both about one tyre radius — so its apex
+   sat 29-39 px BELOW the top of the tyre on all 26 cars. The wheel bulged up through the opening
+   and the body around it read as a shallow scoop bitten out of the bottom edge. A wheel arch is a
+   TALL ellipse that goes over the tyre. */
+{
+  const { SPECS } = await import("../tools/bodykit/specs.mjs");
+  const { profile } = await import("../tools/bodykit/bodykit.mjs");
+  const proud = [];
+  for (const k of Object.keys(SPECS).filter((x) => !SPECS[x].skip)) {
+    const s = SPECS[k], P = profile(s), a = s.archLift || 1.06;
+    for (const [cy, r, end] of [[P.cyR, P.rR, "rear"], [P.cyF, P.rF, "front"]]) {
+      const over = (cy - r * a) - (cy - r);          // arch apex minus tyre top; must be negative
+      if (over > -1) proud.push(`${k} ${end}: tyre stands ${over.toFixed(0)}px out of its arch`);
+    }
+  }
+  check("every tyre sits inside its wheel arch", proud.length === 0, proud.slice(0, 6).join(" | "));
+}
+
 /* ---------- one loaf with two bites out of it is not twenty-six cars ----------
    The top of every body was one unbroken chain of quadratics and the bottom was a straight line
    between two circular arch cut-outs. No car had a single hard crease anywhere — no windscreen

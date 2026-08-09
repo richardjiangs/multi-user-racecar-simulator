@@ -48,10 +48,18 @@ export function profile(spec) {
 
 /* the body outline, WITH the arches cut into it — this is the whole difference */
 export function bodyPath(spec, P) {
+  // THE ARCH. This is where "a loaf with two bites out of it" actually came from. The arch was
+  // drawn as a near-circle springing from the sill line — rx and ry both about one tyre radius —
+  // so its apex sat 30-40 px BELOW the top of the tyre on every car in the garage. The wheel bulged
+  // up through the opening and what was left of the body read as a shallow scoop bitten out of the
+  // bottom edge. A real wheel arch is a TALL ellipse: it goes over the top of the tyre, so the
+  // tyre sits INSIDE it. (The hand-drawn Audi R8 has rx 69.1, ry 96.2 — ry is 1.4x rx.)
   const arch = spec.archLift != null ? spec.archLift : 1.06;     // how far the arch clears the tyre
-  const aR = P.rR * arch, aF = P.rF * arch;
   const flare = spec.flareMm != null ? spec.flareMm * P.k : 0;   // arch mouth wider than the tyre
-  const rearMouth = aR + flare, frontMouth = aF + flare;
+  const rearMouth = P.rR * arch + flare, frontMouth = P.rF * arch + flare;
+  // the apex is a whole tyre-radius above the axle, plus the clearance — never at the sill
+  const rearRise = P.sillY - (P.cyR - P.rR * arch);
+  const frontRise = P.sillY - (P.cyF - P.rF * arch);
   // the front bumper face and the tail panel are the FIRST and LAST roof points: a car's nose
   // has a height, and letting the roofline own it is what stops every body ending in a spike
   const tailX = FRAME.x0 + (spec.tailInset != null ? spec.tailInset : 0) * P.drawL;
@@ -83,11 +91,11 @@ export function bodyPath(spec, P) {
   // down the tail panel, then forward under the rear overhang, rising as it goes back
   d.push(`Q${(tailX - 4).toFixed(1)},${(P.sillY - lift * 0.55).toFixed(1)} ${(tailX + 10).toFixed(1)},${(P.sillY - lift * 0.34).toFixed(1)}`);
   d.push(`L${(P.axRear - rearMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
-  // REAR ARCH — over the wheel, not behind it
-  d.push(`A${rearMouth.toFixed(1)},${(rearMouth * 0.94).toFixed(1)} 0 0 1 ${(P.axRear + rearMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
+  // REAR ARCH — up OVER the top of the wheel and back down, not a scoop out of the sill
+  d.push(`A${rearMouth.toFixed(1)},${rearRise.toFixed(1)} 0 0 1 ${(P.axRear + rearMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
   d.push(between(P.axRear + rearMouth, P.axFront - frontMouth));
   // FRONT ARCH
-  d.push(`A${frontMouth.toFixed(1)},${(frontMouth * 0.94).toFixed(1)} 0 0 1 ${(P.axFront + frontMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
+  d.push(`A${frontMouth.toFixed(1)},${frontRise.toFixed(1)} 0 0 1 ${(P.axFront + frontMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
   d.push(`L${(noseX - 10).toFixed(1)},${(P.sillY - lift * 0.20).toFixed(1)}`);
   // round the bottom corner of the bumper, then run UP its face to meet the bonnet line
   const noseTop = P.yAt(spec.roof[0][1]);

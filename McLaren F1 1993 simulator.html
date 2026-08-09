@@ -2535,12 +2535,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   // deep pod, a smaller speedometer to its left and oil/water/fuel gauges right — cream
   // numerals on black, thin orange needles, exactly as XP5 had it. ----
   function drawCluster(w, h, dashY, sway) {
-    // A binnacle nearly a quarter of the screen tall swallowed the whole dash and left no
-    // scuttle under it. XP5's pod is a compact hood over three groups of dials, so it is sized
-    // like one — the same footprint the rest of the garage uses.
-    const R = Math.min(w, h) * 0.115;
-    const cx = w / 2 + sway, cy = dashY + R * 0.32;
-    const BW = R * 4.1, BH = R * 1.38, bx = cx - BW / 2, by = cy - BH / 2;
+    const R = Math.min(w, h) * 0.125;
+    const cx = w / 2 + sway, cy = dashY + R * 0.3;
+    const BW = R * 4.5, BH = R * 1.92, bx = cx - BW * 0.46, by = cy - BH / 2;
     ctx.save();
     ctx.fillStyle = "#0a0b0e";
     ctx.beginPath(); ctx.moveTo(bx - R * 0.2, by + R * 0.14); ctx.quadraticCurveTo(cx, by - R * 0.38, bx + BW + R * 0.2, by + R * 0.14);
@@ -2549,17 +2546,17 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.fill();
     ctx.strokeStyle = "rgba(255,139,48,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.stroke();
     ctx.restore();
-    // the big tach dead centre, the speedo smaller to its left, ancillaries in a row right
-    const tx = bx + BW * 0.44;
-    f1Dial(tx, cy, BH * 0.44, clamp(state.rpm / 8000, 0, 1), "rpm x1000", null, 8, 1, (SPEC.redlineRpm || 7500) / 8000);
-    f1Dial(bx + BW * 0.15, cy + R * 0.04, BH * 0.30, clamp(Math.abs(app.kmh(state.speedMps)) / 400, 0, 1), "km/h", Math.round(Math.abs(app.kmh(state.speedMps))), 400, 100, null);
-    // oil, water and fuel across the right of the pod rather than stacked down its whole height
+    // the big tach sits centre-left in the binnacle, the speedo smaller to its left
+    f1Dial(bx + BH * 0.86, cy, BH * 0.43, clamp(state.rpm / 8000, 0, 1), "rpm x1000", null, 8, 1, (SPEC.redlineRpm || 7500) / 8000);
+    f1Dial(bx + BH * 0.3, cy + R * 0.06, BH * 0.27, clamp(Math.abs(app.kmh(state.speedMps)) / 400, 0, 1), "km/h", Math.round(Math.abs(app.kmh(state.speedMps))), 400, 100, null);
+    // the three small ancillaries down the right
+    const sx = bx + BW - R * 0.5;
     [["OIL", clamp(0.3 + state.rpm / 9000, 0, 1)], ["WATER", clamp(0.34 + state.rpm / 12000, 0, 1)], ["FUEL", 0.68]]
-      .forEach(([lab, f], i) => f1Small(bx + BW * (0.70 + i * 0.13), cy + R * 0.02, R * 0.21, f, lab));
+      .forEach(([lab, f], i) => f1Small(sx, by + R * 0.42 + i * (BH - R * 0.9) / 2, R * 0.28, f, lab));
     ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillStyle = "#ffab6a"; ctx.font = `800 ${Math.round(R * 0.2)}px ui-sans-serif`;
-    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, tx, cy + BH * 0.36);
-    if (state.raceAero) { ctx.fillStyle = "#ffd24a"; ctx.font = `700 ${Math.round(R * 0.085)}px ui-sans-serif`; ctx.fillText("XP5 · LIMITER RAISED", cx, by - R * 0.14); }
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, bx + BH * 0.86, cy + BH * 0.36);
+    if (state.raceAero) { ctx.fillStyle = "#ffd24a"; ctx.font = `700 ${Math.round(R * 0.092)}px ui-sans-serif`; ctx.fillText("XP5 · LIMITER RAISED", cx + R * 0.2, by + R * 0.24); }
     ctx.restore();
   }
   function f1Dial(cx, cy, R, frac, label, bigVal, maxN, step, redFrac) {
