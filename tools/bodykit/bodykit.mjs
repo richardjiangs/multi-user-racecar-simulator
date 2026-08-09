@@ -76,6 +76,11 @@ export function bodyPath(spec, P) {
   // half of the loaf — nothing between the two arch bites ever varied.
   const rocker = spec.rocker || "flat";
   const tuck = rocker === "tuck" ? P.bodyH * 0.055 : rocker === "step" ? P.bodyH * 0.03 : 0;
+  // How far the valance hangs at each end. It was the same at both ends of all 26, so the bottom
+  // of every car was the same shape too: a splitter-low nose and a diffuser-high tail are as much
+  // of a car's stance as its roof is.
+  const noseDrop = (spec.noseDrop != null ? spec.noseDrop : 0.20) * (P.sillY - P.roofY);
+  const tailDrop = (spec.tailDrop != null ? spec.tailDrop : 0.34) * (P.sillY - P.roofY);
   const midX = (P.axRear + P.axFront) / 2;
   const between = (x0, x1) => {
     if (rocker === "step") {
@@ -89,17 +94,17 @@ export function bodyPath(spec, P) {
   const d = [];
   d.push(`M${tailX.toFixed(1)},${tailY.toFixed(1)}`);
   // down the tail panel, then forward under the rear overhang, rising as it goes back
-  d.push(`Q${(tailX - 4).toFixed(1)},${(P.sillY - lift * 0.55).toFixed(1)} ${(tailX + 10).toFixed(1)},${(P.sillY - lift * 0.34).toFixed(1)}`);
+  d.push(`Q${(tailX - 4).toFixed(1)},${(P.sillY - tailDrop * 0.62).toFixed(1)} ${(tailX + 10).toFixed(1)},${(P.sillY - tailDrop * 0.38).toFixed(1)}`);
   d.push(`L${(P.axRear - rearMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
   // REAR ARCH — up OVER the top of the wheel and back down, not a scoop out of the sill
   d.push(`A${rearMouth.toFixed(1)},${rearRise.toFixed(1)} 0 0 1 ${(P.axRear + rearMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
   d.push(between(P.axRear + rearMouth, P.axFront - frontMouth));
   // FRONT ARCH
   d.push(`A${frontMouth.toFixed(1)},${frontRise.toFixed(1)} 0 0 1 ${(P.axFront + frontMouth).toFixed(1)},${P.sillY.toFixed(1)}`);
-  d.push(`L${(noseX - 10).toFixed(1)},${(P.sillY - lift * 0.20).toFixed(1)}`);
+  d.push(`L${(noseX - 10).toFixed(1)},${(P.sillY - noseDrop * 0.30).toFixed(1)}`);
   // round the bottom corner of the bumper, then run UP its face to meet the bonnet line
   const noseTop = P.yAt(spec.roof[0][1]);
-  d.push(`Q${noseX.toFixed(1)},${(P.sillY - lift * 0.30).toFixed(1)} ${noseX.toFixed(1)},${((P.sillY - lift * 0.30 + noseTop) / 2).toFixed(1)}`);
+  d.push(`Q${noseX.toFixed(1)},${(P.sillY - noseDrop * 0.45).toFixed(1)} ${noseX.toFixed(1)},${((P.sillY - noseDrop * 0.45 + noseTop) / 2).toFixed(1)}`);
   // up the face of the front bumper to the first roof point, then back along the top —
   // straight into and out of every point marked as a corner, smoothed through the rest
   for (let i = 0; i < top.length; i++) {
