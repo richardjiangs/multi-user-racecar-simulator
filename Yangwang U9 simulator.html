@@ -2518,7 +2518,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.fillStyle = scr; ctx.fillRect(w * 0.08 + sway, dashY + h * 0.012, w * 0.84, h * 0.073);
     ctx.strokeStyle = "rgba(95,208,234,0.3)"; ctx.lineWidth = 1.2;
     ctx.strokeRect(w * 0.08 + sway, dashY + h * 0.012, w * 0.84, h * 0.073);
-    drawCluster(w, h, dashY, sway);
+    const R = Math.min(w, h) * 0.118;
+    const cy = dashY + R * 0.66;
+    const cx = w / 2 + sway;
+    drawCluster(cx, cy, R);
     drawWheel(w, h);
   }  // instantaneous combined output (hp) — all four motors together
   function powerPS() {
