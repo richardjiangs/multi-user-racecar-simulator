@@ -46,6 +46,59 @@ export function profile(spec) {
   };
 }
 
+/* THE HAUNCH — and this is the actual bite.
+ *
+ * Making the arch a tall ellipse so the tyre sits inside it was right, but it was only half the
+ * job. Over the bonnet and the rear deck the body's own top surface sits LOWER than the new arch
+ * apex, so the arch cut straight up through it: where the rising arch met the falling bonnet line
+ * the outline closed in a sharp concave V. That notch, twice per car, is what has been getting
+ * called a bite mark all along — and my arch fix put it there.
+ *
+ * A real car does not have that notch because it has a haunch: the wing over each wheel is raised
+ * above the tyre and the bonnet falls away INSIDE it. So the roofline is lifted over each axle,
+ * blended out over a fifth of the length, until the body is above its own arch everywhere.
+ */
+export function withHaunches(spec, P) {
+  const arch = spec.archLift != null ? spec.archLift : 1.06;
+  const span = spec.haunchSpan != null ? spec.haunchSpan : 0.13;   // how far the swell reaches
+  const dh = P.bodyH - P.sillH;
+  const axles = [
+    { xf: (FRAME.x1 - P.axFront) / P.drawL, apex: P.cyF - P.rF * arch },
+    { xf: (FRAME.x1 - P.axRear) / P.drawL, apex: P.cyR - P.rR * arch },
+  ];
+  // the highest the roofline may sit at a station, as a fraction, to stay clear of that arch
+  const capAt = (xf) => {
+    let cap = Infinity;
+    for (const a of axles) {
+      const d = Math.abs(xf - a.xf);
+      if (d > span) continue;
+      const t = 1 - d / span;                       // 1 over the axle, 0 at the edge of the swell
+      const need = (a.apex - 5 - P.roofY) / dh;     // the body must clear the arch by 5px
+      cap = Math.min(cap, need + (1 - t) * (1 - t) * 0.5);
+    }
+    return cap;
+  };
+  const roof = spec.roof.map(([xf, yf, k]) => {
+    const cap = capAt(xf);
+    return cap < yf ? [xf, Math.max(0, cap), k] : [xf, yf, k];
+  });
+  // and put a crest exactly over each axle, so the haunch has a top rather than a flat
+  for (const a of axles) {
+    if (a.xf <= 0.02 || a.xf >= 0.98) continue;
+    // ALWAYS put the crest exactly on the axle. Leaving it to whichever roof point happened to be
+    // nearby left the outline interpolating between two points that were each only just high
+    // enough, so it still dipped a few pixels under the arch in between — a small notch is still
+    // a notch.
+    const cap = capAt(a.xf);
+    if (!Number.isFinite(cap)) continue;
+    const near = roof.findIndex(([xf]) => Math.abs(xf - a.xf) < 0.006);
+    if (near >= 0) { roof[near] = [roof[near][0], Math.min(roof[near][1], Math.max(0, cap)), roof[near][2]]; continue; }
+    const at = roof.findIndex(([xf]) => xf > a.xf);
+    if (at > 0) roof.splice(at, 0, [Number(a.xf.toFixed(3)), Math.max(0, cap)]);
+  }
+  return { ...spec, roof };
+}
+
 /* the body outline, WITH the arches cut into it — this is the whole difference */
 export function bodyPath(spec, P) {
   // THE ARCH. This is where "a loaf with two bites out of it" actually came from. The arch was
