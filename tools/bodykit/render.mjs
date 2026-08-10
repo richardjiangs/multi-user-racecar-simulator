@@ -1,12 +1,15 @@
 // render.mjs — turn one car's real dimensions into its side-profile SVG.
-import { FRAME, profile, bodyPath, wheel } from "./bodykit.mjs";
+import { FRAME, profile, bodyPath, wheel, withHaunches } from "./bodykit.mjs";
 import { greenhouse, dloPath, frontEnd, rearEnd, rearSpoiler, sideKit, livery } from "./detail.mjs";
 
 const f1 = (n) => Number(n).toFixed(1);
 
-export function renderCar(spec) {
-  const ID = (n) => `bk${spec.key}${n}`;
-  const P = profile(spec);
+export function renderCar(rawSpec) {
+  const ID = (n) => `bk${rawSpec.key}${n}`;
+  const P = profile(rawSpec);
+  // lift the body over each axle before ANYTHING else reads the roofline, so the glass, the
+  // furniture and the outline all agree about where the top of the car is
+  const spec = withHaunches(rawSpec, P);
   const body = bodyPath(spec, P);
   const acc = spec.accent, body1 = spec.paint[0], body2 = spec.paint[1], body3 = spec.paint[2];
   const g = [];

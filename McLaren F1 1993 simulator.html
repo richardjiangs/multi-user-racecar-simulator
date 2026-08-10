@@ -2836,60 +2836,30 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a1d22"/><stop offset="1" stop-color="#08090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
         <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0b1622"/><stop offset="1" stop-color="#05080d"/></linearGradient>
-        <linearGradient id="mfSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cbb08a"/><stop offset="0.55" stop-color="#a08a68"/><stop offset="1" stop-color="#5e5040"/></linearGradient>
-        <linearGradient id="mfHide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b49b78"/><stop offset="0.6" stop-color="#7d6a51"/><stop offset="1" stop-color="#3a3226"/></linearGradient>
-        <linearGradient id="mfGold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8c96a"/><stop offset="1" stop-color="#8a6a26"/></linearGradient>
-        <radialGradient id="mfDial" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#3c362c"/><stop offset="1" stop-color="#14120e"/></radialGradient></defs>
+        <linearGradient id="mfSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3b2f22"/><stop offset="1" stop-color="#12100c"/></linearGradient>
+        <linearGradient id="mfHide" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2a2118"/><stop offset="1" stop-color="#100d09"/></linearGradient>
+        <radialGradient id="mfDial" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#1d1a15"/><stop offset="1" stop-color="#070605"/></radialGradient></defs>
       <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
       <g opacity="0.10" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
 
-      <!-- the gold-lined engine bay glowing along the header rail behind the cabin -->
-      <path d="M96,20 Q500,2 904,20 L904,46 Q500,26 96,46 Z" fill="url(#mfGold)" opacity="0.5"/>
-      <path d="M96,44 Q500,24 904,44" fill="none" stroke="#e8c96a" stroke-width="1.6" opacity="0.75"/>
-
       <!-- leather-trimmed dash roll, symmetric about the centre because the driver is -->
-      <path d="M110,58 Q500,34 890,58 L890,82 Q500,58 110,82 Z" fill="url(#mfHide)" stroke="#c9b391" stroke-width="1.6"/>
-      <path d="M118,66 Q500,44 882,66" fill="none" stroke="rgba(255,242,214,0.55)" stroke-width="1.1" stroke-dasharray="7 6"/>
-
-      <!-- the machined alloy fascia the whole width of the tub, under the roll -->
-      <path d="M120,84 Q500,60 880,84 L880,116 Q500,94 120,116 Z" fill="url(#aluG)" opacity="0.55" stroke="#dfe7ee" stroke-width="1.2"/>
-
-      <!-- Kenwood head unit, low in the centre stack -->
-      <g transform="translate(372,182)">
-        <rect x="-56" y="-16" width="112" height="34" rx="4" fill="#1b1814" stroke="#b8c0c8" stroke-width="1.3"/>
-        <rect x="-48" y="-9" width="70" height="14" rx="2" fill="#0d1a16" stroke="#6f7a72"/>
-        <text x="-13" y="2" text-anchor="middle" font-size="8" fill="#7ef0b8" font-family="ui-monospace,monospace">KENWOOD</text>
-        <g fill="#c9d2dc"><circle cx="34" cy="-2" r="4.5"/><circle cx="46" cy="-2" r="4.5"/></g>
-        <text x="0" y="30" text-anchor="middle" font-size="6" fill="#d8c8ab" letter-spacing="1">10-DISC · SPECIFIED BY MURRAY</text>
-      </g>
-
-      <!-- a luggage locker in each flank: the F1 carries its bags beside the engine -->
-      <g transform="translate(120,206)">
-        <path d="M0,0 L74,-8 L78,54 L4,62 Z" fill="url(#mfHide)" stroke="#a08a68" stroke-width="1.3"/>
-        <path d="M10,20 L68,14" stroke="rgba(255,242,214,0.35)" stroke-width="1"/>
-        <text x="40" y="40" text-anchor="middle" font-size="6.2" fill="#d8c8ab" letter-spacing="1">LUGGAGE</text>
-      </g>
-      <g transform="translate(806,206)">
-        <path d="M74,0 L0,-8 L-4,54 L70,62 Z" fill="url(#mfHide)" stroke="#a08a68" stroke-width="1.3"/>
-        <path d="M64,20 L6,14" stroke="rgba(255,242,214,0.35)" stroke-width="1"/>
-        <text x="34" y="40" text-anchor="middle" font-size="6.2" fill="#d8c8ab" letter-spacing="1">LUGGAGE</text>
-      </g>
+      <path d="M110,58 Q500,34 890,58 L890,82 Q500,58 110,82 Z" fill="url(#mfHide)" stroke="#4a3f30" stroke-width="1.4"/>
 
       <!-- the two PASSENGER seats, set BACK and outboard -->
       <g transform="translate(228,296)" opacity="0.95">
-        <path d="M-44,-24 Q-50,-36 -34,-38 L34,-38 Q50,-36 44,-24 L48,74 L-48,74 Z" fill="url(#mfSeat)" stroke="#8d7a5c"/>
-        <path d="M-28,-20 L-28,58 M28,-20 L28,58" stroke="#a08a68"/>
-        <text x="0" y="-46" text-anchor="middle" font-size="7" fill="#d8c8ab" letter-spacing="1.2">PASSENGER</text>
+        <path d="M-44,-24 Q-50,-36 -34,-38 L34,-38 Q50,-36 44,-24 L48,74 L-48,74 Z" fill="url(#mfSeat)" stroke="#4a3f30"/>
+        <path d="M-28,-20 L-28,58 M28,-20 L28,58" stroke="#5c4e3a"/>
+        <text x="0" y="-46" text-anchor="middle" font-size="7" fill="#8a7c66" letter-spacing="1.2">PASSENGER</text>
       </g>
       <g transform="translate(772,296)" opacity="0.95">
-        <path d="M-44,-24 Q-50,-36 -34,-38 L34,-38 Q50,-36 44,-24 L48,74 L-48,74 Z" fill="url(#mfSeat)" stroke="#8d7a5c"/>
-        <path d="M-28,-20 L-28,58 M28,-20 L28,58" stroke="#a08a68"/>
-        <text x="0" y="-46" text-anchor="middle" font-size="7" fill="#d8c8ab" letter-spacing="1.2">PASSENGER</text>
+        <path d="M-44,-24 Q-50,-36 -34,-38 L34,-38 Q50,-36 44,-24 L48,74 L-48,74 Z" fill="url(#mfSeat)" stroke="#4a3f30"/>
+        <path d="M-28,-20 L-28,58 M28,-20 L28,58" stroke="#5c4e3a"/>
+        <text x="0" y="-46" text-anchor="middle" font-size="7" fill="#8a7c66" letter-spacing="1.2">PASSENGER</text>
       </g>
 
       <!-- THE CENTRAL DRIVING SEAT, set forward of the other two -->
       <g transform="translate(500,268)">
-        <path d="M-46,-30 Q-52,-44 -34,-46 L34,-46 Q52,-44 46,-30 L50,92 L-50,92 Z" fill="url(#mfSeat)" stroke="#a08a68" stroke-width="1.6"/>
+        <path d="M-46,-30 Q-52,-44 -34,-46 L34,-46 Q52,-44 46,-30 L50,92 L-50,92 Z" fill="url(#mfSeat)" stroke="#5c4e3a" stroke-width="1.6"/>
         <path d="M-30,-26 L-30,74 M30,-26 L30,74" stroke="#6b5b44" stroke-width="2"/>
         <path d="M0,-40 L0,84" stroke="rgba(255,139,48,0.4)"/>
         <text x="0" y="-54" text-anchor="middle" font-size="7.5" fill="#ff8b30" letter-spacing="1.6">CENTRAL DRIVING SEAT</text>
@@ -2897,50 +2867,50 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
       <!-- small pod of ANALOGUE dials, centred on the driver. No screens in this car. -->
       <g transform="translate(500,128)">
-        <path d="M-104,-46 Q0,-62 104,-46 L104,40 Q0,52 -104,40 Z" fill="#241f18" stroke="#c9b391" stroke-width="2"/>
+        <path d="M-104,-46 Q0,-62 104,-46 L104,40 Q0,52 -104,40 Z" fill="#0d0b08" stroke="#4a3f30" stroke-width="1.6"/>
         <rect x="-96" y="-38" width="192" height="76" rx="9" fill="url(#mfDial)" stroke="rgba(255,139,48,0.45)" stroke-width="1.6" id="tachArt"/>
         <!-- the tachometer, dead centre and biggest -->
-        <circle cx="0" cy="0" r="33" fill="url(#mfDial)" stroke="#d8c8ab" stroke-width="2.4"/>
+        <circle cx="0" cy="0" r="33" fill="url(#mfDial)" stroke="#8a7c66" stroke-width="2.2"/>
         <g stroke="#c9bda6" stroke-width="1.5"><path d="M-25,17 l-6,4"/><path d="M-30,-2 l-7,0"/><path d="M-23,-20 l-6,-4"/><path d="M-4,-31 l-1,-7"/><path d="M16,-27 l4,-6"/><path d="M28,-13 l7,-3"/></g>
         <g id="cabRevNeedle" data-a0="-128" data-a1="128" data-cx="0" data-cy="0"><path d="M0,0 L0,-26" stroke="#ff8b30" stroke-width="2.6" stroke-linecap="round"/></g>
-        <text x="0" y="22" text-anchor="middle" font-size="7" fill="#e2d5bb">rpm x1000</text>
+        <text x="0" y="22" text-anchor="middle" font-size="7" fill="#a89a80">rpm x1000</text>
         <!-- speedo left, oil pressure right; both analogue -->
-        <circle cx="-64" cy="2" r="23" fill="url(#mfDial)" stroke="#c0b096" stroke-width="2"/>
+        <circle cx="-64" cy="2" r="23" fill="url(#mfDial)" stroke="#6d6152" stroke-width="1.8"/>
         <text x="-64" y="4" text-anchor="middle" font-size="13" font-weight="700" fill="#f1e9db" id="cabSpeedArt">0</text>
-        <text x="-64" y="16" text-anchor="middle" font-size="6" fill="#e2d5bb">km/h</text>
+        <text x="-64" y="16" text-anchor="middle" font-size="6" fill="#a89a80">km/h</text>
         <text x="0" y="16" text-anchor="middle" font-size="12" font-weight="800" fill="#ffb066" id="tachGearArt">N</text>
-        <circle cx="64" cy="2" r="23" fill="url(#mfDial)" stroke="#c0b096" stroke-width="2"/>
+        <circle cx="64" cy="2" r="23" fill="url(#mfDial)" stroke="#6d6152" stroke-width="1.8"/>
         <path d="M64,2 L52,-8" stroke="#e0d3bb" stroke-width="1.8"/>
-        <text x="64" y="20" text-anchor="middle" font-size="6" fill="#e2d5bb">OIL bar</text>
+        <text x="64" y="20" text-anchor="middle" font-size="6" fill="#a89a80">OIL bar</text>
       </g>
 
       <!-- toggle switches: this is the whole control set -->
       <g transform="translate(500,196)">
-        <rect x="-72" y="-12" width="144" height="26" rx="4" fill="#2b241b" stroke="#a08a68" stroke-width="1.3"/>
+        <rect x="-72" y="-12" width="144" height="26" rx="4" fill="#12100c" stroke="#5c4e3a" stroke-width="1.3"/>
         <g stroke="url(#aluG)" stroke-width="3" stroke-linecap="round">
           <path d="M-56,6 l0,-12"/><path d="M-34,6 l0,-12"/><path d="M-12,6 l4,-11"/><path d="M12,6 l0,-12"/><path d="M34,6 l4,-11"/><path d="M56,6 l0,-12"/></g>
-        <text x="0" y="26" text-anchor="middle" font-size="6.5" fill="#d8c8ab" letter-spacing="1.4">LIGHTS · FAN · WIPE · FUEL · IGN · AUX</text>
+        <text x="0" y="26" text-anchor="middle" font-size="6.5" fill="#8a7c66" letter-spacing="1.4">LIGHTS · FAN · WIPE · FUEL · IGN · AUX</text>
       </g>
 
       <!-- the exposed OPEN GATE: a milled aluminium plate with the lever standing in it -->
       <g id="shifterArt" transform="translate(626,286)">
-        <path d="M-34,-24 L34,-24 L40,52 L-40,52 Z" fill="#151310" stroke="#a08a68" stroke-width="1.4"/>
+        <path d="M-34,-24 L34,-24 L40,52 L-40,52 Z" fill="#151310" stroke="#5c4e3a" stroke-width="1.4"/>
         <path d="M-24,-14 L24,-14 L26,30 L-26,30 Z" fill="#0a0907" stroke="url(#aluG)" stroke-width="1.6"/>
         <g stroke="url(#aluG)" stroke-width="1.4" opacity="0.75">
           <path d="M-14,-10 L-14,26"/><path d="M0,-10 L0,26"/><path d="M14,-10 L14,26"/><path d="M-20,8 L20,8"/></g>
         <line x1="0" y1="26" x2="0" y2="0" stroke="url(#aluG)" stroke-width="6" id="leverArt"/>
         <circle cx="0" cy="-6" r="10" fill="#2a2118" stroke="url(#aluG)" stroke-width="1.4"/>
-        <text x="0" y="48" text-anchor="middle" font-size="6.5" fill="#d8c8ab">6-SPEED TRANSVERSE</text>
+        <text x="0" y="48" text-anchor="middle" font-size="6.5" fill="#8a7c66">6-SPEED TRANSVERSE</text>
       </g>
-      <g transform="translate(376,250)"><rect x="-27" y="-19" width="54" height="38" rx="4" fill="#2b241b" stroke="#a08a68"/><circle cx="0" cy="0" r="12" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6.5" fill="#ffd7d7">IGN</text></g>
+      <g transform="translate(376,250)"><rect x="-27" y="-19" width="54" height="38" rx="4" fill="#12100c" stroke="#5c4e3a"/><circle cx="0" cy="0" r="12" fill="#7a1f1f" stroke="#ff6060" id="startArt"/><text x="0" y="3" text-anchor="middle" font-size="6.5" fill="#ffd7d7">IGN</text></g>
 
       <!-- thin unassisted rim, CENTRED on the driver, nothing mounted on it -->
       <g id="cabinWheelG" transform="translate(500,300)">
-        <circle r="52" fill="none" stroke="#5a4a34" stroke-width="11"/>
-        <circle r="52" fill="none" stroke="rgba(240,226,196,0.75)" stroke-width="1.6"/>
-        <line x1="0" y1="0" x2="-46" y2="-16" stroke="#9aa2ab" stroke-width="7"/>
-        <line x1="0" y1="0" x2="46" y2="-16" stroke="#9aa2ab" stroke-width="7"/>
-        <line x1="0" y1="0" x2="0" y2="46" stroke="#9aa2ab" stroke-width="7"/>
+        <circle r="52" fill="none" stroke="#171512" stroke-width="11"/>
+        <circle r="52" fill="none" stroke="rgba(200,186,160,0.3)" stroke-width="1.4"/>
+        <line x1="0" y1="0" x2="-46" y2="-16" stroke="#211e19" stroke-width="7"/>
+        <line x1="0" y1="0" x2="46" y2="-16" stroke="#211e19" stroke-width="7"/>
+        <line x1="0" y1="0" x2="0" y2="46" stroke="#211e19" stroke-width="7"/>
         <!-- drilled lightening holes in the spokes, like the real magnesium centre -->
         <g fill="#0b0a08"><circle cx="-24" cy="-9" r="3.4"/><circle cx="-34" cy="-12" r="3.4"/><circle cx="24" cy="-9" r="3.4"/><circle cx="34" cy="-12" r="3.4"/><circle cx="0" cy="24" r="3.4"/><circle cx="0" cy="34" r="3.4"/></g>
         <circle r="12" fill="#12100c" stroke="#2a2620" stroke-width="3"/>

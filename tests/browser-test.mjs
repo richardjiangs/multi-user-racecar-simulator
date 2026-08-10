@@ -205,6 +205,28 @@ const check = (label, ok, detail) => {
   check("every tyre sits inside its wheel arch", proud.length === 0, proud.slice(0, 6).join(" | "));
 }
 
+/* ---------- and the arch must not cut a notch out of the body above it ----------
+   Making the arch a tall ellipse so the tyre fitted inside it was right and only half the job.
+   Over a bonnet or a rear deck the body's own top surface sits LOWER than the new apex, so the
+   arch sliced up through it and the outline closed in a sharp concave V where the rising arch met
+   the falling bonnet line. Twice per car, on 18 of the 52 joins. THAT is the bite mark — the arch
+   fix is what put it there. A real car has a haunch: the wing over the wheel stands above the
+   tyre and the bonnet falls away inside it. */
+{
+  const { SPECS } = await import("../tools/bodykit/specs.mjs");
+  const { profile, withHaunches, FRAME } = await import("../tools/bodykit/bodykit.mjs");
+  const { roofAt } = await import("../tools/bodykit/detail.mjs");
+  const notched = [];
+  for (const k of Object.keys(SPECS).filter((x) => !SPECS[x].skip)) {
+    const P = profile(SPECS[k]), s = withHaunches(SPECS[k], P), a = s.archLift || 1.06;
+    for (const [ax, cy, r, end] of [[P.axRear, P.cyR, P.rR, "rear"], [P.axFront, P.cyF, P.rF, "front"]]) {
+      const xf = (FRAME.x1 - ax) / P.drawL, top = roofAt(s, P, xf), apex = cy - r * a;
+      if (apex < top - 0.5) notched.push(`${k} ${end}: the arch cuts ${(top - apex).toFixed(0)}px into the body`);
+    }
+  }
+  check("no arch cuts a notch out of the body over it", notched.length === 0, notched.slice(0, 6).join(" | "));
+}
+
 /* ---------- one loaf with two bites out of it is not twenty-six cars ----------
    The top of every body was one unbroken chain of quadratics and the bottom was a straight line
    between two circular arch cut-outs. No car had a single hard crease anywhere — no windscreen
