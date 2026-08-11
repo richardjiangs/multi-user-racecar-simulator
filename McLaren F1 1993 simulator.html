@@ -2537,22 +2537,23 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function drawCluster(w, h, dashY, sway) {
     const R = Math.min(w, h) * 0.125;
     const cx = w / 2 + sway, cy = dashY + R * 0.3;
-    const BW = R * 4.5, BH = R * 1.92, bx = cx - BW * 0.46, by = cy - BH / 2;
+    const BW = R * 4.5, BH = R * 1.92, bx = cx - BW / 2, by = cy - BH / 2;
+    // THE BACKDROP IS THE SAME AS EVERY OTHER CAR'S. It used to carry a curved hood swept over
+    // the top of the pod, which nothing else in the garage has — that shape is the "featured-like
+    // thing" and it is what made this dash read as a different object from the rest.
     ctx.save();
-    ctx.fillStyle = "#0a0b0e";
-    ctx.beginPath(); ctx.moveTo(bx - R * 0.2, by + R * 0.14); ctx.quadraticCurveTo(cx, by - R * 0.38, bx + BW + R * 0.2, by + R * 0.14);
-    ctx.lineTo(bx + BW + R * 0.2, by + R * 0.34); ctx.lineTo(bx - R * 0.2, by + R * 0.34); ctx.closePath(); ctx.fill();
-    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#14171c"); pg.addColorStop(1, "#06080b");
-    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.fill();
-    ctx.strokeStyle = "rgba(255,139,48,0.4)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.1); ctx.stroke();
+    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#2a2f36"); pg.addColorStop(1, "#12151a");
+    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.22); ctx.fill();
+    ctx.strokeStyle = "rgba(255,139,48,0.38)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.22); ctx.stroke();
     ctx.restore();
     // the big tach sits centre-left in the binnacle, the speedo smaller to its left
     f1Dial(bx + BH * 0.86, cy, BH * 0.43, clamp(state.rpm / 8000, 0, 1), "rpm x1000", null, 8, 1, (SPEC.redlineRpm || 7500) / 8000);
     f1Dial(bx + BH * 0.3, cy + R * 0.06, BH * 0.27, clamp(Math.abs(app.kmh(state.speedMps)) / 400, 0, 1), "km/h", Math.round(Math.abs(app.kmh(state.speedMps))), 400, 100, null);
     // the three small ancillaries down the right
-    const sx = bx + BW - R * 0.5;
+    // in a ROW across the right of the pod. Stacked at this size they overlapped and two of the
+    // three labels disappeared under the gauge above them.
     [["OIL", clamp(0.3 + state.rpm / 9000, 0, 1)], ["WATER", clamp(0.34 + state.rpm / 12000, 0, 1)], ["FUEL", 0.68]]
-      .forEach(([lab, f], i) => f1Small(sx, by + R * 0.42 + i * (BH - R * 0.9) / 2, R * 0.28, f, lab));
+      .forEach(([lab, f], i) => f1Small(bx + BW * (0.62 + i * 0.15), cy + R * 0.04, R * 0.33, f, lab));
     ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillStyle = "#ffab6a"; ctx.font = `800 ${Math.round(R * 0.2)}px ui-sans-serif`;
     ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, bx + BH * 0.86, cy + BH * 0.36);
@@ -2584,14 +2585,20 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.fillStyle = "#1e2228"; ctx.beginPath(); ctx.arc(0, 0, R * 0.1, 0, Math.PI * 2); ctx.fill();
     ctx.restore();
   }
+  // the ancillaries: a bit bigger than they were, still well inside the main dial, and marked —
+  // eight divisions with every other one long, and a bezel, so they read as gauges rather than dots
   function f1Small(cx, cy, R, frac, label) {
-    const a0 = Math.PI * 0.88, a1 = Math.PI * 1.62;
+    const a0 = Math.PI * 0.82, a1 = Math.PI * 1.68;
     ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "#22262c"; ctx.beginPath(); ctx.arc(0, 0, R * 1.06, 0, Math.PI * 2); ctx.fill();
+    const bz = ctx.createRadialGradient(-R * 0.3, -R * 0.3, R * 0.2, 0, 0, R * 1.1);
+    bz.addColorStop(0, "#c6cdd4"); bz.addColorStop(0.6, "#6d757d"); bz.addColorStop(1, "#2a2f36");
+    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.08, 0, Math.PI * 2); ctx.fill();
     ctx.fillStyle = "#07090b"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-    for (let i = 0; i <= 4; i++) { const a = lerp(a0, a1, i / 4);
-      ctx.strokeStyle = "rgba(240,236,220,0.75)"; ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * 0.6, Math.sin(a) * R * 0.6); ctx.lineTo(Math.cos(a) * R * 0.86, Math.sin(a) * R * 0.86); ctx.stroke(); }
+    for (let i = 0; i <= 8; i++) { const a = lerp(a0, a1, i / 8), major = i % 2 === 0;
+      ctx.strokeStyle = major ? "rgba(244,240,226,0.92)" : "rgba(214,208,190,0.55)";
+      ctx.lineWidth = major ? 1.6 : 1;
+      ctx.beginPath(); ctx.moveTo(Math.cos(a) * R * (major ? 0.56 : 0.68), Math.sin(a) * R * (major ? 0.56 : 0.68));
+      ctx.lineTo(Math.cos(a) * R * 0.88, Math.sin(a) * R * 0.88); ctx.stroke(); }
     const na = lerp(a0, a1, clamp(frac, 0, 1));
     ctx.strokeStyle = "#ff8b30"; ctx.lineWidth = R * 0.09; ctx.lineCap = "round";
     ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(Math.cos(na) * R * 0.7, Math.sin(na) * R * 0.7); ctx.stroke();
