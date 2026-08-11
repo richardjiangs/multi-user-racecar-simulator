@@ -3784,6 +3784,31 @@
         const bs = document.getElementById("buildStamp");
         if (bs && typeof SIM_BUILD === "string") bs.textContent = "build " + SIM_BUILD;
       } catch (err) {}
+
+      /* SELF-HEAL A STALE SHELL.
+         SIM_BUILD is the cache-buster for all 52 simulators and it lives inside THIS file. So a
+         browser holding an old index.html keeps asking for the old ?v= for ever: every sim comes
+         straight from its cache, the build stamp shows the old hash, and nothing that is shipped
+         can reach the user. Five releases went out looking exactly like no release at all.
+         build.txt carries the same hash as a standalone file. Fetched with cache:"no-store" —
+         the one request a browser may not answer from cache — it says what the server really has.
+         If that differs from what this page was built with, reload once past the cache. The
+         sessionStorage guard means a genuinely odd deploy can never put us in a reload loop. */
+      (function checkStale() {
+        if (location.protocol === "file:" || typeof SIM_BUILD !== "string") return;
+        fetch("build.txt", { cache: "no-store" })
+          .then((r) => (r.ok ? r.text() : null))
+          .then((txt) => {
+            const live = (txt || "").trim();
+            if (!live || live === SIM_BUILD) return;
+            const bs = document.getElementById("buildStamp");
+            if (bs) bs.textContent = "updating to " + live + "…";
+            if (sessionStorage.getItem("mucs-reloaded-for") === live) return;   // already tried
+            sessionStorage.setItem("mucs-reloaded-for", live);
+            location.replace(location.pathname + "?b=" + live + location.hash);
+          })
+          .catch(() => {});
+      })();
       function loadEmbeddedSim(car, onLoad) {
         simFrame.onload = () => { attachFrameShortcuts(); if (typeof onLoad === "function") onLoad(); };
         // Hosted (http/https): fetch just this one sim file on demand, so the initial

@@ -263,6 +263,27 @@ const check = (label, ok, detail) => {
   check("every cluster is called with the arguments it declares", bad.length === 0, bad.join(" | "));
 }
 
+/* ---------- a stale shell hides every release ----------
+   SIM_BUILD is the cache-buster for all 52 simulators and it lives inside index.html. A browser
+   holding an old index.html therefore keeps requesting the old ?v= for ever: every sim is served
+   from its own cache, the build stamp shows the old hash, and nothing that is shipped can reach
+   the user. Five releases went out looking exactly like no release at all. build.txt is the same
+   hash as a standalone file, fetched with cache:"no-store"; if it ever disagrees with the hash
+   baked into index.html the self-heal reloads to the wrong build, or loops. */
+{
+  const { readFileSync, existsSync } = await import("node:fs");
+  const idx = readFileSync(ROOT + "/index.html", "utf8");
+  const baked = (idx.match(/SIM_BUILD = "([a-f0-9]+)"/) || [])[1];
+  const live = existsSync(ROOT + "/build.txt") ? readFileSync(ROOT + "/build.txt", "utf8").trim() : null;
+  check(`build.txt matches the hash baked into index.html (${baked || "?"})`,
+    !!baked && !!live && baked === live,
+    !live ? "build.txt is missing — the shell can never tell it is stale"
+      : `index.html says ${baked}, build.txt says ${live}`);
+  check("the shell checks whether it is stale on load",
+    /cache:\s*"no-store"/.test(idx) && idx.includes("build.txt"),
+    "index.html no longer verifies its own build against the server");
+}
+
 /* ---------- the generator has to be safe to run twice ----------
    The generated SVG carries its own <style> block, so a brace counter walking out of
    injectExterior() stops in the wrong place and swallows the next function — which is how six
