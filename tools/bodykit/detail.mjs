@@ -17,6 +17,8 @@
 // Every primitive here is drawn from the real thing, and each takes the profile P so it lands in
 // the right place on whatever body it is bolted to.
 
+import { topEdge } from "./bodykit.mjs";
+
 const f = (n) => Number(n).toFixed(1);
 
 /* ------------------------------------------------------------------ *
@@ -50,12 +52,8 @@ export function dloPath(spec, P, G) {
   pts.push([P.xAt(G.roofR), roofAt(spec, P, G.roofR) + inset * dh, false]);
 
   const d = [`M${f(P.xAt(G.cowl))},${f(beltY)}`, `L${f(pts[0][0])},${f(pts[0][1])}`];
-  for (let i = 1; i < pts.length; i++) {
-    const [px, py, pCorner] = pts[i - 1], [x, y, corner] = pts[i];
-    // the glass follows the same corners the body does, or the roof creases and the glass does not
-    if (corner || pCorner) d.push(`L${f(x)},${f(y)}`);
-    else d.push(`Q${f((px + x) / 2)},${f(py)} ${f(x)},${f(y)}`);
-  }
+  // the SAME monotone spline the body outline uses, so the glass sits under the roof it follows
+  d.push(topEdge(pts));
   d.push(`L${f(P.xAt(G.deck))},${f(beltY)} Z`);
   return d.join(" ");
 }

@@ -82,20 +82,37 @@ export function withHaunches(spec, P) {
     const cap = capAt(xf);
     return cap < yf ? [xf, Math.max(0, cap), k] : [xf, yf, k];
   });
-  // and put a crest exactly over each axle, so the haunch has a top rather than a flat
+  /* A CREST IS NOT ENOUGH, because the outline is not the roofline.
+   *
+   * bodyPath draws `Q` curves between roof points, and a quadratic Bézier SAGS below its control
+   * point — it only touches the endpoints. So the edge that actually gets drawn sits below the
+   * polyline this function reasons about, and a single raised point at the axle gets rounded off
+   * and dips straight back under the arch. Measuring the roofline said every car was clean while
+   * 21 of the 26 visibly had a notch over a wheel.
+   *
+   * The haunch is therefore a PLATEAU — three points across the top of the arch, not one — and it
+   * carries a margin over what the arch needs, so whatever the smoothing takes off the top the
+   * edge still clears. The acceptance test for this is not arithmetic: it hit-tests the drawn
+   * shape column by column and looks for a dip.
+   */
+  const MARGIN = 0.055;              // in roofline fractions, absorbed by the Bézier sag
   for (const a of axles) {
-    if (a.xf <= 0.02 || a.xf >= 0.98) continue;
-    // ALWAYS put the crest exactly on the axle. Leaving it to whichever roof point happened to be
-    // nearby left the outline interpolating between two points that were each only just high
-    // enough, so it still dipped a few pixels under the arch in between — a small notch is still
-    // a notch.
+    if (a.xf <= 0.03 || a.xf >= 0.97) continue;
     const cap = capAt(a.xf);
     if (!Number.isFinite(cap)) continue;
-    const near = roof.findIndex(([xf]) => Math.abs(xf - a.xf) < 0.006);
-    if (near >= 0) { roof[near] = [roof[near][0], Math.min(roof[near][1], Math.max(0, cap)), roof[near][2]]; continue; }
-    const at = roof.findIndex(([xf]) => xf > a.xf);
-    if (at > 0) roof.splice(at, 0, [Number(a.xf.toFixed(3)), Math.max(0, cap)]);
+    const want = Math.max(0, cap - MARGIN);
+    for (const dx of [-0.045, 0, 0.045]) {
+      const xf = Number((a.xf + dx).toFixed(3));
+      if (xf <= 0.005 || xf >= 0.995) continue;
+      const near = roof.findIndex(([x]) => Math.abs(x - xf) < 0.02);
+      if (near >= 0) roof[near] = [roof[near][0], Math.min(roof[near][1], want), roof[near][2]];
+      else {
+        const at = roof.findIndex(([x]) => x > xf);
+        if (at > 0) roof.splice(at, 0, [xf, want]);
+      }
+    }
   }
+  roof.sort((u, v) => u[0] - v[0]);
   return { ...spec, roof };
 }
 
@@ -158,18 +175,55 @@ export function bodyPath(spec, P) {
   // round the bottom corner of the bumper, then run UP its face to meet the bonnet line
   const noseTop = P.yAt(spec.roof[0][1]);
   d.push(`Q${noseX.toFixed(1)},${(P.sillY - noseDrop * 0.45).toFixed(1)} ${noseX.toFixed(1)},${((P.sillY - noseDrop * 0.45 + noseTop) / 2).toFixed(1)}`);
-  // up the face of the front bumper to the first roof point, then back along the top —
-  // straight into and out of every point marked as a corner, smoothed through the rest
-  for (let i = 0; i < top.length; i++) {
-    const [x, y, corner] = top[i];
-    if (i === 0) { d.push(`L${x.toFixed(1)},${y.toFixed(1)}`); continue; }
-    const [px, py, pCorner] = top[i - 1];
-    if (corner || pCorner) { d.push(`L${x.toFixed(1)},${y.toFixed(1)}`); continue; }
-    const cx = (px + x) / 2;
-    d.push(`Q${cx.toFixed(1)},${py.toFixed(1)} ${x.toFixed(1)},${y.toFixed(1)}`);
-  }
+  // up the face of the front bumper to the first roof point, then back along the top
+  d.push(`L${top[0][0].toFixed(1)},${top[0][1].toFixed(1)}`);
+  d.push(topEdge(top));
   d.push("Z");
   return d.join(" ");
+}
+
+/* THE TOP EDGE — and this is what kept putting the notches back.
+ *
+ * It used to be a chain of `Q cx,py x,y`: a quadratic whose control point is the PREVIOUS point's
+ * height. A quadratic only touches its endpoints — it sags away from the control — so the line
+ * that got drawn hung below the roofline every calculation here reasons about. Lift the body over
+ * an axle and the smoothing quietly took the lift back out, which is why the arithmetic reported
+ * every car clean while 21 of the 26 visibly had a bite out of a wing.
+ *
+ * This is a monotone cubic (Fritsch-Carlson tangents). It passes THROUGH every point and cannot
+ * overshoot or sag between them, so the drawn edge IS the roofline. Points marked as corners break
+ * the run, so a windscreen base or a Kamm cut is still a hard crease.
+ */
+export function topEdge(pts) {
+  const out = [];
+  let i = 0;
+  while (i < pts.length - 1) {
+    let j = i;                                        // the end of this smooth run
+    while (j < pts.length - 1 && !pts[j + 1][2] && !pts[j][2]) j++;
+    if (j === i) { const [x, y] = pts[i + 1]; out.push(`L${x.toFixed(1)},${y.toFixed(1)}`); i++; continue; }
+    const run = pts.slice(i, j + 1);
+    const n = run.length;
+    const h = [], s = [];
+    for (let k = 0; k < n - 1; k++) {
+      h.push(run[k + 1][0] - run[k][0]);
+      s.push(h[k] === 0 ? 0 : (run[k + 1][1] - run[k][1]) / h[k]);
+    }
+    const m = new Array(n);
+    m[0] = s[0]; m[n - 1] = s[n - 2];
+    for (let k = 1; k < n - 1; k++) m[k] = s[k - 1] * s[k] <= 0 ? 0 : (s[k - 1] + s[k]) / 2;
+    for (let k = 0; k < n - 1; k++) {                 // Fritsch-Carlson: clamp so it stays monotone
+      if (s[k] === 0) { m[k] = 0; m[k + 1] = 0; continue; }
+      const a = m[k] / s[k], b = m[k + 1] / s[k], t = a * a + b * b;
+      if (t > 9) { const q = 3 / Math.sqrt(t); m[k] = q * a * s[k]; m[k + 1] = q * b * s[k]; }
+    }
+    for (let k = 0; k < n - 1; k++) {
+      const [x0, y0] = run[k], [x1, y1] = run[k + 1], dx = h[k] / 3;
+      out.push(`C${(x0 + dx).toFixed(1)},${(y0 + m[k] * dx).toFixed(1)} ` +
+               `${(x1 - dx).toFixed(1)},${(y1 - m[k + 1] * dx).toFixed(1)} ${x1.toFixed(1)},${y1.toFixed(1)}`);
+    }
+    i = j;
+  }
+  return out.join(" ");
 }
 
 /* a wheel: tyre, rim face and the car's own spoke pattern.
