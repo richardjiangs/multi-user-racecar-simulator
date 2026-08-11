@@ -101,6 +101,14 @@ const line = `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_BUILD
 const newIndex = html.slice(0, i) + line + html.slice(j + END.length);
 writeFileSync(indexPath, newIndex);
 
+// 2b) build.txt — the same hash as a standalone file, so a running page can ask "am I stale?"
+//     without trusting its own cached copy of index.html. SIM_BUILD is the cache-buster for
+//     every simulator, and it lives INSIDE index.html: if the browser holds an old shell it
+//     keeps requesting the old ?v= for ever, and no amount of shipping can reach the user.
+//     This file is fetched with cache:"no-store", which is the one request that cannot be
+//     served from cache.
+writeFileSync(resolve(ROOT, "build.txt"), SIM_BUILD + "\n");
+
 // 3) index-offline.html — the original all-in-one page: one self-contained file
 //    with every sim embedded inline, always uses the embedded copy (no network,
 //    zero loading), works the same from disk or a server. Derived from index.html
