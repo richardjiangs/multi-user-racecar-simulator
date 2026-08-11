@@ -128,8 +128,8 @@ export function renderCar(rawSpec) {
   g.push(`  </g>`);                                   // end of the clipped bodywork
   // furniture that stands PROUD of the panel — a fin, a roof airbox, roll hoops, the T.50s fan,
   // the Speedtail's faired rear wheel — would be cut in half by that clip, so it goes on top
-  g.push("  " + sideKit(spec, P, ID, acc, "proud"));
-  g.push("  " + rearSpoiler(spec, P, acc));
+  g.push(`  <g data-proud="1">` + sideKit(spec, P, ID, acc, "proud") + `</g>`);
+  g.push(`  <g data-proud="1">` + rearSpoiler(spec, P, acc) + `</g>`);
   // the splitter and the pipes are hardware bolted to the car, so they sit outside the paint
   g.push(`  <g id="frontFlapArt"><rect x="${f1(FRAME.x1 - P.drawL * 0.105)}" y="${f1(P.sillY + 6)}" width="${f1(P.drawL * 0.085)}" height="6" rx="3" fill="#101318" stroke="${acc}" stroke-opacity="0.5"/></g>`);
   {
@@ -152,7 +152,7 @@ export function renderCar(rawSpec) {
   // it read as a black flag flying off the cabin, which is not where a door mirror lives
   if (spec.mirror !== false && spec.glass && !spec.glass.none) {
     const mx = P.xAt(spec.glass.cowl) + 6, my = P.yAt(spec.glass.base) + 2;
-    g.push(`  <path d="M${f1(mx)},${f1(my)} l7,-2 l13,-4 l1,10 l-19,3 Z" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>`);
+    g.push(`  <path d="M${f1(mx)},${f1(my)} l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>`);
   }
 
   g.push(`</g>`);
