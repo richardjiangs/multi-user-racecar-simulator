@@ -2541,114 +2541,137 @@ drawCluster(w, h, dashY, sway);
 
   /* McLaren exterior — P1 side profile (five-metre teardrop, canopy cockpit,
      static carbon front-wheel covers, flexible tail wing, retractable cameras) */
-  /* BODYKIT:BEGIN McLaren P1 — drawn from the car's own published dimensions: 4588 mm long
-     on a 2670 mm wheelbase, 1188 mm tall, 990/928 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN McLaren P1 — DRAWN BY HAND, from this car's own side elevation: 4588 mm long on a
+     2670 mm wheelbase, 1188 mm tall, 990/928 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="McLaren P1 side">
       <defs>
-        <linearGradient id="bkp1Paint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffb03a"/><stop offset="0.45" stop-color="#d9600c"/><stop offset="1" stop-color="#4a1c04"/>
+        <linearGradient id="hdp1Paint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffd070"/><stop offset="0.32" stop-color="#ff8e1c"/><stop offset="0.72" stop-color="#c04b06"/><stop offset="1" stop-color="#421903"/>
         </linearGradient>
-        <linearGradient id="bkp1Glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
-        </linearGradient>
-        <linearGradient id="bkp1Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bkp1Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bkp1Shine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bkp1Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkp1Clip"><path d="M78.0,220.0 Q74.0,282.6 88.0,294.2 L170.0,312.5 A78.7,123.9 0 0 1 327.4,312.5 Q494.3,324.5 666.3,312.5 A73.6,114.1 0 0 1 813.5,312.5 L912.0,293.2 Q922.0,283.6 922.0,267.9 L922.0,252.2 C899.5,237.5 877.0,221.4 854.5,208.0 C832.0,194.6 809.5,171.8 787.0,171.8 C771.2,171.8 755.5,178.8 739.7,182.3 L719.4,151.7 L701.7,182.3 C687.9,162.7 674.1,129.0 660.4,123.5 C635.0,113.5 609.7,113.5 584.4,113.5 C556.3,113.5 528.1,120.2 500.0,123.5 L398.7,167.8 L280.6,172.6 L248.5,172.6 C235.8,172.6 223.2,172.6 210.5,172.6 L179.3,212.0 L78.0,220.0 Z"/></clipPath>
-        <clipPath id="bkp1Dlo"><path d="M643.5,171.8 L567.5,119.5 C545.0,122.2 522.5,121.3 500.0,127.5 C483.1,132.2 466.2,142.3 449.4,149.7 L381.8,171.8 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
+        <linearGradient id="hdp1Glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d2e6f6"/><stop offset="0.4" stop-color="#3b4d5e"/><stop offset="1" stop-color="#070c11"/></linearGradient>
+        <linearGradient id="hdp1Carbon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1e24"/><stop offset="1" stop-color="#06080b"/></linearGradient>
+        <radialGradient id="hdp1Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#ffe9cf"/><stop offset="1" stop-color="#6a3208"/></radialGradient>
+        <linearGradient id="hdp1Shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.44"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hdp1Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdp1Clip"><path d="M78,229
+    L78,262 Q80,282 100,288 L156,292 L178,302
+    A71,112 0 0 1 320,302
+    Q506,312 673,302
+    A67,102 0 0 1 807,302
+    L876,298 Q904,294 918,278 L922,265
+    C898,244 866,220 840,206
+    C812,196 776,190 740,188
+    C712,192 686,198 660,204
+    C636,182 610,156 584,138
+    C560,126 534,118 508,116
+    L452,118
+    C436,122 424,130 414,142
+    C396,158 376,170 356,178
+    C330,182 304,180 281,178
+    C212,192 144,210 78,229 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.9));transition:transform .45s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-34deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkp1Glow);}
-        </style>
+          #doorArt{transform-box:fill-box;transform-origin:5% 96%;transition:transform .8s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-34deg) translate(-7px,-17px);}
+          #quadExhaustArt *{fill:#c0c7ce;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdp1Glow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <ellipse cx="500" cy="336" rx="382" ry="9" fill="rgba(0,0,0,0.52)"/>
+
+      <!-- ONE central pylon, not two end plates: the P1's wing rides out on a single stalk -->
+      <rect x="164" y="150" width="9" height="48" fill="#141920" stroke="#4a525b"/>
       <g id="rearWingArt">
-        <rect x="116.1" y="131.6" width="7" height="56.8" fill="#141920" stroke="#4a525b"/>
-        <rect x="231.3" y="131.6" width="7" height="56.8" fill="#141920" stroke="#4a525b"/>
-        <path d="M86.4,136.6 L272.1,131.6 L272.1,140.6 L86.4,145.6 Z" fill="#141920" stroke="#5b636d" stroke-width="1.2"/>
-        <path d="M86.4,136.6 L272.1,131.6" stroke="#ffcf7a" stroke-width="2" opacity="0.75"/>
+        <path d="M104,156 L242,144 L242,158 L104,170 Z" fill="#12161c" stroke="#5e6772" stroke-width="1.2"/>
+        <path d="M104,156 L242,144" stroke="#ff8a3c" stroke-width="2" opacity="0.85"/>
       </g>
+
       <g id="bcBody">
-        <path d="M78.0,220.0 Q74.0,282.6 88.0,294.2 L170.0,312.5 A78.7,123.9 0 0 1 327.4,312.5 Q494.3,324.5 666.3,312.5 A73.6,114.1 0 0 1 813.5,312.5 L912.0,293.2 Q922.0,283.6 922.0,267.9 L922.0,252.2 C899.5,237.5 877.0,221.4 854.5,208.0 C832.0,194.6 809.5,171.8 787.0,171.8 C771.2,171.8 755.5,178.8 739.7,182.3 L719.4,151.7 L701.7,182.3 C687.9,162.7 674.1,129.0 660.4,123.5 C635.0,113.5 609.7,113.5 584.4,113.5 C556.3,113.5 528.1,120.2 500.0,123.5 L398.7,167.8 L280.6,172.6 L248.5,172.6 C235.8,172.6 223.2,172.6 210.5,172.6 L179.3,212.0 L78.0,220.0 Z" fill="url(#bkp1Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bkp1Clip)">
-        <path d="M78.0,171.8 Q500.0,147.6 922.0,171.8 L922.0,191.9 Q500.0,167.8 78.0,195.9 Z" fill="url(#bkp1Shine)"/>
-        <rect x="0" y="299.4" width="1000" height="218.5" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M170.0,312.5 A78.7,123.9 0 0 1 327.4,312.5" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M170.0,312.5 A78.7,123.9 0 0 1 327.4,312.5" fill="none" stroke="#ffcf7a" stroke-width="1.4" opacity="0.45"/>
-        <path d="M666.3,312.5 A73.6,114.1 0 0 1 813.5,312.5" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M666.3,312.5 A73.6,114.1 0 0 1 813.5,312.5" fill="none" stroke="#ffcf7a" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bkp1Clip)">
-        <path d="M92.0,199.9 Q500.0,192.9 902.0,195.9" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M322.1,308.2 L671.6,306.2 L668.5,320.2 L325.4,322.2 Z" fill="url(#bkp1Low)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="236.1" width="1000" height="218.5" fill="#101418" opacity="0.9"/>
-      <path d="M0,236.1 L1000,230.1" stroke="#ffcf7a" stroke-width="1.6" opacity="0.7"/>
-        <path d="M398.7,200.6 q-28.8,-4.0 -52.3,3.0 l3.0,32.8 q26.2,-5.0 49.7,-6.0 Z" fill="#0b1016"/>
-      <path d="M398.7,200.6 q-28.8,-4.0 -52.3,3.0" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
-      <path d="M393.5,228.1 q20.9,-4.0 42.9,-5.0" fill="none" stroke="#ffcf7a" stroke-width="1.6" opacity="0.55"/>
-      <path d="M668.5,314.5 L325.4,316.5 l0,8 L671.6,321.5 Z" fill="#0b0f14" stroke="rgba(255,255,255,0.15)"/>
-        <path d="M651.9,171.8 L648.9,306.5" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M483.1,171.8 L480.1,306.5" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M483.1,179.8 L651.9,175.8 L647.9,302.5 L481.1,304.5 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="555.5" y="212.0" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M643.5,171.8 L567.5,119.5 C545.0,122.2 522.5,121.3 500.0,127.5 C483.1,132.2 466.2,142.3 449.4,149.7 L381.8,171.8 Z" fill="url(#bkp1Glass)"/>
-      <path d="M643.5,171.8 L567.5,119.5 C545.0,122.2 522.5,121.3 500.0,127.5 C483.1,132.2 466.2,142.3 449.4,149.7 L381.8,171.8 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bkp1Dlo)">
-      <path d="M647.5,171.8 L561.5,115.5 L581.5,115.5 L669.5,171.8 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M439.4,171.8 L469.4,145.6 L477.4,145.6 L451.4,171.8 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M643.5,171.8 L567.5,119.5" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M381.8,171.8 L449.4,149.7" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M643.5,171.8 L567.5,119.5 C545.0,122.2 522.5,121.3 500.0,127.5 C483.1,132.2 466.2,142.3 449.4,149.7 L381.8,171.8 Z" fill="none" stroke="#0c1015" stroke-width="2.8" stroke-linejoin="round"/>
-        <path d="M888.5,260.2 q-50.6,15.3 -80.2,41.5 l16.9,15.3 q38.0,-26.2 67.5,-32.8 Z" fill="#080b0f" stroke="rgba(255,255,255,0.28)"/>
-      <path d="M886.5,290.7 L820.7,297.2 L823.3,310.5 L884.5,308.5 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M864.1,224.6 l-22.8,5.4 l5.4,9.6 l19.2,-6.0 Z" fill="#dfeaf4" stroke="#8e9aa6" stroke-width="1"/>
-      <path d="M922.0,257.2 L854.5,213.0 L787.0,176.8 L739.7,187.3 L719.4,156.7 L701.7,187.3 L660.4,128.5" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M90.1,243.3 l42.2,-1.0 l0,9 l-42.2,2 Z" fill="#e0223c"/>
-      <rect x="238.4" y="159.7" width="59.1" height="28.4" rx="3" fill="#080b0f" stroke="rgba(255,255,255,0.2)"/>
-      <path d="M238.4,166.8 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M238.4,173.9 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M238.4,181.0 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M105.0,292.5 l71.7,-2.0 l0,30.0 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M122.9,292.5 l0,29.0" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M140.9,292.5 l0,29.0" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M158.8,292.5 l0,29.0" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
+        <path d="M78,229
+    L78,262 Q80,282 100,288 L156,292 L178,302
+    A71,112 0 0 1 320,302
+    Q506,312 673,302
+    A67,102 0 0 1 807,302
+    L876,298 Q904,294 918,278 L922,265
+    C898,244 866,220 840,206
+    C812,196 776,190 740,188
+    C712,192 686,198 660,204
+    C636,182 610,156 584,138
+    C560,126 534,118 508,116
+    L452,118
+    C436,122 424,130 414,142
+    C396,158 376,170 356,178
+    C330,182 304,180 281,178
+    C212,192 144,210 78,229 Z" fill="url(#hdp1Paint)" stroke="rgba(255,255,255,0.48)" stroke-width="1.2"/>
+
+        <g clip-path="url(#hdp1Clip)">
+          <path d="M78,238 C300,214 560,208 922,256 L922,274 C560,228 300,250 78,262 Z" fill="url(#hdp1Shine)"/>
+          <rect x="0" y="256" width="1000" height="150" fill="url(#hdp1Carbon)" opacity="0.9"/>
+
+          <!-- the daylight opening, header 136, roof outline 116 -->
+          <path d="M660,206
+                   C636,186 612,164 588,148
+                   C566,138 540,134 516,134 L458,136
+                   C444,140 432,148 424,158 L406,174
+                   C492,188 578,198 660,206 Z"
+                fill="url(#hdp1Glass)" stroke="#8b9dad" stroke-width="1.4"/>
+          <path d="M660,206 C636,188 614,168 590,152" stroke="#080c11" stroke-width="7" stroke-linecap="round"/>
+          <path d="M424,158 L406,174" stroke="#080c11" stroke-width="7" stroke-linecap="round"/>
+          <path d="M651,204 C630,188 610,174 590,162" stroke="rgba(255,255,255,0.32)" stroke-width="3"/>
+          <path d="M464,128 L508,127" stroke="rgba(255,255,255,0.48)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- THE TAIL IS NOT A TAIL. Behind the cabin the body is cut away to a mesh and you
+               are looking straight through the back of the car at the exhaust. -->
+          <path d="M352,182 L246,196 L216,214 L222,252 L262,228 L358,210 Z" fill="#04080b"/>
+          <g stroke="rgba(255,150,60,0.34)" stroke-width="1.1">
+            <path d="M228,214 l124,-22"/><path d="M232,226 l124,-22"/><path d="M236,238 l122,-22"/>
+          </g>
+          <path d="M352,182 L246,196 L216,214" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2.2"/>
+
+          <path d="M400,192 L340,194 Q324,196 324,208 L324,220 Q324,232 340,232 L400,230 Z"
+                fill="#04060a" stroke="rgba(255,255,255,0.24)" stroke-width="1.1"/>
+          <path d="M400,192 L400,230" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round"/>
+
+          <g id="doorArt">
+            <path d="M420,178 L648,208 L644,286 L424,276 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="524" y="242" width="26" height="6" rx="3" fill="#5a616a"/>
+          </g>
+          <path d="M420,176 L424,276" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M648,206 L644,286" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+
+          <!-- the SPEEDMARK: McLaren's headlamp is the badge's own swoosh, not a lamp shape -->
+          <path d="M900,250 C884,240 868,236 856,238 L858,250 C870,248 884,252 896,260 Z"
+                fill="#eef6ff" stroke="#8ea0ae" stroke-width="1.1"/>
+          <path d="M84,220 L150,214" stroke="#ff2d4e" stroke-width="5.5" stroke-linecap="round"/>
+
+          <text x="530" y="256" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="rgba(255,220,180,0.55)" letter-spacing="6">P1</text>
         </g>
-        <g data-proud="1"></g>
-        <g data-proud="1"></g>
-        <g id="frontFlapArt"><rect x="833.4" y="318.5" width="71.7" height="6" rx="3" fill="#101318" stroke="#ffcf7a" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"><circle cx="96.7" cy="320.5" r="6"/></g>
-        <path d="M649.5,173.8 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
       </g>
+
+      <g id="frontFlapArt"><rect x="834" y="298" width="84" height="6" rx="3" fill="#101318" stroke="#ffcf7a" stroke-opacity="0.55"/></g>
+      <path d="M84,272 L170,278 L166,300 L88,294 Z" fill="#080b0f" stroke="rgba(255,255,255,0.14)"/>
+      <!-- one pipe, high in the middle of the cut-away tail -->
+      <g id="quadExhaustArt"><circle cx="240" cy="232" r="10"/></g>
+
       <g>
-      <circle cx="248.71316477768093" cy="263.3151700087184" r="66.7" fill="#0a0b0e"/>
-      <circle cx="248.71316477768093" cy="263.3151700087184" r="66.7" fill="none" stroke="#1b1f25" stroke-width="8.7"/>
-      <circle cx="248.71316477768093" cy="263.3151700087184" r="60.0" fill="none" stroke="#ff8a3c" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="248.71316477768093" cy="263.3151700087184" r="41.3" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M258.4,258.9 L289.6,257.2 L289.6,269.5 L258.4,267.7 Z" fill="#2b3138"/><path d="M255.9,271.2 L267.2,300.3 L255.5,304.1 L247.5,273.9 Z" fill="#2b3138"/><path d="M243.5,272.6 L219.3,292.3 L212.0,282.4 L238.3,265.4 Z" fill="#2b3138"/><path d="M238.3,261.2 L212.0,244.3 L219.3,234.3 L243.5,254.0 Z" fill="#2b3138"/><path d="M247.5,252.7 L255.5,222.5 L267.2,226.3 L255.9,255.4 Z" fill="#2b3138"/></g>
-      <circle cx="248.71316477768093" cy="263.3151700087184" r="8.7" fill="url(#bkp1Hub)"/>
+      <circle cx="249" cy="263" r="67.0" fill="#0a0b0e"/>
+      <circle cx="249" cy="263" r="67.0" fill="none" stroke="#1b1f25" stroke-width="8.7"/>
+      <circle cx="249" cy="263" r="60.3" fill="none" stroke="#ff8a3c" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="249" cy="263" r="41.5" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M258.8,258.6 L290.1,256.8 L290.1,269.2 L258.8,267.4 Z" fill="#2b3138"/><path d="M256.2,270.9 L267.6,300.2 L255.8,304.0 L247.8,273.7 Z" fill="#2b3138"/><path d="M243.7,272.3 L219.4,292.2 L212.1,282.1 L238.5,265.1 Z" fill="#2b3138"/><path d="M238.5,260.9 L212.1,243.9 L219.4,233.8 L243.7,253.7 Z" fill="#2b3138"/><path d="M247.8,252.3 L255.8,222.0 L267.6,225.8 L256.2,255.1 Z" fill="#2b3138"/></g>
+      <circle cx="249" cy="263" r="8.7" fill="url(#hdp1Hub)"/>
     </g>
       <g>
-      <circle cx="739.8814298169136" cy="267.91412380122057" r="62.1" fill="#0a0b0e"/>
-      <circle cx="739.8814298169136" cy="267.91412380122057" r="62.1" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
-      <circle cx="739.8814298169136" cy="267.91412380122057" r="55.9" fill="none" stroke="#ff8a3c" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="739.8814298169136" cy="267.91412380122057" r="38.5" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M748.9,263.8 L777.9,262.2 L777.9,273.6 L748.9,272.0 Z" fill="#2b3138"/><path d="M746.6,275.2 L757.1,302.3 L746.2,305.9 L738.8,277.8 Z" fill="#2b3138"/><path d="M735.0,276.6 L712.5,294.9 L705.7,285.6 L730.1,269.9 Z" fill="#2b3138"/><path d="M730.1,265.9 L705.7,250.2 L712.5,240.9 L735.0,259.3 Z" fill="#2b3138"/><path d="M738.8,258.0 L746.2,229.9 L757.1,233.5 L746.6,260.6 Z" fill="#2b3138"/></g>
-      <circle cx="739.8814298169136" cy="267.91412380122057" r="8.1" fill="url(#bkp1Hub)"/>
+      <circle cx="740" cy="268" r="62.0" fill="#0a0b0e"/>
+      <circle cx="740" cy="268" r="62.0" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
+      <circle cx="740" cy="268" r="55.8" fill="none" stroke="#ff8a3c" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="740" cy="268" r="38.4" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M749.0,263.9 L778.0,262.3 L778.0,273.7 L749.0,272.1 Z" fill="#2b3138"/><path d="M746.7,275.3 L757.2,302.4 L746.3,305.9 L738.9,277.9 Z" fill="#2b3138"/><path d="M735.1,276.6 L712.6,295.0 L705.9,285.7 L730.3,270.0 Z" fill="#2b3138"/><path d="M730.3,266.0 L705.9,250.3 L712.6,241.0 L735.1,259.4 Z" fill="#2b3138"/><path d="M738.9,258.1 L746.3,230.1 L757.2,233.6 L746.7,260.7 Z" fill="#2b3138"/></g>
+      <circle cx="740" cy="268" r="8.1" fill="url(#hdp1Hub)"/>
     </g>
     </svg>
     `;
