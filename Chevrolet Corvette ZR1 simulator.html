@@ -2548,118 +2548,160 @@ drawCluster(w, h, dashY, sway);
 
   /* Chevrolet exterior — Corvette ZR1 Attack side profile (arctic white over carbon, deep
      splitter, dive planes, the huge top-mounted BOOMERANG wing on central pylons) */
-  /* BODYKIT:BEGIN Chevrolet Corvette ZR1 — drawn from the car's own published dimensions: 4630 mm long
-     on a 2723 mm wheelbase, 1234 mm tall, 900/1007 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN Chevrolet Corvette ZR1 — DRAWN BY HAND, from this car's own side elevation: 4630 mm long on a
+     2723 mm wheelbase, 1234 mm tall, 900/1007 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Chevrolet Corvette ZR1 side">
       <defs>
-        <linearGradient id="bkzr1Paint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffe14a"/><stop offset="0.45" stop-color="#e0a200"/><stop offset="1" stop-color="#4a3200"/>
+        <linearGradient id="hdzr1Paint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffe063"/><stop offset="0.34" stop-color="#f5b312"/><stop offset="0.78" stop-color="#c07d00"/><stop offset="1" stop-color="#6d4a00"/>
         </linearGradient>
-        <linearGradient id="bkzr1Glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
+        <linearGradient id="hdzr1Glass" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#d6e8f7"/><stop offset="0.38" stop-color="#4a6478"/><stop offset="1" stop-color="#0a1017"/>
         </linearGradient>
-        <linearGradient id="bkzr1Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bkzr1Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bkzr1Shine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+        <linearGradient id="hdzr1Vent" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3138"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+        <linearGradient id="hdzr1Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#23272d"/><stop offset="1" stop-color="#06080a"/></linearGradient>
+        <radialGradient id="hdzr1Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
+        <linearGradient id="hdzr1Shine" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff" stop-opacity="0.42"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
         </linearGradient>
-        <filter id="bkzr1Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkzr1Clip"><path d="M78.0,187.4 Q74.0,277.7 88.0,290.5 L183.4,310.9 A78.2,122.5 0 0 1 339.8,310.9 Q509.8,323.2 684.8,310.9 A73.2,112.9 0 0 1 831.1,310.9 L912.0,293.6 Q922.0,284.9 922.0,246.4 L922.0,208.0 C896.7,202.5 871.4,196.7 846.0,191.5 C829.4,188.0 812.8,183.9 796.2,181.6 C784.7,180.1 773.2,179.1 761.6,179.1 C747.9,179.1 734.1,180.8 720.3,181.6 L694.1,166.8 L643.5,125.6 C623.8,120.1 604.1,109.2 584.4,109.2 C556.3,109.2 528.1,113.3 500.0,115.3 L398.7,146.2 L299.1,172.0 L280.6,150.3 L261.1,172.0 C248.5,172.0 235.8,172.0 223.2,172.0 L162.4,152.4 L78.0,187.4 Z"/></clipPath>
-        <clipPath id="bkzr1Dlo"><path d="M651.9,166.8 L584.4,113.3 C556.3,115.3 528.1,114.1 500.0,119.5 C485.9,122.1 471.9,128.0 457.8,132.3 L365.0,166.8 Z"/></clipPath>
+        <filter id="hdzr1Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdzr1Clip"><path d="M78,186
+    L78,248 Q79,268 97,273 L152,277 L196,300
+    A70,104 0 0 1 336,300
+    Q516,309 694,300
+    A67,106 0 0 1 828,300
+    L892,295 Q916,291 922,270 L922,250
+    C900,240 880,232 830,217
+    C800,208 782,201 762,194
+    C730,192 712,195 700,198
+    C672,184 640,160 610,142
+    C596,134 586,129 575,127
+    C550,123 535,122 520,123
+    C500,125 484,128 470,133
+    C450,142 434,148 420,153
+    C400,161 384,166 370,169
+    C340,172 312,172 300,172
+    C288,171 276,170 265,170
+    C220,172 140,178 78,186 Z"/></clipPath>
         <style>
           .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-13deg) translate(-11px,-4px);}
+          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-11deg) translate(-10px,-5px);}
           #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkzr1Glow);}
+          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdzr1Glow);}
         </style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <ellipse cx="500" cy="336" rx="386" ry="9" fill="rgba(0,0,0,0.5)"/>
+
+      <!-- the ZR1's high wing, on two end plates, behind the body so the plates read -->
       <g id="rearWingArt">
-        <rect x="99.3" y="125.6" width="7" height="58.5" fill="#141920" stroke="#4a525b"/>
-        <rect x="214.4" y="125.6" width="7" height="58.5" fill="#141920" stroke="#4a525b"/>
-        <path d="M69.6,130.6 L255.2,125.6 L255.2,134.6 L69.6,139.6 Z" fill="#141920" stroke="#5b636d" stroke-width="1.2"/>
-        <path d="M69.6,130.6 L255.2,125.6" stroke="#f2c200" stroke-width="2" opacity="0.75"/>
+        <rect x="112" y="132" width="7" height="44" fill="#141920" stroke="#4a525b"/>
+        <rect x="226" y="130" width="7" height="44" fill="#141920" stroke="#4a525b"/>
+        <path d="M96,134 L250,126 L250,137 L96,145 Z" fill="#15191f" stroke="#5e6772" stroke-width="1.2"/>
+        <path d="M96,134 L250,126" stroke="#ffd23a" stroke-width="2" opacity="0.75"/>
       </g>
+
       <g id="bcBody">
-        <path d="M78.0,187.4 Q74.0,277.7 88.0,290.5 L183.4,310.9 A78.2,122.5 0 0 1 339.8,310.9 Q509.8,323.2 684.8,310.9 A73.2,112.9 0 0 1 831.1,310.9 L912.0,293.6 Q922.0,284.9 922.0,246.4 L922.0,208.0 C896.7,202.5 871.4,196.7 846.0,191.5 C829.4,188.0 812.8,183.9 796.2,181.6 C784.7,180.1 773.2,179.1 761.6,179.1 C747.9,179.1 734.1,180.8 720.3,181.6 L694.1,166.8 L643.5,125.6 C623.8,120.1 604.1,109.2 584.4,109.2 C556.3,109.2 528.1,113.3 500.0,115.3 L398.7,146.2 L299.1,172.0 L280.6,150.3 L261.1,172.0 C248.5,172.0 235.8,172.0 223.2,172.0 L162.4,152.4 L78.0,187.4 Z" fill="url(#bkzr1Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bkzr1Clip)">
-        <path d="M78.0,166.8 Q500.0,142.1 922.0,166.8 L922.0,187.4 Q500.0,162.7 78.0,191.5 Z" fill="url(#bkzr1Shine)"/>
-        <rect x="0" y="297.4" width="1000" height="224.9" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M183.4,310.9 A78.2,122.5 0 0 1 339.8,310.9" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M183.4,310.9 A78.2,122.5 0 0 1 339.8,310.9" fill="none" stroke="#f2c200" stroke-width="1.4" opacity="0.45"/>
-        <path d="M684.8,310.9 A73.2,112.9 0 0 1 831.1,310.9" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M684.8,310.9 A73.2,112.9 0 0 1 831.1,310.9" fill="none" stroke="#f2c200" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bkzr1Clip)">
-        <path d="M92.0,195.5 Q500.0,188.5 902.0,191.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M335.8,306.4 L688.8,304.4 L685.6,318.4 L339.1,320.4 Z" fill="url(#bkzr1Low)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="0" width="1000" height="146.2" fill="#141619" opacity="0.95"/>
-        <path d="M415.6,185.3 q-28.8,-4.0 -52.3,3.0 l3.0,33.7 q26.2,-5.0 49.7,-6.0 Z" fill="#0b1016"/>
-      <path d="M415.6,185.3 q-28.8,-4.0 -52.3,3.0" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
-      <path d="M410.4,213.7 q20.9,-4.0 42.9,-5.0" fill="none" stroke="#f2c200" stroke-width="1.6" opacity="0.55"/>
-      <path d="M702.6,232.9 l-18.0,3.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M702.6,230.9 l-18.0,3.0" stroke="rgba(255,255,255,0.22)" stroke-width="1.1" stroke-linecap="round"/>
-      <path d="M692.6,235.9 l-18.0,3.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M692.6,233.9 l-18.0,3.0" stroke="rgba(255,255,255,0.22)" stroke-width="1.1" stroke-linecap="round"/>
-      <path d="M682.6,238.9 l-18.0,3.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M682.6,236.9 l-18.0,3.0" stroke="rgba(255,255,255,0.22)" stroke-width="1.1" stroke-linecap="round"/>
-        <path d="M643.5,166.8 L640.5,304.9" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M474.7,166.8 L471.7,304.9" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M474.7,175.0 L643.5,170.9 L639.5,300.9 L472.7,302.9 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="547.1" y="208.0" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M651.9,166.8 L584.4,113.3 C556.3,115.3 528.1,114.1 500.0,119.5 C485.9,122.1 471.9,128.0 457.8,132.3 L365.0,166.8 Z" fill="url(#bkzr1Glass)"/>
-      <path d="M651.9,166.8 L584.4,113.3 C556.3,115.3 528.1,114.1 500.0,119.5 C485.9,122.1 471.9,128.0 457.8,132.3 L365.0,166.8 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bkzr1Dlo)">
-      <path d="M655.9,166.8 L578.4,109.2 L598.4,109.2 L677.9,166.8 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M447.8,166.8 L477.8,128.2 L485.8,128.2 L459.8,166.8 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M651.9,166.8 L584.4,113.3" stroke="#10141a" stroke-width="6" stroke-linecap="butt"/>
-      <path d="M365.0,166.8 L457.8,132.3" stroke="#10141a" stroke-width="6" stroke-linecap="butt"/>
-      <path d="M651.9,166.8 L584.4,113.3 C556.3,115.3 528.1,114.1 500.0,119.5 C485.9,122.1 471.9,128.0 457.8,132.3 L365.0,166.8 Z" fill="none" stroke="#0c1015" stroke-width="2.8" stroke-linejoin="round"/>
-        <path d="M888.5,250.8 q-50.6,14.2 -80.2,38.5 l16.9,14.2 q38.0,-24.3 67.5,-30.4 Z" fill="#080b0f" stroke="rgba(255,255,255,0.28)"/>
-      <path d="M886.5,288.4 L820.7,295.1 L823.3,308.9 L884.5,306.9 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M864.4,221.5 l-29.7,3.7" stroke="#dff0ff" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M922.0,213.0 L846.0,196.5 L796.2,186.6 L761.6,184.1 L720.3,186.6 L694.1,171.8 L643.5,130.6" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M90.1,213.6 l42.2,-1.0 l0,9 l-42.2,2 Z" fill="#e0223c"/>
-      <rect x="263.7" y="146.2" width="67.5" height="27.0" rx="4" fill="rgba(120,150,175,0.35)" stroke="rgba(220,236,250,0.5)"/>
-      <circle cx="284.8" cy="159.7" r="4" fill="#c8a24a"/>
-      <circle cx="307.6" cy="159.7" r="4" fill="#c8a24a"/>
-      <path d="M105.0,290.1 l71.7,-2.0 l0,30.7 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M122.9,290.1 l0,29.7" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M140.9,290.1 l0,29.7" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M158.8,290.1 l0,29.7" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-        <text x="533.8" y="220.3" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">ZR1</text>
+        <path d="M78,186
+    L78,248 Q79,268 97,273 L152,277 L196,300
+    A70,104 0 0 1 336,300
+    Q516,309 694,300
+    A67,106 0 0 1 828,300
+    L892,295 Q916,291 922,270 L922,250
+    C900,240 880,232 830,217
+    C800,208 782,201 762,194
+    C730,192 712,195 700,198
+    C672,184 640,160 610,142
+    C596,134 586,129 575,127
+    C550,123 535,122 520,123
+    C500,125 484,128 470,133
+    C450,142 434,148 420,153
+    C400,161 384,166 370,169
+    C340,172 312,172 300,172
+    C288,171 276,170 265,170
+    C220,172 140,178 78,186 Z" fill="url(#hdzr1Paint)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#hdzr1Clip)">
+          <!-- paint, not a fill: a soft band under the shoulder and a darkened lower body -->
+          <path d="M78,196 C300,180 560,178 922,258 L922,276 C560,196 300,198 78,214 Z" fill="url(#hdzr1Shine)"/>
+          <rect x="0" y="252" width="1000" height="120" fill="rgba(0,0,0,0.16)"/>
+
+          <!-- the flying buttress: roof down onto the deck, with the engine glass let into it -->
+          <path d="M470,133 L455,158 L392,176 L420,153 Z" fill="#191e25" stroke="rgba(255,255,255,0.22)"/>
+          <path d="M300,174 L392,158 L448,166 L352,186 Z" fill="rgba(126,158,184,0.34)" stroke="rgba(214,232,246,0.45)"/>
+          <g stroke="rgba(0,0,0,0.5)" stroke-width="2.4" stroke-linecap="round">
+            <path d="M322,176 L392,163"/><path d="M334,180 L404,167"/><path d="M346,184 L416,171"/>
+          </g>
+
+          <!-- THE DAYLIGHT OPENING: a fast screen, a short side window, a hard C-pillar -->
+          <path d="M706,200 C670,182 630,155 596,138 L580,130
+                   C548,125 505,125 478,133 L455,158
+                   C520,170 620,186 706,200 Z"
+                fill="url(#hdzr1Glass)" stroke="#8fa3b3" stroke-width="1.4"/>
+          <path d="M700,198 C666,180 628,153 592,136" stroke="#0d1116" stroke-width="7" stroke-linecap="round"/>
+          <path d="M478,133 L455,158" stroke="#0d1116" stroke-width="8" stroke-linecap="round"/>
+          <path d="M690,196 C660,180 626,156 596,140" stroke="rgba(255,255,255,0.30)" stroke-width="3"/>
+
+          <!-- THE SIDE INTAKE. On a C8 this is the flank: a deep scoop ahead of the rear arch. -->
+          <path d="M492,186 C452,184 420,196 396,216 L402,246 C428,222 460,212 492,212 Z" fill="#05070a"/>
+          <path d="M492,186 C452,184 420,196 396,216" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.4"/>
+          <path d="M486,208 C456,208 432,216 410,234" fill="none" stroke="#ffd23a" stroke-width="1.6" opacity="0.6"/>
+
+          <!-- the door, its shut lines and the flush handle -->
+          <g id="doorArt">
+            <path d="M498,182 L700,206 L696,286 L500,272 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.32)" stroke-width="1.4"/>
+            <rect x="596" y="222" width="28" height="7" rx="3.5" fill="#4d545c"/>
+          </g>
+          <path d="M498,180 L500,272" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
+          <path d="M700,204 L696,286" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
+
+          <!-- the shoulder crease, and the gill behind the front arch -->
+          <path d="M180,196 C420,186 640,206 892,262" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="2.2" stroke-linecap="round"/>
+          <g stroke="rgba(0,0,0,0.55)" stroke-width="3" stroke-linecap="round">
+            <path d="M742,238 l-28,6"/><path d="M734,247 l-28,6"/><path d="M726,256 l-28,6"/>
+          </g>
+
+          <!-- the rocker skirt -->
+          <path d="M338,296 L690,300 L686,312 L342,308 Z" fill="url(#hdzr1Low)" stroke="rgba(120,132,146,0.32)"/>
+
+          <!-- lamps: the C8's thin wrapped headlamp, and the squared tail cluster -->
+          <path d="M896,252 L852,240 L850,253 L894,265 Z" fill="#e2edf6" stroke="#93a1ad" stroke-width="1.1"/>
+          <path d="M893,247 L856,236" stroke="#ffd23a" stroke-width="2.2" stroke-linecap="round"/>
+          <rect x="84" y="200" width="36" height="10" rx="2.5" fill="#e0223c"/>
+          <rect x="84" y="214" width="24" height="7" rx="2" fill="#8c1220"/>
+
+          <text x="600" y="258" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">ZR1</text>
         </g>
-        <g data-proud="1"></g>
-        <g data-proud="1"><path d="M162.4,154.4 L99.1,173.9 l0,5 L162.4,159.4 Z" fill="#12161c" stroke="#f2c200" stroke-opacity="0.5"/></g>
-        <g id="frontFlapArt"><rect x="833.4" y="316.9" width="71.7" height="6" rx="3" fill="#101318" stroke="#f2c200" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"><circle cx="96.7" cy="318.9" r="6"/><circle cx="111.7" cy="318.9" r="6"/><circle cx="134.7" cy="318.9" r="6"/><circle cx="149.7" cy="318.9" r="6"/></g>
-        <path d="M657.9,168.8 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
       </g>
+
+      <!-- hardware bolted to the car, outside the paint: splitter, diffuser, quad centre pipes -->
+      <g id="frontFlapArt"><rect x="836" y="296" width="82" height="6" rx="3" fill="#101318" stroke="#ffd23a" stroke-opacity="0.5"/></g>
+      <path d="M84,272 L178,278 L174,300 L88,294 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.14)"/>
+      <g stroke="rgba(170,186,200,0.38)" stroke-width="1.4"><path d="M110,294 L108,302"/><path d="M134,296 L132,303"/><path d="M158,297 L156,305"/></g>
+      <g id="quadExhaustArt"><circle cx="102" cy="286" r="5.5"/><circle cx="118" cy="287" r="5.5"/><circle cx="142" cy="288" r="5.5"/><circle cx="158" cy="289" r="5.5"/></g>
+
       <g>
-      <circle cx="261.56544276457885" cy="262.5529157667387" r="67.4" fill="#0a0b0e"/>
-      <circle cx="261.56544276457885" cy="262.5529157667387" r="67.4" fill="none" stroke="#1b1f25" stroke-width="8.8"/>
-      <circle cx="261.56544276457885" cy="262.5529157667387" r="60.7" fill="none" stroke="#ffd23a" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="261.56544276457885" cy="262.5529157667387" r="41.8" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M273.7,262.6 L302.8,255.5 L303.2,258.4 L281.8,262.6 L303.2,266.7 L302.8,269.6 Z" fill="#2b3138"/><path d="M265.3,274.1 L281.0,299.6 L278.4,300.8 L267.8,281.8 L270.5,303.4 L267.6,303.9 Z" fill="#2b3138"/><path d="M251.7,269.7 L232.4,292.5 L230.4,290.4 L245.2,274.4 L225.4,283.6 L224.1,281.1 Z" fill="#2b3138"/><path d="M251.7,255.4 L224.1,244.1 L225.4,241.5 L245.2,250.7 L230.4,234.7 L232.4,232.6 Z" fill="#2b3138"/><path d="M265.3,251.0 L267.6,221.2 L270.5,221.7 L267.8,243.3 L278.4,224.3 L281.0,225.5 Z" fill="#2b3138"/></g>
-      <circle cx="261.56544276457885" cy="262.5529157667387" r="8.8" fill="url(#bkzr1Hub)"/>
+      <circle cx="265" cy="266" r="64.0" fill="#0a0b0e"/>
+      <circle cx="265" cy="266" r="64.0" fill="none" stroke="#1b1f25" stroke-width="8.3"/>
+      <circle cx="265" cy="266" r="57.6" fill="none" stroke="#ffd23a" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="265" cy="266" r="39.7" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M276.5,266.0 L304.1,259.3 L304.5,262.0 L284.2,266.0 L304.5,270.0 L304.1,272.7 Z" fill="#2b3138"/><path d="M268.6,277.0 L283.5,301.1 L281.0,302.3 L270.9,284.3 L273.4,304.8 L270.7,305.3 Z" fill="#2b3138"/><path d="M255.7,272.8 L237.3,294.4 L235.4,292.4 L249.5,277.3 L230.7,286.0 L229.4,283.6 Z" fill="#2b3138"/><path d="M255.7,259.2 L229.4,248.4 L230.7,246.0 L249.5,254.7 L235.4,239.6 L237.3,237.6 Z" fill="#2b3138"/><path d="M268.6,255.0 L270.7,226.7 L273.4,227.2 L270.9,247.7 L281.0,229.7 L283.5,230.9 Z" fill="#2b3138"/></g>
+      <circle cx="265" cy="266" r="8.3" fill="url(#hdzr1Hub)"/>
     </g>
       <g>
-      <circle cx="757.939524838013" cy="267.110151187905" r="62.9" fill="#0a0b0e"/>
-      <circle cx="757.939524838013" cy="267.110151187905" r="62.9" fill="none" stroke="#1b1f25" stroke-width="8.2"/>
-      <circle cx="757.939524838013" cy="267.110151187905" r="56.6" fill="none" stroke="#ffd23a" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="757.939524838013" cy="267.110151187905" r="39.0" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M769.3,267.1 L796.4,260.5 L796.7,263.2 L776.8,267.1 L796.7,271.0 L796.4,273.7 Z" fill="#2b3138"/><path d="M761.4,277.9 L776.1,301.6 L773.6,302.8 L763.8,285.1 L766.2,305.2 L763.5,305.7 Z" fill="#2b3138"/><path d="M748.8,273.8 L730.7,295.0 L728.8,293.1 L742.7,278.2 L724.3,286.8 L723.0,284.4 Z" fill="#2b3138"/><path d="M748.8,260.5 L723.0,249.9 L724.3,247.5 L742.7,256.0 L728.8,241.2 L730.7,239.2 Z" fill="#2b3138"/><path d="M761.4,256.3 L763.5,228.5 L766.2,229.0 L763.8,249.2 L773.6,231.4 L776.1,232.6 Z" fill="#2b3138"/></g>
-      <circle cx="757.939524838013" cy="267.110151187905" r="8.2" fill="url(#bkzr1Hub)"/>
+      <circle cx="762" cy="269" r="61.0" fill="#0a0b0e"/>
+      <circle cx="762" cy="269" r="61.0" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
+      <circle cx="762" cy="269" r="54.9" fill="none" stroke="#ffd23a" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="762" cy="269" r="37.8" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M773.0,269.0 L799.3,262.6 L799.6,265.2 L780.3,269.0 L799.6,272.8 L799.3,275.4 Z" fill="#2b3138"/><path d="M765.4,279.4 L779.6,302.5 L777.2,303.6 L767.7,286.4 L770.0,306.0 L767.4,306.4 Z" fill="#2b3138"/><path d="M753.1,275.5 L735.6,296.1 L733.8,294.2 L747.2,279.8 L729.3,288.1 L728.1,285.7 Z" fill="#2b3138"/><path d="M753.1,262.5 L728.1,252.3 L729.3,249.9 L747.2,258.2 L733.8,243.8 L735.6,241.9 Z" fill="#2b3138"/><path d="M765.4,258.6 L767.4,231.6 L770.0,232.0 L767.7,251.6 L777.2,234.4 L779.6,235.5 Z" fill="#2b3138"/></g>
+      <circle cx="762" cy="269" r="7.9" fill="url(#hdzr1Hub)"/>
     </g>
     </svg>
     `;
