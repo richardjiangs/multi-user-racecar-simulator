@@ -107,13 +107,13 @@ export function drawZr1(spec) {
           </g>
 
           <!-- THE DAYLIGHT OPENING: a fast screen, a short side window, a hard C-pillar -->
-          <path d="M706,200 C670,182 630,155 596,138 L580,130
-                   C548,125 505,125 478,133 L455,158
+          <path d="M706,200 C670,182 630,155 596,138 L586,148
+                   C552,143 508,143 484,151 L458,162
                    C520,170 620,186 706,200 Z"
                 fill="url(#${ID("Glass")})" stroke="#8fa3b3" stroke-width="1.4"/>
-          <path d="M700,198 C666,180 628,153 592,136" stroke="#0d1116" stroke-width="7" stroke-linecap="round"/>
-          <path d="M478,133 L455,158" stroke="#0d1116" stroke-width="8" stroke-linecap="round"/>
-          <path d="M690,196 C660,180 626,156 596,140" stroke="rgba(255,255,255,0.30)" stroke-width="3"/>
+          <path d="M700,198 C666,182 630,158 596,150" stroke="#0d1116" stroke-width="7" stroke-linecap="round"/>
+          <path d="M484,151 L458,162" stroke="#0d1116" stroke-width="8" stroke-linecap="round"/>
+          <path d="M690,196 C660,182 628,160 598,152" stroke="rgba(255,255,255,0.30)" stroke-width="3"/>
 
           <!-- THE SIDE INTAKE. On a C8 this is the flank: a deep scoop ahead of the rear arch. -->
           <path d="M492,186 C452,184 420,196 396,216 L402,246 C428,222 460,212 492,212 Z" fill="#05070a"/>
@@ -218,11 +218,11 @@ export function drawNevera(spec) {
           <rect x="0" y="248" width="1000" height="120" fill="rgba(0,0,0,0.18)"/>
           <!-- the canopy: a long teardrop with a fast screen and a wrapped backlight -->
           <path d="M690,196 C660,178 626,152 596,134
-                   C572,122 544,116 516,116 C486,116 458,122 434,132 L410,150
+                   C574,138 546,132 518,132 C488,132 460,138 436,148 L412,158
                    C486,166 596,182 690,196 Z" fill="url(#${ID("Glass")})" stroke="#8fa8bb" stroke-width="1.4"/>
-          <path d="M686,194 C656,176 624,150 594,134" stroke="#0c1117" stroke-width="7" stroke-linecap="round"/>
-          <path d="M434,132 L410,150" stroke="#0c1117" stroke-width="7" stroke-linecap="round"/>
-          <path d="M672,190 C646,174 618,152 592,138" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M686,194 C656,178 626,156 596,146" stroke="#0c1117" stroke-width="7" stroke-linecap="round"/>
+          <path d="M436,148 L412,158" stroke="#0c1117" stroke-width="7" stroke-linecap="round"/>
+          <path d="M672,190 C646,176 620,158 594,148" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
           <!-- THE TIE: Rimac's scoop, from the door back into the haunch -->
           <path d="M470,200 C424,198 390,214 366,240 L374,262 C400,236 434,224 470,224 Z" fill="#04070a"/>
           <path d="M470,200 C424,198 390,214 366,240" fill="none" stroke="rgba(255,255,255,0.48)" stroke-width="2.4"/>
@@ -306,12 +306,12 @@ export function drawGto(spec) {
           <rect x="0" y="246" width="1000" height="120" fill="rgba(0,0,0,0.14)"/>
           <!-- the small upright cabin, chrome-framed, with a quarter light -->
           <path d="M654,192 C640,178 622,164 600,154
-                   C572,142 540,136 508,136 C476,136 448,142 424,154 L404,178
+                   C572,156 540,150 508,150 C476,150 450,156 428,166 L408,182
                    C478,190 570,192 654,192 Z" fill="url(#${ID("Glass")})" stroke="#e6eef4" stroke-width="2.4"/>
-          <path d="M650,190 C636,177 620,164 600,155" stroke="#b41219" stroke-width="6" stroke-linecap="round"/>
-          <path d="M424,154 L404,178" stroke="#b41219" stroke-width="7" stroke-linecap="round"/>
-          <path d="M600,158 L586,188" stroke="#e6eef4" stroke-width="2.2"/>
-          <path d="M636,186 C622,174 606,162 588,154" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
+          <path d="M650,190 C636,180 620,170 600,163" stroke="#b41219" stroke-width="6" stroke-linecap="round"/>
+          <path d="M428,166 L408,182" stroke="#b41219" stroke-width="7" stroke-linecap="round"/>
+          <path d="M600,166 L588,190" stroke="#e6eef4" stroke-width="2.2"/>
+          <path d="M636,186 C622,177 606,168 590,162" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
           <!-- the three louvres cut into the front wing, and the bonnet scoop -->
           <g stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round">
             <path d="M690,222 l-30,4"/><path d="M684,232 l-30,4"/><path d="M678,242 l-30,4"/>
@@ -407,11 +407,11 @@ export function drawF40(spec) {
           <path d="M78,206 C300,196 560,206 916,260 L916,278 C560,224 300,214 78,224 Z" fill="url(#${ID("Shine")})"/>
           <rect x="0" y="250" width="1000" height="120" fill="rgba(0,0,0,0.2)"/>
           <!-- the glasshouse: a flat screen, a flat roof, a hard C-pillar. All straight lines. -->
-          <path d="M668,210 L604,168 L566,148 L520,146 L470,148 L448,166 L560,186 Z"
+          <path d="M668,210 L600,180 L568,164 L522,162 L474,164 L452,176 L560,186 Z"
                 fill="url(#${ID("Glass")})" stroke="#8fa3b3" stroke-width="1.4"/>
-          <path d="M666,208 L602,167 L566,149" stroke="#0c1116" stroke-width="7" stroke-linecap="round"/>
-          <path d="M470,148 L448,166" stroke="#0c1116" stroke-width="8" stroke-linecap="round"/>
-          <path d="M648,200 L596,168 L566,153" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M666,208 L600,180 L568,165" stroke="#0c1116" stroke-width="7" stroke-linecap="round"/>
+          <path d="M474,164 L452,176" stroke="#0c1116" stroke-width="8" stroke-linecap="round"/>
+          <path d="M648,200 L596,181 L568,169" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
           <!-- the slatted engine cover over the twin-turbo V8 -->
           <g stroke="rgba(0,0,0,0.62)" stroke-width="3.6" stroke-linecap="round">
             <path d="M420,190 l-56,4"/><path d="M404,196 l-56,4"/><path d="M388,202 l-56,4"/>
@@ -510,11 +510,11 @@ export function drawEvija(spec) {
           <path d="M0,258 L1000,252" stroke="#c8ff5a" stroke-width="1.6" opacity="0.65"/>
           <!-- the canopy: a low bubble, wrapped, no B-pillar to speak of -->
           <path d="M706,224 C676,206 640,178 606,158
-                   C578,142 548,134 518,134 C488,134 460,142 436,156 L416,176
+                   C580,158 550,150 520,150 C490,150 462,158 438,170 L418,186
                    C500,196 606,212 706,224 Z" fill="url(#${ID("Glass")})" stroke="#93a8b8" stroke-width="1.4"/>
-          <path d="M702,222 C672,204 638,178 604,158" stroke="#0b1015" stroke-width="7" stroke-linecap="round"/>
-          <path d="M436,156 L416,176" stroke="#0b1015" stroke-width="7" stroke-linecap="round"/>
-          <path d="M688,218 C662,202 632,178 602,162" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M702,222 C672,206 640,186 606,170" stroke="#0b1015" stroke-width="7" stroke-linecap="round"/>
+          <path d="M438,170 L418,186" stroke="#0b1015" stroke-width="7" stroke-linecap="round"/>
+          <path d="M688,218 C662,204 634,186 604,174" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
           <!-- THE VENTURI TUNNEL, bored clean through the rear haunch -->
           <ellipse cx="118" cy="243" rx="33" ry="25" fill="url(#${ID("Tunnel")})" stroke="#c8ff5a" stroke-width="2.4"/>
           <ellipse cx="124" cy="243" rx="21" ry="15" fill="#05070a"/>
@@ -591,12 +591,12 @@ export function drawTuatara(spec) {
         <g clip-path="url(#${ID("Clip")})">
           <path d="M78,246 C300,228 560,224 922,258 L922,276 C560,242 300,246 78,264 Z" fill="url(#${ID("Shine")})"/>
           <rect x="0" y="256" width="1000" height="120" fill="rgba(10,14,20,0.85)"/>
-          <path d="M684,214 C650,192 610,168 566,154 C534,144 500,140 466,142
-                   C432,144 402,152 376,164 L360,182
+          <path d="M684,214 C650,192 610,168 566,154 C534,158 500,154 466,156
+                   C432,158 404,166 380,176 L364,190
                    C470,196 580,206 684,214 Z" fill="url(#${ID("Glass")})" stroke="#93a4b4" stroke-width="1.4"/>
-          <path d="M680,212 C648,192 608,168 564,155" stroke="#0a0f14" stroke-width="7" stroke-linecap="round"/>
-          <path d="M376,164 L360,182" stroke="#0a0f14" stroke-width="6" stroke-linecap="round"/>
-          <path d="M664,208 C634,190 600,170 562,158" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
+          <path d="M680,212 C648,194 610,180 566,168" stroke="#0a0f14" stroke-width="7" stroke-linecap="round"/>
+          <path d="M380,176 L364,190" stroke="#0a0f14" stroke-width="6" stroke-linecap="round"/>
+          <path d="M664,208 C634,192 602,180 564,170" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
           <path d="M470,214 C436,214 410,224 392,244 L398,264 C418,246 442,238 470,238 Z" fill="#05070a"/>
           <path d="M470,214 C436,214 410,224 392,244" fill="none" stroke="rgba(255,255,255,0.44)" stroke-width="2.2"/>
           <g id="doorArt"><path d="M480,208 L668,222 L664,286 L484,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.3)" stroke-width="1.4"/>
@@ -674,11 +674,11 @@ export function drawBugatti(spec) {
           <!-- the orange stripes over the spine: this is the 300+ record car -->
           <path d="M118,196 C320,186 560,186 900,240" fill="none" stroke="#ff7a1c" stroke-width="7"/>
           <path d="M118,210 C320,200 560,200 900,254" fill="none" stroke="#ff7a1c" stroke-width="7"/>
-          <path d="M690,196 C664,178 630,152 596,136 C566,122 534,116 502,116
-                   C470,116 442,122 418,134 L398,152
+          <path d="M690,196 C664,178 630,152 596,136 C568,138 536,132 504,132
+                   C472,132 444,138 420,148 L400,164
                    C486,170 590,184 690,196 Z" fill="url(#${ID("Glass")})" stroke="#8ea2b4" stroke-width="1.4"/>
-          <path d="M686,194 C660,176 628,152 594,136" stroke="#0a0e13" stroke-width="7" stroke-linecap="round"/>
-          <path d="M418,134 L398,152" stroke="#0a0e13" stroke-width="7" stroke-linecap="round"/>
+          <path d="M686,194 C660,178 630,158 596,148" stroke="#0a0e13" stroke-width="7" stroke-linecap="round"/>
+          <path d="M420,148 L400,164" stroke="#0a0e13" stroke-width="7" stroke-linecap="round"/>
           <!-- THE C-LINE: roof to sill, splitting door from haunch. Nothing else has this. -->
           <path d="M462,170 C424,198 410,240 424,286 L438,286 C426,244 438,206 472,182 Z"
                 fill="#0a0e14" stroke="#ff7a1c" stroke-width="2"/>
