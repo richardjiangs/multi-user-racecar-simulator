@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of fifty-two simulators — each a **single self-contained HTML file** —
-thirty-seven road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
+A garage of fifty-four simulators — each a **single self-contained HTML file** —
+thirty-nine road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
 Supra MK4 (A80), the six later hypercars (Hennessey Venom F5 · Lotus Evija · Mercedes-AMG
@@ -207,6 +207,8 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Gordon Murray T.50s Niki Lauda | 541 kW / 725 bhp @ 11,500 (3.9 L Cosworth GMA NA V12, 12,100 rpm) | 485 Nm | **2.6 s — DERIVED, not a factory figure** (GMA publish none for a track-only car) | ~318 drag-limited, fan + delta wing + fin | 6-Xtrac paddle | **852 kg** |
 | Jaguar XE SV Project 8 | 441 kW / 600 PS / 592 hp @ 6,500 (5.0 L supercharged AJ133 V8, Roots-type twin-vortex blower in the vee) | 700 Nm @ 3,500–5,000 | 3.7 s | 322 (200 mph) | 8-ZF auto | 1,745 kg (1,732 with the Track Pack) |
 | Honda S2000 (AP1) | 176 kW / 240 PS / 237 hp @ 8,300 (2.0 L F20C DOHC VTEC I4) — **120 PS per litre**, the NA production record at launch; the AP2's 2.2 F22C1 makes 237 hp @ 7,800 | 208 Nm @ 7,500 (AP2 220 @ 6,800) | 6.2 s | 241 (150 mph — reached, not governed) | 6-manual | 1,260 kg |
+| Ford Mustang GTD | 608 kW / 815 hp @ 7,400 (5.2 L supercharged cross-plane V8, 2.65 L twin-screw blower) | 900 Nm (664 lb-ft) @ 4,800 | 3.0 s — DERIVED from Ford's 0-60 mph 2.8 s | 325 (202 mph); 338 in Track mode | 8-DCT **transaxle** | 1,950 kg |
+| Mazda RX-7 Spirit R (FD3S) | 206 kW / 280 PS @ 6,500 (1.3 L 13B-REW **twin-rotor Wankel**, SEQUENTIAL twin turbos) — 654 cc × 2 | 314 Nm @ 5,000 | 5.2 s | 250; the JDM car was limited to 180 | 5-manual (Mazda's published table) | 1,270 kg |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 
@@ -324,9 +326,9 @@ a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
 `updatePhysics`, `stageForce()` adds the grade on the leg and the water drag on the sea,
 `stageCapMps()` caps each stage, and `drawStage(w,h,pal)` paints the surface.
 
-**Exteriors — every road car is now DRAWN BY HAND.** All **37** road-car bodies are written out
+**Exteriors — every road car is now DRAWN BY HAND.** All **39** road-car bodies are written out
 car by car: the eleven that always were (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 · T.33 ·
-Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **26** in `tools/bodykit/drawn.mjs`, which
+Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **28** in `tools/bodykit/drawn.mjs`, which
 `DRAWN` now covers completely. `apply.mjs` prefers `DRAWN[key]` and falls back to the generator,
 so the generator is still the safety net for a new car but no longer draws anything shipped.
 (The F1 grid and the Dakar cars are drawn by `openwheel.mjs` / `raid.mjs`, which is right — eleven
@@ -340,7 +342,7 @@ got wrong at least once here before the render caught them:
 - **the roofline is the OUTLINE, not the glass** — writing a deck from the glass line puts the tail
   30–50 px too low, and the body comes out as a thin slab with the cabin sitting on it like a box.
 
-The roof is **painted metal**, in all 37: the glass top edge is drawn *below* the body outline so a
+The roof is **painted metal**, in all 38 closed cars (the 918 is a Spyder and has no roof at all — its outline has a NOTCH cut where a coupe's roof would be, so the cockpit is a real opening you look into rather than a shape painted on the side): the glass top edge is drawn *below* the body outline so a
 band of body colour shows above it, and that band gets its own highlight. Every drawing here once
 had its DLO on the roofline instead, which made the roof glass and the cabin a bubble.
 
@@ -647,7 +649,7 @@ reality cannot come out identical:
 | **e-motor** | a hybrid carries an inverter whine under the engine note. |
 | **EV** | no firing order at all: inverter switching + reduction-stage and rotor whine, pitched by motor speed (a 30,000 rpm U9 Xtreme rotor whines far higher than a Nevera's). |
 
-**45 distinct voices across 52 cars.** The groups that still share one are the ones
+**47 distinct voices across 54 cars.** The two newest are the reason the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
 that really do share a power unit — the Mercedes, Ferrari and Red Bull Ford F1 customer
 teams, and the Jesko/Agera RS 5.0 twin-turbo V8. `tests/browser-test.mjs` hashes every
 oscillator stack and **fails on any shared voice outside that allow-list**, so this cannot

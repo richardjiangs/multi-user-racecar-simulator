@@ -450,6 +450,49 @@ export const SPECS = {
     rimCol: "#e0e6ec",
     livery: {kind: "lower", at: 0.8, col: "#161a1f", op: 0.55}, noseDrop: 0.18, tailDrop: 0.18,
   },
+  mustanggtd: {
+    name: "Ford Mustang GTD",
+    lengthMm: 4831, wheelbaseMm: 2718, heightMm: 1331, frontOverhangMm: 890, rearOverhangMm: 1223,
+    wheelDiaFrontMm: 703, wheelDiaRearMm: 715, sillMm: 120,
+    paint: ["#9aa3ad", "#4a525b", "#171b20"], accent: "#2f6ad0",
+    // a very long bonnet, the cabin set well back, and a fastback that runs straight
+    // into the boot the wing stands on
+    // a front-engined coupe, so the bonnet is LONG and nearly flat and the cabin sits a
+    // long way back — the opposite shape to the mid-engined cars either side of it
+    roof: [[0.00, 0.62], [0.14, 0.54], [0.28, 0.49], [0.38, 0.46, "c"],
+           [0.46, 0.22], [0.56, 0.03], [0.66, 0.06], [0.78, 0.26, "c"],
+           [0.90, 0.33, "c"], [1.00, 0.40, "c"]],
+    glass: {cowl: 0.38, roofF: 0.46, roofR: 0.60, deck: 0.70, base: 0.40, inset: 0.03, surround: "black", pillarW: 6},
+    doors: [0.38, 0.60], creaseY: 0.50, rocker: "flat", archLift: 1.10, flareMm: 26, endLift: 0.24,
+    lampY: 0.40, rim: "ten", badge: "GTD", badgeX: 0.48,
+    exhaust: { kind: "quad", n: 4 },
+    wing: { x: 0.90, y: 0.14, w: 0.22, drop: 0.24 },
+    front: {grille: "mouth", grilleY: 0.56, grilleW: 0.05, grilleH: 0.20, lamp: "cluster"},
+    rear: {lamp: "stack", vent: "louvre", ventX: 0.74, ventY: 0.30, ventN: 3, diffuser: true},
+    side: [["gill", 0.28, 0.46], ["intake", 0.62, 0.44]],
+    rimCol: "#8fb6ff",
+    livery: {kind: "lower", at: 0.74, col: "#12161b", op: 0.7}, noseDrop: 0.24, tailDrop: 0.20,
+  },
+  rx7: {
+    name: "Mazda RX-7 Spirit R",
+    lengthMm: 4285, wheelbaseMm: 2425, heightMm: 1230, frontOverhangMm: 940, rearOverhangMm: 920,
+    wheelDiaFrontMm: 643, wheelDiaRearMm: 643, sillMm: 115,
+    paint: ["#7fc6e8", "#2277a8", "#08334c"], accent: "#a8dcf4",
+    // the FD has almost no straight line anywhere on it: one continuous curve from the
+    // nose over the cabin and down into the tail — and the nose is VERY low, because the
+    // headlamps fold away into the bonnet instead of standing up in it
+    roof: [[0.00, 0.86], [0.10, 0.70], [0.20, 0.56], [0.30, 0.46, "c"],
+           [0.38, 0.20], [0.48, 0.02], [0.58, 0.06], [0.70, 0.16, "c"],
+           [0.84, 0.22, "c"], [1.00, 0.30, "c"]],
+    glass: {cowl: 0.36, roofF: 0.44, roofR: 0.58, deck: 0.70, base: 0.38, inset: 0.03, surround: "black", pillarW: 5},
+    doors: [0.36, 0.60], creaseY: 0.50, rocker: "flat", archLift: 1.08, flareMm: 14, endLift: 0.22,
+    lampY: 0.42, rim: "five", badge: "", exhaust: { kind: "single", n: 1 },
+    front: {grille: "slot", grilleY: 0.60, grilleW: 0.04, grilleH: 0.12, lamp: "pop"},
+    rear: {lamp: "roundPair", vent: "none", diffuser: false, spoiler: "lip"},
+    side: [["fuelcap", 0.22, 0.42], ["gill", 0.28, 0.48]],
+    rimCol: "#d8e2ea",
+    livery: {kind: "lower", at: 0.82, col: "#0d1a22", op: 0.5}, noseDrop: 0.14, tailDrop: 0.14,
+  },
   evo: { skip: true },   // hand-drawn — the generator must not touch it
   gtr: { skip: true },   // hand-drawn — the generator must not touch it
   m5: { skip: true },   // hand-drawn — the generator must not touch it

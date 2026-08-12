@@ -44,6 +44,8 @@ const FILES = {
   alfa33: "Alfa Romeo 33 Stradale simulator.html",
   project8: "Jaguar XE SV Project 8 simulator.html",
   s2000: "Honda S2000 simulator.html",
+  mustanggtd: "Ford Mustang GTD simulator.html",
+  rx7: "Mazda RX-7 simulator.html",
 };
 
 let done = 0;
