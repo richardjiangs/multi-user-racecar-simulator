@@ -167,6 +167,7 @@ export const DRAWN = {
   pagani: drawPagani, mclaren: drawMclaren, ferrari: drawFerrariF80,
   koenigsegg: drawKoenigsegg, aston: drawAston,
   venom: drawVenom, amgone: drawAmgOne, p1: drawP1, p917: drawP917, revuelto: drawRevuelto,
+  tesla: drawTesla, taycan: drawTaycan, amg: drawAmgGt, porsche918: drawPorsche918, supra: drawSupra,
 };
 
 /* ------------------------------------------------------------------ *
@@ -1993,5 +1994,575 @@ export function drawRevuelto(spec) {
 
       ${wheel(axR, G - rR, rR, "ten", "#c8ff2a", ID("Hub"))}
       ${wheel(axF, G - rF, rF, "ten", "#c8ff2a", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Tesla Model S Plaid                                                 *
+ *                                                                     *
+ * 4,979 x 1,445 mm on a 2,960 mm wheelbase — a FIVE-DOOR LIFTBACK, and *
+ * the first car in this file that is not a two-seat coupe. That        *
+ * changes the whole drawing: there is a B-pillar, the side glass is    *
+ * SPLIT into a front and a rear light, there are two door handles, and *
+ * the roof is a long flat plateau rather than a peak. The other three  *
+ * things that make it itself are all absences — no grille at all (the  *
+ * nose is one closed surface), no exhaust anywhere, and no door        *
+ * handles standing off the skin, because they sit flush and only the   *
+ * shut line tells you they are there. The tail is one unbroken arc     *
+ * from the base of the screen to the liftback, and the lamp is a bar.  *
+ * ------------------------------------------------------------------ */
+export function drawTesla(spec) {
+  const ID = (n) => `hd${spec.key || "tesla"}${n}`;
+  const axF = 766, axR = 264, rF = 61, rR = 61, G = FRAME.ground;
+
+  const BODY = `M78,227
+    L78,268 Q80,292 104,298 L172,302 L198,302
+    A66,100 0 0 1 330,302
+    Q530,312 700,302
+    A66,100 0 0 1 832,302
+    L890,299 Q912,296 920,282 L922,262
+    C900,250 872,236 846,226
+    C818,212 792,202 766,196
+    C740,196 720,198 703,198
+    C680,178 662,160 644,144
+    C614,120 582,100 551,95
+    L455,93
+    C424,100 388,110 348,124
+    C310,142 274,160 238,178
+    C186,196 130,214 78,227 Z`;
+
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Tesla Model S Plaid side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="0.34" stop-color="#dbe2ea"/><stop offset="0.74" stop-color="#9aa5b1"/><stop offset="1" stop-color="#39424c"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dceaf6"/><stop offset="0.4" stop-color="#4a5c6e"/><stop offset="1" stop-color="#0b131b"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f4f8fc"/><stop offset="1" stop-color="#3d4750"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.52"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.09"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          #doorArt{transform-box:fill-box;transform-origin:4% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-11deg) translate(-12px,-4px);}
+          #quadExhaustArt *{fill:#a7aeb6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+
+      <ellipse cx="500" cy="${G + 6}" rx="392" ry="9" fill="rgba(0,0,0,0.5)"/>
+
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,238 C300,220 560,214 922,272 L922,292 C560,234 300,240 78,256 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="278" width="1000" height="120" fill="rgba(0,0,0,0.2)"/>
+
+          <!-- THE GREENHOUSE OF A FOUR-DOOR: two lights, split by a B-pillar, header at 122
+               with 10 px of painted roof above it. This is not a canopy. -->
+          <path d="M700,194 L568,108 L468,106 L396,176
+                   C492,182 596,188 700,194 Z"
+                fill="url(#${ID("Glass")})" stroke="#93a7bb" stroke-width="1.4"/>
+          <path d="M700,194 L568,108" stroke="#0a1119" stroke-width="7" stroke-linecap="round"/>
+          <path d="M468,106 L396,176" stroke="#0a1119" stroke-width="7" stroke-linecap="round"/>
+          <!-- the B-pillar, blacked out the way a Model S does it -->
+          <path d="M517,107 L520,183" stroke="#0a1119" stroke-width="9" stroke-linecap="round"/>
+          <path d="M690,190 L572,114" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M482,99 L546,98" stroke="rgba(255,255,255,0.5)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- two doors, and the handles that sit FLUSH: a shut line, not a lever -->
+          <g id="doorArt">
+            <path d="M519,184 L700,196 L696,288 L521,284 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="606" y="212" width="30" height="5" rx="2.5" fill="#8d99a5"/>
+          </g>
+          <path d="M519,182 L521,284" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M700,194 L696,288" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M396,176 L400,280" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <rect x="440" y="206" width="30" height="5" rx="2.5" fill="#8d99a5"/>
+
+          <!-- the crease along the flank, and the CHARGE PORT in the rear quarter -->
+          <path d="M120,236 C360,220 620,222 894,258" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M196,222 l24,-2 l1,15 l-24,2 Z" fill="#0d141b" stroke="rgba(200,16,46,0.6)" stroke-width="1.2"/>
+
+          <!-- one bar across the tail, and the swept front cluster. No grille anywhere. -->
+          <path d="M84,238 L152,232" stroke="#e0223c" stroke-width="7" stroke-linecap="round"/>
+          <path d="M900,254 C884,246 866,242 850,242 L852,254 C866,254 882,258 896,264 Z"
+                fill="#eef6ff" stroke="#8fa0ad" stroke-width="1.1"/>
+
+          <text x="560" y="252" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="rgba(70,84,98,0.65)" letter-spacing="5">PLAID</text>
+        </g>
+      </g>
+
+      <g id="frontFlapArt"><rect x="838" y="296" width="78" height="6" rx="3" fill="#141a20" stroke="#c8102e" stroke-opacity="0.4"/></g>
+      <path d="M84,282 L172,288 L168,304 L88,298 Z" fill="#0c1116" stroke="rgba(255,255,255,0.12)"/>
+      <!-- there is no exhaust on a Model S. The group stays so the sim's ref still binds. -->
+      <g id="quadExhaustArt"></g>
+
+      ${wheel(axR, G - rR, rR, "ten", "#b9c6d4", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "ten", "#b9c6d4", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Porsche Taycan Turbo GT                                             *
+ *                                                                     *
+ * 4,963 x 1,381 mm on a 2,900 mm wheelbase — also a four-door, but it  *
+ * is not drawn like the Tesla and must not be. Porsche's FLYLINE runs  *
+ * the roof down in one continuous fall straight into the ducktail with *
+ * no boot step at all, the front wings stand PROUD of the bonnet the   *
+ * way they have since the 911, and the rear haunch is the widest part  *
+ * of the car. Four-point lamps in a recessed pod at the front, a       *
+ * full-width bar with the name written across it at the back, the      *
+ * charge-port flap ahead of the door, and no exhaust.                  *
+ * ------------------------------------------------------------------ */
+export function drawTaycan(spec) {
+  const ID = (n) => `hd${spec.key || "taycan"}${n}`;
+  const axF = 764, axR = 271, rF = 60, rR = 61, G = FRAME.ground;
+
+  const BODY = `M78,231
+    L78,272 Q80,294 104,300 L166,303 L205,302
+    A66,100 0 0 1 337,302
+    Q530,312 699,302
+    A65,98 0 0 1 829,302
+    L888,299 Q910,296 918,282 L922,258
+    C898,242 872,222 848,212
+    C818,204 792,200 764,199
+    C740,194 720,189 703,184
+    C682,160 660,138 635,124
+    C608,108 576,99 542,98
+    L470,100
+    C432,112 390,132 348,151
+    C320,170 292,188 255,206
+    C200,212 140,218 78,227 Z`;
+
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Porsche Taycan Turbo GT side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#a7f0e8"/><stop offset="0.32" stop-color="#3fb4b2"/><stop offset="0.72" stop-color="#106a70"/><stop offset="1" stop-color="#062a30"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8eef6"/><stop offset="0.4" stop-color="#41606a"/><stop offset="1" stop-color="#08131a"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f2f8fc"/><stop offset="1" stop-color="#3a4a54"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:translateY(calc(var(--wing-deg,10deg) * -0.28px));transition:transform .5s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          #doorArt{transform-box:fill-box;transform-origin:4% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-12deg) translate(-12px,-4px);}
+          #quadExhaustArt *{fill:#a7aeb6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+
+      <ellipse cx="500" cy="${G + 6}" rx="392" ry="9" fill="rgba(0,0,0,0.5)"/>
+
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,242 C300,226 560,220 922,268 L922,288 C560,240 300,246 78,260 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="276" width="1000" height="120" fill="rgba(0,0,0,0.2)"/>
+
+          <!-- the greenhouse: header 142, roof outline 104-106. THE FLYLINE is the point —
+               the backlight and the deck are ONE line, with no step onto a boot lid. -->
+          <path d="M700,190 L558,116 L476,116
+                   C440,134 400,166 362,198
+                   C474,196 588,193 700,190 Z"
+                fill="url(#${ID("Glass")})" stroke="#8fb0bb" stroke-width="1.4"/>
+          <path d="M700,190 L558,116" stroke="#08131a" stroke-width="7" stroke-linecap="round"/>
+          <path d="M476,116 C440,136 400,168 364,198" stroke="#08131a" stroke-width="6" stroke-linecap="round"/>
+          <path d="M528,117 L531,194" stroke="#08131a" stroke-width="8.5" stroke-linecap="round"/>
+          <path d="M690,186 L562,122" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M488,104 L544,103" stroke="rgba(255,255,255,0.5)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <g id="doorArt">
+            <path d="M530,194 L700,192 L696,288 L532,286 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="614" y="216" width="30" height="5" rx="2.5" fill="#8fa0aa"/>
+          </g>
+          <path d="M530,192 L532,286" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M700,190 L696,288" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M394,204 L398,280" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <rect x="452" y="218" width="30" height="5" rx="2.5" fill="#8fa0aa"/>
+
+          <!-- the charge-port flap AHEAD of the door, which is where a Taycan carries it -->
+          <path d="M700,232 l26,-2 l1,18 l-26,2 Z" fill="#0a181c" stroke="rgba(95,208,234,0.6)" stroke-width="1.2"/>
+          <!-- the hip over the rear wheel: the widest point of the car, so the hardest crease -->
+          <path d="M180,244 C240,232 300,228 356,232" fill="none" stroke="rgba(255,255,255,0.34)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- the four-point lamp, recessed into its own pod -->
+          <path d="M902,246 C884,238 866,236 852,238 L854,254 C868,252 884,256 898,262 Z" fill="#0a1418" stroke="#cfe0e6" stroke-width="1.3"/>
+          <g fill="#eef8ff"><circle cx="866" cy="244" r="3.2"/><circle cx="878" cy="247" r="3.2"/><circle cx="866" cy="253" r="3.2"/><circle cx="878" cy="256" r="3.2"/></g>
+          <!-- the bar across the tail with the name written across it -->
+          <path d="M84,242 L172,236" stroke="#e0223c" stroke-width="7" stroke-linecap="round"/>
+          <text x="128" y="232" text-anchor="middle" font-family="ui-sans-serif" font-size="7" fill="rgba(255,255,255,0.7)" letter-spacing="3">PORSCHE</text>
+        </g>
+
+        <!-- the deployable ducktail: it RISES rather than tilts, which is what a Taycan does -->
+        <g id="rearWingArt" data-proud="1">
+          <path d="M84,228 C120,220 160,214 196,212 L198,224 C162,226 122,232 86,240 Z"
+                fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.42)" stroke-width="1.2"/>
+        </g>
+      </g>
+
+      <g id="frontFlapArt"><rect x="836" y="296" width="80" height="6" rx="3" fill="#0e161a" stroke="#5fd0ea" stroke-opacity="0.5"/></g>
+      <path d="M84,286 L176,290 L172,304 L88,300 Z" fill="#0a1215" stroke="rgba(255,255,255,0.12)"/>
+      <!-- no exhaust on a Taycan either -->
+      <g id="quadExhaustArt"></g>
+
+      ${wheel(axR, G - rR, rR, "five", "#d8e0e8", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "five", "#d8e0e8", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Mercedes-AMG GT Black Series                                        *
+ *                                                                     *
+ * 4,638 x 1,284 mm on a 2,630 mm wheelbase with a 1,120 mm FRONT       *
+ * overhang — the longest bonnet in the garage by a wide margin, and    *
+ * the only front-engined two-seater here. Everything follows from      *
+ * that: the cabin sits right back over the rear axle, the screen base  *
+ * is more than halfway down the car, and the tail is cut off short.    *
+ * The Black Series adds the two-plane fixed wing with the manually     *
+ * adjustable upper element, the louvres cut into the top of each front *
+ * wing to let radiator air out, and the extra bonnet vents. Solarbeam  *
+ * yellow, because that is the colour AMG launched it in.               *
+ * ------------------------------------------------------------------ */
+export function drawAmgGt(spec) {
+  const ID = (n) => `hd${spec.key || "amg"}${n}`;
+  const axF = 718, axR = 240, rF = 64, rR = 66, G = FRAME.ground;
+
+  const BODY = `M78,199
+    L78,252 Q80,274 102,280 L152,284 L170,302
+    A70,110 0 0 1 310,302
+    Q480,312 650,302
+    A68,106 0 0 1 786,302
+    L862,298 Q896,294 912,282 L922,246
+    C898,232 862,214 828,200
+    C796,192 760,188 718,188
+    C688,190 660,192 630,194
+    C608,170 588,144 566,126
+    C548,116 530,112 512,112
+    L452,115
+    C438,124 424,140 412,158
+    C392,164 372,167 356,169
+    C326,168 294,167 264,166
+    C218,176 148,190 78,199 Z`;
+
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Mercedes-AMG GT Black Series side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffe86a"/><stop offset="0.32" stop-color="#f6cc12"/><stop offset="0.72" stop-color="#a97f00"/><stop offset="1" stop-color="#3a2900"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8e8f4"/><stop offset="0.4" stop-color="#3f4c58"/><stop offset="1" stop-color="#080c11"/></linearGradient>
+        <linearGradient id="${ID("Carbon")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f25"/><stop offset="1" stop-color="#06080b"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#fff6cf"/><stop offset="1" stop-color="#6a5200"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.46"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.5));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-13deg) translate(-12px,-4px);}
+          #quadExhaustArt *{fill:#b6bdc4;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+
+      <ellipse cx="500" cy="${G + 6}" rx="388" ry="9" fill="rgba(0,0,0,0.52)"/>
+
+      <!-- the two-plane fixed wing. The upper element is the one you set by hand in the pits. -->
+      <rect x="106" y="152" width="7" height="46" fill="#141920" stroke="#4a525b"/>
+      <rect x="206" y="150" width="7" height="46" fill="#141920" stroke="#4a525b"/>
+      <g id="rearWingArt">
+        <path d="M88,158 L232,146 L232,158 L88,170 Z" fill="#12161c" stroke="#5e6772" stroke-width="1.2"/>
+        <path d="M88,158 L232,146" stroke="#f2c200" stroke-width="2" opacity="0.85"/>
+      </g>
+      <path d="M92,176 L228,165 L228,173 L92,184 Z" fill="#0e1218" stroke="#4d555f" stroke-width="1"/>
+
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.48)" stroke-width="1.2"/>
+
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,210 C300,200 560,208 922,274 L922,292 C560,228 300,226 78,232 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="268" width="1000" height="130" fill="url(#${ID("Carbon")})" opacity="0.85"/>
+
+          <!-- the greenhouse, set right back: header 128, roof outline 105 -->
+          <path d="M632,194 L552,132 L458,128 L404,168
+                   C480,177 556,186 632,194 Z"
+                fill="url(#${ID("Glass")})" stroke="#8697a6" stroke-width="1.4"/>
+          <path d="M632,194 L552,132" stroke="#080c11" stroke-width="7" stroke-linecap="round"/>
+          <path d="M458,128 L404,168" stroke="#080c11" stroke-width="7" stroke-linecap="round"/>
+          <path d="M623,191 L556,139" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M468,120 L520,118" stroke="rgba(255,255,255,0.46)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- LOUVRES cut into the top of the front wing: Black Series only, and the fastest
+               way to tell one from an ordinary GT at a glance -->
+          <g stroke="rgba(0,0,0,0.6)" stroke-width="3.4" stroke-linecap="round">
+            <path d="M786,208 l-34,4"/><path d="M790,218 l-34,4"/><path d="M794,228 l-34,4"/>
+          </g>
+          <!-- and the extra vents let into that very long bonnet -->
+          <g stroke="rgba(0,0,0,0.4)" stroke-width="3" stroke-linecap="round">
+            <path d="M850,222 l-26,3"/><path d="M854,232 l-26,3"/>
+          </g>
+
+          <path d="M414,176 C368,182 330,190 296,198" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="2.2" stroke-linecap="round"/>
+
+          <g id="doorArt">
+            <path d="M418,172 L626,194 L622,288 L422,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="520" y="224" width="30" height="6" rx="3" fill="#7d6a12"/>
+          </g>
+          <path d="M418,170 L422,278" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M626,192 L622,288" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+
+          <path d="M84,206 L154,202" stroke="#e0223c" stroke-width="6" stroke-linecap="round"/>
+          <path d="M902,258 C888,250 872,246 858,246 L860,258 C872,258 886,262 898,268 Z"
+                fill="#eef6ff" stroke="#8f9aa5" stroke-width="1.1"/>
+        </g>
+      </g>
+
+      <g id="frontFlapArt"><rect x="828" y="298" width="90" height="6" rx="3" fill="#101318" stroke="#f2c200" stroke-opacity="0.55"/></g>
+      <path d="M84,274 L176,280 L172,302 L88,296 Z" fill="#080b0f" stroke="rgba(255,255,255,0.14)"/>
+      <!-- two round pipes, out at the corners, which is the AMG way -->
+      <g id="quadExhaustArt"><circle cx="110" cy="262" r="8"/><circle cx="136" cy="263" r="8"/></g>
+
+      ${wheel(axR, G - rR, rR, "five", "#ffd23a", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "five", "#ffd23a", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Porsche 918 Spyder                                                  *
+ *                                                                     *
+ * 4,643 x 1,167 mm, 2,730 wheelbase. It is a SPYDER, which is the      *
+ * whole drawing: two roof panels lift out and stow in the nose, so     *
+ * behind the seats there are two ROLL HOOPS standing proud of the deck *
+ * rather than a backlight, and the space between them is open. The     *
+ * other thing nothing else in this garage has is where the exhaust     *
+ * comes out — the 918's pipes exit STRAIGHT UP out of the top of the   *
+ * engine cover, inches behind the driver's head, because the shortest  *
+ * pipe is the best one and there was nowhere else to route it. Two     *
+ * stubs on the deck, not a diffuser.                                   *
+ * ------------------------------------------------------------------ */
+export function drawPorsche918(spec) {
+  const ID = (n) => `hd${spec.key || "porsche918"}${n}`;
+  const axF = 740, axR = 244, rF = 62, rR = 65, G = FRAME.ground;
+
+  const BODY = `M78,203
+    L78,254 Q80,276 102,282 L156,286 L174,302
+    A70,108 0 0 1 314,302
+    Q506,312 673,302
+    A67,102 0 0 1 807,302
+    L878,298 Q906,294 918,282 L922,262
+    C898,246 866,228 838,214
+    C808,204 774,198 740,194
+    C712,198 686,202 662,204
+    C640,190 618,176 601,166
+    C578,158 556,154 534,153
+    L470,155
+    C452,158 442,166 436,176
+    C420,180 400,178 380,177
+    C330,181 282,184 230,186
+    C178,192 126,198 78,203 Z`;
+
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Porsche 918 Spyder side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="0.34" stop-color="#d6dde4"/><stop offset="0.74" stop-color="#939ea9"/><stop offset="1" stop-color="#2a3138"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8ecf6"/><stop offset="0.4" stop-color="#41545f"/><stop offset="1" stop-color="#080e13"/></linearGradient>
+        <linearGradient id="${ID("Carbon")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2129"/><stop offset="1" stop-color="#070a0d"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f6fadd"/><stop offset="1" stop-color="#4a5514"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.8));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-15deg) translate(-10px,-6px);}
+          #quadExhaustArt *{fill:#cdd4da;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+
+      <ellipse cx="500" cy="${G + 6}" rx="386" ry="9" fill="rgba(0,0,0,0.5)"/>
+
+      <!-- the deployable rear wing, hung low behind the deck -->
+      <g id="rearWingArt">
+        <rect x="112" y="176" width="6" height="26" fill="#141920" stroke="#4a525b"/>
+        <rect x="196" y="174" width="6" height="26" fill="#141920" stroke="#4a525b"/>
+        <path d="M96,180 L218,170 L218,180 L96,190 Z" fill="#12171d" stroke="#5e6772" stroke-width="1.2"/>
+        <path d="M96,180 L218,170" stroke="#c8e400" stroke-width="2" opacity="0.8"/>
+      </g>
+
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,212 C300,204 560,210 922,272 L922,290 C560,230 300,230 78,238 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="256" width="1000" height="150" fill="url(#${ID("Carbon")})" opacity="0.88"/>
+          <!-- the Weissach stripes -->
+          <path d="M140,214 C380,206 620,216 890,262" fill="none" stroke="#c8102e" stroke-width="4.5" opacity="0.9"/>
+          <path d="M140,224 C380,216 620,226 890,272" fill="none" stroke="#c8102e" stroke-width="2.6" opacity="0.6"/>
+
+          <!-- the windscreen ONLY. A Spyder has no backlight: behind the header there is sky. -->
+          <path d="M660,200 L596,178 L480,178 L444,192
+                   C516,195 588,198 660,200 Z"
+                fill="url(#${ID("Glass")})" stroke="#93aab6" stroke-width="1.4"/>
+          <path d="M660,200 L596,178" stroke="#080e13" stroke-width="6.5" stroke-linecap="round"/>
+          <path d="M480,178 L444,192" stroke="#080e13" stroke-width="6" stroke-linecap="round"/>
+          <path d="M652,197 L600,183" stroke="rgba(255,255,255,0.32)" stroke-width="3"/>
+
+          <path d="M424,196 L364,198 Q348,200 348,212 L348,220 Q348,232 364,232 L424,230 Z"
+                fill="#04080a" stroke="rgba(255,255,255,0.24)" stroke-width="1.1"/>
+          <path d="M424,196 L424,230" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round"/>
+
+          <g id="doorArt">
+            <path d="M446,196 L654,204 L650,286 L450,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="536" y="238" width="28" height="6" rx="3" fill="#5d666f"/>
+          </g>
+          <path d="M446,194 L450,278" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M654,202 L650,286" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+
+          <path d="M84,210 L146,206" stroke="#e0223c" stroke-width="5.5" stroke-linecap="round"/>
+          <circle cx="880" cy="248" r="11" fill="#0a1016" stroke="#c6d0da" stroke-width="1.5"/>
+          <circle cx="880" cy="248" r="5" fill="#eef6ff"/>
+        </g>
+
+        <!-- proud of the paint: TWO ROLL HOOPS behind the seats, which is what a Spyder has
+             where a coupe has a rear window, and the panel gap for the two lift-out roof halves -->
+        <g data-proud="1">
+          <path d="M448,181 C442,152 428,140 412,140 C396,140 382,152 378,179 L396,181
+                   C399,164 404,156 412,156 C420,156 427,164 430,182 Z"
+                fill="#1b2129" stroke="rgba(200,228,0,0.6)" stroke-width="1.4"/>
+          <path d="M376,183 C370,156 356,144 340,144 C324,144 310,156 306,181 L324,183
+                   C327,168 332,160 340,160 C348,160 355,168 358,184 Z"
+                fill="#1b2129" stroke="rgba(200,228,0,0.5)" stroke-width="1.4"/>
+        </g>
+      </g>
+
+      <g id="frontFlapArt"><rect x="834" y="298" width="84" height="6" rx="3" fill="#101318" stroke="#c8e400" stroke-opacity="0.55"/></g>
+      <path d="M84,268 L166,274 L162,296 L88,290 Z" fill="#080b0f" stroke="rgba(255,255,255,0.14)"/>
+      <!-- THE TOP PIPES. Straight up out of the engine cover, behind the driver's head.
+           Nothing else in this garage exhausts anywhere near here. -->
+      <path d="M264,180 L320,178 L320,192 L264,194 Z" fill="#0a0e12" stroke="rgba(200,210,220,0.35)" stroke-width="1.1"/>
+      <g id="quadExhaustArt">
+        <ellipse cx="280" cy="178" rx="9" ry="5"/>
+        <ellipse cx="306" cy="177" rx="9" ry="5"/>
+      </g>
+
+      ${wheel(axR, G - rR, rR, "five", "#c8d4e0", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "five", "#c8d4e0", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Toyota Supra MK4 (A80)                                              *
+ *                                                                     *
+ * 4,514 x 1,275 mm on a 2,550 mm wheelbase — the shortest wheelbase of *
+ * the road cars here, under a rounded fastback with no straight lines  *
+ * in it at all. Two things settle what it is from across a car park:   *
+ * the WING, which on a Turbo is a full-width blade standing on two     *
+ * tall stanchions clear above the boot lid rather than a lip on it;    *
+ * and the four ROUND tail lamps in a black panel across the tail. Add  *
+ * the hatchback glass running most of the way down the back, the       *
+ * swept projector cluster at the front, and Renaissance Red.           *
+ * ------------------------------------------------------------------ */
+export function drawSupra(spec) {
+  const ID = (n) => `hd${spec.key || "supra"}${n}`;
+  const axF = 735, axR = 258, rF = 60, rR = 62, G = FRAME.ground;
+
+  const BODY = `M78,211
+    L78,262 Q80,286 104,292 L168,296 L192,302
+    A66,102 0 0 1 324,302
+    Q500,312 671,302
+    A64,98 0 0 1 799,302
+    L868,298 Q898,294 914,282 L922,268
+    C898,254 866,240 838,232
+    C808,220 774,212 735,206
+    C716,208 704,209 694,210
+    C674,180 650,146 620,122
+    C602,108 584,100 568,99
+    L484,102
+    C470,106 458,116 448,130
+    C424,158 396,184 366,204
+    C320,208 292,208 264,207
+    C200,200 138,204 78,211 Z`;
+
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Toyota Supra MK4 side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff6f52"/><stop offset="0.32" stop-color="#e23225"/><stop offset="0.72" stop-color="#9c1416"/><stop offset="1" stop-color="#3a0607"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d6e6f2"/><stop offset="0.4" stop-color="#3f4d5c"/><stop offset="1" stop-color="#080c11"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f6f9fc"/><stop offset="1" stop-color="#454e57"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.46"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.3));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-13deg) translate(-12px,-4px);}
+          #quadExhaustArt *{fill:#b8bfc6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+
+      <ellipse cx="500" cy="${G + 6}" rx="384" ry="9" fill="rgba(0,0,0,0.52)"/>
+
+      <!-- THE WING. A full-width blade on two tall stanchions, standing clear above the boot —
+           not a lip on it. On an A80 this is the whole silhouette from behind. -->
+      <rect x="132" y="150" width="8" height="58" fill="#8c1416" stroke="#4d0a0b"/>
+      <rect x="230" y="146" width="8" height="58" fill="#8c1416" stroke="#4d0a0b"/>
+      <g id="rearWingArt">
+        <path d="M110,152 L262,140 L262,154 L110,166 Z" fill="#c8281f" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+        <path d="M110,152 L262,140" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
+      </g>
+
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.48)" stroke-width="1.2"/>
+
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,222 C300,212 560,216 922,278 L922,296 C560,236 300,240 78,248 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="272" width="1000" height="126" fill="rgba(0,0,0,0.24)"/>
+
+          <!-- the greenhouse: header 118, roof outline 99-102. The hatch glass runs most of
+               the way down the back, which is what makes an A80 a fastback and not a coupe. -->
+          <path d="M694,216 L620,128 L500,112 L462,138
+                   C440,166 414,190 388,208
+                   C490,212 592,214 694,216 Z"
+                fill="url(#${ID("Glass")})" stroke="#8b9caa" stroke-width="1.4"/>
+          <path d="M694,216 L622,130" stroke="#080c11" stroke-width="7" stroke-linecap="round"/>
+          <path d="M462,138 C442,166 416,190 390,208" stroke="#080c11" stroke-width="6" stroke-linecap="round"/>
+          <path d="M684,212 L624,140" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M500,110 L570,109" stroke="rgba(255,255,255,0.46)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <g id="doorArt">
+            <path d="M446,208 L688,220 L684,290 L450,282 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="562" y="238" width="30" height="6" rx="3" fill="#6d4040"/>
+            <!-- the door mirror, on the skin, where an A80 carries it -->
+            <path d="M688,204 l22,-4 l2,13 l-22,4 Z" fill="#c8281f" stroke="rgba(255,255,255,0.4)" stroke-width="1.1"/>
+          </g>
+          <path d="M446,206 L450,282" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M688,218 L684,290" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+
+          <!-- the fuel filler on the rear quarter, and the crease along the flank -->
+          <circle cx="308" cy="228" r="9" fill="#a8201c" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"/>
+          <path d="M140,232 C360,220 600,228 886,268" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="2" stroke-linecap="round"/>
+
+          <!-- FOUR ROUND LAMPS in a black panel across the tail -->
+          <path d="M80,216 L162,210 L164,238 L82,244 Z" fill="#141a20" stroke="rgba(255,255,255,0.2)" stroke-width="1.1"/>
+          <circle cx="98" cy="226" r="8.5" fill="#e0223c" stroke="#7d1020" stroke-width="1.1"/>
+          <circle cx="120" cy="224" r="8.5" fill="#e0223c" stroke="#7d1020" stroke-width="1.1"/>
+          <circle cx="142" cy="222" r="6.5" fill="#ffb35c" stroke="#7d4a10" stroke-width="1"/>
+
+          <!-- the swept projector cluster -->
+          <path d="M904,258 C888,248 868,242 852,242 L854,256 C868,256 886,260 900,268 Z"
+                fill="#0b1016" stroke="#c6d0da" stroke-width="1.3"/>
+          <circle cx="870" cy="250" r="5" fill="#eef6ff"/><circle cx="886" cy="256" r="4" fill="#dfeaf4"/>
+        </g>
+      </g>
+
+      <g id="frontFlapArt"><rect x="834" y="298" width="84" height="6" rx="3" fill="#1a1012" stroke="#ff7a6c" stroke-opacity="0.5"/></g>
+      <path d="M84,278 L172,284 L168,302 L88,296 Z" fill="#0c0e12" stroke="rgba(255,255,255,0.12)"/>
+      <!-- ONE very large pipe, which is how a 2JZ is finished -->
+      <g id="quadExhaustArt"><circle cx="118" cy="262" r="12"/></g>
+
+      ${wheel(axR, G - rR, rR, "five", "#e0e6ec", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "five", "#e0e6ec", ID("Hub"))}
     </svg>`;
 }

@@ -2699,107 +2699,128 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* Porsche Taycan Turbo GT exterior — low four-door EV sport-sedan side profile (turquoise, glass
      roof, flush handles, carbon spoiler; the fastest-accelerating production sedan) */
-  /* BODYKIT:BEGIN Porsche Taycan Turbo GT — drawn from the car's own published dimensions: 4963 mm long
-     on a 2900 mm wheelbase, 1381 mm tall, 930/1133 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN Porsche Taycan Turbo GT — DRAWN BY HAND, from this car's own side elevation: 4963 mm long on a
+     2900 mm wheelbase, 1381 mm tall, 930/1133 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Porsche Taycan Turbo GT side">
       <defs>
-        <linearGradient id="bktaycanPaint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#7fe6dc"/><stop offset="0.45" stop-color="#188f8c"/><stop offset="1" stop-color="#073237"/>
+        <linearGradient id="hdtaycanPaint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#a7f0e8"/><stop offset="0.32" stop-color="#3fb4b2"/><stop offset="0.72" stop-color="#106a70"/><stop offset="1" stop-color="#062a30"/>
         </linearGradient>
-        <linearGradient id="bktaycanGlass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
-        </linearGradient>
-        <linearGradient id="bktaycanLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bktaycanHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bktaycanShine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bktaycanGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bktaycanClip"><path d="M78.0,215.2 Q74.0,288.3 88.0,296.6 L203.7,309.6 A66.9,105.7 0 0 1 337.6,309.6 L697.8,309.6 A66.0,104.0 0 0 1 829.9,309.6 L912.0,299.3 Q922.0,294.2 922.0,269.7 L922.0,245.3 C896.7,236.7 871.4,232.7 846.0,219.5 C831.4,211.9 816.8,188.8 802.2,188.8 C791.5,188.8 780.8,188.8 770.1,188.8 C755.5,188.8 740.8,188.8 726.2,188.8 L702.6,176.6 L635.0,125.2 C604.1,116.6 573.1,99.4 542.2,99.4 C508.4,99.4 474.7,99.4 440.9,103.7 C410.0,107.7 379.0,123.7 348.1,146.6 C334.9,156.4 321.6,173.6 308.4,187.1 L255.2,187.1 L232.5,187.1 L179.3,202.4 L78.0,215.2 Z"/></clipPath>
-        <clipPath id="bktaycanDlo"><path d="M685.7,185.2 L601.3,122.2 C581.6,116.8 561.9,105.9 542.2,105.9 C508.4,105.9 474.7,105.9 440.9,110.2 C432.5,111.2 424.0,118.0 415.6,121.9 L314.3,185.2 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
+        <linearGradient id="hdtaycanGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8eef6"/><stop offset="0.4" stop-color="#41606a"/><stop offset="1" stop-color="#08131a"/></linearGradient>
+        <radialGradient id="hdtaycanHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f2f8fc"/><stop offset="1" stop-color="#3a4a54"/></radialGradient>
+        <linearGradient id="hdtaycanShine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hdtaycanGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdtaycanClip"><path d="M78,231
+    L78,272 Q80,294 104,300 L166,303 L205,302
+    A66,100 0 0 1 337,302
+    Q530,312 699,302
+    A65,98 0 0 1 829,302
+    L888,299 Q910,296 918,282 L922,258
+    C898,242 872,222 848,212
+    C818,204 792,200 764,199
+    C740,194 720,189 703,184
+    C682,160 660,138 635,124
+    C608,108 576,99 542,98
+    L470,100
+    C432,112 390,132 348,151
+    C320,170 292,188 255,206
+    C200,212 140,218 78,227 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:translateY(calc(var(--wing-deg,10deg) * -0.28px));transition:transform .5s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-13deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bktaycanGlow);}
-        </style>
+          #doorArt{transform-box:fill-box;transform-origin:4% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-12deg) translate(-12px,-4px);}
+          #quadExhaustArt *{fill:#a7aeb6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdtaycanGlow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <ellipse cx="500" cy="336" rx="392" ry="9" fill="rgba(0,0,0,0.5)"/>
+
       <g id="bcBody">
-        <path d="M78.0,215.2 Q74.0,288.3 88.0,296.6 L203.7,309.6 A66.9,105.7 0 0 1 337.6,309.6 L697.8,309.6 A66.0,104.0 0 0 1 829.9,309.6 L912.0,299.3 Q922.0,294.2 922.0,269.7 L922.0,245.3 C896.7,236.7 871.4,232.7 846.0,219.5 C831.4,211.9 816.8,188.8 802.2,188.8 C791.5,188.8 780.8,188.8 770.1,188.8 C755.5,188.8 740.8,188.8 726.2,188.8 L702.6,176.6 L635.0,125.2 C604.1,116.6 573.1,99.4 542.2,99.4 C508.4,99.4 474.7,99.4 440.9,103.7 C410.0,107.7 379.0,123.7 348.1,146.6 C334.9,156.4 321.6,173.6 308.4,187.1 L255.2,187.1 L232.5,187.1 L179.3,202.4 L78.0,215.2 Z" fill="url(#bktaycanPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bktaycanClip)">
-        <path d="M78.0,159.5 Q500.0,133.7 922.0,159.5 L922.0,180.9 Q500.0,155.2 78.0,185.2 Z" fill="url(#bktaycanShine)"/>
-        <rect x="0" y="295.5" width="1000" height="234.9" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M203.7,309.6 A66.9,105.7 0 0 1 337.6,309.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M203.7,309.6 A66.9,105.7 0 0 1 337.6,309.6" fill="none" stroke="#5fd0ea" stroke-width="1.4" opacity="0.45"/>
-        <path d="M697.8,309.6 A66.0,104.0 0 0 1 829.9,309.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M697.8,309.6 A66.0,104.0 0 0 1 829.9,309.6" fill="none" stroke="#5fd0ea" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bktaycanClip)">
-        <path d="M92.0,214.9 Q500.0,207.9 902.0,210.9" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M338.0,304.9 L697.4,302.9 L694.4,316.9 L341.1,318.9 Z" fill="url(#bktaycanLow)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="266.7" width="1000" height="234.9" fill="#14181d" opacity="0.6"/>
-      <path d="M0,266.7 L1000,260.3" stroke="#5fd0ea" stroke-width="1.6" opacity="0.7"/>
-        <rect x="761.1" y="231.1" width="18" height="12" rx="4" fill="#0e131a" stroke="#5fd0ea" stroke-width="1.4"/>
-      <path d="M702.6,243.1 l-18.0,3.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M702.6,241.1 l-18.0,3.0" stroke="rgba(255,255,255,0.22)" stroke-width="1.1" stroke-linecap="round"/>
-      <path d="M692.6,246.1 l-18.0,3.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M692.6,244.1 l-18.0,3.0" stroke="rgba(255,255,255,0.22)" stroke-width="1.1" stroke-linecap="round"/>
-      <path d="M682.6,249.1 l-18.0,3.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M682.6,247.1 l-18.0,3.0" stroke="rgba(255,255,255,0.22)" stroke-width="1.1" stroke-linecap="round"/>
-        <path d="M651.9,159.5 L648.9,303.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M500.0,159.5 L497.0,303.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M381.8,159.5 L378.8,303.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M500.0,168.1 L651.9,163.8 L647.9,299.6 L498.0,301.6 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="564.0" y="202.4" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M685.7,185.2 L601.3,122.2 C581.6,116.8 561.9,105.9 542.2,105.9 C508.4,105.9 474.7,105.9 440.9,110.2 C432.5,111.2 424.0,118.0 415.6,121.9 L314.3,185.2 Z" fill="url(#bktaycanGlass)"/>
-      <path d="M685.7,185.2 L601.3,122.2 C581.6,116.8 561.9,105.9 542.2,105.9 C508.4,105.9 474.7,105.9 440.9,110.2 C432.5,111.2 424.0,118.0 415.6,121.9 L314.3,185.2 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bktaycanDlo)">
-      <path d="M689.7,185.2 L595.3,115.8 L615.3,115.8 L711.7,185.2 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M405.6,185.2 L435.6,115.4 L443.6,115.4 L417.6,185.2 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M685.7,185.2 L601.3,122.2" stroke="#188f8c" stroke-width="6" stroke-linecap="butt"/>
-      <path d="M314.3,185.2 L415.6,121.9" stroke="#188f8c" stroke-width="6" stroke-linecap="butt"/>
-      <path d="M533.8,185.2 L528.7,106.2" stroke="#188f8c" stroke-width="4" stroke-linecap="butt"/>
-      <path d="M449.4,185.2 L444.3,109.8" stroke="#188f8c" stroke-width="4" stroke-linecap="butt"/>
-      <path d="M685.7,185.2 L601.3,122.2 C581.6,116.8 561.9,105.9 542.2,105.9 C508.4,105.9 474.7,105.9 440.9,110.2 C432.5,111.2 424.0,118.0 415.6,121.9 L314.3,185.2 Z" fill="none" stroke="#9aa5b0" stroke-width="2.8" stroke-linejoin="round"/>
-        <path d="M886.5,286.1 L820.7,293.2 L823.3,307.6 L884.5,305.6 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M866.1,237.5 l-25.8,4.1 l0,11.0 l25.8,-3.2 Z" fill="#cfe0ee" stroke="#8894a0" stroke-width="1"/>
-      <path d="M865.5,235.3 l-24.5,3.9" stroke="#5fd0ea" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M922.0,250.3 L846.0,224.5 L802.2,193.8 L770.1,193.8 L726.2,193.8 L702.6,181.6" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M91.1,241.1 l63.3,-2.0" stroke="#e0223c" stroke-width="6" stroke-linecap="round"/>
-      <path d="M91.1,241.1 l63.3,-2.0" stroke="rgba(255,180,190,0.55)" stroke-width="2"/>
+        <path d="M78,231
+    L78,272 Q80,294 104,300 L166,303 L205,302
+    A66,100 0 0 1 337,302
+    Q530,312 699,302
+    A65,98 0 0 1 829,302
+    L888,299 Q910,296 918,282 L922,258
+    C898,242 872,222 848,212
+    C818,204 792,200 764,199
+    C740,194 720,189 703,184
+    C682,160 660,138 635,124
+    C608,108 576,99 542,98
+    L470,100
+    C432,112 390,132 348,151
+    C320,170 292,188 255,206
+    C200,212 140,218 78,227 Z" fill="url(#hdtaycanPaint)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#hdtaycanClip)">
+          <path d="M78,242 C300,226 560,220 922,268 L922,288 C560,240 300,246 78,260 Z" fill="url(#hdtaycanShine)"/>
+          <rect x="0" y="276" width="1000" height="120" fill="rgba(0,0,0,0.2)"/>
+
+          <!-- the greenhouse: header 142, roof outline 104-106. THE FLYLINE is the point —
+               the backlight and the deck are ONE line, with no step onto a boot lid. -->
+          <path d="M700,190 L558,116 L476,116
+                   C440,134 400,166 362,198
+                   C474,196 588,193 700,190 Z"
+                fill="url(#hdtaycanGlass)" stroke="#8fb0bb" stroke-width="1.4"/>
+          <path d="M700,190 L558,116" stroke="#08131a" stroke-width="7" stroke-linecap="round"/>
+          <path d="M476,116 C440,136 400,168 364,198" stroke="#08131a" stroke-width="6" stroke-linecap="round"/>
+          <path d="M528,117 L531,194" stroke="#08131a" stroke-width="8.5" stroke-linecap="round"/>
+          <path d="M690,186 L562,122" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M488,104 L544,103" stroke="rgba(255,255,255,0.5)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <g id="doorArt">
+            <path d="M530,194 L700,192 L696,288 L532,286 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="614" y="216" width="30" height="5" rx="2.5" fill="#8fa0aa"/>
+          </g>
+          <path d="M530,192 L532,286" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M700,190 L696,288" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M394,204 L398,280" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <rect x="452" y="218" width="30" height="5" rx="2.5" fill="#8fa0aa"/>
+
+          <!-- the charge-port flap AHEAD of the door, which is where a Taycan carries it -->
+          <path d="M700,232 l26,-2 l1,18 l-26,2 Z" fill="#0a181c" stroke="rgba(95,208,234,0.6)" stroke-width="1.2"/>
+          <!-- the hip over the rear wheel: the widest point of the car, so the hardest crease -->
+          <path d="M180,244 C240,232 300,228 356,232" fill="none" stroke="rgba(255,255,255,0.34)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- the four-point lamp, recessed into its own pod -->
+          <path d="M902,246 C884,238 866,236 852,238 L854,254 C868,252 884,256 898,262 Z" fill="#0a1418" stroke="#cfe0e6" stroke-width="1.3"/>
+          <g fill="#eef8ff"><circle cx="866" cy="244" r="3.2"/><circle cx="878" cy="247" r="3.2"/><circle cx="866" cy="253" r="3.2"/><circle cx="878" cy="256" r="3.2"/></g>
+          <!-- the bar across the tail with the name written across it -->
+          <path d="M84,242 L172,236" stroke="#e0223c" stroke-width="7" stroke-linecap="round"/>
+          <text x="128" y="232" text-anchor="middle" font-family="ui-sans-serif" font-size="7" fill="rgba(255,255,255,0.7)" letter-spacing="3">PORSCHE</text>
         </g>
-        <g data-proud="1"></g>
-        <g data-proud="1"><path d="M162.4,206.5 L99.1,207.5 l0,5 L162.4,211.5 Z" fill="#12161c" stroke="#5fd0ea" stroke-opacity="0.5"/></g>
-        <g id="frontFlapArt"><rect x="833.4" y="315.6" width="71.7" height="6" rx="3" fill="#101318" stroke="#5fd0ea" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"></g>
-        <path d="M691.7,187.2 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
+
+        <!-- the deployable ducktail: it RISES rather than tilts, which is what a Taycan does -->
+        <g id="rearWingArt" data-proud="1">
+          <path d="M84,228 C120,220 160,214 196,212 L198,224 C162,226 122,232 86,240 Z"
+                fill="url(#hdtaycanPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.2"/>
+        </g>
       </g>
+
+      <g id="frontFlapArt"><rect x="836" y="296" width="80" height="6" rx="3" fill="#0e161a" stroke="#5fd0ea" stroke-opacity="0.5"/></g>
+      <path d="M84,286 L176,290 L172,304 L88,300 Z" fill="#0a1215" stroke="rgba(255,255,255,0.12)"/>
+      <!-- no exhaust on a Taycan either -->
+      <g id="quadExhaustArt"></g>
+
       <g>
-      <circle cx="270.676203908926" cy="268.77896433608703" r="61.2" fill="#0a0b0e"/>
-      <circle cx="270.676203908926" cy="268.77896433608703" r="61.2" fill="none" stroke="#1b1f25" stroke-width="8.0"/>
-      <circle cx="270.676203908926" cy="268.77896433608703" r="55.1" fill="none" stroke="#d8e0e8" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="270.676203908926" cy="268.77896433608703" r="38.0" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M279.6,264.7 L308.2,263.1 L308.2,274.4 L279.6,272.8 Z" fill="#2b3138"/><path d="M277.3,276.0 L287.7,302.7 L276.9,306.2 L269.6,278.5 Z" fill="#2b3138"/><path d="M265.8,277.3 L243.6,295.4 L237.0,286.3 L261.1,270.7 Z" fill="#2b3138"/><path d="M261.1,266.8 L237.0,251.3 L243.6,242.1 L265.8,260.3 Z" fill="#2b3138"/><path d="M269.6,259.0 L276.9,231.3 L287.7,234.8 L277.3,261.6 Z" fill="#2b3138"/></g>
-      <circle cx="270.676203908926" cy="268.77896433608703" r="8.0" fill="url(#bktaycanHub)"/>
+      <circle cx="271" cy="269" r="61.0" fill="#0a0b0e"/>
+      <circle cx="271" cy="269" r="61.0" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
+      <circle cx="271" cy="269" r="54.9" fill="none" stroke="#d8e0e8" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="271" cy="269" r="37.8" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M279.9,265.0 L308.4,263.4 L308.4,274.6 L279.9,273.0 Z" fill="#2b3138"/><path d="M277.6,276.2 L287.9,302.8 L277.2,306.3 L269.9,278.7 Z" fill="#2b3138"/><path d="M266.2,277.5 L244.1,295.5 L237.4,286.4 L261.4,270.9 Z" fill="#2b3138"/><path d="M261.4,267.1 L237.4,251.6 L244.1,242.5 L266.2,260.5 Z" fill="#2b3138"/><path d="M269.9,259.3 L277.2,231.7 L287.9,235.2 L277.6,261.8 Z" fill="#2b3138"/></g>
+      <circle cx="271" cy="269" r="7.9" fill="url(#hdtaycanHub)"/>
     </g>
       <g>
-      <circle cx="763.8456578682249" cy="269.62925649808585" r="60.4" fill="#0a0b0e"/>
-      <circle cx="763.8456578682249" cy="269.62925649808585" r="60.4" fill="none" stroke="#1b1f25" stroke-width="7.8"/>
-      <circle cx="763.8456578682249" cy="269.62925649808585" r="54.3" fill="none" stroke="#d8e0e8" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="763.8456578682249" cy="269.62925649808585" r="37.4" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M772.6,265.6 L800.9,264.1 L800.9,275.2 L772.6,273.6 Z" fill="#2b3138"/><path d="M770.4,276.8 L780.6,303.1 L770.0,306.6 L762.8,279.2 Z" fill="#2b3138"/><path d="M759.1,278.0 L737.2,295.9 L730.6,286.9 L754.4,271.6 Z" fill="#2b3138"/><path d="M754.4,267.7 L730.6,252.4 L737.2,243.4 L759.1,261.2 Z" fill="#2b3138"/><path d="M762.8,260.0 L770.0,232.7 L780.6,236.2 L770.4,262.5 Z" fill="#2b3138"/></g>
-      <circle cx="763.8456578682249" cy="269.62925649808585" r="7.8" fill="url(#bktaycanHub)"/>
+      <circle cx="764" cy="270" r="60.0" fill="#0a0b0e"/>
+      <circle cx="764" cy="270" r="60.0" fill="none" stroke="#1b1f25" stroke-width="7.8"/>
+      <circle cx="764" cy="270" r="54.0" fill="none" stroke="#d8e0e8" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="764" cy="270" r="37.2" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M772.7,266.0 L800.8,264.5 L800.8,275.5 L772.7,274.0 Z" fill="#2b3138"/><path d="M770.5,277.1 L780.6,303.3 L770.1,306.7 L762.9,279.5 Z" fill="#2b3138"/><path d="M759.3,278.4 L737.5,296.1 L731.0,287.1 L754.6,271.9 Z" fill="#2b3138"/><path d="M754.6,268.1 L731.0,252.9 L737.5,243.9 L759.3,261.6 Z" fill="#2b3138"/><path d="M762.9,260.5 L770.1,233.3 L780.6,236.7 L770.5,262.9 Z" fill="#2b3138"/></g>
+      <circle cx="764" cy="270" r="7.8" fill="url(#hdtaycanHub)"/>
     </g>
     </svg>
     `;
