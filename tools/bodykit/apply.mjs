@@ -4,6 +4,10 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { renderCar } from "./render.mjs";
 import { SPECS } from "./specs.mjs";
+// Cars that have been DRAWN BY HAND and signed off take precedence over the generator. The
+// generator stays in place for the ones not yet reached, so the garage is never half-empty
+// while the set is worked through.
+import { DRAWN } from "./drawn.mjs";
 
 // HANDS OFF. These eleven were drawn by hand, car by car, and they are the standard the rest
 // are trying to reach: evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5, slr300, czinger.
@@ -49,12 +53,20 @@ for (const [key, file] of Object.entries(FILES)) {
   if (!spec || spec.skip) { console.log("no spec: " + key); continue; }
   let s = readFileSync(file, "utf8");
 
-  const svg = renderCar({ ...spec, key }).replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/g, "\\${");
+  const byHand = typeof DRAWN[key] === "function";
+  const raw = byHand ? DRAWN[key]({ ...spec, key }) : renderCar({ ...spec, key });
+  const svg = raw.replace(/\\/g, "\\\\").replace(/`/g, "\\`").replace(/\$\{/g, "\\${");
   const TAIL = `app.el.bcBody = document.getElementById("bcBody");\n  }`;
-  const fn = `  /* ${OPEN} ${spec.name} — drawn from the car's own published dimensions: ${spec.lengthMm} mm long
+  const provenance = byHand
+    ? `DRAWN BY HAND, from this car's own side elevation: ${spec.lengthMm} mm long on a
+     ${spec.wheelbaseMm} mm wheelbase, ${spec.heightMm} mm tall, ${spec.frontOverhangMm}/${spec.rearOverhangMm} mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs.`
+    : `drawn from the car's own published dimensions: ${spec.lengthMm} mm long
      on a ${spec.wheelbaseMm} mm wheelbase, ${spec.heightMm} mm tall, ${spec.frontOverhangMm}/${spec.rearOverhangMm} mm
      overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears.`;
+  const fn = `  /* ${OPEN} ${spec.name} — ${provenance} */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = \`
     ${svg}
