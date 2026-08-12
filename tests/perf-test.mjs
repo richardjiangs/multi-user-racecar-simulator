@@ -257,6 +257,26 @@ const CARS = {
     topSpeed: { kmh: 474.8, setup: "e85", minT: 110 },
     brake100: { target: 30, tol: 1.5 },
   },
+  mustanggtd: {
+    file: "Ford Mustang GTD simulator.html",
+    app: "MustangApp",
+    label: "Ford Mustang GTD",
+    // Ford quote 0-60 mph in 2.8 s. 0-100 km/h is the longer run; 3.0 s is the derived
+    // figure and is what SPEC.zeroTo100Kmh certifies.
+    marks: { 100: { target: 3.0, tol: 1e-4 } },
+    topSpeed: { kmh: 325, minT: 60 },      // 202 mph
+    // Track mode: 40 mm lower on the hydraulic pushrods and the rear wing's DRS flap open.
+    topSpeed2: { kmh: 338, setup: "e85", minT: 80, label: "Track mode, DRS open" },
+    brake100: { target: 31, tol: 1.5 },
+  },
+  rx7: {
+    file: "Mazda RX-7 simulator.html",
+    app: "Rx7App",
+    label: "Mazda RX-7 Spirit R (FD3S)",
+    marks: { 100: { target: 5.2, tol: 1e-4 } },
+    topSpeed: { kmh: 250, minT: 60 },
+    brake100: { target: 38, tol: 1.5 },
+  },
   s2000: {
     file: "Honda S2000 simulator.html", app: "S2000App", label: "Honda S2000 (AP1)",
     marks: { 100: { target: 6.2, tol: 1e-4 } },
