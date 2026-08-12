@@ -2676,102 +2676,116 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* Lotus exterior — Evija side profile (pearl-white five-seat hypercar, glass
      roof, flush handles, carbon spoiler; the fastest-accelerating production hypercar) */
-  /* BODYKIT:BEGIN Lotus Evija — drawn from the car's own published dimensions: 4459 mm long
-     on a 2700 mm wheelbase, 1122 mm tall, 880/879 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN Lotus Evija — DRAWN BY HAND, from this car's own side elevation: 4459 mm long on a
+     2700 mm wheelbase, 1122 mm tall, 880/879 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Lotus Evija side">
       <defs>
-        <linearGradient id="bkevijaPaint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#d6f03c"/><stop offset="0.45" stop-color="#84a800"/><stop offset="1" stop-color="#232f04"/>
+        <linearGradient id="hdevijaPaint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#dcf05a"/><stop offset="0.3" stop-color="#a6c81a"/><stop offset="0.62" stop-color="#5c7a0c"/><stop offset="1" stop-color="#141a08"/>
         </linearGradient>
-        <linearGradient id="bkevijaGlass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
-        </linearGradient>
-        <linearGradient id="bkevijaLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bkevijaHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bkevijaShine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bkevijaGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkevijaClip"><path d="M78.0,172.2 Q74.0,290.8 88.0,299.3 L162.8,312.6 A81.5,129.1 0 0 1 325.9,312.6 Q499.9,324.3 679.2,312.6 A76.2,119.0 0 0 1 831.7,312.6 L912.0,299.7 Q922.0,293.3 922.0,267.8 L922.0,242.4 C899.5,238.5 877.0,240.5 854.5,230.7 C829.2,219.7 803.8,177.8 778.5,177.8 C770.9,177.8 763.3,177.8 755.7,177.8 C738.0,177.8 720.3,177.8 702.6,177.8 C682.9,177.8 663.2,153.8 643.5,144.9 C621.0,134.8 598.5,121.5 576.0,121.5 C547.8,121.5 519.7,125.4 491.6,127.4 L390.3,148.8 L282.2,167.8 L263.7,160.5 L244.3,167.8 C231.6,167.8 218.9,167.8 206.3,167.8 L78.0,172.2 Z"/></clipPath>
-        <clipPath id="bkevijaDlo"><path d="M651.9,176.1 L584.4,128.4 C581.6,127.4 578.8,125.4 576.0,125.4 C547.8,125.4 519.7,127.3 491.6,131.3 C480.3,132.9 469.1,136.0 457.8,138.4 L398.7,176.1 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
-          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-32deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkevijaGlow);}
-        </style>
+        <linearGradient id="hdevijaGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d2e6f4"/><stop offset="0.4" stop-color="#3c5165"/><stop offset="1" stop-color="#080e13"/></linearGradient>
+        <linearGradient id="hdevijaCarbon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#20262c"/><stop offset="1" stop-color="#080a0d"/></linearGradient>
+        <radialGradient id="hdevijaHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f0f6dc"/><stop offset="1" stop-color="#4a5620"/></radialGradient>
+        <radialGradient id="hdevijaTunnel" cx="60%" cy="45%" r="70%"><stop offset="0" stop-color="#39424a"/><stop offset="0.6" stop-color="#0d1116"/><stop offset="1" stop-color="#04060a"/></radialGradient>
+        <linearGradient id="hdevijaShine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.44"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hdevijaGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdevijaClip"><path d="M78,214
+    L78,258 Q80,278 100,284 L146,288 L160,302
+    A76,112 0 0 1 302,302
+    Q500,312 682,302
+    A72,110 0 0 1 828,302
+    L890,296 Q916,292 922,272 L922,246
+    C894,236 866,230 838,226
+    C808,222 782,220 755,220
+    C736,220 720,222 706,224
+    C676,206 640,178 606,158
+    C578,142 548,134 518,134
+    C488,134 460,142 436,156
+    C412,170 392,182 374,190
+    C344,202 312,208 282,210
+    C264,211 246,211 231,211
+    C186,212 132,213 78,214 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.5));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));}
+          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-26deg) translate(-8px,-16px);}
+          #quadExhaustArt *{fill:#c8ff5a;} #quadExhaustArt.hot *{fill:#e8ffb0;filter:url(#hdevijaGlow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+      <ellipse cx="500" cy="336" rx="388" ry="9" fill="rgba(0,0,0,0.5)"/>
+      <g id="rearWingArt"><path d="M92,190 L244,182 L244,193 L92,201 Z" fill="#12171d" stroke="#5c6570" stroke-width="1.2"/>
+        <path d="M92,190 L244,182" stroke="#c8ff5a" stroke-width="2" opacity="0.7"/></g>
       <g id="bcBody">
-        <path d="M78.0,172.2 Q74.0,290.8 88.0,299.3 L162.8,312.6 A81.5,129.1 0 0 1 325.9,312.6 Q499.9,324.3 679.2,312.6 A76.2,119.0 0 0 1 831.7,312.6 L912.0,299.7 Q922.0,293.3 922.0,267.8 L922.0,242.4 C899.5,238.5 877.0,240.5 854.5,230.7 C829.2,219.7 803.8,177.8 778.5,177.8 C770.9,177.8 763.3,177.8 755.7,177.8 C738.0,177.8 720.3,177.8 702.6,177.8 C682.9,177.8 663.2,153.8 643.5,144.9 C621.0,134.8 598.5,121.5 576.0,121.5 C547.8,121.5 519.7,125.4 491.6,127.4 L390.3,148.8 L282.2,167.8 L263.7,160.5 L244.3,167.8 C231.6,167.8 218.9,167.8 206.3,167.8 L78.0,172.2 Z" fill="url(#bkevijaPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bkevijaClip)">
-        <path d="M78.0,176.1 Q500.0,152.7 922.0,176.1 L922.0,195.6 Q500.0,172.2 78.0,199.5 Z" fill="url(#bkevijaShine)"/>
-        <rect x="0" y="299.8" width="1000" height="212.4" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M162.8,312.6 A81.5,129.1 0 0 1 325.9,312.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M162.8,312.6 A81.5,129.1 0 0 1 325.9,312.6" fill="none" stroke="#b6d900" stroke-width="1.4" opacity="0.45"/>
-        <path d="M679.2,312.6 A76.2,119.0 0 0 1 831.7,312.6" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M679.2,312.6 A76.2,119.0 0 0 1 831.7,312.6" fill="none" stroke="#b6d900" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bkevijaClip)">
-        <path d="M92.0,203.5 Q500.0,196.5 902.0,199.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M320.4,308.3 L684.6,306.3 L681.4,320.3 L323.8,322.3 Z" fill="url(#bkevijaLow)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="215.1" width="1000" height="212.4" fill="#14181c" opacity="0.94"/>
-      <path d="M0,215.1 L1000,209.3" stroke="#b6d900" stroke-width="1.6" opacity="0.7"/>
-        <ellipse cx="280.6" cy="216.6" rx="42.2" ry="27.6" fill="#05070a" stroke="#b6d900" stroke-width="2"/>
-      <ellipse cx="274.6" cy="216.6" rx="27.0" ry="18.1" fill="#0e141b"/>
-      <rect x="575.4" y="186.2" width="18" height="12" rx="4" fill="#0e131a" stroke="#b6d900" stroke-width="1.4"/>
-        <path d="M651.9,176.1 L648.9,306.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M483.1,176.1 L480.1,306.6" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M483.1,183.9 L651.9,180.0 L647.9,302.6 L481.1,304.6 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="555.5" y="215.1" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M651.9,176.1 L584.4,128.4 C581.6,127.4 578.8,125.4 576.0,125.4 C547.8,125.4 519.7,127.3 491.6,131.3 C480.3,132.9 469.1,136.0 457.8,138.4 L398.7,176.1 Z" fill="url(#bkevijaGlass)"/>
-      <path d="M651.9,176.1 L584.4,128.4 C581.6,127.4 578.8,125.4 576.0,125.4 C547.8,125.4 519.7,127.3 491.6,131.3 C480.3,132.9 469.1,136.0 457.8,138.4 L398.7,176.1 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bkevijaDlo)">
-      <path d="M655.9,176.1 L578.4,124.5 L598.4,124.5 L677.9,176.1 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M447.8,176.1 L477.8,134.5 L485.8,134.5 L459.8,176.1 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M651.9,176.1 L584.4,128.4" stroke="#10141a" stroke-width="4" stroke-linecap="butt"/>
-      <path d="M398.7,176.1 L457.8,138.4" stroke="#10141a" stroke-width="4" stroke-linecap="butt"/>
-        <path d="M886.5,291.3 L820.7,297.7 L823.3,310.6 L884.5,308.6 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M863.8,250.4 l-28.0,3.5" stroke="#c8ff5a" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M922.0,247.4 L854.5,235.7 L778.5,182.8 L755.7,182.8 L702.6,182.8 L643.5,149.9" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M91.1,213.7 l63.3,-2.0" stroke="#ff3a5c" stroke-width="6" stroke-linecap="round"/>
-      <path d="M91.1,213.7 l63.3,-2.0" stroke="rgba(255,180,190,0.55)" stroke-width="2"/>
-      <path d="M105.0,293.2 l71.7,-2.0 l0,29.4 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M122.9,293.2 l0,28.4" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M140.9,293.2 l0,28.4" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M158.8,293.2 l0,28.4" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
+        <path d="M78,214
+    L78,258 Q80,278 100,284 L146,288 L160,302
+    A76,112 0 0 1 302,302
+    Q500,312 682,302
+    A72,110 0 0 1 828,302
+    L890,296 Q916,292 922,272 L922,246
+    C894,236 866,230 838,226
+    C808,222 782,220 755,220
+    C736,220 720,222 706,224
+    C676,206 640,178 606,158
+    C578,142 548,134 518,134
+    C488,134 460,142 436,156
+    C412,170 392,182 374,190
+    C344,202 312,208 282,210
+    C264,211 246,211 231,211
+    C186,212 132,213 78,214 Z" fill="url(#hdevijaPaint)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+        <g clip-path="url(#hdevijaClip)">
+          <path d="M78,224 C300,212 560,214 922,254 L922,272 C560,232 300,232 78,242 Z" fill="url(#hdevijaShine)"/>
+          <!-- the whole lower body is exposed carbon, which is how an Evija is finished -->
+          <rect x="0" y="256" width="1000" height="140" fill="url(#hdevijaCarbon)" opacity="0.94"/>
+          <path d="M0,258 L1000,252" stroke="#c8ff5a" stroke-width="1.6" opacity="0.65"/>
+          <!-- the canopy: a low bubble, wrapped, no B-pillar to speak of -->
+          <path d="M706,224 C676,206 640,178 606,158
+                   C578,142 548,134 518,134 C488,134 460,142 436,156 L416,176
+                   C500,196 606,212 706,224 Z" fill="url(#hdevijaGlass)" stroke="#93a8b8" stroke-width="1.4"/>
+          <path d="M702,222 C672,204 638,178 604,158" stroke="#0b1015" stroke-width="7" stroke-linecap="round"/>
+          <path d="M436,156 L416,176" stroke="#0b1015" stroke-width="7" stroke-linecap="round"/>
+          <path d="M688,218 C662,202 632,178 602,162" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <!-- THE VENTURI TUNNEL, bored clean through the rear haunch -->
+          <ellipse cx="118" cy="243" rx="33" ry="25" fill="url(#hdevijaTunnel)" stroke="#c8ff5a" stroke-width="2.4"/>
+          <ellipse cx="124" cy="243" rx="21" ry="15" fill="#05070a"/>
+          <path d="M96,232 C108,226 132,226 144,232" fill="none" stroke="rgba(255,255,255,0.34)" stroke-width="1.8"/>
+          <!-- the dished bonnet between the front arches, drawn as its own surface -->
+          <path d="M838,226 C806,236 780,240 755,240 C736,240 720,238 706,236 L706,224
+                   C720,222 736,220 755,220 C782,220 808,222 838,226 Z" fill="rgba(0,0,0,0.2)" stroke="rgba(255,255,255,0.24)"/>
+          <g id="doorArt">
+            <path d="M452,196 L688,226 L684,292 L456,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.3)" stroke-width="1.4"/>
+            <rect x="576" y="244" width="26" height="6" rx="3" fill="#59616a"/>
+          </g>
+          <path d="M452,194 L456,278" stroke="rgba(0,0,0,0.32)" stroke-width="2"/>
+          <path d="M688,224 L684,292" stroke="rgba(0,0,0,0.32)" stroke-width="2"/>
+          <rect x="330" y="222" width="18" height="12" rx="4" fill="#0d141a" stroke="#c8ff5a" stroke-width="1.3"/>
+          <!-- the thin LED signatures, front and rear -->
+          <path d="M898,252 L856,244" stroke="#eaffc0" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M84,222 L146,218" stroke="#ff2d4e" stroke-width="6" stroke-linecap="round"/>
+          <text x="560" y="268" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="rgba(220,240,150,0.6)" letter-spacing="5">EVIJA</text>
         </g>
-        <g data-proud="1"></g>
-        <g data-proud="1"></g>
-        <g id="frontFlapArt"><rect x="833.4" y="318.6" width="71.7" height="6" rx="3" fill="#101318" stroke="#b6d900" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"></g>
-        <path d="M657.9,178.1 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
       </g>
+      <g id="frontFlapArt"><rect x="836" y="298" width="80" height="6" rx="3" fill="#101318" stroke="#c8ff5a" stroke-opacity="0.5"/></g>
+      <path d="M84,282 L172,288 L168,306 L88,300 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.14)"/>
+      <g id="quadExhaustArt"><rect x="96" y="272" width="24" height="5" rx="2.5"/></g>
       <g>
-      <circle cx="244.37721462211258" cy="260.91276070867906" r="69.1" fill="#0a0b0e"/>
-      <circle cx="244.37721462211258" cy="260.91276070867906" r="69.1" fill="none" stroke="#1b1f25" stroke-width="9.0"/>
-      <circle cx="244.37721462211258" cy="260.91276070867906" r="62.2" fill="none" stroke="#c8ff5a" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="244.37721462211258" cy="260.91276070867906" r="42.8" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="244.37721462211258" cy="260.91276070867906" r="42.8" fill="#20252c"/><circle cx="244.37721462211258" cy="260.91276070867906" r="26.6" fill="none" stroke="#c8ff5a" stroke-width="1.6" opacity="0.55"/></g>
-      <circle cx="244.37721462211258" cy="260.91276070867906" r="9.0" fill="url(#bkevijaHub)"/>
+      <circle cx="231" cy="261" r="69.0" fill="#0a0b0e"/>
+      <circle cx="231" cy="261" r="69.0" fill="none" stroke="#1b1f25" stroke-width="9.0"/>
+      <circle cx="231" cy="261" r="62.1" fill="none" stroke="#c8ff5a" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="231" cy="261" r="42.8" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="231" cy="261" r="42.8" fill="#20252c"/><circle cx="231" cy="261" r="26.5" fill="none" stroke="#c8ff5a" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="231" cy="261" r="9.0" fill="url(#hdevijaHub)"/>
     </g>
       <g>
-      <circle cx="755.43350527024" cy="265.64476339986544" r="64.4" fill="#0a0b0e"/>
-      <circle cx="755.43350527024" cy="265.64476339986544" r="64.4" fill="none" stroke="#1b1f25" stroke-width="8.4"/>
-      <circle cx="755.43350527024" cy="265.64476339986544" r="57.9" fill="none" stroke="#c8ff5a" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="755.43350527024" cy="265.64476339986544" r="39.9" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="755.43350527024" cy="265.64476339986544" r="39.9" fill="#20252c"/><circle cx="755.43350527024" cy="265.64476339986544" r="24.7" fill="none" stroke="#c8ff5a" stroke-width="1.6" opacity="0.55"/></g>
-      <circle cx="755.43350527024" cy="265.64476339986544" r="8.4" fill="url(#bkevijaHub)"/>
+      <circle cx="755" cy="265" r="65.0" fill="#0a0b0e"/>
+      <circle cx="755" cy="265" r="65.0" fill="none" stroke="#1b1f25" stroke-width="8.5"/>
+      <circle cx="755" cy="265" r="58.5" fill="none" stroke="#c8ff5a" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="755" cy="265" r="40.3" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="755" cy="265" r="40.3" fill="#20252c"/><circle cx="755" cy="265" r="25.0" fill="none" stroke="#c8ff5a" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="755" cy="265" r="8.5" fill="url(#hdevijaHub)"/>
     </g>
     </svg>
     `;
