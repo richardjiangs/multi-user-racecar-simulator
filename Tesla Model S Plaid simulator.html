@@ -2730,102 +2730,121 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* Tesla exterior — Model S Plaid side profile (pearl-white five-seat sedan, glass
      roof, flush handles, carbon spoiler; the fastest-accelerating production sedan) */
-  /* BODYKIT:BEGIN Tesla Model S Plaid — drawn from the car's own published dimensions: 4979 mm long
-     on a 2960 mm wheelbase, 1445 mm tall, 920/1099 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN Tesla Model S Plaid — DRAWN BY HAND, from this car's own side elevation: 4979 mm long on a
+     2960 mm wheelbase, 1445 mm tall, 920/1099 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Tesla Model S Plaid side">
       <defs>
-        <linearGradient id="bkteslaPaint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f2f5f8"/><stop offset="0.45" stop-color="#b8c2cc"/><stop offset="1" stop-color="#3b444d"/>
+        <linearGradient id="hdteslaPaint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="0.34" stop-color="#dbe2ea"/><stop offset="0.74" stop-color="#9aa5b1"/><stop offset="1" stop-color="#39424c"/>
         </linearGradient>
-        <linearGradient id="bkteslaGlass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
-        </linearGradient>
-        <linearGradient id="bkteslaLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bkteslaHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bkteslaShine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bkteslaGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkteslaClip"><path d="M78.0,214.3 Q74.0,288.6 88.0,296.1 L198.9,308.0 A65.4,103.1 0 0 1 329.7,308.0 L700.6,308.0 A65.4,103.1 0 0 1 831.5,308.0 L912.0,298.6 Q922.0,293.9 922.0,274.2 L922.0,254.5 C896.7,247.0 871.4,249.3 846.0,232.2 C832.0,222.7 817.9,187.6 803.8,187.6 C792.6,187.6 781.3,187.6 770.1,187.6 C756.0,187.6 741.9,187.6 727.9,187.6 C719.4,187.6 711.0,187.6 702.6,187.6 C682.9,187.5 663.2,151.5 643.5,138.6 C612.5,118.3 581.6,96.0 550.6,94.0 C516.9,91.7 483.1,91.7 449.4,91.7 C415.6,91.7 381.8,91.7 348.1,120.7 C332.9,133.8 317.7,187.6 302.5,187.6 C289.8,187.6 277.2,187.6 264.5,187.6 C255.8,187.6 247.1,175.7 238.4,169.8 L145.5,201.0 L78.0,214.3 Z"/></clipPath>
-        <clipPath id="bkteslaDlo"><path d="M685.7,183.1 L601.3,125.0 C584.4,116.9 567.5,101.8 550.6,100.7 C516.9,98.4 483.1,98.4 449.4,98.4 C432.5,98.4 415.6,108.1 398.7,112.9 L297.4,183.1 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
+        <linearGradient id="hdteslaGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dceaf6"/><stop offset="0.4" stop-color="#4a5c6e"/><stop offset="1" stop-color="#0b131b"/></linearGradient>
+        <radialGradient id="hdteslaHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f4f8fc"/><stop offset="1" stop-color="#3d4750"/></radialGradient>
+        <linearGradient id="hdteslaShine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.52"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.09"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hdteslaGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdteslaClip"><path d="M78,227
+    L78,268 Q80,292 104,298 L172,302 L198,302
+    A66,100 0 0 1 330,302
+    Q530,312 700,302
+    A66,100 0 0 1 832,302
+    L890,299 Q912,296 920,282 L922,262
+    C900,250 872,236 846,226
+    C818,212 792,202 766,196
+    C740,196 720,198 703,198
+    C680,178 662,160 644,144
+    C614,120 582,100 551,95
+    L455,93
+    C424,100 388,110 348,124
+    C310,142 274,160 238,178
+    C186,196 130,214 78,227 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-13deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkteslaGlow);}
-        </style>
+          #doorArt{transform-box:fill-box;transform-origin:4% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-11deg) translate(-12px,-4px);}
+          #quadExhaustArt *{fill:#a7aeb6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdteslaGlow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <ellipse cx="500" cy="336" rx="392" ry="9" fill="rgba(0,0,0,0.5)"/>
+
       <g id="bcBody">
-        <path d="M78.0,214.3 Q74.0,288.6 88.0,296.1 L198.9,308.0 A65.4,103.1 0 0 1 329.7,308.0 L700.6,308.0 A65.4,103.1 0 0 1 831.5,308.0 L912.0,298.6 Q922.0,293.9 922.0,274.2 L922.0,254.5 C896.7,247.0 871.4,249.3 846.0,232.2 C832.0,222.7 817.9,187.6 803.8,187.6 C792.6,187.6 781.3,187.6 770.1,187.6 C756.0,187.6 741.9,187.6 727.9,187.6 C719.4,187.6 711.0,187.6 702.6,187.6 C682.9,187.5 663.2,151.5 643.5,138.6 C612.5,118.3 581.6,96.0 550.6,94.0 C516.9,91.7 483.1,91.7 449.4,91.7 C415.6,91.7 381.8,91.7 348.1,120.7 C332.9,133.8 317.7,187.6 302.5,187.6 C289.8,187.6 277.2,187.6 264.5,187.6 C255.8,187.6 247.1,175.7 238.4,169.8 L145.5,201.0 L78.0,214.3 Z" fill="url(#bkteslaPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bkteslaClip)">
-        <path d="M78.0,151.9 Q500.0,125.2 922.0,151.9 L922.0,174.2 Q500.0,147.5 78.0,178.7 Z" fill="url(#bkteslaShine)"/>
-        <rect x="0" y="293.3" width="1000" height="244.9" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M198.9,308.0 A65.4,103.1 0 0 1 329.7,308.0" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M198.9,308.0 A65.4,103.1 0 0 1 329.7,308.0" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.45"/>
-        <path d="M700.6,308.0 A65.4,103.1 0 0 1 831.5,308.0" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M700.6,308.0 A65.4,103.1 0 0 1 831.5,308.0" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bkteslaClip)">
-        <path d="M92.0,213.9 Q500.0,206.9 902.0,209.9" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M331.4,303.1 L698.9,301.1 L695.9,315.1 L334.5,317.1 Z" fill="url(#bkteslaLow)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="263.4" width="1000" height="244.9" fill="#14181d" opacity="0.6"/>
-      <path d="M0,263.4 L1000,256.7" stroke="#c8102e" stroke-width="1.6" opacity="0.7"/>
-        <rect x="794.8" y="232.2" width="18" height="12" rx="4" fill="#0e131a" stroke="#c8102e" stroke-width="1.4"/>
-        <path d="M651.9,151.9 L648.9,302.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M500.0,151.9 L497.0,302.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M381.8,151.9 L378.8,302.0" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M500.0,160.8 L651.9,156.4 L647.9,298.0 L498.0,300.0 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="564.0" y="196.5" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M685.7,183.1 L601.3,125.0 C584.4,116.9 567.5,101.8 550.6,100.7 C516.9,98.4 483.1,98.4 449.4,98.4 C432.5,98.4 415.6,108.1 398.7,112.9 L297.4,183.1 Z" fill="url(#bkteslaGlass)"/>
-      <path d="M685.7,183.1 L601.3,125.0 C584.4,116.9 567.5,101.8 550.6,100.7 C516.9,98.4 483.1,98.4 449.4,98.4 C432.5,98.4 415.6,108.1 398.7,112.9 L297.4,183.1 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bkteslaDlo)">
-      <path d="M689.7,183.1 L595.3,118.3 L615.3,118.3 L711.7,183.1 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M388.7,183.1 L418.7,106.2 L426.7,106.2 L400.7,183.1 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M685.7,183.1 L601.3,125.0" stroke="#b8c2cc" stroke-width="6" stroke-linecap="butt"/>
-      <path d="M297.4,183.1 L398.7,112.9" stroke="#b8c2cc" stroke-width="6" stroke-linecap="butt"/>
-      <path d="M516.9,183.1 L511.8,99.9" stroke="#b8c2cc" stroke-width="4" stroke-linecap="butt"/>
-      <path d="M432.5,183.1 L427.4,103.3" stroke="#b8c2cc" stroke-width="4" stroke-linecap="butt"/>
-      <path d="M685.7,183.1 L601.3,125.0 C584.4,116.9 567.5,101.8 550.6,100.7 C516.9,98.4 483.1,98.4 449.4,98.4 C432.5,98.4 415.6,108.1 398.7,112.9 L297.4,183.1 Z" fill="none" stroke="#9aa5b0" stroke-width="2.8" stroke-linejoin="round"/>
-        <path d="M886.5,283.5 L820.7,290.8 L823.3,306.0 L884.5,304.0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M866.6,246.2 l-26.9,4.3 l0,11.5 l26.9,-3.4 Z" fill="#cfe0ee" stroke="#8894a0" stroke-width="1"/>
-      <path d="M865.9,243.9 l-25.6,4.0" stroke="#c8102e" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M922.0,259.5 L846.0,237.2 L803.8,192.6 L770.1,192.6 L727.9,192.6 L702.6,192.6" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M91.1,238.7 l63.3,-2.0" stroke="#e0223c" stroke-width="6" stroke-linecap="round"/>
-      <path d="M91.1,238.7 l63.3,-2.0" stroke="rgba(255,180,190,0.55)" stroke-width="2"/>
-        <text x="533.8" y="209.9" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">PLAID</text>
+        <path d="M78,227
+    L78,268 Q80,292 104,298 L172,302 L198,302
+    A66,100 0 0 1 330,302
+    Q530,312 700,302
+    A66,100 0 0 1 832,302
+    L890,299 Q912,296 920,282 L922,262
+    C900,250 872,236 846,226
+    C818,212 792,202 766,196
+    C740,196 720,198 703,198
+    C680,178 662,160 644,144
+    C614,120 582,100 551,95
+    L455,93
+    C424,100 388,110 348,124
+    C310,142 274,160 238,178
+    C186,196 130,214 78,227 Z" fill="url(#hdteslaPaint)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#hdteslaClip)">
+          <path d="M78,238 C300,220 560,214 922,272 L922,292 C560,234 300,240 78,256 Z" fill="url(#hdteslaShine)"/>
+          <rect x="0" y="278" width="1000" height="120" fill="rgba(0,0,0,0.2)"/>
+
+          <!-- THE GREENHOUSE OF A FOUR-DOOR: two lights, split by a B-pillar, header at 122
+               with 10 px of painted roof above it. This is not a canopy. -->
+          <path d="M700,194 L568,108 L468,106 L396,176
+                   C492,182 596,188 700,194 Z"
+                fill="url(#hdteslaGlass)" stroke="#93a7bb" stroke-width="1.4"/>
+          <path d="M700,194 L568,108" stroke="#0a1119" stroke-width="7" stroke-linecap="round"/>
+          <path d="M468,106 L396,176" stroke="#0a1119" stroke-width="7" stroke-linecap="round"/>
+          <!-- the B-pillar, blacked out the way a Model S does it -->
+          <path d="M517,107 L520,183" stroke="#0a1119" stroke-width="9" stroke-linecap="round"/>
+          <path d="M690,190 L572,114" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <path d="M482,99 L546,98" stroke="rgba(255,255,255,0.5)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- two doors, and the handles that sit FLUSH: a shut line, not a lever -->
+          <g id="doorArt">
+            <path d="M519,184 L700,196 L696,288 L521,284 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="606" y="212" width="30" height="5" rx="2.5" fill="#8d99a5"/>
+          </g>
+          <path d="M519,182 L521,284" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M700,194 L696,288" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M396,176 L400,280" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <rect x="440" y="206" width="30" height="5" rx="2.5" fill="#8d99a5"/>
+
+          <!-- the crease along the flank, and the CHARGE PORT in the rear quarter -->
+          <path d="M120,236 C360,220 620,222 894,258" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-linecap="round"/>
+          <path d="M196,222 l24,-2 l1,15 l-24,2 Z" fill="#0d141b" stroke="rgba(200,16,46,0.6)" stroke-width="1.2"/>
+
+          <!-- one bar across the tail, and the swept front cluster. No grille anywhere. -->
+          <path d="M84,238 L152,232" stroke="#e0223c" stroke-width="7" stroke-linecap="round"/>
+          <path d="M900,254 C884,246 866,242 850,242 L852,254 C866,254 882,258 896,264 Z"
+                fill="#eef6ff" stroke="#8fa0ad" stroke-width="1.1"/>
+
+          <text x="560" y="252" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="rgba(70,84,98,0.65)" letter-spacing="5">PLAID</text>
         </g>
-        <g data-proud="1"></g>
-        <g data-proud="1"></g>
-        <g id="frontFlapArt"><rect x="833.4" y="314.0" width="71.7" height="6" rx="3" fill="#101318" stroke="#c8102e" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"></g>
-        <path d="M691.7,185.1 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
       </g>
+
+      <g id="frontFlapArt"><rect x="838" y="296" width="78" height="6" rx="3" fill="#141a20" stroke="#c8102e" stroke-opacity="0.4"/></g>
+      <path d="M84,282 L172,288 L168,304 L88,298 Z" fill="#0c1116" stroke="rgba(255,255,255,0.12)"/>
+      <!-- there is no exhaust on a Model S. The group stays so the sim's ref still binds. -->
+      <g id="quadExhaustArt"></g>
+
       <g>
-      <circle cx="264.2936332596907" cy="268.9756979313115" r="61.0" fill="#0a0b0e"/>
-      <circle cx="264.2936332596907" cy="268.9756979313115" r="61.0" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
-      <circle cx="264.2936332596907" cy="268.9756979313115" r="54.9" fill="none" stroke="#b9c6d4" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="264.2936332596907" cy="268.9756979313115" r="37.8" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M273.8,266.9 L302.0,266.1 L302.0,271.8 L273.8,271.0 Z" fill="#2b3138"/><path d="M273.2,272.9 L296.5,288.9 L293.2,293.4 L270.8,276.3 Z" fill="#2b3138"/><path d="M269.2,277.4 L278.6,304.0 L273.3,305.7 L265.3,278.7 Z" fill="#2b3138"/><path d="M263.3,278.7 L255.3,305.7 L249.9,304.0 L259.4,277.4 Z" fill="#2b3138"/><path d="M257.8,276.3 L235.4,293.4 L232.1,288.9 L255.4,272.9 Z" fill="#2b3138"/><path d="M254.8,271.0 L226.6,271.8 L226.6,266.1 L254.8,266.9 Z" fill="#2b3138"/><path d="M255.4,265.0 L232.1,249.1 L235.4,244.5 L257.8,261.7 Z" fill="#2b3138"/><path d="M259.4,260.5 L249.9,234.0 L255.3,232.2 L263.3,259.3 Z" fill="#2b3138"/><path d="M265.3,259.3 L273.3,232.2 L278.6,234.0 L269.2,260.5 Z" fill="#2b3138"/><path d="M270.8,261.7 L293.2,244.5 L296.5,249.1 L273.2,265.0 Z" fill="#2b3138"/></g>
-      <circle cx="264.2936332596907" cy="268.9756979313115" r="7.9" fill="url(#bkteslaHub)"/>
+      <circle cx="264" cy="269" r="61.0" fill="#0a0b0e"/>
+      <circle cx="264" cy="269" r="61.0" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
+      <circle cx="264" cy="269" r="54.9" fill="none" stroke="#b9c6d4" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="264" cy="269" r="37.8" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M273.5,266.9 L301.7,266.2 L301.7,271.8 L273.5,271.1 Z" fill="#2b3138"/><path d="M272.9,272.9 L296.2,288.9 L292.9,293.5 L270.5,276.3 Z" fill="#2b3138"/><path d="M268.9,277.4 L278.3,304.0 L273.0,305.7 L265.0,278.7 Z" fill="#2b3138"/><path d="M263.0,278.7 L255.0,305.7 L249.7,304.0 L259.1,277.4 Z" fill="#2b3138"/><path d="M257.5,276.3 L235.1,293.5 L231.8,288.9 L255.1,272.9 Z" fill="#2b3138"/><path d="M254.5,271.1 L226.3,271.8 L226.3,266.2 L254.5,266.9 Z" fill="#2b3138"/><path d="M255.1,265.1 L231.8,249.1 L235.1,244.5 L257.5,261.7 Z" fill="#2b3138"/><path d="M259.1,260.6 L249.7,234.0 L255.0,232.3 L263.0,259.3 Z" fill="#2b3138"/><path d="M265.0,259.3 L273.0,232.3 L278.3,234.0 L268.9,260.6 Z" fill="#2b3138"/><path d="M270.5,261.7 L292.9,244.5 L296.2,249.1 L272.9,265.1 Z" fill="#2b3138"/></g>
+      <circle cx="264" cy="269" r="7.9" fill="url(#hdteslaHub)"/>
     </g>
       <g>
-      <circle cx="766.0490058244627" cy="268.9756979313115" r="61.0" fill="#0a0b0e"/>
-      <circle cx="766.0490058244627" cy="268.9756979313115" r="61.0" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
-      <circle cx="766.0490058244627" cy="268.9756979313115" r="54.9" fill="none" stroke="#b9c6d4" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="766.0490058244627" cy="268.9756979313115" r="37.8" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M775.6,266.9 L803.8,266.1 L803.8,271.8 L775.6,271.0 Z" fill="#2b3138"/><path d="M775.0,272.9 L798.2,288.9 L794.9,293.4 L772.6,276.3 Z" fill="#2b3138"/><path d="M771.0,277.4 L780.4,304.0 L775.0,305.7 L767.0,278.7 Z" fill="#2b3138"/><path d="M765.1,278.7 L757.1,305.7 L751.7,304.0 L761.1,277.4 Z" fill="#2b3138"/><path d="M759.5,276.3 L737.2,293.4 L733.9,288.9 L757.1,272.9 Z" fill="#2b3138"/><path d="M756.5,271.0 L728.3,271.8 L728.3,266.1 L756.5,266.9 Z" fill="#2b3138"/><path d="M757.1,265.0 L733.9,249.1 L737.2,244.5 L759.5,261.7 Z" fill="#2b3138"/><path d="M761.1,260.5 L751.7,234.0 L757.1,232.2 L765.1,259.3 Z" fill="#2b3138"/><path d="M767.0,259.3 L775.0,232.2 L780.4,234.0 L771.0,260.5 Z" fill="#2b3138"/><path d="M772.6,261.7 L794.9,244.5 L798.2,249.1 L775.0,265.0 Z" fill="#2b3138"/></g>
-      <circle cx="766.0490058244627" cy="268.9756979313115" r="7.9" fill="url(#bkteslaHub)"/>
+      <circle cx="766" cy="269" r="61.0" fill="#0a0b0e"/>
+      <circle cx="766" cy="269" r="61.0" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
+      <circle cx="766" cy="269" r="54.9" fill="none" stroke="#b9c6d4" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="766" cy="269" r="37.8" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M775.5,266.9 L803.7,266.2 L803.7,271.8 L775.5,271.1 Z" fill="#2b3138"/><path d="M774.9,272.9 L798.2,288.9 L794.9,293.5 L772.5,276.3 Z" fill="#2b3138"/><path d="M770.9,277.4 L780.3,304.0 L775.0,305.7 L767.0,278.7 Z" fill="#2b3138"/><path d="M765.0,278.7 L757.0,305.7 L751.7,304.0 L761.1,277.4 Z" fill="#2b3138"/><path d="M759.5,276.3 L737.1,293.5 L733.8,288.9 L757.1,272.9 Z" fill="#2b3138"/><path d="M756.5,271.1 L728.3,271.8 L728.3,266.2 L756.5,266.9 Z" fill="#2b3138"/><path d="M757.1,265.1 L733.8,249.1 L737.1,244.5 L759.5,261.7 Z" fill="#2b3138"/><path d="M761.1,260.6 L751.7,234.0 L757.0,232.3 L765.0,259.3 Z" fill="#2b3138"/><path d="M767.0,259.3 L775.0,232.3 L780.3,234.0 L770.9,260.6 Z" fill="#2b3138"/><path d="M772.5,261.7 L794.9,244.5 L798.2,249.1 L774.9,265.1 Z" fill="#2b3138"/></g>
+      <circle cx="766" cy="269" r="7.9" fill="url(#hdteslaHub)"/>
     </g>
     </svg>
     `;

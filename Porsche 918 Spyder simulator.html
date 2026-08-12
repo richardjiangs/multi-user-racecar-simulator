@@ -2727,114 +2727,142 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* Porsche 918 Spyder exterior — open two-seat Spyder side profile (very low body, low
      wraparound screen, signature top-exit exhaust pipes on the deck, rear wing, 5-spoke wheels) */
-  /* BODYKIT:BEGIN Porsche 918 Spyder — drawn from the car's own published dimensions: 4643 mm long
-     on a 2730 mm wheelbase, 1167 mm tall, 1000/913 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN Porsche 918 Spyder — DRAWN BY HAND, from this car's own side elevation: 4643 mm long on a
+     2730 mm wheelbase, 1167 mm tall, 1000/913 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Porsche 918 Spyder side">
       <defs>
-        <linearGradient id="bkporsche918Paint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#eef1f4"/><stop offset="0.45" stop-color="#a4aeb8"/><stop offset="1" stop-color="#2a3138"/>
+        <linearGradient id="hdporsche918Paint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ffffff"/><stop offset="0.34" stop-color="#d6dde4"/><stop offset="0.74" stop-color="#939ea9"/><stop offset="1" stop-color="#2a3138"/>
         </linearGradient>
-        <linearGradient id="bkporsche918Glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
-        </linearGradient>
-        <linearGradient id="bkporsche918Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bkporsche918Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bkporsche918Shine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bkporsche918Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkporsche918Clip"><path d="M78.0,195.4 Q74.0,287.8 88.0,297.1 L168.3,311.8 A75.6,119.2 0 0 1 319.6,311.8 Q492.1,323.5 668.6,311.8 A71.6,111.6 0 0 1 811.8,311.8 L912.0,296.7 Q922.0,289.1 922.0,269.4 L922.0,249.8 C893.9,242.0 865.7,240.3 837.6,226.5 C817.9,216.8 798.2,184.5 778.5,184.5 C770.1,184.5 761.6,184.5 753.2,184.5 C736.3,184.5 719.4,184.5 702.6,184.5 L668.8,199.3 L601.3,172.2 L533.8,148.9 L466.2,160.5 L365.0,172.2 L282.2,176.9 L229.9,176.9 L206.3,176.9 L78.0,195.4 Z"/></clipPath>
-        <clipPath id="bkporsche918Dlo"><path d="M626.6,176.1 L559.1,161.5 L533.8,152.8 L466.2,164.4 L449.4,166.4 L398.7,176.1 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
+        <linearGradient id="hdporsche918Glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8ecf6"/><stop offset="0.4" stop-color="#41545f"/><stop offset="1" stop-color="#080e13"/></linearGradient>
+        <linearGradient id="hdporsche918Carbon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2129"/><stop offset="1" stop-color="#070a0d"/></linearGradient>
+        <radialGradient id="hdporsche918Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f6fadd"/><stop offset="1" stop-color="#4a5514"/></radialGradient>
+        <linearGradient id="hdporsche918Shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hdporsche918Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdporsche918Clip"><path d="M78,203
+    L78,254 Q80,276 102,282 L156,286 L174,302
+    A70,108 0 0 1 314,302
+    Q506,312 673,302
+    A67,102 0 0 1 807,302
+    L878,298 Q906,294 918,282 L922,262
+    C898,246 866,228 838,214
+    C808,204 774,198 740,194
+    C712,198 686,202 662,204
+    C640,190 618,176 601,166
+    C578,158 556,154 534,153
+    L470,155
+    C452,158 442,166 436,176
+    C420,180 400,178 380,177
+    C330,181 282,184 230,186
+    C178,192 126,198 78,203 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.8));transition:transform .45s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
           #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-13deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkporsche918Glow);}
-        </style>
+          #doorArt.open{transform:rotate(-15deg) translate(-10px,-6px);}
+          #quadExhaustArt *{fill:#cdd4da;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdporsche918Glow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <ellipse cx="500" cy="336" rx="386" ry="9" fill="rgba(0,0,0,0.5)"/>
+
+      <!-- the deployable rear wing, hung low behind the deck -->
+      <g id="rearWingArt">
+        <rect x="112" y="176" width="6" height="26" fill="#141920" stroke="#4a525b"/>
+        <rect x="196" y="174" width="6" height="26" fill="#141920" stroke="#4a525b"/>
+        <path d="M96,180 L218,170 L218,180 L96,190 Z" fill="#12171d" stroke="#5e6772" stroke-width="1.2"/>
+        <path d="M96,180 L218,170" stroke="#c8e400" stroke-width="2" opacity="0.8"/>
+      </g>
+
       <g id="bcBody">
-        <path d="M78.0,195.4 Q74.0,287.8 88.0,297.1 L168.3,311.8 A75.6,119.2 0 0 1 319.6,311.8 Q492.1,323.5 668.6,311.8 A71.6,111.6 0 0 1 811.8,311.8 L912.0,296.7 Q922.0,289.1 922.0,269.4 L922.0,249.8 C893.9,242.0 865.7,240.3 837.6,226.5 C817.9,216.8 798.2,184.5 778.5,184.5 C770.1,184.5 761.6,184.5 753.2,184.5 C736.3,184.5 719.4,184.5 702.6,184.5 L668.8,199.3 L601.3,172.2 L533.8,148.9 L466.2,160.5 L365.0,172.2 L282.2,176.9 L229.9,176.9 L206.3,176.9 L78.0,195.4 Z" fill="url(#bkporsche918Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bkporsche918Clip)">
-        <path d="M78.0,176.1 Q500.0,152.8 922.0,176.1 L922.0,195.4 Q500.0,172.2 78.0,199.3 Z" fill="url(#bkporsche918Shine)"/>
-        <rect x="0" y="299.1" width="1000" height="212.1" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M168.3,311.8 A75.6,119.2 0 0 1 319.6,311.8" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M168.3,311.8 A75.6,119.2 0 0 1 319.6,311.8" fill="none" stroke="#c8e400" stroke-width="1.4" opacity="0.45"/>
-        <path d="M668.6,311.8 A71.6,111.6 0 0 1 811.8,311.8" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M668.6,311.8 A71.6,111.6 0 0 1 811.8,311.8" fill="none" stroke="#c8e400" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bkporsche918Clip)">
-        <path d="M92.0,207.2 Q500.0,200.2 902.0,203.2" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M315.9,307.6 L672.2,305.6 L669.1,319.6 L319.2,321.6 Z" fill="url(#bkporsche918Low)" stroke="rgba(120,132,146,0.35)"/>
-        <path d="M922.0,270.8 L837.6,247.5 L778.5,205.5 L753.2,205.5 L702.6,205.5 L668.8,220.3 L601.3,193.2 L533.8,169.9 L466.2,181.5 L365.0,193.2 L282.2,197.9 L229.9,197.9 L206.3,197.9 L78.0,216.4" fill="none" stroke="#c8102e" stroke-width="5" opacity="0.95"/>
-      <path d="M922.0,280.8 L837.6,257.5 L778.5,215.5 L753.2,215.5 L702.6,215.5 L668.8,230.3 L601.3,203.2 L533.8,179.9 L466.2,191.5 L365.0,203.2 L282.2,207.9 L229.9,207.9 L206.3,207.9 L78.0,226.4" fill="none" stroke="#c8102e" stroke-width="5" opacity="0.95"/>
-        <path d="M415.6,205.7 q-28.8,-4.0 -52.3,3.0 l3.0,31.8 q26.2,-5.0 49.7,-6.0 Z" fill="#0b1016"/>
-      <path d="M415.6,205.7 q-28.8,-4.0 -52.3,3.0" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
-      <path d="M410.4,232.5 q20.9,-4.0 42.9,-5.0" fill="none" stroke="#c8e400" stroke-width="1.6" opacity="0.55"/>
-        <path d="M626.6,176.1 L623.6,305.8" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M466.2,176.1 L463.2,305.8" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M466.2,183.8 L626.6,179.9 L622.6,301.8 L464.2,303.8 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="534.4" y="214.8" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M626.6,176.1 L559.1,161.5 L533.8,152.8 L466.2,164.4 L449.4,166.4 L398.7,176.1 Z" fill="url(#bkporsche918Glass)"/>
-      <path d="M626.6,176.1 L559.1,161.5 L533.8,152.8 L466.2,164.4 L449.4,166.4 L398.7,176.1 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bkporsche918Dlo)">
-      <path d="M630.6,176.1 L553.1,157.6 L573.1,157.6 L652.6,176.1 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M439.4,176.1 L469.4,162.5 L477.4,162.5 L451.4,176.1 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M626.6,176.1 L559.1,161.5" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M398.7,176.1 L449.4,166.4" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M626.6,176.1 L559.1,161.5 L533.8,152.8 L466.2,164.4 L449.4,166.4 L398.7,176.1 Z" fill="none" stroke="#0c1015" stroke-width="2.8" stroke-linejoin="round"/>
-        <path d="M888.5,269.7 q-45.6,13.4 -72.2,36.3 l15.2,13.4 q34.2,-22.9 60.8,-28.6 Z" fill="#080b0f" stroke="rgba(255,255,255,0.28)"/>
-      <path d="M886.5,290.6 L820.7,297.0 L823.3,309.8 L884.5,307.8 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <circle cx="854.5" cy="250.5" r="11.7" fill="#9fb6c8" stroke="#e2ebf2" stroke-width="1.8"/>
-      <circle cx="854.5" cy="250.5" r="5.8" fill="#dfeaf2"/>
-      <circle cx="851.0" cy="247.0" r="2.3" fill="#ffffff" opacity="0.85"/>
-      <path d="M922.0,254.8 L837.6,231.5 L778.5,189.5 L753.2,189.5 L702.6,189.5 L668.8,204.3" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M90.1,224.6 l42.2,-1.0 l0,9 l-42.2,2 Z" fill="#e0223c"/>
-      <path d="M280.6,168.3 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M269.6,170.7 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M258.6,173.1 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M247.6,175.5 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M236.6,177.9 l-26.0,5.0" stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round"/>
-      <path d="M105.0,292.5 l71.7,-2.0 l0,29.3 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M122.9,292.5 l0,28.3" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M140.9,292.5 l0,28.3" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M158.8,292.5 l0,28.3" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-        <text x="533.8" y="226.5" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">918</text>
+        <path d="M78,203
+    L78,254 Q80,276 102,282 L156,286 L174,302
+    A70,108 0 0 1 314,302
+    Q506,312 673,302
+    A67,102 0 0 1 807,302
+    L878,298 Q906,294 918,282 L922,262
+    C898,246 866,228 838,214
+    C808,204 774,198 740,194
+    C712,198 686,202 662,204
+    C640,190 618,176 601,166
+    C578,158 556,154 534,153
+    L470,155
+    C452,158 442,166 436,176
+    C420,180 400,178 380,177
+    C330,181 282,184 230,186
+    C178,192 126,198 78,203 Z" fill="url(#hdporsche918Paint)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#hdporsche918Clip)">
+          <path d="M78,212 C300,204 560,210 922,272 L922,290 C560,230 300,230 78,238 Z" fill="url(#hdporsche918Shine)"/>
+          <rect x="0" y="256" width="1000" height="150" fill="url(#hdporsche918Carbon)" opacity="0.88"/>
+          <!-- the Weissach stripes -->
+          <path d="M140,214 C380,206 620,216 890,262" fill="none" stroke="#c8102e" stroke-width="4.5" opacity="0.9"/>
+          <path d="M140,224 C380,216 620,226 890,272" fill="none" stroke="#c8102e" stroke-width="2.6" opacity="0.6"/>
+
+          <!-- the windscreen ONLY. A Spyder has no backlight: behind the header there is sky. -->
+          <path d="M660,200 L596,178 L480,178 L444,192
+                   C516,195 588,198 660,200 Z"
+                fill="url(#hdporsche918Glass)" stroke="#93aab6" stroke-width="1.4"/>
+          <path d="M660,200 L596,178" stroke="#080e13" stroke-width="6.5" stroke-linecap="round"/>
+          <path d="M480,178 L444,192" stroke="#080e13" stroke-width="6" stroke-linecap="round"/>
+          <path d="M652,197 L600,183" stroke="rgba(255,255,255,0.32)" stroke-width="3"/>
+
+          <path d="M424,196 L364,198 Q348,200 348,212 L348,220 Q348,232 364,232 L424,230 Z"
+                fill="#04080a" stroke="rgba(255,255,255,0.24)" stroke-width="1.1"/>
+          <path d="M424,196 L424,230" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round"/>
+
+          <g id="doorArt">
+            <path d="M446,196 L654,204 L650,286 L450,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="536" y="238" width="28" height="6" rx="3" fill="#5d666f"/>
+          </g>
+          <path d="M446,194 L450,278" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M654,202 L650,286" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+
+          <path d="M84,210 L146,206" stroke="#e0223c" stroke-width="5.5" stroke-linecap="round"/>
+          <circle cx="880" cy="248" r="11" fill="#0a1016" stroke="#c6d0da" stroke-width="1.5"/>
+          <circle cx="880" cy="248" r="5" fill="#eef6ff"/>
         </g>
-        <g data-proud="1"><ellipse cx="348.1" cy="195.3" rx="9" ry="5" fill="#b8bfc7" stroke="#5d666f" stroke-width="1.4"/>
-      <ellipse cx="326.1" cy="197.3" rx="9" ry="5" fill="#b8bfc7" stroke="#5d666f" stroke-width="1.4"/>
-      <path d="M415.6,198.4 a18.6,19.1 0 0 1 37.1,0 Z" fill="#a4aeb8" stroke="rgba(255,255,255,0.32)"/>
-      <path d="M373.4,198.4 a18.6,19.1 0 0 1 37.1,0 Z" fill="#2a3138" stroke="rgba(255,255,255,0.22)"/></g>
-        <g data-proud="1"></g>
-        <g id="frontFlapArt"><rect x="833.4" y="317.8" width="71.7" height="6" rx="3" fill="#101318" stroke="#c8e400" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"></g>
-        <path d="M632.6,178.1 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
+
+        <!-- proud of the paint: TWO ROLL HOOPS behind the seats, which is what a Spyder has
+             where a coupe has a rear window, and the panel gap for the two lift-out roof halves -->
+        <g data-proud="1">
+          <path d="M448,181 C442,152 428,140 412,140 C396,140 382,152 378,179 L396,181
+                   C399,164 404,156 412,156 C420,156 427,164 430,182 Z"
+                fill="#1b2129" stroke="rgba(200,228,0,0.6)" stroke-width="1.4"/>
+          <path d="M376,183 C370,156 356,144 340,144 C324,144 310,156 306,181 L324,183
+                   C327,168 332,160 340,160 C348,160 355,168 358,184 Z"
+                fill="#1b2129" stroke="rgba(200,228,0,0.5)" stroke-width="1.4"/>
+        </g>
       </g>
+
+      <g id="frontFlapArt"><rect x="834" y="298" width="84" height="6" rx="3" fill="#101318" stroke="#c8e400" stroke-opacity="0.55"/></g>
+      <path d="M84,268 L166,274 L162,296 L88,290 Z" fill="#080b0f" stroke="rgba(255,255,255,0.14)"/>
+      <!-- THE TOP PIPES. Straight up out of the engine cover, behind the driver's head.
+           Nothing else in this garage exhausts anywhere near here. -->
+      <path d="M264,180 L320,178 L320,192 L264,194 Z" fill="#0a0e12" stroke="rgba(200,210,220,0.35)" stroke-width="1.1"/>
+      <g id="quadExhaustArt">
+        <ellipse cx="280" cy="178" rx="9" ry="5"/>
+        <ellipse cx="306" cy="177" rx="9" ry="5"/>
+      </g>
+
       <g>
-      <circle cx="243.96424725393064" cy="264.5595520137842" r="65.4" fill="#0a0b0e"/>
-      <circle cx="243.96424725393064" cy="264.5595520137842" r="65.4" fill="none" stroke="#1b1f25" stroke-width="8.5"/>
-      <circle cx="243.96424725393064" cy="264.5595520137842" r="58.9" fill="none" stroke="#c8d4e0" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="243.96424725393064" cy="264.5595520137842" r="40.6" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M253.5,260.2 L284.1,258.5 L284.1,270.6 L253.5,268.9 Z" fill="#2b3138"/><path d="M251.0,272.3 L262.1,300.8 L250.6,304.6 L242.8,275.0 Z" fill="#2b3138"/><path d="M238.8,273.7 L215.1,293.0 L208.0,283.3 L233.7,266.7 Z" fill="#2b3138"/><path d="M233.7,262.5 L208.0,245.9 L215.1,236.1 L238.8,255.4 Z" fill="#2b3138"/><path d="M242.8,254.2 L250.6,224.5 L262.1,228.3 L251.0,256.8 Z" fill="#2b3138"/></g>
-      <circle cx="243.96424725393064" cy="264.5595520137842" r="8.5" fill="url(#bkporsche918Hub)"/>
+      <circle cx="244" cy="265" r="65.0" fill="#0a0b0e"/>
+      <circle cx="244" cy="265" r="65.0" fill="none" stroke="#1b1f25" stroke-width="8.5"/>
+      <circle cx="244" cy="265" r="58.5" fill="none" stroke="#c8d4e0" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="244" cy="265" r="40.3" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M253.5,260.7 L283.9,259.0 L283.9,271.0 L253.5,269.3 Z" fill="#2b3138"/><path d="M251.0,272.7 L262.0,301.0 L250.6,304.8 L242.8,275.3 Z" fill="#2b3138"/><path d="M238.9,274.0 L215.3,293.3 L208.2,283.6 L233.8,267.1 Z" fill="#2b3138"/><path d="M233.8,262.9 L208.2,246.4 L215.3,236.7 L238.9,256.0 Z" fill="#2b3138"/><path d="M242.8,254.7 L250.6,225.2 L262.0,229.0 L251.0,257.3 Z" fill="#2b3138"/></g>
+      <circle cx="244" cy="265" r="8.5" fill="url(#hdporsche918Hub)"/>
     </g>
       <g>
-      <circle cx="740.2209778160673" cy="268.1951324574628" r="61.8" fill="#0a0b0e"/>
-      <circle cx="740.2209778160673" cy="268.1951324574628" r="61.8" fill="none" stroke="#1b1f25" stroke-width="8.0"/>
-      <circle cx="740.2209778160673" cy="268.1951324574628" r="55.6" fill="none" stroke="#c8d4e0" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="740.2209778160673" cy="268.1951324574628" r="38.3" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M749.2,264.1 L778.1,262.5 L778.1,273.9 L749.2,272.3 Z" fill="#2b3138"/><path d="M746.9,275.5 L757.4,302.5 L746.5,306.0 L739.1,278.0 Z" fill="#2b3138"/><path d="M735.3,276.8 L712.9,295.1 L706.2,285.8 L730.5,270.2 Z" fill="#2b3138"/><path d="M730.5,266.2 L706.2,250.5 L712.9,241.3 L735.3,259.6 Z" fill="#2b3138"/><path d="M739.1,258.4 L746.5,230.4 L757.4,233.9 L746.9,260.9 Z" fill="#2b3138"/></g>
-      <circle cx="740.2209778160673" cy="268.1951324574628" r="8.0" fill="url(#bkporsche918Hub)"/>
+      <circle cx="740" cy="268" r="62.0" fill="#0a0b0e"/>
+      <circle cx="740" cy="268" r="62.0" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
+      <circle cx="740" cy="268" r="55.8" fill="none" stroke="#c8d4e0" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="740" cy="268" r="38.4" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M749.0,263.9 L778.0,262.3 L778.0,273.7 L749.0,272.1 Z" fill="#2b3138"/><path d="M746.7,275.3 L757.2,302.4 L746.3,305.9 L738.9,277.9 Z" fill="#2b3138"/><path d="M735.1,276.6 L712.6,295.0 L705.9,285.7 L730.3,270.0 Z" fill="#2b3138"/><path d="M730.3,266.0 L705.9,250.3 L712.6,241.0 L735.1,259.4 Z" fill="#2b3138"/><path d="M738.9,258.1 L746.3,230.1 L757.2,233.6 L746.7,260.7 Z" fill="#2b3138"/></g>
+      <circle cx="740" cy="268" r="8.1" fill="url(#hdporsche918Hub)"/>
     </g>
     </svg>
     `;
