@@ -2616,106 +2616,103 @@ drawCluster(w, h, dashY, sway);
   /* SSC Tuatara — Jason Castriota's teardrop: a very low nose, a canopy that runs straight
      into the deck, faired-in rear wheels, a long tapering tail and no wing at all, because
      Cd 0.279 on 1.86 m² is the entire brief */
-  /* BODYKIT:BEGIN SSC Tuatara — drawn from the car's own published dimensions: 4670 mm long
-     on a 2705 mm wheelbase, 1092 mm tall, 1000/965 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN SSC Tuatara — DRAWN BY HAND, from this car's own side elevation: 4670 mm long on a
+     2705 mm wheelbase, 1092 mm tall, 1000/965 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="SSC Tuatara side">
       <defs>
-        <linearGradient id="bktuataraPaint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#e6e9ee"/><stop offset="0.45" stop-color="#8c95a1"/><stop offset="1" stop-color="#252b33"/>
-        </linearGradient>
-        <linearGradient id="bktuataraGlass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
-        </linearGradient>
-        <linearGradient id="bktuataraLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bktuataraHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bktuataraShine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bktuataraGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bktuataraClip"><path d="M78.0,227.0 Q74.0,296.1 88.0,303.1 L175.6,314.1 A76.8,124.5 0 0 1 329.2,314.1 Q496.8,325.0 670.4,314.1 A70.8,113.1 0 0 1 812.1,314.1 L912.0,299.9 Q922.0,292.9 922.0,263.6 L922.0,234.3 C893.9,227.0 865.7,222.5 837.6,212.5 C818.2,205.6 798.8,186.0 779.4,186.0 C770.6,186.0 761.9,186.0 753.2,186.0 C736.6,186.0 720.0,186.0 703.4,186.0 C691.9,186.0 680.3,176.5 668.8,172.6 C646.3,164.9 623.8,158.4 601.3,152.6 C578.8,146.9 556.3,138.1 533.8,138.1 C502.8,138.1 471.9,145.8 440.9,152.6 C404.3,160.6 367.8,183.5 331.2,183.5 C317.7,183.5 304.2,174.6 290.7,174.6 C278.0,174.6 265.4,174.6 252.7,174.6 C236.7,174.6 220.6,174.6 204.6,174.6 L78.0,227.0 Z"/></clipPath>
-        <clipPath id="bktuataraDlo"><path d="M651.9,183.5 L584.4,152.6 C567.5,149.0 550.6,141.7 533.8,141.7 C505.6,141.7 477.5,150.5 449.4,154.9 L365.0,183.5 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
-          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-30deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bktuataraGlow);}
-        </style>
+        <linearGradient id="hdtuataraPaint" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7fa"/><stop offset="0.36" stop-color="#c3ccd6"/><stop offset="0.78" stop-color="#79838f"/><stop offset="1" stop-color="#2b3138"/></linearGradient>
+        <linearGradient id="hdtuataraGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0ee"/><stop offset="0.4" stop-color="#37485a"/><stop offset="1" stop-color="#070c11"/></linearGradient>
+        <linearGradient id="hdtuataraLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f25"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+        <radialGradient id="hdtuataraHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
+        <linearGradient id="hdtuataraShine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hdtuataraGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdtuataraClip"><path d="M78,238
+    L78,266 Q82,284 102,289 L162,292 L182,302
+    A72,110 0 0 1 320,302
+    Q500,312 668,302
+    A69,108 0 0 1 810,302
+    L878,297 Q912,293 922,274 L922,252
+    C892,240 862,232 830,226
+    C798,220 770,216 740,214
+    C716,212 698,212 684,214
+    C650,192 610,168 566,154
+    C534,144 500,140 466,142
+    C432,144 402,152 376,164
+    C346,178 316,192 288,202
+    C270,208 258,212 251,214
+    C196,224 138,232 78,238 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.5));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));}
+          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-22deg) translate(-8px,-12px);}
+          #quadExhaustArt *{fill:#b7bec6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdtuataraGlow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+      <ellipse cx="500" cy="336" rx="386" ry="9" fill="rgba(0,0,0,0.5)"/>
+      <g id="rearWingArt"><path d="M92,222 L232,214 L232,224 L92,232 Z" fill="#12171d" stroke="#5c6570" stroke-width="1.1"/></g>
       <g id="bcBody">
-        <path d="M78.0,227.0 Q74.0,296.1 88.0,303.1 L175.6,314.1 A76.8,124.5 0 0 1 329.2,314.1 Q496.8,325.0 670.4,314.1 A70.8,113.1 0 0 1 812.1,314.1 L912.0,299.9 Q922.0,292.9 922.0,263.6 L922.0,234.3 C893.9,227.0 865.7,222.5 837.6,212.5 C818.2,205.6 798.8,186.0 779.4,186.0 C770.6,186.0 761.9,186.0 753.2,186.0 C736.6,186.0 720.0,186.0 703.4,186.0 C691.9,186.0 680.3,176.5 668.8,172.6 C646.3,164.9 623.8,158.4 601.3,152.6 C578.8,146.9 556.3,138.1 533.8,138.1 C502.8,138.1 471.9,145.8 440.9,152.6 C404.3,160.6 367.8,183.5 331.2,183.5 C317.7,183.5 304.2,174.6 290.7,174.6 C278.0,174.6 265.4,174.6 252.7,174.6 C236.7,174.6 220.6,174.6 204.6,174.6 L78.0,227.0 Z" fill="url(#bktuataraPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bktuataraClip)">
-        <path d="M78.0,187.1 Q500.0,165.3 922.0,187.1 L922.0,205.2 Q500.0,183.5 78.0,208.9 Z" fill="url(#bktuataraShine)"/>
-        <rect x="0" y="302.3" width="1000" height="197.4" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M175.6,314.1 A76.8,124.5 0 0 1 329.2,314.1" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M175.6,314.1 A76.8,124.5 0 0 1 329.2,314.1" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.45"/>
-        <path d="M670.4,314.1 A70.8,113.1 0 0 1 812.1,314.1" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M670.4,314.1 A70.8,113.1 0 0 1 812.1,314.1" fill="none" stroke="#c8102e" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bktuataraClip)">
-        <path d="M92.0,212.9 Q500.0,205.9 902.0,208.9" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M326.0,310.1 L673.7,308.1 L670.6,322.1 L329.3,324.1 Z" fill="url(#bktuataraLow)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="0" width="1000" height="172.6" fill="#0d1116" opacity="0.95"/>
-        <path d="M398.7,206.5 q-28.8,-4.0 -52.3,3.0 l3.0,29.6 q26.2,-5.0 49.7,-6.0 Z" fill="#0b1016"/>
-      <path d="M398.7,206.5 q-28.8,-4.0 -52.3,3.0" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
-      <path d="M393.5,231.4 q20.9,-4.0 42.9,-5.0" fill="none" stroke="#c8102e" stroke-width="1.6" opacity="0.55"/>
-        <path d="M643.5,187.1 L640.5,308.1" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M474.7,187.1 L471.7,308.1" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M474.7,194.3 L643.5,190.7 L639.5,304.1 L472.7,306.1 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="547.1" y="223.4" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M651.9,183.5 L584.4,152.6 C567.5,149.0 550.6,141.7 533.8,141.7 C505.6,141.7 477.5,150.5 449.4,154.9 L365.0,183.5 Z" fill="url(#bktuataraGlass)"/>
-      <path d="M651.9,183.5 L584.4,152.6 C567.5,149.0 550.6,141.7 533.8,141.7 C505.6,141.7 477.5,150.5 449.4,154.9 L365.0,183.5 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bktuataraDlo)">
-      <path d="M655.9,183.5 L578.4,149.0 L598.4,149.0 L677.9,183.5 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M439.4,183.5 L469.4,151.3 L477.4,151.3 L451.4,183.5 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M651.9,183.5 L584.4,152.6" stroke="#10141a" stroke-width="4" stroke-linecap="butt"/>
-      <path d="M365.0,183.5 L449.4,154.9" stroke="#10141a" stroke-width="4" stroke-linecap="butt"/>
-        <rect x="829.2" y="266.0" width="63.3" height="8" rx="3" fill="#080b0f" stroke="#c8102e" stroke-opacity="0.5"/>
-      <path d="M886.5,294.4 L820.7,300.3 L823.3,312.1 L884.5,310.1 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M863.2,240.2 l-26.1,3.3" stroke="#dff0ff" stroke-width="3.2" stroke-linecap="round"/>
-      <path d="M922.0,239.3 L837.6,217.5 L779.4,191.0 L753.2,191.0 L703.4,191.0 L668.8,177.6" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M90.1,242.3 l42.2,-1.0 l0,9 l-42.2,2 Z" fill="#e0223c"/>
-      <rect x="221.5" y="172.6" width="59.1" height="25.7" rx="3" fill="#080b0f" stroke="rgba(255,255,255,0.2)"/>
-      <path d="M221.5,179.0 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M221.5,185.4 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M221.5,191.8 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M105.0,296.4 l71.7,-2.0 l0,27.7 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M122.9,296.4 l0,26.7" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M140.9,296.4 l0,26.7" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M158.8,296.4 l0,26.7" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-        <text x="516.9" y="234.3" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">TUATARA</text>
+        <path d="M78,238
+    L78,266 Q82,284 102,289 L162,292 L182,302
+    A72,110 0 0 1 320,302
+    Q500,312 668,302
+    A69,108 0 0 1 810,302
+    L878,297 Q912,293 922,274 L922,252
+    C892,240 862,232 830,226
+    C798,220 770,216 740,214
+    C716,212 698,212 684,214
+    C650,192 610,168 566,154
+    C534,144 500,140 466,142
+    C432,144 402,152 376,164
+    C346,178 316,192 288,202
+    C270,208 258,212 251,214
+    C196,224 138,232 78,238 Z" fill="url(#hdtuataraPaint)" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
+        <g clip-path="url(#hdtuataraClip)">
+          <path d="M78,246 C300,228 560,224 922,258 L922,276 C560,242 300,246 78,264 Z" fill="url(#hdtuataraShine)"/>
+          <rect x="0" y="256" width="1000" height="120" fill="rgba(10,14,20,0.85)"/>
+          <path d="M684,214 C650,192 610,168 566,154 C534,158 500,154 466,156
+                   C432,158 404,166 380,176 L364,190
+                   C470,196 580,206 684,214 Z" fill="url(#hdtuataraGlass)" stroke="#93a4b4" stroke-width="1.4"/>
+          <path d="M680,212 C648,194 610,180 566,168" stroke="#0a0f14" stroke-width="7" stroke-linecap="round"/>
+          <path d="M380,176 L364,190" stroke="#0a0f14" stroke-width="6" stroke-linecap="round"/>
+          <path d="M664,208 C634,192 602,180 564,170" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
+          <path d="M470,214 C436,214 410,224 392,244 L398,264 C418,246 442,238 470,238 Z" fill="#05070a"/>
+          <path d="M470,214 C436,214 410,224 392,244" fill="none" stroke="rgba(255,255,255,0.44)" stroke-width="2.2"/>
+          <g id="doorArt"><path d="M480,208 L668,222 L664,286 L484,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.3)" stroke-width="1.4"/>
+            <rect x="566" y="248" width="24" height="6" rx="3" fill="#525a63"/></g>
+          <path d="M480,206 L484,278" stroke="rgba(0,0,0,0.3)" stroke-width="2"/>
+          <path d="M668,220 L664,286" stroke="rgba(0,0,0,0.3)" stroke-width="2"/>
+          <path d="M894,258 L852,250" stroke="#e8f2fa" stroke-width="4" stroke-linecap="round"/>
+          <path d="M84,248 L142,244" stroke="#e0223c" stroke-width="5" stroke-linecap="round"/>
+          <text x="560" y="266" text-anchor="middle" font-family="ui-sans-serif" font-size="9.5" fill="rgba(255,255,255,0.55)" letter-spacing="5">TUATARA</text>
         </g>
-        <g data-proud="1"><path d="M365.0,190.8 L103.3,202.6 L103.3,234.2 L365.0,222.4 Z" fill="#8c95a1" opacity="0.95" stroke="rgba(255,255,255,0.3)"/></g>
-        <g data-proud="1"></g>
-        <g id="frontFlapArt"><rect x="833.4" y="320.1" width="71.7" height="6" rx="3" fill="#101318" stroke="#c8102e" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"><circle cx="96.7" cy="322.1" r="6"/><circle cx="111.7" cy="322.1" r="6"/></g>
-        <path d="M657.9,185.5 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
+        <!-- the dorsal fin down the engine deck, and the spat over the rear wheel -->
+        <g data-proud="1">
+          <path d="M188,200 L320,192 L320,206 L188,214 Z" fill="#a8b2bd" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+          <path d="M182,262 A76,58 0 0 1 326,262 L326,276 L182,276 Z" fill="url(#hdtuataraPaint)" stroke="rgba(255,255,255,0.4)" stroke-width="1.1" opacity="0.96"/>
+        </g>
       </g>
+      <g id="frontFlapArt"><rect x="838" y="298" width="76" height="6" rx="3" fill="#101318" stroke="#cfd8e2" stroke-opacity="0.4"/></g>
+      <path d="M84,282 L166,288 L162,304 L88,298 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.14)"/>
+      <g id="quadExhaustArt"><circle cx="106" cy="274" r="6"/><circle cx="124" cy="275" r="6"/></g>
       <g>
-      <circle cx="252.40256959314775" cy="263.1306209850107" r="66.9" fill="#0a0b0e"/>
-      <circle cx="252.40256959314775" cy="263.1306209850107" r="66.9" fill="none" stroke="#1b1f25" stroke-width="8.7"/>
-      <circle cx="252.40256959314775" cy="263.1306209850107" r="60.2" fill="none" stroke="#d8e4f0" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="252.40256959314775" cy="263.1306209850107" r="41.5" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="252.40256959314775" cy="263.1306209850107" r="41.5" fill="#20252c"/><circle cx="252.40256959314775" cy="263.1306209850107" r="25.7" fill="none" stroke="#d8e4f0" stroke-width="1.6" opacity="0.55"/></g>
-      <circle cx="252.40256959314775" cy="263.1306209850107" r="8.7" fill="url(#bktuataraHub)"/>
+      <circle cx="251" cy="265" r="65.0" fill="#0a0b0e"/>
+      <circle cx="251" cy="265" r="65.0" fill="none" stroke="#1b1f25" stroke-width="8.5"/>
+      <circle cx="251" cy="265" r="58.5" fill="none" stroke="#d8e2ec" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="251" cy="265" r="40.3" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="251" cy="265" r="40.3" fill="#20252c"/><circle cx="251" cy="265" r="25.0" fill="none" stroke="#d8e2ec" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="251" cy="265" r="8.5" fill="url(#hdtuataraHub)"/>
     </g>
       <g>
-      <circle cx="741.2719486081371" cy="268.5524625267666" r="61.4" fill="#0a0b0e"/>
-      <circle cx="741.2719486081371" cy="268.5524625267666" r="61.4" fill="none" stroke="#1b1f25" stroke-width="8.0"/>
-      <circle cx="741.2719486081371" cy="268.5524625267666" r="55.3" fill="none" stroke="#d8e4f0" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="741.2719486081371" cy="268.5524625267666" r="38.1" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="741.2719486081371" cy="268.5524625267666" r="38.1" fill="#20252c"/><circle cx="741.2719486081371" cy="268.5524625267666" r="23.6" fill="none" stroke="#d8e4f0" stroke-width="1.6" opacity="0.55"/></g>
-      <circle cx="741.2719486081371" cy="268.5524625267666" r="8.0" fill="url(#bktuataraHub)"/>
+      <circle cx="740" cy="268" r="62.0" fill="#0a0b0e"/>
+      <circle cx="740" cy="268" r="62.0" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
+      <circle cx="740" cy="268" r="55.8" fill="none" stroke="#d8e2ec" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="740" cy="268" r="38.4" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="740" cy="268" r="38.4" fill="#20252c"/><circle cx="740" cy="268" r="23.8" fill="none" stroke="#d8e2ec" stroke-width="1.6" opacity="0.55"/></g>
+      <circle cx="740" cy="268" r="8.1" fill="url(#hdtuataraHub)"/>
     </g>
     </svg>
     `;
