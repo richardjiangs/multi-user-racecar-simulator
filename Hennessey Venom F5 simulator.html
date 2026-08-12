@@ -2544,112 +2544,145 @@ drawCluster(w, h, dashY, sway);
 
   /* Hennessey exterior — Venom F5 Attack side profile (arctic white over carbon, deep
      splitter, dive planes, the huge top-mounted BOOMERANG wing on central pylons) */
-  /* BODYKIT:BEGIN Hennessey Venom F5 — drawn from the car's own published dimensions: 4666 mm long
-     on a 2807 mm wheelbase, 1130 mm tall, 940/919 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN Hennessey Venom F5 — DRAWN BY HAND, from this car's own side elevation: 4666 mm long on a
+     2807 mm wheelbase, 1130 mm tall, 940/919 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Hennessey Venom F5 side">
       <defs>
-        <linearGradient id="bkvenomPaint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#4fa3f0"/><stop offset="0.45" stop-color="#1a5fb4"/><stop offset="1" stop-color="#082444"/>
+        <linearGradient id="hdvenomPaint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#8ccbff"/><stop offset="0.32" stop-color="#3d8ee6"/><stop offset="0.72" stop-color="#15529f"/><stop offset="1" stop-color="#06203f"/>
         </linearGradient>
-        <linearGradient id="bkvenomGlass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
-        </linearGradient>
-        <linearGradient id="bkvenomLow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bkvenomHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bkvenomShine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bkvenomGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bkvenomClip"><path d="M78.0,215.7 Q74.0,280.8 88.0,293.4 L167.0,313.4 A77.2,123.9 0 0 1 321.5,313.4 Q498.1,324.6 679.7,313.4 A72.3,114.4 0 0 1 824.2,313.4 L912.0,293.1 Q922.0,282.9 922.0,262.5 L922.0,242.0 C888.2,239.2 854.5,241.8 820.7,227.0 C810.6,222.6 800.5,183.6 790.3,183.6 C777.7,183.6 765.0,183.6 752.4,183.6 C741.4,183.6 730.4,183.6 719.4,183.6 L626.6,200.7 L559.1,163.2 C536.6,153.1 514.1,133.1 491.6,133.1 C469.1,133.1 446.5,140.6 424.0,144.4 L348.1,178.2 L282.2,174.1 L229.9,174.1 L206.3,174.1 L78.0,215.7 Z"/></clipPath>
-        <clipPath id="bkvenomDlo"><path d="M643.5,181.9 L567.5,171.6 C564.7,170.0 561.9,168.3 559.1,166.9 C536.6,155.6 514.1,136.9 491.6,136.9 C474.7,136.9 457.8,142.5 440.9,145.3 L381.8,181.9 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
+        <linearGradient id="hdvenomGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d2e6f8"/><stop offset="0.4" stop-color="#39516b"/><stop offset="1" stop-color="#060b12"/></linearGradient>
+        <linearGradient id="hdvenomCarbon" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a2028"/><stop offset="1" stop-color="#06080c"/></linearGradient>
+        <radialGradient id="hdvenomHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#e8f2ff"/><stop offset="1" stop-color="#26405f"/></radialGradient>
+        <linearGradient id="hdvenomShine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.46"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hdvenomGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hdvenomClip"><path d="M78,224
+    L78,258 Q80,278 100,284 L158,288 L172,302
+    A72,112 0 0 1 316,302
+    Q506,312 684,302
+    A68,102 0 0 1 820,302
+    L886,298 Q912,294 920,276 L922,253
+    C898,238 866,216 838,204
+    C812,196 782,192 752,192
+    C716,196 682,202 654,208
+    C630,192 600,166 570,148
+    C548,138 526,133 506,132
+    L452,132
+    C436,134 422,140 410,148
+    C388,164 366,178 348,186
+    C316,188 282,186 252,184
+    C196,192 138,206 78,224 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:0% 50%;transform:rotate(calc(var(--wing-deg,10deg) * -0.3));transition:transform .5s ease;}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-28deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bkvenomGlow);}
-        </style>
+          #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .8s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-28deg) translate(-8px,-14px);}
+          #quadExhaustArt *{fill:#c2cad2;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdvenomGlow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <ellipse cx="500" cy="336" rx="386" ry="9" fill="rgba(0,0,0,0.52)"/>
+
       <g id="bcBody">
-        <path d="M78.0,215.7 Q74.0,280.8 88.0,293.4 L167.0,313.4 A77.2,123.9 0 0 1 321.5,313.4 Q498.1,324.6 679.7,313.4 A72.3,114.4 0 0 1 824.2,313.4 L912.0,293.1 Q922.0,282.9 922.0,262.5 L922.0,242.0 C888.2,239.2 854.5,241.8 820.7,227.0 C810.6,222.6 800.5,183.6 790.3,183.6 C777.7,183.6 765.0,183.6 752.4,183.6 C741.4,183.6 730.4,183.6 719.4,183.6 L626.6,200.7 L559.1,163.2 C536.6,153.1 514.1,133.1 491.6,133.1 C469.1,133.1 446.5,140.6 424.0,144.4 L348.1,178.2 L282.2,174.1 L229.9,174.1 L206.3,174.1 L78.0,215.7 Z" fill="url(#bkvenomPaint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bkvenomClip)">
-        <path d="M78.0,181.9 Q500.0,159.4 922.0,181.9 L922.0,200.7 Q500.0,178.2 78.0,204.5 Z" fill="url(#bkvenomShine)"/>
-        <rect x="0" y="301.1" width="1000" height="204.4" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M167.0,313.4 A77.2,123.9 0 0 1 321.5,313.4" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M167.0,313.4 A77.2,123.9 0 0 1 321.5,313.4" fill="none" stroke="#9fc8ff" stroke-width="1.4" opacity="0.45"/>
-        <path d="M679.7,313.4 A72.3,114.4 0 0 1 824.2,313.4" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M679.7,313.4 A72.3,114.4 0 0 1 824.2,313.4" fill="none" stroke="#9fc8ff" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bkvenomClip)">
-        <path d="M92.0,208.5 Q500.0,201.5 902.0,204.5" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M317.9,309.3 L683.3,307.3 L680.2,321.3 L321.2,323.3 Z" fill="url(#bkvenomLow)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="238.3" width="1000" height="204.4" fill="#12161b" opacity="0.88"/>
-      <path d="M0,238.3 L1000,232.6" stroke="#9fc8ff" stroke-width="1.6" opacity="0.7"/>
-        <path d="M398.7,197.1 q-28.8,-4.0 -52.3,3.0 l3.0,30.7 q26.2,-5.0 49.7,-6.0 Z" fill="#0b1016"/>
-      <path d="M398.7,197.1 q-28.8,-4.0 -52.3,3.0" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2"/>
-      <path d="M393.5,222.8 q20.9,-4.0 42.9,-5.0" fill="none" stroke="#9fc8ff" stroke-width="1.6" opacity="0.55"/>
-      <path d="M500.0,200.4 L453.6,202.4 q-10.0,2.0 -12.0,9.0 l42.2,-2.0 Z" fill="#0a0e13"/>
-      <path d="M500.0,200.4 L453.6,202.4" stroke="rgba(255,255,255,0.4)" stroke-width="1.4"/>
-      <path d="M495.8,207.4 L449.4,210.4" stroke="rgba(255,255,255,0.18)" stroke-width="1"/>
-        <path d="M651.9,181.9 L648.9,307.4" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M483.1,181.9 L480.1,307.4" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M483.1,189.4 L651.9,185.7 L647.9,303.4 L481.1,305.4 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="555.5" y="219.5" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M643.5,181.9 L567.5,171.6 C564.7,170.0 561.9,168.3 559.1,166.9 C536.6,155.6 514.1,136.9 491.6,136.9 C474.7,136.9 457.8,142.5 440.9,145.3 L381.8,181.9 Z" fill="url(#bkvenomGlass)"/>
-      <path d="M643.5,181.9 L567.5,171.6 C564.7,170.0 561.9,168.3 559.1,166.9 C536.6,155.6 514.1,136.9 491.6,136.9 C474.7,136.9 457.8,142.5 440.9,145.3 L381.8,181.9 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bkvenomDlo)">
-      <path d="M647.5,181.9 L561.5,167.8 L581.5,167.8 L669.5,181.9 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M430.9,181.9 L460.9,141.6 L468.9,141.6 L442.9,181.9 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M643.5,181.9 L567.5,171.6" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M381.8,181.9 L440.9,145.3" stroke="#10141a" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M643.5,181.9 L567.5,171.6 C564.7,170.0 561.9,168.3 559.1,166.9 C536.6,155.6 514.1,136.9 491.6,136.9 C474.7,136.9 457.8,142.5 440.9,145.3 L381.8,181.9 Z" fill="none" stroke="#0c1015" stroke-width="2.8" stroke-linejoin="round"/>
-        <path d="M888.5,267.6 q-50.6,14.3 -80.2,38.8 l16.9,14.3 q38.0,-24.5 67.5,-30.7 Z" fill="#080b0f" stroke="rgba(255,255,255,0.28)"/>
-      <path d="M886.5,292.9 L820.7,299.1 L823.3,311.4 L884.5,309.4 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M864.6,246.5 l-22.5,3.6 l0,9.6 l22.5,-2.8 Z" fill="#cfe0ee" stroke="#8894a0" stroke-width="1"/>
-      <path d="M864.0,244.6 l-21.4,3.4" stroke="#9fc8ff" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M922.0,247.0 L820.7,232.0 L790.3,188.6 L752.4,188.6 L719.4,188.6" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <circle cx="111.1" cy="238.9" r="16.9" fill="#e0223c" stroke="rgba(0,0,0,0.45)"/>
-      <rect x="238.4" y="170.7" width="59.1" height="26.6" rx="3" fill="#080b0f" stroke="rgba(255,255,255,0.2)"/>
-      <path d="M238.4,177.3 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M238.4,183.9 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M238.4,190.6 l59.1,0" stroke="rgba(150,166,182,0.35)" stroke-width="0.8"/>
-      <path d="M105.0,294.9 l71.7,-2.0 l0,28.5 l-71.7,0 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M122.9,294.9 l0,27.5" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M140.9,294.9 l0,27.5" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-      <path d="M158.8,294.9 l0,27.5" stroke="rgba(170,186,200,0.38)" stroke-width="1.4"/>
-        <text x="533.8" y="230.7" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">F5</text>
+        <path d="M78,224
+    L78,258 Q80,278 100,284 L158,288 L172,302
+    A72,112 0 0 1 316,302
+    Q506,312 684,302
+    A68,102 0 0 1 820,302
+    L886,298 Q912,294 920,276 L922,253
+    C898,238 866,216 838,204
+    C812,196 782,192 752,192
+    C716,196 682,202 654,208
+    C630,192 600,166 570,148
+    C548,138 526,133 506,132
+    L452,132
+    C436,134 422,140 410,148
+    C388,164 366,178 348,186
+    C316,188 282,186 252,184
+    C196,192 138,206 78,224 Z" fill="url(#hdvenomPaint)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+
+        <g clip-path="url(#hdvenomClip)">
+          <path d="M78,234 C300,216 560,212 922,254 L922,272 C560,232 300,236 78,252 Z" fill="url(#hdvenomShine)"/>
+          <rect x="0" y="256" width="1000" height="150" fill="url(#hdvenomCarbon)" opacity="0.9"/>
+
+          <!-- the daylight opening, well below the roofline: header 152, outline 132 -->
+          <path d="M654,210
+                   C630,194 602,172 574,156
+                   C552,148 530,150 512,150 L456,150
+                   C442,152 428,158 418,166 L400,182
+                   C486,194 574,203 654,210 Z"
+                fill="url(#hdvenomGlass)" stroke="#8ea6bc" stroke-width="1.4"/>
+          <path d="M654,210 C630,194 604,174 576,158" stroke="#080d13" stroke-width="7" stroke-linecap="round"/>
+          <path d="M418,166 L400,182" stroke="#080d13" stroke-width="7" stroke-linecap="round"/>
+          <path d="M645,208 C624,194 602,180 578,168" stroke="rgba(255,255,255,0.32)" stroke-width="3"/>
+          <path d="M462,142 L506,142" stroke="rgba(255,255,255,0.46)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- THE OPEN TAIL. Two buttresses run back from the roof and the Fury V8 sits in the
+               daylight between them, under a mesh — there is no engine cover to speak of. -->
+          <path d="M396,186 L340,196 L300,214 L306,242 L352,220 L404,208 Z" fill="#050a10"/>
+          <g stroke="rgba(160,200,255,0.42)" stroke-width="1.1">
+            <path d="M312,214 l84,-22"/><path d="M316,224 l84,-22"/><path d="M320,234 l84,-22"/>
+          </g>
+          <path d="M396,186 L340,196 L300,214" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+          <path d="M262,190 C240,196 216,206 194,220" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="2.4"/>
+
+          <!-- the intake behind the door: mouth, throat, closed rear end -->
+          <path d="M446,196 L386,198 Q370,200 370,212 L370,222 Q370,234 386,234 L446,232 Z"
+                fill="#04070c" stroke="rgba(255,255,255,0.24)" stroke-width="1.1"/>
+          <path d="M446,196 L446,232" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round"/>
+
+          <!-- a NACA duct let flush into the door, which is the F5's other flank feature -->
+          <path d="M556,232 L604,228 L618,242 L556,244 Z" fill="#060b11" stroke="rgba(159,200,255,0.4)" stroke-width="1.1"/>
+
+          <g id="doorArt">
+            <path d="M424,196 L642,216 L638,288 L428,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="524" y="252" width="26" height="6" rx="3" fill="#5a636d"/>
+          </g>
+          <path d="M424,194 L428,278" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M642,214 L638,288" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+
+          <!-- two round lamps at each end, which is how an F5 is lit -->
+          <circle cx="96" cy="244" r="8" fill="#e0223c" stroke="#7d1020" stroke-width="1.2"/>
+          <circle cx="120" cy="243" r="8" fill="#e0223c" stroke="#7d1020" stroke-width="1.2"/>
+          <circle cx="884" cy="240" r="9" fill="#0a1018" stroke="#c6d4e2" stroke-width="1.6"/>
+          <circle cx="884" cy="240" r="4.6" fill="#eef6ff"/>
+          <circle cx="866" cy="248" r="7" fill="#0a1018" stroke="#c6d4e2" stroke-width="1.4"/>
+          <circle cx="866" cy="248" r="3.4" fill="#eef6ff"/>
+
+          <text x="540" y="268" text-anchor="middle" font-family="ui-sans-serif" font-size="12" fill="rgba(190,220,255,0.7)" letter-spacing="6">F5</text>
         </g>
-        <g data-proud="1"></g>
-        <g data-proud="1"></g>
-        <g id="frontFlapArt"><rect x="833.4" y="319.4" width="71.7" height="6" rx="3" fill="#101318" stroke="#9fc8ff" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"><circle cx="96.7" cy="321.4" r="6"/><circle cx="111.7" cy="321.4" r="6"/></g>
-        <path d="M649.5,183.9 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
+
+        <!-- the ducktail: worked INTO the deck, not bolted above it. There is no wing. -->
+        <g id="rearWingArt" data-proud="1">
+          <path d="M78,222 C110,210 148,200 182,196 L184,208 C150,212 112,222 80,234 Z"
+                fill="url(#hdvenomPaint)" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+        </g>
       </g>
+
+      <g id="frontFlapArt"><rect x="836" y="298" width="82" height="6" rx="3" fill="#101318" stroke="#9fc8ff" stroke-opacity="0.55"/></g>
+      <path d="M84,270 L180,276 L176,300 L88,294 Z" fill="#070b10" stroke="rgba(255,255,255,0.14)"/>
+      <g stroke="rgba(170,190,215,0.36)" stroke-width="1.4"><path d="M112,292 L110,302"/><path d="M136,294 L134,303"/><path d="M160,295 L158,304"/></g>
+      <path d="M100,252 L172,256 L170,278 L98,274 Z" fill="#04070c" stroke="rgba(150,180,220,0.28)" stroke-width="1.2"/>
+      <g id="quadExhaustArt"><circle cx="120" cy="264" r="9"/><circle cx="150" cy="265" r="9"/></g>
+
       <g>
-      <circle cx="244.23146163737678" cy="263.0732961851693" r="66.9" fill="#0a0b0e"/>
-      <circle cx="244.23146163737678" cy="263.0732961851693" r="66.9" fill="none" stroke="#1b1f25" stroke-width="8.7"/>
-      <circle cx="244.23146163737678" cy="263.0732961851693" r="60.2" fill="none" stroke="#8fb4ff" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="244.23146163737678" cy="263.0732961851693" r="41.5" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M254.0,258.6 L285.3,256.9 L285.3,269.3 L254.0,267.5 Z" fill="#2b3138"/><path d="M251.5,271.0 L262.8,300.2 L251.0,304.0 L243.0,273.7 Z" fill="#2b3138"/><path d="M239.0,272.4 L214.7,292.2 L207.4,282.2 L233.7,265.2 Z" fill="#2b3138"/><path d="M233.7,260.9 L207.4,244.0 L214.7,234.0 L239.0,253.8 Z" fill="#2b3138"/><path d="M243.0,252.4 L251.0,222.1 L262.8,226.0 L251.5,255.2 Z" fill="#2b3138"/></g>
-      <circle cx="244.23146163737678" cy="263.0732961851693" r="8.7" fill="url(#bkvenomHub)"/>
+      <circle cx="244" cy="263" r="67.0" fill="#0a0b0e"/>
+      <circle cx="244" cy="263" r="67.0" fill="none" stroke="#1b1f25" stroke-width="8.7"/>
+      <circle cx="244" cy="263" r="60.3" fill="none" stroke="#8fb4ff" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="244" cy="263" r="41.5" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M253.8,258.6 L285.1,256.8 L285.1,269.2 L253.8,267.4 Z" fill="#2b3138"/><path d="M251.2,270.9 L262.6,300.2 L250.8,304.0 L242.8,273.7 Z" fill="#2b3138"/><path d="M238.7,272.3 L214.4,292.2 L207.1,282.1 L233.5,265.1 Z" fill="#2b3138"/><path d="M233.5,260.9 L207.1,243.9 L214.4,233.8 L238.7,253.7 Z" fill="#2b3138"/><path d="M242.8,252.3 L250.8,222.0 L262.6,225.8 L251.2,255.1 Z" fill="#2b3138"/></g>
+      <circle cx="244" cy="263" r="8.7" fill="url(#hdvenomHub)"/>
     </g>
       <g>
-      <circle cx="751.9699957136734" cy="267.59537076725246" r="62.4" fill="#0a0b0e"/>
-      <circle cx="751.9699957136734" cy="267.59537076725246" r="62.4" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
-      <circle cx="751.9699957136734" cy="267.59537076725246" r="56.2" fill="none" stroke="#8fb4ff" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="751.9699957136734" cy="267.59537076725246" r="38.7" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M761.1,263.5 L790.2,261.8 L790.2,273.4 L761.1,271.7 Z" fill="#2b3138"/><path d="M758.7,275.0 L769.3,302.2 L758.3,305.8 L750.8,277.5 Z" fill="#2b3138"/><path d="M747.1,276.3 L724.4,294.7 L717.6,285.4 L742.2,269.6 Z" fill="#2b3138"/><path d="M742.2,265.6 L717.6,249.8 L724.4,240.4 L747.1,258.9 Z" fill="#2b3138"/><path d="M750.8,257.7 L758.3,229.4 L769.3,233.0 L758.7,260.2 Z" fill="#2b3138"/></g>
-      <circle cx="751.9699957136734" cy="267.59537076725246" r="8.1" fill="url(#bkvenomHub)"/>
+      <circle cx="752" cy="268" r="62.0" fill="#0a0b0e"/>
+      <circle cx="752" cy="268" r="62.0" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
+      <circle cx="752" cy="268" r="55.8" fill="none" stroke="#8fb4ff" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="752" cy="268" r="38.4" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M761.0,263.9 L790.0,262.3 L790.0,273.7 L761.0,272.1 Z" fill="#2b3138"/><path d="M758.7,275.3 L769.2,302.4 L758.3,305.9 L750.9,277.9 Z" fill="#2b3138"/><path d="M747.1,276.6 L724.6,295.0 L717.9,285.7 L742.3,270.0 Z" fill="#2b3138"/><path d="M742.3,266.0 L717.9,250.3 L724.6,241.0 L747.1,259.4 Z" fill="#2b3138"/><path d="M750.9,258.1 L758.3,230.1 L769.2,233.6 L758.7,260.7 Z" fill="#2b3138"/></g>
+      <circle cx="752" cy="268" r="8.1" fill="url(#hdvenomHub)"/>
     </g>
     </svg>
     `;
