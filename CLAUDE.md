@@ -326,9 +326,15 @@ a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
 `updatePhysics`, `stageForce()` adds the grade on the leg and the water drag on the sea,
 `stageCapMps()` caps each stage, and `drawStage(w,h,pal)` paints the surface.
 
+<<<<<<< HEAD
 **Exteriors — every road car is now DRAWN BY HAND.** All **39** road-car bodies are written out
 car by car: the eleven that always were (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 · T.33 ·
 Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **28** in `tools/bodykit/drawn.mjs`, which
+=======
+**Exteriors — every road car is now DRAWN BY HAND.** All **37** road-car bodies are written out
+car by car: the eleven that always were (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 · T.33 ·
+Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **26** in `tools/bodykit/drawn.mjs`, which
+>>>>>>> origin/main
 `DRAWN` now covers completely. `apply.mjs` prefers `DRAWN[key]` and falls back to the generator,
 so the generator is still the safety net for a new car but no longer draws anything shipped.
 (The F1 grid and the Dakar cars are drawn by `openwheel.mjs` / `raid.mjs`, which is right — eleven
@@ -342,7 +348,11 @@ got wrong at least once here before the render caught them:
 - **the roofline is the OUTLINE, not the glass** — writing a deck from the glass line puts the tail
   30–50 px too low, and the body comes out as a thin slab with the cabin sitting on it like a box.
 
+<<<<<<< HEAD
 The roof is **painted metal**, in all 38 closed cars (the 918 is a Spyder and has no roof at all — its outline has a NOTCH cut where a coupe's roof would be, so the cockpit is a real opening you look into rather than a shape painted on the side): the glass top edge is drawn *below* the body outline so a
+=======
+The roof is **painted metal**, in all 37: the glass top edge is drawn *below* the body outline so a
+>>>>>>> origin/main
 band of body colour shows above it, and that band gets its own highlight. Every drawing here once
 had its DLO on the roofline instead, which made the roof glass and the cabin a bubble.
 

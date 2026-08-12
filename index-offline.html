@@ -271,11 +271,34 @@
     .garage-foot {
       display: flex;
       justify-content: space-between;
+      flex-wrap: wrap;
       gap: 12px;
       color: var(--muted);
       font-size: 12px;
       padding-bottom: 3px;
     }
+    .garage-foot .creator-credit {
+      flex: 0 0 100%;
+      margin-top: 6px;
+      padding-top: 10px;
+      border-top: 1px solid var(--line);
+      background: transparent;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 20px;
+      text-align: center;
+    }
+    .garage-foot .creator-credit a {
+      color: var(--teal);
+      font-weight: 700;
+      text-decoration: underline;
+      text-decoration-thickness: 1px;
+      text-underline-offset: 3px;
+    }
+    .garage-foot .creator-credit a:visited { color: var(--teal); }
+    .garage-foot .creator-credit a:hover,
+    .garage-foot .creator-credit a:focus-visible { color: #72e7df; }
     .host-board {
       border: 1px solid var(--line);
       border-radius: 8px;
@@ -2121,7 +2144,7 @@
             <img class="realcar" loading="lazy" alt="Alfa Romeo 33 Stradale exterior" src="assets/cars/alfa-33-stradale.jpg" onerror="this.remove()">
             <div class="badge-row">
               <div class="mark">33</div>
-              <div class="credit">Livery illustration</div>
+              <div class="credit">Photo supplied by site owner</div>
             </div>
           </div>
           <div class="car-info">
@@ -2165,7 +2188,7 @@
             <img class="realcar" loading="lazy" alt="SSC Tuatara exterior" src="assets/cars/ssc-tuatara.jpg" onerror="this.remove()">
             <div class="badge-row">
               <div class="mark">SSC</div>
-              <div class="credit">Livery illustration</div>
+              <div class="credit">Photo supplied by site owner</div>
             </div>
           </div>
           <div class="car-info">
@@ -2211,7 +2234,7 @@
               <g><circle cx="606" cy="318" r="50" fill="#0a0b0e"/><circle cx="606" cy="318" r="50" fill="none" stroke="#c8102e" stroke-width="3"/><circle cx="606" cy="318" r="21" fill="url(#rimt5)"/></g>
             </svg>
             <img class="realcar" loading="lazy" alt="Gordon Murray T.50s Niki Lauda exterior" src="assets/cars/gma-t50s.jpg" onerror="this.remove()">
-            <div class="badge-row"><div class="mark">T50s</div><div class="credit">Livery illustration</div></div>
+            <div class="badge-row"><div class="mark">T50s</div><div class="credit">Photo supplied by site owner</div></div>
           </div>
           <div class="car-info">
             <div class="car-title">
@@ -2265,7 +2288,7 @@
               <g><circle cx="632" cy="312" r="52" fill="#0a0b0e"/><circle cx="632" cy="312" r="52" fill="none" stroke="#1f4fa8" stroke-width="3"/><circle cx="632" cy="312" r="22" fill="url(#rimp8)"/></g>
             </svg>
             <img class="realcar" loading="lazy" alt="Jaguar XE SV Project 8 exterior" src="assets/cars/jaguar-project8.jpg" onerror="this.remove()">
-            <div class="badge-row"><div class="mark">SV</div><div class="credit">Livery illustration</div></div>
+            <div class="badge-row"><div class="mark">SV</div><div class="credit">Photo supplied by site owner</div></div>
           </div>
           <div class="car-info">
             <div class="car-title">
@@ -2314,7 +2337,7 @@
               <g><circle cx="666" cy="312" r="47" fill="#0a0b0e"/><circle cx="666" cy="312" r="47" fill="none" stroke="#c8102e" stroke-width="3"/><circle cx="666" cy="312" r="20" fill="url(#rims2)"/></g>
             </svg>
             <img class="realcar" loading="lazy" alt="Honda S2000 exterior" src="assets/cars/honda-s2000.jpg" onerror="this.remove()">
-            <div class="badge-row"><div class="mark">S2K</div><div class="credit">Livery illustration</div></div>
+            <div class="badge-row"><div class="mark">S2K</div><div class="credit">Photo supplied by site owner</div></div>
           </div>
           <div class="car-info">
             <div class="car-title">
@@ -3422,6 +3445,7 @@
         <span>Private practice opens the original simulator unchanged — AI rival grid included.</span>
         <span>Browser P2P is tuned for 20 racers; bigger public matchmaking needs a server.</span>
         <span id="buildStamp" title="Content hash of all 47 simulators. If this has not changed, you are looking at a cached page.">build …</span>
+        <span class="creator-credit">Created by <a href="https://github.com/richardjiangs" target="_blank" rel="noopener noreferrer">Richard Jiang</a></span>
       </footer>
     </div>
   </main>
