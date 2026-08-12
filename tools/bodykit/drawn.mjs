@@ -158,7 +158,10 @@ export function drawZr1(spec) {
     </svg>`;
 }
 
-export const DRAWN = { zr1: drawZr1 };
+/* Only SIGNED-OFF drawings go in here. apply.mjs prefers whatever this map holds and falls back
+   to the generator for everything else, so a car that has been drawn but not yet approved stays
+   out of the garage until it is named on this line. */
+export const DRAWN = { zr1: drawZr1, nevera: drawNevera, gto: drawGto };
 
 /* ------------------------------------------------------------------ *
  * Rimac Nevera                                                        *
