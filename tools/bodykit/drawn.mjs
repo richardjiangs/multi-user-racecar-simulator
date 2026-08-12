@@ -158,4 +158,194 @@ export function drawZr1(spec) {
     </svg>`;
 }
 
-export const DRAWN = { zr1: drawZr1 };
+/* Only SIGNED-OFF drawings go in here. apply.mjs prefers whatever this map holds and falls back
+   to the generator for everything else, so a car that has been drawn but not yet approved stays
+   out of the garage until it is named on this line. */
+export const DRAWN = { zr1: drawZr1, nevera: drawNevera, gto: drawGto };
+
+/* ------------------------------------------------------------------ *
+ * Rimac Nevera                                                        *
+ * 4,750 x 1,208 mm on a 2,745 mm wheelbase, 950/1,055 overhangs.       *
+ * An EV, so no grille at all: the nose is one smooth surface falling   *
+ * to a splitter. The flank carries Rimac's "tie" — a scoop that starts *
+ * at the door and sweeps back into the rear haunch — and the tail is a *
+ * full-width light bar over a very deep diffuser.                      *
+ * ------------------------------------------------------------------ */
+export function drawNevera(spec) {
+  const ID = (n) => `hd${spec.key || "nevera"}${n}`;
+  const axF = 753, axR = 265, rF = 62, rR = 64, G = FRAME.ground;
+  const BODY = `M78,206
+    L78,258 Q80,278 100,283 L156,286 L196,302
+    A70,106 0 0 1 336,302
+    Q510,310 686,302
+    A68,108 0 0 1 822,302
+    L886,296 Q914,292 922,272 L922,244
+    C896,232 868,224 838,216
+    C806,208 782,202 753,196
+    C728,192 706,192 690,194
+    C660,178 626,152 596,134
+    C572,122 544,116 516,116
+    C486,116 458,122 434,132
+    C412,142 396,152 380,160
+    C352,172 322,178 296,180
+    C282,181 272,181 265,181
+    C214,184 140,194 78,206 Z`;
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rimac Nevera side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6fd6e8"/><stop offset="0.36" stop-color="#1f8fb2"/><stop offset="0.8" stop-color="#0d4d66"/><stop offset="1" stop-color="#06222e"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d8ecfa"/><stop offset="0.4" stop-color="#3f5b71"/><stop offset="1" stop-color="#080f16"/></linearGradient>
+        <linearGradient id="${ID("Low")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f25"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f4e3c8"/><stop offset="1" stop-color="#7a5326"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.44"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.4));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-24deg) translate(-8px,-14px);}
+          #quadExhaustArt *{fill:#7fd8ff;} #quadExhaustArt.hot *{fill:#bff0ff;filter:url(#${ID("Glow")});}</style>
+      </defs>
+      <ellipse cx="500" cy="${G + 6}" rx="390" ry="9" fill="rgba(0,0,0,0.5)"/>
+      <g id="rearWingArt"><path d="M104,178 L262,170 L262,182 L104,190 Z" fill="#12171d" stroke="#5c6570" stroke-width="1.2"/>
+        <path d="M104,178 L262,170" stroke="#7fd8ff" stroke-width="2" opacity="0.7"/></g>
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,216 C300,196 560,192 922,254 L922,272 C560,212 300,214 78,234 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="248" width="1000" height="120" fill="rgba(0,0,0,0.18)"/>
+          <!-- the canopy: a long teardrop with a fast screen and a wrapped backlight -->
+          <path d="M690,196 C660,178 626,152 596,134
+                   C572,122 544,116 516,116 C486,116 458,122 434,132 L410,150
+                   C486,166 596,182 690,196 Z" fill="url(#${ID("Glass")})" stroke="#8fa8bb" stroke-width="1.4"/>
+          <path d="M686,194 C656,176 624,150 594,134" stroke="#0c1117" stroke-width="7" stroke-linecap="round"/>
+          <path d="M434,132 L410,150" stroke="#0c1117" stroke-width="7" stroke-linecap="round"/>
+          <path d="M672,190 C646,174 618,152 592,138" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+          <!-- THE TIE: Rimac's scoop, from the door back into the haunch -->
+          <path d="M470,200 C424,198 390,214 366,240 L374,262 C400,236 434,224 470,224 Z" fill="#04070a"/>
+          <path d="M470,200 C424,198 390,214 366,240" fill="none" stroke="rgba(255,255,255,0.48)" stroke-width="2.4"/>
+          <path d="M466,220 C432,220 406,230 384,250" fill="none" stroke="#7fd8ff" stroke-width="1.6" opacity="0.6"/>
+          <g id="doorArt">
+            <path d="M478,196 L676,214 L672,288 L482,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.3)" stroke-width="1.4"/>
+            <rect x="572" y="232" width="26" height="6" rx="3" fill="#4f565e"/>
+          </g>
+          <path d="M478,194 L482,278" stroke="rgba(0,0,0,0.32)" stroke-width="2"/>
+          <path d="M676,212 L672,288" stroke="rgba(0,0,0,0.32)" stroke-width="2"/>
+          <path d="M170,210 C420,198 640,214 890,262" fill="none" stroke="rgba(255,255,255,0.24)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M336,298 L682,302 L678,314 L340,310 Z" fill="url(#${ID("Low")})" stroke="rgba(120,132,146,0.3)"/>
+          <!-- charge port, thin LED lamps, full-width tail bar -->
+          <rect x="300" y="216" width="18" height="12" rx="4" fill="#0d141a" stroke="#7fd8ff" stroke-width="1.3"/>
+          <path d="M894,250 L850,240" stroke="#e6f4ff" stroke-width="5" stroke-linecap="round"/>
+          <path d="M890,258 L858,250" stroke="#7fd8ff" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M84,220 L150,214" stroke="#ff2d4e" stroke-width="7" stroke-linecap="round"/>
+          <path d="M84,220 L150,214" stroke="rgba(255,190,200,0.6)" stroke-width="2.4" stroke-linecap="round"/>
+          <text x="580" y="262" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="rgba(255,255,255,0.6)" letter-spacing="5">NEVERA</text>
+        </g>
+      </g>
+      <g id="frontFlapArt"><rect x="830" y="298" width="82" height="6" rx="3" fill="#101318" stroke="#7fd8ff" stroke-opacity="0.5"/></g>
+      <path d="M84,278 L188,284 L184,306 L88,300 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.14)"/>
+      <g stroke="rgba(160,180,196,0.4)" stroke-width="1.5"><path d="M112,286 L110,302"/><path d="M136,288 L134,304"/><path d="M160,290 L158,305"/></g>
+      <g id="quadExhaustArt"><rect x="96" y="268" width="26" height="5" rx="2.5"/></g>
+      ${wheel(axR, G - rR, rR, "basket", "#d8a866", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "basket", "#d8a866", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Ferrari 250 GTO (1962)                                              *
+ * 4,325 x 1,210 mm on a 2,400 mm wheelbase, 1,000/925 overhangs.       *
+ * Almost half the car is bonnet. The cabin is small, upright and set   *
+ * a long way back; the tail is CUT — a Kamm panel with a ducktail lip  *
+ * standing on it. Covered round lamps in faired perspex, the oval egg- *
+ * crate mouth, three louvres in the front wing, Borrani wire wheels    *
+ * and the competition roundel on the door.                             *
+ * ------------------------------------------------------------------ */
+export function drawGto(spec) {
+  const ID = (n) => `hd${spec.key || "gto"}${n}`;
+  const axF = 727, axR = 258, rF = 64, rR = 64, G = FRAME.ground;
+  const BODY = `M78,202
+    L78,244 Q80,262 98,268 L150,272 L190,300
+    A72,110 0 0 1 334,300
+    L660,300
+    A72,110 0 0 1 800,300
+    L878,296 Q912,292 920,272 L920,236
+    C892,222 862,212 826,206
+    C792,200 762,196 727,192
+    C700,190 676,190 654,192
+    C640,178 622,164 600,154
+    C572,142 540,136 508,136
+    C476,136 448,142 424,154
+    C406,163 392,174 380,186
+    C356,190 322,192 292,192
+    C280,192 268,192 258,192
+    C214,194 146,198 78,202 Z`;
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Ferrari 250 GTO side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f04a34"/><stop offset="0.32" stop-color="#c8151c"/><stop offset="0.78" stop-color="#78060d"/><stop offset="1" stop-color="#3a0206"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dceaf5"/><stop offset="0.4" stop-color="#516a7c"/><stop offset="1" stop-color="#101820"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f2f6fa"/><stop offset="1" stop-color="#6c757e"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.44"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));}
+          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-13deg) translate(-10px,-6px);}
+          #quadExhaustArt *{fill:#b9c0c8;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+      <ellipse cx="500" cy="${G + 6}" rx="382" ry="9" fill="rgba(0,0,0,0.5)"/>
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,180 C300,168 560,186 916,244 L916,264 C560,206 300,190 78,200 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="246" width="1000" height="120" fill="rgba(0,0,0,0.14)"/>
+          <!-- the small upright cabin, chrome-framed, with a quarter light -->
+          <path d="M654,192 C640,178 622,164 600,154
+                   C572,142 540,136 508,136 C476,136 448,142 424,154 L404,178
+                   C478,190 570,192 654,192 Z" fill="url(#${ID("Glass")})" stroke="#e6eef4" stroke-width="2.4"/>
+          <path d="M650,190 C636,177 620,164 600,155" stroke="#b41219" stroke-width="6" stroke-linecap="round"/>
+          <path d="M424,154 L404,178" stroke="#b41219" stroke-width="7" stroke-linecap="round"/>
+          <path d="M600,158 L586,188" stroke="#e6eef4" stroke-width="2.2"/>
+          <path d="M636,186 C622,174 606,162 588,154" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
+          <!-- the three louvres cut into the front wing, and the bonnet scoop -->
+          <g stroke="rgba(0,0,0,0.62)" stroke-width="3.4" stroke-linecap="round">
+            <path d="M690,222 l-30,4"/><path d="M684,232 l-30,4"/><path d="M678,242 l-30,4"/>
+          </g>
+          <g stroke="rgba(255,255,255,0.3)" stroke-width="1.2" stroke-linecap="round">
+            <path d="M690,219 l-30,4"/><path d="M684,229 l-30,4"/><path d="M678,239 l-30,4"/>
+          </g>
+          <path d="M840,206 C812,200 786,197 762,195 L760,204 C786,206 812,209 838,215 Z" fill="#12161b" stroke="rgba(255,255,255,0.3)"/>
+          <!-- the door, and the competition roundel on it -->
+          <g id="doorArt">
+            <path d="M420,196 L640,196 L636,282 L424,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.3)" stroke-width="1.4"/>
+          </g>
+          <path d="M420,194 L424,278" stroke="rgba(0,0,0,0.32)" stroke-width="2"/>
+          <path d="M640,194 L636,282" stroke="rgba(0,0,0,0.32)" stroke-width="2"/>
+          <circle cx="528" cy="234" r="34" fill="#f5f7f9" stroke="#2a3037" stroke-width="1.8"/>
+          <text x="528" y="248" text-anchor="middle" font-family="ui-serif,Georgia" font-size="38" fill="#1a1f26">24</text>
+          <circle cx="382" cy="206" r="7" fill="#cbd4dc" stroke="#6e7780" stroke-width="1.5"/>
+          <!-- the egg-crate mouth, the faired lamp, the chrome bumper -->
+          <ellipse cx="892" cy="256" rx="26" ry="20" fill="#07090c" stroke="#d8e2ea" stroke-width="2.2"/>
+          <g stroke="rgba(190,204,218,0.5)" stroke-width="1"><path d="M868,248 l48,0"/><path d="M866,256 l52,0"/><path d="M868,264 l48,0"/></g>
+          <path d="M872,214 C848,210 836,218 834,236 L860,240 C862,226 868,220 878,220 Z" fill="rgba(214,232,244,0.45)" stroke="#dbe5ec" stroke-width="1.4"/>
+          <circle cx="856" cy="228" r="12" fill="#eef5fa" stroke="#b7c2cc" stroke-width="1.4"/>
+          <path d="M918,278 C900,288 876,290 854,286" fill="none" stroke="#e8eff5" stroke-width="6" stroke-linecap="round"/>
+          <!-- round tail lamps in a pair, and the Kamm panel -->
+          <circle cx="96" cy="228" r="10" fill="#e0223c" stroke="rgba(0,0,0,0.4)"/>
+          <circle cx="122" cy="227" r="10" fill="#e0223c" stroke="rgba(0,0,0,0.4)"/>
+          <path d="M80,214 L160,210" stroke="rgba(255,255,255,0.26)" stroke-width="1.6"/>
+        </g>
+        <!-- the ducktail lip, standing proud of the Kamm panel -->
+        <g data-proud="1"><path d="M80,200 C114,190 158,186 196,190 L195,199 C158,195 114,199 80,209 Z" fill="#c8151c" stroke="rgba(255,255,255,0.42)" stroke-width="1.2"/></g>
+      </g>
+      <g id="frontFlapArt"><rect x="836" y="290" width="70" height="5" rx="2.5" fill="#1a1010" stroke="#e8eff5" stroke-opacity="0.35"/></g>
+      <g id="quadExhaustArt" data-proud="1"><rect x="470" y="292" width="20" height="7" rx="3.5"/><rect x="496" y="292" width="20" height="7" rx="3.5"/><rect x="522" y="292" width="20" height="7" rx="3.5"/><rect x="548" y="292" width="20" height="7" rx="3.5"/></g>
+      ${wheel(axR, G - rR, rR, "wire", "#e6eef4", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "wire", "#e6eef4", ID("Hub"))}
+    </svg>`;
+}
