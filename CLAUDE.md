@@ -324,14 +324,31 @@ a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
 `updatePhysics`, `stageForce()` adds the grade on the leg and the water drag on the sea,
 `stageCapMps()` caps each stage, and `drawStage(w,h,pal)` paints the surface.
 
-**Exteriors — a silhouette is not a car (all 52)** — the bodies are drawn by `tools/bodykit/`
-from each car's REAL dimensions (length, wheelbase, height, both overhangs, wheel diameters) with the
-wheel arches **cut into** the body, and one `roof: [[xFromFront, yFromRoofPeak], …]` array per car
-carrying the identity. That gave the right proportions and stopped there, which is why the set was
-fairly described as "a half-bitten banana coloured in fifty-two ways": one grey polygon for glass and
-nothing else on the whole car.
+**Exteriors — every road car is now DRAWN BY HAND.** All **37** road-car bodies are written out
+car by car: the eleven that always were (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 · T.33 ·
+Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **26** in `tools/bodykit/drawn.mjs`, which
+`DRAWN` now covers completely. `apply.mjs` prefers `DRAWN[key]` and falls back to the generator,
+so the generator is still the safety net for a new car but no longer draws anything shipped.
+(The F1 grid and the Dakar cars are drawn by `openwheel.mjs` / `raid.mjs`, which is right — eleven
+F1 cars really are one chassis in eleven liveries.)
 
-`tools/bodykit/detail.mjs` adds the **furniture**, which is what a viewer actually recognises a car by:
+A hand drawing has to do for itself the two things the generator did automatically, and both were
+got wrong at least once here before the render caught them:
+
+- **the haunch** — the body top must sit *above* the wheel-arch apex at each axle, or the tyre
+  stands proud of the bodywork and the car reads as an open-wheeler;
+- **the roofline is the OUTLINE, not the glass** — writing a deck from the glass line puts the tail
+  30–50 px too low, and the body comes out as a thin slab with the cabin sitting on it like a box.
+
+The roof is **painted metal**, in all 37: the glass top edge is drawn *below* the body outline so a
+band of body colour shows above it, and that band gets its own highlight. Every drawing here once
+had its DLO on the roofline instead, which made the roof glass and the cabin a bubble.
+
+`specs.mjs` is still the source of truth for the numbers — length, wheelbase, height, both
+overhangs, wheel diameters, and the `roof: [[xFromFront, yFromRoofPeak], …]` array — and every
+hand-drawn outline is written from them. `tools/bodykit/render.mjs` + `detail.mjs` remain as the
+fallback generator, and its **furniture** vocabulary is the checklist a new drawing is measured
+against:
 
 | part | what it carries |
 |---|---|
@@ -347,11 +364,12 @@ because the clip cuts it in half. Everything at the nose and tail is placed as a
 length** and hung off the body's own surface at that station — placing it in frame pixels is what
 left every lamp clipped to a white sliver hanging past the bumper.
 
-**Eleven exteriors are hand-drawn and off limits** (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 ·
-T.33 · Agera RS · U9 · DB5 · 300 SLR · Czinger 21C). `apply.mjs` refuses to touch them and
+**Eleven exteriors are off limits to the tooling entirely** (Evo X · GT-R Nismo · M5 · R8 ·
+McLaren F1 1993 · T.33 · Agera RS · U9 · DB5 · 300 SLR · Czinger 21C). They live inline in their
+own simulator files rather than in `drawn.mjs`; `apply.mjs` refuses to touch them and
 `tests/browser-test.mjs` fails if it ever does — the generator flattened six of them once.
 
-The generated block is **fenced** (`BODYKIT:BEGIN` … `BODYKIT:END`) so `apply.mjs` can be re-run:
+The block written into each sim is **fenced** (`BODYKIT:BEGIN` … `BODYKIT:END`) so `apply.mjs` can be re-run:
 the SVG carries its own `<style>` block, so a brace counter walking out of `injectExterior()` stops
 in the wrong place and swallows the next function. `browser-test` runs the generator a second time
 and fails on any byte of drift, and measures the roofline set (mean pairwise difference ≥ 0.115, no

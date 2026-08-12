@@ -2677,103 +2677,134 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      axle, so the bonnet is long and low and the screen sits a long way back, and the deck
      behind the cabin is short. New Formula Red, fabric roof, flush handles, twin centre tips,
      16-inch front and 17-inch rear wheels. */
-  /* BODYKIT:BEGIN Honda S2000 — drawn from the car's own published dimensions: 4135 mm long
-     on a 2400 mm wheelbase, 1285 mm tall, 880/855 mm
-     overhangs. The wheel arches are cut INTO the body, which is what gives it proportions, and the
-     furniture on it — glasshouse, grille, lamps, vents, flank kit — is what that car really wears. */
+  /* BODYKIT:BEGIN Honda S2000 — DRAWN BY HAND, from this car's own side elevation: 4135 mm long on a
+     2400 mm wheelbase, 1285 mm tall, 880/855 mm
+     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
+     shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Honda S2000 side">
       <defs>
-        <linearGradient id="bks2000Paint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#e8382c"/><stop offset="0.45" stop-color="#b0121e"/><stop offset="1" stop-color="#3f060b"/>
+        <linearGradient id="hds2000Paint" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#ff7060"/><stop offset="0.32" stop-color="#e2342a"/><stop offset="0.72" stop-color="#9c1018"/><stop offset="1" stop-color="#3a060a"/>
         </linearGradient>
-        <linearGradient id="bks2000Glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#b8cfe2" stop-opacity="0.9"/><stop offset="0.5" stop-color="#33495c" stop-opacity="0.92"/><stop offset="1" stop-color="#0a1219"/>
+        <linearGradient id="hds2000Cloth" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#33383e"/><stop offset="0.5" stop-color="#1e2328"/><stop offset="1" stop-color="#0d1013"/>
         </linearGradient>
-        <linearGradient id="bks2000Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2026"/><stop offset="1" stop-color="#07090c"/></linearGradient>
-        <radialGradient id="bks2000Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="bks2000Shine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="bks2000Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="bks2000Clip"><path d="M78.0,190.8 Q74.0,281.0 88.0,290.1 L180.6,304.5 A71.9,108.2 0 0 1 324.4,304.5 L672.7,304.5 A69.7,104.0 0 0 1 812.1,304.5 L912.0,293.1 Q922.0,287.4 922.0,262.8 L922.0,238.2 C888.2,228.7 854.5,225.9 820.7,209.8 C807.2,203.3 793.7,182.5 780.2,182.5 C767.5,182.5 754.9,182.5 742.2,182.5 C734.6,182.5 727.0,182.5 719.4,182.5 L618.2,176.6 L550.6,124.5 L483.1,91.4 L398.7,100.9 L314.3,143.5 L290.7,178.2 C278.0,178.2 265.4,178.2 252.7,178.2 C240.0,178.2 227.4,178.2 214.7,178.2 L196.2,171.9 L78.0,190.8 Z"/></clipPath>
-        <clipPath id="bks2000Dlo"><path d="M567.5,153.0 L500.0,106.8 L483.1,98.5 L415.6,106.1 L365.0,153.0 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
+        <linearGradient id="hds2000Glass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d6e6f2"/><stop offset="0.4" stop-color="#3e4c5a"/><stop offset="1" stop-color="#080c11"/></linearGradient>
+        <radialGradient id="hds2000Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f6f9fc"/><stop offset="1" stop-color="#454e57"/></radialGradient>
+        <linearGradient id="hds2000Shine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.44"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="hds2000Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="hds2000Clip"><path d="M78,204
+    L78,258 Q80,282 104,288 L166,292 L186,302
+    A67,106 0 0 1 320,302
+    Q510,312 677,302
+    A65,102 0 0 1 807,302
+    L876,298 Q902,294 916,282 L922,257
+    C898,240 866,220 838,206
+    C812,198 776,194 742,194
+    C716,198 682,201 648,204
+    C630,176 610,150 590,131
+    C574,116 552,104 528,101
+    L470,103
+    C452,108 436,122 424,142
+    C404,168 380,188 352,200
+    C320,196 288,192 253,190
+    C196,192 138,198 78,204 Z"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
           #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
           #doorArt{transform-box:fill-box;transform-origin:6% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-13deg) translate(-11px,-4px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#bks2000Glow);}
-        </style>
+          #doorArt.open{transform:rotate(-14deg) translate(-12px,-5px);}
+          #quadExhaustArt *{fill:#c0c7ce;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hds2000Glow);}</style>
       </defs>
-      <ellipse cx="500.0" cy="336.0" rx="396.7" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <ellipse cx="500" cy="336" rx="374" ry="9" fill="rgba(0,0,0,0.52)"/>
+
       <g id="bcBody">
-        <path d="M78.0,190.8 Q74.0,281.0 88.0,290.1 L180.6,304.5 A71.9,108.2 0 0 1 324.4,304.5 L672.7,304.5 A69.7,104.0 0 0 1 812.1,304.5 L912.0,293.1 Q922.0,287.4 922.0,262.8 L922.0,238.2 C888.2,228.7 854.5,225.9 820.7,209.8 C807.2,203.3 793.7,182.5 780.2,182.5 C767.5,182.5 754.9,182.5 742.2,182.5 C734.6,182.5 727.0,182.5 719.4,182.5 L618.2,176.6 L550.6,124.5 L483.1,91.4 L398.7,100.9 L314.3,143.5 L290.7,178.2 C278.0,178.2 265.4,178.2 252.7,178.2 C240.0,178.2 227.4,178.2 214.7,178.2 L196.2,171.9 L78.0,190.8 Z" fill="url(#bks2000Paint)" stroke="rgba(255,255,255,0.42)" stroke-width="1.1"/>
-        <g clip-path="url(#bks2000Clip)">
-        <path d="M78.0,138.7 Q500.0,110.3 922.0,138.7 L922.0,162.4 Q500.0,134.0 78.0,167.2 Z" fill="url(#bks2000Shine)"/>
-        <rect x="0" y="288.7" width="1000" height="262.3" fill="rgba(0,0,0,0.16)"/>
-      </g>
-        <path d="M180.6,304.5 A71.9,108.2 0 0 1 324.4,304.5" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M180.6,304.5 A71.9,108.2 0 0 1 324.4,304.5" fill="none" stroke="#ff8a7c" stroke-width="1.4" opacity="0.45"/>
-        <path d="M672.7,304.5 A69.7,104.0 0 0 1 812.1,304.5" fill="none" stroke="rgba(0,0,0,0.55)" stroke-width="4"/>
-  <path d="M672.7,304.5 A69.7,104.0 0 0 1 812.1,304.5" fill="none" stroke="#ff8a7c" stroke-width="1.4" opacity="0.45"/>
-        <g clip-path="url(#bks2000Clip)">
-        <path d="M92.0,194.8 Q500.0,187.8 902.0,190.8" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="2.2" stroke-linecap="round"/>
-        <path d="M323.2,299.2 L673.9,297.2 L670.8,311.2 L326.5,313.2 Z" fill="url(#bks2000Low)" stroke="rgba(120,132,146,0.35)"/>
-        <rect x="0" y="261.9" width="1000" height="262.3" fill="#161a1f" opacity="0.5"/>
-      <path d="M0,261.9 L1000,254.8" stroke="#ff8a7c" stroke-width="1.6" opacity="0.7"/>
-        <circle cx="736.3" cy="236.2" r="6.5" fill="#c9d2dc" stroke="#6d757d" stroke-width="1.4"/>
-        <path d="M567.5,138.7 L564.5,298.5" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <path d="M398.7,138.7 L395.7,298.5" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-        <g id="doorArt">
-        <path d="M398.7,148.2 L567.5,143.5 L563.5,294.5 L396.7,296.5 Z" fill="rgba(255,255,255,0.028)" stroke="rgba(0,0,0,0.3)" stroke-width="1.3"/>
-        <rect x="471.1" y="186.1" width="24" height="5" rx="2.5" fill="#3c434b"/>
-      </g>
-        <path d="M567.5,153.0 L500.0,106.8 L483.1,98.5 L415.6,106.1 L365.0,153.0 Z" fill="url(#bks2000Glass)"/>
-      <path d="M567.5,153.0 L500.0,106.8 L483.1,98.5 L415.6,106.1 L365.0,153.0 Z" fill="none" clip-path="none" opacity="0"/>
-      <g clip-path="url(#bks2000Dlo)">
-      <path d="M571.5,153.0 L494.0,99.7 L514.0,99.7 L593.5,153.0 Z" fill="rgba(255,255,255,0.30)"/>
-      <path d="M405.6,153.0 L435.6,99.0 L443.6,99.0 L417.6,153.0 Z" fill="rgba(255,255,255,0.13)"/>
-    </g>
-      <path d="M567.5,153.0 L500.0,106.8" stroke="#b0121e" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M365.0,153.0 L415.6,106.1" stroke="#b0121e" stroke-width="5" stroke-linecap="butt"/>
-      <path d="M567.5,153.0 L500.0,106.8 L483.1,98.5 L415.6,106.1 L365.0,153.0 Z" fill="none" stroke="#9aa5b0" stroke-width="2.8" stroke-linejoin="round"/>
-        <rect x="835.5" y="252.8" width="57.0" height="36.7" rx="3" fill="#080b0f" stroke="#8e98a3" stroke-width="1.4"/>
-      <path d="M835.5,262.0 l57.0,0" stroke="rgba(160,176,192,0.4)" stroke-width="0.8"/>
-      <path d="M835.5,271.2 l57.0,0" stroke="rgba(160,176,192,0.4)" stroke-width="0.8"/>
-      <path d="M835.5,280.4 l57.0,0" stroke="rgba(160,176,192,0.4)" stroke-width="0.8"/>
-      <path d="M886.5,278.3 L820.7,286.1 L823.3,302.5 L884.5,300.5 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.16)"/>
-      <path d="M867.5,233.2 l-28.9,4.6 l0,12.3 l28.9,-3.6 Z" fill="#cfe0ee" stroke="#8894a0" stroke-width="1"/>
-      <path d="M866.7,230.8 l-27.4,4.3" stroke="#ff8a7c" stroke-width="1.8" stroke-linecap="round"/>
-      <path d="M922.0,243.2 L820.7,214.8 L780.2,187.5 L742.2,187.5 L719.4,187.5 L618.2,181.6" fill="none" stroke="rgba(0,0,0,0.28)" stroke-width="1.6"/>
-        <path d="M90.1,218.9 l42.2,-1.0 l0,9 l-42.2,2 Z" fill="#e0223c"/>
-        <text x="500.0" y="200.3" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">S2000</text>
+        <path d="M78,204
+    L78,258 Q80,282 104,288 L166,292 L186,302
+    A67,106 0 0 1 320,302
+    Q510,312 677,302
+    A65,102 0 0 1 807,302
+    L876,298 Q902,294 916,282 L922,257
+    C898,240 866,220 838,206
+    C812,198 776,194 742,194
+    C716,198 682,201 648,204
+    C630,176 610,150 590,131
+    C574,116 552,104 528,101
+    L470,103
+    C452,108 436,122 424,142
+    C404,168 380,188 352,200
+    C320,196 288,192 253,190
+    C196,192 138,198 78,204 Z" fill="url(#hds2000Paint)" stroke="rgba(255,255,255,0.48)" stroke-width="1.2"/>
+
+        <g clip-path="url(#hds2000Clip)">
+          <path d="M78,214 C300,202 560,208 922,268 L922,288 C560,228 300,232 78,242 Z" fill="url(#hds2000Shine)"/>
+          <rect x="0" y="272" width="1000" height="126" fill="rgba(0,0,0,0.24)"/>
+
+          <!-- THE HOOD, UP, IN CLOTH. Nothing else in this garage has a fabric roof, and the
+               bows showing through it are what tell you it is fabric and not painted steel. -->
+          <path d="M648,204 C630,176 610,150 590,131
+                   C574,116 552,104 528,101 L470,103
+                   C452,108 436,122 424,142
+                   C404,168 380,188 352,200
+                   C450,203 550,204 648,204 Z"
+                fill="url(#hds2000Cloth)" stroke="#454c53" stroke-width="1.3"/>
+          <g stroke="rgba(255,255,255,0.13)" stroke-width="2" fill="none">
+            <path d="M524,101 C516,132 500,166 476,196"/>
+            <path d="M470,103 C462,132 446,166 424,192"/>
+          </g>
+          <path d="M488,106 C512,104 524,106 534,110" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1.6"/>
+
+          <!-- the windscreen, in its own satin frame, which is all the glass a roadster has -->
+          <path d="M646,202 L590,140 L536,124 L520,128 L568,186
+                   C594,192 620,197 646,202 Z"
+                fill="url(#hds2000Glass)" stroke="#b8c2cb" stroke-width="1.8"/>
+          <path d="M646,202 L592,142" stroke="#080c11" stroke-width="6" stroke-linecap="round"/>
+          <path d="M638,199 L596,150" stroke="rgba(255,255,255,0.3)" stroke-width="3"/>
+
+          <g id="doorArt">
+            <path d="M436,196 L644,206 L640,288 L440,282 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.2)" stroke-width="1.2"/>
+            <rect x="546" y="230" width="30" height="6" rx="3" fill="#6d3634"/>
+            <path d="M644,192 l22,-4 l2,13 l-22,4 Z" fill="#c8281f" stroke="rgba(255,255,255,0.4)" stroke-width="1.1"/>
+          </g>
+          <path d="M436,194 L440,282" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+          <path d="M644,204 L640,288" stroke="rgba(0,0,0,0.22)" stroke-width="1.6"/>
+
+          <circle cx="300" cy="216" r="9" fill="#a8201c" stroke="rgba(255,255,255,0.35)" stroke-width="1.2"/>
+          <path d="M130,222 C340,210 580,216 880,262" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="2" stroke-linecap="round"/>
+
+          <path d="M84,214 L150,210" stroke="#e0223c" stroke-width="6" stroke-linecap="round"/>
+          <path d="M902,252 C886,242 866,238 850,238 L852,252 C866,252 884,256 898,264 Z"
+                fill="#0b1016" stroke="#c6d0da" stroke-width="1.3"/>
+          <circle cx="868" cy="245" r="5" fill="#eef6ff"/><circle cx="884" cy="251" r="4" fill="#dfeaf4"/>
+
+          <text x="470" y="252" text-anchor="middle" font-family="ui-sans-serif" font-size="9" fill="rgba(255,200,190,0.5)" letter-spacing="4">S2000</text>
         </g>
-        <g data-proud="1"><path d="M381.8,167.9 a18.6,23.6 0 0 1 37.1,0 Z" fill="#b0121e" stroke="rgba(255,255,255,0.32)"/>
-      <path d="M339.6,167.9 a18.6,23.6 0 0 1 37.1,0 Z" fill="#3f060b" stroke="rgba(255,255,255,0.22)"/></g>
-        <g data-proud="1"><path d="M162.4,179.3 L99.1,181.6 l0,5 L162.4,184.3 Z" fill="#12161c" stroke="#ff8a7c" stroke-opacity="0.5"/></g>
-        <g id="frontFlapArt"><rect x="833.4" y="310.5" width="71.7" height="6" rx="3" fill="#101318" stroke="#ff8a7c" stroke-opacity="0.5"/></g>
-        <g id="quadExhaustArt"><circle cx="96.7" cy="312.5" r="6"/><circle cx="111.7" cy="312.5" r="6"/></g>
-        <path d="M573.5,155.0 l7,-2 l13,-4 l1,10 l-19,3 Z" data-proud="1" fill="#0b0e12" stroke="rgba(255,255,255,0.22)" stroke-width="0.9"/>
+
+        <!-- no roll hoop drawn: with the hood UP it is under the fabric, and a hoop poking
+             through the roof was the first thing that looked wrong here -->
       </g>
+
+      <g id="frontFlapArt"><rect x="836" y="298" width="80" height="6" rx="3" fill="#1a1012" stroke="#ff8a7c" stroke-opacity="0.45"/></g>
+      <path d="M84,276 L166,282 L162,298 L88,292 Z" fill="#0c0e12" stroke="rgba(255,255,255,0.12)"/>
+      <g id="quadExhaustArt"><circle cx="112" cy="264" r="7"/><circle cx="134" cy="265" r="7"/></g>
+
       <g>
-      <circle cx="252.51511487303506" cy="265.7049576783555" r="64.3" fill="#0a0b0e"/>
-      <circle cx="252.51511487303506" cy="265.7049576783555" r="64.3" fill="none" stroke="#1b1f25" stroke-width="8.4"/>
-      <circle cx="252.51511487303506" cy="265.7049576783555" r="57.9" fill="none" stroke="#d0d8e0" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="252.51511487303506" cy="265.7049576783555" r="39.9" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M262.3,262.6 L292.2,261.5 L292.2,270.0 L262.3,268.8 Z" fill="#2b3138"/><path d="M261.0,271.4 L280.6,294.0 L273.9,299.3 L256.2,275.3 Z" fill="#2b3138"/><path d="M253.3,276.0 L247.8,305.3 L239.6,303.4 L247.3,274.6 Z" fill="#2b3138"/><path d="M245.0,272.7 L218.6,286.7 L215.0,279.1 L242.3,267.2 Z" fill="#2b3138"/><path d="M242.3,264.2 L215.0,252.3 L218.6,244.7 L245.0,258.7 Z" fill="#2b3138"/><path d="M247.3,256.8 L239.6,228.0 L247.8,226.1 L253.3,255.5 Z" fill="#2b3138"/><path d="M256.2,256.1 L273.9,232.1 L280.6,237.4 L261.0,260.0 Z" fill="#2b3138"/></g>
-      <circle cx="252.51511487303506" cy="265.7049576783555" r="8.4" fill="url(#bks2000Hub)"/>
+      <circle cx="253" cy="266" r="64.0" fill="#0a0b0e"/>
+      <circle cx="253" cy="266" r="64.0" fill="none" stroke="#1b1f25" stroke-width="8.3"/>
+      <circle cx="253" cy="266" r="57.6" fill="none" stroke="#d0d8e0" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="253" cy="266" r="39.7" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M262.8,262.9 L292.5,261.8 L292.5,270.2 L262.8,269.1 Z" fill="#2b3138"/><path d="M261.5,271.7 L280.9,294.2 L274.3,299.5 L256.7,275.6 Z" fill="#2b3138"/><path d="M253.8,276.2 L248.3,305.4 L240.1,303.5 L247.8,274.8 Z" fill="#2b3138"/><path d="M245.5,273.0 L219.3,286.9 L215.6,279.3 L242.9,267.5 Z" fill="#2b3138"/><path d="M242.9,264.5 L215.6,252.7 L219.3,245.1 L245.5,259.0 Z" fill="#2b3138"/><path d="M247.8,257.2 L240.1,228.5 L248.3,226.6 L253.8,255.8 Z" fill="#2b3138"/><path d="M256.7,256.4 L274.3,232.5 L280.9,237.8 L261.5,260.3 Z" fill="#2b3138"/></g>
+      <circle cx="253" cy="266" r="8.3" fill="url(#hds2000Hub)"/>
     </g>
       <g>
-      <circle cx="742.3821039903265" cy="267.7460701330109" r="62.3" fill="#0a0b0e"/>
-      <circle cx="742.3821039903265" cy="267.7460701330109" r="62.3" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
-      <circle cx="742.3821039903265" cy="267.7460701330109" r="56.0" fill="none" stroke="#d0d8e0" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="742.3821039903265" cy="267.7460701330109" r="38.6" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M751.9,264.8 L780.8,263.6 L780.8,271.9 L751.9,270.7 Z" fill="#2b3138"/><path d="M750.6,273.3 L769.5,295.2 L763.1,300.3 L746.0,277.0 Z" fill="#2b3138"/><path d="M743.2,277.7 L737.9,306.1 L729.8,304.2 L737.4,276.3 Z" fill="#2b3138"/><path d="M735.1,274.6 L709.6,288.1 L706.0,280.7 L732.5,269.2 Z" fill="#2b3138"/><path d="M732.5,266.3 L706.0,254.8 L709.6,247.4 L735.1,260.9 Z" fill="#2b3138"/><path d="M737.4,259.1 L729.8,231.2 L737.9,229.4 L743.2,257.8 Z" fill="#2b3138"/><path d="M746.0,258.5 L763.1,235.2 L769.5,240.3 L750.6,262.2 Z" fill="#2b3138"/></g>
-      <circle cx="742.3821039903265" cy="267.7460701330109" r="8.1" fill="url(#bks2000Hub)"/>
+      <circle cx="742" cy="268" r="62.0" fill="#0a0b0e"/>
+      <circle cx="742" cy="268" r="62.0" fill="none" stroke="#1b1f25" stroke-width="8.1"/>
+      <circle cx="742" cy="268" r="55.8" fill="none" stroke="#d0d8e0" stroke-width="1.4" opacity="0.5"/>
+      <circle cx="742" cy="268" r="38.4" fill="#14181d"/>
+      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M751.5,265.0 L780.2,263.9 L780.2,272.1 L751.5,271.0 Z" fill="#2b3138"/><path d="M750.2,273.5 L769.0,295.3 L762.6,300.4 L745.6,277.3 Z" fill="#2b3138"/><path d="M742.8,277.9 L737.5,306.2 L729.5,304.4 L737.0,276.6 Z" fill="#2b3138"/><path d="M734.8,274.8 L709.3,288.3 L705.8,280.9 L732.2,269.4 Z" fill="#2b3138"/><path d="M732.2,266.6 L705.8,255.1 L709.3,247.7 L734.8,261.2 Z" fill="#2b3138"/><path d="M737.0,259.4 L729.5,231.6 L737.5,229.8 L742.8,258.1 Z" fill="#2b3138"/><path d="M745.6,258.7 L762.6,235.6 L769.0,240.7 L750.2,262.5 Z" fill="#2b3138"/></g>
+      <circle cx="742" cy="268" r="8.1" fill="url(#hds2000Hub)"/>
     </g>
     </svg>
     `;
