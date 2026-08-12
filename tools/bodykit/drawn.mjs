@@ -542,3 +542,166 @@ export function drawEvija(spec) {
       ${wheel(axF, G - rF, rF, "dish", "#c8ff5a", ID("Hub"))}
     </svg>`;
 }
+
+/* ------------------------------------------------------------------ *
+ * SSC Tuatara — 4,630 x 1,092 mm, 2,680 wheelbase, 1,000/950.          *
+ * Cd 0.279, and the shape is entirely in service of that: ONE          *
+ * continuous line from the tip of the nose over the canopy and all the *
+ * way to a tail that tapers almost to a point. No break anywhere, a    *
+ * dorsal fin down the deck, and the rear wheels faired in behind spats.*
+ * ------------------------------------------------------------------ */
+export function drawTuatara(spec) {
+  const ID = (n) => `hd${spec.key || "tuatara"}${n}`;
+  const axF = 740, axR = 251, rF = 62, rR = 65, G = FRAME.ground;
+  const BODY = `M78,238
+    L78,266 Q82,284 102,289 L162,292 L182,302
+    A72,110 0 0 1 320,302
+    Q500,312 668,302
+    A69,108 0 0 1 810,302
+    L878,297 Q912,293 922,274 L922,252
+    C892,240 862,232 830,226
+    C798,220 770,216 740,214
+    C716,212 698,212 684,214
+    C650,192 610,168 566,154
+    C534,144 500,140 466,142
+    C432,144 402,152 376,164
+    C346,178 316,192 288,202
+    C270,208 258,212 251,214
+    C196,224 138,232 78,238 Z`;
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="SSC Tuatara side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f4f7fa"/><stop offset="0.36" stop-color="#c3ccd6"/><stop offset="0.78" stop-color="#79838f"/><stop offset="1" stop-color="#2b3138"/></linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfe0ee"/><stop offset="0.4" stop-color="#37485a"/><stop offset="1" stop-color="#070c11"/></linearGradient>
+        <linearGradient id="${ID("Low")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f25"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#33383f"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.07"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.5));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));}
+          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-22deg) translate(-8px,-12px);}
+          #quadExhaustArt *{fill:#b7bec6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+      <ellipse cx="500" cy="${G + 6}" rx="386" ry="9" fill="rgba(0,0,0,0.5)"/>
+      <g id="rearWingArt"><path d="M92,222 L232,214 L232,224 L92,232 Z" fill="#12171d" stroke="#5c6570" stroke-width="1.1"/></g>
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,246 C300,228 560,224 922,258 L922,276 C560,242 300,246 78,264 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="256" width="1000" height="120" fill="rgba(10,14,20,0.85)"/>
+          <path d="M684,214 C650,192 610,168 566,154 C534,144 500,140 466,142
+                   C432,144 402,152 376,164 L360,182
+                   C470,196 580,206 684,214 Z" fill="url(#${ID("Glass")})" stroke="#93a4b4" stroke-width="1.4"/>
+          <path d="M680,212 C648,192 608,168 564,155" stroke="#0a0f14" stroke-width="7" stroke-linecap="round"/>
+          <path d="M376,164 L360,182" stroke="#0a0f14" stroke-width="6" stroke-linecap="round"/>
+          <path d="M664,208 C634,190 600,170 562,158" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
+          <path d="M470,214 C436,214 410,224 392,244 L398,264 C418,246 442,238 470,238 Z" fill="#05070a"/>
+          <path d="M470,214 C436,214 410,224 392,244" fill="none" stroke="rgba(255,255,255,0.44)" stroke-width="2.2"/>
+          <g id="doorArt"><path d="M480,208 L668,222 L664,286 L484,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.3)" stroke-width="1.4"/>
+            <rect x="566" y="248" width="24" height="6" rx="3" fill="#525a63"/></g>
+          <path d="M480,206 L484,278" stroke="rgba(0,0,0,0.3)" stroke-width="2"/>
+          <path d="M668,220 L664,286" stroke="rgba(0,0,0,0.3)" stroke-width="2"/>
+          <path d="M894,258 L852,250" stroke="#e8f2fa" stroke-width="4" stroke-linecap="round"/>
+          <path d="M84,248 L142,244" stroke="#e0223c" stroke-width="5" stroke-linecap="round"/>
+          <text x="560" y="266" text-anchor="middle" font-family="ui-sans-serif" font-size="9.5" fill="rgba(255,255,255,0.55)" letter-spacing="5">TUATARA</text>
+        </g>
+        <!-- the dorsal fin down the engine deck, and the spat over the rear wheel -->
+        <g data-proud="1">
+          <path d="M188,200 L320,192 L320,206 L188,214 Z" fill="#a8b2bd" stroke="rgba(255,255,255,0.5)" stroke-width="1.1"/>
+          <path d="M182,262 A76,58 0 0 1 326,262 L326,276 L182,276 Z" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.4)" stroke-width="1.1" opacity="0.96"/>
+        </g>
+      </g>
+      <g id="frontFlapArt"><rect x="838" y="298" width="76" height="6" rx="3" fill="#101318" stroke="#cfd8e2" stroke-opacity="0.4"/></g>
+      <path d="M84,282 L166,288 L162,304 L88,298 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.14)"/>
+      <g id="quadExhaustArt"><circle cx="106" cy="274" r="6"/><circle cx="124" cy="275" r="6"/></g>
+      ${wheel(axR, G - rR, rR, "dish", "#d8e2ec", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "dish", "#d8e2ec", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Bugatti Chiron Super Sport 300+ — 4,994 x 1,212 mm, 2,711 wheelbase. *
+ * Three things say Bugatti and nothing else: the C-LINE, the arc that  *
+ * separates door from haunch and runs from the roof down to the sill;  *
+ * the HORSESHOE at the nose; and the two-tone split along that C. This *
+ * is the record car, so it is black over exposed carbon with the       *
+ * orange stripes over the spine.                                       *
+ * ------------------------------------------------------------------ */
+export function drawBugatti(spec) {
+  const ID = (n) => `hd${spec.key || "bugatti"}${n}`;
+  const axF = 750, axR = 291, rF = 63, rR = 67, G = FRAME.ground;
+  const BODY = `M78,200
+    L78,252 Q80,272 100,278 L162,282 L222,302
+    A74,110 0 0 1 360,302
+    Q540,311 682,302
+    A70,108 0 0 1 820,302
+    L888,297 Q914,293 922,272 L922,236
+    C896,224 866,214 836,208
+    C804,202 776,198 750,196
+    C726,194 706,194 690,196
+    C664,178 630,152 596,136
+    C566,122 534,116 502,116
+    C470,116 442,122 418,134
+    C396,146 378,158 362,168
+    C338,182 314,190 291,194
+    C220,200 148,202 78,200 Z`;
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Bugatti Chiron Super Sport 300+ side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a525c"/><stop offset="0.34" stop-color="#232a32"/><stop offset="0.78" stop-color="#101419"/><stop offset="1" stop-color="#05070a"/></linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cadcec"/><stop offset="0.4" stop-color="#33465a"/><stop offset="1" stop-color="#070b10"/></linearGradient>
+        <linearGradient id="${ID("Carbon")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1a1e24"/><stop offset="1" stop-color="#06080b"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f0e2cf"/><stop offset="1" stop-color="#6b4a1e"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.05"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.55));transition:transform .45s ease;}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));}
+          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-18deg) translate(-9px,-9px);}
+          #quadExhaustArt *{fill:#b7bec6;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+      <ellipse cx="500" cy="${G + 6}" rx="392" ry="9" fill="rgba(0,0,0,0.55)"/>
+      <g id="rearWingArt"><path d="M112,178 L268,170 L268,182 L112,190 Z" fill="#14181e" stroke="#5e6772" stroke-width="1.2"/>
+        <path d="M112,178 L268,170" stroke="#ff7a1c" stroke-width="2" opacity="0.8"/></g>
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.42)" stroke-width="1.2"/>
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,208 C300,196 560,192 922,244 L922,262 C560,210 300,214 78,226 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="250" width="1000" height="130" fill="url(#${ID("Carbon")})" opacity="0.9"/>
+          <!-- the orange stripes over the spine: this is the 300+ record car -->
+          <path d="M118,196 C320,186 560,186 900,240" fill="none" stroke="#ff7a1c" stroke-width="7"/>
+          <path d="M118,210 C320,200 560,200 900,254" fill="none" stroke="#ff7a1c" stroke-width="7"/>
+          <path d="M690,196 C664,178 630,152 596,136 C566,122 534,116 502,116
+                   C470,116 442,122 418,134 L398,152
+                   C486,170 590,184 690,196 Z" fill="url(#${ID("Glass")})" stroke="#8ea2b4" stroke-width="1.4"/>
+          <path d="M686,194 C660,176 628,152 594,136" stroke="#0a0e13" stroke-width="7" stroke-linecap="round"/>
+          <path d="M418,134 L398,152" stroke="#0a0e13" stroke-width="7" stroke-linecap="round"/>
+          <!-- THE C-LINE: roof to sill, splitting door from haunch. Nothing else has this. -->
+          <path d="M462,170 C424,198 410,240 424,286 L438,286 C426,244 438,206 472,182 Z"
+                fill="#0a0e14" stroke="#ff7a1c" stroke-width="2"/>
+          <path d="M388,196 C356,204 336,220 322,242 L330,262 C346,240 364,228 388,220 Z" fill="#05070a"/>
+          <path d="M388,196 C356,204 336,220 322,242" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2"/>
+          <g id="doorArt"><path d="M464,166 L676,200 L672,286 L468,278 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.34)" stroke-width="1.4"/>
+            <rect x="574" y="238" width="26" height="6" rx="3" fill="#5a626b"/></g>
+          <path d="M676,198 L672,286" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
+          <circle cx="322" cy="212" r="7" fill="#c9d2dc" stroke="#6d757d" stroke-width="1.4"/>
+          <path d="M898,246 L856,238" stroke="#eaf3fa" stroke-width="4.5" stroke-linecap="round"/>
+          <path d="M84,218 L160,212" stroke="#ff2d4e" stroke-width="7" stroke-linecap="round"/>
+          <text x="560" y="256" text-anchor="middle" font-family="ui-sans-serif" font-size="10" fill="rgba(255,180,120,0.7)" letter-spacing="5">300+</text>
+        </g>
+        <!-- the horseshoe: chromed, arched, with its grid. Drawn proud, over the nose. -->
+        <g data-proud="1">
+          <path d="M906,246 C882,250 872,260 872,272 C872,284 882,292 906,296 Z" fill="#06090d" stroke="#dfe7ee" stroke-width="2"/>
+          <g stroke="rgba(200,214,228,0.5)" stroke-width="0.9"><path d="M876,256 l30,0"/><path d="M873,266 l33,0"/><path d="M873,276 l33,0"/><path d="M876,286 l30,0"/></g>
+        </g>
+      </g>
+      <g id="frontFlapArt"><rect x="836" y="300" width="76" height="6" rx="3" fill="#101318" stroke="#ff7a1c" stroke-opacity="0.5"/></g>
+      <path d="M84,282 L184,288 L180,306 L88,300 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.14)"/>
+      <g id="quadExhaustArt"><circle cx="112" cy="270" r="6"/><circle cx="130" cy="271" r="6"/><circle cx="152" cy="272" r="6"/><circle cx="170" cy="273" r="6"/></g>
+      ${wheel(axR, G - rR, rR, "turbine", "#d8a860", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "turbine", "#d8a860", ID("Hub"))}
+    </svg>`;
+}
