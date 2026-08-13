@@ -351,9 +351,9 @@
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">SV</div>
+        <div class="mark">RR</div>
         <h1>Rolls-Royce Phantom</h1>
-        <p>5.0L supercharged V8 · 8-speed ZF automatic · all-wheel drive with an electronic active differential · manually adjustable wing and splitter · 300 built.</p>
+        <p>6.75L twin-turbo V12 · 8-speed satellite-aided ZF automatic · rear drive with four-wheel steering · Planar suspension · coach doors · built at Goodwood.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -405,14 +405,14 @@
       <aside class="drive-help">
         <strong>Drive it yourself</strong><br>
         <kbd>W</kbd>/<kbd>&uarr;</kbd> throttle · <kbd>S</kbd>/<kbd>&darr;</kbd>/<kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>E</kbd>/<kbd>Q</kbd> shift up/down · <kbd>R</kbd> reverse · <kbd>N</kbd> neutral · <kbd>L</kbd> launch · <kbd>H</kbd> horn.<br>
-        Or open <strong>Circuit</strong>, pick a track, and hand it to the test driver for a hot lap.
+        Or open <strong>Circuit</strong>, pick a track, and hand it to the chauffeur for a hot lap.
       </aside>
 
       <!-- EXTERIOR -->
       <section class="mode-panel panel-exterior">
         <div class="panel-title">
-          <h2>Exterior — SVO widebody</h2>
-          <span class="small"><span class="indicator"></span><span id="paintStatus">Velocity Blue, carbon wings 14 mm wider a side, adjustable wing and splitter, four centre tailpipes</span></span>
+          <h2>Exterior — Phantom VIII, standard wheelbase</h2>
+          <span class="small"><span class="indicator"></span><span id="paintStatus">English White over a hand-painted coachline, the Pantheon grille lit from within, 22in part-polished wheels with self-levelling centres</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
           <div class="car-side">
@@ -431,18 +431,18 @@
         </div>
         <div class="control-grid">
           <button data-door="driver">Driver Door</button>
-          <button data-door="passenger">Passenger Door</button>
-          <button data-door="all">Both Doors</button>
-          <button id="wingBtn" class="active">Rear Wing</button>
+          <button data-door="passenger">Rear Coach Door</button>
+          <button data-door="all">All Four</button>
+          <button id="wingBtn" class="active">Umbrellas</button>
           <button id="exhaustBtn2" class="active">Exhaust Flap</button>
-          <button id="lightsBtn2" class="active">Headlamps</button>
+          <button id="lightsBtn2" class="active">Laser Headlamps</button>
         </div>
         <div class="divider"></div>
         <div class="readout-grid">
-          <div class="readout"><b id="doorState">Closed</b><span>four front-hinged doors</span></div>
-          <div class="readout"><b id="rideHeightRead">Standard</b><span>adaptive dampers</span></div>
-          <div class="readout"><b>265 / 305</b><span>Michelin Pilot Sport Cup 2</span></div>
-          <div class="readout"><b id="lightState">Auto</b><span>adaptive LED headlamps</span></div>
+          <div class="readout"><b id="doorState">Closed</b><span>two front, two REAR-hinged coach doors</span></div>
+          <div class="readout"><b id="rideHeightRead">Standard</b><span>Planar suspension, camera-fed</span></div>
+          <div class="readout"><b>255/45 R22</b><span>self-levelling wheel centres</span></div>
+          <div class="readout"><b id="lightState">Auto</b><span>laser headlamps, 600 m</span></div>
         </div>
       </section>
 
@@ -450,27 +450,40 @@
       <section class="mode-panel panel-cockpit">
         <div class="panel-title">
           <h2>Cockpit</h2>
-          <span class="small" id="cockpitStatus">Hooded 12.3in cluster · InControl Touch Pro · rotary drive selector · suede wheel · Track Pack buckets and brace</span>
+          <span class="small" id="cockpitStatus">The Gallery · Starlight Headliner · Power Reserve dial · a thin-rimmed wheel you hold at the top · and a rear compartment that is the point of the car</span>
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
-          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat bolster</span></div>
+          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat recline</span></div>
           <div class="readout"><b id="climateRead">22&deg;C</b><span>cabin climate</span></div>
           <div class="readout"><b id="beltRead">Open</b><span>safety belt</span></div>
-          <div class="readout"><b id="modeReadCab">Sport</b><span>Rolls-RoyceDrive mode</span></div>
+          <div class="readout"><b id="rearStatus">Nobody aboard</b><span>rear compartment</span></div>
         </div>
         <div class="divider"></div>
         <div class="control-grid">
-          <button id="frontForward">Bolster +</button>
-          <button id="frontBack">Bolster -</button>
+          <button id="frontForward">Recline +</button>
+          <button id="frontBack">Recline -</button>
           <button id="harnessBtn">Belt</button>
           <button id="heatBtn">Seat Heat</button>
           <button id="coolBtn">Climate A/C</button>
           <button id="ambientBtn" class="active">Ambient Light</button>
-          <button id="audioBtn">Meridian Surround</button>
+          <button id="audioBtn">Bespoke Audio</button>
           <button id="shifterLightBtn" class="active">Shift Lights</button>
           <button id="startSwitchBtn" class="active">Start/Stop</button>
-          <button id="raceAeroBtn" class="race" title="Track Pack — rear seats out, cage in, two carbon buckets, and the wing and splitter wound to high downforce">Track Pack</button>
+        </div>
+        <div class="divider"></div>
+        <div class="small" style="margin:0 0 6px">The rear compartment &mdash; keys <kbd>1</kbd>&ndash;<kbd>9</kbd> and <kbd>0</kbd>. All of it is opt-in, so the certified figures never see it.</div>
+        <div class="control-grid">
+          <button id="starsBtn" title="1 — 1,340 fibre-optic lights hand-fitted into the headliner, and a shooting star every so often">1 &middot; Starlight</button>
+          <button id="galleryBtn" title="2 — the glass-fronted case running the full width of the fascia, with a commissioned artwork behind it">2 &middot; The Gallery</button>
+          <button id="umbrellaBtn" title="3 — a Teflon-coated umbrella in each front door, blown dry by the car before it is put away">3 &middot; Umbrellas</button>
+          <button id="tableBtn" title="4 — the picnic tables out of the front seat backs">4 &middot; Picnic Tables</button>
+          <button id="screenBtn" title="5 — two screens rise out of the seat backs">5 &middot; Theatre</button>
+          <button id="privacyBtn" title="6 — the glass divider goes opaque and the intercom cuts">6 &middot; Privacy Suite</button>
+          <button id="coolerBtn" title="7 — the champagne cooler between the rear seats, held at 6&deg;C, with two flutes in their cradle">7 &middot; Champagne</button>
+          <button id="rearReclineBtn" title="8 — the rear seat goes back">8 &middot; Rear Recline</button>
+          <button id="rearMassageBtn" title="9 — the rear massage">9 &middot; Rear Massage</button>
+          <button id="spiritBtn" class="race" title="0 — she drops into the prow, which is what she really does at the touch of a button and by herself if anyone tries to take her">0 &middot; Retract the Spirit</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,15 +495,15 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — 5.0L supercharged N74B68 V8</h2>
-          <span class="small" id="engineStatus">5.0L supercharged N74B68 V8 · 600 PS / 592 hp @ 6,500 · 700 Nm @ 3,500–5,000 · 6,500 rpm · 8-speed ZF automatic · all-wheel drive · 0–100 in 3.7 s · 322 km/h · 1,745 kg · Nürburgring saloon record 7:18.361</span>
+          <h2>Engine Bay — 6.75L twin-turbo V12 (N74B68)</h2>
+          <span class="small" id="engineStatus">6.75 L (6,749 cc) twin-turbo V12 · 420 kW / 571 hp @ 5,000 · 900 Nm from 1,700 rpm · 5,500 rpm limit · 8-speed satellite-aided ZF · rear drive · 0–100 in 5.4 s · 250 km/h governed · 2,560 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL" style="display:none"></div>
           <div class="turbo right" id="turboR" style="display:none"></div>
-          <div style="position:absolute;left:13%;right:13%;top:12%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="jgBank" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><linearGradient id="jgBlow" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f7a86"/><stop offset="0.45" stop-color="#39424c"/><stop offset="1" stop-color="#14181d"/></linearGradient><radialGradient id="jgRotor" cx="38%" cy="34%" r="70%"><stop offset="0" stop-color="#e6edf4"/><stop offset="0.55" stop-color="#8b96a2"/><stop offset="1" stop-color="#252b32"/></radialGradient><radialGradient id="jgCam" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><linearGradient id="jgCool" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b6ec0"/><stop offset="1" stop-color="#0a1e3c"/></linearGradient></defs><rect x="34" y="16" width="66" height="96" rx="10" fill="url(#jgBank)" stroke="#74a9ff" stroke-opacity="0.4"/><rect x="200" y="16" width="66" height="96" rx="10" fill="url(#jgBank)" stroke="#74a9ff" stroke-opacity="0.4"/><circle cx="67" cy="24" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><circle cx="233" cy="24" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><line x1="75" y1="24" x2="112" y2="24" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><line x1="225" y1="24" x2="188" y2="24" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><circle cx="67" cy="46" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><circle cx="233" cy="46" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><line x1="75" y1="46" x2="112" y2="46" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><line x1="225" y1="46" x2="188" y2="46" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><circle cx="67" cy="68" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><circle cx="233" cy="68" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><line x1="75" y1="68" x2="112" y2="68" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><line x1="225" y1="68" x2="188" y2="68" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><circle cx="67" cy="90" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><circle cx="233" cy="90" r="8" fill="url(#jgCam)" stroke="rgba(190,200,210,0.5)"/><line x1="75" y1="90" x2="112" y2="90" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><line x1="225" y1="90" x2="188" y2="90" stroke="#74a9ff" stroke-width="1.7" opacity="0.5"/><rect x="112" y="18" width="76" height="82" rx="9" fill="url(#jgBlow)" stroke="rgba(210,222,236,0.5)" stroke-width="1.3"/><ellipse cx="139" cy="52" rx="17" ry="30" fill="url(#jgRotor)" opacity="0.95"/><ellipse cx="161" cy="52" rx="17" ry="30" fill="url(#jgRotor)" opacity="0.95"/><path d="M124,24 Q128,52 124,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><path d="M146,24 Q142,52 146,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><path d="M134,24 Q138,52 134,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><path d="M156,24 Q152,52 156,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><path d="M144,24 Q148,52 144,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><path d="M166,24 Q162,52 166,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><path d="M154,24 Q158,52 154,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><path d="M176,24 Q172,52 176,80" fill="none" stroke="rgba(30,36,44,0.55)" stroke-width="2"/><rect x="116" y="92" width="68" height="16" rx="4" fill="url(#jgCool)" stroke="rgba(140,190,255,0.6)"/><g stroke="rgba(190,220,255,0.5)" stroke-width="1.2"><line x1="122" y1="93" x2="122" y2="107"/><line x1="131" y1="93" x2="131" y2="107"/><line x1="140" y1="93" x2="140" y2="107"/><line x1="149" y1="93" x2="149" y2="107"/><line x1="158" y1="93" x2="158" y2="107"/><line x1="167" y1="93" x2="167" y2="107"/><line x1="176" y1="93" x2="176" y2="107"/></g><circle cx="150" cy="115" r="9" fill="#1c2129" stroke="#8b96a2" stroke-width="1.6"/><circle cx="150" cy="115" r="3.4" fill="#0a0d11"/><path d="M141,115 Q150,100 159,115" fill="none" stroke="#5c6772" stroke-width="2.4"/><text x="150" y="10" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#74a9ff" letter-spacing="0.5">5.0 SUPERCHARGED V8</text><text x="150" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#74a9ff">N74B68 · TWIN-VORTEX ROOTS BLOWER IN THE VEE</text></svg></div>
-          <div class="emotor" id="airTankArt">BELT-DRIVEN BLOWER · 1.7 bar · WATER-COOLED CHARGE COOLER</div>
+          <div style="position:absolute;left:13%;right:13%;top:12%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="rrBank" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a3f46"/><stop offset="0.5" stop-color="#1a1d22"/><stop offset="1" stop-color="#0b0e12"/></linearGradient><linearGradient id="rrTurb" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8b8471"/><stop offset="0.5" stop-color="#4a4538"/><stop offset="1" stop-color="#191710"/></linearGradient><radialGradient id="rrSnail" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#efe8d4"/><stop offset="0.6" stop-color="#96907e"/><stop offset="1" stop-color="#26241f"/></radialGradient><linearGradient id="rrCov" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8e4d8"/><stop offset="0.55" stop-color="#a8a293"/><stop offset="1" stop-color="#413d34"/></linearGradient></defs><g><rect x="30" y="20" width="70" height="88" rx="9" fill="url(#rrBank)" stroke="#c9a85f" stroke-opacity="0.45"/><rect x="200" y="20" width="70" height="88" rx="9" fill="url(#rrBank)" stroke="#c9a85f" stroke-opacity="0.45"/></g><g fill="#0a0d11" stroke="rgba(201,168,95,0.5)" stroke-width="1.1"><circle cx="65" cy="28" r="5.4"/><circle cx="235" cy="28" r="5.4"/><circle cx="65" cy="42" r="5.4"/><circle cx="235" cy="42" r="5.4"/><circle cx="65" cy="56" r="5.4"/><circle cx="235" cy="56" r="5.4"/><circle cx="65" cy="70" r="5.4"/><circle cx="235" cy="70" r="5.4"/><circle cx="65" cy="84" r="5.4"/><circle cx="235" cy="84" r="5.4"/><circle cx="65" cy="98" r="5.4"/><circle cx="235" cy="98" r="5.4"/></g><rect x="104" y="30" width="92" height="52" rx="8" fill="url(#rrCov)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/><text x="150" y="52" text-anchor="middle" font-family="ui-serif,Georgia,serif" font-size="10" font-weight="700" fill="#2a2823" letter-spacing="1.4">ROLLS-ROYCE</text><text x="150" y="66" text-anchor="middle" font-family="ui-sans-serif" font-size="7" font-weight="700" fill="#4a473f" letter-spacing="1.8">6&#183;75 LITRE V12</text><g><ellipse cx="52" cy="112" rx="17" ry="13" fill="url(#rrSnail)" stroke="rgba(240,236,220,0.55)"/><circle cx="52" cy="112" r="5" fill="#14171d"/><ellipse cx="248" cy="112" rx="17" ry="13" fill="url(#rrSnail)" stroke="rgba(240,236,220,0.55)"/><circle cx="248" cy="112" r="5" fill="#14171d"/></g><path d="M69,112 L104,100" stroke="url(#rrTurb)" stroke-width="7" stroke-linecap="round"/><path d="M231,112 L196,100" stroke="url(#rrTurb)" stroke-width="7" stroke-linecap="round"/><text x="150" y="12" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#c9a85f" letter-spacing="0.5">6.75 TWIN-TURBO V12</text><text x="150" y="126" text-anchor="middle" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#c9a85f">N74B68 &#183; 900 Nm AT 1,700 rpm &#183; TWO SMALL, SLOW, SILENT TURBOS</text></svg></div>
+          <div class="emotor" id="airTankArt">TWO TURBOS · 1.2 bar · AND 130 kg OF SOUND DEADENING AROUND ALL OF IT</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
@@ -506,21 +519,21 @@
         <div class="readout-grid">
           <div class="readout"><b id="oilTempRead">90&deg;C</b><span>oil temperature</span></div>
           <div class="readout"><b id="waterTempRead">88&deg;C</b><span>coolant</span></div>
-          <div class="readout"><b id="boostRead">0.0 bar</b><span>blower boost</span></div>
+          <div class="readout"><b id="boostRead">0.0 bar</b><span>turbo boost</span></div>
           <div class="readout"><b id="egtRead">320&deg;C</b><span>exhaust gas</span></div>
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real supercharged V8 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised supercharged V8</span>
+          <button id="engineLoadBtn" title="Load a real V12 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V12 recording</button>
+          <span class="small now" id="engineSoundStatus">Engine voice: synthesised 6.75 twin-turbo V12</span>
         </div>
       </section>
 
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
         <div class="panel-title">
-          <h2>Dynamics — 8-Speed ZF · adaptive dampers · AWD + eDiff</h2>
-          <span class="small" id="dynStatus">Track mode: adaptive dampers firm, TracDSC engaged, electronic active differential locked</span>
+          <h2>Dynamics — satellite-aided 8-speed ZF · Planar suspension · four-wheel steering</h2>
+          <span class="small" id="dynStatus">The suspension reads the road with a camera and sets the dampers for a bump you have not reached yet</span>
         </div>
         <div class="systems-visual">
           <div class="drivetrain">
@@ -633,7 +646,7 @@
                 <button data-nords="Nürburgring GP">Block North → run South ◢</button>
               </div>
             </div>
-            <button id="testDriverBtn">Hand to Test Driver</button>
+            <button id="testDriverBtn">Hand to Chauffeur</button>
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <button id="realBtn" class="race" title="Real Mode — real tyre wear, damage and reliability; a failed system retires you">Real Mode: Off</button>
             <div class="voice">
@@ -704,30 +717,30 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">SV</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">RR</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
-      <div class="pmark">SVO</div>
+      <div class="pmark">RR</div>
       <h1>Phantom</h1>
-      <p>Turn the key and a supercharger whines up behind the bulkhead before the V8 has finished clearing its throat. Four doors, four seats — until you take two of them out — and the fastest saloon ever to go round the Nordschleife. Drive it yourself, or hand it to the test driver.</p>
+      <p>Press it and almost nothing happens: 900 Nm arrives at 1,700 rpm and 130 kg of deadening keeps the rest of it away from you. Seven journeys through real cities, every traffic light obeyed by every car on the road, and Chauffeur 101 to teach you the job — which is not going fast.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
-      <div class="ring">Rolls-Royce Special Vehicle Operations · Warwickshire · 300 built</div>
+      <div class="ring">Rolls-Royce Motor Cars · Goodwood, West Sussex · Phantom VIII</div>
     </div>
   </div>
 
   <script type="module">
 /* ===========================================================================
-      Rolls-Royce Phantom (browser supercharged V8 simulator)
-   Real Web-Audio supercharged V8, factory-matched physics (0–100 km/h
-   3.7 s; 441 kW / 600 PS / 592 hp; 700 Nm; 6500 rpm limit; 1745 kg;
-   322 km/h; manually adjustable rear wing and front splitter, and the
-   Track Pack the 7:18.361 Nordschleife record was set with), an
-   8-speed ZF automatic with paddle shifts, and a test driver
-   who can lap for you.
+      Rolls-Royce Phantom VIII (browser twin-turbo V12 simulator)
+   Real Web-Audio 6.75 L V12, factory-matched physics (0–100 km/h
+   5.4 s; 420 kW / 563 PS / 571 hp; 900 Nm from 1,700 rpm; 5,500 rpm
+   limit; 2,560 kg; 250 km/h governed), a satellite-aided 8-speed ZF,
+   seven point-to-point city journeys with working traffic signals that
+   every car on the road obeys, a rear compartment on keys 1-0, and a
+   chauffeur who can drive it for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
    =========================================================================== */
 
@@ -771,6 +784,14 @@ function signalPhase(sg, t) {
 function circuitNow() {
   const app = window.PhantomApp; const st = app && app.state;
   return st && st.route.active ? CIRCUITS[st.route.name] : null;
+}
+
+/* A JOURNEY is any route that carries signals — which is exactly the seven city routes
+   and none of the seven circuits. Everything that is about being driven rather than being
+   raced hangs off this one predicate. */
+function onJourney() {
+  const c = circuitNow();
+  return !!(c && c.signals && c.signals.length);
 }
 
 /* the next signal at or ahead of `d`, and how far away it is */
@@ -1049,6 +1070,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // acceleration kept; everything else is a running peak. These are measured off the
     // real integrator, not asserted — you cannot talk your way to a good score.
     chLastAccel: 0, chJerk: 0, chJerkPeak: 0, chLatPeak: 0, chRough: 0, chSmoothS: 0,
+    /* THE REAR COMPARTMENT. Ten things, all off by default and all opt-in, so
+       tests/perf-test.mjs never sees any of them and the certified figures stand.
+       `rearOccupied` is set the moment you switch any of it on: the car only has a
+       point when there is somebody in the back. */
+    rear: { stars: false, gallery: false, umbrella: false, table: false, screen: false,
+            privacy: false, cooler: false, recline: false, massage: false, spirit: true },
+    rearOccupied: false, starT: 0, shootT: 9e9, shootX: 0, shootY: 0, massageT: 0, spiritY: 0,
     time: 0, lastTime: performance.now(),
     speedMps: 0, distanceM: 0,
     laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, noseLiftVis: 0,
@@ -1093,12 +1121,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   for (const id of [
     "speedReadout","gearReadout","rpmText","rpmBar","boostText","boostBar","throttleText","throttleBar",
     "brakeText","brakeBar","warning","aeroState","flapFront","flapRear","beltRead","doorState","rideHeightRead","lightState",
-    "paintStatus","frontSeatRead","climateRead","modeReadCab","cockpitStatus","engineStatus","dynStatus","roadWave","cabinWave",
+    "paintStatus","frontSeatRead","climateRead","cockpitStatus","engineStatus","dynStatus","roadWave","cabinWave",
     "rideRead","downforceRead","gRead","brakeTempRead","oilTempRead","waterTempRead","boostRead","egtRead",
     "navRead","lapRead","distRead","driverRead","cruiseRead","tcRead","computerStatus","voiceInput","toast",
     "throttlePedal","brakePedal","gforce","gdot","exteriorArt","cabinArt","doorArt","rearWingArt","frontFlapArt",
     "quadExhaustArt","engineBay","engineCover","turboL","turboR","turboL2","turboR2","gearStack","shifterLink","driveshaft",
-    "aeroFL","aeroRL","aeroArrow","mapCanvas","keyOverlay","startBtn"
+    "aeroFL","aeroRL","aeroArrow","mapCanvas","keyOverlay","startBtn","rearStatus"
   ]) el[id] = document.getElementById(id);
 
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -1154,12 +1182,6 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
       const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
-      // Supercharged 90-degree V8 (N74B68): cross-plane, so the burble is real, with a
-      // hard-edged howl building to the limiter and the turbo whistling underneath
-      // 5.0 SUPERCHARGED cross-plane V8. The cross-plane crank gives the uneven half-order
-      // burble every American-pattern V8 has; what makes it a Rolls-Royce is the ROOTS BLOWER,
-      // geared straight to the crank — no spool, no lag, and a whine locked to engine speed
-      // at a fixed high ratio, present the instant the throttle moves.
       // A 6.75 TWIN-TURBO V12, and the brief for it was SILENCE. Six pulses per revolution
       // at 600 rpm idle is 60 Hz, which is below where a cabin resonates, and Rolls-Royce
       // spent the rest of the effort making sure you hear nothing above it: so the stack
@@ -1336,7 +1358,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   app.audio = audio;
 }
 
-/* ===== physics: engine, 8-speed auto, active diff, launch, world, test driver ===== */
+/* ===== physics: engine, 8-speed auto, active diff, launch, world, chauffeur ===== */
 {
   const app = window.PhantomApp;
   const { state, el, SPEC, CIRCUITS, KMH, clamp, approach } = app;
@@ -1350,7 +1372,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const plateau = rpm <= SPEC.torqueLoRpm
       ? 520 + (SPEC.peakTorqueNm - 520) * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
       : SPEC.peakTorqueNm;
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at the engine peak (537 kW)
+    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at the engine peak (420 kW)
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1616,7 +1638,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "The Mall, London") ? RR_GRID : GRID_CARS;
+    const grid = onJourney() ? RR_GRID : GRID_CARS;   // every one of the seven journeys gets traffic, not just London
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1650,6 +1672,129 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       car.hold = approach(car.hold, want, want < car.hold ? 0.06 : 0.02, dt);
     }
   }
+
+
+  /* ===== the rear compartment ==============================================
+     Ten pieces of real Phantom equipment. Each has its own sound built from the
+     mechanism rather than a generic click — a picnic table is a detent and a
+     damper, an umbrella is a spring and a shaft, the divider going opaque is a
+     film energising and has almost no sound at all — and each has an effect you
+     can see, either on the cabin frame or on the road.
+
+     None of it is free: the Phantom's equipment weighs something and the car
+     notices. `rearMassKg()` is added to the mass ONLY while a feature is
+     deployed, and perf-test never deploys anything, so certification is
+     untouched by every line of this.
+     ======================================================================== */
+  const REAR = {
+    stars:    { key: "Digit1", label: "Starlight Headliner", kg: 0,
+                on: "1,340 lights, hand-fitted one at a time. Look up.",
+                off: "Starlight off." },
+    gallery:  { key: "Digit2", label: "The Gallery", kg: 0,
+                on: "The Gallery is lit — the full width of the fascia behind one piece of glass.",
+                off: "The Gallery is dark." },
+    umbrella: { key: "Digit3", label: "Door umbrellas", kg: 1.2,
+                on: "Umbrella out of the door. The car blows it dry before it goes back.",
+                off: "Umbrella stowed — and dried on the way in." },
+    table:    { key: "Digit4", label: "Picnic tables", kg: 4.0,
+                on: "Picnic tables down. Veneer, matched across the pair.",
+                off: "Tables away." },
+    screen:   { key: "Digit5", label: "Theatre screens", kg: 6.0,
+                on: "Two screens up out of the seat backs.",
+                off: "Screens down." },
+    privacy:  { key: "Digit6", label: "Privacy suite", kg: 0,
+                on: "The divider is opaque and the intercom is off. They cannot hear you and you cannot hear them.",
+                off: "Divider clear, intercom live." },
+    cooler:   { key: "Digit7", label: "Champagne cooler", kg: 3.5,
+                on: "Cooler open — held at 6&deg;C, two flutes in the cradle. Now drive as if it is full.",
+                off: "Cooler closed." },
+    recline:  { key: "Digit8", label: "Rear recline", kg: 0,
+                on: "Rear seat back. They are not looking at the road any more.",
+                off: "Rear seat upright." },
+    massage:  { key: "Digit9", label: "Rear massage", kg: 0,
+                on: "Rear massage running.",
+                off: "Rear massage off." },
+    spirit:   { key: "Digit0", label: "Spirit of Ecstasy", kg: 0,
+                on: "She is up.",
+                off: "She has dropped into the prow — which is what she really does at the touch of a button, and by herself if anybody tries to take her." },
+  };
+  function rearMassKg() {
+    let m = 0;
+    for (const k in REAR) if (state.rear[k] && k !== "spirit") m += REAR[k].kg;
+    return m;
+  }
+  /* the sounds. Each is the mechanism, not a beep. */
+  function rearSound(k) {
+    if (!audio.ready) return;
+    const c = audio.ctx, t = c.currentTime;
+    const tone = (f0, f1, dur, type, gain) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || "sine"; o.frequency.setValueAtTime(f0, t);
+      o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain || 0.06, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(audio.master); o.start(t); o.stop(t + dur + 0.05);
+    };
+    const rush = (dur, freq, q, gain) => {
+      const src = c.createBufferSource(); src.buffer = audio.noiseBuf; src.loop = true;
+      const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq; f.Q.value = q;
+      const g = c.createGain();
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain, t + 0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      src.connect(f); f.connect(g); g.connect(audio.master); src.start(t); src.stop(t + dur + 0.05);
+    };
+    switch (k) {
+      // a thousand LEDs make no noise; what you hear is the switch on the roof console
+      case "stars":    tone(2400, 2400, 0.03, "square", 0.03); break;
+      // the Gallery glass is motorised: a small geared drive, then a stop
+      case "gallery":  tone(180, 240, 0.55, "triangle", 0.05); tone(900, 700, 0.05, "square", 0.03); break;
+      // spring out of the door, then the shaft sliding
+      case "umbrella": tone(620, 200, 0.16, "sawtooth", 0.05); rush(0.5, 1600, 1.2, 0.035); break;
+      // a detent releasing and a damper letting the table down slowly
+      case "table":    tone(1400, 1400, 0.02, "square", 0.05); rush(0.85, 420, 0.9, 0.03); break;
+      // a screen on a lead-screw
+      case "screen":   tone(210, 300, 0.9, "sine", 0.045); break;
+      // an electrochromic film energising: essentially silent, so this is the relay
+      case "privacy":  tone(1100, 1100, 0.025, "square", 0.04); tone(60, 55, 0.5, "sine", 0.02); break;
+      // a heavy lid on a soft-close hinge, then the bottles moving in the cradle
+      case "cooler":   rush(0.6, 300, 0.8, 0.035); tone(1800, 1500, 0.08, "sine", 0.025); break;
+      case "recline":  tone(140, 175, 1.1, "sine", 0.04); break;
+      case "massage":  tone(48, 62, 1.4, "sine", 0.05); break;
+      // the mascot is on a motorised plinth and there is a solid stop at each end
+      case "spirit":   tone(240, 320, 0.7, "triangle", 0.05); tone(700, 400, 0.05, "square", 0.035); break;
+    }
+  }
+  function toggleRear(k) {
+    const d = REAR[k]; if (!d) return;
+    state.rear[k] = !state.rear[k];
+    if (k !== "spirit" && state.rear[k]) state.rearOccupied = true;
+    if (k === "stars") state.shootT = 6 + Math.random() * 14;
+    if (k === "massage") state.massageT = 0;
+    audio.init(); audio.resume(); rearSound(k);
+    app.setActive(k === "spirit" ? "spiritBtn" : k + "Btn", k === "spirit" ? !state.rear.spirit : state.rear[k]);
+    showToast(state.rear[k] ? d.on : d.off, "Rear");
+    app.updateRearRead();
+  }
+  function updateRearRead() {
+    if (!el.rearStatus) return;
+    const on = Object.keys(REAR).filter(k => k !== "spirit" && state.rear[k]);
+    el.rearStatus.textContent = !state.rearOccupied ? "Nobody aboard"
+      : on.length ? on.map(k => REAR[k].label.split(" ")[0]).join(", ") : "Aboard, wanting nothing";
+  }
+  /* the parts of it that MOVE. A shooting star crosses the headliner every ten to
+     twenty-five seconds — the real car does one, on a timer, and it is the only thing
+     in a Rolls-Royce that is deliberately random. */
+  function rearStep(dt) {
+    if (state.rear.stars) {
+      state.starT += dt;
+      state.shootT -= dt;
+      if (state.shootT <= 0) { state.shootT = 10 + Math.random() * 15; state.shootX = 0.15 + Math.random() * 0.7; state.shootY = 0.1 + Math.random() * 0.5; }
+    }
+    if (state.rear.massage) state.massageT += dt;
+    // the mascot takes two thirds of a second to go down and the same to come back
+    state.spiritY = approach(state.spiritY, state.rear.spirit ? 0 : 1, 0.02, dt);
+  }
+  Object.assign(app, { toggleRear, REAR, rearMassKg, onJourney, rearStep, updateRearRead });
 
   /* WHAT THE PASSENGER FEELS. Two numbers, both from the physics that is already running:
      jerk (how fast the acceleration is changing) and lateral g. A person cannot feel a
@@ -1780,7 +1925,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     else limit = 110 * KMH;
     const cruiseOnly = state.adaptiveCruise && !state.testDriver;
     const k = Math.max(Math.abs(curvatureAt(state.distanceM + 25)), Math.abs(curvatureAt(state.distanceM + 60)));
-    // test driver corners near the limit of the tyres; cruise stays gentle
+    // chauffeur corners near the limit of the tyres; cruise stays gentle
     const latLimit = cruiseOnly ? 0.5 : 1.5;
     const cornerCap = (k > 0.0006) ? Math.sqrt((latLimit * 9.81) / k) : Infinity;
     const lead = nearestLeadVehicle();
@@ -1957,6 +2102,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     state.routeTime += dt;
     signalStep(dt);
     trafficSignalStep(dt);
+    rearStep(dt);
     chauffeurStep(dt, accel);
     state.distanceM += dsdt * dt;
     state.lateralG = (v * yawRate) / 9.81;
@@ -2738,6 +2884,129 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
+
+  /* ===== what the rear compartment looks like from the driver's seat =========
+     The Starlight is on the HEADLINER, so it goes at the very top of the frame,
+     above the screen header; the Gallery is the full width of the FASCIA, so it
+     goes in the dash cowl under the cluster; the umbrella is in the door, so it
+     shows on the A-pillar side; and the Spirit of Ecstasy is out on the prow,
+     which from behind the wheel is the bottom edge of the windscreen.
+
+     Every one of them is drawn only when it is switched on, so a car nobody has
+     touched looks exactly as it did before any of this existed.
+     ======================================================================== */
+  const STAR_SEED = [];
+  for (let i = 0; i < 220; i++) STAR_SEED.push([Math.random(), Math.random(), 0.4 + Math.random() * 0.6, Math.random() * 6.28]);
+
+  function drawRearArt(w, h, pal, dashY, sway) {
+    const R = state.rear;
+
+    // ---- the Starlight Headliner: fibre ends in the roof, each on its own slow
+    // breath, plus the shooting star that crosses every ten to twenty-five seconds
+    if (R.stars) {
+      // the headliner has to reach far enough down the screen to clear the topbar,
+      // and it fades out rather than ending in a line, because a roof curves away
+      const band = h * 0.155;
+      ctx.save();
+      const hg = ctx.createLinearGradient(0, 0, 0, band);
+      hg.addColorStop(0, "#05060a"); hg.addColorStop(0.62, "rgba(5,6,10,0.86)"); hg.addColorStop(1, "rgba(5,6,10,0)");
+      ctx.fillStyle = hg; ctx.fillRect(0, 0, w, band);
+      for (const [fx, fy, br, ph] of STAR_SEED) {
+        const a = br * (0.55 + 0.45 * Math.sin(state.starT * 0.9 + ph));
+        ctx.fillStyle = `rgba(255,246,214,${a.toFixed(3)})`;
+        ctx.fillRect(fx * w + sway * 0.3, fy * band, 1.4, 1.4);
+      }
+      if (state.shootT > 9.2) {                       // the last 0.8 s of the timer IS the streak
+        const t = (10 + 15) - state.shootT;
+        const p = clamp((state.shootT - 9.2) / 0.8, 0, 1);
+        const x = state.shootX * w + (1 - p) * w * 0.16, y = state.shootY * band;
+        const g = ctx.createLinearGradient(x - 60, y, x, y);
+        g.addColorStop(0, "rgba(255,246,214,0)"); g.addColorStop(1, `rgba(255,252,236,${p.toFixed(2)})`);
+        ctx.strokeStyle = g; ctx.lineWidth = 1.6; ctx.lineCap = "round";
+        ctx.beginPath(); ctx.moveTo(x - 60, y + 6); ctx.lineTo(x, y); ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    // ---- THE GALLERY: one piece of glass across the whole fascia, with a
+    // commissioned piece behind it. Lit, it is the brightest thing in the cabin.
+    if (R.gallery) {
+      const gx = w * 0.06 + sway, gw = w * 0.88, gy = dashY + h * 0.052, gh = h * 0.055;
+      ctx.save();
+      const g = ctx.createLinearGradient(gx, gy, gx, gy + gh);
+      g.addColorStop(0, "rgba(201,168,95,0.30)"); g.addColorStop(0.5, "rgba(70,58,32,0.34)"); g.addColorStop(1, "rgba(12,14,18,0.5)");
+      ctx.fillStyle = g; ctx.fillRect(gx, gy, gw, gh);
+      // the artwork: a field of fine vertical strokes, which is what most of the
+      // commissioned Gallery pieces have actually been
+      ctx.strokeStyle = "rgba(232,228,216,0.22)"; ctx.lineWidth = 1;
+      for (let x = gx + 6; x < gx + gw - 6; x += 7) {
+        const a = 0.35 + 0.3 * Math.sin(x * 0.06 + state.time * 0.4);
+        ctx.globalAlpha = a; ctx.beginPath(); ctx.moveTo(x, gy + 5); ctx.lineTo(x, gy + gh - 5); ctx.stroke();
+      }
+      ctx.globalAlpha = 1;
+      ctx.strokeStyle = "rgba(240,236,222,0.55)"; ctx.lineWidth = 1.4; ctx.strokeRect(gx, gy, gw, gh);
+      ctx.restore();
+    }
+
+    // ---- the umbrella, out of the driver's door, on the left of the frame
+    if (R.umbrella) {
+      ctx.save();
+      ctx.strokeStyle = "#d8d2c4"; ctx.lineWidth = 4; ctx.lineCap = "round";
+      ctx.beginPath(); ctx.moveTo(w * 0.035, h * 0.50); ctx.lineTo(w * 0.055, h * 0.80); ctx.stroke();
+      ctx.fillStyle = "#1b1f24";
+      ctx.beginPath(); ctx.arc(w * 0.035, h * 0.50, 9, 0, Math.PI, true); ctx.fill();
+      ctx.restore();
+    }
+
+    // ---- the picnic tables and the theatre screens are BEHIND you, so what you
+    // get is the interior mirror filling with them
+    if (R.table || R.screen) {
+      const mx = w * 0.50 - w * 0.055, my = h * 0.17, mw = w * 0.11, mh = mw * 0.32;
+      ctx.save();
+      ctx.fillStyle = "rgba(6,8,11,0.85)"; ctx.fillRect(mx, my, mw, mh);
+      if (R.table) { ctx.fillStyle = "rgba(150,110,60,0.75)"; ctx.fillRect(mx + mw * 0.14, my + mh * 0.55, mw * 0.28, mh * 0.22); ctx.fillRect(mx + mw * 0.58, my + mh * 0.55, mw * 0.28, mh * 0.22); }
+      if (R.screen) { ctx.fillStyle = "rgba(120,190,255,0.55)"; ctx.fillRect(mx + mw * 0.16, my + mh * 0.16, mw * 0.24, mh * 0.30); ctx.fillRect(mx + mw * 0.60, my + mh * 0.16, mw * 0.24, mh * 0.30); }
+      ctx.strokeStyle = "rgba(201,168,95,0.6)"; ctx.lineWidth = 1.2; ctx.strokeRect(mx, my, mw, mh);
+      ctx.restore();
+    }
+
+    // ---- the privacy suite: the divider goes opaque, so the mirror goes blank
+    if (R.privacy) {
+      const mx = w * 0.50 - w * 0.055, my = h * 0.17, mw = w * 0.11, mh = mw * 0.32;
+      ctx.save();
+      ctx.fillStyle = "rgba(196,204,214,0.55)"; ctx.fillRect(mx, my, mw, mh);
+      ctx.fillStyle = "rgba(20,24,30,0.8)"; ctx.font = "700 9px ui-sans-serif"; ctx.textAlign = "center";
+      ctx.fillText("PRIVACY", mx + mw / 2, my + mh / 2 + 3);
+      ctx.restore();
+    }
+
+    // ---- the massage runs, and you can see it: the mirror image breathes
+    if (R.massage) {
+      const mx = w * 0.50 - w * 0.055, my = h * 0.17, mw = w * 0.11, mh = mw * 0.32;
+      ctx.save();
+      ctx.strokeStyle = `rgba(201,168,95,${(0.25 + 0.25 * Math.sin(state.massageT * 2.2)).toFixed(2)})`;
+      ctx.lineWidth = 2; ctx.strokeRect(mx - 2, my - 2, mw + 4, mh + 4);
+      ctx.restore();
+    }
+
+    // ---- the Spirit of Ecstasy, out on the prow at the bottom of the screen.
+    // 0 = up, 1 = fully retracted into the bonnet.
+    const sy = state.spiritY;
+    if (sy < 0.99) {
+      const bx = w * 0.5 + sway * 1.6, by = h * 0.575 + sy * 22;
+      ctx.save();
+      ctx.globalAlpha = clamp(1 - sy * 1.1, 0, 1);
+      ctx.fillStyle = pal.night ? "rgba(226,220,200,0.75)" : "rgba(246,242,230,0.9)";
+      ctx.beginPath();
+      ctx.moveTo(bx, by); ctx.quadraticCurveTo(bx + 3, by - 9, bx + 7, by - 15);
+      ctx.quadraticCurveTo(bx + 1, by - 10, bx - 1, by - 3); ctx.closePath(); ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(bx + 1, by - 12); ctx.quadraticCurveTo(bx - 8, by - 12, bx - 13, by - 6);
+      ctx.quadraticCurveTo(bx - 6, by - 9, bx + 2, by - 9); ctx.closePath(); ctx.fill();
+      ctx.restore();
+    }
+  }
+
   function drawCabinFrame(w, h, pal) {
     const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
     ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
@@ -2756,22 +3025,32 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // ---- the Phantom's cluster: a hooded binnacle, two virtual dials and the blower bar (
     // rev sweep, digital speed in the hub) with turbo BOOST + TEMP readouts either side ----
     drawCluster(w, h, dashY, sway);
-    // the suede wheel in front of the cluster
+    drawRearArt(w, h, pal, dashY, sway);
+    // the thin-rimmed wheel in front of the cluster
     drawWheel(w, h);
+  }
+  /* POWER RESERVE, the way Rolls-Royce actually compute it: how much of the engine's
+     available output you are NOT using at this moment. 100 means the car is doing nothing
+     for you. It is deliberately not a tachometer and deliberately not a power meter — it
+     answers the passenger's question, not the driver's. */
+  function powerReservePct() {
+    const avail = app.SPEC.peakPowerW;
+    const used = Math.max(0, app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1));
+    return clamp(100 - (used / avail) * 100, 0, 100);
   }
   // instantaneous output (PS) for the left-hand pod — reads to 387 at peak
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // ---- Rolls-Royce Phantom: a hooded 12.3in binnacle — two virtual dials with a round
-  // rev arc left, a round speed arc right, the M tricolour shift lights across the top and
-  // the blower-boost bar between them. ----
-  /* Rolls-Royce's Interactive Driver Display: two round VIRTUAL dials in one dark pane, sunk
-     behind a hooded surround, with a message centre between them. On a Phantom that centre
-     carries the things you actually watch on a Ring lap — the gear, oil temperature, and the
-     lap clock — and the tacho carries a blower-boost ring, because this V8 is supercharged
-     and the boost is there the instant you touch the throttle. */
+  /* THE POWER RESERVE DIAL. A Rolls-Royce has never had a tachometer, because the number
+     of revolutions the engine is turning is the sort of thing the car should be dealing
+     with rather than you. In its place, on the left, is the gauge that reads how much of
+     the engine you have LEFT — 100% at rest, falling as you use it — and the entire
+     character of the car is in the fact that on an ordinary journey it barely moves off
+     100. The right-hand dial is road speed. Between them, on a journey, is the NEXT
+     TRAFFIC SIGNAL: its name, its colour and the seconds left on it, which is the one
+     piece of information that actually helps you drive this car well. */
   function drawCluster(w, h, dashY, sway) {
     const R = Math.min(w, h) * 0.104;
     const cx = w / 2 + sway, cy = dashY + R * 0.66, gap = R * 1.40;
@@ -2785,40 +3064,48 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     roundRect(ctx, bx + 3, by + 3, BW - 6, BH - 6, R * 0.12); ctx.stroke();
     ctx.restore();
 
-    // LEFT — the tacho, with a blower-boost ring outside it
+    // LEFT — POWER RESERVE, 100 down to 0, and it hardly moves
     jagDial(cx - gap, cy, R, {
-      max: 7, redFrom: 6.5, value: state.rpm / 1000, label: "RPM x1000", step: 1,
-      ring: clamp((state.boostBar || 0) / 0.9, 0, 1), ringCol: "#7ce0c0", ringLabel: "BLOWER",
+      max: 100, redFrom: 9e9, value: powerReservePct(), label: "POWER RESERVE %", step: 20,
+      ring: 0, ringCol: null, reserve: true,
     });
-    // RIGHT — road speed to 340
+    // RIGHT — road speed to 260, because the car is governed at 250
     jagDial(cx + gap, cy, R, {
-      max: 340, redFrom: 9e9, value: Math.abs(app.kmh(state.speedMps)), label: "KM/H", step: 40,
+      max: 260, redFrom: 9e9, value: Math.abs(app.kmh(state.speedMps)), label: "KM/H", step: 40,
       ring: 0, ringCol: null,
     });
 
-    // CENTRE — the message centre: gear, oil, and the lap clock
+    // CENTRE — the gear, and then the thing that actually matters on a journey:
+    // the NEXT SIGNAL, by name, in its own colour, counting down.
     ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
     ctx.fillStyle = "#05070a"; roundRect(ctx, cx - R * 0.50, cy - R * 0.80, R * 1.0, R * 1.6, R * 0.1); ctx.fill();
-    ctx.strokeStyle = "rgba(10,90,74,0.7)"; ctx.lineWidth = 1.1; ctx.stroke();
+    ctx.strokeStyle = "rgba(201,168,95,0.7)"; ctx.lineWidth = 1.1; ctx.stroke();
     ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.44)}px ui-sans-serif`;
     ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy - R * 0.30);
-    // oil temperature — it climbs with revs and load, the way it does on a lap
-    const oil = Math.round(88 + clamp(state.rpm / 6500, 0, 1) * 26 + clamp(state.throttle, 0, 1) * 8);
-    ctx.fillStyle = oil > 118 ? "#ffb03a" : "rgba(160,176,192,0.9)";
-    ctx.font = `700 ${Math.round(R * 0.15)}px ui-sans-serif`;
-    ctx.fillText("OIL " + oil + "°", cx, cy + R * 0.10);
-    const lap = state.lapTimeS || 0, mm = Math.floor(lap / 60), ss = (lap % 60).toFixed(1);
-    ctx.fillStyle = "rgba(124,224,192,0.9)"; ctx.font = `700 ${Math.round(R * 0.15)}px ui-monospace, monospace`;
-    ctx.fillText(mm + ":" + (ss.padStart(4, "0")), cx, cy + R * 0.40);
-    if (state.raceAero) {
-      ctx.fillStyle = "#ffb03a"; ctx.font = `700 ${Math.round(R * 0.12)}px ui-sans-serif`;
-      ctx.fillText("TRACK PACK", cx, cy + R * 0.64);
+
+    const circ = circuitNow(), sg = circ && nextSignal(circ, state.distanceM);
+    if (sg) {
+      const p = signalPhase(sg, state.routeTime);
+      const col = p.state === "green" ? "#3ddc84" : p.state === "amber" ? "#ffb03a" : "#ff5568";
+      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(cx, cy + R * 0.10, R * 0.11, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(170,186,202,0.9)"; ctx.font = `700 ${Math.round(R * 0.12)}px ui-sans-serif`;
+      ctx.fillText(sg.name.length > 15 ? sg.name.slice(0, 14) + "\u2026" : sg.name, cx, cy + R * 0.36);
+      ctx.fillStyle = col; ctx.font = `700 ${Math.round(R * 0.15)}px ui-monospace, monospace`;
+      ctx.fillText(Math.max(0, Math.round(sg.at - state.distanceM)) + " m \u00b7 " + p.left.toFixed(0) + "s", cx, cy + R * 0.56);
+    } else {
+      const lap = state.lapTimeS || 0, mm = Math.floor(lap / 60), ss = (lap % 60).toFixed(1);
+      ctx.fillStyle = "rgba(201,168,95,0.9)"; ctx.font = `700 ${Math.round(R * 0.15)}px ui-monospace, monospace`;
+      ctx.fillText(mm + ":" + (ss.padStart(4, "0")), cx, cy + R * 0.30);
+    }
+    if (state.rearOccupied) {
+      ctx.fillStyle = "#c9a85f"; ctx.font = `700 ${Math.round(R * 0.11)}px ui-sans-serif`;
+      ctx.fillText("PASSENGER ABOARD", cx, cy + R * 0.72);
     }
     ctx.restore();
   }
-
-  /* one virtual dial: a dark face with a bright thin sweep, painted numerals, and an optional
-     outer ring (the blower's boost on the tacho) */
+  /* one dial: a dark face, painted numerals, and a thin needle. `reserve` reverses the
+     sense of the sweep so 100 sits where a tachometer would put zero — a Power Reserve
+     gauge falls as you use the car, which is the whole idea. */
   function jagDial(cx, cy, R, o) {
     const a0 = Math.PI * 0.70, a1 = Math.PI * 2.30;
     ctx.save(); ctx.translate(cx, cy);
@@ -2837,7 +3124,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const N = Math.round(o.max / o.step);
     for (let k = 0; k <= N * 2; k++) {
       const v = (k / 2) * o.step, f = v / o.max; if (f > 1) break;
-      const a = lerp(a0, a1, f), major = k % 2 === 0, red = v >= o.redFrom;
+      const a = lerp(a0, a1, o.reserve ? 1 - f : f), major = k % 2 === 0, red = v >= o.redFrom;
       ctx.strokeStyle = red ? "#ff3b30" : "rgba(210,222,236,0.75)";
       ctx.lineWidth = major ? 2 : 1;
       const r1 = R * (major ? 0.68 : 0.76), r2 = R * 0.82;
@@ -2848,12 +3135,19 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         ctx.fillText(String(Math.round(v)), Math.cos(a) * R * 0.53, Math.sin(a) * R * 0.53);
       }
     }
-    // the sweep — a bar of light on the scale, which is how a virtual dial reads
+    // the sweep — a bar of light on the scale, which is how a virtual dial reads.
+    // A reserve gauge fills from the OTHER end: it shows what is left, not what is used.
     const f = clamp(o.value / o.max, 0, 1);
     ctx.strokeStyle = "rgba(255,255,255,0.06)"; ctx.lineWidth = R * 0.11;
     ctx.beginPath(); ctx.arc(0, 0, R * 0.75, a0, a1); ctx.stroke();
-    ctx.strokeStyle = f > (o.redFrom / o.max) ? "#ff3b30" : "#dfe8f2"; ctx.lineCap = "butt";
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.75, a0, lerp(a0, a1, f)); ctx.stroke();
+    ctx.lineCap = "butt";
+    if (o.reserve) {
+      ctx.strokeStyle = f < 0.2 ? "#ff5568" : "#c9a85f";
+      ctx.beginPath(); ctx.arc(0, 0, R * 0.75, lerp(a0, a1, 1 - f), a1); ctx.stroke();
+    } else {
+      ctx.strokeStyle = f > (o.redFrom / o.max) ? "#ff3b30" : "#dfe8f2";
+      ctx.beginPath(); ctx.arc(0, 0, R * 0.75, a0, lerp(a0, a1, f)); ctx.stroke();
+    }
 
     ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.34)}px ui-sans-serif`;
     ctx.fillText(String(Math.round(o.value)), 0, -R * 0.02);
@@ -3271,7 +3565,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <rect x="-82" y="-68" width="164" height="76" rx="5" fill="url(#screenG)" stroke="#26313d"/>
         <g fill="#0f1a28" stroke="#2b3846"><rect x="-74" y="-60" width="72" height="30" rx="4"/><rect x="6" y="-60" width="68" height="30" rx="4"/><rect x="-74" y="-24" width="148" height="26" rx="4"/></g>
         <text x="-38" y="-41" text-anchor="middle" font-size="7.5" fill="#8fa8c2">DYNAMIC</text>
-        <text x="40" y="-41" text-anchor="middle" font-size="7.5" fill="#8fa8c2">AWD · eDIFF</text>
+        <text x="40" y="-41" text-anchor="middle" font-size="7.5" fill="#c9a85f">RWD · 4WS</text>
         <text x="0" y="-6" text-anchor="middle" font-size="7.5" fill="#8fa8c2">INCONTROL TOUCH PRO</text>
         <!-- Rolls-RoyceSense: the dial IS the display -->
         <circle cx="-52" cy="52" r="21" fill="#11151b" stroke="url(#aluG)" stroke-width="2"/>
@@ -3283,7 +3577,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <g fill="#161b22" stroke="#39414a"><rect x="-16" y="34" width="15" height="13" rx="3"/><rect x="2" y="34" width="15" height="13" rx="3"/><rect x="-16" y="52" width="15" height="13" rx="3"/><rect x="2" y="52" width="15" height="13" rx="3"/></g>
       </g>
 
-      <!-- the console: the ROTARY drive selector, the SV start button, the mode switch -->
+      <!-- the console: the drive selector on the COLUMN, so the console is free -->
       <g id="shifterArt" transform="translate(520,290)">
         <path d="M-52,-36 L52,-36 L58,64 L-58,64 Z" fill="#0d1116" stroke="#39414a" stroke-width="1.6"/>
         <circle cx="0" cy="-4" r="24" fill="#12161c" stroke="url(#aluG)" stroke-width="2.4"/>
@@ -3400,12 +3694,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Track: adaptive dampers firm, DSC in TracDSC, active exhaust open, eDiff locked." : m === "sport" ? "Dynamic: sharper throttle, faster shifts, firmer dampers." : "Normal: throttle softened, traction protected.", "Phantom");
+    showToast(m === "race" ? "Off-duty: the dampers firm up and the box holds a gear — nobody is in the back." : m === "sport" ? "Underway: sharper throttle, but the shifts stay invisible." : "Chauffeur: everything softened. This is how the car is meant to be driven.", "Phantom");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Active exhaust open — the supercharged V8 hardens and cracks on the overrun." : "Active exhaust closed — muted."); }
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — as loud as this car is ever asked to be, which is not very." : "Exhaust flap closed — back to nothing."); }
     // Sport mode firms the adaptive variable suspension, sharpens throttle and shifts,
   // locks the active differential and trims the boot lip for a little more
   // rear downforce and high-speed stability. It does not change engine output.
@@ -3503,7 +3797,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
   function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat bolster ${state.frontRecline}.`); }
-  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the blower whines up with it, instantly."); }
+  function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — and almost nothing comes back through the bulkhead."); }
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V8 clears its throat to 3,000."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
@@ -3600,7 +3894,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // this car's OWN ceiling, and it follows the top-speed mode when that is on
     const speedCapKmh = Math.round((state.raceAero ? SPEC.topSpeedRecordMps : SPEC.topSpeedMps) * 3.6);
     if (speed >= speedCapKmh * 0.98) warn.push(`approaching the ${speedCapKmh} km/h limiter`);   // 250 km/h — governed, and Rolls-Royce have never published a number above it
-    if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
+    if (!warn.length) warn.push(state.testDriver ? `chauffeur driving ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
     const gp = document.getElementById("rivalGaps");
@@ -3620,7 +3914,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.lightState.textContent = state.lights ? "Active" : "Off";
     el.frontSeatRead.textContent = `${state.frontRecline}°`;
     el.climateRead.textContent = `${Math.round(state.seatTempC)}°C`;
-    el.modeReadCab.textContent = state.driveMode === "wet" ? "Wet" : state.driveMode === "sport" ? "Sport" : "Race";
+    // the cockpit tab reads out the REAR compartment now, not the drive mode: on this
+    // car what matters is who is behind you and what they have switched on.
+    app.updateRearRead();
     el.rideRead.textContent = state.driveMode === "wet" ? "Soft" : state.driveMode === "sport" ? "Sport" : "Race";
     el.downforceRead.textContent = `${Math.round(state.downforceN / 9.81)} kg`;
     el.gRead.textContent = state.lateralG.toFixed(2) + " g";
@@ -3797,7 +4093,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       state.ignition = true; state.started = true; state.testDriver = true;
       state.gearMode = "G"; state.curGear = 1;
       if (app.setView) app.setView("drive");
-      app.showToast("Demo — the test driver takes the corners on the ideal line. Watch the boards count down to the yellow apex dot; open Circuit for the zoom map.", "Driving School");
+      app.showToast("Demo — the chauffeur takes the corners on the ideal line. Watch the boards count down to the yellow apex dot; open Circuit for the zoom map.", "Driving School");
     };
     { const pnl = document.querySelector(".panel-learn"); if (pnl) {
         pnl.querySelectorAll("[data-goto]").forEach(aEl => aEl.addEventListener("click", () => { const t2 = document.getElementById(aEl.dataset.goto); if (t2) t2.scrollIntoView({ behavior: "smooth", block: "start" }); }));
@@ -3826,7 +4122,14 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
-    document.getElementById("raceAeroBtn").addEventListener("click", () => app.toggleRaceAero());
+    // app.REAR, not REAR: the physics block and the events block are separate scopes
+    // that each reach into the app global, which is how every other cross-block call
+    // in this file works.
+    for (const k in app.REAR) {
+      const btn = document.getElementById(k === "spirit" ? "spiritBtn" : k + "Btn");
+      if (btn) btn.addEventListener("click", () => app.toggleRear(k));
+    }
+    app.setActive("spiritBtn", false);
   }
 
   function bindMedia() {
@@ -3844,7 +4147,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Phantom"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real supercharged V8 recording loaded — pitched with the revs.", "Phantom"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the supercharged V8 works best.", "Phantom"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Phantom"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V12 recording loaded — pitched with the revs.", "Phantom"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V12 works best.", "Phantom"); }); });
   }
 
   function setupPedals() {
@@ -3879,7 +4182,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
-      if (e.code === "KeyZ" && !e.repeat) app.toggleRaceAero();   // Z = TRACK PACK: seats out, cage in, high downforce
+      // Z = hand it to the chauffeur, or take it back. On this car that is the
+      // switch that matters, which is why it gets the key every other car uses for
+      // its ultimate-speed mode.
+      if (e.code === "KeyZ" && !e.repeat) { const b = document.getElementById("testDriverBtn"); if (b) b.click(); }
+      // 1-9 and 0: the rear compartment. All opt-in, so certification never sees it.
+      if (!e.repeat) for (const k in app.REAR) if (e.code === app.REAR[k].key) { app.toggleRear(k); break; }
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }

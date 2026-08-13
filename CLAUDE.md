@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of fifty-four simulators — each a **single self-contained HTML file** —
-thirty-nine road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
+A garage of fifty-six simulators — each a **single self-contained HTML file** —
+forty-one road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
 Supra MK4 (A80), the six later hypercars (Hennessey Venom F5 · Lotus Evija · Mercedes-AMG
@@ -12,7 +12,10 @@ T.33), and five more after them (**Koenigsegg Agera RS** · **Yangwang U9** · *
 DB5** with its Q Branch equipment · **Mercedes-Benz 300 SLR Uhlenhaut Coupé** · **Czinger
 21C**), and five more after those (**Alfa Romeo 33 Stradale** · **SSC Tuatara** · **Gordon
 Murray T.50s Niki Lauda** · **Jaguar XE SV Project 8** — the only four-door in the garage —
-· **Honda S2000**). `index.html` bundles all of them together with
+· **Honda S2000**), two more after those (**Ford Mustang GTD** · **Mazda RX-7 Spirit R**), and
+finally two **Rolls-Royces** — the **Phantom VIII** and the **Spectre Black Badge** — which are
+not sports cars at all and are the reason the garage now has city journeys, working traffic
+signals and a course in being a chauffeur. `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
@@ -82,6 +85,15 @@ Jaguar XE SV Project 8 simulator.html          Facility, E85) · T.50s (3.9 Cosw
 Honda S2000 simulator.html                     Anderstorp, high downforce) · Project 8 (5.0 supercharged V8,
                                                MIRA, Track Pack — a FOUR-DOOR SALOON, the only one here) ·
                                                S2000 (2.0 F20C VTEC to 9,000, Twin Ring Motegi, AP2 spec).
+Ford Mustang GTD simulator.html             ← two more (5.2 supercharged cross-plane V8, the only belt-driven
+Mazda RX-7 simulator.html                      blower here; and the only Wankel — 13B-REW, sequential turbos).
+Rolls-Royce Phantom simulator.html          ← TWO ROLLS-ROYCES, and almost nothing in the template applied
+Rolls-Royce Spectre Black Badge simulator.html unchanged: Phantom VIII (6.75 TT V12, 2,560 kg, 250 governed)
+                                               and Spectre Black Badge (two motors, 1,075 Nm, one speed,
+                                               2,975 kg). Seven point-to-point CITY JOURNEYS instead of
+                                               circuits, real traffic signals every car obeys, a ten-piece
+                                               rear compartment on keys 1-0, a POWER RESERVE dial instead of
+                                               a tachometer, and Chauffeur 101 in place of Race Car 101.
 Dacia Sandrider Dakar simulator.html        ← 2026 Dakar Rally raid cars (4, one shared T1+ Ultimate chassis SPEC):
 Ford Raptor T1+ Dakar simulator.html           Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter.
 Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound (Ford = 5.0 NA V8; the rest twin-turbo V6),
@@ -209,6 +221,8 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Honda S2000 (AP1) | 176 kW / 240 PS / 237 hp @ 8,300 (2.0 L F20C DOHC VTEC I4) — **120 PS per litre**, the NA production record at launch; the AP2's 2.2 F22C1 makes 237 hp @ 7,800 | 208 Nm @ 7,500 (AP2 220 @ 6,800) | 6.2 s | 241 (150 mph — reached, not governed) | 6-manual | 1,260 kg |
 | Ford Mustang GTD | 608 kW / 815 hp @ 7,400 (5.2 L supercharged cross-plane V8, 2.65 L twin-screw blower) | 900 Nm (664 lb-ft) @ 4,800 | 3.0 s — DERIVED from Ford's 0-60 mph 2.8 s | 325 (202 mph); 338 in Track mode | 8-DCT **transaxle** | 1,950 kg |
 | Mazda RX-7 Spirit R (FD3S) | 206 kW / 280 PS @ 6,500 (1.3 L 13B-REW **twin-rotor Wankel**, SEQUENTIAL twin turbos) — 654 cc × 2 | 314 Nm @ 5,000 | 5.2 s | 250; the JDM car was limited to 180 | 5-manual (Mazda's published table) | 1,270 kg |
+| Rolls-Royce Phantom VIII | 420 kW / 563 PS / 571 hp @ 5,000 (6.75 L twin-turbo V12, N74B68) | **900 Nm at 1,700 rpm** — all of it, just above idle | 5.4 s | 250 governed | 8-ZF, satellite-aided | 2,560 kg |
+| Rolls-Royce Spectre Black Badge | 485 kW / 659 PS (two motors, 102 kWh) — 430 kW / 584 PS as the standard Spectre | 1,075 Nm from rest (900 standard) | 4.1 s | 250 governed | 1-speed | 2,975 kg |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 
@@ -326,15 +340,9 @@ a film wind; `seaTorpedo` is a screw closing on you). `stageStep(dt)` runs from
 `updatePhysics`, `stageForce()` adds the grade on the leg and the water drag on the sea,
 `stageCapMps()` caps each stage, and `drawStage(w,h,pal)` paints the surface.
 
-<<<<<<< HEAD
-**Exteriors — every road car is now DRAWN BY HAND.** All **39** road-car bodies are written out
+**Exteriors — every road car is now DRAWN BY HAND.** All **41** road-car bodies are written out
 car by car: the eleven that always were (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 · T.33 ·
-Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **28** in `tools/bodykit/drawn.mjs`, which
-=======
-**Exteriors — every road car is now DRAWN BY HAND.** All **37** road-car bodies are written out
-car by car: the eleven that always were (Evo X · GT-R Nismo · M5 · R8 · McLaren F1 1993 · T.33 ·
-Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **26** in `tools/bodykit/drawn.mjs`, which
->>>>>>> origin/main
+Agera RS · U9 · DB5 · 300 SLR · Czinger 21C) plus the **30** in `tools/bodykit/drawn.mjs`, which
 `DRAWN` now covers completely. `apply.mjs` prefers `DRAWN[key]` and falls back to the generator,
 so the generator is still the safety net for a new car but no longer draws anything shipped.
 (The F1 grid and the Dakar cars are drawn by `openwheel.mjs` / `raid.mjs`, which is right — eleven
@@ -348,11 +356,9 @@ got wrong at least once here before the render caught them:
 - **the roofline is the OUTLINE, not the glass** — writing a deck from the glass line puts the tail
   30–50 px too low, and the body comes out as a thin slab with the cabin sitting on it like a box.
 
-<<<<<<< HEAD
-The roof is **painted metal**, in all 38 closed cars (the 918 is a Spyder and has no roof at all — its outline has a NOTCH cut where a coupe's roof would be, so the cockpit is a real opening you look into rather than a shape painted on the side): the glass top edge is drawn *below* the body outline so a
-=======
-The roof is **painted metal**, in all 37: the glass top edge is drawn *below* the body outline so a
->>>>>>> origin/main
+The roof is **painted metal**, in all 40 closed cars (the 918 is a Spyder and has no roof at all — its
+outline has a NOTCH cut where a coupe's roof would be, so the cockpit is a real opening you look into
+rather than a shape painted on the side): the glass top edge is drawn *below* the body outline so a
 band of body colour shows above it, and that band gets its own highlight. Every drawing here once
 had its DLO on the roofline instead, which made the roof glass and the cabin a bubble.
 
@@ -563,19 +569,19 @@ craned away after `scT`, "in this lap" → box → GREEN and the next incident i
 pre-rolled. A race-control board (name/status/health per car) draws in
 `drawTelemetry`; map dots get status rings. The index.html AMG card is now the
 **FIA F1 Safety Car** (inline SVG livery: silver, green stripe, light bar).
-**Learning mode (all 52 sims)**: a `data-view="learn"` tab AFTER Circuit — road
+**Learning mode (all 56 sims)**: a `data-view="learn"` tab AFTER Circuit — road
 cars "Race Car 101", AMG "Safety Car 101", F1 "Formula 1 101" — with a curriculum
 panel + `learnBtn` toggling `state.learnMode`: `drawLearningMarks()` paints
 150/100/BRAKE boards, TURN IN, a LATE APEX cone (60% through the corner) and an
 EXIT—POWER board around the next corner; the teal racing line stays on and
 `drawMap` overlays the full racing line. All opt-in → certification untouched.
 
-**v8** — width 3.75 in ALL 52 sims. `radioSay` uses cancel → setTimeout(60 ms) →
+**v8** — width 3.75 in ALL 56 sims. `radioSay` uses cancel → setTimeout(60 ms) →
 resume+speak plus a 4 s resume keepalive (Chrome silently drops queued utterances
 otherwise). Learning is a **launch mode**: the learn tab is `display:none` until the
 garage card's **Learning** button calls `app.enterLearning()` (index.html
 `openLearning` polls `getSimApp()`). Each 101 is a real course: CONTENTS quick-nav,
-two inline SVG diagrams, a per-car feature lesson (all 52 differ) and **Demo**
+two inline SVG diagrams, a per-car feature lesson (all 56 differ) and **Demo**
 buttons → `app.learnDemo()` (Suzuka, test driver, gear engaged, markers on).
 `analyseCorner()` CACHES the corner target (no board jitter) and classifies the
 apex: straight after → LATE (frac .58), hairpin → V-LINE (.62), same-direction
@@ -635,6 +641,69 @@ panel. Perf-test never holds X/V, so the certified figures are untouched.
 
 
 
+
+## The two Rolls-Royces — journeys, signals and the rear compartment
+
+Everything the garage template assumes is wrong for these two. A Phantom on a circuit tells
+you nothing about a Phantom, so the Circuit tab carries **seven point-to-point JOURNEYS**
+(`loop: false`) through real streets in the order you would actually drive them:
+
+| journey | the road | signals |
+|---|---|---|
+| `The Mall, London` | Park Lane · Hyde Park Corner · Constitution Hill · Buckingham Palace, 4.2 km | 5 |
+| `Paris — Champs-Élysées` | the Étoile down to the Concorde, Rue de Rivoli, Place Vendôme, 3.6 km | 5 |
+| `New York — Park Avenue` | Grand Central up Park to Grand Army Plaza and Central Park South, 3.9 km | 6 |
+| `Tokyo — Ginza` | Chūō-dōri · Harumi-dōri · Hibiya · the Imperial Palace moat, 3.4 km | 5 |
+| `Shanghai — The Bund` | Zhongshan East Road with the Huangpu on your right, then Nanjing Road, 3.7 km | 5 |
+| `The Royal Hotel` | the last mile: a service road, two turns and the porte-cochère, 1.7 km | 2 |
+| `The White Palace` | four kilometres of gravel and lime trees, two gates, one forecourt | 2 |
+
+**Traffic signals that every car obeys.** `sig(at, name, cycle, offset)` puts a signal head at
+a real junction; `signalPhase(sg, t)` is a **pure function of route time**, so the phase is
+identical for you, for every AI rival and for every piece of ambient traffic. Nobody gets a
+private light: if it is red for you it is red for the taxi beside you, which is the entire
+point of putting them there. New York's offsets are a **green wave** — hold the limit and you
+meet green after green — and London's deliberately are not. `signalStep` checks the CROSSING
+rather than proximity, so creeping over a stop line still counts, and `trafficSignalStep` eases
+the ambient cars to a halt rather than snapping them, so a bus does not stop dead.
+
+`onJourney()` is the one predicate everything hangs off, and it is simply "does this route have
+signals". On a journey the rival field is replaced by `RR_GRID` — a Ghost, a Cullinan, a Flying
+Spur, a Maybach, a London taxi, a bus, a van, a police escort — because on a city street **the
+traffic IS the field**, not a grid of cars to beat.
+
+**Chauffeur 101** replaces Race Car 101, and the score is not the clock. Two numbers come
+straight off the running integrator: **jerk** (the derivative of acceleration, `CH_JERK_OK` =
+2.5 m/s³) and **lateral g** (`CH_LAT_OK` = 0.30). A passenger cannot feel a steady 0.2 g and can
+feel any sudden change, which is why jerk is the one that matters. `chauffeurGrade()` returns
+DISMISSED the moment you run a red, then FAULTLESS · ACCEPTABLE · THEY NOTICED. You cannot talk
+your way to a good mark — it is measured, not asserted.
+
+**The POWER RESERVE dial.** A Rolls-Royce has never had a tachometer, so the left-hand dial reads
+how much of the engine you have **left**: 100% at rest, falling as you use it, and on an ordinary
+journey it barely moves off 100. It fills from the opposite end of the scale (`o.reserve` reverses
+the sweep). The Spectre keeps it, which is Rolls-Royce's own joke on a car with no engine. Between
+the two dials, on a journey, sits the **next signal** — its name, its colour and the seconds left
+on it, which is the one piece of information that actually helps you drive these cars well.
+
+**The rear compartment — ten pieces of equipment, keys 1-9 and 0.** Starlight (1) · the Gallery
+(2) · door umbrellas (3) · picnic tables (4) · theatre screens (5) · the privacy suite (6) · the
+champagne cooler (7) · rear recline (8) · rear massage (9) · and **0 retracts the Spirit of
+Ecstasy** into the prow, which is what she really does at the touch of a button and by herself if
+anyone tries to take her. Each has a sound built from its own **mechanism** rather than a beep — a
+picnic table is a detent releasing and then a damper; an umbrella is a spring and a sliding shaft;
+the electrochromic divider is essentially silent, so what you hear is the relay — and each has an
+effect you can see: the Starlight is a band of fibre ends across the headliner with a shooting
+star every ten to twenty-five seconds, the Gallery lights the full width of the fascia, and the
+tables, screens, privacy glass and massage all show in the interior mirror, because they are
+behind you. **The Spectre's Starlight is in its DOORS as well** — 5,876 lights in the roof and
+4,796 more in the door cards, which no other car in the world has, and which is why the two cars'
+headliners are not the same drawing. All of it is opt-in and `rearMassKg()` is only added while a
+feature is deployed, so `tests/perf-test.mjs` never sees a gram of it.
+
+**Key Z** is not an ultimate-speed mode on these two — there isn't one. It hands the car to the
+**chauffeur**, and takes it back, because on a Rolls-Royce that is the switch that matters.
+
 ## Engine voice — every car sounds like its own engine
 
 Firing frequency is `rpm/60 × pulses-per-rev` (I4=2, I6/V6=3, V8/straight-8=4, V10=5,
@@ -659,11 +728,20 @@ reality cannot come out identical:
 | **e-motor** | a hybrid carries an inverter whine under the engine note. |
 | **EV** | no firing order at all: inverter switching + reduction-stage and rotor whine, pitched by motor speed (a 30,000 rpm U9 Xtreme rotor whines far higher than a Nevera's). |
 
-**47 distinct voices across 54 cars.** The two newest are the reason the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
+**49 distinct voices across 56 cars.** The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
 that really do share a power unit — the Mercedes, Ferrari and Red Bull Ford F1 customer
 teams, and the Jesko/Agera RS 5.0 twin-turbo V8. `tests/browser-test.mjs` hashes every
 oscillator stack and **fails on any shared voice outside that allow-list**, so this cannot
 silently regress.
+
+The two Rolls-Royces are the other end of the same derivation. The Phantom's 6.75 twin-turbo V12
+is the only engine in the garage whose brief was **silence**: six pulses a revolution at a 600 rpm
+idle is 60 Hz, below where a cabin resonates, so its stack is deliberately poor in high harmonics,
+its two banks are barely detuned (a V12 is inherently balanced and has no reason to beat), and its
+turbos are big, slow and low-pitched rather than a whistle — what is left is a hum you feel through
+the floor. The Spectre has **no firing order at all** and only **two** motors where the Evija, the
+Nevera and the U9 have four, so its inverter switching and reduction-stage whine sit at their own
+frequencies and it does not collide with the other EVs.
 
 ## Gearbox invariants (learned the hard way — check these on every car)
 
@@ -694,7 +772,7 @@ from the numbers perf-test certifies.
 
 ## index.html — garage + online race shell
 
-- Fifty-two `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
+- Fifty-six `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
   the six later hypercars, each with a real-photo `<img class="realcar">` slot that reveals
   a supplied photo and otherwise falls back to the SVG livery) + spec chips; buttons
   `data-practice` / `data-online` per car key (`pagani, bugatti, mclaren, ferrari,
@@ -702,7 +780,8 @@ from the numbers perf-test certifies.
   amgone, nevera, zr1, p1, f40, p917, f1mercedes, f1redbull, f1ferrari, f1mclaren, f1aston, f1alpine,
   f1williams, f1racingbulls, f1haas, f1audi, f1cadillac, dacia, fordraptor, grhilux,
   hunter`; plus the later road cars `evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5,
-  slr300, czinger, alfa33, tuatara, t50s, project8, s2000`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
+  slr300, czinger, alfa33, tuatara, t50s, project8, s2000, mustanggtd, rx7, phantom,
+  spectre`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
 - **Lazy sim loading** (so the homepage isn't a 12 MB download): between the
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers index.html now carries only a
   tiny `SIM_FILES = {key: "filename.html"}` map. `loadEmbeddedSim` branches on
