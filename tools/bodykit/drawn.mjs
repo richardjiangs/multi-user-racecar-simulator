@@ -170,6 +170,7 @@ export const DRAWN = {
   tesla: drawTesla, taycan: drawTaycan, amg: drawAmgGt, porsche918: drawPorsche918, supra: drawSupra,
   t50s: drawT50s, alfa33: drawAlfa33, project8: drawProject8, s2000: drawS2000,
   mustanggtd: drawMustangGtd, rx7: drawRx7,
+  phantom: drawPhantom, spectre: drawSpectre,
 };
 
 /* ------------------------------------------------------------------ *
@@ -3313,5 +3314,297 @@ export function drawRx7(spec) {
 
       ${wheel(axR, G - rR, rR, "five", "#d8e2ea", ID("Hub"))}
       ${wheel(axF, G - rF, rF, "five", "#d8e2ea", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Rolls-Royce Phantom VIII                                            *
+ *                                                                     *
+ * 5,762 x 1,646 mm on a 3,552 mm wheelbase — the longest and tallest   *
+ * car in the garage by a distance, and it has to be drawn as a formal  *
+ * three-box saloon rather than anything low. Three things and nothing  *
+ * else identify it:                                                   *
+ *                                                                     *
+ *  - the PANTHEON GRILLE, which is not a hole in the nose but a        *
+ *    polished temple front standing PROUD of it, taller than it is     *
+ *    wide, with the Spirit of Ecstasy on the prow above it;            *
+ *  - the COACH DOORS. The rear doors hinge at the BACK, so the two     *
+ *    handles sit at the INNER edges of the doors and meet in the       *
+ *    middle of the car — which is the opposite of every other          *
+ *    four-door ever drawn, and the fastest way to tell a Phantom from  *
+ *    a photograph of its side;                                        *
+ *  - the WAFT LINE, one unbroken hard crease from the top of the front *
+ *    wheel to the tail lamp, and a roof that is nearly level for its   *
+ *    whole length because the people who matter sit under the back of  *
+ *    it.                                                              *
+ * ------------------------------------------------------------------ */
+export function drawPhantom(spec) {
+  const ID = (n) => `hd${spec.key || "phantom"}${n}`;
+  const axF = 766, axR = 246, rF = 58, rR = 58, G = FRAME.ground;
+
+  /* Straight off specs.mjs: 5,762 mm at k = 844/5762, roof peak 1,646 mm above the
+     road (y 89), nose 196, boot deck 166. The bonnet is nearly level for a third of
+     the car, the roof is level over the back seat, and the TAIL IS A TALL FLAT FACE
+     that goes down to a bumper at y 300 — a saloon's boot, not a wedge. */
+  const BODY = `M78,166
+    L78,286 Q80,297 104,300 L176,303
+    A70,104 0 0 1 316,303
+    Q506,313 698,303
+    A68,102 0 0 1 834,303
+    L892,300 Q916,296 922,286
+    L922,196
+    C892,187 850,179 804,176
+    C762,171 720,167 685,166
+    C642,164 612,163 584,161
+    C560,145 534,119 508,103
+    C490,93 470,89 448,89
+    L352,93
+    C332,105 310,121 288,134
+    C252,142 176,156 122,162
+    C106,164 92,165 78,166 Z`;
+
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rolls-Royce Phantom side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#f6f3ea"/><stop offset="0.3" stop-color="#e8e4d8"/><stop offset="0.72" stop-color="#8f8b80"/><stop offset="1" stop-color="#26241f"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe8ee"/><stop offset="0.4" stop-color="#3f4a52"/><stop offset="1" stop-color="#090c0f"/></linearGradient>
+        <linearGradient id="${ID("Chrome")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f2e6"/><stop offset="0.45" stop-color="#c9a85f"/><stop offset="1" stop-color="#6d5a2e"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f8f5ec"/><stop offset="1" stop-color="#4a4740"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          /* a coach door hinges at the BACK, so the pivot is the REAR-bottom corner of
+             the panel and it is the LEADING edge that swings out toward you — the
+             opposite of every other door in this garage */
+          #doorArt{transform-box:fill-box;transform-origin:3% 96%;transition:transform 1.1s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-8deg) translate(-12px,-2px);}
+          #quadExhaustArt *{fill:#cfc9b8;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+
+      <ellipse cx="500" cy="${G + 6}" rx="398" ry="9" fill="rgba(0,0,0,0.5)"/>
+
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
+
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,178 C300,172 560,182 922,232 L922,252 C560,202 300,196 78,202 Z" fill="url(#${ID("Shine")})"/>
+          <!-- only the valance is dark. A Phantom is one colour from the waist to the sill. -->
+          <rect x="0" y="272" width="1000" height="130" fill="rgba(20,24,30,0.55)"/>
+
+          <!-- the greenhouse. Roof outline 89-93; the glass header is 22 px BELOW it, so a
+               band of paint shows above the DLO all the way round — the roof of a Phantom
+               is painted metal and the brightest thing on the flank is the chrome that
+               frames the glass. -->
+          <path d="M598,170 L494,112 L366,116 L318,172
+                   C400,175 500,173 598,170 Z"
+                fill="url(#${ID("Glass")})" stroke="url(#${ID("Chrome")})" stroke-width="2.8"/>
+          <path d="M598,170 L494,112" stroke="#090c0f" stroke-width="7" stroke-linecap="round"/>
+          <path d="M366,116 L318,172" stroke="#090c0f" stroke-width="7" stroke-linecap="round"/>
+          <!-- the B-pillar, between the two doors: a Phantom has four side windows -->
+          <path d="M431,114 L433,173" stroke="#090c0f" stroke-width="5.5"/>
+          <path d="M589,168 L500,120" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
+          <path d="M400,104 L470,101" stroke="rgba(255,255,255,0.5)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- THE COACH DOORS. The shut line between them, and then the two handles: the
+               front door's at its REAR edge, the rear door's at its FRONT edge, both
+               inboard, meeting in the middle. No other car in this garage is like this. -->
+          <g id="doorArt">
+            <path d="M352,170 L488,168 L486,288 L356,284 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.18)" stroke-width="1.2"/>
+            <rect x="458" y="212" width="26" height="5" rx="2.5" fill="url(#${ID("Chrome")})"/>
+          </g>
+          <path d="M492,168 L600,172 L596,290 L490,288 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,0,0,0.18)" stroke-width="1.2"/>
+          <rect x="496" y="212" width="26" height="5" rx="2.5" fill="url(#${ID("Chrome")})"/>
+          <path d="M489,166 L488,288" stroke="rgba(0,0,0,0.3)" stroke-width="2.2"/>
+          <path d="M352,168 L356,284" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
+          <path d="M600,170 L596,290" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
+          <!-- the boot lid's side shut line, under the deck -->
+          <path d="M290,144 C232,155 152,166 82,172" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
+          <!-- and the bonnet's, which on a car with this much bonnet is a long way from it -->
+          <path d="M900,193 C820,183 700,174 606,172" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/>
+
+          <!-- THE WAFT LINE: one crease, front arch to tail lamp, unbroken -->
+          <path d="M818,202 C620,197 380,201 116,206" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2.6" stroke-linecap="round"/>
+          <path d="M818,205 C620,200 380,204 116,209" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
+          <!-- the coachline: one hand-painted stripe, the length of the car -->
+          <path d="M846,238 C620,232 380,236 96,240" fill="none" stroke="#c9a85f" stroke-width="1.8" opacity="0.85"/>
+
+          <!-- a single slim lamp at each end, set high, with a chrome underline -->
+          <path d="M84,196 L154,193 L154,214 L84,217 Z" fill="#8c1622" stroke="rgba(255,255,255,0.25)" stroke-width="1.1"/>
+          <path d="M88,200 L148,198" stroke="#ff5568" stroke-width="4" stroke-linecap="round"/>
+          <path d="M84,224 L160,221" stroke="url(#${ID("Chrome")})" stroke-width="3" stroke-linecap="round"/>
+          <path d="M856,198 L910,196 L912,228 L858,230 Z" fill="rgba(13,16,20,0.72)"/>
+          <path d="M904,206 L864,204" stroke="#f4f8fc" stroke-width="7" stroke-linecap="round"/>
+          <path d="M906,220 L860,218" stroke="url(#${ID("Chrome")})" stroke-width="3" stroke-linecap="round"/>
+          <!-- the chrome garnish on the front wing, behind the wheel -->
+          <path d="M666,214 L714,211 L716,221 L668,224 Z" fill="url(#${ID("Chrome")})" opacity="0.9"/>
+          <circle cx="304" cy="182" r="8" fill="#b8b2a4" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+        </g>
+
+        <!-- THE PANTHEON GRILLE, standing PROUD of the nose, and the Spirit of Ecstasy on
+             the prow above it. This is drawn outside the body clip on purpose: the grille
+             is a separate polished object bolted to the front of the car, not a hole. -->
+        <g data-proud="1">
+          <path d="M884,198 L924,193 L924,266 L884,262 Z" fill="#0d1014" stroke="url(#${ID("Chrome")})" stroke-width="3"/>
+          <g stroke="rgba(230,222,200,0.55)" stroke-width="1.3">
+            <path d="M890,204 l30,-3"/><path d="M890,214 l30,-3"/><path d="M890,224 l30,-3"/>
+            <path d="M890,234 l30,-3"/><path d="M890,244 l30,-3"/><path d="M890,254 l30,-3"/>
+          </g>
+          <path d="M882,193 L926,188 L926,197 L882,202 Z" fill="url(#${ID("Chrome")})"/>
+          <!-- the Spirit of Ecstasy: a figure leaning forward with her sleeves swept back -->
+          <path d="M898,190 C900,180 904,175 909,172 C905,179 904,184 904,190 Z" fill="url(#${ID("Chrome")})"/>
+          <path d="M903,178 C896,177 889,180 885,185 C892,182 898,182 904,183 Z" fill="url(#${ID("Chrome")})"/>
+        </g>
+      </g>
+
+      <g id="frontFlapArt"><rect x="836" y="296" width="82" height="6" rx="3" fill="#1a1c20" stroke="#c9a85f" stroke-opacity="0.45"/></g>
+      <path d="M84,286 L184,290 L182,300 L86,296 Z" fill="#131518" stroke="rgba(255,255,255,0.12)"/>
+      <!-- two rectangular pipes, flush in the valance, because they are not a feature -->
+      <g id="quadExhaustArt">
+        <rect x="104" y="276" width="26" height="8" rx="3"/><rect x="140" y="277" width="26" height="8" rx="3"/>
+      </g>
+
+      ${wheel(axR, G - rR, rR, "dish", "#d8d2c4", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "dish", "#d8d2c4", ID("Hub"))}
+    </svg>`;
+}
+
+/* ------------------------------------------------------------------ *
+ * Rolls-Royce Spectre Black Badge                                     *
+ *                                                                     *
+ * 5,453 x 1,559 mm on a 3,210 mm wheelbase and 2,975 kg — a TWO-DOOR   *
+ * fastback, which is the whole difference from the Phantom beside it.  *
+ * There is one door each side and it is enormous: 1.5 metres of coach  *
+ * door, the largest fitted to a modern car, hinged at the back like    *
+ * the Phantom's rear doors and taking the entire cabin side with it.   *
+ * So the flank has exactly ONE shut line on it, and a car with one     *
+ * shut line reads as a coupe from any distance.                        *
+ *                                                                     *
+ * Black Badge darkens everything that is normally bright: the Pantheon *
+ * grille, the surrounds and the Spirit of Ecstasy all go to a smoked   *
+ * chrome instead of polished. It is an EV, so there are no pipes at    *
+ * all — and the split headlamps and the illuminated grille are the     *
+ * two things that say Spectre rather than Phantom at the front.        *
+ * ------------------------------------------------------------------ */
+export function drawSpectre(spec) {
+  const ID = (n) => `hd${spec.key || "spectre"}${n}`;
+  const axF = 760, axR = 263, rF = 61, rR = 61, G = FRAME.ground;
+
+  /* 5,453 mm at k = 844/5453. The roofline out of specs.mjs is the whole difference
+     from the Phantom: the peak is at 449 and from there the outline FALLS CONTINUOUSLY
+     to the tail — 108 at the C-pillar, 142 over the rear axle, 180 at the boot. There
+     is no separate deck, because a Spectre is a fastback. */
+  const BODY = `M78,180
+    L78,282 Q80,294 104,297 L193,302
+    A70,106 0 0 1 333,302
+    Q506,312 692,302
+    A68,102 0 0 1 828,302
+    L890,300 Q914,296 922,286
+    L922,209
+    C890,199 856,191 821,185
+    C786,178 750,172 719,168
+    C684,163 650,158 620,155
+    C596,140 570,118 540,106
+    C512,95 484,90 460,89
+    L404,92
+    C376,100 350,110 320,124
+    C282,140 244,152 210,160
+    C170,169 120,176 96,179
+    C90,180 84,180 78,180 Z`;
+
+  return `<svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rolls-Royce Spectre Black Badge side">
+      <defs>
+        <linearGradient id="${ID("Paint")}" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stop-color="#6c757f"/><stop offset="0.34" stop-color="#333941"/><stop offset="0.74" stop-color="#171b20"/><stop offset="1" stop-color="#06080a"/>
+        </linearGradient>
+        <linearGradient id="${ID("Glass")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c8d6e0"/><stop offset="0.4" stop-color="#2f3840"/><stop offset="1" stop-color="#06080b"/></linearGradient>
+        <linearGradient id="${ID("Chrome")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a9384"/><stop offset="0.45" stop-color="#6b6355"/><stop offset="1" stop-color="#2a2721"/></linearGradient>
+        <radialGradient id="${ID("Hub")}" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#8c949e"/><stop offset="1" stop-color="#1b1f24"/></radialGradient>
+        <linearGradient id="${ID("Shine")}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.34"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
+        <filter id="${ID("Glow")}" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        <clipPath id="${ID("Clip")}"><path d="${BODY}"/></clipPath>
+        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
+          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
+          /* 1.5 metres of coach door, hinged at the BACK: the pivot is the rear-bottom
+             corner, it swings slowly, it swings the other way, and the whole side of
+             the cabin goes with it */
+          #doorArt{transform-box:fill-box;transform-origin:3% 96%;transition:transform 1.3s cubic-bezier(.2,.9,.2,1);}
+          #doorArt.open{transform:rotate(-10deg) translate(-16px,-3px);}
+          #quadExhaustArt *{fill:#8c949e;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#${ID("Glow")});}</style>
+      </defs>
+
+      <ellipse cx="500" cy="${G + 6}" rx="394" ry="9" fill="rgba(0,0,0,0.55)"/>
+
+      <g id="bcBody">
+        <path d="${BODY}" fill="url(#${ID("Paint")})" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
+
+        <g clip-path="url(#${ID("Clip")})">
+          <path d="M78,192 C300,186 560,196 922,244 L922,264 C560,214 300,208 78,216 Z" fill="url(#${ID("Shine")})"/>
+          <rect x="0" y="270" width="1000" height="130" fill="rgba(6,8,10,0.5)"/>
+
+          <!-- the greenhouse: a fastback, so the glass runs BACK past the door and dies
+               in a very wide C-pillar rather than stopping at a boot. Header 22 px under
+               the roof outline, so the roof shows as paint. -->
+          <path d="M620,166 L510,116 L398,121 L318,178
+                   C420,181 520,174 620,166 Z"
+                fill="url(#${ID("Glass")})" stroke="url(#${ID("Chrome")})" stroke-width="2.6"/>
+          <path d="M620,166 L510,116" stroke="#06080b" stroke-width="7" stroke-linecap="round"/>
+          <path d="M398,121 L318,178" stroke="#06080b" stroke-width="7" stroke-linecap="round"/>
+          <!-- the door glass ends here and a small fixed quarter light carries on: the
+               only division in the side glass, because there is no B-pillar on a coupe -->
+          <path d="M392,121 L388,177" stroke="#06080b" stroke-width="4"/>
+          <path d="M611,164 L516,125" stroke="rgba(255,255,255,0.26)" stroke-width="3"/>
+          <path d="M420,108 L492,104" stroke="rgba(255,255,255,0.36)" stroke-width="2.4" stroke-linecap="round"/>
+
+          <!-- ONE shut line. That is the entire flank of a Spectre. -->
+          <g id="doorArt">
+            <path d="M388,176 L622,168 L618,290 L392,286 Z" fill="rgba(255,255,255,0.025)" stroke="rgba(0,0,0,0.22)" stroke-width="1.3"/>
+            <rect x="584" y="212" width="28" height="5" rx="2.5" fill="url(#${ID("Chrome")})"/>
+          </g>
+          <path d="M388,174 L392,286" stroke="rgba(0,0,0,0.26)" stroke-width="1.8"/>
+          <path d="M622,166 L618,290" stroke="rgba(0,0,0,0.26)" stroke-width="1.8"/>
+
+          <path d="M812,206 C620,200 380,206 116,214" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2.4" stroke-linecap="round"/>
+          <path d="M840,242 C620,236 380,242 96,250" fill="none" stroke="#c9a85f" stroke-width="1.6" opacity="0.6"/>
+          <!-- the charge flap, on the rear quarter where a fuel filler would be -->
+          <path d="M240,196 l26,-3 l2,17 l-26,3 Z" fill="#0d1216" stroke="rgba(201,168,95,0.55)" stroke-width="1.2"/>
+
+          <path d="M84,206 L152,201 L153,220 L85,225 Z" fill="#7d1420" stroke="rgba(255,255,255,0.2)" stroke-width="1.1"/>
+          <path d="M88,210 L147,206" stroke="#ff5568" stroke-width="4" stroke-linecap="round"/>
+          <!-- SPLIT headlamps: a thin daylight blade above, the main lamp below, both sunk
+               into a dark housing that wraps onto the wing -->
+          <path d="M858,208 L912,206 L914,240 L860,242 Z" fill="rgba(6,8,11,0.75)"/>
+          <path d="M908,214 L864,212" stroke="#e6eef6" stroke-width="4" stroke-linecap="round"/>
+          <path d="M906,232 L872,230" stroke="#f4f8fc" stroke-width="8" stroke-linecap="round"/>
+
+          <!-- Black Badge's own mark: the Double-R roundel, inverted to black on black,
+               where the boot badge would be on a car that had a boot -->
+          <circle cx="285" cy="168" r="9" fill="#0a0d10" stroke="rgba(154,147,132,0.8)" stroke-width="1.3"/>
+          <text x="285" y="172" text-anchor="middle" font-family="ui-serif,Georgia,serif" font-size="9" fill="rgba(154,147,132,0.9)">RR</text>
+        </g>
+
+        <!-- the Pantheon grille again, but SMOKED — and lit from within, which the Phantom's
+             is not. Black Badge darkens every bright part on the car, including her. -->
+        <g data-proud="1">
+          <path d="M886,210 L924,205 L924,272 L886,268 Z" fill="#0a0d10" stroke="url(#${ID("Chrome")})" stroke-width="3"/>
+          <g stroke="rgba(201,168,95,0.55)" stroke-width="1.4">
+            <path d="M892,216 l28,-3"/><path d="M892,226 l28,-3"/><path d="M892,236 l28,-3"/>
+            <path d="M892,246 l28,-3"/><path d="M892,256 l28,-3"/>
+          </g>
+          <path d="M884,205 L926,200 L926,209 L884,214 Z" fill="url(#${ID("Chrome")})"/>
+          <path d="M900,202 C902,193 906,188 911,185 C907,192 906,197 906,202 Z" fill="url(#${ID("Chrome")})"/>
+          <path d="M905,191 C898,190 891,193 887,198 C894,195 900,195 906,196 Z" fill="url(#${ID("Chrome")})"/>
+        </g>
+      </g>
+
+      <g id="frontFlapArt"><rect x="834" y="296" width="84" height="6" rx="3" fill="#0d1014" stroke="#c9a85f" stroke-opacity="0.4"/></g>
+      <path d="M84,284 L178,288 L176,298 L86,294 Z" fill="#0a0d10" stroke="rgba(255,255,255,0.1)"/>
+      <!-- there is no exhaust on a Spectre. The group stays so the sim's ref still binds. -->
+      <g id="quadExhaustArt"></g>
+
+      ${wheel(axR, G - rR, rR, "dish", "#3a3f46", ID("Hub"))}
+      ${wheel(axF, G - rF, rF, "dish", "#3a3f46", ID("Hub"))}
     </svg>`;
 }
