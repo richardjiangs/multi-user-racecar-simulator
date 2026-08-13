@@ -148,6 +148,15 @@ const check = (label, ok, detail) => {
     // those two declare themselves instead.
     const openWheel = /2026 Formula 1|halo|F1 R26|MCL40|FW48|VCARB|VF-26|SF-26|RB22|W17|AMR26|A526|C26/.test(art);
     const raid = /T1\+|Sandrider|GR DKR|HUNTER|RAPTOR/.test(art);
+    // the Phantom's coachwork is not an SVG at all: it is the car's own original CSS body
+    // shell, with the arches as border-radius wheels and the paint as a linear-gradient. It
+    // declares itself the same way the open-wheelers and the raid cars do.
+    const cssCoach = /THE COACHWORK IS IN THE PAGE/.test(art) && /phantom-side/.test(src);
+    if (cssCoach) {
+      if (!/border-radius: 50%/.test(src)) gaps.push(n + ": CSS coachwork with no wheel arches");
+      if (!/linear-gradient\(180deg, #fffdf4/.test(src)) gaps.push(n + ": CSS coachwork with no paint");
+      continue;
+    }
     if (!openWheel && !raid && !/ 0 0 1 /.test(art)) gaps.push(n + ": the body has no wheel arch");
     // and the paint must be the car's own, not one flat fill
     if (!/linearGradient/.test(art)) gaps.push(n + ": the body has no paint, just a flat fill");

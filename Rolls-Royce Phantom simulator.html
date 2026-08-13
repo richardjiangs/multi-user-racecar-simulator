@@ -338,6 +338,112 @@
       .mobile-pad { display:grid; }
       .touch-wheel { display:block; }
     }
+
+    /* ===== THE ORIGINAL PHANTOM COACHWORK =========================================
+       Not the generated body: this is the Phantom as it was drawn in the first place,
+       in CSS rather than SVG — a body shell with a real radius set, the coachline, two
+       coach doors that hinge at opposite ends, the Pantheon grille, the Spirit of
+       Ecstasy on the prow and an umbrella that slides out of the door. `apply.mjs` is
+       told to keep its hands off `phantom` so the generator can never overwrite it.
+       ============================================================================= */
+    #exteriorArt .phantom-side {
+      /* the original sat 50 px off the bottom of a 105 px strip; this panel is taller, so
+         it is centred instead. Everything inside it is still in the original's own pixels. */
+      position: absolute;
+      left: 7%; right: 7%; bottom: calc(50% - 52px); height: 105px; }
+    #exteriorArt .body-shell {
+      position: absolute;
+      inset: 24px 24px 15px;
+      border-radius: 26px 16px 13px 11px / 34px 20px 12px 12px;
+      background: linear-gradient(180deg, #fffdf4 0%, #ede9dc 53%, #d9d3c8 54%, #bdb7ab 100%);
+      border: 1px solid rgba(255,255,255,0.7);
+      box-shadow: inset 0 -16px 24px rgba(0,0,0,0.14), 0 12px 28px rgba(0,0,0,0.48); }
+    #exteriorArt .body-shell::before {
+      content: "";
+      position: absolute;
+      left: 23%; top: -34px; width: 50%; height: 48px;
+      border-radius: 42px 20px 0 0;
+      background: linear-gradient(180deg, #141821 0 45%, #090b10 46% 100%);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-bottom: 0;
+      clip-path: polygon(8% 100%, 19% 17%, 70% 0, 91% 100%); }
+    #exteriorArt .body-shell::after {
+      content: "";
+      position: absolute;
+      right: 3%; top: 17px; width: 9%; height: 18px;
+      border-radius: 9px;
+      background: linear-gradient(90deg, rgba(255,255,255,0.4), rgba(240, 213, 142, 0.7));
+      box-shadow: 0 0 16px rgba(240, 213, 142, 0.38); }
+    #exteriorArt .coach-line {
+      position: absolute;
+      left: 11%; right: 7%; top: 51%; height: 2px;
+      background: linear-gradient(90deg, transparent, rgba(217,183,106,0.9), transparent); }
+    #exteriorArt .grille {
+      position: absolute;
+      right: 4%; bottom: 27%; width: 35px; height: 45px;
+      border: 2px solid rgba(215,215,215,0.82);
+      border-radius: 4px 8px 8px 4px;
+      background: repeating-linear-gradient(90deg, rgba(255,255,255,0.62) 0 2px, rgba(0,0,0,0.16) 2px 5px);
+      box-shadow: inset 0 0 10px rgba(255,255,255,0.25); }
+    #exteriorArt .spirit {
+      position: absolute;
+      right: 8.2%; bottom: 75%; width: 12px; height: 27px;
+      transform-origin: bottom center; }
+    #exteriorArt .spirit::before {
+      content: "";
+      position: absolute;
+      left: 3px; top: 2px; width: 7px; height: 21px;
+      border-radius: 50% 50% 35% 35%;
+      background: linear-gradient(130deg, #fff, #c8c8c8 55%, #8f8f8f);
+      clip-path: polygon(50% 0, 100% 20%, 70% 100%, 50% 73%, 30% 100%, 0 20%); }
+    #exteriorArt .spirit.hidden { transform: translateY(23px) scaleY(0.2); opacity: 0.3; }
+    #exteriorArt .door {
+      position: absolute;
+      top: 6px; bottom: 10px; width: 16.5%;
+      border: 1px solid rgba(40,40,40,0.25);
+      background: linear-gradient(180deg, rgba(255,255,255,0.08), rgba(255,255,255,0));
+      transform-origin: center left;
+      transition: transform 520ms cubic-bezier(.2,.9,.2,1), filter 520ms ease; }
+    #exteriorArt .door.front { right: 37%; }
+    #exteriorArt .door.rear { right: 53.5%; transform-origin: center right; }
+    #exteriorArt .door.open.front { transform: perspective(480px) rotateY(-58deg); filter: brightness(0.9); }
+    #exteriorArt .door.open.rear { transform: perspective(480px) rotateY(58deg); filter: brightness(0.9); }
+    #exteriorArt .door::before {
+      content: "";
+      position: absolute;
+      left: 15%; right: 15%; top: 9px; height: 23px;
+      border-radius: 5px 5px 2px 2px;
+      background: linear-gradient(180deg, rgba(27, 54, 76, 0.9), rgba(9,12,16,0.95));
+      border: 1px solid rgba(255,255,255,0.16); }
+    #exteriorArt .wheel {
+      position: absolute;
+      width: 73px; height: 73px; bottom: -15px;
+      border-radius: 50%;
+      background: radial-gradient(circle, #090909 0 17%, var(--gold) 18% 22%, #111 23% 47%, #d6b461 48% 53%, #030303 54% 100%);
+      box-shadow: inset 0 0 0 9px #050505, inset 0 0 0 13px rgba(217,183,106,0.55), 0 12px 20px rgba(0,0,0,0.55); }
+    #exteriorArt .wheel::before {
+      content: "";
+      position: absolute;
+      inset: 17px; border-radius: 50%;
+      background: conic-gradient(from var(--wheel-rot, 0deg), rgba(255,255,255,0.75) 0 4deg, transparent 4deg 28deg, rgba(217,183,106,0.72) 28deg 34deg, transparent 34deg 60deg);
+      mask: radial-gradient(circle, transparent 0 29%, #000 30% 100%); }
+    #exteriorArt .wheel::after {
+      content: "RR";
+      position: absolute;
+      inset: 25px; display: grid; place-items: center; border-radius: 50%;
+      color: #f5df9c; background: #080808;
+      font: 700 10px Georgia, serif;
+      transform: rotate(calc(var(--wheel-rot, 0deg) * -1)); }
+    #exteriorArt .wheel.front { right: 10%; }
+    #exteriorArt .wheel.rear { left: 13%; }
+    #exteriorArt .umbrella {
+      position: absolute;
+      left: 33%; bottom: 49px; width: 94px; height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #161b21, #e0d3ac 87%, #151515);
+      transform: translateX(var(--umbrella-out, 0px));
+      opacity: var(--umbrella-opacity, 0);
+      transition: transform 420ms ease, opacity 240ms ease; }
     @media (max-width:600px) {
       .hud { width:calc(100vw - 16px); left:8px; top:168px; }
       .mode-panel { left:8px; right:8px; bottom:8px; }
@@ -415,15 +521,16 @@
           <span class="small"><span class="indicator"></span><span id="paintStatus">English White over a hand-painted coachline, the Pantheon grille lit from within, 22in part-polished wheels with self-levelling centres</span></span>
         </div>
         <div class="car-art-wrap" id="exteriorArt">
-          <div class="car-side">
+          <div class="phantom-side" id="phantomSide">
             <div class="body-shell">
-              <div class="canopy"></div>
-              <div class="door-g" id="doorArt"></div>
-              <div class="rear-wing" id="rearWingArt"></div>
-              <div class="front-flap" id="frontFlapArt"></div>
-              <div class="sidepod"></div>
-              <div class="splitter"></div>
-              <div class="quad-exhaust" id="quadExhaustArt"><i></i><i></i><i></i><i></i></div>
+              <div class="coach-line"></div>
+              <div class="door rear" id="doorArt"></div>
+              <div class="door front" id="frontDoorArt"></div>
+              <div class="grille"></div>
+              <div class="spirit" id="spiritArt"></div>
+              <div class="umbrella" id="umbrellaArt"></div>
+              <div class="front-flap" id="frontFlapArt" style="display:none"></div>
+              <div class="quad-exhaust" id="quadExhaustArt" style="display:none"></div>
             </div>
             <div class="wheel rear"></div>
             <div class="wheel front"></div>
@@ -628,15 +735,17 @@
               <button data-circuit="Nürburgring 24h">Nürburgring 24h</button>
               <button data-circuit="Suzuka Circuit">Suzuka</button>
               <button data-circuit="Silverstone Circuit">Silverstone</button>
-              <button data-circuit="The Mall, London">The Mall, London</button>
-              <button data-circuit="Prologue — Yanbu">Prologue · Yanbu</button>
-              <button data-circuit="Stage 2 — Yanbu to AlUla">S2 · Yanbu→AlUla</button>
-              <button data-circuit="Stage 4 — AlUla Marathon">S4 · AlUla marathon</button>
-              <button data-circuit="Stage 7 — Riyadh to Wadi Ad Dawasir">S7 · →Wadi Ad Dawasir</button>
-              <button data-circuit="Stage 8 — Wadi Ad Dawasir">S8 · Wadi (Queen)</button>
-              <button data-circuit="Stage 9 — Wadi Ad Dawasir to Bisha">S9 · →Bisha marathon</button>
-              <button data-circuit="Stage 13 — Yanbu Finish">S13 · Yanbu finish</button>
               <button data-circuit="Nardò Ring">Nardò Ring</button>
+            </div>
+            <div class="small" style="margin:8px 0 4px;color:#c9a85f">THE SEVEN JOURNEYS &mdash; point to point, real streets, real signals</div>
+            <div class="circuit-grid" id="journeyGrid">
+              <button data-circuit="The Mall, London">London &middot; The Mall</button>
+              <button data-circuit="Paris — Champs-Élysées">Paris &middot; Champs-Élysées</button>
+              <button data-circuit="New York — Park Avenue">New York &middot; Park Avenue</button>
+              <button data-circuit="Tokyo — Ginza">Tokyo &middot; Ginza</button>
+              <button data-circuit="Shanghai — The Bund">Shanghai &middot; The Bund</button>
+              <button data-circuit="The Royal Hotel">The Royal Hotel</button>
+              <button data-circuit="The White Palace">The White Palace</button>
             </div>
             <div id="nordsRoute" style="display:none">
               <div class="small" style="margin:2px 0 6px">Nürburgring Y-junction — block a side to choose your route:</div>
@@ -1126,7 +1235,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     "navRead","lapRead","distRead","driverRead","cruiseRead","tcRead","computerStatus","voiceInput","toast",
     "throttlePedal","brakePedal","gforce","gdot","exteriorArt","cabinArt","doorArt","rearWingArt","frontFlapArt",
     "quadExhaustArt","engineBay","engineCover","turboL","turboR","turboL2","turboR2","gearStack","shifterLink","driveshaft",
-    "aeroFL","aeroRL","aeroArrow","mapCanvas","keyOverlay","startBtn","rearStatus"
+    "aeroFL","aeroRL","aeroArrow","mapCanvas","keyOverlay","startBtn","rearStatus",
+    "frontDoorArt","spiritArt","umbrellaArt","phantomSide"
   ]) el[id] = document.getElementById(id);
 
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
@@ -1541,7 +1651,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const r = state.route;
     let full = (r.active && r.baseWidth) ? r.baseWidth : 13;
     if (r.active && r.widthZones && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; for (const z of r.widthZones) if (phase >= z.from && phase <= z.to) full = z.w; }
-    return (full * TRACK_WIDTH_SCALE) / 2;
+    return (full * (onJourney() ? 1 : TRACK_WIDTH_SCALE)) / 2;
   }
   function roughnessAt(d) {
     const r = state.route;
@@ -1581,9 +1691,394 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     } else state.bogging = false;
     state.gripMul = clamp(g, 0.05, 1.2);
   }
+
+  /* ===== THE CITY ===========================================================
+     A city is not a race track with taller scenery. `drawScenery` wraps its
+     buildings every 3,000 m and picks their height at random, which is right
+     for the Nordschleife and completely wrong for Ginza: on a real street the
+     building you passed stays passed, the shop on the corner is the same shop
+     every time, and the thing at 2,860 m is the Imperial Palace moat because
+     that is where the Imperial Palace moat is.
+
+     So each journey gets a KIT: its own palette, its own building vocabulary,
+     its own shop signs in its own script, its own street furniture, its own
+     mix of vehicles, and a list of REAL LANDMARKS at their REAL distance along
+     the route. Everything is WORLD-ANCHORED to absolute route metres and built
+     from a fixed seed, so the street is the same street every time you drive it.
+
+     None of this touches the physics. `buildCity` runs from `seedWorld`, which
+     only runs when a route is selected, and `tests/perf-test.mjs` selects none.
+     ========================================================================= */
+
+  // a small deterministic PRNG, so a street is the same street every time
+  function cityRand(seed) {
+    let s = seed >>> 0;
+    return () => { s = (s * 1664525 + 1013904223) >>> 0; return s / 4294967296; };
+  }
+
+  /* Each kit is a real street. `blocks` are the frontages in the order you meet
+     them; `marks` are the named things, at the metre they really stand at. */
+  const CITY_KITS = {
+    "The Mall, London": {
+      hour: 0.34,
+      seed: 10101, script: "latin", drive: "left",
+      sky: ["#7d8b98", "#9aa6ae", "#b9bfc2"],           // London overcast
+      road: "#2e3136", pave: "#8a8b88", kerb: "#b6b5b0", line: "#e8e4d6",
+      lamp: "london", bin: true, rail: true,
+      trees: { kind: "plane", from: 2300, to: 4200, every: 32 },
+      blocks: [
+        { from: 0,    to: 1450, side: -1, kind: "mayfair",  storeys: 7,  shops: true },
+        { from: 0,    to: 1450, side:  1, kind: "park",     rail: true },      // Hyde Park
+        { from: 1450, to: 2300, side: -1, kind: "mayfair",  storeys: 6,  shops: true },
+        { from: 1450, to: 2300, side:  1, kind: "park",     rail: true },
+        { from: 2300, to: 4200, side: -1, kind: "park",     rail: true },      // Green Park
+        { from: 2300, to: 4200, side:  1, kind: "palacewall" },                // garden wall
+      ],
+      shopNames: ["FLORIST", "TAILOR", "BOOKS", "TEA ROOMS", "JEWELLER", "GALLERY", "HATTER", "CHEMIST", "WINE", "BOOTMAKER"],
+      traffic: [["cab", 0.34], ["ddbus", 0.14], ["van", 0.18], ["saloon", 0.28], ["cycle", 0.06]],
+      peds: { density: 0.55, dogs: 0.12, umbrella: 0.30, tones: ["#2b3038", "#4a3f36", "#1d2733", "#5b4a52"] },
+      marks: [
+        { at: 420,  side: 1,  kind: "gate",     name: "Grosvenor Gate" },
+        { at: 1560, side: 0,  kind: "arch",     name: "Wellington Arch" },
+        { at: 1600, side: -1, kind: "apsley",   name: "Apsley House" },
+        { at: 3300, side: 0,  kind: "memorial", name: "Victoria Memorial" },
+        { at: 4120, side: 0,  kind: "palace",   name: "Buckingham Palace" },
+      ],
+    },
+
+    "Paris — Champs-Élysées": {
+      hour: 0.62,
+      seed: 20202, script: "latin", drive: "right",
+      sky: ["#6f90b4", "#a8bccb", "#d7d9d2"],
+      road: "#33353a", pave: "#9b978c", kerb: "#a9a49a", line: "#f0ece0",
+      lamp: "paris", kiosk: true, cafe: true,
+      trees: { kind: "plane", from: 200, to: 2400, every: 26 },
+      blocks: [
+        { from: 0,    to: 2400, side: -1, kind: "haussmann", storeys: 7, shops: true },
+        { from: 0,    to: 2400, side:  1, kind: "haussmann", storeys: 7, shops: true },
+        { from: 2400, to: 2900, side: -1, kind: "concorde" },
+        { from: 2400, to: 2900, side:  1, kind: "tuileries", rail: true },
+        { from: 2900, to: 3600, side: -1, kind: "rivoli",    storeys: 6, shops: true, arcade: true },
+        { from: 2900, to: 3600, side:  1, kind: "haussmann", storeys: 6, shops: true },
+      ],
+      shopNames: ["BOULANGERIE", "PARFUMERIE", "LIBRAIRIE", "CAFÉ", "MAROQUINERIE", "HORLOGER", "FLEURISTE", "TABAC", "JOAILLIER", "BRASSERIE"],
+      traffic: [["hatch", 0.34], ["taxi", 0.16], ["scooter", 0.22], ["bus", 0.10], ["van", 0.12], ["cycle", 0.06]],
+      peds: { density: 0.85, dogs: 0.16, umbrella: 0.08, tones: ["#22242a", "#6b3f3a", "#2f3d4a", "#7a6a52"] },
+      marks: [
+        { at: 240,  side: 0,  kind: "arcdet",   name: "Arc de Triomphe" },
+        { at: 1740, side: 0,  kind: "rondpoint",name: "Rond-Point" },
+        { at: 2480, side: 0,  kind: "obelisk",  name: "Place de la Concorde" },
+        { at: 3480, side: 0,  kind: "column",   name: "Place Vendôme" },
+      ],
+    },
+
+    "New York — Park Avenue": {
+      hour: 0.40,
+      seed: 30303, script: "latin", drive: "right",
+      sky: ["#5d7fa6", "#93aec4", "#c2cbd0"],
+      road: "#3a3c40", pave: "#8f9092", kerb: "#a6a7a5", line: "#f2e04a",   // yellow lines
+      lamp: "crook", hydrant: true, steam: true, scaffold: true,
+      trees: { kind: "honeylocust", from: 2700, to: 3900, every: 30 },
+      blocks: [
+        { from: 0,    to: 2300, side: -1, kind: "tower",   storeys: 26, shops: true },
+        { from: 0,    to: 2300, side:  1, kind: "tower",   storeys: 30, shops: true },
+        { from: 2300, to: 2700, side: -1, kind: "plaza",   storeys: 19 },
+        { from: 2300, to: 2700, side:  1, kind: "tower",   storeys: 22, shops: true },
+        { from: 2700, to: 3900, side: -1, kind: "centralpark", rail: true },
+        { from: 2700, to: 3900, side:  1, kind: "tower",   storeys: 24, shops: true },
+      ],
+      shopNames: ["DELI", "PHARMACY", "COFFEE", "NEWS", "TAILORS", "BANK", "OPTICIAN", "SHOE REPAIR", "GRILL", "FLOWERS"],
+      traffic: [["yellowcab", 0.44], ["suv", 0.16], ["van", 0.14], ["bus", 0.10], ["truck", 0.10], ["cycle", 0.06]],
+      peds: { density: 1.0, dogs: 0.22, umbrella: 0.06, tones: ["#1b1d22", "#3c3a44", "#5a4034", "#2a4450"] },
+      marks: [
+        { at: 180,  side: 0,  kind: "helmsley", name: "The Helmsley Building" },
+        { at: 1240, side: -1, kind: "seagram",  name: "Seagram Building" },
+        { at: 1300, side:  1, kind: "lever",    name: "Lever House" },
+        { at: 2380, side: 0,  kind: "plazahotel", name: "Grand Army Plaza" },
+      ],
+    },
+
+    "Tokyo — Ginza": {
+      hour: 0.92,
+      seed: 40404, script: "jp", drive: "left",
+      sky: ["#4c6f95", "#8ea6bb", "#c6cdd0"],
+      road: "#35373b", pave: "#9a9c9e", kerb: "#c8c9c6", line: "#f4f2e8",
+      lamp: "ginza", vending: true, banner: true,
+      trees: { kind: "ginkgo", from: 2400, to: 3400, every: 28 },
+      blocks: [
+        { from: 0,    to: 1450, side: -1, kind: "ginza", storeys: 11, shops: true, vertical: true },
+        { from: 0,    to: 1450, side:  1, kind: "ginza", storeys: 12, shops: true, vertical: true },
+        { from: 1450, to: 2100, side: -1, kind: "ginza", storeys: 9,  shops: true, vertical: true },
+        { from: 1450, to: 2100, side:  1, kind: "ginza", storeys: 10, shops: true, vertical: true },
+        { from: 2100, to: 2600, side: -1, kind: "hibiya", storeys: 14 },
+        { from: 2100, to: 2600, side:  1, kind: "hibiya", storeys: 12 },
+        { from: 2600, to: 3400, side: -1, kind: "moat" },                       // the palace moat
+        { from: 2600, to: 3400, side:  1, kind: "marunouchi", storeys: 16 },
+      ],
+      shopNames: ["銀座", "時計", "百貨店", "珈琲", "寿司", "呉服", "宝石", "文具", "薬局", "書店"],
+      shopNamesAlt: ["GINZA", "WAKO", "MIKIMOTO", "KOHIKAN", "SUSHI", "DEPT", "OPTIC", "SEIKO", "TORAYA", "ITOYA"],
+      traffic: [["crown", 0.30], ["hiace", 0.18], ["keitruck", 0.14], ["toeibus", 0.10], ["saloon", 0.22], ["cycle", 0.06]],
+      peds: { density: 1.15, dogs: 0.05, umbrella: 0.22, tones: ["#1a1c20", "#2b3038", "#4a4a52", "#6a5a4a"] },
+      marks: [
+        { at: 360,  side: -1, kind: "wako",     name: "Wako, Ginza 4-chōme" },
+        { at: 380,  side: 0,  kind: "scramble", name: "the 4-chōme crossing" },
+        { at: 880,  side:  1, kind: "ginzasix", name: "Ginza Six" },
+        { at: 1520, side: -1, kind: "kabukiza", name: "Kabuki-za" },
+        { at: 2860, side: -1, kind: "moatgate", name: "the Imperial Palace moat" },
+      ],
+    },
+
+    "Shanghai — The Bund": {
+      hour: 0.90,
+      seed: 50505, script: "cn", drive: "right",
+      sky: ["#5b7f9c", "#9db4c2", "#cfd6d4"],
+      road: "#34363b", pave: "#95948e", kerb: "#b2b0a8", line: "#f0ecdc",
+      lamp: "bund", flag: true,
+      trees: { kind: "planetree", from: 1900, to: 3700, every: 30 },
+      blocks: [
+        { from: 0,    to: 1900, side: -1, kind: "colonial", storeys: 8, shops: false },   // the Bund facades
+        { from: 0,    to: 1900, side:  1, kind: "promenade" },                            // the river, Pudong beyond
+        { from: 1900, to: 3700, side: -1, kind: "nanjing",  storeys: 9, shops: true, vertical: true },
+        { from: 1900, to: 3700, side:  1, kind: "nanjing",  storeys: 8, shops: true, vertical: true },
+      ],
+      shopNames: ["南京路", "百货", "茶楼", "钟表", "书店", "老字号", "银楼", "药房", "点心", "丝绸"],
+      shopNamesAlt: ["NANJING RD", "DEPT STORE", "TEA HOUSE", "WATCHES", "BOOKS", "SILK", "JEWELLERY", "PHARMACY", "DIM SUM", "DEPT"],
+      traffic: [["santana", 0.30], ["ebike", 0.26], ["bus", 0.14], ["van", 0.14], ["suv", 0.16]],
+      peds: { density: 1.1, dogs: 0.06, umbrella: 0.18, tones: ["#1c1f24", "#3a3f48", "#5a4a44", "#2f4a4a"] },
+      marks: [
+        { at: 1180, side: -1, kind: "customs",  name: "the Customs House clock" },
+        { at: 1240, side: -1, kind: "hsbc",     name: "the HSBC dome" },
+        { at: 1840, side: -1, kind: "peace",    name: "the Peace Hotel" },
+        { at: 900,  side:  1, kind: "pudong",   name: "Pudong, across the Huangpu" },
+      ],
+    },
+
+    "The Royal Hotel": {
+      hour: 0.86,
+      seed: 60606, script: "latin", drive: "right",
+      sky: ["#3d4d63", "#6d7b88", "#9aa1a2"],
+      road: "#303237", pave: "#8b8a86", kerb: "#aeaca6", line: "#e8e4d6",
+      lamp: "london", bin: true,
+      trees: { kind: "plane", from: 900, to: 1700, every: 26 },
+      blocks: [
+        { from: 0,    to: 900,  side: -1, kind: "service", storeys: 5 },
+        { from: 0,    to: 900,  side:  1, kind: "service", storeys: 4 },
+        { from: 900,  to: 1700, side: -1, kind: "hotel",   storeys: 9, shops: true },
+        { from: 900,  to: 1700, side:  1, kind: "hotel",   storeys: 8 },
+      ],
+      shopNames: ["CONCIERGE", "BAR", "FLORIST", "RESTAURANT", "SPA", "BOUTIQUE"],
+      traffic: [["saloon", 0.42], ["cab", 0.22], ["van", 0.20], ["suv", 0.16]],
+      peds: { density: 0.5, dogs: 0.06, umbrella: 0.10, tones: ["#191b1f", "#2e2620", "#3a3f48"] },
+      marks: [
+        { at: 1520, side: 0, kind: "portecochere", name: "the porte-cochère" },
+        { at: 1660, side: 0, kind: "carpet",       name: "the carpet" },
+      ],
+    },
+
+    "The White Palace": {
+      hour: 0.30,
+      seed: 70707, script: "latin", drive: "right",
+      sky: ["#7f97ae", "#a9bcc6", "#d5d9d2"],
+      road: "#7c705c", pave: "#6d7a52", kerb: "#8e8468", line: null,    // gravel, no markings
+      lamp: "lantern", gravel: true,
+      trees: { kind: "lime", from: 700, to: 3900, every: 22 },
+      blocks: [
+        { from: 0,    to: 4200, side: -1, kind: "parkland" },
+        { from: 0,    to: 4200, side:  1, kind: "parkland" },
+      ],
+      shopNames: [],
+      traffic: [["saloon", 0.5], ["van", 0.25], ["suv", 0.25]],
+      peds: { density: 0.12, dogs: 0.3, umbrella: 0.02, tones: ["#26303a", "#3b3228"] },
+      marks: [
+        { at: 660,  side: 0, kind: "gatepiers", name: "the outer gate" },
+        { at: 2420, side: 0, kind: "gatepiers", name: "the inner gate" },
+        { at: 4120, side: 0, kind: "whitepalace", name: "the forecourt" },
+      ],
+    },
+  };
+
+  /* Build the street once, from the kit and a fixed seed. Everything comes out with an
+     absolute route distance `at`, so a shop at 1,240 m is at 1,240 m for the whole drive
+     and for every car on the road. */
+  function buildCity() {
+    state.city = null;
+    if (!onJourney()) return;
+    const kit = CITY_KITS[state.route.name];
+    if (!kit) return;
+    const R = cityRand(kit.seed);
+    const L = state.route.totalM || 4000;
+    const props = [];
+
+    // ---- frontages: one building per plot, marching down each block
+    for (const b of kit.blocks) {
+      if (b.kind === "park" || b.kind === "centralpark" || b.kind === "parkland" ||
+          b.kind === "promenade" || b.kind === "moat" || b.kind === "tuileries") {
+        // open ground: railings, and whatever stands beyond
+        for (let d = b.from; d < b.to; d += 9) {
+          props.push({ at: d, side: b.side, t: "rail", kind: b.kind, h: 1.3 });
+        }
+        if (b.kind === "promenade") for (let d = b.from; d < b.to; d += 120)
+          props.push({ at: d, side: b.side, t: "skyline", seed: R() });
+        if (b.kind === "moat") for (let d = b.from; d < b.to; d += 40)
+          props.push({ at: d, side: b.side, t: "moatwall", seed: R() });
+        if (b.kind === "park" || b.kind === "centralpark" || b.kind === "parkland" || b.kind === "tuileries")
+          for (let d = b.from; d < b.to; d += 18)
+            props.push({ at: d, side: b.side, t: "parktree", seed: R() });
+        continue;
+      }
+      if (b.kind === "palacewall") {
+        for (let d = b.from; d < b.to; d += 12) props.push({ at: d, side: b.side, t: "gardenwall" });
+        continue;
+      }
+      // a real frontage: plots of 14-26 m, each its own building
+      let d = b.from;
+      while (d < b.to) {
+        const wM = 14 + R() * 12;
+        const storeys = Math.max(2, Math.round(b.storeys * (0.72 + R() * 0.5)));
+        props.push({
+          at: d + wM / 2, side: b.side, t: "block", kind: b.kind, wM, storeys,
+          seed: R(), arcade: !!b.arcade, vertical: !!b.vertical,
+          shop: b.shops && R() < 0.82,
+          shopName: kit.shopNames.length ? kit.shopNames[Math.floor(R() * kit.shopNames.length)] : "",
+          shopAlt: (kit.shopNamesAlt || kit.shopNames)[Math.floor(R() * ((kit.shopNamesAlt || kit.shopNames).length || 1))] || "",
+          lit: R() < 0.75, awn: R() < 0.4, hue: R(),
+        });
+        d += wM;
+      }
+    }
+
+    // ---- street furniture, both pavements
+    for (let d = 12; d < L; d += 26) {
+      props.push({ at: d, side: -1, t: "lamp", kind: kit.lamp });
+      props.push({ at: d + 13, side: 1, t: "lamp", kind: kit.lamp });
+    }
+    if (kit.bin)      for (let d = 40; d < L; d += 120) props.push({ at: d, side: (d % 240 < 120 ? -1 : 1), t: "bin" });
+    if (kit.hydrant)  for (let d = 70; d < L; d += 150) props.push({ at: d, side: (d % 300 < 150 ? -1 : 1), t: "hydrant" });
+    if (kit.vending)  for (let d = 90; d < L; d += 110) props.push({ at: d, side: (d % 220 < 110 ? -1 : 1), t: "vending" });
+    if (kit.kiosk)    for (let d = 150; d < L; d += 380) props.push({ at: d, side: -1, t: "kiosk" });
+    if (kit.cafe)     for (let d = 260; d < L; d += 300) props.push({ at: d, side: 1, t: "cafe" });
+    if (kit.steam)    for (let d = 200; d < L; d += 430) props.push({ at: d, side: 0, t: "steam" });
+    if (kit.scaffold) for (let d = 520; d < L; d += 900) props.push({ at: d, side: -1, t: "scaffold" });
+    if (kit.flag)     for (let d = 120; d < L; d += 90) props.push({ at: d, side: -1, t: "flag" });
+    if (kit.banner)   for (let d = 160; d < L; d += 140) props.push({ at: d, side: 1, t: "banner", seed: Math.random() });
+    if (kit.trees) for (let d = kit.trees.from; d < kit.trees.to; d += kit.trees.every) {
+      props.push({ at: d, side: -1, t: "tree", kind: kit.trees.kind, seed: R() });
+      props.push({ at: d + kit.trees.every / 2, side: 1, t: "tree", kind: kit.trees.kind, seed: R() });
+    }
+
+    // ---- parked cars along the kerb, in the gaps between junctions
+    const sigAt = (state.route.active && CIRCUITS[state.route.name].signals || []).map(s => s.at);
+    const nearJunction = (d) => sigAt.some(a => Math.abs(a - d) < 34);
+    for (let d = 20; d < L; d += 11 + R() * 8) {
+      if (nearJunction(d) || R() > 0.55) continue;
+      props.push({ at: d, side: R() < 0.5 ? -1 : 1, t: "parked", seed: R() });
+    }
+
+    // ---- the named landmarks, at their real distance
+    for (const m of kit.marks) props.push({ ...m, t: "mark" });
+
+    // ---- CROSSINGS. Every signal is a junction, and a junction has a crossing on it.
+    for (const sg of (CIRCUITS[state.route.name].signals || [])) {
+      props.push({ at: sg.at + 4, side: 0, t: "crossing", sg, scramble: kit.marks.some(m => m.kind === "scramble" && Math.abs(m.at - sg.at) < 40) });
+    }
+
+    // ---- PEOPLE. Density is per kit; they walk the pavement at ~1.35 m/s, and at a
+    // crossing they wait on the kerb until the cars have a red.
+    const peds = [];
+    const n = Math.round(L * 0.17 * kit.peds.density);   // a city is CROWDED — Ginza is one every three metres
+    for (let i = 0; i < n; i++) {
+      const at = R() * L;
+      peds.push({
+        at, side: R() < 0.5 ? -1 : 1, dir: R() < 0.5 ? 1 : -1,
+        v: 1.05 + R() * 0.6, phase: R() * 6.28,
+        tone: kit.peds.tones[Math.floor(R() * kit.peds.tones.length)],
+        hat: R() < 0.25, bag: R() < 0.35,
+        umbrella: R() < kit.peds.umbrella,
+        dog: R() < kit.peds.dogs,
+        cross: null, lateral: 0,          // set when they step off the kerb
+      });
+    }
+
+    state.city = { kit, props, peds, L };
+    // props are drawn far-to-near, so sort once rather than every frame
+    props.sort((a, b) => a.at - b.at);
+  }
+
+  /* People walk. At a crossing they stand on the kerb while the cars have green and step
+     off the moment the cars go red — the same `signalPhase` you and the taxi are reading,
+     so a red light fills the crossing with people and a green one empties it. */
+  function cityStep(dt) {
+    const C = state.city; if (!C) return;
+    const circ = circuitNow(); if (!circ) return;
+    for (const p of C.peds) {
+      // only simulate the ones you could see; the rest just hold position
+      const rel = p.at - state.distanceM;
+      if (rel < -60 || rel > 320) continue;
+      if (p.cross) {
+        // stepping across the road: lateral runs from the kerb to the far kerb
+        p.lateral += p.crossDir * 1.25 * dt;
+        if (Math.abs(p.lateral) > 1) { p.cross = null; p.lateral = 0; p.side = -p.side; }
+        continue;
+      }
+      p.at += p.dir * p.v * dt;
+      // at a crossing, and the cars are stopped? then go.
+      for (const sg of (circ.signals || [])) {
+        if (Math.abs(p.at - (sg.at + 4)) > 2.2) continue;
+        const ph = signalPhase(sg, state.routeTime);
+        if (ph.state === "red" && ph.left > 2.5 && Math.random() < 0.02) {
+          p.cross = sg; p.crossDir = -p.side; p.lateral = 0;
+        }
+      }
+      if (p.at < 0) p.at += C.L;
+      if (p.at > C.L) p.at -= C.L;
+    }
+  }
+
+  /* ===== THE OTHER CARS =====================================================
+     A city street is mostly other traffic, and it is not one shape. Each kit
+     draws from its own mix — Ginza gets Crown taxis, Hiace vans and kei trucks;
+     Park Avenue is yellow cabs and box trucks; The Mall gets black cabs and red
+     double-deckers; Paris runs on scooters. Every one reads the same signal
+     clock you do, so a red light stops the whole street.
+     ========================================================================= */
+  /* Seed the street with traffic. Both directions, spaced the way traffic actually
+     spaces itself — bunched behind the signals and thinner between them. */
+  function seedCityTraffic() {
+    state.traffic = [];
+    const C = state.city; if (!C) return;
+    const kit = C.kit, mix = kit.traffic, L = C.L;
+    const R = cityRand(kit.seed ^ 0x5f3a);
+    const pick = () => { let r = R(), acc = 0; for (const [k, p] of mix) { acc += p; if (r <= acc) return k; } return mix[0][0]; };
+    // your side, and the other side of the road
+    for (let d = 8; d < 380; d += 4 + R() * 8) {
+      state.traffic.push(mkTrafficCar(pick(), d, false, R));
+      state.traffic.push(mkTrafficCar(pick(), d + R() * 7, true, R));
+      if (R() < 0.45) state.traffic.push(mkTrafficCar(pick(), d + 2 + R() * 4, false, R));
+    }
+  }
+  function mkTrafficCar(kind, z, oncoming, R) {
+    const limit = ((CIRCUITS[state.route.name] || {}).limitKmh || 50) / 3.6;
+    return {
+      // `lane` stays -1/0/1 because laneScan() indexes an object with those exact keys;
+      // the fine placement across the carriageway is `sub`, which nothing else reads.
+      kind, z, oncoming, hold: 1,
+      lane: oncoming ? 1 : (R() < 0.6 ? 0 : -1),
+      sub: R() < 0.55 ? 0 : 1,
+      speed: limit * (0.72 + R() * 0.32),
+      hue: Math.floor(R() * 360),
+      tone: 26 + Math.floor(R() * 42),
+      seed: R(),
+    };
+  }
+
+
   function seedWorld() {
-    state.traffic = []; state.scenery = []; state.roadside = [];
+    state.traffic = []; state.scenery = []; state.roadside = []; state.city = null;
     const env = state.route.env;
+    // A JOURNEY builds a real street instead — named buildings, shops, people, parked
+    // cars and traffic, all anchored to absolute route metres. The random-box scenery
+    // below is for the circuits, and a city gets none of it.
+    if (onJourney()) { buildCity(); seedCityTraffic(); return; }
     // no anonymous rectangle traffic anywhere — the only other cars are the rival grid
     const tall = env === "street";
     for (let i = 0; i < 80; i++) state.scenery.push({ side: i % 2 === 0 ? -1 : 1, z: i * 42 + Math.random() * 38, width: 30 + Math.random() * 46, height: tall ? 120 + Math.random() * 260 : env === "nords" ? 120 + Math.random() * 200 : 50 + Math.random() * 120, lit: Math.random() > 0.4, hue: env === "nords" ? 120 + Math.random() * 30 : 20 + Math.random() * 60 });
@@ -1774,6 +2269,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.setActive(k === "spirit" ? "spiritBtn" : k + "Btn", k === "spirit" ? !state.rear.spirit : state.rear[k]);
     showToast(state.rear[k] ? d.on : d.off, "Rear");
     app.updateRearRead();
+    if (app.updateDoorArt) app.updateDoorArt();   // the Spirit and the umbrella are on the car
   }
   function updateRearRead() {
     if (!el.rearStatus) return;
@@ -1794,7 +2290,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // the mascot takes two thirds of a second to go down and the same to come back
     state.spiritY = approach(state.spiritY, state.rear.spirit ? 0 : 1, 0.02, dt);
   }
-  Object.assign(app, { toggleRear, REAR, rearMassKg, onJourney, rearStep, updateRearRead });
+  Object.assign(app, { toggleRear, REAR, rearMassKg, onJourney, rearStep, updateRearRead, buildCity, cityStep, CITY_KITS });
 
   /* WHAT THE PASSENGER FEELS. Two numbers, both from the physics that is already running:
      jerk (how fast the acceleration is changing) and lateral g. A person cannot feel a
@@ -1938,7 +2434,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function isLoop() { return !!(state.route.active && state.route.loop); }
   function followDist() { return clamp(Math.abs(state.speedMps) * 1.4, 20, 70); }
   function nearestLeadVehicle() { let best = null; for (const car of state.traffic) { if (car.oncoming) continue; if (Math.abs(car.lane * 3 - state.laneOffset) > 2.0) continue; if (car.z > 2 && (!best || car.z < best.gapM)) best = { gapM: car.z, vMps: car.speed }; } return best; }
-  function laneScan() { const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } }; for (const car of state.traffic) { if (car.oncoming) continue; const e = r[car.lane]; if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; } } return r; }
+  function laneScan() { const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } }; for (const car of state.traffic) { if (car.oncoming) continue; const e = r[String(clamp(Math.round(car.lane), -1, 1))]; if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; } } return r; }
   function chooseLaneOffset() { const lanes = laneScan(); const cur = clamp(Math.round(state.laneOffset / 3), -1, 1); const follow = followDist(); const spd = Math.abs(state.speedMps); const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5; if (!blocked) { if (cur !== 0 && lanes["0"].gap > follow + 10) return 0; return cur * 3; } let best = cur, bestGap = lanes[cur].gap + 12; for (let l = -1; l <= 1; l++) { if (Math.abs(l - cur) > 1) continue; if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; } } return best * 3; }
 
   const STEERING = { wheelbase: 2.470, frontTrack: 1.594, maxAngle: 0.58 };
@@ -2103,6 +2599,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     signalStep(dt);
     trafficSignalStep(dt);
     rearStep(dt);
+    cityStep(dt);
     chauffeurStep(dt, accel);
     state.distanceM += dsdt * dt;
     state.lateralG = (v * yawRate) / 9.81;
@@ -2213,6 +2710,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       dune:     { road: "#b08a4e", grass: "#d8bd80", far: "#cfa96a", kerb: false, barrier: false },
       canyon:   { road: "#8f7a55", grass: "#9c7a53", far: "#7e6038", kerb: false, barrier: false }
     };
+    // On a journey the kit IS the palette: a pavement, not grass, and the city's own
+    // tarmac. Without this a London street came out with a green verge either side.
+    const kit = app.CITY_KITS[state.route.active ? state.route.name : ""];
+    if (kit) return { env, night, road: kit.road, grass: kit.pave, far: kit.sky[1], kerb: false, barrier: false, city: kit };
     return { env, night, ...(palettes[env] || palettes.track) };
   }
 
@@ -2249,7 +2750,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const w = innerWidth, h = innerHeight; horizonY = h * 0.46; const pal = envColors(); rebuildRoadTable();
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
-    drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawSignals(w, h, pal); drawRivals(w, h, pal);
+    drawSky(w, h, pal);
+    if (state.city) drawCity(w, h, pal, "back"); else drawScenery(w, h, pal);
+    drawRoad(w, h, pal);
+    if (state.city) { drawPavement(w, h, pal); drawCity(w, h, pal, "front"); drawCityTraffic(w, h, pal); }
+    else { drawRoadside(w, h, pal); drawTraffic(w, h, pal); }
+    drawSignals(w, h, pal); drawRivals(w, h, pal);
     drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,90,80,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
     drawMirrors(w, h, pal);
@@ -2260,6 +2766,15 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   function drawSky(w, h, pal) {
     const sky = ctx.createLinearGradient(0, 0, 0, horizonY + 40);
+    if (pal.city) {
+      // each city has its own sky and its own time of day: Ginza and the Bund are night
+      // cities because that is when their signs are the point of them.
+      const s = pal.city.sky;
+      sky.addColorStop(0, s[0]); sky.addColorStop(0.55, s[1]); sky.addColorStop(1, s[2]);
+      ctx.fillStyle = sky; ctx.fillRect(0, 0, w, horizonY + 40);
+      if (pal.night) { ctx.fillStyle = "rgba(255,255,255,0.6)"; for (let i = 0; i < 60; i++) { const sx = (i * 137.5) % w, sy = (i * 53.3) % (horizonY * 0.7); ctx.fillRect(sx, sy, 1.4, 1.4); } }
+      return;
+    }
     if (pal.night) { sky.addColorStop(0, "#05101f"); sky.addColorStop(0.6, "#0a1622"); sky.addColorStop(1, "#0d1a22"); }
     else if (["desert","dune","canyon"].includes(pal.env)) { sky.addColorStop(0, "#5a86ac"); sky.addColorStop(0.5, "#c3b48f"); sky.addColorStop(1, "#e4cf9e"); }
     else { const dusk = state.dayPhase > 0.66; sky.addColorStop(0, dusk ? "#39506e" : "#6ea7cf"); sky.addColorStop(0.55, dusk ? "#9c6f5a" : "#a9c4d4"); sky.addColorStop(1, dusk ? "#caa07e" : "#d3dee0"); }
@@ -2435,6 +2950,869 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      lamps, and a painted stop line on the road at the signal's own distance — so what you
      brake for is a thing you can see rather than a number in the HUD. Drawn before the
      rivals so a car waiting at the line sits in front of its own light. */
+
+  /* ===== drawing the city ===================================================
+     One pass, far to near, so a lamp post in front of a shop covers the shop.
+     Everything is placed by `projectAhead(rel, lateral)` at its own real
+     distance, which is what makes it world-anchored: nothing is drawn relative
+     to the camera, so nothing slides or teleports.
+
+     The pavement edge is at `halfAt(rel) + 0.4`, the building line 8 m beyond
+     that, and heights are in metres and projected — so a 30-storey tower on
+     Park Avenue really does fill the windscreen and a 7-storey Haussmann block
+     really does not.
+     ========================================================================= */
+  const M_PER_STOREY = 3.4;
+  let cityHazeCol = "#b9bfc2";
+  /* AERIAL PERSPECTIVE. Without it a street 300 m long is a flat sheet of cut-outs; with
+     it the far end goes soft and the near end does not, which is the whole reason a real
+     street looks deep. Applied per prop from its own distance. */
+  function cityHaze(rel) {
+    const a = Math.min(0.62, Math.max(0, (rel - 45) / 340));
+    if (a < 0.02) return;
+    ctx.globalAlpha = a; ctx.fillStyle = cityHazeCol;
+  }
+
+  function cityShade(hex, k) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = Math.min(255, Math.max(0, ((n >> 16) & 255) * k)) | 0;
+    const g = Math.min(255, Math.max(0, ((n >> 8) & 255) * k)) | 0;
+    const b = Math.min(255, Math.max(0, (n & 255) * k)) | 0;
+    return `rgb(${r},${g},${b})`;
+  }
+
+  // a wall standing on the pavement: returns the screen quad, or null if off camera
+  function wallQuad(rel, lat, wM, hM) {
+    const a = projectAhead(rel - wM / 2, lat), b = projectAhead(rel + wM / 2, lat);
+    if (a.scale < 0.02 || b.scale < 0.02) return null;
+    return { a, b, ah: hM * a.scale, bh: hM * b.scale };
+  }
+  function fillWall(q, fill) {
+    ctx.fillStyle = fill;
+    ctx.beginPath();
+    ctx.moveTo(q.a.x, q.a.y); ctx.lineTo(q.b.x, q.b.y);
+    ctx.lineTo(q.b.x, q.b.y - q.bh); ctx.lineTo(q.a.x, q.a.y - q.ah);
+    ctx.closePath(); ctx.fill();
+  }
+
+  function drawCity(w, h, pal, phase) {
+    const C = state.city; if (!C) return;
+    const kit = C.kit, night = pal.night;
+    cityHazeCol = kit.sky[night ? 0 : 2];
+    const seen = [];
+    for (const p of C.props) {
+      const rel = p.at - state.distanceM;
+      if (rel < -30 || rel > 340) continue;
+      seen.push(p);
+    }
+    // far to near
+    for (let i = seen.length - 1; i >= 0; i--) {
+      const p = seen[i], rel = p.at - state.distanceM;
+      const half = halfAt(Math.max(2, rel));
+      const kerbLat = (half + 0.4) * p.side;
+      const faceLat = (half + 8) * p.side;
+      if (phase === "back" && !["block", "skyline", "moatwall", "gardenwall", "parktree", "mark", "scaffold"].includes(p.t)) continue;
+      if (phase === "front" && ["block", "skyline", "moatwall", "gardenwall", "parktree", "scaffold"].includes(p.t)) continue;
+      if (phase === "front" && p.t === "mark") continue;
+      ctx.save();
+      switch (p.t) {
+        case "block":     drawBlock(p, rel, faceLat, kit, night); break;
+        case "skyline":   drawSkyline(p, rel, faceLat, kit, night); break;
+        case "moatwall":  drawMoat(p, rel, faceLat, night); break;
+        case "gardenwall":drawGardenWall(p, rel, faceLat, night); break;
+        case "parktree":  drawTree(p, rel, faceLat, "plane", night, 0.8); break;
+        case "mark":      drawLandmark(p, rel, half, kit, night); break;
+        case "rail":      drawRailing(p, rel, kerbLat, night); break;
+        case "lamp":      drawStreetLamp(p, rel, kerbLat, kit.lamp, night); break;
+        case "tree":      drawTree(p, rel, (half + 2.2) * p.side, p.kind, night, 1); break;
+        case "bin":       drawBox(rel, kerbLat, 0.6, 1.0, night ? "#1c2027" : "#2b3038"); break;
+        case "hydrant":   drawBox(rel, kerbLat, 0.35, 0.8, "#b3363a"); break;
+        case "vending":   drawVending(rel, (half + 1.6) * p.side, night); break;
+        case "kiosk":     drawKiosk(rel, (half + 2.6) * p.side, night); break;
+        case "cafe":      drawCafe(rel, (half + 2.4) * p.side, night); break;
+        case "steam":     drawSteam(rel, night); break;
+        case "flag":      drawFlag(rel, (half + 1.4) * p.side, night); break;
+        case "banner":    drawBanner(p, rel, (half + 1.4) * p.side, night); break;
+        case "parked":    drawParked(p, rel, (half - 1.3) * p.side, night); break;
+        case "crossing":  drawCrossing(p, rel, half, kit); break;
+      }
+      ctx.restore();
+      // and then a wash of sky over it, in proportion to how far away it is
+      if (p.t === "block" || p.t === "mark") {
+        const a = Math.min(0.55, Math.max(0, (rel - 40) / 330));
+        if (a > 0.02) {
+          const q = wallQuad(rel, faceLat, (p.wM || 40) + 6, 130);
+          if (q) { ctx.save(); ctx.globalAlpha = a; fillWall(q, cityHazeCol); ctx.restore(); }
+        }
+      }
+    }
+    if (phase === "front") drawPeople(pal);
+  }
+
+  /* ---- a frontage. Storeys are real metres, the ground floor is a shop with a lit
+     window and a fascia sign, and the sign is in the city's own script. */
+  function drawBlock(p, rel, lat, kit, night) {
+    const hM = p.storeys * M_PER_STOREY;
+    const q = wallQuad(rel, lat, p.wM, hM); if (!q) return;
+    const base = kit.blockTone || null;
+    let face = "#8a8378";
+    if (p.kind === "haussmann") face = night ? "#3b3830" : "#cfc4ab";
+    else if (p.kind === "rivoli") face = night ? "#3a382f" : "#c9bfa6";
+    else if (p.kind === "mayfair") face = night ? "#33302c" : "#b3a893";
+    else if (p.kind === "tower" || p.kind === "plaza") face = night ? "#20252d" : "#6f7782";
+    else if (p.kind === "ginza" || p.kind === "marunouchi" || p.kind === "hibiya") face = night ? "#1c2028" : "#7c828c";
+    else if (p.kind === "colonial") face = night ? "#332f28" : "#a89c85";
+    else if (p.kind === "nanjing") face = night ? "#2a2820" : "#9a907c";
+    else if (p.kind === "hotel") face = night ? "#332e26" : "#b6a98e";
+    else if (p.kind === "service") face = night ? "#26272a" : "#6e6d68";
+    // each plot gets its own tone. Without this a block of eight buildings is one slab.
+    const own = 0.86 + p.seed * 0.30;
+    fillWall(q, cityShade(face, own * (p.side < 0 ? 1 : 0.88)));
+    // the party walls, which are what tell you where one building stops and the next starts
+    ctx.strokeStyle = night ? "rgba(0,0,0,0.55)" : "rgba(0,0,0,0.28)";
+    ctx.lineWidth = Math.max(1, 0.9 * q.a.scale * 0.14);
+    ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y); ctx.lineTo(q.a.x, q.a.y - q.ah); ctx.stroke();
+    // a cornice at the top, because almost every real frontage has one
+    quadPatch(q, 0, 1, 1 - (hM - 0.9) / hM, 1 - hM / hM, night ? "rgba(0,0,0,0.5)" : "rgba(0,0,0,0.22)");
+
+    // roofline: a mansard on a Haussmann, a water tower on a New York low block,
+    // a parapet everywhere else
+    const topA = q.a.y - q.ah, topB = q.b.y - q.bh;
+    if (p.kind === "haussmann" || p.kind === "rivoli") {
+      ctx.fillStyle = night ? "#232520" : "#5d6360";                  // zinc
+      const mh = 2.6 * q.a.scale;
+      ctx.beginPath(); ctx.moveTo(q.a.x, topA); ctx.lineTo(q.b.x, topB);
+      ctx.lineTo(q.b.x + (q.a.x - q.b.x) * 0.08, topB - mh); ctx.lineTo(q.a.x + (q.b.x - q.a.x) * 0.08, topA - mh);
+      ctx.closePath(); ctx.fill();
+    } else if ((p.kind === "tower" || p.kind === "plaza") && p.storeys < 20 && p.seed > 0.6) {
+      const wt = 2.4 * q.a.scale, cx = (q.a.x + q.b.x) / 2;
+      ctx.fillStyle = night ? "#1a1d22" : "#4b4238";
+      ctx.fillRect(cx - wt / 2, topA - wt * 1.6, wt, wt * 1.6);
+    }
+
+    // windows: a grid in real metres, so the storeys line up across the street
+    const cols = Math.max(2, Math.round(p.wM / 4));
+    const lit = night || p.kind === "ginza" || p.kind === "nanjing";
+    for (let s = 1; s < p.storeys; s++) {
+      const y0 = 1 - (s * M_PER_STOREY + 1.0) / hM, y1 = 1 - (s * M_PER_STOREY + 2.6) / hM;
+      for (let c = 0; c < cols; c++) {
+        const u0 = (c + 0.28) / cols, u1 = (c + 0.72) / cols;
+        const on = lit && ((s * 7 + c * 13 + Math.floor(p.seed * 100)) % 5 !== 0);
+        ctx.fillStyle = on ? (night ? "rgba(255,226,164,0.72)" : "rgba(150,178,196,0.5)")
+                           : (night ? "rgba(12,16,22,0.85)" : "rgba(48,56,66,0.55)");
+        quadPatch(q, u0, u1, y0, y1);
+      }
+    }
+    // vertical mullions the full height of a tower, which is what a curtain wall is
+    if (p.kind === "tower" || p.kind === "plaza" || p.kind === "marunouchi" || p.kind === "hibiya") {
+      for (let c = 1; c < cols; c++) quadPatch(q, c / cols - 0.006, c / cols + 0.006, 1 - 4.2 / hM, 0, night ? "rgba(8,10,14,0.7)" : "rgba(40,46,54,0.45)");
+    }
+    // wrought-iron balconies on the Haussmann's 2nd and 5th floors, which is the rule
+    if (p.kind === "haussmann") for (const s of [2, 5]) {
+      if (s >= p.storeys) continue;
+      const y = 1 - (s * M_PER_STOREY + 0.9) / hM;
+      ctx.fillStyle = night ? "rgba(20,22,20,0.9)" : "rgba(38,42,38,0.75)";
+      quadPatch(q, 0.06, 0.94, y, y - 0.02);
+    }
+    // an arcade at ground level along the Rue de Rivoli
+    if (p.arcade) {
+      const y0 = 1, y1 = 1 - 4.2 / hM;
+      for (let c = 0; c < cols; c++) quadPatch(q, (c + 0.15) / cols, (c + 0.85) / cols, y0, y1, night ? "rgba(6,8,12,0.9)" : "rgba(30,34,40,0.8)");
+    }
+
+    // ---- the SHOP. A fascia, a sign, a lit window, and sometimes an awning.
+    if (p.shop && q.a.scale > 0.055) {
+      const gh = 4.2;                                   // ground floor, metres
+      const y0 = 1, y1 = 1 - gh / hM;
+      quadPatch(q, 0.04, 0.96, y0, y1, night ? "rgba(255,232,180,0.30)" : "rgba(220,230,236,0.42)");
+      const fy0 = 1 - (gh - 0.9) / hM, fy1 = 1 - gh / hM;
+      quadPatch(q, 0.02, 0.98, fy0, fy1, night ? "rgba(14,18,24,0.92)" : "rgba(32,36,42,0.9)");
+      if (p.awn) quadPatch(q, 0.05, 0.95, 1 - (gh - 1.3) / hM, 1 - (gh - 1.9) / hM, p.hue > 0.5 ? "rgba(140,40,42,0.85)" : "rgba(30,58,46,0.85)");
+      // the sign — vertical in Ginza and on Nanjing Road, on the fascia everywhere else
+      const sc = q.a.scale, cx = (q.a.x + q.b.x) / 2;
+      if (sc > 0.10) {
+        const label = (kit.script === "latin" ? p.shopName : (p.hue > 0.45 ? p.shopName : p.shopAlt)) || p.shopName;
+        if (p.vertical && p.hue > 0.35) {
+          // a vertical illuminated column up the face of the building — Ginza's whole look
+          const bx = q.b.x + (q.a.x - q.b.x) * 0.12, by = q.a.y;
+          const bw = Math.max(4, 1.5 * sc), bh2 = Math.min(q.ah * 0.7, 16 * sc * M_PER_STOREY);
+          ctx.fillStyle = night ? "rgba(255,238,196,0.9)" : "rgba(240,244,248,0.85)";
+          ctx.fillRect(bx - bw / 2, by - bh2, bw, bh2);
+          ctx.fillStyle = p.hue > 0.7 ? "#b3363a" : "#1b3a6b";
+          ctx.fillRect(bx - bw / 2, by - bh2, bw, bh2 * 0.06);
+          if (sc > 0.2 && sc < 6) {
+            ctx.save(); ctx.fillStyle = "#1b1f26"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+            ctx.font = `700 ${Math.max(6, Math.min(30, bw * 0.72))}px ui-sans-serif`;
+            const chars = [...label].slice(0, 5);
+            chars.forEach((ch, k) => ctx.fillText(ch, bx, by - bh2 + bh2 * (0.16 + k * 0.16)));
+            ctx.restore();
+          }
+        } else if (sc > 0.13 && sc < 6) {
+          // the fascia sign is 0.55 m of lettering, and it has to be CLAMPED: a shop two
+          // metres from the camera has a scale in the hundreds, and an unclamped font size
+          // painted the shop's name across the entire windscreen.
+          const px = Math.max(7, Math.min(46, Math.round(0.55 * sc)));
+          ctx.save();
+          ctx.fillStyle = night ? "rgba(248,232,190,0.92)" : "rgba(236,240,244,0.9)";
+          ctx.textAlign = "center"; ctx.textBaseline = "middle";
+          ctx.font = `700 ${px}px ui-sans-serif`;
+          ctx.fillText(label, cx, q.a.y - (gh - 1.35) * sc);
+          ctx.restore();
+        }
+      }
+    }
+  }
+
+  // paint a patch of a wall quad in normalised (u across, v up-from-base) coordinates
+  function quadPatch(q, u0, u1, v0, v1, fill) {
+    const xa = q.a.x + (q.b.x - q.a.x) * u0, xb = q.a.x + (q.b.x - q.a.x) * u1;
+    const ya = q.a.y + (q.b.y - q.a.y) * u0, yb = q.a.y + (q.b.y - q.a.y) * u1;
+    const ha = q.ah + (q.bh - q.ah) * u0, hb = q.ah + (q.bh - q.ah) * u1;
+    if (fill) ctx.fillStyle = fill;
+    ctx.beginPath();
+    ctx.moveTo(xa, ya - ha * (1 - v0)); ctx.lineTo(xb, yb - hb * (1 - v0));
+    ctx.lineTo(xb, yb - hb * (1 - v1)); ctx.lineTo(xa, ya - ha * (1 - v1));
+    ctx.closePath(); ctx.fill();
+  }
+
+  /* ---- Pudong across the Huangpu: a skyline, not a frontage. The three that everybody
+     knows — the Oriental Pearl's spheres, the Jin Mao's steps, the Shanghai Tower's twist. */
+  function drawSkyline(p, rel, lat, kit, night) {
+    const base = projectAhead(Math.max(3, rel), lat * 6); if (base.scale < 0.02) return;
+    const sc = base.scale, x = base.x, y = horizonY;
+    ctx.save();
+    ctx.fillStyle = night ? "#141c28" : "rgba(120,140,158,0.55)";
+    const seedI = Math.floor(p.seed * 1000);
+    for (let i = 0; i < 7; i++) {
+      const bx = x + (i - 3) * 34 * sc * 6, bw = (12 + (seedI * (i + 3)) % 14) * sc * 6;
+      const bh = (60 + (seedI * (i + 7)) % 130) * sc * 6;
+      ctx.fillRect(bx - bw / 2, y - bh, bw, bh);
+    }
+    // the Oriental Pearl: a column with two spheres on it
+    const px = x - 60 * sc * 6, ph2 = 210 * sc * 6;
+    ctx.fillStyle = night ? "#1b2434" : "rgba(150,120,130,0.6)";
+    ctx.fillRect(px - 2 * sc * 6, y - ph2, 4 * sc * 6, ph2);
+    ctx.beginPath(); ctx.arc(px, y - ph2 * 0.52, 9 * sc * 6, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.arc(px, y - ph2 * 0.86, 5 * sc * 6, 0, Math.PI * 2); ctx.fill();
+    ctx.restore();
+  }
+
+  function drawMoat(p, rel, lat, night) {
+    // water, then the great sloped stone wall, then pines on top of it
+    const q = wallQuad(rel, lat, 40, 6.5); if (!q) return;
+    fillWall(q, night ? "#1b2a28" : "#4c5f52");
+    const t = wallQuad(rel, lat, 40, 9.5); if (!t) return;
+    ctx.fillStyle = night ? "#101a16" : "#243a26";
+    for (let k = 0; k < 4; k++) {
+      const cx = q.a.x + (q.b.x - q.a.x) * (0.15 + k * 0.24);
+      const cy = q.a.y - q.ah - 1;
+      const r = 2.6 * q.a.scale;
+      ctx.beginPath(); ctx.ellipse(cx, cy - r, r * 1.5, r, 0, 0, Math.PI * 2); ctx.fill();
+    }
+  }
+  function drawGardenWall(p, rel, lat, night) {
+    const q = wallQuad(rel, lat, 12, 3.4); if (!q) return;
+    fillWall(q, night ? "#2a2620" : "#77695a");
+  }
+  function drawRailing(p, rel, lat, night) {
+    const q = wallQuad(rel, lat, 9, p.h || 1.3); if (!q) return;
+    ctx.strokeStyle = night ? "rgba(10,12,16,0.9)" : "rgba(24,28,32,0.85)";
+    ctx.lineWidth = Math.max(0.8, 1.2 * q.a.scale);
+    ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y - q.ah); ctx.lineTo(q.b.x, q.b.y - q.bh); ctx.stroke();
+    const n = 6;
+    for (let k = 0; k <= n; k++) {
+      const u = k / n, x = q.a.x + (q.b.x - q.a.x) * u, y = q.a.y + (q.b.y - q.a.y) * u;
+      const hh = q.ah + (q.bh - q.ah) * u;
+      ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(x, y - hh); ctx.stroke();
+    }
+  }
+
+  function drawStreetLamp(p, rel, lat, kind, night) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.03) return;
+    const sc = b.scale, hM = kind === "crook" ? 9 : kind === "ginza" ? 7 : 6;
+    const top = b.y - hM * sc;
+    ctx.strokeStyle = night ? "#12161c" : "#2b3038";
+    ctx.lineWidth = Math.max(1, 0.16 * sc * 6);
+    ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.x, top); ctx.stroke();
+    const arm = (kind === "crook" ? 2.4 : kind === "bund" ? 1.4 : 0) * sc;
+    if (arm) { ctx.beginPath(); ctx.moveTo(b.x, top); ctx.quadraticCurveTo(b.x - arm * p.side, top - 0.9 * sc, b.x - arm * p.side * 1.4, top + 0.2 * sc); ctx.stroke(); }
+    const lx = b.x - arm * p.side * 1.4, ly = top + (arm ? 0.2 * sc : 0);
+    const on = night;
+    if (kind === "london" || kind === "lantern") {
+      ctx.fillStyle = on ? "rgba(255,226,160,0.95)" : "rgba(210,214,206,0.6)";
+      ctx.beginPath(); ctx.moveTo(lx - 0.5 * sc, ly); ctx.lineTo(lx + 0.5 * sc, ly);
+      ctx.lineTo(lx + 0.35 * sc, ly + 1.1 * sc); ctx.lineTo(lx - 0.35 * sc, ly + 1.1 * sc); ctx.closePath(); ctx.fill();
+    } else if (kind === "paris") {
+      ctx.fillStyle = on ? "rgba(255,238,190,0.95)" : "rgba(226,228,222,0.6)";
+      for (const dx of [-0.9, 0.9]) { ctx.beginPath(); ctx.arc(lx + dx * sc, ly + 0.3 * sc, 0.45 * sc, 0, Math.PI * 2); ctx.fill(); }
+    } else {
+      ctx.fillStyle = on ? "rgba(232,242,255,0.95)" : "rgba(214,220,226,0.6)";
+      ctx.fillRect(lx - 0.7 * sc, ly, 1.4 * sc, 0.4 * sc);
+    }
+        // the glow is a 4 m pool of light, and it has to be CAPPED: unclamped it becomes a
+    // 240 px grey disc floating over the street as soon as the lamp is close.
+    if (on && sc > 0.1) { ctx.save(); ctx.globalAlpha = 0.16; ctx.fillStyle = "#ffe6a8"; ctx.beginPath(); ctx.arc(lx, ly + 0.4 * sc, Math.min(70, 4 * sc), 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+  }
+
+  function drawTree(p, rel, lat, kind, night, k) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.03) return;
+    const sc = b.scale, hM = (kind === "lime" ? 11 : kind === "ginkgo" ? 8 : 10) * (k || 1);
+    ctx.strokeStyle = night ? "#181a16" : "#4a4034";
+    ctx.lineWidth = Math.max(1, 0.4 * sc);
+    ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.x, b.y - hM * 0.45 * sc); ctx.stroke();
+    const cy = b.y - hM * 0.72 * sc, r = hM * 0.34 * sc;
+    ctx.fillStyle = kind === "ginkgo" ? (night ? "#2c2c14" : "#9aa03a")
+                  : kind === "lime"   ? (night ? "#16240f" : "#4d6b34")
+                  :                     (night ? "#15211a" : "#3f5c39");
+    ctx.beginPath(); ctx.ellipse(b.x, cy, r * 1.15, r, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(b.x - r * 0.5, cy + r * 0.4, r * 0.7, r * 0.6, 0, 0, Math.PI * 2); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(b.x + r * 0.55, cy + r * 0.3, r * 0.65, r * 0.55, 0, 0, Math.PI * 2); ctx.fill();
+  }
+
+  function drawBox(rel, lat, wM, hM, fill) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.04) return;
+    const sc = b.scale;
+    ctx.fillStyle = fill;
+    ctx.fillRect(b.x - wM * sc / 2, b.y - hM * sc, wM * sc, hM * sc);
+  }
+  function drawVending(rel, lat, night) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.05) return;
+    const sc = b.scale, wM = 1.1, hM = 1.9;
+    ctx.fillStyle = night ? "#0f1319" : "#2a2f36";
+    ctx.fillRect(b.x - wM * sc / 2, b.y - hM * sc, wM * sc, hM * sc);
+    // the lit front, which at night is the brightest thing on a Tokyo pavement
+    ctx.fillStyle = night ? "rgba(255,244,208,0.92)" : "rgba(226,236,244,0.8)";
+    ctx.fillRect(b.x - wM * sc * 0.4, b.y - hM * sc * 0.92, wM * sc * 0.8, hM * sc * 0.6);
+    ctx.fillStyle = "#c0272d"; ctx.fillRect(b.x - wM * sc * 0.4, b.y - hM * sc * 0.94, wM * sc * 0.8, hM * sc * 0.09);
+  }
+  function drawKiosk(rel, lat, night) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.05) return;
+    const sc = b.scale;
+    ctx.fillStyle = night ? "#10261f" : "#1e4a3a";
+    ctx.fillRect(b.x - 1.4 * sc, b.y - 3.2 * sc, 2.8 * sc, 3.2 * sc);
+    ctx.fillStyle = night ? "rgba(255,232,170,0.8)" : "rgba(230,236,240,0.75)";
+    ctx.fillRect(b.x - 1.0 * sc, b.y - 2.6 * sc, 2.0 * sc, 1.2 * sc);
+    ctx.fillStyle = "#0d2b22";
+    ctx.beginPath(); ctx.moveTo(b.x - 1.9 * sc, b.y - 3.2 * sc); ctx.lineTo(b.x + 1.9 * sc, b.y - 3.2 * sc); ctx.lineTo(b.x, b.y - 4.3 * sc); ctx.closePath(); ctx.fill();
+  }
+  function drawCafe(rel, lat, night) {
+    // pavement tables under an awning, which is most of what a Paris pavement is
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.05) return;
+    const sc = b.scale;
+    ctx.fillStyle = night ? "rgba(120,30,34,0.9)" : "rgba(158,44,48,0.9)";
+    ctx.fillRect(b.x - 3.2 * sc, b.y - 3.0 * sc, 6.4 * sc, 0.5 * sc);
+    for (let k = -1; k <= 1; k++) {
+      const tx = b.x + k * 1.8 * sc;
+      ctx.fillStyle = night ? "#2a2620" : "#6b6153";
+      ctx.fillRect(tx - 0.35 * sc, b.y - 0.8 * sc, 0.7 * sc, 0.12 * sc);
+      ctx.fillRect(tx - 0.05 * sc, b.y - 0.8 * sc, 0.1 * sc, 0.8 * sc);
+    }
+  }
+  function drawSteam(rel, night) {
+    const b = projectAhead(Math.max(3, rel), -2.2); if (b.scale < 0.05) return;
+    const sc = b.scale, t = state.time;
+    ctx.save(); ctx.globalAlpha = 0.22;
+    ctx.fillStyle = night ? "#c8d2dc" : "#e6ecf0";
+    for (let k = 0; k < 4; k++) {
+      const yy = b.y - (0.6 + k * 1.1 + (t * 0.5 % 1.1)) * sc;
+      ctx.beginPath(); ctx.ellipse(b.x + Math.sin(t + k) * 0.4 * sc, yy, (0.7 + k * 0.35) * sc, (0.4 + k * 0.2) * sc, 0, 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.restore();
+  }
+  function drawFlag(rel, lat, night) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.05) return;
+    const sc = b.scale, t = state.time;
+    ctx.strokeStyle = night ? "#20252b" : "#3a4048"; ctx.lineWidth = Math.max(1, 0.12 * sc);
+    ctx.beginPath(); ctx.moveTo(b.x, b.y - 5 * sc); ctx.lineTo(b.x, b.y - 8.4 * sc); ctx.stroke();
+    ctx.fillStyle = "#c8102e";
+    ctx.beginPath(); ctx.moveTo(b.x, b.y - 8.4 * sc);
+    ctx.quadraticCurveTo(b.x + 1.2 * sc, b.y - 8.4 * sc + Math.sin(t * 3) * 0.3 * sc, b.x + 2.2 * sc, b.y - 8.1 * sc);
+    ctx.lineTo(b.x + 2.2 * sc, b.y - 7.0 * sc);
+    ctx.quadraticCurveTo(b.x + 1.2 * sc, b.y - 7.3 * sc + Math.sin(t * 3) * 0.3 * sc, b.x, b.y - 7.3 * sc);
+    ctx.closePath(); ctx.fill();
+  }
+  function drawBanner(p, rel, lat, night) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.06) return;
+    const sc = b.scale;
+    ctx.fillStyle = p.seed > 0.5 ? "rgba(200,40,50,0.9)" : "rgba(20,60,140,0.9)";
+    ctx.fillRect(b.x - 0.25 * sc, b.y - 6.4 * sc, 0.5 * sc, 2.6 * sc);
+  }
+  function drawScaffoldProp(rel, lat, night) {
+    const q = wallQuad(rel, lat, 22, 4.4); if (!q) return;
+    fillWall(q, night ? "rgba(30,34,20,0.9)" : "rgba(120,110,60,0.85)");
+  }
+
+  /* ---- parked cars, which is what a kerb actually looks like */
+  function drawParked(p, rel, lat, night) {
+    const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.05) return;
+    const sc = b.scale, L = 4.5, W = 1.85, H = 1.45;
+    const hue = Math.floor(p.seed * 360);
+    ctx.save(); ctx.translate(b.x, b.y);
+    ctx.fillStyle = `hsl(${hue},${night ? 12 : 22}%,${night ? 16 : 40}%)`;
+    ctx.beginPath(); ctx.roundRect(-W * sc / 2, -H * sc, W * sc, H * sc * 0.72, Math.min(W * sc * 0.16, 0.18 * sc)); ctx.fill();
+    // a windscreen, so it reads as a car rather than a lozenge
+    ctx.fillStyle = night ? "rgba(70,90,110,0.4)" : "rgba(170,192,208,0.55)";
+    ctx.fillStyle = night ? "rgba(90,110,130,0.35)" : "rgba(170,192,208,0.6)";
+    ctx.fillRect(-W * sc * 0.32, -H * sc * 0.98, W * sc * 0.64, H * sc * 0.3);
+    ctx.restore();
+  }
+
+  /* ---- THE CROSSING. Painted on the road at the signal, and a scramble crossing
+     (Ginza 4-chōme) gets its diagonals as well, because that is the whole point of one. */
+  function drawCrossing(p, rel, half, kit) {
+    if (rel < -8 || rel > 130) return;
+    const bars = 9;
+    ctx.fillStyle = "rgba(238,240,236,0.72)";
+    for (let k = 0; k < bars; k++) {
+      const u0 = -half + (2 * half) * (k / bars) + 0.25;
+      const u1 = u0 + (2 * half / bars) * 0.55;
+      const a = projectAhead(Math.max(1.2, rel - 1.6), u0), b = projectAhead(Math.max(1.2, rel - 1.6), u1);
+      const c = projectAhead(Math.max(1.2, rel + 1.6), u1), d = projectAhead(Math.max(1.2, rel + 1.6), u0);
+      if (a.scale < 0.03 || c.scale < 0.03) continue;
+      ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.lineTo(c.x, c.y); ctx.lineTo(d.x, d.y); ctx.closePath(); ctx.fill();
+    }
+  }
+
+  /* ---- PEOPLE. Every one is a real body — legs that alternate as they walk, an arm,
+     a head — because a city with rectangles in it is not a city. They stand on the
+     pavement, they wait at the kerb, and they cross when the cars are stopped. */
+  function drawPeople(pal) {
+    const C = state.city; if (!C) return;
+    const night = pal.night;
+    const list = C.peds.filter(p => {
+      const rel = p.at - state.distanceM; return rel > -6 && rel < 190;
+    }).sort((a, b) => (b.at - state.distanceM) - (a.at - state.distanceM));
+    for (const p of list) {
+      const rel = p.at - state.distanceM;
+      const half = halfAt(Math.max(2, rel));
+      const lat = p.cross ? (half + 1.2) * p.side * (1 - Math.abs(p.lateral)) * (p.lateral === 0 ? 1 : 1) - (p.lateral * half * p.side * -1)
+                          : (half + 1.0 + ((p.phase * 7) % 2) * 0.9) * p.side;
+      const b = projectAhead(Math.max(1.5, rel), p.cross ? (half + 1.2) * p.side + p.lateral * -(half + 1.2) * p.side * 2 : lat);
+      // NOT `scale > 9`: FOCAL is 360, so a scale of 9 is FORTY METRES away. That test
+      // deleted every pedestrian closer than the far side of the junction and left the
+      // pavements empty exactly where you can see them. `projectRoad` already drops
+      // anything behind the camera; nothing else needs a ceiling.
+      if (b.scale < 0.05) continue;
+      const sc = b.scale, hM = 1.72, t = state.time * 2.4 + p.phase;
+      const walking = !!p.cross || true;
+      const swing = Math.sin(t) * 0.22;
+      ctx.save(); ctx.translate(b.x, b.y);
+      // legs
+      ctx.strokeStyle = night ? "#12151a" : "#23272e";
+      ctx.lineWidth = Math.max(0.9, 0.13 * sc);
+      ctx.beginPath(); ctx.moveTo(0, -hM * 0.48 * sc); ctx.lineTo(swing * sc, 0); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, -hM * 0.48 * sc); ctx.lineTo(-swing * sc, 0); ctx.stroke();
+      // body
+      ctx.fillStyle = p.tone;
+      ctx.beginPath();
+      ctx.roundRect(-0.20 * sc, -hM * 0.88 * sc, 0.40 * sc, hM * 0.42 * sc, 0.1 * sc);
+      ctx.fill();
+      // arm
+      ctx.strokeStyle = p.tone; ctx.lineWidth = Math.max(0.8, 0.1 * sc);
+      ctx.beginPath(); ctx.moveTo(0.16 * sc, -hM * 0.82 * sc); ctx.lineTo(0.16 * sc - swing * 0.7 * sc, -hM * 0.52 * sc); ctx.stroke();
+      // head
+      ctx.fillStyle = night ? "#8a7a68" : "#c2a487";
+      ctx.beginPath(); ctx.arc(0, -hM * 0.95 * sc, 0.115 * sc, 0, Math.PI * 2); ctx.fill();
+      if (p.hat) { ctx.fillStyle = "#1b1f26"; ctx.fillRect(-0.15 * sc, -hM * 1.02 * sc, 0.30 * sc, 0.07 * sc); }
+      if (p.bag) { ctx.fillStyle = "#5a4632"; ctx.fillRect(0.16 * sc, -hM * 0.62 * sc, 0.14 * sc, 0.18 * sc); }
+      if (p.umbrella) {
+        ctx.fillStyle = night ? "#1a1e26" : "#2c3038";
+        ctx.beginPath(); ctx.ellipse(0, -hM * 1.16 * sc, 0.5 * sc, 0.16 * sc, 0, Math.PI, 0); ctx.fill();
+        ctx.strokeStyle = "#2c3038"; ctx.lineWidth = Math.max(0.6, 0.05 * sc);
+        ctx.beginPath(); ctx.moveTo(0, -hM * 1.16 * sc); ctx.lineTo(0, -hM * 0.78 * sc); ctx.stroke();
+      }
+      if (p.dog) {
+        // a dog, on a lead, half a metre behind
+        const dx = -0.55 * sc * p.dir;
+        ctx.strokeStyle = "rgba(180,180,180,0.5)"; ctx.lineWidth = Math.max(0.5, 0.04 * sc);
+        ctx.beginPath(); ctx.moveTo(0.16 * sc, -hM * 0.55 * sc); ctx.lineTo(dx, -0.32 * sc); ctx.stroke();
+        ctx.fillStyle = night ? "#3a3128" : "#6b5a44";
+        ctx.beginPath(); ctx.roundRect(dx - 0.16 * sc, -0.36 * sc, 0.32 * sc, 0.17 * sc, 0.06 * sc); ctx.fill();
+        ctx.beginPath(); ctx.arc(dx - 0.18 * sc, -0.40 * sc, 0.08 * sc, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = ctx.fillStyle; ctx.lineWidth = Math.max(0.5, 0.045 * sc);
+        ctx.beginPath(); ctx.moveTo(dx - 0.1 * sc, -0.2 * sc); ctx.lineTo(dx - 0.1 * sc, 0); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(dx + 0.1 * sc, -0.2 * sc); ctx.lineTo(dx + 0.1 * sc, 0); ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  /* ===== THE LANDMARKS ======================================================
+     The named things, each drawn as itself and each standing at the metre it
+     really stands at. This is the part that makes a route a PLACE rather than
+     a corridor: you know you are on The Mall because Wellington Arch goes past
+     at 1,560 m and the Victoria Memorial is in front of you at 3,300.
+     ========================================================================= */
+  function drawLandmark(p, rel, half, kit, night) {
+    const lat = p.side === 0 ? 0 : (half + 12) * p.side;
+    const b = projectAhead(Math.max(2.5, rel), lat);
+    if (b.scale < 0.02 || b.scale > 12) return;
+    const sc = b.scale, x = b.x, y = b.y;
+    const stone = night ? "#3a3830" : "#cdc4ad";
+    const dark  = night ? "#22242a" : "#59606a";
+    ctx.save();
+
+    const box = (cx, wM, hM, fill) => { ctx.fillStyle = fill; ctx.fillRect(x + cx * sc - wM * sc / 2, y - hM * sc, wM * sc, hM * sc); };
+    /* No caption. An earlier pass printed the landmark's name over it and it read as a
+       ghost of text floating in the middle of the street — you know the Customs House by
+       its clock tower and Buckingham Palace by its balcony, which is the whole point of
+       drawing them properly. The junction names are in the cluster where they belong. */
+    const label = () => {};
+
+    switch (p.kind) {
+      case "arch": {                       // Wellington Arch: a quadriga on a triumphal arch
+        box(0, 24, 20, stone);
+        ctx.fillStyle = night ? "#0b0e12" : "#3d4048";
+        ctx.fillRect(x - 5 * sc, y - 13 * sc, 10 * sc, 13 * sc);           // the opening
+        ctx.beginPath(); ctx.ellipse(x, y - 13 * sc, 5 * sc, 4 * sc, 0, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = night ? "#2a2a20" : "#4b4636";                     // the bronze quadriga
+        ctx.fillRect(x - 5 * sc, y - 23.5 * sc, 10 * sc, 3.5 * sc);
+        for (let k = 0; k < 4; k++) ctx.fillRect(x + (k - 1.7) * 2.2 * sc, y - 26 * sc, 1.4 * sc, 2.6 * sc);
+        label("WELLINGTON ARCH", 26);
+        break;
+      }
+      case "apsley":  box(0, 30, 16, stone); label("APSLEY HOUSE", 16); break;
+      case "gate": {                       // a park gate: two piers and ironwork
+        box(-3, 1.6, 5, stone); box(3, 1.6, 5, stone);
+        ctx.strokeStyle = night ? "#0d1014" : "#22262c"; ctx.lineWidth = Math.max(1, 0.12 * sc);
+        for (let k = -2; k <= 2; k++) { ctx.beginPath(); ctx.moveTo(x + k * 1.1 * sc, y); ctx.lineTo(x + k * 1.1 * sc, y - 3.8 * sc); ctx.stroke(); }
+        break;
+      }
+      case "memorial": {                   // the Victoria Memorial: a stepped white pile with gold on top
+        ctx.fillStyle = night ? "#4a4740" : "#e6e0cf";
+        ctx.beginPath(); ctx.moveTo(x - 14 * sc, y); ctx.lineTo(x + 14 * sc, y); ctx.lineTo(x + 9 * sc, y - 4 * sc); ctx.lineTo(x - 9 * sc, y - 4 * sc); ctx.closePath(); ctx.fill();
+        box(0, 8, 13, night ? "#4a4740" : "#e6e0cf");
+        ctx.fillStyle = night ? "#8a7434" : "#d9b76a";                     // Winged Victory, gilded
+        ctx.beginPath(); ctx.arc(x, y - 15 * sc, 1.6 * sc, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x, y - 16 * sc); ctx.lineTo(x - 3.4 * sc, y - 19 * sc); ctx.lineTo(x, y - 17.6 * sc);
+        ctx.lineTo(x + 3.4 * sc, y - 19 * sc); ctx.closePath(); ctx.fill();
+        label("VICTORIA MEMORIAL", 20);
+        break;
+      }
+      case "palace": {                     // Buckingham Palace: the East Front, and the balcony
+        box(0, 66, 19, stone);
+        ctx.fillStyle = night ? "#20222a" : "#4d5158";                     // the roofline balustrade
+        ctx.fillRect(x - 33 * sc, y - 20.4 * sc, 66 * sc, 1.4 * sc);
+        for (let k = -8; k <= 8; k++) {                                    // the windows, three ranks
+          for (let r = 0; r < 3; r++) {
+            ctx.fillStyle = night ? "rgba(255,226,164,0.5)" : "rgba(50,58,68,0.55)";
+            ctx.fillRect(x + k * 3.6 * sc - 0.7 * sc, y - (5 + r * 5) * sc, 1.4 * sc, 2.6 * sc);
+          }
+        }
+        ctx.fillStyle = night ? "#2c2a22" : "#8d8672";                     // the centre bay and the balcony
+        ctx.fillRect(x - 6 * sc, y - 21.6 * sc, 12 * sc, 21.6 * sc);
+        ctx.fillStyle = night ? "#4a4436" : "#b8ab8c";
+        ctx.fillRect(x - 4 * sc, y - 11 * sc, 8 * sc, 0.9 * sc);
+        ctx.fillStyle = "#c8102e";                                          // the Royal Standard
+        ctx.fillRect(x - 0.2 * sc, y - 26 * sc, 0.4 * sc, 4.4 * sc);
+        ctx.fillRect(x + 0.2 * sc, y - 26 * sc, 3.2 * sc, 1.9 * sc);
+        label("BUCKINGHAM PALACE", 27);
+        break;
+      }
+      case "arcdet": {                     // the Arc de Triomphe, behind you off the Étoile
+        box(0, 34, 30, stone);
+        ctx.fillStyle = night ? "#0b0e12" : "#3d4048";
+        ctx.fillRect(x - 7 * sc, y - 19 * sc, 14 * sc, 19 * sc);
+        ctx.beginPath(); ctx.ellipse(x, y - 19 * sc, 7 * sc, 6 * sc, 0, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = night ? "#2f2d26" : "#b3a98f";
+        ctx.fillRect(x - 17 * sc, y - 31.6 * sc, 34 * sc, 1.6 * sc);
+        label("ARC DE TRIOMPHE", 33);
+        break;
+      }
+      case "rondpoint": {                  // the Rond-Point fountains
+        for (const dx of [-9, 9]) {
+          ctx.fillStyle = night ? "#1d2a30" : "#5c7d86";
+          ctx.beginPath(); ctx.ellipse(x + dx * sc, y, 3.4 * sc, 1.1 * sc, 0, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = "rgba(210,232,240,0.55)";
+          ctx.fillRect(x + dx * sc - 0.2 * sc, y - 3.4 * sc, 0.4 * sc, 3.4 * sc);
+        }
+        break;
+      }
+      case "obelisk": {                    // the Luxor obelisk on the Concorde, gold pyramidion
+        ctx.fillStyle = night ? "#4a4230" : "#c9ac72";
+        ctx.beginPath(); ctx.moveTo(x - 1.2 * sc, y); ctx.lineTo(x + 1.2 * sc, y);
+        ctx.lineTo(x + 0.7 * sc, y - 21 * sc); ctx.lineTo(x - 0.7 * sc, y - 21 * sc); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = night ? "#8a7434" : "#e0c07a";
+        ctx.beginPath(); ctx.moveTo(x - 0.7 * sc, y - 21 * sc); ctx.lineTo(x + 0.7 * sc, y - 21 * sc); ctx.lineTo(x, y - 23.4 * sc); ctx.closePath(); ctx.fill();
+        label("PLACE DE LA CONCORDE", 25);
+        break;
+      }
+      case "column": {                     // the Vendôme column, bronze, Napoleon on top
+        ctx.fillStyle = night ? "#2c2f28" : "#5f6455";
+        ctx.fillRect(x - 1.6 * sc, y - 42 * sc, 3.2 * sc, 42 * sc);
+        ctx.fillStyle = night ? "#3a3e34" : "#767c68";
+        for (let k = 0; k < 9; k++) ctx.fillRect(x - 1.8 * sc, y - (4 + k * 4.4) * sc, 3.6 * sc, 0.5 * sc);
+        ctx.fillStyle = night ? "#4a4436" : "#8a8a72";
+        ctx.fillRect(x - 0.6 * sc, y - 45 * sc, 1.2 * sc, 3 * sc);
+        label("PLACE VENDÔME", 46);
+        break;
+      }
+      case "helmsley": {                   // the Helmsley Building: you drive UNDER it, twice
+        box(0, 46, 52, night ? "#282c33" : "#8f8570");
+        ctx.fillStyle = night ? "#0a0d12" : "#33383f";
+        ctx.fillRect(x - 8 * sc, y - 15 * sc, 16 * sc, 15 * sc);
+        ctx.beginPath(); ctx.ellipse(x, y - 15 * sc, 8 * sc, 5 * sc, 0, Math.PI, 0); ctx.fill();
+        ctx.fillStyle = night ? "#8a7434" : "#c8a457";                     // the gilded pyramid roof
+        ctx.beginPath(); ctx.moveTo(x - 9 * sc, y - 52 * sc); ctx.lineTo(x + 9 * sc, y - 52 * sc); ctx.lineTo(x, y - 62 * sc); ctx.closePath(); ctx.fill();
+        label("THE HELMSLEY BUILDING", 63);
+        break;
+      }
+      case "seagram": {                    // bronze and dark glass, set back behind its plaza
+        box(0, 30, 100, night ? "#1d1a16" : "#4a3f2c");
+        for (let r = 0; r < 24; r++) { ctx.fillStyle = night ? "rgba(255,214,150,0.28)" : "rgba(60,52,38,0.6)"; ctx.fillRect(x - 14 * sc, y - (6 + r * 3.9) * sc, 28 * sc, 1.5 * sc); }
+        label("SEAGRAM BUILDING", 101);
+        break;
+      }
+      case "lever": {                      // Lever House: blue-green glass, floating on its podium
+        box(0, 22, 80, night ? "#16262c" : "#5d8a92");
+        box(0, 40, 8, night ? "#16262c" : "#5d8a92");
+        label("LEVER HOUSE", 81);
+        break;
+      }
+      case "plazahotel": {                 // the Plaza: a French château on Grand Army Plaza
+        box(0, 44, 60, night ? "#33302a" : "#c3b7a0");
+        ctx.fillStyle = night ? "#1a2226" : "#4e6068";                     // the green copper mansard
+        ctx.beginPath(); ctx.moveTo(x - 22 * sc, y - 60 * sc); ctx.lineTo(x + 22 * sc, y - 60 * sc);
+        ctx.lineTo(x + 16 * sc, y - 72 * sc); ctx.lineTo(x - 16 * sc, y - 72 * sc); ctx.closePath(); ctx.fill();
+        for (let k = -3; k <= 3; k++) { ctx.fillStyle = night ? "rgba(255,226,164,0.6)" : "rgba(48,56,66,0.5)"; ctx.fillRect(x + k * 5 * sc - 1 * sc, y - 68 * sc, 2 * sc, 3 * sc); }
+        label("THE PLAZA", 74);
+        break;
+      }
+      case "wako": {                       // Wako, Ginza 4-chōme: the clock tower on the corner
+        box(0, 26, 24, night ? "#2b2a26" : "#9d9483");
+        box(0, 7, 33, night ? "#2b2a26" : "#9d9483");                      // the tower
+        ctx.fillStyle = night ? "#e8dcc0" : "#f0e8d4";                     // the clock face
+        ctx.beginPath(); ctx.arc(x, y - 30 * sc, 2.6 * sc, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#1b1f26"; ctx.lineWidth = Math.max(0.8, 0.16 * sc);
+        const hh = (new Date().getHours() % 12) / 12 * 6.28, mm = new Date().getMinutes() / 60 * 6.28;
+        ctx.beginPath(); ctx.moveTo(x, y - 30 * sc); ctx.lineTo(x + Math.sin(hh) * 1.3 * sc, y - 30 * sc - Math.cos(hh) * 1.3 * sc); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(x, y - 30 * sc); ctx.lineTo(x + Math.sin(mm) * 2.0 * sc, y - 30 * sc - Math.cos(mm) * 2.0 * sc); ctx.stroke();
+        ctx.fillStyle = night ? "#3a3a36" : "#6e6a5e";
+        ctx.beginPath(); ctx.moveTo(x - 4 * sc, y - 33 * sc); ctx.lineTo(x + 4 * sc, y - 33 * sc); ctx.lineTo(x, y - 37 * sc); ctx.closePath(); ctx.fill();
+        label("WAKO · GINZA 4-CHŌME", 38);
+        break;
+      }
+      case "scramble": {                   // the 4-chōme scramble: the diagonals, which is the point
+        ctx.strokeStyle = "rgba(238,240,236,0.6)"; ctx.lineWidth = Math.max(1.2, 5 * sc);
+        for (const s of [-1, 1]) {
+          const a = projectAhead(Math.max(1.5, rel - 8), -half * s), c = projectAhead(Math.max(1.5, rel + 8), half * s);
+          if (a.scale < 0.03 || c.scale < 0.03) continue;
+          ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(c.x, c.y); ctx.stroke();
+        }
+        break;
+      }
+      case "ginzasix": {                   // a long louvred facade with the big awnings under it
+        box(0, 56, 40, night ? "#22242a" : "#726d63");
+        for (let r = 0; r < 9; r++) { ctx.fillStyle = night ? "rgba(230,214,180,0.22)" : "rgba(220,214,200,0.5)"; ctx.fillRect(x - 27 * sc, y - (6 + r * 3.8) * sc, 54 * sc, 1.1 * sc); }
+        label("GINZA SIX", 41);
+        break;
+      }
+      case "kabukiza": {                   // the Kabuki-za: a tiled gable roof, lanterns under it
+        box(0, 40, 14, night ? "#2b211c" : "#8a6a52");
+        ctx.fillStyle = night ? "#1a1410" : "#4a3a2c";
+        ctx.beginPath(); ctx.moveTo(x - 24 * sc, y - 14 * sc); ctx.lineTo(x + 24 * sc, y - 14 * sc);
+        ctx.lineTo(x + 14 * sc, y - 22 * sc); ctx.lineTo(x - 14 * sc, y - 22 * sc); ctx.closePath(); ctx.fill();
+        ctx.beginPath(); ctx.moveTo(x - 10 * sc, y - 22 * sc); ctx.lineTo(x + 10 * sc, y - 22 * sc); ctx.lineTo(x, y - 28 * sc); ctx.closePath(); ctx.fill();
+        for (let k = -4; k <= 4; k++) {    // the red-and-white lanterns
+          ctx.fillStyle = k % 2 ? "#d8d2c4" : "#c0272d";
+          ctx.beginPath(); ctx.ellipse(x + k * 4 * sc, y - 11 * sc, 0.8 * sc, 1.4 * sc, 0, 0, Math.PI * 2); ctx.fill();
+        }
+        label("KABUKI-ZA", 29);
+        break;
+      }
+      case "moatgate": {                   // the moat, the sloped stone wall, and a corner turret
+        ctx.fillStyle = night ? "#12211f" : "#3f5a4c";
+        ctx.fillRect(x - 30 * sc, y - 1.4 * sc, 60 * sc, 1.4 * sc);
+        ctx.fillStyle = night ? "#2a2b26" : "#736e5e";
+        ctx.beginPath(); ctx.moveTo(x - 26 * sc, y - 1.4 * sc); ctx.lineTo(x + 26 * sc, y - 1.4 * sc);
+        ctx.lineTo(x + 20 * sc, y - 9 * sc); ctx.lineTo(x - 20 * sc, y - 9 * sc); ctx.closePath(); ctx.fill();
+        ctx.fillStyle = night ? "#e6e0d0" : "#f2ecdc";                     // the white turret on the corner
+        ctx.fillRect(x - 3 * sc, y - 16 * sc, 6 * sc, 7 * sc);
+        ctx.fillStyle = night ? "#1a1410" : "#3a3028";
+        ctx.beginPath(); ctx.moveTo(x - 4.4 * sc, y - 16 * sc); ctx.lineTo(x + 4.4 * sc, y - 16 * sc); ctx.lineTo(x, y - 20 * sc); ctx.closePath(); ctx.fill();
+        label("THE IMPERIAL PALACE", 21);
+        break;
+      }
+      case "customs": {                    // the Customs House: a colonnade and the clock tower
+        box(0, 40, 26, night ? "#33302a" : "#b0a78f");
+        for (let k = -4; k <= 4; k++) box(k * 4, 1.6, 14, night ? "#3d3a32" : "#c6bda4");
+        box(0, 11, 46, night ? "#33302a" : "#b0a78f");
+        ctx.fillStyle = "#e8e0c8"; ctx.beginPath(); ctx.arc(x, y - 40 * sc, 3.2 * sc, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#1b1f26"; ctx.lineWidth = Math.max(0.8, 0.18 * sc);
+        ctx.beginPath(); ctx.moveTo(x, y - 40 * sc); ctx.lineTo(x, y - 42.4 * sc); ctx.stroke();
+        ctx.fillStyle = night ? "#3a3a36" : "#6e6a5e";
+        ctx.beginPath(); ctx.moveTo(x - 6 * sc, y - 46 * sc); ctx.lineTo(x + 6 * sc, y - 46 * sc); ctx.lineTo(x, y - 53 * sc); ctx.closePath(); ctx.fill();
+        label("THE CUSTOMS HOUSE", 54);
+        break;
+      }
+      case "hsbc": {                       // the HSBC building: a dome on a granite block
+        box(0, 44, 24, night ? "#2e2c26" : "#a49b84");
+        ctx.fillStyle = night ? "#33352e" : "#8d8672";
+        ctx.beginPath(); ctx.ellipse(x, y - 24 * sc, 9 * sc, 9 * sc, 0, Math.PI, 0); ctx.fill();
+        label("THE HSBC DOME", 34);
+        break;
+      }
+      case "peace": {                      // the Peace Hotel: the green copper pyramid
+        box(0, 26, 46, night ? "#2b2a26" : "#9a917c");
+        ctx.fillStyle = night ? "#16342c" : "#3f7a63";
+        ctx.beginPath(); ctx.moveTo(x - 9 * sc, y - 46 * sc); ctx.lineTo(x + 9 * sc, y - 46 * sc); ctx.lineTo(x, y - 62 * sc); ctx.closePath(); ctx.fill();
+        label("THE PEACE HOTEL", 63);
+        break;
+      }
+      case "pudong": drawSkyline({ seed: 0.42 }, rel, lat / 6, kit, night); break;
+      case "portecochere": {               // the hotel canopy you stop under
+        ctx.fillStyle = night ? "#2a2620" : "#7a6f5c";
+        for (const dx of [-7, 7]) ctx.fillRect(x + dx * sc - 0.5 * sc, y - 6 * sc, 1 * sc, 6 * sc);
+        ctx.fillStyle = night ? "#3a332a" : "#95886f";
+        ctx.fillRect(x - 9 * sc, y - 7.2 * sc, 18 * sc, 1.2 * sc);
+        ctx.fillStyle = night ? "rgba(255,226,164,0.55)" : "rgba(255,244,214,0.35)";
+        ctx.fillRect(x - 8 * sc, y - 6 * sc, 16 * sc, 0.4 * sc);
+        label("THE ROYAL HOTEL", 9);
+        break;
+      }
+      case "carpet": {
+        ctx.fillStyle = "#8e1b26";
+        const a = projectAhead(Math.max(1.5, rel - 6), -2.2), b2 = projectAhead(Math.max(1.5, rel - 6), 2.2);
+        const c = projectAhead(Math.max(1.5, rel + 6), 2.2), d = projectAhead(Math.max(1.5, rel + 6), -2.2);
+        if (a.scale > 0.03 && c.scale > 0.03) { ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b2.x, b2.y); ctx.lineTo(c.x, c.y); ctx.lineTo(d.x, d.y); ctx.closePath(); ctx.fill(); }
+        break;
+      }
+      case "gatepiers": {
+        for (const dx of [-8, 8]) { box(dx, 2.2, 7, stone); ctx.fillStyle = night ? "#8a7434" : "#c8a457"; ctx.beginPath(); ctx.arc(x + dx * sc, y - 7.8 * sc, 0.9 * sc, 0, Math.PI * 2); ctx.fill(); }
+        ctx.strokeStyle = night ? "#0d1014" : "#1e2228"; ctx.lineWidth = Math.max(1, 0.14 * sc);
+        for (let k = -6; k <= 6; k++) { ctx.beginPath(); ctx.moveTo(x + k * 1.1 * sc, y); ctx.lineTo(x + k * 1.1 * sc, y - 4.6 * sc); ctx.stroke(); }
+        break;
+      }
+      case "whitepalace": {
+        box(0, 72, 22, night ? "#4a4740" : "#eee8d8");
+        ctx.fillStyle = night ? "#20222a" : "#5b6068";
+        ctx.beginPath(); ctx.moveTo(x - 36 * sc, y - 22 * sc); ctx.lineTo(x + 36 * sc, y - 22 * sc);
+        ctx.lineTo(x + 28 * sc, y - 30 * sc); ctx.lineTo(x - 28 * sc, y - 30 * sc); ctx.closePath(); ctx.fill();
+        for (let k = -7; k <= 7; k++) box(k * 4.6, 2.2, 9, night ? "#5a564c" : "#f6f1e2");   // the colonnade
+        label("THE WHITE PALACE", 31);
+        break;
+      }
+    }
+    ctx.restore();
+  }
+  const VEHICLES = {
+    cab:       { L: 4.6, W: 1.9, H: 1.9, body: "#101216", roof: "#101216", sign: "#f2c200", label: "TAXI" },
+    yellowcab: { L: 4.9, W: 1.95, H: 1.6, body: "#f2c81e", roof: "#f2c81e", sign: "#1b1f26", label: "TAXI" },
+    crown:     { L: 4.7, W: 1.75, H: 1.5, body: "#0f1216", roof: "#0f1216", sign: "#3ddc84", label: "空車" },
+    santana:   { L: 4.6, W: 1.7, H: 1.45, body: "#1c4f8a", roof: "#d8d2c4" },
+    ddbus:     { L: 11.2, W: 2.5, H: 4.4, body: "#b3232b", roof: "#b3232b", decks: 2 },
+    bus:       { L: 12.0, W: 2.55, H: 3.2, body: "#2b6f4e", roof: "#d8d2c4" },
+    toeibus:   { L: 10.8, W: 2.5, H: 3.1, body: "#e8e2d2", roof: "#e8e2d2", stripe: "#2f7ec4" },
+    van:       { L: 5.4, W: 2.0, H: 2.5, body: "#e9edf0", roof: "#e9edf0" },
+    hiace:     { L: 4.7, W: 1.7, H: 2.0, body: "#f0f2f4", roof: "#f0f2f4" },
+    keitruck:  { L: 3.4, W: 1.48, H: 1.8, body: "#e6e8ea", roof: "#e6e8ea" },
+    truck:     { L: 8.5, W: 2.4, H: 3.4, body: "#6f7784", roof: "#6f7784" },
+    saloon:    { L: 4.8, W: 1.85, H: 1.45, body: null, roof: null },
+    hatch:     { L: 4.0, W: 1.75, H: 1.5, body: null, roof: null },
+    suv:       { L: 4.9, W: 1.95, H: 1.75, body: null, roof: null },
+    scooter:   { L: 1.9, W: 0.7, H: 1.5, body: "#2a2e34", rider: true },
+    ebike:     { L: 1.8, W: 0.7, H: 1.5, body: "#4a5058", rider: true },
+    cycle:     { L: 1.7, W: 0.6, H: 1.6, body: "#3a4048", rider: true },
+  };
+
+  /* Draw one, as itself. A double-decker is two decks of windows and four metres
+     tall; a scooter is a rider with no roof; a kei truck is a cab and a flat bed. */
+  function drawCityTraffic(w, h, pal) {
+    const night = pal.night;
+    const list = state.traffic.slice().sort((a, b) => b.z - a.z);
+    for (const car of list) {
+      const v = VEHICLES[car.kind] || VEHICLES.saloon;
+      const held = car.speed * (car.hold == null ? 1 : car.hold);
+      const rel = car.oncoming ? -(Math.abs(state.speedMps) + held) : (held - state.speedMps);
+      car.z += rel * 0.016;
+      if (car.z < 4) car.z += 380;
+      if (car.z > 384) car.z -= 380;
+      const half = halfAt(Math.max(2, car.z));
+      // which side of the road this car is on is the country's rule, not a coin toss:
+      // London and Tokyo drive on the left, so oncoming traffic is to your RIGHT.
+      const mine = (state.city && state.city.kit.drive === "left") ? -1 : 1;
+      const side = car.oncoming ? -mine : mine;
+      const lateral = side * half * (0.26 + car.sub * 0.42);
+      const p = projectAhead(Math.max(1.5, car.z), lateral);
+      // same trap as the pedestrians: a ceiling of 9 is 40 m, and it emptied the road
+      // in front of you of everything except the rival grid.
+      if (p.scale < 0.05) continue;
+      const sc = p.scale, W = v.W * sc, H = v.H * sc;
+      ctx.save(); ctx.translate(p.x, p.y);
+      ctx.fillStyle = "rgba(0,0,0,0.34)";
+      ctx.beginPath(); ctx.ellipse(0, 0, W * 0.62, H * 0.10, 0, 0, Math.PI * 2); ctx.fill();
+
+      if (v.rider) {
+        ctx.strokeStyle = v.body; ctx.lineWidth = Math.max(1, 0.12 * sc);
+        ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -H * 0.45); ctx.stroke();
+        ctx.fillStyle = night ? "#2a3038" : "#3d444d";
+        ctx.beginPath(); ctx.roundRect(-W * 0.4, -H * 0.85, W * 0.8, H * 0.4, 0.1 * sc); ctx.fill();
+        ctx.fillStyle = night ? "#8a7a68" : "#c2a487";
+        ctx.beginPath(); ctx.arc(0, -H * 0.96, 0.13 * sc, 0, Math.PI * 2); ctx.fill();
+        if (car.oncoming) { ctx.fillStyle = "rgba(255,250,220,0.85)"; ctx.fillRect(-0.08 * sc, -H * 0.42, 0.16 * sc, 0.12 * sc); }
+        ctx.restore(); continue;
+      }
+
+      const body = v.body || `hsl(${car.hue},${night ? 10 : 20}%,${night ? 18 : car.tone}%)`;
+      ctx.fillStyle = body;
+      ctx.beginPath(); ctx.roundRect(-W / 2, -H * 0.72, W, H * 0.72, Math.max(1.5, 0.18 * sc)); ctx.fill();
+      // the greenhouse
+      if (v.decks === 2) {
+        ctx.fillStyle = night ? "rgba(255,226,170,0.55)" : "rgba(190,212,228,0.75)";
+        ctx.fillRect(-W * 0.42, -H * 0.66, W * 0.84, H * 0.20);
+        ctx.fillRect(-W * 0.42, -H * 0.34, W * 0.84, H * 0.18);
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.font = `700 ${Math.max(5, 0.3 * sc)}px ui-sans-serif`; ctx.textAlign = "center";
+        if (sc > 0.3) ctx.fillText("11", 0, -H * 0.72);
+      } else {
+        ctx.fillStyle = night ? "rgba(120,150,170,0.45)" : "rgba(186,208,224,0.78)";
+        ctx.fillRect(-W * 0.34, -H * 0.70, W * 0.68, H * 0.26);
+      }
+      if (v.stripe) { ctx.fillStyle = v.stripe; ctx.fillRect(-W / 2, -H * 0.32, W, H * 0.07); }
+      if (v.sign && sc > 0.16) {           // the roof sign on a taxi
+        ctx.fillStyle = v.sign;
+        ctx.fillRect(-W * 0.18, -H * 0.80, W * 0.36, H * 0.09);
+      }
+      // lamps
+      if (car.oncoming) { ctx.fillStyle = "rgba(255,250,220,0.85)"; ctx.fillRect(-W * 0.42, -H * 0.22, W * 0.16, H * 0.10); ctx.fillRect(W * 0.26, -H * 0.22, W * 0.16, H * 0.10); }
+      else { ctx.fillStyle = "rgba(255,70,60,0.92)"; ctx.fillRect(-W * 0.44, -H * 0.26, W * 0.14, H * 0.09); ctx.fillRect(W * 0.30, -H * 0.26, W * 0.14, H * 0.09); }
+      ctx.restore();
+    }
+  }
+
+  /* The pavement. `drawRoad` fills the whole ground plane with `pal.grass`, which on a
+     journey is the pavement colour; this lays the KERB on top of it — a raised edge and a
+     line of slabs — so the road has a real edge to it rather than fading into a lawn. */
+  function drawPavement(w, h, pal) {
+    const kit = state.city.kit;
+    for (const side of [-1, 1]) {
+      let prev = null;
+      ctx.fillStyle = kit.kerb;
+      for (let d = -20; d <= 240; d += 6) {
+        const half = halfAt(d);
+        const a = projectAhead(Math.max(1.2, d), half * side);
+        const b = projectAhead(Math.max(1.2, d), (half + 0.5) * side);
+        if (a.scale < 0.03 || b.scale < 0.03) { prev = null; continue; }
+        if (prev) {
+          ctx.beginPath(); ctx.moveTo(prev.a.x, prev.a.y); ctx.lineTo(prev.b.x, prev.b.y);
+          ctx.lineTo(b.x, b.y); ctx.lineTo(a.x, a.y); ctx.closePath(); ctx.fill();
+        }
+        prev = { a, b };
+      }
+    }
+    // the slab joints, every two metres, which is what tells you how fast you are going
+    ctx.strokeStyle = "rgba(255,255,255,0.10)"; ctx.lineWidth = 1;
+    for (let d = Math.ceil((-20 + state.distanceM % 2)); d <= 200; d += 2) {
+      const half = halfAt(d);
+      for (const side of [-1, 1]) {
+        const a = projectAhead(Math.max(1.2, d), (half + 0.6) * side);
+        const b = projectAhead(Math.max(1.2, d), (half + 5.5) * side);
+        if (a.scale < 0.05 || b.scale < 0.05) continue;
+        ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y); ctx.stroke();
+      }
+    }
+  }
+
   function drawSignals(w, h, pal) {
     const circ = circuitNow(); if (!circ || !circ.signals) return;
     for (const sg of circ.signals) {
@@ -3338,169 +4716,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      arches, a carbon bonnet with a louvred vent, the manually adjustable rear wing on twin
      uprights, the adjustable front splitter blade, carbon sills and diffuser, four centre
      tailpipes. Velocity Blue — the colour it lapped the Nordschleife in. */
-  /* BODYKIT:BEGIN Rolls-Royce Phantom — DRAWN BY HAND, from this car's own side elevation: 5762 mm long on a
-     3552 mm wheelbase, 1646 mm tall, 1065/1145 mm
-     overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
-     shared with any other car. The source is tools/bodykit/drawn.mjs. */
-  function injectExterior() {
-    app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Rolls-Royce Phantom side">
-      <defs>
-        <linearGradient id="hdphantomPaint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#f6f3ea"/><stop offset="0.3" stop-color="#e8e4d8"/><stop offset="0.72" stop-color="#8f8b80"/><stop offset="1" stop-color="#26241f"/>
-        </linearGradient>
-        <linearGradient id="hdphantomGlass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe8ee"/><stop offset="0.4" stop-color="#3f4a52"/><stop offset="1" stop-color="#090c0f"/></linearGradient>
-        <linearGradient id="hdphantomChrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6f2e6"/><stop offset="0.45" stop-color="#c9a85f"/><stop offset="1" stop-color="#6d5a2e"/></linearGradient>
-        <radialGradient id="hdphantomHub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#f8f5ec"/><stop offset="1" stop-color="#4a4740"/></radialGradient>
-        <linearGradient id="hdphantomShine" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff" stop-opacity="0.5"/><stop offset="0.55" stop-color="#ffffff" stop-opacity="0.08"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/></linearGradient>
-        <filter id="hdphantomGlow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="hdphantomClip"><path d="M78,166
-    L78,286 Q80,297 104,300 L176,303
-    A70,104 0 0 1 316,303
-    Q506,313 698,303
-    A68,102 0 0 1 834,303
-    L892,300 Q916,296 922,286
-    L922,196
-    C892,187 850,179 804,176
-    C762,171 720,167 685,166
-    C642,164 612,163 584,161
-    C560,145 534,119 508,103
-    C490,93 470,89 448,89
-    L352,93
-    C332,105 310,121 288,134
-    C252,142 176,156 122,162
-    C106,164 92,165 78,166 Z"/></clipPath>
-        <style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          /* a coach door hinges at the BACK, so the pivot is the REAR-bottom corner of
-             the panel and it is the LEADING edge that swings out toward you — the
-             opposite of every other door in this garage */
-          #doorArt{transform-box:fill-box;transform-origin:3% 96%;transition:transform 1.1s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-8deg) translate(-12px,-2px);}
-          #quadExhaustArt *{fill:#cfc9b8;} #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdphantomGlow);}</style>
-      </defs>
-
-      <ellipse cx="500" cy="336" rx="398" ry="9" fill="rgba(0,0,0,0.5)"/>
-
-      <g id="bcBody">
-        <path d="M78,166
-    L78,286 Q80,297 104,300 L176,303
-    A70,104 0 0 1 316,303
-    Q506,313 698,303
-    A68,102 0 0 1 834,303
-    L892,300 Q916,296 922,286
-    L922,196
-    C892,187 850,179 804,176
-    C762,171 720,167 685,166
-    C642,164 612,163 584,161
-    C560,145 534,119 508,103
-    C490,93 470,89 448,89
-    L352,93
-    C332,105 310,121 288,134
-    C252,142 176,156 122,162
-    C106,164 92,165 78,166 Z" fill="url(#hdphantomPaint)" stroke="rgba(255,255,255,0.55)" stroke-width="1.2"/>
-
-        <g clip-path="url(#hdphantomClip)">
-          <path d="M78,178 C300,172 560,182 922,232 L922,252 C560,202 300,196 78,202 Z" fill="url(#hdphantomShine)"/>
-          <!-- only the valance is dark. A Phantom is one colour from the waist to the sill. -->
-          <rect x="0" y="272" width="1000" height="130" fill="rgba(20,24,30,0.55)"/>
-
-          <!-- the greenhouse. Roof outline 89-93; the glass header is 22 px BELOW it, so a
-               band of paint shows above the DLO all the way round — the roof of a Phantom
-               is painted metal and the brightest thing on the flank is the chrome that
-               frames the glass. -->
-          <path d="M598,170 L494,112 L366,116 L318,172
-                   C400,175 500,173 598,170 Z"
-                fill="url(#hdphantomGlass)" stroke="url(#hdphantomChrome)" stroke-width="2.8"/>
-          <path d="M598,170 L494,112" stroke="#090c0f" stroke-width="7" stroke-linecap="round"/>
-          <path d="M366,116 L318,172" stroke="#090c0f" stroke-width="7" stroke-linecap="round"/>
-          <!-- the B-pillar, between the two doors: a Phantom has four side windows -->
-          <path d="M431,114 L433,173" stroke="#090c0f" stroke-width="5.5"/>
-          <path d="M589,168 L500,120" stroke="rgba(255,255,255,0.34)" stroke-width="3"/>
-          <path d="M400,104 L470,101" stroke="rgba(255,255,255,0.5)" stroke-width="2.4" stroke-linecap="round"/>
-
-          <!-- THE COACH DOORS. The shut line between them, and then the two handles: the
-               front door's at its REAR edge, the rear door's at its FRONT edge, both
-               inboard, meeting in the middle. No other car in this garage is like this. -->
-          <g id="doorArt">
-            <path d="M352,170 L488,168 L486,288 L356,284 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.18)" stroke-width="1.2"/>
-            <rect x="458" y="212" width="26" height="5" rx="2.5" fill="url(#hdphantomChrome)"/>
-          </g>
-          <path d="M492,168 L600,172 L596,290 L490,288 Z" fill="rgba(255,255,255,0.02)" stroke="rgba(0,0,0,0.18)" stroke-width="1.2"/>
-          <rect x="496" y="212" width="26" height="5" rx="2.5" fill="url(#hdphantomChrome)"/>
-          <path d="M489,166 L488,288" stroke="rgba(0,0,0,0.3)" stroke-width="2.2"/>
-          <path d="M352,168 L356,284" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
-          <path d="M600,170 L596,290" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
-          <!-- the boot lid's side shut line, under the deck -->
-          <path d="M290,144 C232,155 152,166 82,172" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
-          <!-- and the bonnet's, which on a car with this much bonnet is a long way from it -->
-          <path d="M900,193 C820,183 700,174 606,172" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="1.5"/>
-
-          <!-- THE WAFT LINE: one crease, front arch to tail lamp, unbroken -->
-          <path d="M818,202 C620,197 380,201 116,206" fill="none" stroke="rgba(255,255,255,0.42)" stroke-width="2.6" stroke-linecap="round"/>
-          <path d="M818,205 C620,200 380,204 116,209" fill="none" stroke="rgba(0,0,0,0.2)" stroke-width="1.6"/>
-          <!-- the coachline: one hand-painted stripe, the length of the car -->
-          <path d="M846,238 C620,232 380,236 96,240" fill="none" stroke="#c9a85f" stroke-width="1.8" opacity="0.85"/>
-
-          <!-- a single slim lamp at each end, set high, with a chrome underline -->
-          <path d="M84,196 L154,193 L154,214 L84,217 Z" fill="#8c1622" stroke="rgba(255,255,255,0.25)" stroke-width="1.1"/>
-          <path d="M88,200 L148,198" stroke="#ff5568" stroke-width="4" stroke-linecap="round"/>
-          <path d="M84,224 L160,221" stroke="url(#hdphantomChrome)" stroke-width="3" stroke-linecap="round"/>
-          <path d="M856,198 L910,196 L912,228 L858,230 Z" fill="rgba(13,16,20,0.72)"/>
-          <path d="M904,206 L864,204" stroke="#f4f8fc" stroke-width="7" stroke-linecap="round"/>
-          <path d="M906,220 L860,218" stroke="url(#hdphantomChrome)" stroke-width="3" stroke-linecap="round"/>
-          <!-- the chrome garnish on the front wing, behind the wheel -->
-          <path d="M666,214 L714,211 L716,221 L668,224 Z" fill="url(#hdphantomChrome)" opacity="0.9"/>
-          <circle cx="304" cy="182" r="8" fill="#b8b2a4" stroke="rgba(255,255,255,0.4)" stroke-width="1.2"/>
-        </g>
-
-        <!-- THE PANTHEON GRILLE, standing PROUD of the nose, and the Spirit of Ecstasy on
-             the prow above it. This is drawn outside the body clip on purpose: the grille
-             is a separate polished object bolted to the front of the car, not a hole. -->
-        <g data-proud="1">
-          <path d="M884,198 L924,193 L924,266 L884,262 Z" fill="#0d1014" stroke="url(#hdphantomChrome)" stroke-width="3"/>
-          <g stroke="rgba(230,222,200,0.55)" stroke-width="1.3">
-            <path d="M890,204 l30,-3"/><path d="M890,214 l30,-3"/><path d="M890,224 l30,-3"/>
-            <path d="M890,234 l30,-3"/><path d="M890,244 l30,-3"/><path d="M890,254 l30,-3"/>
-          </g>
-          <path d="M882,193 L926,188 L926,197 L882,202 Z" fill="url(#hdphantomChrome)"/>
-          <!-- the Spirit of Ecstasy: a figure leaning forward with her sleeves swept back -->
-          <path d="M898,190 C900,180 904,175 909,172 C905,179 904,184 904,190 Z" fill="url(#hdphantomChrome)"/>
-          <path d="M903,178 C896,177 889,180 885,185 C892,182 898,182 904,183 Z" fill="url(#hdphantomChrome)"/>
-        </g>
-      </g>
-
-      <g id="frontFlapArt"><rect x="836" y="296" width="82" height="6" rx="3" fill="#1a1c20" stroke="#c9a85f" stroke-opacity="0.45"/></g>
-      <path d="M84,286 L184,290 L182,300 L86,296 Z" fill="#131518" stroke="rgba(255,255,255,0.12)"/>
-      <!-- two rectangular pipes, flush in the valance, because they are not a feature -->
-      <g id="quadExhaustArt">
-        <rect x="104" y="276" width="26" height="8" rx="3"/><rect x="140" y="277" width="26" height="8" rx="3"/>
-      </g>
-
-      <g>
-      <circle cx="246" cy="272" r="58.0" fill="#0a0b0e"/>
-      <circle cx="246" cy="272" r="58.0" fill="none" stroke="#1b1f25" stroke-width="7.5"/>
-      <circle cx="246" cy="272" r="52.2" fill="none" stroke="#d8d2c4" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="246" cy="272" r="36.0" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="246" cy="272" r="36.0" fill="#20252c"/><circle cx="246" cy="272" r="22.3" fill="none" stroke="#d8d2c4" stroke-width="1.6" opacity="0.55"/></g>
-      <circle cx="246" cy="272" r="7.5" fill="url(#hdphantomHub)"/>
-    </g>
-      <g>
-      <circle cx="766" cy="272" r="58.0" fill="#0a0b0e"/>
-      <circle cx="766" cy="272" r="58.0" fill="none" stroke="#1b1f25" stroke-width="7.5"/>
-      <circle cx="766" cy="272" r="52.2" fill="none" stroke="#d8d2c4" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="766" cy="272" r="36.0" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><circle cx="766" cy="272" r="36.0" fill="#20252c"/><circle cx="766" cy="272" r="22.3" fill="none" stroke="#d8d2c4" stroke-width="1.6" opacity="0.55"/></g>
-      <circle cx="766" cy="272" r="7.5" fill="url(#hdphantomHub)"/>
-    </g>
-    </svg>
-    `;
-    // the SVG replaced the original nodes — re-point the element refs at the new ones
-    app.el.doorArt = document.getElementById("doorArt");
-    app.el.quadExhaustArt = document.getElementById("quadExhaustArt");
-    app.el.bcBody = document.getElementById("bcBody");
-  }
-  /* BODYKIT:END */  /* the 20-inch forged SVO wheel: ten spokes in five pairs, each pair splitting from one root */
+  /* THE COACHWORK IS IN THE PAGE, not in this function. It is the Phantom's own original
+     drawing — a CSS body shell with the coachline, the two coach doors hinged at opposite
+     ends, the Pantheon grille, the Spirit of Ecstasy and the door umbrella — so there is
+     nothing to inject. `tools/bodykit/apply.mjs` lists `phantom` under HAND_DRAWN and
+     refuses to touch this file. */
+  function injectExterior() { /* nothing to inject — see above */ }
   function svoWheel() {
     let s = '<circle r="41" fill="#0c0f14" stroke="#1c212a" stroke-width="4"/>';
     for (let i = 0; i < 5; i++) {
@@ -3523,116 +4744,99 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      console when the engine starts, two Rolls-RoyceSense dials with displays in them, a suede wheel
      with a red twelve-o'clock band — and, on the Track Pack, two carbon buckets on four-point
      harnesses with the bolted brace where the rear seat used to be. */
+  /* the Starlight headliner, as a field of fibre ends across the roof of the cabin SVG */
+  function starsField() {
+      let s = "";
+      for (let i = 0; i < 80; i++) { const x = (i * 137.5) % 1000, y = (i * 47.3) % 64 + 3, r = (i % 5 === 0) ? 1.4 : 0.8; s += `<circle cx="${x.toFixed(0)}" cy="${y.toFixed(0)}" r="${r}"/>`; }
+      return s;
+    }
+
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Rolls-Royce Phantom cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Phantom cabin">
       <defs>
-        <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#191c21"/><stop offset="1" stop-color="#07080b"/></linearGradient>
-        <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#a9b1ba"/><stop offset="1" stop-color="#5a616a"/></linearGradient>
-        <linearGradient id="screenG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0a1521"/><stop offset="1" stop-color="#04070c"/></linearGradient>
-        <linearGradient id="jgShell" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#262b32"/><stop offset="1" stop-color="#0b0e13"/></linearGradient>
-        <linearGradient id="jgSuede" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#20242a"/><stop offset="1" stop-color="#0c0f13"/></linearGradient>
-        <linearGradient id="jgHood" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#171b21"/><stop offset="1" stop-color="#080a0e"/></linearGradient>
+        <linearGradient id="dashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f26"/><stop offset="1" stop-color="#070809"/></linearGradient>
+        <linearGradient id="woodG" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stop-color="#5a331c"/><stop offset="0.3" stop-color="#7a4a28"/><stop offset="0.5" stop-color="#8a572f"/><stop offset="0.8" stop-color="#4d2b16"/><stop offset="1" stop-color="#6a3d22"/>
+        </linearGradient>
+        <linearGradient id="leatherG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1e5d96"/><stop offset="1" stop-color="#0f3a63"/></linearGradient>
+        <radialGradient id="galleryGlow" cx="50%" cy="50%" r="60%"><stop offset="0" stop-color="#ecd398"/><stop offset="1" stop-color="#1a2230"/></radialGradient>
       </defs>
-      <rect x="0" y="0" width="1000" height="360" fill="url(#carbonG)"/>
-      <g opacity="0.08" stroke="#9fb0bd" stroke-width="1">${weave()}</g>
-
-      <!-- THE BROW: a real hood over the instruments, the way Rolls-Royce builds a dash -->
-      <g id="tachArt">
-        <path d="M196,150 Q206,66 300,58 L560,58 Q622,62 640,104 L646,150 Z" fill="url(#jgHood)" stroke="#3a424c" stroke-width="1.8"/>
-        <path d="M200,150 Q210,72 302,64 L556,64 Q614,68 632,106" fill="none" stroke="rgba(200,220,244,0.22)" stroke-width="1.6"/>
-        <rect x="216" y="80" width="410" height="66" rx="7" fill="url(#screenG)" stroke="#232c37"/>
-        <!-- the 12.3in cluster: two virtual dials, revs left, road speed right -->
-        <path d="M268,132 A44 44 0 0 1 268,86" fill="none" stroke="#101a26" stroke-width="9" stroke-linecap="round"/>
-        <path d="M268,132 A44 44 0 0 1 246,92" fill="none" stroke="#74a9ff" stroke-width="9" stroke-linecap="round"/>
-        <text x="264" y="118" text-anchor="middle" font-size="7" fill="#7e8d9c">RPM</text>
-        <path d="M574,132 A44 44 0 0 0 574,86" fill="none" stroke="#101a26" stroke-width="9" stroke-linecap="round"/>
-        <path d="M574,132 A44 44 0 0 0 596,92" fill="none" stroke="#e6eef8" stroke-width="9" stroke-linecap="round"/>
-        <text x="578" y="118" text-anchor="middle" font-size="7" fill="#7e8d9c">KM/H</text>
-        <!-- the centre panel between them: gear, and the supercharger reading -->
-        <text x="421" y="98.5" text-anchor="middle" font-size="20.3" font-weight="700" fill="#eaf2fa" id="tachGearArt">N</text><text x="421" y="124.0" text-anchor="middle" font-size="18.7" font-weight="800" fill="#eaf2fa" id="cabSpeedArt">0</text><text x="421" y="135.9" text-anchor="middle" font-size="7.8" fill="#eaf2fa" opacity="0.65">KM/H</text>
-        <text x="421" y="126" text-anchor="middle" font-size="7" fill="#7e8d9c" letter-spacing="1.5">GEAR</text>
-        <rect x="372" y="132" width="98" height="8" rx="4" fill="#101a26" stroke="#232c37"/>
-        <rect x="374" y="134" width="52" height="4" rx="2" fill="#1f4fa8"/>
-        <text x="421" y="152" text-anchor="middle" font-size="6.5" fill="#5f6f80" letter-spacing="1.2">SUPERCHARGER BOOST</text>
+      <!-- headliner with starlight -->
+      <rect x="0" y="0" width="1000" height="70" fill="#0c0f14"/>
+      <g id="starsCabin" fill="#fff">
+        ${starsField()}
       </g>
-
-      <!-- the centre stack: InControl Touch Pro, then the two Rolls-RoyceSense dials with
-           displays in their faces, then the row of hard switches under them -->
-      <g transform="translate(760,150)">
-        <rect x="-92" y="-76" width="184" height="106" rx="8" fill="#0e1218" stroke="#39414a" stroke-width="1.6"/>
-        <rect x="-82" y="-68" width="164" height="76" rx="5" fill="url(#screenG)" stroke="#26313d"/>
-        <g fill="#0f1a28" stroke="#2b3846"><rect x="-74" y="-60" width="72" height="30" rx="4"/><rect x="6" y="-60" width="68" height="30" rx="4"/><rect x="-74" y="-24" width="148" height="26" rx="4"/></g>
-        <text x="-38" y="-41" text-anchor="middle" font-size="7.5" fill="#8fa8c2">DYNAMIC</text>
-        <text x="40" y="-41" text-anchor="middle" font-size="7.5" fill="#c9a85f">RWD · 4WS</text>
-        <text x="0" y="-6" text-anchor="middle" font-size="7.5" fill="#8fa8c2">INCONTROL TOUCH PRO</text>
-        <!-- Rolls-RoyceSense: the dial IS the display -->
-        <circle cx="-52" cy="52" r="21" fill="#11151b" stroke="url(#aluG)" stroke-width="2"/>
-        <circle cx="-52" cy="52" r="13" fill="#08131e" stroke="#26313d"/>
-        <text x="-52" y="55" text-anchor="middle" font-size="8" fill="#9fc4ee">21°</text>
-        <circle cx="52" cy="52" r="21" fill="#11151b" stroke="url(#aluG)" stroke-width="2"/>
-        <circle cx="52" cy="52" r="13" fill="#08131e" stroke="#26313d"/>
-        <text x="52" y="55" text-anchor="middle" font-size="8" fill="#9fc4ee">21°</text>
-        <g fill="#161b22" stroke="#39414a"><rect x="-16" y="34" width="15" height="13" rx="3"/><rect x="2" y="34" width="15" height="13" rx="3"/><rect x="-16" y="52" width="15" height="13" rx="3"/><rect x="2" y="52" width="15" height="13" rx="3"/></g>
+      <!-- dash -->
+      <rect x="0" y="150" width="1000" height="210" fill="url(#dashG)"/>
+      <!-- wood veneer band -->
+      <rect x="70" y="158" width="860" height="34" rx="14" fill="#6a3d22"/>
+      <rect x="70" y="158" width="860" height="34" rx="14" fill="url(#woodG)" opacity="0.55"/>
+      <!-- The Gallery (glass-fronted fascia art) -->
+      <g id="galleryG">
+        <rect x="360" y="196" width="280" height="58" rx="8" fill="#0c121b" stroke="#cfd3d8" stroke-width="1.5"/>
+        <rect id="galleryArt" x="368" y="204" width="264" height="42" rx="5" fill="url(#galleryGlow)" opacity="0.95"/>
+        <path d="M372,232 Q430,206 500,224 T628,220" fill="none" stroke="#1a2230" stroke-width="2" opacity="0.5"/>
       </g>
-
-      <!-- the console: the drive selector on the COLUMN, so the console is free -->
-      <g id="shifterArt" transform="translate(520,290)">
-        <path d="M-52,-36 L52,-36 L58,64 L-58,64 Z" fill="#0d1116" stroke="#39414a" stroke-width="1.6"/>
-        <circle cx="0" cy="-4" r="24" fill="#12161c" stroke="url(#aluG)" stroke-width="2.4"/>
-        <circle cx="0" cy="-4" r="15" fill="#0a0d12" stroke="#2b333c"/>
-        <line x1="0" y1="-4" x2="0" y2="-17" stroke="url(#aluG)" stroke-width="5" id="leverArt"/>
-        <text x="-34" y="-22" font-size="7" fill="#7e8d9c">P</text><text x="-38" y="0" font-size="7" fill="#7e8d9c">R</text>
-        <text x="-38" y="18" font-size="7" fill="#7e8d9c">N</text><text x="30" y="18" font-size="7" fill="#74a9ff">D</text>
-        <text x="0" y="34" text-anchor="middle" font-size="6.5" fill="#667482" letter-spacing="1.1">ROTARY SHIFT SELECTOR</text>
-        <circle cx="-30" cy="50" r="12" fill="#7a1f1f" stroke="#ff6060" id="startArt"/>
-        <text x="-30" y="53" text-anchor="middle" font-size="6" fill="#ffd7d7">START</text>
-        <rect x="10" y="40" width="42" height="20" rx="5" fill="#12161c" stroke="url(#aluG)" stroke-width="1.3"/>
-        <text x="31" y="53" text-anchor="middle" font-size="7" fill="#9fc4ee">DYN</text>
+      <!-- THE BINNACLE. The original drawing had the Gallery and the clock but no
+           instruments, and a Phantom has two: the POWER RESERVE on the left and road
+           speed on the right, both live. -->
+      <g transform="translate(190,222)">
+        <rect x="-96" y="-40" width="192" height="80" rx="12" fill="#05070a" stroke="#cfd3d8" stroke-opacity="0.35"/>
+        <g transform="translate(-48,0)">
+          <circle r="31" fill="#04060a" stroke="rgba(201,168,95,0.5)"/>
+          <g id="cabRevSegs">
+            <path d="M-22,16 A27,27 0 0 1 -27,-4" fill="none" stroke="#c9a85f" stroke-width="4" stroke-linecap="round"/>
+            <path d="M-24,-11 A27,27 0 0 1 -9,-25" fill="none" stroke="#c9a85f" stroke-width="4" stroke-linecap="round"/>
+            <path d="M-2,-27 A27,27 0 0 1 16,-22" fill="none" stroke="#c9a85f" stroke-width="4" stroke-linecap="round"/>
+            <path d="M22,-16 A27,27 0 0 1 27,4" fill="none" stroke="rgba(201,168,95,0.22)" stroke-width="4" stroke-linecap="round"/>
+          </g>
+          <text y="4" text-anchor="middle" font-size="17" font-weight="700" fill="#eef2f7">100</text>
+          <text y="17" text-anchor="middle" font-size="5.5" fill="#8a93a0">POWER RESERVE</text>
+        </g>
+        <g transform="translate(48,0)">
+          <circle r="31" fill="#04060a" stroke="rgba(201,168,95,0.5)"/>
+          <text id="cabSpeedArt" y="4" text-anchor="middle" font-size="19" font-weight="800" fill="#eef2f7">0</text>
+          <text y="17" text-anchor="middle" font-size="5.5" fill="#8a93a0">KM/H</text>
+        </g>
       </g>
-
-      <!-- Track Pack: two carbon shells on four-point harnesses, and the brace behind them -->
-      <g id="p8Cage">
-        <path d="M112,206 L888,206" stroke="#5a636d" stroke-width="7" stroke-linecap="round" opacity="0.9"/>
-        <path d="M150,206 L150,300 M850,206 L850,300" stroke="#5a636d" stroke-width="6" opacity="0.85"/>
-        <path d="M112,206 L888,206" stroke="rgba(230,240,252,0.35)" stroke-width="2"/>
-        <text x="500" y="199" text-anchor="middle" font-size="7" fill="#6d8db4" letter-spacing="3">TRACK PACK · REAR SEATS OUT</text>
+      <!-- analogue clock -->
+      <g transform="translate(700,225)">
+        <circle r="26" fill="#0a0e14" stroke="#cfd3d8"/>
+        <circle r="2" fill="#ecd398"/>
+        <line id="clockHour" x1="0" y1="0" x2="0" y2="-12" stroke="#ecd398" stroke-width="2.6" stroke-linecap="round"/>
+        <line id="clockMin" x1="0" y1="0" x2="0" y2="-18" stroke="#ecd398" stroke-width="1.6" stroke-linecap="round"/>
+        <text x="0" y="18" text-anchor="middle" font-size="6" fill="#8a8" >ROLLS-ROYCE</text>
       </g>
-      <g transform="translate(180,276)">
-        <path d="M-48,-34 Q-58,-50 -36,-52 L36,-52 Q58,-50 48,-34 L52,86 L-52,86 Z" fill="url(#jgShell)" stroke="#2a323c"/>
-        <path d="M-30,-52 L-30,-30 Q0,-22 30,-30 L30,-52" fill="#0a0d12" stroke="#39424d"/>
-        <path d="M-20,-26 L-8,40 M20,-26 L8,40" stroke="#a01423" stroke-width="5" stroke-linecap="round"/>
-        <path d="M-30,34 L30,34" stroke="#a01423" stroke-width="5" stroke-linecap="round"/>
-        <circle cx="0" cy="36" r="6" fill="#161b22" stroke="url(#aluG)"/>
+      <!-- organ-stop vents -->
+      <g fill="#cfd3d8">
+        <circle cx="300" cy="225" r="6"/><circle cx="320" cy="225" r="6"/>
+        <circle cx="680" cy="262" r="5"/><circle cx="720" cy="262" r="5"/>
       </g>
-      <g transform="translate(832,276)">
-        <path d="M-48,-34 Q-58,-50 -36,-52 L36,-52 Q58,-50 48,-34 L52,86 L-52,86 Z" fill="url(#jgShell)" stroke="#2a323c"/>
-        <path d="M-30,-52 L-30,-30 Q0,-22 30,-30 L30,-52" fill="#0a0d12" stroke="#39424d"/>
-        <path d="M-20,-26 L-8,40 M20,-26 L8,40" stroke="#a01423" stroke-width="5" stroke-linecap="round"/>
-        <path d="M-30,34 L30,34" stroke="#a01423" stroke-width="5" stroke-linecap="round"/>
+      <!-- central screen -->
+      <rect x="455" y="262" width="90" height="40" rx="5" fill="#0a1722" stroke="#2a3a4a"/>
+      <rect x="460" y="267" width="80" height="30" rx="3" fill="#143a63" opacity="0.6"/>
+      <!-- steering wheel -->
+      <g id="cabinWheelG" transform="translate(250,300)">
+        <circle r="54" fill="none" stroke="#15181d" stroke-width="14"/>
+        <circle r="54" fill="none" stroke="#3c424a" stroke-width="4"/>
+        <line x1="0" y1="0" x2="0" y2="-50" stroke="#1b1f25" stroke-width="7"/>
+        <line x1="0" y1="0" x2="-46" y2="12" stroke="#1b1f25" stroke-width="7"/>
+        <line x1="0" y1="0" x2="46" y2="12" stroke="#1b1f25" stroke-width="7"/>
+        <circle r="13" fill="#0a0c10" stroke="#c9a85f"/>
+        <text x="0" y="4" text-anchor="middle" font-family="Georgia" font-size="11" fill="#ecd398">RR</text>
       </g>
-
-      <!-- the wheel: suede rim, red band at twelve, alloy paddles, the growler in the boss -->
-      <g id="cabinWheelG" transform="translate(300,300)">
-        <circle r="58" fill="none" stroke="url(#jgSuede)" stroke-width="17"/>
-        <circle r="58" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="17" stroke-dasharray="2 6"/>
-        <path d="M-12,-66 L12,-66 L11,-50 L-11,-50 Z" fill="#a01423"/>
-        <line x1="0" y1="0" x2="-52" y2="-10" stroke="#181c22" stroke-width="11"/>
-        <line x1="0" y1="0" x2="52" y2="-10" stroke="#181c22" stroke-width="11"/>
-        <line x1="0" y1="0" x2="0" y2="50" stroke="#181c22" stroke-width="11"/>
-        <rect x="-44" y="12" width="24" height="14" rx="4" fill="#12161c" stroke="#4d5763" stroke-width="1.2"/>
-        <text x="-32" y="22.5" text-anchor="middle" font-size="7" fill="#9fc4ee">CRUISE</text>
-        <rect x="20" y="12" width="24" height="14" rx="4" fill="#12161c" stroke="#4d5763" stroke-width="1.2"/>
-        <text x="32" y="22.5" text-anchor="middle" font-size="7" fill="#9fc4ee">AUDIO</text>
-        <path d="M-76,-10 L-52,-17 L-52,1 L-76,8 Z" fill="url(#aluG)" opacity="0.92"/>
-        <path d="M76,-10 L52,-17 L52,1 L76,8 Z" fill="url(#aluG)" opacity="0.92"/>
-        <circle r="15" fill="#0d1015" stroke="#20252c" stroke-width="4"/>
-        <circle r="10" fill="#0a0d12" stroke="#c8a24a" stroke-width="1.3"/>
-        ${growler()}
+      <!-- seats (blue quilted) flanking -->
+      <g transform="translate(150,250)">
+        <rect x="-44" y="-30" width="88" height="120" rx="22" fill="url(#leatherG)" stroke="rgba(255,255,255,0.12)"/>
+        <path d="M-30,-20 L30,-20 M-30,4 L30,4 M-30,28 L30,28" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
       </g>
-      </svg>
-    `;
+      <g transform="translate(850,250)">
+        <rect x="-44" y="-30" width="88" height="120" rx="22" fill="url(#leatherG)" stroke="rgba(255,255,255,0.12)"/>
+        <path d="M-30,-20 L30,-20 M-30,4 L30,4 M-30,28 L30,28" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
+      </g>
+    </svg>`;
     const cage = document.getElementById("p8Cage");
     if (cage) cage.style.display = app.state.raceAero ? "" : "none";
   }
@@ -3684,7 +4888,20 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     else if (state.doors[which] !== undefined) { const next = !state.doors[which]; if (next && moving) { showToast("Doors stay shut while moving."); return; } state.doors[which] = next; next ? audio.motor(0.65) : audio.clunk(120); showToast(`${which === "driver" ? "Driver" : "Passenger"} door ${next ? "open" : "closed"}.`); }
     updateDoorArt();
   }
-  function updateDoorArt() { if (el.doorArt) el.doorArt.classList.toggle("open", anyDoorOpen()); }
+  /* THE COACH DOORS. The rear one hinges at the BACK and the front one at the front, so
+     they swing apart from the middle of the car — which is the thing everybody recognises
+     a Phantom by, and the reason both panels are separate elements. */
+  function updateDoorArt() {
+    const open = anyDoorOpen();
+    if (el.doorArt) el.doorArt.classList.toggle("open", open);            // the REAR coach door
+    if (el.frontDoorArt) el.frontDoorArt.classList.toggle("open", open);  // and the front one
+    // the Spirit drops into the prow, and the umbrella slides out of the door
+    if (el.spiritArt) el.spiritArt.classList.toggle("hidden", !state.rear.spirit);
+    if (el.umbrellaArt) {
+      el.umbrellaArt.style.setProperty("--umbrella-out", state.rear.umbrella ? "-64px" : "0px");
+      el.umbrellaArt.style.setProperty("--umbrella-opacity", state.rear.umbrella ? "1" : "0");
+    }
+  }
 
   function setMode(m) {
     state.driveMode = m;
@@ -3741,6 +4958,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const circ = CIRCUITS[name]; if (!circ) { showToast(`No ${name} on file.`, "Co-Pilot"); return; }
     state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist, arrived: false };
     state.lap = { running: true, startDist: state.distanceM, lastMs: 0, bestMs: 0, curMs: 0 };
+    { const k = app.CITY_KITS[name]; if (k && k.hour != null) state.dayPhase = k.hour; }
     app.buildCornersForRoute(); app.seedWorld(); app.seedRivals();
     const loop = app.isLoop();
     showToast(`${loop ? "Lapping" : "Route set for"} ${circ.blurb}. ${(circ.dist / 1000).toFixed(1)} km${loop ? " / lap" : ""}.`, "Co-Pilot");
