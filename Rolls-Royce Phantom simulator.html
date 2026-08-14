@@ -2971,7 +2971,7 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
      (behind and ahead), then project every world point through a camera that yaws with
      the car's heading. Because the camera can face any direction, the car can corner
      hard and even turn all the way around (a U-turn). */
-  const ROAD = { AHEAD: 240, BEHIND: 96, STEP: 4, samples: [] };
+  const ROAD = { AHEAD: 240, BEHIND: 240, STEP: 4, samples: [] };
   function rebuildRoadTable() {
     const s0 = state.distanceM, STEP = ROAD.STEP, arr = [];
     let psi = 0, X = 0, Z = 0;
@@ -3273,7 +3273,7 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
   // distance. Spans behind the car too, so a U-turn still shows the road you came from.
   const ROAD_OFFS = (function () {
     const o = [];
-    for (let d = -80; d < -6; d += 8) o.push(d);
+    for (let d = -240; d < -6; d += 8) o.push(d);
     for (let d = -6; d < 6; d += 0.6) o.push(d);     // dense through the camera plane
     for (let d = 6; d < 32; d += 2.4) o.push(d);
     for (let d = 32; d <= 240; d += 6) o.push(d);
@@ -5558,7 +5558,15 @@ function updateUi() {
   const starsCabin = document.getElementById("starsCabin");
   if (starsCabin) starsCabin.style.opacity = state.stars ? "0.95" : "0.12";
   const cabinWheel = document.getElementById("cabinWheelG");
-  if (cabinWheel) cabinWheel.setAttribute("transform", `translate(250,300) rotate(${(state.steer * 100).toFixed(1)})`);
+  if (cabinWheel) {
+    // the home transform comes off the SVG, not out of this line, so a redrawn cabin can
+    // never leave the wheel spinning about a point that has moved
+    if (!cabinWheel.dataset.home) {
+      const t0 = cabinWheel.getAttribute("transform") || "";
+      cabinWheel.dataset.home = (t0.match(/translate\([^)]*\)/) || ["translate(0,0)"])[0];
+    }
+    cabinWheel.setAttribute("transform", cabinWheel.dataset.home + ` rotate(${(state.steer * 100).toFixed(1)})`);
+  }
 
   const clockHour = document.getElementById("clockHour");
   const clockMin = document.getElementById("clockMin");
