@@ -679,6 +679,52 @@ meet green after green — and London's deliberately are not. `signalStep` check
 rather than proximity, so creeping over a stop line still counts, and `trafficSignalStep` eases
 the ambient cars to a halt rather than snapping them, so a bus does not stop dead.
 
+A signal head is also **five and a half metres tall**, not two hundred and ten. `drawSignals`
+sized the pole, arm, lamps and stop line in raw pixels-at-scale-1 while every other prop in the
+street is sized in **metres** (a street lamp is `hM = 6`) — and `scale` is pixels per metre, so
+the pole came out 210 m tall, swinging its head off the top of the frame from 200 m out, and the
+"stop line" was a nine-metre stripe that painted a white disc across the road as you closed on
+it. It is now 5.6 m of pole, 4.2 m of arm, 200 mm lenses and half a metre of paint, and it
+stands on the kerb the **country** puts it on (`driveSide()`), reaching in over the carriageway.
+
+**The roads are not all the same road.** Every journey used to be ONE width for its whole length
+and two-way everywhere, which is wrong about every street it is named after. Each now carries a
+`LANE_PLAN` of real stretches — `ln(to, w, fwd, back, name)`, where `w` is kerb to kerb in metres,
+`fwd` is lanes going your way and `back` lanes coming the other way:
+
+| road | kerb to kerb | lanes |
+|---|---|---|
+| Tower Bridge, between the towers | **8.2 m** | 1 + 1 |
+| Constitution Hill, between the walls | 9 m | 1 + 1 |
+| the hotel service road | 6.5 m | 1 + 1 |
+| Park Lane | 11 m | **3 + 0 — one-way** |
+| Park Avenue | 13 m | **4 + 0 — one-way** |
+| Rue de Rivoli | 14 m | **2 + 0 — one-way** |
+| Trafalgar Square | 16 m | **4 + 0 — one-way** |
+| Hyde Park Corner | 22 m | **5 + 0 — one-way** |
+| Uchibori-dōri, the palace ring | 30 m | **4 + 0 — one-way** |
+| Avenue des Champs-Élysées | **35 m** | 4 + 4 |
+| Zhongshan East No.1 Road | **38 m** | 5 + 5 |
+| Place de la Concorde | 40 m | 5 + 5 |
+
+`buildCornersForRoute` turns the plan into contiguous `widthZones`, so **`halfWidthAt` needed no
+change at all**; `laneInfoAt(d)` hands the layout to everything else. The markings come off the
+lane count — a dash between lanes running the same way, a solid line (doubled once the road is
+wide enough to warrant it) at the split between the two directions, and **no split line at all on
+a one-way street**, because there is nothing to divide you from. The White Palace avenue is
+gravel (`kit.line === null`) and gets no paint.
+
+The other cars sit in **real lanes**. A car cannot own a lane *index*, because the number of lanes
+changes along the road, so it owns a preference across its own carriageway and `cityTrafficStep`
+reads the index off the plan wherever it happens to be; the queue then forms per real lane. On a
+one-way stretch an oncoming car **simply is not there** — and when it recycles round you it joins
+your direction, because there is no other direction to join, which is what makes Park Lane and
+Park Avenue feel busy rather than like a country road with a wide verge. You start a journey in
+the **nearside lane** (`homeLaneOffAt`) rather than straddling the centreline pointing at the
+traffic, `raceLineOffAt` returns that lane instead of a racing line (a racing line across a
+carriageway means driving at the oncoming cars, and Chauffeur 101 is *wide of the apex* anyway),
+and the assist picks among the real forward lanes rather than multiples of three metres.
+
 `onJourney()` is the one predicate everything hangs off, and it is simply "does this route have
 signals". On a journey the rival field is replaced by `RR_GRID` — a Ghost, a Cullinan, a Flying
 Spur, a Maybach, a London taxi, a bus, a van, a police escort — because on a city street **the
@@ -743,9 +789,24 @@ apparently stationary. You now arrive at any speed, `state.arrivalKmh` records h
 
 **The Phantom's coachwork and cabin are the car's own**, not the generator's — a CSS body shell
 with the coachline, two coach doors hinged at opposite ends, the Pantheon grille, the Spirit of
-Ecstasy and the door umbrella, plus the original cabin (Starlight, the Gallery, wood veneer,
-organ-stop vents, the clock) with a binnacle carrying the live Power Reserve and speed.
-`apply.mjs` lists `phantom` under `HAND_DRAWN`. The car's **own switches** are back on a second
+Ecstasy and the door umbrella, plus the original cabin exactly as it was drawn: Starlight, the
+Gallery, wood veneer, organ-stop vents and the clock, and **nothing added to it**.
+`apply.mjs` lists `phantom` under `HAND_DRAWN`.
+
+A binnacle with a speedometer was bolted onto that fascia once, to satisfy the garage-wide guard
+that a Cockpit drawing is not a photograph — and it was the wrong answer twice over. A Phantom's
+fascia carries **no instruments at all**; the driver's dials are in the binnacle you look through
+in the *driving* view, so painting a speedometer across the passenger's side was faking the car
+to pass a test. (It also passed the *wheel-arch* check by accident, because that check reads a
+26 kB window after `injectExterior()` and, on a car whose body is CSS rather than SVG, that window
+ran on into the cabin drawing and found the binnacle's arcs. The CSS-coachwork exemption now reads
+its marker off the whole file, which is what it was meant to do.) What the guard is really for is
+that the drawing **moves**, so a coachbuilt fascia may prove it with the things that genuinely
+move on one: `cabinCoachStep()` runs the clock on real time, lights the Gallery when you switch it
+on, and brings the Starlight up and twinkles it — driving the ids the original drawing already
+carried. `browser-test` accepts that only if the code driving them is in the file too.
+
+The car's **own switches** are back on a second
 cockpit grid: Magic Carpet Ride (Planar takes the road input out), Windows, Night Vision (it
 boxes anyone in the road ahead, which is a real instrument on a street with 900 people on it),
 Memory I, front massage, Summon Chauffeur, the seat row — and the **Flagbearer**, which is the

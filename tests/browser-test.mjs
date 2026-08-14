@@ -150,8 +150,12 @@ const check = (label, ok, detail) => {
     const raid = /T1\+|Sandrider|GR DKR|HUNTER|RAPTOR/.test(art);
     // the Phantom's coachwork is not an SVG at all: it is the car's own original CSS body
     // shell, with the arches as border-radius wheels and the paint as a linear-gradient. It
-    // declares itself the same way the open-wheelers and the raid cars do.
-    const cssCoach = /THE COACHWORK IS IN THE PAGE/.test(art) && /phantom-side/.test(src);
+    // declares itself the same way the open-wheelers and the raid cars do — and the marker
+    // is read off the WHOLE file, because a car with no SVG body has an empty
+    // injectExterior() and the comment explaining why sits above it rather than inside it.
+    // Read off `art` this never fired, and the Phantom passed the arch test only because the
+    // 26 kB window ran on past the function into the cabin drawing and found an arc there.
+    const cssCoach = /THE COACHWORK IS IN THE PAGE/.test(src) && /phantom-side/.test(src);
     if (cssCoach) {
       if (!/border-radius: 50%/.test(src)) gaps.push(n + ": CSS coachwork with no wheel arches");
       if (!/linear-gradient\(180deg, #fffdf4/.test(src)) gaps.push(n + ": CSS coachwork with no paint");
@@ -326,9 +330,18 @@ const check = (label, ok, detail) => {
     // the readout contract has to be in the updater
     if (!/num\("cabSpeedArt", spd\)/.test(src)) gaps.push(n + ": no live-readout contract");
     if (!/getElementById\("cabRevSegs"\)/.test(src)) gaps.push(n + ": the contract is incomplete");
-    // and the car's own drawing has to declare at least one live instrument
-    if (!/id="(cabSpeedArt|cabRpmArt|cabRevSegs|cabRevNeedle|cabSpeedNeedle|cabRevBar)"/.test(src))
-      gaps.push(n + ": the cabin drawing has no live instrument");
+    // and the car's own drawing has to declare at least one live instrument.
+    // A COACHBUILT EXEMPTION: a Rolls-Royce fascia has no instruments on it — the dials
+    // are in the binnacle you look through in the driving view — so putting a speedometer
+    // across the passenger's side of a Phantom's dash to satisfy this check would be
+    // faking the car to pass a test. What the rule is really for is that the drawing
+    // MOVES, so such a car may prove it with the things that genuinely move on that
+    // fascia: the clock, the Gallery and the Starlight. It must also carry the code that
+    // drives them, or it is a photograph with hopeful ids on it.
+    const instr = /id="(cabSpeedArt|cabRpmArt|cabRevSegs|cabRevNeedle|cabSpeedNeedle|cabRevBar)"/.test(src);
+    const coach = /id="clockHour"/.test(src) && /id="galleryArt"/.test(src) &&
+                  /function cabinCoachStep\(\)/.test(src) && /cabinCoachStep\(\);/.test(src);
+    if (!instr && !coach) gaps.push(n + ": the cabin drawing has no live instrument");
     // no canvas may be laid over the cabin art again
     if (/cabLive|drawCabinLive/.test(src)) gaps.push(n + ": a canvas is pasted over the cabin art");
   }

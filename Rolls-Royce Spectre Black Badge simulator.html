@@ -1044,6 +1044,108 @@ const CIRCUITS = {
     track: [c(0, 1, 360, 12600, "Banked circle")]
   }
 };
+
+/* ===== THE ROADS ARE NOT ALL THE SAME ROAD ===============================
+   A city is not one width and it is not all two-way. Tower Bridge's roadway is
+   8.2 m between the towers and the Champs-Élysées is 35 m across; Constitution
+   Hill is two lanes and the Bund is ten; Park Avenue, the Rue de Rivoli and the
+   palace ring road in Tokyo are ONE-WAY, so on those there is no oncoming
+   traffic at all — not thinner traffic, none.
+
+   `ln(to, w, fwd, back, name)` describes the carriageway from the previous
+   zone's end up to `to` metres: `w` is kerb to kerb in metres, `fwd` is lanes
+   running your way and `back` lanes coming the other way. Every figure is the
+   real one for that stretch of road.
+
+   The route builder turns these into `widthZones`, so `halfWidthAt` needs no
+   change at all; `laneInfoAt` gives the renderer and the traffic the layout at
+   any distance, which is what puts the paint in the right place, keeps the
+   other cars in real lanes, and leaves the far side of a one-way street empty.
+   ========================================================================= */
+const ln = (to, w, fwd, back, name) => ({ to, w, fwd, back, name });
+
+const LANE_PLAN = {
+  "London — Tower Bridge to the Palace": { drive: "left", zones: [
+    ln(340,  8.2, 1, 1, "Tower Bridge"),          // the bascule roadway: genuinely narrow
+    ln(900,  14,  2, 2, "Tower Hill"),
+    ln(1400, 18,  3, 3, "Upper Thames Street"),
+    ln(2900, 20,  3, 3, "Victoria Embankment"),
+    ln(3300, 24,  4, 3, "Parliament Square"),     // the gyratory, and the widest of it
+    ln(4100, 19,  3, 3, "Whitehall"),
+    ln(4700, 16,  4, 0, "Trafalgar Square"),      // ONE-WAY, four lanes round the square
+    ln(5600, 19,  3, 3, "The Mall"),
+  ] },
+  "The Mall, London": { drive: "left", zones: [
+    ln(1500, 11,  3, 0, "Park Lane"),             // a dual carriageway: you are on one side of it
+    ln(2300, 22,  5, 0, "Hyde Park Corner"),      // one-way gyratory, five lanes
+    ln(3200,  9,  1, 1, "Constitution Hill"),     // two lanes between the walls
+    ln(4200, 19,  3, 3, "The Mall"),
+  ] },
+  "Paris — Champs-Élysées": { drive: "right", zones: [
+    ln(2400, 35,  4, 4, "Avenue des Champs-Élysées"),   // eight lanes
+    ln(2900, 40,  5, 5, "Place de la Concorde"),
+    ln(3600, 14,  2, 0, "Rue de Rivoli"),         // ONE-WAY, westbound
+  ] },
+  "New York — Park Avenue": { drive: "right", zones: [
+    ln(330,   9,  2, 0, "the Helmsley viaduct"),
+    ln(2360, 13,  4, 0, "Park Avenue"),           // each carriageway one-way, the median between
+    ln(2700, 20,  4, 2, "Grand Army Plaza"),
+    ln(3900, 16,  4, 0, "Central Park South"),    // 59th is one-way westbound here
+  ] },
+  "Tokyo — Ginza": { drive: "left", zones: [
+    ln(1450, 15,  2, 2, "Chūō-dōri"),
+    ln(2100, 27,  3, 3, "Harumi-dōri"),           // much wider than Chūō-dōri
+    ln(2600, 22,  3, 3, "Hibiya"),
+    ln(3400, 30,  4, 0, "Uchibori-dōri"),         // the palace ring road runs one way
+  ] },
+  "Shanghai — The Bund": { drive: "right", zones: [
+    ln(1900, 38,  5, 5, "Zhongshan East No.1 Road"),   // ten lanes
+    ln(2600, 11,  2, 2, "Nanjing East Road"),
+    ln(3700, 16,  3, 3, "toward People's Square"),
+  ] },
+  "The Royal Hotel": { drive: "left", zones: [
+    ln(400,  14,   2, 2, "the avenue"),
+    ln(1300,  6.5, 1, 1, "the service road"),     // one car each way and no more
+    ln(1700,  9,   1, 0, "the porte-cochère"),
+  ] },
+  "The White Palace": { drive: "left", zones: [
+    ln(660,  12,  1, 1, "the approach"),
+    ln(3700, 10,  1, 1, "the lime avenue"),       // gravel, and unmarked
+    ln(4200, 26,  2, 2, "the forecourt"),
+  ] },
+};
+
+/* the carriageway at `d` metres along the route you are actually on */
+function laneInfoAt(d) {
+  const st = window.SpectreApp && window.SpectreApp.state;
+  if (!st || !st.route.active) return null;
+  const plan = LANE_PLAN[st.route.name]; if (!plan) return null;
+  const zs = plan.zones;
+  for (const z of zs) if (d <= z.to) return z;
+  return zs[zs.length - 1];
+}
+/* which side of the centreline YOUR direction runs on: -1 in Britain and Japan,
+   +1 in France, America and China. It is the country's rule, not a preference. */
+function driveSide() {
+  const st = window.SpectreApp && window.SpectreApp.state;
+  const plan = st && st.route.active ? LANE_PLAN[st.route.name] : null;
+  return plan && plan.drive === "left" ? -1 : 1;
+}
+/* the centre of lane `i` of a carriageway, in metres off the road's centreline.
+   i = 0 is the lane against your own kerb. On a one-way street every lane runs
+   your way and they fill the whole road, which the same arithmetic gives you. */
+function laneCentreIn(z, i, oncoming) {
+  if (!z) return 0;
+  const total = z.fwd + z.back, lw = z.w / Math.max(1, total);
+  const n = Math.max(0, Math.min(i, (oncoming ? z.back : z.fwd) - 1));
+  const s = oncoming ? -driveSide() : driveSide();
+  return s * (z.w / 2 - lw * (n + 0.5));
+}
+function laneCentreAt(d, i, oncoming) { return laneCentreIn(laneInfoAt(d), i, oncoming); }
+/* where a car BELONGS on this road — the nearside lane. On a journey this is the
+   line the chauffeur drives and the line the assist steers to. */
+function homeLaneOffAt(d) { const z = laneInfoAt(d); return z ? laneCentreIn(z, 0, false) : 0; }
+
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
 /* ===== data: vehicle spec — EXACT Rolls-Royce Spectre Black Badge figures =====
@@ -1570,6 +1672,16 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       r.bumps = t.bumps || [];
       r.baseWidth = t.widthM || 12;
       r.loop = t.loop !== false;
+      // A journey's width comes from its LANE PLAN, not from one figure for the whole
+      // drive: the zones are contiguous, so every metre of the route is covered and
+      // halfWidthAt needs no change to read them.
+      const plan = LANE_PLAN[r.name];
+      if (plan) {
+        const zs = []; let from = 0;
+        for (const z of plan.zones) { zs.push({ from, to: z.to, w: z.w }); from = z.to; }
+        r.widthZones = zs;
+        r.baseWidth = plan.zones[plan.zones.length - 1].w;
+      }
     } else {
       r.trackCorners = null; r.widthZones = null; r.bumps = []; r.baseWidth = 13; r.loop = false;
     }
@@ -2043,7 +2155,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // your side, and the other side of the road
     for (let d = 8; d < 380; d += 4 + R() * 8) {
       state.traffic.push(mkTrafficCar(pick(), d, false, R));
-      state.traffic.push(mkTrafficCar(pick(), d + R() * 7, true, R));
+      // On a one-way street the other half of the road is not empty — it is more of
+      // your own traffic, which is what makes Park Lane and Park Avenue feel like
+      // themselves rather than like a country road with a wide verge.
+      const z0 = laneInfoAt(state.distanceM + d);
+      state.traffic.push(mkTrafficCar(pick(), d + R() * 7, !(z0 && z0.back === 0), R));
       if (R() < 0.45) state.traffic.push(mkTrafficCar(pick(), d + 2 + R() * 4, false, R));
     }
   }
@@ -2055,6 +2171,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       kind, z, oncoming, hold: 1, want: 1, routeD: 0,
       lane: oncoming ? 1 : (R() < 0.6 ? 0 : -1),
       sub: R() < 0.55 ? 0 : 1,
+      // The number of lanes changes along the road, so a car cannot own a lane INDEX.
+      // It owns a preference across its own carriageway (0 = against its kerb, 1 = the
+      // far side of it) and the index is worked out wherever it happens to be.
+      laneP: R(), laneIdx: 0, lat: 0, hidden: false,
       speed: limit * (0.72 + R() * 0.32),
       hue: Math.floor(R() * 360),
       tone: 26 + Math.floor(R() * 42),
@@ -2298,6 +2418,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     for (const c of state.traffic) {
       c.routeD = state.distanceM + (c.oncoming ? -c.z : c.z);
       c.want = 1;
+      // where this car is on the road, worked out from the carriageway it is standing on
+      const zc = laneInfoAt(c.routeD);
+      c.hidden = !!(zc && zc.back === 0 && c.oncoming);   // one-way: it simply is not there
+      const nl = zc ? Math.max(1, c.oncoming ? zc.back : zc.fwd) : 2;
+      c.laneIdx = Math.min(nl - 1, Math.floor(c.laneP * nl));
+      c.lat = zc ? laneCentreIn(zc, c.laneIdx, c.oncoming) : (c.lane * 3 + (c.oncoming ? -3.6 : 0));
       if (!circ || !circ.signals) continue;
       // oncoming traffic meets the same signal heads coming the other way
       let sg = null, bestGap = Infinity;
@@ -2320,7 +2446,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // ---- 2. and how fast the car in FRONT lets it go. Same direction, same lane band.
     const lanes = new Map();
     for (const c of state.traffic) {
-      const key = (c.oncoming ? "o" : "s") + c.lane + "_" + c.sub;
+      if (c.hidden) continue;
+      const key = (c.oncoming ? "o" : "s") + c.laneIdx;
       if (!lanes.has(key)) lanes.set(key, []);
       lanes.get(key).push(c);
     }
@@ -2347,11 +2474,20 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const rel = c.oncoming ? -(Math.abs(state.speedMps) + v) : (v - state.speedMps);
       c.z += rel * dt;
       // recycle round you so the street is never empty in either direction
-      if (c.z < -60) c.z += 440;
-      if (c.z > 380) c.z -= 440;
+      if (c.z < -60) { c.z += 440; recycleTrafficCar(c); }
+      else if (c.z > 380) { c.z -= 440; recycleTrafficCar(c); }
     }
   }
 
+
+  /* A car that has come round again is a NEW car as far as the street is concerned, so
+     it takes a fresh lane — and where it reappears is one-way it joins your direction,
+     because there is no other direction to join. */
+  function recycleTrafficCar(c) {
+    c.laneP = Math.random();
+    const z = laneInfoAt(state.distanceM + (c.oncoming ? -c.z : c.z));
+    c.oncoming = !!(z && z.back > 0) && Math.random() < 0.45;
+  }
 
   /* ===== THE PHANTOM'S OWN SWITCHES =========================================
      Everything on this panel is off the car itself and most of it was in the
@@ -2512,6 +2648,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function raceLineOffAt(d) {
     // built from the REAL corner table: an arc that is wide at turn-in, cuts THROUGH the
     // middle apex on the inside, and opens wide again at the exit (out-in-out, per corner)
+    // On a street the line to be on is your own lane. A racing line across a
+    // carriageway means driving at the oncoming traffic, and the whole of Chauffeur 101
+    // is that you go wide of the apex rather than clip it.
+    if (onJourney()) return homeLaneOffAt(d);
     const r = state.route, hw = halfWidthAt(d);
     if (!(r.active && r.trackCorners && r.totalM)) {
       const k = curvatureAt(d); const sI = Math.max(-1, Math.min(1, k * 420));
@@ -2555,9 +2695,28 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   function isLoop() { return !!(state.route.active && state.route.loop); }
   function followDist() { return clamp(Math.abs(state.speedMps) * 1.4, 20, 70); }
-  function nearestLeadVehicle() { let best = null; for (const car of state.traffic) { if (car.oncoming) continue; if (Math.abs(car.lane * 3 - state.laneOffset) > 2.0) continue; if (car.z > 2 && (!best || car.z < best.gapM)) best = { gapM: car.z, vMps: car.speed }; } return best; }
+  function nearestLeadVehicle() { let best = null; for (const car of state.traffic) { if (car.oncoming || car.hidden) continue; const lat = (car.lat != null && state.city) ? car.lat : car.lane * 3; if (Math.abs(lat - state.laneOffset) > 2.0) continue; if (car.z > 2 && (!best || car.z < best.gapM)) best = { gapM: car.z, vMps: car.speed * (car.hold == null ? 1 : car.hold) }; } return best; }
   function laneScan() { const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } }; for (const car of state.traffic) { if (car.oncoming) continue; const e = r[String(clamp(Math.round(car.lane), -1, 1))]; if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; } } return r; }
-  function chooseLaneOffset() { const lanes = laneScan(); const cur = clamp(Math.round(state.laneOffset / 3), -1, 1); const follow = followDist(); const spd = Math.abs(state.speedMps); const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5; if (!blocked) { if (cur !== 0 && lanes["0"].gap > follow + 10) return 0; return cur * 3; } let best = cur, bestGap = lanes[cur].gap + 12; for (let l = -1; l <= 1; l++) { if (Math.abs(l - cur) > 1) continue; if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; } } return best * 3; }
+  /* On a street the lanes are real, so the assist picks one of THEM rather than a
+     multiple of three metres. It sits in the nearside lane and only pulls out for
+     something genuinely slower in front of it — which is how a chauffeur drives. */
+  function journeyLaneOffset() {
+    const z = laneInfoAt(state.distanceM); if (!z) return 0;
+    let best = 0, bestScore = -1e9;
+    for (let i = 0; i < z.fwd; i++) {
+      const lat = laneCentreIn(z, i, false);
+      let gap = Infinity;
+      for (const c of state.traffic) {
+        if (c.oncoming || c.hidden) continue;
+        if (Math.abs(c.lat - lat) > 1.6) continue;
+        if (c.z > 1 && c.z < gap) gap = c.z;
+      }
+      const score = Math.min(gap, 400) - i * 26;   // the nearside lane unless it is blocked
+      if (score > bestScore) { bestScore = score; best = lat; }
+    }
+    return best;
+  }
+  function chooseLaneOffset() { if (onJourney()) return journeyLaneOffset(); const lanes = laneScan(); const cur = clamp(Math.round(state.laneOffset / 3), -1, 1); const follow = followDist(); const spd = Math.abs(state.speedMps); const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5; if (!blocked) { if (cur !== 0 && lanes["0"].gap > follow + 10) return 0; return cur * 3; } let best = cur, bestGap = lanes[cur].gap + 12; for (let l = -1; l <= 1; l++) { if (Math.abs(l - cur) > 1) continue; if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; } } return best * 3; }
 
   const STEERING = { wheelbase: 2.470, frontTrack: 1.594, maxAngle: 0.58 };
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
@@ -2821,7 +2980,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   Object.assign(app, {
     engineTorque, gearedRpm, mode, manualShift, updateTransmission, updateAero, tractionCapN,
-    buildCornersForRoute, curvatureAt, halfWidthAt, raceLineOffAt, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING
+    buildCornersForRoute, curvatureAt, halfWidthAt, raceLineOffAt, laneInfoAt, laneCentreAt, homeLaneOffAt, driveSide, roughnessAt, seedWorld, seedRivals, updateRivals, rivalAhead, rivalGaps, isLoop, targetSpeedMps, updatePhysics, onArrival, fmtLap, STEERING
   });
 }
 
@@ -2948,9 +3107,37 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (pal.kerb) drawKerbs();
     drawStartFinishLine();
     ctx.strokeStyle = "rgba(236,232,220,0.5)"; drawEdge(-1, 0.3, 2); drawEdge(1, 0.3, 2);
-    ctx.strokeStyle = "rgba(245,240,225,0.28)"; drawRoadLine(0, true, 1.6);   // faint centre
+    drawLaneMarkings(pal);
     if (state.dataHud || state.learnMode) drawRacingLine();
     if (state.learnMode) drawLearningMarks();                                      // the line to aim at (toggle with HUD)
+  }
+  /* ---- THE PAINT COMES OFF THE LANE COUNT ------------------------------------
+     A two-lane bridge and an eight-lane avenue cannot wear the same markings. Between
+     two lanes running the same way there is a dash; at the split between the two
+     directions there is a solid line, doubled once the road is wide enough to warrant
+     it; and on a ONE-WAY street there is no split line at all, because there is nothing
+     to divide you from. Gravel is unmarked, so the White Palace avenue gets none. */
+  function drawLaneMarkings(pal) {
+    const z = onJourney() ? laneInfoAt(state.distanceM) : null;
+    if (!z) { ctx.strokeStyle = "rgba(245,240,225,0.28)"; drawRoadLine(0, true, 1.6); return; }
+    const kit = pal.city;
+    if (kit && kit.line === null) return;                     // gravel: no paint on it at all
+    const line = (kit && kit.line) || "#e8e4d6";
+    const total = z.fwd + z.back, lw = z.w / Math.max(1, total);
+    const split = z.back === 0 ? null : driveSide() * (z.w / 2 - lw * z.fwd);
+    ctx.save();
+    ctx.globalAlpha = 0.32; ctx.strokeStyle = line;
+    for (let i = 1; i < total; i++) {
+      const lat = -z.w / 2 + lw * i;
+      if (split !== null && Math.abs(lat - split) < 0.05) continue;   // that one is the split
+      drawRoadLine(lat, true, 1.4);
+    }
+    if (split !== null) {
+      ctx.globalAlpha = 0.62;
+      if (z.w >= 18) { drawRoadLine(split - 0.35, false, 1.5); drawRoadLine(split + 0.35, false, 1.5); }
+      else drawRoadLine(split, false, 1.7);
+    }
+    ctx.restore();
   }
   // a teal racing line that swings to the apex of the corner ahead, with an aim dot ~55 m out
   // corner analysis with a CACHED target (stable boards — no re-scan jitter) and a real
@@ -4031,9 +4218,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const half = halfAt(Math.max(2, car.z));
       // which side of the road this car is on is the country's rule, not a coin toss:
       // London and Tokyo drive on the left, so oncoming traffic is to your RIGHT.
+      if (car.hidden) continue;              // one-way street: there is nothing coming
       const mine = (state.city && state.city.kit.drive === "left") ? -1 : 1;
       const side = car.oncoming ? -mine : mine;
-      const lateral = side * half * (0.26 + car.sub * 0.42);
+      // its REAL lane on this stretch of road, worked out in cityTrafficStep
+      const lateral = (car.lat != null) ? car.lat : side * half * (0.26 + car.sub * 0.42);
       const p = projectAhead(Math.max(1.5, car.z), lateral);
       // same trap as the pedestrians: a ceiling of 9 is 40 m, and it emptied the road
       // in front of you of everything except the rival grid.
@@ -4178,20 +4367,27 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (rel < -14 || rel > 220) continue;
       const ph = signalPhase(sg, state.routeTime);
       const half = halfAt(Math.max(2, rel));
-      // the stop line, painted across the road
+      // THE STOP LINE. Half a metre of paint, which is what one is — `scale` is pixels
+      // per metre, so the old `9 * scale` painted a NINE-METRE stripe and at close range
+      // it filled the road with a white disc.
       const l = projectAhead(Math.max(1.5, rel), -half), r = projectAhead(Math.max(1.5, rel), half);
       if (l.scale > 0.05 && r.scale > 0.05) {
-        ctx.strokeStyle = "rgba(240,244,248,0.75)"; ctx.lineWidth = Math.max(1.5, 9 * l.scale);
+        ctx.strokeStyle = "rgba(240,244,248,0.75)"; ctx.lineWidth = capW(Math.max(1.2, 0.5 * l.scale));
         ctx.beginPath(); ctx.moveTo(l.x, l.y); ctx.lineTo(r.x, r.y); ctx.stroke();
       }
-      // the pole and the arm
-      const base = projectAhead(Math.max(1.5, rel), half + 2.2); if (base.scale < 0.04) continue;
-      const sc = base.scale, poleH = 210 * sc, armL = 78 * sc;
-      ctx.strokeStyle = "#20252b"; ctx.lineWidth = Math.max(1.4, 7 * sc);
+      // THE POLE AND THE ARM, in metres like every other thing standing in this street:
+      // 5.6 m to the arm and 4.2 m of arm out over the carriageway. It stands on the kerb
+      // the country puts it on — the near kerb in Britain and Japan, and reaching in from
+      // your right in France, America and China.
+      if (rel < 5) continue;                       // you are under it; the cluster tells you
+      const sd = onJourney() ? driveSide() : 1;
+      const base = projectAhead(rel, sd * (half + 1.6)); if (base.scale < 0.04) continue;
+      const sc = base.scale, poleH = 5.6 * sc, armL = 4.2 * sc;
+      ctx.strokeStyle = "#20252b"; ctx.lineWidth = capW(Math.max(1, 0.16 * sc));
       ctx.beginPath(); ctx.moveTo(base.x, base.y); ctx.lineTo(base.x, base.y - poleH); ctx.stroke();
-      ctx.beginPath(); ctx.moveTo(base.x, base.y - poleH); ctx.lineTo(base.x - armL, base.y - poleH); ctx.stroke();
-      // the head: three lamps, and only the live one is lit
-      const hx = base.x - armL, hy = base.y - poleH, lr = Math.max(1.6, 11 * sc);
+      ctx.beginPath(); ctx.moveTo(base.x, base.y - poleH); ctx.lineTo(base.x - armL * sd, base.y - poleH); ctx.stroke();
+      // the head: three 200 mm lenses, and only the live one is lit
+      const hx = base.x - armL * sd, hy = base.y - poleH, lr = Math.max(1.2, 0.17 * sc);
       ctx.fillStyle = "#0b0e12";
       roundRect(ctx, hx - lr * 1.5, hy, lr * 3, lr * 7.6, lr * 0.7); ctx.fill();
       const lamps = [["red", "#ff3b34"], ["amber", "#ffb02e"], ["green", "#3ddc84"]];
@@ -4199,13 +4395,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         const on = ph.state === name;
         ctx.beginPath(); ctx.arc(hx, hy + lr * 1.5 + i * lr * 2.4, lr, 0, Math.PI * 2);
         ctx.fillStyle = on ? col : "rgba(255,255,255,0.07)"; ctx.fill();
-        if (on) { ctx.shadowColor = col; ctx.shadowBlur = 18 * sc * 4; ctx.fill(); ctx.shadowBlur = 0; }
+        if (on) { ctx.shadowColor = col; ctx.shadowBlur = Math.min(24, 3 * sc); ctx.fill(); ctx.shadowBlur = 0; }
       });
       // the junction's name on the arm, so you know where you are
-      if (sc > 0.16) {
-        ctx.fillStyle = "rgba(230,236,244,0.72)"; ctx.textAlign = "right";
-        ctx.font = "600 " + Math.max(8, Math.round(30 * sc)) + "px ui-sans-serif";
-        ctx.fillText(sg.name, base.x - 4, base.y - poleH - 6 * sc);
+      if (sc > 0.5) {
+        ctx.fillStyle = "rgba(230,236,244,0.72)"; ctx.textAlign = sd > 0 ? "right" : "left";
+        ctx.font = "600 " + clamp(Math.round(1.1 * sc), 8, 17) + "px ui-sans-serif";
+        ctx.fillText(sg.name, base.x - 4 * sd, base.y - poleH - 1.1 * sc);
       }
     }
   }
@@ -5537,7 +5733,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
                     arrived: false, endDist: state.distanceM + circ.dist, loop: !!circ.loop };
     state.lap = { running: true, startDist: state.distanceM, lastMs: 0, bestMs: 0, curMs: 0 };
     { const k = app.CITY_KITS[name]; if (k && k.hour != null) state.dayPhase = k.hour; }
-    app.buildCornersForRoute(); app.seedWorld(); app.seedRivals();
+    app.buildCornersForRoute();
+    // you begin a journey in the nearside lane, because that is where a car sits on a
+    // road. Starting on the centreline of a two-way street points you at the traffic.
+    state.laneOffset = homeLaneOffAt(state.distanceM);
+    app.seedWorld(); app.seedRivals();
     const loop = app.isLoop();
     showToast(`${loop ? "Lapping" : "Route set for"} ${circ.blurb}. ${(circ.dist / 1000).toFixed(1)} km${loop ? " / lap" : ""}.`, "Co-Pilot");
     const nords = isNords(name);
