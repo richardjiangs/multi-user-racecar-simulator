@@ -483,7 +483,24 @@
           <button id="coolerBtn" title="7 — the champagne cooler between the rear seats, held at 6&deg;C, with two flutes in their cradle">7 &middot; Champagne</button>
           <button id="rearReclineBtn" title="8 — the rear seat goes back">8 &middot; Rear Recline</button>
           <button id="rearMassageBtn" title="9 — the rear massage">9 &middot; Rear Massage</button>
-          <button id="spiritBtn" class="race" title="0 — she drops into the prow, which is what she really does at the touch of a button and by herself if anyone tries to take her">0 &middot; Retract the Spirit</button>
+          <button id="spiritBtn" class="race" title="0 — she drops into the prow, which is what she really does at the touch of a button and by herself if anyone tries to take her">0 &middot; Retract the Spirit</button>        </div>
+        <div class="divider"></div>
+        <div class="small" style="margin:0 0 6px">The car's own switches</div>
+        <div class="control-grid">
+          <button id="phRideBtn" title="Planar suspension: a camera reads the road and the dampers are set for a bump you have not reached yet">Magic Carpet Ride</button>
+          <button id="phWindowsBtn" title="Frameless glass, one motor a side">Windows</button>
+          <button id="phNightBtn" title="Night vision — it picks people out of the dark ahead of the headlamps">Night Vision</button>
+          <button id="phMemoryBtn" title="Seat, mirrors and column to the stored position">Memory I</button>
+          <button id="phMassageBtn" title="Front seat massage">Front Massage</button>
+          <button id="phSummonBtn" title="Bring the chauffeur to the car">Summon Chauffeur</button>
+          <button id="phFlagBtn" class="race" title="Locomotive Act 1865: a man walks ahead with a red flag and the limit is four miles an hour">Flagbearer (1865)</button>
+        </div>
+        <div class="control-grid">
+          <button id="phSeatHeat">Seat H</button>
+          <button id="phSeatCool">Seat C</button>
+          <button id="phSeatUp">Seat +</button>
+          <button id="phSeatDown">Seat -</button>
+          <button id="phSeatReset">Seat 0</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -632,6 +649,7 @@
             </div>
             <div class="small" style="margin:8px 0 4px;color:#c9a85f">THE SEVEN JOURNEYS &mdash; point to point, real streets, real signals</div>
             <div class="circuit-grid" id="journeyGrid">
+              <button data-circuit="London — Tower Bridge to the Palace">London &middot; Tower Bridge → the Palace</button>
               <button data-circuit="The Mall, London">London &middot; The Mall</button>
               <button data-circuit="Paris — Champs-Élysées">Paris &middot; Champs-Élysées</button>
               <button data-circuit="New York — Park Avenue">New York &middot; Park Avenue</button>
@@ -652,7 +670,7 @@
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <button id="realBtn" class="race" title="Real Mode — real tyre wear, damage and reliability; a failed system retires you">Real Mode: Off</button>
             <div class="voice">
-              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “track mode”, “launch”, “themall”">
+              <input id="voiceInput" autocomplete="off" placeholder="“take me to Tower Bridge”, “Ginza”, “the hotel”, “chauffeur”">
               <button id="voiceBtn">Tell Co-Pilot</button>
             </div>
             <div class="status-list">
@@ -892,6 +910,30 @@ const CIRCUITS = {
      lights, which you and every other car on the road have to obey.
      `sig(at, name, cycle, offset)` places a signal head at `at` metres.
      ------------------------------------------------------------------------ */
+  "London — Tower Bridge to the Palace": {
+    dist: 5600, env: "city", limitKmh: 48, loop: false, widthM: 13, corners: 11,
+    blurb: "the real London drive: over Tower Bridge, west along the river past St Paul's, Blackfriars and the Embankment, round Parliament Square under Big Ben, up Whitehall to Trafalgar Square, through Admiralty Arch and down The Mall — 5.6 km",
+    bumps: [{ from: 0, to: 320, r: 0.24 }, { from: 2600, to: 3000, r: 0.14 }],
+    signals: [
+      sig(150, "Tower Bridge, south tower", 74, 0), sig(620, "Tower Hill", 66, 18),
+      sig(1450, "Blackfriars", 70, 8), sig(2260, "Temple", 62, 26),
+      sig(3080, "Parliament Square", 92, 0), sig(3560, "Whitehall", 68, 14),
+      sig(4180, "Trafalgar Square", 86, 30), sig(4720, "Admiralty Arch", 60, 6)
+    ],
+    track: [
+      c(160, 1, 20, 300, "Tower Bridge"),
+      c(640, -1, 70, 120, "Tower Hill"),
+      c(1000, 1, 30, 260, "Upper Thames Street"),
+      c(1470, -1, 25, 280, "Blackfriars"),
+      c(2280, 1, 18, 340, "Victoria Embankment"),
+      c(2900, -1, 40, 200, "Westminster Bridge Road"),
+      c(3100, 1, 95, 90,  "Parliament Square"),
+      c(3580, -1, 12, 400, "Whitehall"),
+      c(4200, 1, 60, 120, "Trafalgar Square"),
+      c(4740, -1, 75, 80,  "Admiralty Arch"),
+      c(5400, 1, 45, 160, "Buckingham Palace forecourt")
+    ]
+  },
   "The Mall, London": {
     dist: 4200, env: "city", limitKmh: 48, loop: false, widthM: 14, corners: 9,
     blurb: "Park Lane, Hyde Park Corner, Constitution Hill and The Mall to Buckingham Palace — 4.2 km, and a 30 mph limit the whole way",
@@ -1078,6 +1120,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
        point when there is somebody in the back. */
     rear: { stars: false, gallery: false, umbrella: false, table: false, screen: false,
             privacy: false, cooler: false, recline: false, massage: false, spirit: true },
+    // the car's own switches, all opt-in so certification never sees them
+    ph: { ride: false, windows: false, night: false, memory: false, massage: false,
+          flag: false, massageT: 0, flagT: 0 },
     rearOccupied: false, starT: 0, shootT: 9e9, shootX: 0, shootY: 0, massageT: 0, spiritY: 0,
     time: 0, lastTime: performance.now(),
     speedMps: 0, distanceM: 0,
@@ -1099,7 +1144,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     raceAeroVis: 0,                // aero-setting indicator
     testDriver: false,
     lights: true, hazards: false, horn: false,
-    aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
+    aeroAuto: true, aeroDeploy: 0, aeroDragDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
     rideHeight: 0,                 // 0 standard, 1 lifted, -1 race-low
     heat: false, cool: false, ambient: true, audioCabin: false, shifterLight: true,
@@ -1443,7 +1488,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      So the two HUD bars deliberately read differently on the brakes. */
   function updateAero(dt) {
     const spd = Math.abs(state.speedMps);
-    let frontT, rearT;
+    let frontT, rearT, dragT;
     if (state.aeroAuto) {
       // Standing downforce rises through mid-speed as the aero loads up.
       const rise = clamp((spd - 16) / 70, 0, 1);          // air does not care about driver aids
@@ -1457,14 +1502,23 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const corner = clamp(Math.abs(state.lateralG) / 1.4, 0, 1) * 0.6;
       rearT  = clamp(Math.max(speedComp,        state.brake * 1.00, corner),       0, 1);
       frontT = clamp(Math.max(speedComp * 0.85, state.brake * 0.30, corner * 0.8), 0, 1);
+      // DRAG IS NOT THE SAME TRIM. Active aero raises drag under BRAKING — it is an
+      // airbrake — and flattens as the car approaches its own top speed. Nothing flares
+      // its wing because you turned the steering wheel, and the T.50s has no movable wing
+      // at all: it has a fan and a fixed delta. Feeding `corner` into the drag term made
+      // the two highest-drag cars here (Mustang GTD aeroDragAdd 0.55, T.50s 0.30) shed
+      // speed every time you turned in, which feels exactly like the car braking for you.
+      dragT = clamp(Math.max(speedComp, state.brake * 1.00), 0, 1);
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
+      dragT = rearT;                      // a wing you wound up by hand really does cost drag
     }
     // (Race Aero raises the downforce coefficient rather than the engine output;
     // see toggleRaceAero.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
-    state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
+    state.aeroDeploy = state.aeroRearDeploy;            // what the wing LOOKS like
+    state.aeroDragDeploy = approach(state.aeroDragDeploy, dragT, 0.004, dt);   // what it COSTS
     state.frontFlap = state.aeroFrontDeploy;
     const avg = (state.aeroFrontDeploy + state.aeroRearDeploy) / 2;
     state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;
@@ -1612,6 +1666,44 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   /* Each kit is a real street. `blocks` are the frontages in the order you meet
      them; `marks` are the named things, at the metre they really stand at. */
   const CITY_KITS = {
+    "London — Tower Bridge to the Palace": {
+      hour: 0.36,
+      seed: 10102, script: "latin", drive: "left",
+      sky: ["#7a8896", "#98a4ad", "#b7bdc1"],
+      road: "#2e3136", pave: "#8a8b88", kerb: "#b6b5b0", line: "#e8e4d6",
+      lamp: "london", bin: true,
+      trees: { kind: "plane", from: 1600, to: 2900, every: 30 },
+      blocks: [
+        // the bridge itself: a river on both sides and nothing to build on
+        { from: 0,    to: 340,  side: -1, kind: "river" },
+        { from: 0,    to: 340,  side:  1, kind: "river" },
+        { from: 340,  to: 1400, side: -1, kind: "citylondon", storeys: 12, shops: true },
+        { from: 340,  to: 1400, side:  1, kind: "citylondon", storeys: 10, shops: true },
+        { from: 1400, to: 2900, side: -1, kind: "victorian",  storeys: 7,  shops: true },
+        { from: 1400, to: 2900, side:  1, kind: "river" },        // the Thames, on your left
+        { from: 2900, to: 4100, side: -1, kind: "whitehall",  storeys: 6 },
+        { from: 2900, to: 4100, side:  1, kind: "whitehall",  storeys: 6 },
+        { from: 4100, to: 4700, side: -1, kind: "trafalgar",  storeys: 7 },
+        { from: 4100, to: 4700, side:  1, kind: "trafalgar",  storeys: 7 },
+        { from: 4700, to: 5600, side: -1, kind: "park",  rail: true },   // St James's Park
+        { from: 4700, to: 5600, side:  1, kind: "park",  rail: true },
+      ],
+      shopNames: ["COFFEE", "NEWS", "PUB", "BANK", "CHEMIST", "SANDWICHES", "BOOKS", "TAILOR", "WINE", "BUREAU"],
+      traffic: [["cab", 0.30], ["ddbus", 0.20], ["van", 0.16], ["saloon", 0.24], ["cycle", 0.10]],
+      peds: { density: 1.0, dogs: 0.08, umbrella: 0.34, tones: ["#2b3038", "#4a3f36", "#1d2733", "#5b4a52"] },
+      marks: [
+        { at: 170,  side: 0,  kind: "towerbridge", name: "Tower Bridge" },
+        { at: 620,  side: -1, kind: "toweroflondon", name: "the Tower of London" },
+        { at: 1180, side: -1, kind: "stpauls",    name: "St Paul's" },
+        { at: 3060, side: -1, kind: "bigben",     name: "Elizabeth Tower" },
+        { at: 3120, side: -1, kind: "parliament", name: "the Palace of Westminster" },
+        { at: 3520, side:  1, kind: "abbey",      name: "Westminster Abbey" },
+        { at: 4190, side: 0,  kind: "nelson",     name: "Nelson's Column" },
+        { at: 4740, side: 0,  kind: "admiralty",  name: "Admiralty Arch" },
+        { at: 5480, side: 0,  kind: "memorial",   name: "Victoria Memorial" },
+        { at: 5560, side: 0,  kind: "palace",     name: "Buckingham Palace" },
+      ],
+    },
     "The Mall, London": {
       hour: 0.34,
       seed: 10101, script: "latin", drive: "left",
@@ -1819,6 +1911,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
             props.push({ at: d, side: b.side, t: "parktree", seed: R() });
         continue;
       }
+      if (b.kind === "river") {
+        // the Thames. A stone parapet on the kerb, water beyond it, and the far bank
+        // beyond that — which is what you actually see from a bridge or the Embankment.
+        for (let d = b.from; d < b.to; d += 10) props.push({ at: d, side: b.side, t: "river" });
+        continue;
+      }
       if (b.kind === "palacewall") {
         for (let d = b.from; d < b.to; d += 12) props.push({ at: d, side: b.side, t: "gardenwall" });
         continue;
@@ -1954,7 +2052,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     return {
       // `lane` stays -1/0/1 because laneScan() indexes an object with those exact keys;
       // the fine placement across the carriageway is `sub`, which nothing else reads.
-      kind, z, oncoming, hold: 1,
+      kind, z, oncoming, hold: 1, want: 1, routeD: 0,
       lane: oncoming ? 1 : (R() < 0.6 ? 0 : -1),
       sub: R() < 0.55 ? 0 : 1,
       speed: limit * (0.72 + R() * 0.32),
@@ -2041,25 +2139,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      list, so a red light stops the whole street rather than just you — which is the only
      way a junction looks like a junction. `hold` is what the renderer multiplies its
      speed by, and it eases rather than snapping so a bus does not stop dead. */
-  function trafficSignalStep(dt) {
-    const circ = circuitNow();
-    if (!circ || !circ.signals) { for (const car of state.traffic) car.hold = 1; return; }
-    for (const car of state.traffic) {
-      if (car.hold == null) car.hold = 1;
-      // where this car actually is on the route: ahead of you by its own z
-      const d = state.distanceM + (car.oncoming ? -car.z : car.z);
-      const sg = nextSignal(circ, d);
-      let want = 1;
-      if (sg) {
-        const gap = sg.at - d, ph = signalPhase(sg, state.routeTime);
-        const stopping = (car.speed * car.speed) / (2 * 3.0) + 5;
-        if ((ph.state === "red" || ph.state === "amber") && gap > -2 && gap < stopping) {
-          want = clamp((gap - 2) / Math.max(6, stopping), 0, 1);
-        }
-      }
-      car.hold = approach(car.hold, want, want < car.hold ? 0.06 : 0.02, dt);
-    }
-  }
+  /* superseded by cityTrafficStep, which reads the car in front as well as the light.
+     Kept as a no-op so the circuits, which have no signals, still call something. */
+  function trafficSignalStep(dt) { if (!state.city) for (const car of state.traffic) car.hold = 1; }
+
 
 
   /* ===== the rear compartment ==============================================
@@ -2182,7 +2265,154 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // the mascot takes two thirds of a second to go down and the same to come back
     state.spiritY = approach(state.spiritY, state.rear.spirit ? 0 : 1, 0.02, dt);
   }
-  Object.assign(app, { toggleRear, REAR, rearMassKg, onJourney, rearStep, updateRearRead, buildCity, cityStep, CITY_KITS });
+  Object.assign(app, { toggleRear, REAR, rearMassKg, onJourney, rearStep, updateRearRead, buildCity, cityStep, CITY_KITS,
+                       phToggle, phStep, phFlagCapMps });
+
+
+  /* ===== TRAFFIC THAT QUEUES ================================================
+     A red light with twenty cars at it is a queue, not twenty cars all easing
+     to a halt on top of each other. Two things were wrong:
+
+     1. traffic MOVED IN THE RENDERER, on a hard-coded 0.016 s step. So it ran
+        at whatever the frame rate happened to be, and it did not move at all
+        while the Circuit tab was open.
+     2. every car read the signal on its own and nothing read the car in front,
+        so they all coasted to the stop line and stacked in the same place.
+
+     Now it runs in the physics at the real dt, and each car takes the LOWER of
+     "what the light lets me do" and "what the car in front lets me do" — which
+     is what a traffic jam is. Back one goes solid at a red, and it takes a few
+     seconds to clear from the front when the light turns green, exactly as it
+     does on Park Lane.
+     ========================================================================= */
+  const VEH_LEN = { ddbus: 11.2, bus: 12.0, toeibus: 10.8, truck: 8.5, van: 5.4,
+                    keitruck: 3.4, scooter: 1.9, ebike: 1.8, cycle: 1.7 };
+  const vehLen = (k) => VEH_LEN[k] || 4.7;
+
+  function cityTrafficStep(dt) {
+    if (!state.city || !state.traffic.length) return;
+    const circ = circuitNow();
+    const limit = ((circ && circ.limitKmh) || 50) / 3.6;
+
+    // ---- 1. where each car is on the ROUTE, and how fast the light lets it go
+    for (const c of state.traffic) {
+      c.routeD = state.distanceM + (c.oncoming ? -c.z : c.z);
+      c.want = 1;
+      if (!circ || !circ.signals) continue;
+      // oncoming traffic meets the same signal heads coming the other way
+      let sg = null, bestGap = Infinity;
+      for (const g of circ.signals) {
+        const gap = c.oncoming ? (c.routeD - g.at) : (g.at - c.routeD);
+        if (gap >= -3 && gap < bestGap) { bestGap = gap; sg = g; }
+      }
+      if (!sg) continue;
+      const ph = signalPhase(sg, state.routeTime);
+      if (ph.state === "green") continue;
+      // THE ALLOWED SPEED AT THE LINE, not a factor derived from stopping distance. The
+      // first version worked out how far the car needed to stop and braked if the gap was
+      // shorter — but once it had slowed, its stopping distance shrank, the test stopped
+      // being true and it accelerated again. Nothing ever came to rest. v = sqrt(2·a·s) is
+      // monotonic: it falls to zero exactly at the stop line and stays there.
+      const allow = Math.sqrt(Math.max(0, 2 * 2.4 * Math.max(0, bestGap - 1.5)));
+      c.want = Math.min(c.want, clamp(allow / Math.max(0.5, c.speed), 0, 1));
+    }
+
+    // ---- 2. and how fast the car in FRONT lets it go. Same direction, same lane band.
+    const lanes = new Map();
+    for (const c of state.traffic) {
+      const key = (c.oncoming ? "o" : "s") + c.lane + "_" + c.sub;
+      if (!lanes.has(key)) lanes.set(key, []);
+      lanes.get(key).push(c);
+    }
+    for (const [key, list] of lanes) {
+      // nearest-first in the direction each column is travelling
+      list.sort((a, b) => a.routeD - b.routeD);
+      const flow = key[0] === "o" ? -1 : 1;
+      const order = flow > 0 ? list.slice().reverse() : list;   // the leader comes first
+      for (let i = 1; i < order.length; i++) {
+        const me = order[i], lead = order[i - 1];
+        const gap = Math.abs(lead.routeD - me.routeD) - vehLen(lead.kind) * 0.5 - vehLen(me.kind) * 0.5 - 1.2;
+        // same rule as the light: the speed this gap allows, plus whatever the car in
+        // front is already doing, so a queue closes up instead of concertinaing.
+        const leadV = lead.speed * lead.hold;
+        const allow = Math.sqrt(Math.max(0, 2 * 2.6 * Math.max(0, gap - 1.5))) + leadV * 0.85;
+        me.want = Math.min(me.want, clamp(allow / Math.max(0.5, me.speed), 0, 1));
+      }
+    }
+
+    // ---- 3. ease, and move
+    for (const c of state.traffic) {
+      c.hold = approach(c.hold, c.want, c.want < c.hold ? 0.02 : 0.25, dt);
+      const v = c.speed * c.hold;
+      const rel = c.oncoming ? -(Math.abs(state.speedMps) + v) : (v - state.speedMps);
+      c.z += rel * dt;
+      // recycle round you so the street is never empty in either direction
+      if (c.z < -60) c.z += 440;
+      if (c.z > 380) c.z -= 440;
+    }
+  }
+
+
+  /* ===== THE PHANTOM'S OWN SWITCHES =========================================
+     Everything on this panel is off the car itself and most of it was in the
+     original before the garage template got hold of it. None of it is a toy:
+
+     - MAGIC CARPET RIDE is what Rolls-Royce call the Planar suspension. A
+       stereo camera reads the road and the dampers are set for a bump you have
+       not reached yet, so it takes the road input out before you feel it.
+     - NIGHT VISION picks people out of the dark ahead of the headlamps. On a
+       street with several hundred pedestrians on it that is a real instrument
+       rather than a gimmick.
+     - THE FLAGBEARER is the Locomotive Act 1865: a man walked ahead of every
+       self-propelled vehicle with a red flag, and the limit was four miles an
+       hour. Switch it on and you get the man, and the four miles an hour.
+     - SUMMON brings the chauffeur to the car; WINDOWS, MEMORY I, the massage
+       and the seat row are the switches a Phantom actually has.
+
+     All of it is opt-in and none of it is on the certification path.
+     ========================================================================= */
+  const PH_JERK_FLOOR = 0.30;                 // what Planar takes out of the road input
+
+  function phSound(kind) {
+    if (!audio.ready) return;
+    const c = audio.ctx, t = c.currentTime;
+    const tone = (f0, f1, dur, type, gain) => {
+      const o = c.createOscillator(), g = c.createGain();
+      o.type = type || "sine"; o.frequency.setValueAtTime(f0, t);
+      o.frequency.exponentialRampToValueAtTime(Math.max(20, f1), t + dur);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(gain || 0.05, t + 0.012);
+      g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+      o.connect(g); g.connect(audio.master); o.start(t); o.stop(t + dur + 0.05);
+    };
+    switch (kind) {
+      case "ride":    tone(70, 58, 0.7, "sine", 0.05); break;        // the air springs settling
+      case "windows": tone(150, 120, 1.1, "triangle", 0.045); break; // frameless glass, one motor
+      case "night":   tone(1400, 1400, 0.03, "square", 0.03); break;
+      case "memory":  tone(190, 240, 0.9, "sine", 0.04); break;      // the seat motor
+      case "massage": tone(46, 60, 1.3, "sine", 0.045); break;
+      case "summon":  tone(660, 880, 0.16, "sine", 0.05); break;
+      case "flag":    tone(300, 220, 0.3, "triangle", 0.05); break;
+      default:        tone(900, 900, 0.03, "square", 0.03);
+    }
+  }
+
+  function phToggle(key, on, off, sound) {
+    state.ph[key] = !state.ph[key];
+    audio.init(); audio.resume(); phSound(sound || key);
+    app.setActive("ph" + key.charAt(0).toUpperCase() + key.slice(1) + "Btn", state.ph[key]);
+    showToast(state.ph[key] ? on : off, "Phantom");
+  }
+
+  /* THE FLAGBEARER. He walks four miles an hour and the car does not pass him, because
+     that was the law between 1865 and 1896 and this car's ancestors obeyed it. */
+  function phFlagCapMps() { return state.ph.flag ? 4 * 1609.34 / 3600 : Infinity; }
+
+  function phStep(dt) {
+    if (state.ph.massage) state.ph.massageT += dt;
+    if (state.ph.flag) state.ph.flagT += dt;
+    // Planar: the road input you feel is what is LEFT after the dampers have dealt with it
+    if (state.ph.ride) state.roadInputG *= PH_JERK_FLOOR;
+  }
 
   /* WHAT THE PASSENGER FEELS. Two numbers, both from the physics that is already running:
      jerk (how fast the acceleration is changing) and lateral g. A person cannot feel a
@@ -2441,7 +2671,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     // The big two-plane wing is fixed hardware — its drag is always in the baseline.
     const baseCd = SPEC.dragCd;
-    const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd);
+    const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDragDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
     const brakeGrip = 1 + (state.downforceN / (SPEC.massKg * 9.81)) * 0.6;   // aero helps the carbon-ceramics
@@ -2491,9 +2721,24 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     signalStep(dt);
     trafficSignalStep(dt);
     rearStep(dt);
+    phStep(dt);
     cityStep(dt);
+    cityTrafficStep(dt);
     chauffeurStep(dt, accel);
+    // FOUR MILES AN HOUR. The Locomotive Act 1865 required a man to walk ahead of the
+    // car with a red flag, and this is that. Opt-in, so perf-test never meets him.
+    {
+      const fc = phFlagCapMps();
+      if (state.speedMps > fc) state.speedMps = fc;
+    }
     state.distanceM += dsdt * dt;
+    // THE DESTINATION IS THE END OF THE ROAD. A journey is not a lap: there is nothing
+    // beyond the forecourt, so the car is held at it and brought to rest rather than
+    // driving on into an empty plane.
+    if (state.route.endDist != null && !state.route.loop && state.distanceM > state.route.endDist) {
+      state.distanceM = state.route.endDist;
+      state.speedMps = Math.abs(state.speedMps) < 0.3 ? 0 : state.speedMps * Math.pow(0.02, dt);
+    }
     state.lateralG = (v * yawRate) / 9.81;
     state.bodyRoll = approach(state.bodyRoll, clamp(state.lateralG * (state.driveMode === "race" ? 4 : 8), -8, 8), 0.002, dt);
     if (!Number.isFinite(state.bodyRoll)) state.bodyRoll = 0;   // a non-finite lateralG must not poison the cabin render
@@ -2553,15 +2798,24 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         state.route.remainingM = state.route.totalM;   // next lap
         showToast(`Lap complete — ${fmtLap(lapMs)}${state.lap.bestMs === lapMs ? " · new best" : ""}.`, "Co-Pilot");
         audio.chime([659, 988, 1319]);
-      } else if (!state.route.arrived && Math.abs(state.speedMps) < 1.2) {
+      } else if (!state.route.arrived) {
+        // ARRIVE AT ANY SPEED. Requiring |v| < 1.2 m/s at the exact moment the last metre
+        // went by meant that driving through the destination left the route active with
+        // nothing left in it — the grey void described at the top of this file.
         onArrival();
       }
     }
   }
   function fmtLap(ms) { const s = ms / 1000; const m = Math.floor(s / 60); const r = (s - m * 60); return m > 0 ? `${m}:${r.toFixed(2).padStart(5, "0")}` : `${r.toFixed(2)}s`; }
   function onArrival() {
-    state.route.arrived = true; state.route.active = false; const name = state.route.name; state.adaptiveCruise = false;
-    showToast(`Arrived at ${name}. ${fmtLap(state.lap.curMs)} on the clock.`, state.testDriver ? "Test Driver" : "Co-Pilot");
+    state.route.arrived = true; state.arrivalKmh = Math.abs(kmh(state.speedMps));
+    state.route.active = false; const name = state.route.name; state.adaptiveCruise = false;
+    const v = state.arrivalKmh;
+    const how = v < 3 ? "Stopped at the door."
+              : v < 12 ? "Rolled to the door — close enough."
+              : v < 30 ? `Still doing ${Math.round(v)} at the door. They were not ready to get out.`
+              : `Through the forecourt at ${Math.round(v)} km/h. Nobody in the back forgives that.`;
+    showToast(`Arrived at ${name}. ${how} ${fmtLap(state.lap.curMs)} on the clock.`, state.testDriver ? "Chauffeur" : "Co-Pilot");
     audio.chime([784, 1047, 1319]);
   }
 
@@ -2647,6 +2901,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     drawRoad(w, h, pal);
     if (state.city) { drawPavement(w, h, pal); drawCity(w, h, pal, "front"); drawCityTraffic(w, h, pal); }
     else { drawRoadside(w, h, pal); drawTraffic(w, h, pal); }
+    drawPhSwitches(w, h, pal);
     drawSignals(w, h, pal); drawRivals(w, h, pal);
     drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,90,80,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
@@ -2855,6 +3110,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      really does not.
      ========================================================================= */
   const M_PER_STOREY = 3.4;
+  /* A stroke width is in SCREEN pixels. `scale` is FOCAL/distance, so at two metres
+     it is ~180 and a 0.16 m lamp post comes out as a 170 px black bar across the
+     middle of the windscreen. Everything drawn as a line gets capped. */
+  const capW = (px) => Math.min(px, 22);
   let cityHazeCol = "#b9bfc2";
   /* AERIAL PERSPECTIVE. Without it a street 300 m long is a flat sheet of cut-outs; with
      it the far end goes soft and the near end does not, which is the whole reason a real
@@ -2903,8 +3162,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const half = halfAt(Math.max(2, rel));
       const kerbLat = (half + 0.4) * p.side;
       const faceLat = (half + 8) * p.side;
-      if (phase === "back" && !["block", "skyline", "moatwall", "gardenwall", "parktree", "mark", "scaffold"].includes(p.t)) continue;
-      if (phase === "front" && ["block", "skyline", "moatwall", "gardenwall", "parktree", "scaffold"].includes(p.t)) continue;
+      if (phase === "back" && !["block", "skyline", "moatwall", "gardenwall", "parktree", "mark", "scaffold", "river"].includes(p.t)) continue;
+      if (phase === "front" && ["block", "skyline", "moatwall", "gardenwall", "parktree", "scaffold", "river"].includes(p.t)) continue;
       if (phase === "front" && p.t === "mark") continue;
       ctx.save();
       switch (p.t) {
@@ -2912,6 +3171,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         case "skyline":   drawSkyline(p, rel, faceLat, kit, night); break;
         case "moatwall":  drawMoat(p, rel, faceLat, night); break;
         case "gardenwall":drawGardenWall(p, rel, faceLat, night); break;
+        case "river":     drawRiver(p, rel, faceLat, night); break;
         case "parktree":  drawTree(p, rel, faceLat, "plane", night, 0.8); break;
         case "mark":      drawLandmark(p, rel, half, kit, night); break;
         case "rail":      drawRailing(p, rel, kerbLat, night); break;
@@ -2957,6 +3217,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     else if (p.kind === "nanjing") face = night ? "#2a2820" : "#9a907c";
     else if (p.kind === "hotel") face = night ? "#332e26" : "#b6a98e";
     else if (p.kind === "service") face = night ? "#26272a" : "#6e6d68";
+    else if (p.kind === "citylondon") face = night ? "#22262d" : "#7d848d";   // the City: glass
+    else if (p.kind === "victorian") face = night ? "#33291f" : "#9a7d63";    // brick and stucco
+    else if (p.kind === "whitehall") face = night ? "#37342c" : "#b6ac93";    // Portland stone
+    else if (p.kind === "trafalgar") face = night ? "#3a362d" : "#bdb39a";
     // each plot gets its own tone. Without this a block of eight buildings is one slab.
     const own = 0.86 + p.seed * 0.30;
     fillWall(q, cityShade(face, own * (p.side < 0 ? 1 : 0.88)));
@@ -3102,6 +3366,26 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       ctx.beginPath(); ctx.ellipse(cx, cy - r, r * 1.5, r, 0, 0, Math.PI * 2); ctx.fill();
     }
   }
+  /* THE THAMES. A parapet at the kerb, then water, then the far bank — so a bridge feels
+     like a bridge and the Embankment has a river on it rather than a blank verge. */
+  function drawRiver(p, rel, lat, night) {
+    const q = wallQuad(rel, lat - 6 * p.side, 11, 1.15); if (!q) return;
+    fillWall(q, night ? "#3a3830" : "#9a927e");                       // the stone parapet
+    const w2 = wallQuad(rel, lat * 5, 90, 0.1);                       // the water beyond it
+    if (w2) {
+      ctx.fillStyle = night ? "#0d1a24" : "#4a6272";
+      ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y); ctx.lineTo(q.b.x, q.b.y);
+      ctx.lineTo(w2.b.x, horizonY); ctx.lineTo(w2.a.x, horizonY); ctx.closePath(); ctx.fill();
+      // the lights of the far bank on the water, which is most of what the Thames looks like
+      if (night) {
+        ctx.fillStyle = "rgba(255,214,150,0.25)";
+        for (let k = 0; k < 5; k++) ctx.fillRect(q.a.x + (q.b.x - q.a.x) * (k / 5), q.a.y - 2, 2, 5);
+      }
+    }
+    const far = wallQuad(rel, lat * 7, 60, 24);                       // and the far bank itself
+    if (far) fillWall(far, night ? "#151b22" : "rgba(120,134,148,0.55)");
+  }
+
   function drawGardenWall(p, rel, lat, night) {
     const q = wallQuad(rel, lat, 12, 3.4); if (!q) return;
     fillWall(q, night ? "#2a2620" : "#77695a");
@@ -3109,7 +3393,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function drawRailing(p, rel, lat, night) {
     const q = wallQuad(rel, lat, 9, p.h || 1.3); if (!q) return;
     ctx.strokeStyle = night ? "rgba(10,12,16,0.9)" : "rgba(24,28,32,0.85)";
-    ctx.lineWidth = Math.max(0.8, 1.2 * q.a.scale);
+    ctx.lineWidth = capW(Math.max(0.8, 1.2 * q.a.scale));
     ctx.beginPath(); ctx.moveTo(q.a.x, q.a.y - q.ah); ctx.lineTo(q.b.x, q.b.y - q.bh); ctx.stroke();
     const n = 6;
     for (let k = 0; k <= n; k++) {
@@ -3120,11 +3404,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
 
   function drawStreetLamp(p, rel, lat, kind, night) {
+    if (rel < 1.5) return;                       // it is level with you; you cannot see it
     const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.03) return;
     const sc = b.scale, hM = kind === "crook" ? 9 : kind === "ginza" ? 7 : 6;
     const top = b.y - hM * sc;
     ctx.strokeStyle = night ? "#12161c" : "#2b3038";
-    ctx.lineWidth = Math.max(1, 0.16 * sc * 6);
+    ctx.lineWidth = capW(Math.max(1, 0.16 * sc * 6));
     ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.x, top); ctx.stroke();
     const arm = (kind === "crook" ? 2.4 : kind === "bund" ? 1.4 : 0) * sc;
     if (arm) { ctx.beginPath(); ctx.moveTo(b.x, top); ctx.quadraticCurveTo(b.x - arm * p.side, top - 0.9 * sc, b.x - arm * p.side * 1.4, top + 0.2 * sc); ctx.stroke(); }
@@ -3143,14 +3428,15 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
         // the glow is a 4 m pool of light, and it has to be CAPPED: unclamped it becomes a
     // 240 px grey disc floating over the street as soon as the lamp is close.
-    if (on && sc > 0.1) { ctx.save(); ctx.globalAlpha = 0.16; ctx.fillStyle = "#ffe6a8"; ctx.beginPath(); ctx.arc(lx, ly + 0.4 * sc, Math.min(70, 4 * sc), 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+    // only at night, and small: an unclamped pool of lamplight in daylight reads as fog
+    if (night && sc > 0.1) { ctx.save(); ctx.globalAlpha = 0.13; ctx.fillStyle = "#ffe6a8"; ctx.beginPath(); ctx.arc(lx, ly + 0.4 * sc, Math.min(34, 4 * sc), 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
   }
 
   function drawTree(p, rel, lat, kind, night, k) {
     const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.03) return;
     const sc = b.scale, hM = (kind === "lime" ? 11 : kind === "ginkgo" ? 8 : 10) * (k || 1);
     ctx.strokeStyle = night ? "#181a16" : "#4a4034";
-    ctx.lineWidth = Math.max(1, 0.4 * sc);
+    ctx.lineWidth = capW(Math.max(1, 0.4 * sc));
     ctx.beginPath(); ctx.moveTo(b.x, b.y); ctx.lineTo(b.x, b.y - hM * 0.45 * sc); ctx.stroke();
     const cy = b.y - hM * 0.72 * sc, r = hM * 0.34 * sc;
     ctx.fillStyle = kind === "ginkgo" ? (night ? "#2c2c14" : "#9aa03a")
@@ -3236,16 +3522,18 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   /* ---- parked cars, which is what a kerb actually looks like */
   function drawParked(p, rel, lat, night) {
+    if (rel < 7) return;                         // you are alongside it, not looking at it
     const b = projectAhead(Math.max(2, rel), lat); if (b.scale < 0.05) return;
     const sc = b.scale, L = 4.5, W = 1.85, H = 1.45;
     const hue = Math.floor(p.seed * 360);
     ctx.save(); ctx.translate(b.x, b.y);
     ctx.fillStyle = `hsl(${hue},${night ? 12 : 22}%,${night ? 16 : 40}%)`;
     ctx.beginPath(); ctx.roundRect(-W * sc / 2, -H * sc, W * sc, H * sc * 0.72, Math.min(W * sc * 0.16, 0.18 * sc)); ctx.fill();
-    // a windscreen, so it reads as a car rather than a lozenge
-    ctx.fillStyle = night ? "rgba(70,90,110,0.4)" : "rgba(170,192,208,0.55)";
+    // glass and wheels, so it reads as a car rather than a lozenge of paint
     ctx.fillStyle = night ? "rgba(90,110,130,0.35)" : "rgba(170,192,208,0.6)";
-    ctx.fillRect(-W * sc * 0.32, -H * sc * 0.98, W * sc * 0.64, H * sc * 0.3);
+    ctx.fillRect(-W * sc * 0.32, -H * sc * 0.70, W * sc * 0.64, H * sc * 0.26);
+    ctx.fillStyle = night ? "#0a0c0f" : "#15181c";
+    for (const dx of [-0.34, 0.34]) ctx.fillRect(dx * W * sc - 0.09 * W * sc, -0.15 * H * sc, 0.18 * W * sc, 0.15 * H * sc);
     ctx.restore();
   }
 
@@ -3363,6 +3651,112 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         label("WELLINGTON ARCH", 26);
         break;
       }
+      case "towerbridge": {              // the two Gothic towers, the walkways between them,
+        // and the bascules you are driving over. It is the thing everyone means by
+        // "the bridge of London", and it is the reason this route exists.
+        for (const dx of [-11, 11]) {
+          box(dx, 7, 42, night ? "#3a3830" : "#b3a68c");
+          ctx.fillStyle = night ? "#1a2a2a" : "#3f6b63";                 // the copper roofs
+          ctx.beginPath();
+          ctx.moveTo(x + (dx - 4.2) * sc, y - 42 * sc); ctx.lineTo(x + (dx + 4.2) * sc, y - 42 * sc);
+          ctx.lineTo(x + dx * sc, y - 54 * sc); ctx.closePath(); ctx.fill();
+          for (let r = 0; r < 5; r++) {                                   // the pointed windows
+            ctx.fillStyle = night ? "rgba(255,226,164,0.5)" : "rgba(48,56,66,0.5)";
+            ctx.fillRect(x + (dx - 1) * sc, y - (10 + r * 6) * sc, 2 * sc, 3.4 * sc);
+          }
+        }
+        ctx.fillStyle = night ? "#2b3a5c" : "#4f6a9c";                    // the high walkways
+        ctx.fillRect(x - 12 * sc, y - 40 * sc, 24 * sc, 2.2 * sc);
+        ctx.fillRect(x - 12 * sc, y - 35 * sc, 24 * sc, 1.4 * sc);
+        // the suspension chains out to each bank
+        ctx.strokeStyle = night ? "#2b3a5c" : "#4f6a9c"; ctx.lineWidth = Math.max(1, 0.5 * sc);
+        for (const s2 of [-1, 1]) {
+          ctx.beginPath(); ctx.moveTo(x + s2 * 15 * sc, y - 34 * sc);
+          ctx.quadraticCurveTo(x + s2 * 30 * sc, y - 12 * sc, x + s2 * 46 * sc, y - 9 * sc); ctx.stroke();
+        }
+        break;
+      }
+      case "toweroflondon": {            // the White Tower: four corner turrets and a battlement
+        box(0, 26, 17, night ? "#3d3a32" : "#c2b9a2");
+        for (const dx of [-11, 11]) { box(dx, 4, 21, night ? "#3d3a32" : "#c2b9a2");
+          ctx.fillStyle = night ? "#1a2a2a" : "#3f6b63";
+          ctx.beginPath(); ctx.moveTo(x + (dx - 2.4) * sc, y - 21 * sc); ctx.lineTo(x + (dx + 2.4) * sc, y - 21 * sc);
+          ctx.lineTo(x + dx * sc, y - 27 * sc); ctx.closePath(); ctx.fill(); }
+        ctx.fillStyle = night ? "#2a2820" : "#8d8672";
+        for (let k = -5; k <= 5; k++) ctx.fillRect(x + k * 2.2 * sc - 0.7 * sc, y - 18.6 * sc, 1.4 * sc, 1.8 * sc);
+        break;
+      }
+      case "stpauls": {                  // the dome, the lantern, and the two west towers
+        box(0, 34, 22, stone);
+        ctx.fillStyle = night ? "#3f4650" : "#9aa3ac";
+        ctx.beginPath(); ctx.ellipse(x, y - 22 * sc, 9 * sc, 11 * sc, 0, Math.PI, 0); ctx.fill();
+        box(0, 3.4, 40, stone);                                            // the lantern
+        ctx.fillStyle = night ? "#8a7434" : "#d9b76a";
+        ctx.beginPath(); ctx.arc(x, y - 42 * sc, 1.3 * sc, 0, Math.PI * 2); ctx.fill();
+        for (const dx of [-15, 15]) box(dx, 5, 27, stone);
+        break;
+      }
+      case "bigben": {                   // the Elizabeth Tower, with the clock telling the time
+        box(0, 9, 78, night ? "#3a3830" : "#c0b394");
+        ctx.fillStyle = night ? "#f2ead4" : "#f6f0dc";                     // the dial
+        ctx.beginPath(); ctx.arc(x, y - 62 * sc, 4.2 * sc, 0, Math.PI * 2); ctx.fill();
+        ctx.strokeStyle = "#1b1f26"; ctx.lineWidth = Math.max(0.9, 0.22 * sc);
+        {
+          const now = new Date(), hh = ((now.getHours() % 12) + now.getMinutes() / 60) / 12 * 6.28, mm = now.getMinutes() / 60 * 6.28;
+          ctx.beginPath(); ctx.moveTo(x, y - 62 * sc); ctx.lineTo(x + Math.sin(hh) * 2.2 * sc, y - 62 * sc - Math.cos(hh) * 2.2 * sc); ctx.stroke();
+          ctx.beginPath(); ctx.moveTo(x, y - 62 * sc); ctx.lineTo(x + Math.sin(mm) * 3.4 * sc, y - 62 * sc - Math.cos(mm) * 3.4 * sc); ctx.stroke();
+        }
+        ctx.fillStyle = night ? "#2b2a22" : "#8a7f66";                     // the belfry and the spire
+        ctx.fillRect(x - 5.4 * sc, y - 72 * sc, 10.8 * sc, 6 * sc);
+        ctx.beginPath(); ctx.moveTo(x - 5.4 * sc, y - 78 * sc); ctx.lineTo(x + 5.4 * sc, y - 78 * sc);
+        ctx.lineTo(x, y - 96 * sc); ctx.closePath(); ctx.fill();
+        break;
+      }
+      case "parliament": {               // the river front: a long Gothic wall and the Victoria Tower
+        box(-30, 90, 26, night ? "#3a3830" : "#bfb294");
+        for (let k = -14; k <= 6; k++) {                                    // the pinnacles
+          ctx.fillStyle = night ? "#2b2a22" : "#8a7f66";
+          ctx.fillRect(x + (k * 4 - 30) * sc - 0.5 * sc, y - 29 * sc, 1 * sc, 3.4 * sc);
+        }
+        box(-64, 14, 62, night ? "#3a3830" : "#bfb294");                    // the Victoria Tower
+        ctx.fillStyle = "#c8102e";
+        ctx.fillRect(x - 64 * sc - 0.2 * sc, y - 70 * sc, 0.4 * sc, 5 * sc);
+        ctx.fillRect(x - 64 * sc, y - 70 * sc, 4 * sc, 2.4 * sc);
+        break;
+      }
+      case "abbey": {                    // Westminster Abbey: the two west towers
+        box(0, 30, 20, stone);
+        for (const dx of [-11, 11]) { box(dx, 6, 40, stone);
+          ctx.fillStyle = night ? "#2b2a22" : "#8a7f66";
+          for (let k = -1; k <= 1; k += 2) ctx.fillRect(x + (dx + k * 2.4) * sc, y - 44 * sc, 0.9 * sc, 4 * sc); }
+        break;
+      }
+      case "nelson": {                   // the column, the capital, and Nelson on top of it
+        ctx.fillStyle = night ? "#2f2d28" : "#6e675a";
+        ctx.fillRect(x - 8 * sc, y, 16 * sc, -3 * sc);                      // the plinth
+        ctx.fillRect(x - 1.9 * sc, y - 3 * sc, 3.8 * sc, -46 * sc);
+        ctx.fillStyle = night ? "#3a382f" : "#857d6c";
+        ctx.fillRect(x - 3 * sc, y - 49 * sc, 6 * sc, -2.6 * sc);
+        ctx.fillStyle = night ? "#2a2a24" : "#4b4636";
+        ctx.fillRect(x - 0.9 * sc, y - 51.6 * sc, 1.8 * sc, -5.4 * sc);     // Nelson
+        // and the four lions round the base
+        ctx.fillStyle = night ? "#1d1c18" : "#3c3830";
+        for (const dx of [-6.5, 6.5]) { ctx.beginPath(); ctx.ellipse(x + dx * sc, y - 1 * sc, 2.4 * sc, 1.1 * sc, 0, 0, Math.PI * 2); ctx.fill(); }
+        break;
+      }
+      case "admiralty": {                // Admiralty Arch: you drive through the centre span
+        box(0, 46, 21, stone);
+        ctx.fillStyle = night ? "#0b0e12" : "#3d4048";
+        for (const dx of [-13, 0, 13]) {
+          const w2 = dx === 0 ? 6 : 3.6, h2 = dx === 0 ? 13 : 10;
+          ctx.fillRect(x + dx * sc - w2 * sc, y - h2 * sc, w2 * 2 * sc, h2 * sc);
+          ctx.beginPath(); ctx.ellipse(x + dx * sc, y - h2 * sc, w2 * sc, w2 * 0.9 * sc, 0, Math.PI, 0); ctx.fill();
+        }
+        ctx.fillStyle = night ? "#2f2d26" : "#b3a98f";
+        ctx.fillRect(x - 23 * sc, y - 22.6 * sc, 46 * sc, 1.6 * sc);
+        break;
+      }
+      case "river": break;               // handled as a block, not a mark
       case "apsley":  box(0, 30, 16, stone); label("APSLEY HOUSE", 16); break;
       case "gate": {                       // a park gate: two piers and ironwork
         box(-3, 1.6, 5, stone); box(3, 1.6, 5, stone);
@@ -3395,6 +3789,21 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         ctx.fillRect(x - 6 * sc, y - 21.6 * sc, 12 * sc, 21.6 * sc);
         ctx.fillStyle = night ? "#4a4436" : "#b8ab8c";
         ctx.fillRect(x - 4 * sc, y - 11 * sc, 8 * sc, 0.9 * sc);
+        // THE BALCONY. Arrive as a chauffeur should — under 12 km/h, no reds run — and
+        // there is somebody on it. Arrive at forty through the forecourt and there is not.
+        if (state.route.arrived && state.sigRuns === 0 && (state.arrivalKmh || 99) < 12) {
+          ctx.fillStyle = night ? "#c8b8d8" : "#e8d8f0";                   // a pale coat
+          ctx.fillRect(x - 0.9 * sc, y - 13.4 * sc, 1.8 * sc, 2.6 * sc);
+          ctx.fillStyle = night ? "#c2a487" : "#e0c0a0";
+          ctx.beginPath(); ctx.arc(x, y - 14 * sc, 0.62 * sc, 0, Math.PI * 2); ctx.fill();
+          ctx.fillStyle = night ? "#8a7434" : "#d9b76a";                   // and a hat
+          ctx.fillRect(x - 0.85 * sc, y - 14.7 * sc, 1.7 * sc, 0.4 * sc);
+          if (sc > 0.5) {
+            ctx.fillStyle = "rgba(232,236,244,0.75)"; ctx.textAlign = "center";
+            ctx.font = `600 ${Math.max(8, Math.min(15, Math.round(11 * sc)))}px ui-sans-serif`;
+            ctx.fillText("Her Majesty is on the balcony.", x, y - 17 * sc);
+          }
+        }
         ctx.fillStyle = "#c8102e";                                          // the Royal Standard
         ctx.fillRect(x - 0.2 * sc, y - 26 * sc, 0.4 * sc, 4.4 * sc);
         ctx.fillRect(x + 0.2 * sc, y - 26 * sc, 3.2 * sc, 1.9 * sc);
@@ -3614,11 +4023,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const list = state.traffic.slice().sort((a, b) => b.z - a.z);
     for (const car of list) {
       const v = VEHICLES[car.kind] || VEHICLES.saloon;
-      const held = car.speed * (car.hold == null ? 1 : car.hold);
-      const rel = car.oncoming ? -(Math.abs(state.speedMps) + held) : (held - state.speedMps);
-      car.z += rel * 0.016;
-      if (car.z < 4) car.z += 380;
-      if (car.z > 384) car.z -= 380;
+      // NO MOTION HERE. Traffic moves in cityTrafficStep, at the real dt, so it queues
+      // properly and keeps moving while you are on another tab.
+      // a car three metres away is a flat slab filling a quarter of the windscreen: it
+      // has slid past you, so let it go rather than drawing a wall of paint
+      if (car.z < 5) continue;
       const half = halfAt(Math.max(2, car.z));
       // which side of the road this car is on is the country's rule, not a coin toss:
       // London and Tokyo drive on the left, so oncoming traffic is to your RIGHT.
@@ -3675,6 +4084,63 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   /* The pavement. `drawRoad` fills the whole ground plane with `pal.grass`, which on a
      journey is the pavement colour; this lays the KERB on top of it — a raised edge and a
      line of slabs — so the road has a real edge to it rather than fading into a lawn. */
+
+  /* ---- THE FLAGBEARER, and NIGHT VISION. Both are switches on the car, so both have to
+     be things you can see out of the windscreen rather than lines in a toast. */
+  function drawPhSwitches(w, h, pal) {
+    // the man with the red flag, walking four miles an hour eight metres ahead of you
+    if (state.ph.flag) {
+      const b = projectAhead(8, -1.6);
+      if (b.scale > 0.05) {
+        const sc = Math.min(b.scale, 120), t = state.ph.flagT * 3.2, sw = Math.sin(t) * 0.2;
+        ctx.save(); ctx.translate(b.x, b.y);
+        ctx.strokeStyle = "#2b2620"; ctx.lineWidth = capW(Math.max(1, 0.14 * sc));
+        ctx.beginPath(); ctx.moveTo(0, -0.85 * sc); ctx.lineTo(sw * sc, 0); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, -0.85 * sc); ctx.lineTo(-sw * sc, 0); ctx.stroke();
+        ctx.fillStyle = "#3a3128";
+        ctx.beginPath(); ctx.roundRect(-0.22 * sc, -1.5 * sc, 0.44 * sc, 0.7 * sc, 0.1 * sc); ctx.fill();
+        ctx.fillStyle = "#c2a487";
+        ctx.beginPath(); ctx.arc(0, -1.66 * sc, 0.13 * sc, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#241f18";                                   // a stovepipe hat, 1865
+        ctx.fillRect(-0.16 * sc, -2.0 * sc, 0.32 * sc, 0.3 * sc);
+        // the flag itself, on its staff, waving
+        ctx.strokeStyle = "#6b5a44"; ctx.lineWidth = capW(Math.max(1, 0.07 * sc));
+        ctx.beginPath(); ctx.moveTo(0.2 * sc, -1.4 * sc); ctx.lineTo(0.55 * sc, -2.4 * sc); ctx.stroke();
+        ctx.fillStyle = "#b3232b";
+        ctx.beginPath();
+        ctx.moveTo(0.55 * sc, -2.4 * sc);
+        ctx.quadraticCurveTo(1.0 * sc, (-2.3 + Math.sin(t * 2) * 0.12) * sc, 1.35 * sc, -2.15 * sc);
+        ctx.lineTo(1.3 * sc, -1.6 * sc);
+        ctx.quadraticCurveTo(0.95 * sc, (-1.75 + Math.sin(t * 2) * 0.12) * sc, 0.5 * sc, -1.85 * sc);
+        ctx.closePath(); ctx.fill();
+        ctx.restore();
+      }
+    }
+    // night vision: a box round anyone in or near the road ahead, before the lamps reach them
+    if (state.ph.night && state.city) {
+      ctx.save();
+      ctx.strokeStyle = "rgba(120,255,190,0.85)"; ctx.lineWidth = 1.4;
+      ctx.font = "600 9px ui-sans-serif"; ctx.textAlign = "center";
+      let seen = 0;
+      for (const pp of state.city.peds) {
+        const rel = pp.at - state.distanceM;
+        if (rel < 4 || rel > 110) continue;
+        const half = halfAt(Math.max(2, rel));
+        const lat = pp.cross ? (half + 1.2) * pp.side + pp.lateral * -(half + 1.2) * pp.side * 2
+                             : (half + 1.4) * pp.side;
+        if (Math.abs(lat) > half + 3.5) continue;          // only what is in or beside the road
+        const b = projectAhead(Math.max(1.5, rel), lat);
+        if (b.scale < 0.06) continue;
+        const sc = Math.min(b.scale, 90), bw = 0.7 * sc, bh = 1.9 * sc;
+        ctx.strokeRect(b.x - bw / 2, b.y - bh, bw, bh);
+        if (++seen > 26) break;
+      }
+      ctx.fillStyle = "rgba(120,255,190,0.7)";
+      ctx.fillText("NIGHT VISION \u00b7 " + seen + " ahead", innerWidth * 0.5, horizonY - 14);
+      ctx.restore();
+    }
+  }
+
   function drawPavement(w, h, pal) {
     const kit = state.city.kit;
     for (const side of [-1, 1]) {
@@ -4541,6 +5007,70 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     g.strokeStyle = state.route.active ? "rgba(165,175,185,0.92)" : "rgba(120,130,140,0.55)"; g.lineWidth = 5; g.lineCap = "round"; g.lineJoin = "round";
     g.beginPath(); for (let i = 0; i <= N; i++) { const x = TX(X[i]), y = TY(Y[i]); i ? g.lineTo(x, y) : g.moveTo(x, y); } if (loop) g.closePath(); g.stroke();
     const s0 = at(0); g.strokeStyle = "rgba(245,245,245,0.95)"; g.lineWidth = 3; g.beginPath(); g.moveTo(s0.x - 6, s0.y); g.lineTo(s0.x + 6, s0.y); g.stroke();
+
+    /* ---- ON A JOURNEY, THIS IS A STREET MAP -------------------------------------
+       A circuit is a closed ribbon and the only thing you need off it is the shape. A
+       city is junctions: which roads cross yours, which one you are coming to, and
+       whether its light is green. All of it is read off the same signal clock the world
+       is using, so a junction that is red on the map is red out of the windscreen. */
+    const circM = circuitNow();
+    if (circM && circM.signals) {
+      const kitM = app.CITY_KITS[state.route.name];
+      // the cross streets. Each junction gets a road running across yours, drawn from the
+      // route's own heading at that point so it meets the street at a right angle.
+      for (const sg of circM.signals) {
+        const p0 = at(sg.at - 6), p1 = at(sg.at + 6);
+        const ang = Math.atan2(p1.y - p0.y, p1.x - p0.x) + Math.PI / 2;
+        const c0 = at(sg.at), arm = Math.max(12, sc * 90);
+        g.strokeStyle = "rgba(150,160,172,0.34)"; g.lineWidth = 3.4; g.lineCap = "round";
+        g.beginPath();
+        g.moveTo(c0.x - Math.cos(ang) * arm, c0.y - Math.sin(ang) * arm);
+        g.lineTo(c0.x + Math.cos(ang) * arm, c0.y + Math.sin(ang) * arm);
+        g.stroke();
+      }
+      // a few unsignalled side turnings as well, because a real street has far more
+      // junctions than it has lights
+      g.strokeStyle = "rgba(150,160,172,0.16)"; g.lineWidth = 2.2;
+      for (let d = 90; d < L; d += 170) {
+        if (circM.signals.some(sg => Math.abs(sg.at - d) < 60)) continue;
+        const p0 = at(d - 5), p1 = at(d + 5);
+        const ang = Math.atan2(p1.y - p0.y, p1.x - p0.x) + Math.PI / 2;
+        const c0 = at(d), arm = Math.max(7, sc * 46), sgn = (d % 340 < 170) ? 1 : -1;
+        g.beginPath(); g.moveTo(c0.x, c0.y);
+        g.lineTo(c0.x + Math.cos(ang) * arm * sgn, c0.y + Math.sin(ang) * arm * sgn); g.stroke();
+      }
+      // the junctions themselves, each lit in its own live colour
+      for (const sg of circM.signals) {
+        const c0 = at(sg.at), ph = signalPhase(sg, state.routeTime);
+        const col = ph.state === "green" ? "#3ddc84" : ph.state === "amber" ? "#ffb02e" : "#ff3b34";
+        g.fillStyle = "rgba(8,12,16,0.9)";
+        g.beginPath(); g.arc(c0.x, c0.y, 5.2, 0, Math.PI * 2); g.fill();
+        g.fillStyle = col;
+        g.beginPath(); g.arc(c0.x, c0.y, 3.4, 0, Math.PI * 2); g.fill();
+        // the one you are actually coming to gets its name
+        const gap = sg.at - state.distanceM;
+        if (gap > -10 && gap < 420) {
+          g.fillStyle = "rgba(226,232,240,0.9)"; g.font = "600 9px ui-sans-serif"; g.textAlign = "left";
+          g.fillText(sg.name, c0.x + 7, c0.y + 3);
+          g.strokeStyle = col; g.lineWidth = 1.4;
+          g.beginPath(); g.arc(c0.x, c0.y, 8, 0, Math.PI * 2); g.stroke();
+        }
+      }
+      // the named places, so the map tells you where you are rather than just what shape
+      // the road is
+      if (kitM) for (const m of kitM.marks) {
+        if (m.kind === "scramble") continue;
+        const c0 = at(m.at);
+        g.fillStyle = "rgba(201,168,95,0.95)";
+        g.beginPath(); g.arc(c0.x, c0.y, 2.6, 0, Math.PI * 2); g.fill();
+        g.fillStyle = "rgba(201,168,95,0.75)"; g.font = "600 8px ui-sans-serif"; g.textAlign = "right";
+        g.fillText(m.name, c0.x - 5, c0.y - 4);
+      }
+      // and where you are going
+      const dst = at(L - 1);
+      g.fillStyle = "#c9a85f";
+      g.beginPath(); g.moveTo(dst.x, dst.y - 8); g.lineTo(dst.x + 5, dst.y); g.lineTo(dst.x, dst.y + 8); g.lineTo(dst.x - 5, dst.y); g.closePath(); g.fill();
+    }
     if (state.learnMode) {   // learning: exaggerated racing line around the lap + a ZOOMED live inset with the precise route
       g.strokeStyle = "rgba(120,230,190,0.85)"; g.lineWidth = 1.6; g.beginPath();
       const M2 = 260, swing = Math.max(3.2, sc * 7);
@@ -5001,7 +5531,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function isNords(n) { return n === "Nürburgring 24h" || n === "Nordschleife" || n === "Nürburgring GP"; }
   function selectCircuit(name) {
     const circ = CIRCUITS[name]; if (!circ) { showToast(`No ${name} on file.`, "Co-Pilot"); return; }
-    state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist, arrived: false };
+    // endDist is the absolute distance the destination sits at, so the car can be held
+    // there rather than driving on into a world that has nothing left in it.
+    state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist,
+                    arrived: false, endDist: state.distanceM + circ.dist, loop: !!circ.loop };
     state.lap = { running: true, startDist: state.distanceM, lastMs: 0, bestMs: 0, curMs: 0 };
     { const k = app.CITY_KITS[name]; if (k && k.hour != null) state.dayPhase = k.hour; }
     app.buildCornersForRoute(); app.seedWorld(); app.seedRivals();
@@ -5082,7 +5615,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (/^(hi|hello|hey|hallo)/.test(text)) { reply("Hallo! Which circuit?"); return; }
     if (has("thank", "danke")) { reply("Gern geschehen."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["The Mall, London", ["themall", "nuneaton", "proving ground", "jaguar", "svo"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["London — Tower Bridge to the Palace", ["london", "tower bridge", "the bridge", "big ben", "parliament", "trafalgar", "the queen", "palace"]], ["The Mall, London", ["themall", "the mall", "hyde park", "park lane"]], ["Paris — Champs-Élysées", ["paris", "champs", "champs-elysees", "concorde", "vendome"]], ["New York — Park Avenue", ["new york", "newyork", "park avenue", "manhattan", "plaza"]], ["Tokyo — Ginza", ["tokyo", "ginza", "chuo dori", "wako"]], ["Shanghai — The Bund", ["shanghai", "the bund", "bund", "nanjing road"]], ["The Royal Hotel", ["hotel", "the hotel", "porte cochere"]], ["The White Palace", ["white palace", "the palace drive", "forecourt", "gravel"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
@@ -5393,6 +5926,20 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (btn) btn.addEventListener("click", () => app.toggleRear(k));
     }
     app.setActive("spiritBtn", false);
+    // the car's own switches
+    const phBtn = (id, key, on, off) => { const b = document.getElementById(id); if (b) b.addEventListener("click", () => app.phToggle(key, on, off)); };
+    phBtn("phRideBtn", "ride", "Magic Carpet Ride — the camera is reading the road and the dampers are set before you get there.", "Planar off — you are feeling the road as it is.");
+    phBtn("phWindowsBtn", "windows", "Windows down. It is quieter with them up, which is rather the point of the car.", "Windows up. Silence.");
+    phBtn("phNightBtn", "night", "Night vision on — anyone in the road ahead is marked before the headlamps reach them.", "Night vision off.");
+    phBtn("phMemoryBtn", "memory", "Memory I — seat, mirrors and column to your position.", "Back to where the seat was.");
+    phBtn("phMassageBtn", "massage", "Front massage running.", "Front massage off.");
+    phBtn("phFlagBtn", "flag", "A man is walking ahead of you with a red flag, and the limit is four miles an hour. Locomotive Act 1865.", "He has stood aside. The Act was repealed in 1896.");
+    { const b = document.getElementById("phSummonBtn"); if (b) b.addEventListener("click", () => { const t = document.getElementById("testDriverBtn"); if (t) t.click(); }); }
+    { const b = document.getElementById("phSeatHeat"); if (b) b.addEventListener("click", () => app.setToggle("heat")); }
+    { const b = document.getElementById("phSeatCool"); if (b) b.addEventListener("click", () => app.setToggle("cool")); }
+    { const b = document.getElementById("phSeatUp"); if (b) b.addEventListener("click", () => app.adjustSeat(-2)); }
+    { const b = document.getElementById("phSeatDown"); if (b) b.addEventListener("click", () => app.adjustSeat(2)); }
+    { const b = document.getElementById("phSeatReset"); if (b) b.addEventListener("click", () => app.adjustSeat(-999)); }
   }
 
   function bindMedia() {
