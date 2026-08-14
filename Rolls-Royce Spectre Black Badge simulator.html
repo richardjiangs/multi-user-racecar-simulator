@@ -461,6 +461,9 @@
         </div>
         <div class="divider"></div>
         <div class="control-grid">
+          <button id="infinityBtn" class="race active" title="Z — the Black Badge's Infinity switch: 659 PS and 1,075 Nm, and Spirited launch. Out of it the car is the standard Spectre, 584 PS and 900 Nm.">Infinity &infin; (on)</button>
+        </div>
+        <div class="control-grid">
           <button id="frontForward">Recline +</button>
           <button id="frontBack">Recline -</button>
           <button id="harnessBtn">Belt</button>
@@ -1220,6 +1223,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
        tests/perf-test.mjs never sees any of them and the certified figures stand.
        `rearOccupied` is set the moment you switch any of it on: the car only has a
        point when there is somebody in the back. */
+    // INFINITY, the Black Badge's own switch. It is ON as the car leaves the factory
+    // description -- 659 PS and 1,075 Nm are the figures Rolls-Royce publish for this car
+    // and are what the certified 4.1 s is measured on -- so key Z drops it the OTHER way,
+    // to the Spectre's ordinary drive mode, exactly as the Yangwang U9's Z does.
+    infinity: true, infinityT: 0,
     rear: { stars: false, gallery: false, umbrella: false, table: false, screen: false,
             privacy: false, cooler: false, recline: false, massage: false, spirit: true },
     // the car's own switches, all opt-in so certification never sees them
@@ -1520,8 +1528,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      car with idleRpm 0 meant it produced nothing at all off the line. */
   function engineTorque(rpm) {
     const omega = rpm * Math.PI * 2 / 60;
-    const plateau = SPEC.peakTorqueNm;                          // full torque from rest
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);      // 485 kW, and it is the ceiling
+    // INFINITY: 485 kW / 659 PS and 1,075 Nm. Out of it the car is the Spectre you drive
+    // every day -- 430 kW / 584 PS and 900 Nm -- which is the real difference between the
+    // two states rather than a percentage invented for the sake of a switch.
+    const inf = state.infinity;
+    const plateau = inf ? SPEC.peakTorqueNm : 900;              // full torque from rest
+    const powerCap = (inf ? SPEC.peakPowerW : 430000) / Math.max(omega, 1);
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1529,6 +1541,35 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const wheelRps = Math.abs(state.speedMps) / (2 * Math.PI * SPEC.wheelRadiusM);
     return wheelRps * SPEC.gearRatios[gear - 1] * SPEC.finalDrive * 60;
   }
+
+  /* =========================================================================
+     INFINITY.
+
+     The symbol on the Black Badge's console is the one thing on this car that is not
+     about comfort. Pressed, it hands over the full 659 PS and 1,075 Nm and sharpens the
+     throttle; released, the car goes back to 584 PS and 900 Nm and drives the way a
+     Spectre normally does. Rolls-Royce's own 0-100 of 4.1 s is an Infinity figure, so
+     Infinity is the state this sim is certified in and the key takes you OUT of it --
+     the same way round as the Yangwang U9's standard specification.
+
+     There is no separate sound file: the note is the same two motors, but out of Infinity
+     the inverter is asked for less and the whine sits lower and quieter, which is what
+     you actually hear.
+     ========================================================================= */
+  function toggleInfinity() {
+    state.infinity = !state.infinity;
+    state.infinityT = 0;
+    audio.init(); audio.resume();
+    if (audio.chime) audio.chime(state.infinity ? [392, 523, 784] : [523, 392]);
+    app.setActive("infinityBtn", state.infinity);
+    const b = document.getElementById("infinityBtn");
+    if (b) b.textContent = state.infinity ? "Infinity ∞ (on)" : "Infinity ∞ (off)";
+    showToast(state.infinity
+      ? "INFINITY. 659 PS and 1,075 Nm, and the throttle answers the moment you ask it. Spirited launch is available."
+      : "Out of Infinity — 584 PS and 900 Nm. This is the Spectre as it is normally driven, and it is no less quick than it needs to be.",
+      "Black Badge");
+  }
+  Object.assign(app, { toggleInfinity });
 
   const modeMap = {
     // A Spectre upshifts EARLY and always has. There is no reason to hold a gear when
@@ -6126,6 +6167,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (btn) btn.addEventListener("click", () => app.toggleRear(k));
     }
     app.setActive("spiritBtn", false);
+    { const b = document.getElementById("infinityBtn"); if (b) b.addEventListener("click", () => app.toggleInfinity()); }
     // the car's own switches
     const phBtn = (id, key, on, off) => { const b = document.getElementById(id); if (b) b.addEventListener("click", () => app.phToggle(key, on, off)); };
     phBtn("phRideBtn", "ride", "Magic Carpet Ride — the camera is reading the road and the dampers are set before you get there.", "Planar off — you are feeling the road as it is.");
@@ -6195,7 +6237,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       // Z = hand it to the chauffeur, or take it back. On this car that is the
       // switch that matters, which is why it gets the key every other car uses for
       // its ultimate-speed mode.
-      if (e.code === "KeyZ" && !e.repeat) { const b = document.getElementById("testDriverBtn"); if (b) b.click(); }
+      // Z is the Black Badge's own switch on this car, not the chauffeur handover
+      if (e.code === "KeyZ" && !e.repeat) app.toggleInfinity();
       // 1-9 and 0: the rear compartment. All opt-in, so certification never sees it.
       if (!e.repeat) for (const k in app.REAR) if (e.code === app.REAR[k].key) { app.toggleRear(k); break; }
     });
