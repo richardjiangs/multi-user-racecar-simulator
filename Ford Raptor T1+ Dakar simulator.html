@@ -966,7 +966,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     testDriver: false,
     realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, strat: "standard", bbias: "std", rainLight: false, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
     lights: true, hazards: false, horn: false,
-    aeroAuto: true, aeroDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
+    aeroAuto: true, aeroDeploy: 0, aeroDragDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
     rideHeight: 0,                 // 0 standard, 1 lifted, -1 race-low
     heat: false, cool: false, ambient: true, audioCabin: false, shifterLight: true,
@@ -1298,7 +1298,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      So the two HUD bars deliberately read differently on the brakes. */
   function updateAero(dt) {
     const spd = Math.abs(state.speedMps);
-    let frontT, rearT;
+    let frontT, rearT, dragT;
     if (state.aeroAuto) {
       // Standing downforce rises through mid-speed as the aero loads up.
       const rise = clamp((spd - 16) / 70, 0, 1);          // air does not care about driver aids
@@ -1312,13 +1312,22 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const corner = clamp(Math.abs(state.lateralG) / 1.4, 0, 1) * 0.6;
       rearT  = clamp(Math.max(speedComp,        state.brake * 1.00, corner),       0, 1);
       frontT = clamp(Math.max(speedComp * 0.85, state.brake * 0.30, corner * 0.8), 0, 1);
+      // DRAG IS NOT THE SAME TRIM. Active aero raises drag under BRAKING — it is an
+      // airbrake — and flattens as the car approaches its own top speed. Nothing flares
+      // its wing because you turned the steering wheel, and the T.50s has no movable wing
+      // at all: it has a fan and a fixed delta. Feeding `corner` into the drag term made
+      // the two highest-drag cars here (Mustang GTD aeroDragAdd 0.55, T.50s 0.30) shed
+      // speed every time you turned in, which feels exactly like the car braking for you.
+      dragT = clamp(Math.max(speedComp, state.brake * 1.00), 0, 1);
     } else {
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
+      dragT = rearT;                      // a wing you wound up by hand really does cost drag
     }
     // (Override changes the electric deploy rather than the aero; see toggleFuel.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
-    state.aeroDeploy = state.aeroRearDeploy;            // the rear sets drag / top-speed cost
+    state.aeroDeploy = state.aeroRearDeploy;            // what the wing LOOKS like
+    state.aeroDragDeploy = approach(state.aeroDragDeploy, dragT, 0.004, dt);   // what it COSTS
     state.frontFlap = state.aeroFrontDeploy;
     const avg = (state.aeroFrontDeploy + state.aeroRearDeploy) / 2;
     state.downforceN = 0.5 * SPEC.airDensity * SPEC.aeroClA * SPEC.frontalAreaM2 * spd * spd * avg;
@@ -1988,7 +1997,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     // The wings and floor make colossal downforce — their drag is always in the baseline.
     const baseCd = SPEC.dragCd;
-    const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDeploy * SPEC.aeroDragAdd) * (state.xMode ? 1 - ERS.xShed : 1);
+    const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDragDeploy * SPEC.aeroDragAdd) * (state.xMode ? 1 - ERS.xShed : 1);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
     const brakeGrip = 1 + (state.downforceN / (SPEC.massKg * 9.81)) * 0.6;   // aero helps the carbon-ceramics

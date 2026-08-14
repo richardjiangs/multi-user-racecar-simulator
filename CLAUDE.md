@@ -162,6 +162,17 @@ is part of the contract):
      car's real dashboard, circuit map, exterior/cockpit SVG art injection.
    - **UI actions / cockpit effects / co-pilot voice / HUD / events / main loop**.
 
+### Active aero: DRAG is not the same trim as DOWNFORCE
+
+`updateAero` fed a **corner** term (lateral g) into the same number that sets drag, so turning
+the wheel flared the wing and the car shed speed. On the two highest-drag cars in the garage —
+Ford Mustang GTD (`aeroDragAdd` 0.55) and Gordon Murray T.50s (0.30) — that reads exactly like
+the car braking for you every time you turn in. Real active aero raises drag under **braking**
+(it is an airbrake) and flattens on the straight; nothing flares a wing because of lateral g,
+and the T.50s has no movable wing at all — it has a fan and a fixed delta. `state.aeroDeploy`
+is now what the wing LOOKS like and `state.aeroDragDeploy` is what it COSTS, and only the
+second one reaches `cdA`. `perf-test` drives in a straight line, so nothing it certifies moved.
+
 ### Steering — do not touch the input paths
 
 Keyboard A/D, the mobile touch wheel, and trackpad steering (hold Space+T or
@@ -650,6 +661,7 @@ you nothing about a Phantom, so the Circuit tab carries **seven point-to-point J
 
 | journey | the road | signals |
 |---|---|---|
+| `London — Tower Bridge to the Palace` | over Tower Bridge · the Tower · St Paul's · Blackfriars · the Embankment · Parliament Square under Big Ben · Whitehall · Trafalgar Square · Admiralty Arch · Buckingham Palace, 5.6 km | 8 |
 | `The Mall, London` | Park Lane · Hyde Park Corner · Constitution Hill · Buckingham Palace, 4.2 km | 5 |
 | `Paris — Champs-Élysées` | the Étoile down to the Concorde, Rue de Rivoli, Place Vendôme, 3.6 km | 5 |
 | `New York — Park Avenue` | Grand Central up Park to Grand Army Plaza and Central Park South, 3.9 km | 6 |
@@ -700,6 +712,45 @@ behind you. **The Spectre's Starlight is in its DOORS as well** — 5,876 lights
 4,796 more in the door cards, which no other car in the world has, and which is why the two cars'
 headliners are not the same drawing. All of it is opt-in and `rearMassKg()` is only added while a
 feature is deployed, so `tests/perf-test.mjs` never sees a gram of it.
+
+**The city is a KIT, not scenery.** `drawScenery` wraps random boxes every 3,000 m, which is
+right for the Nordschleife and nonsense for Ginza. Each journey carries a `CITY_KITS` entry —
+palette, hour, building vocabulary, shop signs in its own script, street furniture, vehicle
+mix, and real landmarks at their real distance — and `buildCity()` turns it into props with
+absolute route positions from a fixed seed, so the shop on the corner is the same shop every
+time. Frontages are built plot by plot (Mayfair, Haussmann with balconies on the 2nd and 5th
+floors, Park Avenue setbacks with water tanks, Ginza's vertical sign columns, the Bund's
+colonial fronts with Pudong across the river); landmarks are drawn as themselves; hundreds of
+**people** walk the pavement and wait at the kerb; each city's own vehicles obey the signals
+and keep to the correct side of the road for the country. Ginza and the Bund are **night**.
+
+**Traffic queues.** `cityTrafficStep(dt)` runs in the physics at the real dt (it used to run in
+the renderer on a hard-coded 0.016 s step, so it ran at the frame rate and stopped entirely
+when you opened another tab). Each car takes the LOWER of what the light allows and what the
+car in front allows, and both are expressed as **`v = sqrt(2·a·s)`** rather than a factor off a
+stopping distance — the first version worked out how far it needed to stop and braked if the
+gap was shorter, but once it had slowed its stopping distance shrank, the test stopped being
+true and it accelerated again, so nothing ever came to rest. A red light now goes solid and
+takes a few seconds to clear from the front.
+
+**A journey ENDS.** `updateLap` used to call `onArrival()` only if you happened to be under
+1.2 m/s at the exact moment the last metre went by. Drive through the destination at any speed
+and the route stayed active with nothing left in it — no corners, so the road ran dead straight
+for ever, and no props, because they are all placed between 0 and the route length. That is a
+grey void you can accelerate across to the governor while nothing moves past you: 250 km/h,
+apparently stationary. You now arrive at any speed, `state.arrivalKmh` records how, and
+`state.route.endDist` holds the car at the forecourt.
+
+**The Phantom's coachwork and cabin are the car's own**, not the generator's — a CSS body shell
+with the coachline, two coach doors hinged at opposite ends, the Pantheon grille, the Spirit of
+Ecstasy and the door umbrella, plus the original cabin (Starlight, the Gallery, wood veneer,
+organ-stop vents, the clock) with a binnacle carrying the live Power Reserve and speed.
+`apply.mjs` lists `phantom` under `HAND_DRAWN`. The car's **own switches** are back on a second
+cockpit grid: Magic Carpet Ride (Planar takes the road input out), Windows, Night Vision (it
+boxes anyone in the road ahead, which is a real instrument on a street with 900 people on it),
+Memory I, front massage, Summon Chauffeur, the seat row — and the **Flagbearer**, which is the
+Locomotive Act 1865: a man walks ahead of the car with a red flag and the limit is four miles
+an hour.
 
 **Key Z** is not an ultimate-speed mode on these two — there isn't one. It hands the car to the
 **chauffeur**, and takes it back, because on a Rolls-Royce that is the switch that matters.
