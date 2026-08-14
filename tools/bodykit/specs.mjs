@@ -493,6 +493,44 @@ export const SPECS = {
     rimCol: "#d8e2ea",
     livery: {kind: "lower", at: 0.82, col: "#0d1a22", op: 0.5}, noseDrop: 0.14, tailDrop: 0.14,
   },
+  phantom: {
+    name: "Rolls-Royce Phantom",
+    lengthMm: 5762, wheelbaseMm: 3552, heightMm: 1646, frontOverhangMm: 1065, rearOverhangMm: 1145,
+    wheelDiaFrontMm: 788, wheelDiaRearMm: 788, sillMm: 160,
+    paint: ["#e8e4d8", "#8f8b80", "#26241f"], accent: "#c9a85f",
+    // a formal three-box saloon: a long flat bonnet, an upright cabin set back, and a
+    // boot deck that is nearly level. Nothing about this shape is trying to be fast.
+    roof: [[0.00, 0.44], [0.14, 0.36], [0.28, 0.32], [0.40, 0.30, "c"],
+           [0.48, 0.12], [0.58, 0.00], [0.70, 0.02], [0.80, 0.18, "c"],
+           [0.90, 0.26, "c"], [1.00, 0.32, "c"]],
+    glass: {cowl: 0.40, roofF: 0.48, roofR: 0.70, deck: 0.80, base: 0.42, inset: 0.03, surround: "chrome", pillarW: 7, split: [0.58, 0.62]},
+    doors: [0.40, 0.58, 0.80], creaseY: 0.52, rocker: "flat", archLift: 1.04, flareMm: 10, endLift: 0.14,
+    lampY: 0.40, rim: "dish", badge: "", exhaust: { kind: "twin", n: 2 },
+    front: {grille: "horseshoe", grilleY: 0.40, grilleW: 0.05, grilleH: 0.34, lamp: "cluster"},
+    rear: {lamp: "slim", vent: "none", diffuser: false},
+    side: [["cline", 0.46, 0.40], ["fuelcap", 0.18, 0.40]],
+    rimCol: "#d8d2c4",
+    livery: {kind: "lower", at: 0.62, col: "#1b1f24", op: 0.75}, noseDrop: 0.06, tailDrop: 0.06,
+  },
+  spectre: {
+    name: "Rolls-Royce Spectre Black Badge",
+    lengthMm: 5453, wheelbaseMm: 3210, heightMm: 1559, frontOverhangMm: 1050, rearOverhangMm: 1193,
+    wheelDiaFrontMm: 784, wheelDiaRearMm: 784, sillMm: 150,
+    paint: ["#3c4148", "#1b1f24", "#08090b"], accent: "#c9a85f",
+    // a two-door FASTBACK: one enormous door each side and a roof that never stops
+    // falling from the peak to the tail. Nothing three-box about it at all.
+    roof: [[0.00, 0.50], [0.12, 0.40], [0.24, 0.33], [0.36, 0.28, "c"],
+           [0.46, 0.10], [0.56, 0.00], [0.68, 0.08], [0.80, 0.22],
+           [0.90, 0.30], [1.00, 0.38]],
+    glass: {cowl: 0.38, roofF: 0.46, roofR: 0.66, deck: 0.80, base: 0.40, inset: 0.02, surround: "chrome", pillarW: 7},
+    doors: [0.38, 0.68], creaseY: 0.50, rocker: "flat", archLift: 1.05, flareMm: 14, endLift: 0.18,
+    lampY: 0.38, rim: "dish", badge: "", exhaust: { kind: "none" },
+    front: {grille: "horseshoe", grilleY: 0.38, grilleW: 0.05, grilleH: 0.30, lamp: "slit"},
+    rear: {lamp: "slim", vent: "none", diffuser: false},
+    side: [["chargeport", 0.16, 0.38], ["cline", 0.46, 0.40]],
+    rimCol: "#3a3f46",
+    livery: {kind: "lower", at: 0.68, col: "#0b0d10", op: 0.8}, noseDrop: 0.08, tailDrop: 0.10,
+  },
   evo: { skip: true },   // hand-drawn — the generator must not touch it
   gtr: { skip: true },   // hand-drawn — the generator must not touch it
   m5: { skip: true },   // hand-drawn — the generator must not touch it

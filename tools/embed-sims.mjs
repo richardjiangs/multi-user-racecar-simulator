@@ -47,6 +47,8 @@ const FILES = {
   s2000: "Honda S2000 simulator.html",
   mustanggtd: "Ford Mustang GTD simulator.html",
   rx7: "Mazda RX-7 simulator.html",
+  phantom: "Rolls-Royce Phantom simulator.html",
+  spectre: "Rolls-Royce Spectre Black Badge simulator.html",
   venom: "Hennessey Venom F5 simulator.html",
   evija: "Lotus Evija simulator.html",
   amgone: "Mercedes-AMG One simulator.html",

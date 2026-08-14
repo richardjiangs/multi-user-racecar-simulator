@@ -257,6 +257,22 @@ const CARS = {
     topSpeed: { kmh: 474.8, setup: "e85", minT: 110 },
     brake100: { target: 30, tol: 1.5 },
   },
+  phantom: {
+    file: "Rolls-Royce Phantom simulator.html",
+    app: "PhantomApp",
+    label: "Rolls-Royce Phantom VIII",
+    marks: { 100: { target: 5.4, tol: 1e-4 } },
+    topSpeed: { kmh: 250, minT: 60 },     // 155 mph, governed
+    brake100: { target: 38, tol: 1.5 },
+  },
+  spectre: {
+    file: "Rolls-Royce Spectre Black Badge simulator.html",
+    app: "SpectreApp",
+    label: "Rolls-Royce Spectre Black Badge",
+    marks: { 100: { target: 4.1, tol: 1e-4 } },
+    topSpeed: { kmh: 250, minT: 50 },
+    brake100: { target: 37, tol: 1.5 },
+  },
   mustanggtd: {
     file: "Ford Mustang GTD simulator.html",
     app: "MustangApp",

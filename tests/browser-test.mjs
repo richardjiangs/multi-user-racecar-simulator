@@ -148,6 +148,15 @@ const check = (label, ok, detail) => {
     // those two declare themselves instead.
     const openWheel = /2026 Formula 1|halo|F1 R26|MCL40|FW48|VCARB|VF-26|SF-26|RB22|W17|AMR26|A526|C26/.test(art);
     const raid = /T1\+|Sandrider|GR DKR|HUNTER|RAPTOR/.test(art);
+    // the Phantom's coachwork is not an SVG at all: it is the car's own original CSS body
+    // shell, with the arches as border-radius wheels and the paint as a linear-gradient. It
+    // declares itself the same way the open-wheelers and the raid cars do.
+    const cssCoach = /THE COACHWORK IS IN THE PAGE/.test(art) && /phantom-side/.test(src);
+    if (cssCoach) {
+      if (!/border-radius: 50%/.test(src)) gaps.push(n + ": CSS coachwork with no wheel arches");
+      if (!/linear-gradient\(180deg, #fffdf4/.test(src)) gaps.push(n + ": CSS coachwork with no paint");
+      continue;
+    }
     if (!openWheel && !raid && !/ 0 0 1 /.test(art)) gaps.push(n + ": the body has no wheel arch");
     // and the paint must be the car's own, not one flat fill
     if (!/linearGradient/.test(art)) gaps.push(n + ": the body has no paint, just a flat fill");
@@ -442,7 +451,7 @@ const check = (label, ok, detail) => {
   // The Tesla keeps its ORIGINAL inverter noise: the user saved that build and asked for
   // it back, and their preference outranks the rule. Everything else is exempt from
   // nothing.
-  const EVc = /Taycan|Evija|Nevera|Yangwang/;
+  const EVc = /Taycan|Evija|Nevera|Yangwang|Spectre/;
   const bad = [];
   for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
     const src = readFileSync(ROOT + "/" + f, "utf8");
@@ -536,7 +545,7 @@ const check = (label, ok, detail) => {
   }
   // and they must not all look alike: the housings differ per car the way the dashboards do
   check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
-    bad.length === 0 && side === 13 && centre === 41 && frames.size >= 6, bad.slice(0, 4).join(" | "));
+    bad.length === 0 && side === 13 && centre === 43 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------
@@ -856,7 +865,7 @@ const check = (label, ok, detail) => {
     "Czinger": "Czinger", "Dacia": "Dacia", "Ford": "Ford", "Prodrive": "Prodrive",
     "Alpine": "Alpine", "Williams": "Williams", "Racing": "Racing Bulls", "Haas": "Haas",
     "Cadillac": "Cadillac", "Red": "Red Bull", "Alfa": "Alfa Romeo", "SSC": "SSC", "Jaguar": "Jaguar",
-    "Honda": "Honda", "Mazda": "Mazda",
+    "Honda": "Honda", "Mazda": "Mazda", "Rolls-Royce": "Rolls-Royce",
   };
   const bad = [];
   let checked = 0;
@@ -901,7 +910,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("fifty-four car cards render", await page.locator(".car-card").count() === 54);
+check("fifty-six car cards render", await page.locator(".car-card").count() === 56);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- every card must be WIRED, not just rendered ----------
@@ -911,7 +920,7 @@ check("host board present", await page.locator("#activeHostList").count() === 1)
    `if (!car) return;` and every button on them was inert — and this file never tried
    them, because they were not in the list. Derive, never enumerate. */
 const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
-check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 54);
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 56);
 
 const wiring = await page.evaluate((keys) => keys.map((k) => ({
   key: k,

@@ -9,10 +9,12 @@ import { SPECS } from "./specs.mjs";
 // while the set is worked through.
 import { DRAWN } from "./drawn.mjs";
 
-// HANDS OFF. These eleven were drawn by hand, car by car, and they are the standard the rest
-// are trying to reach: evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5, slr300, czinger.
-// The generator overwrote six of them once. It does not get a second go.
-const HAND_DRAWN = ["evo", "gtr", "m5", "r8", "mclarenf1", "t33", "agera", "u9", "db5", "slr300", "czinger"];
+// HANDS OFF. These twelve were drawn by hand, car by car, and they are the standard the rest
+// are trying to reach: evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5, slr300, czinger, and
+// the Phantom — whose coachwork is not an SVG at all but the car's own original CSS body
+// shell, living as markup in the page. The generator overwrote six of them once. It does not
+// get a second go.
+const HAND_DRAWN = ["evo", "gtr", "m5", "r8", "mclarenf1", "t33", "agera", "u9", "db5", "slr300", "czinger", "phantom"];
 
 /* the fences that make a re-run safe — see the note further down */
 const OPEN = "BODYKIT:BEGIN", CLOSE = "BODYKIT:END";
@@ -46,6 +48,8 @@ const FILES = {
   s2000: "Honda S2000 simulator.html",
   mustanggtd: "Ford Mustang GTD simulator.html",
   rx7: "Mazda RX-7 simulator.html",
+  phantom: "Rolls-Royce Phantom simulator.html",
+  spectre: "Rolls-Royce Spectre Black Badge simulator.html",
 };
 
 let done = 0;
