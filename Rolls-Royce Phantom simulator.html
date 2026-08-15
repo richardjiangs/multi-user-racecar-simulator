@@ -152,7 +152,8 @@
     body.view-cockpit .panel-cockpit,
     body.view-rear .panel-rear,
     body.view-systems .panel-systems,
-    body.view-computer .panel-computer { display: block; }
+    body.view-computer .panel-computer,
+    body.view-learn .panel-learn { display: block; }
 
     .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     h2 { margin: 0; font-size: 15px; font-weight: 700; }
@@ -554,6 +555,7 @@
         <button data-view="rear">Rear Suite</button>
         <button data-view="systems">Systems</button>
         <button data-view="computer">Navigation</button>
+        <button data-view="learn" style="display:none">Chauffeur 101</button>
       </nav>
 
       <section class="quick" aria-label="Quick controls">
@@ -804,6 +806,77 @@
             <i id="brakePedal"></i>
           </div>
         </div>
+      </section>
+
+      <section class="mode-panel panel-learn">
+        <div class="panel-title"><h2>Chauffeur 101</h2><span class="small">a different job from driving fast &mdash; you are judged on what the person behind you feels, and it is measured, not asserted</span></div>
+        <div style="display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap">
+          <nav style="min-width:158px; font-size:11.5px; line-height:1.95">
+          <b style="color:#c9a85f">CONTENTS</b>
+          <a data-goto="pl0" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">1. The whole job in one number</a>
+          <a data-goto="pl1" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">2. Reading the lights, early</a>
+          <a data-goto="pl2" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">3. A junction is a decision, not a corner</a>
+          <a data-goto="pl3" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">4. The line that keeps the back flat</a>
+          <a data-goto="pl4" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">5. Stopping &mdash; and where the rear door lands</a>
+          <a data-goto="pl5" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">6. The arrival</a>
+          <a data-goto="pl6" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">7. This car: 2,560 kg, 900 Nm at 1,700</a>
+          </nav>
+          <div style="flex:1; font-size:13px; line-height:1.6; color:#d6cfbe; min-width:260px">
+
+        <h3 id="pl0" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">1. The whole job in one number</h3>
+        <p style="margin:4px 0">A racing driver is judged on lap time. A chauffeur is judged on <b>JERK</b> &mdash; the rate at which acceleration changes, in m/s&sup3;. Not how hard you accelerate: how fast the hardness changes. A passenger cannot feel a steady 0.2 g. They feel the instant it arrives and the instant it stops, and if they are reading, or pouring something, or asleep, that is the only thing about your driving they will ever notice.</p>
+        <svg viewBox="0 0 340 124" style="width:100%;max-width:340px;height:auto;margin:6px 0;background:#12161b;border-radius:6px">
+          <text x="8" y="14" font-size="9" fill="#9fb2c6">the same stop, driven two ways</text>
+          <path d="M14 48 L120 48 L128 94 L156 94" stroke="#ff7676" stroke-width="2.6" fill="none"/>
+          <text x="158" y="97" font-size="9" fill="#ff7676">braked late &mdash; one big step</text>
+          <path d="M14 48 C62 48 98 66 128 92 L156 94" stroke="#6cd49a" stroke-width="2.6" fill="none"/>
+          <text x="158" y="62" font-size="9" fill="#6cd49a">braked early &mdash; one smooth curve</text>
+          <text x="8" y="116" font-size="9" fill="#8b93a0">both stop in the same place. Only one of them spills the glass.</text>
+        </svg>
+        <p style="margin:4px 0">Chauffeur Mode scores you live on three things and nothing else: <b>peak jerk</b>, <b>peak lateral g</b> and whether you stopped at every red. Both numbers come straight off the running integrator &mdash; jerk is the derivative of the acceleration the physics is already producing, and lateral g is <code>v &times; yaw rate / 9.81</code>. Anything over <b>2.5 m/s&sup3;</b> or <b>0.30 g</b> sideways is marked, because that is roughly where a person stops being able to ignore the car. Run one red and the grade is <b>DISMISSED</b>, immediately. You cannot talk your way to a good mark.</p>
+
+        <h3 id="pl1" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">2. Reading the lights, early</h3>
+        <p style="margin:4px 0">Every junction here has a real name and a real signal on it, and <b>every other car obeys the same one</b> &mdash; the phase is a pure function of route time, so the taxi beside you and the bus in front are reading the clock you are reading. Nobody gets a private light. The binnacle names the next junction, its colour, and the seconds left on it.</p>
+        <p style="margin:4px 0">That countdown is the entire skill. If a light is red with eight seconds left and you are 120 metres away, you do not brake &mdash; you <b>lift</b>, and arrive at it as it turns green having never touched the brake pedal. Braking is what you do when you failed to look far enough ahead. New York's lights are deliberately set on a <b>green wave</b>: hold the limit exactly and you will not stop once. London's are not, and never have been.</p>
+        <p style="margin:4px 0">Amber is not "go faster". Amber means stop if you can do it comfortably, and in this car you almost always can.</p>
+
+        <h3 id="pl2" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">3. A junction is a decision, not a corner</h3>
+        <p style="margin:4px 0">Choose <b>London</b> in Navigation and there is no route at all: you are on the real road network, twenty kilometres round Charing Cross, and every junction offers the roads it really has. Nothing is recalculating and nothing is going to pull you back onto a line, because there is no line.</p>
+        <p style="margin:4px 0">The car goes where the <b>wheel</b> is pointing. From about two hundred metres out the binnacle lists what this junction offers &mdash; &larr; &uarr; &rarr; with the road names &mdash; and highlights the one you are currently asking for; a fingerpost on the kerb says the same thing in the world. Turn the wheel and the highlight moves. You may change your mind right up to the stop line.</p>
+        <svg viewBox="0 0 340 132" style="width:100%;max-width:340px;height:auto;margin:6px 0;background:#12161b;border-radius:6px">
+          <text x="8" y="14" font-size="9" fill="#9fb2c6">approaching a junction: one wheel input, held</text>
+          <path d="M150 124 L150 66 L96 40" stroke="#6cd49a" stroke-width="2.4" fill="none"/>
+          <text x="12" y="36" font-size="9" fill="#6cd49a">turn in once at walking pace, unwind once</text>
+          <path d="M186 124 L186 78 L188 62 L214 54 L246 42" stroke="#ff7676" stroke-width="2.4" fill="none"/>
+          <text x="222" y="72" font-size="9" fill="#ff7676">three corrections</text>
+          <rect x="120" y="46" width="96" height="6" fill="#2b3138"/>
+          <text x="8" y="124" font-size="9" fill="#8b93a0">the rear seat is 2.1 m behind the front axle. It feels every one of them.</text>
+        </svg>
+        <p style="margin:4px 0">Lane centring is a <b>separate switch from the chauffeur</b> and it starts off, because a car that steers itself while you are choosing a turning is a car arguing with you. When it is on, it holds the real lane you are in &mdash; and it lets go entirely for the last forty-six metres of a road.</p>
+
+        <h3 id="pl3" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">4. The line that keeps the back flat</h3>
+        <p style="margin:4px 0">The racing line and the chauffeur's line are not the same line and are sometimes opposites. A racing driver clips the apex to carry speed. You go <b>wide of the apex and slow earlier</b>, because the rear seat is a long way behind the front axle &mdash; <b>2.1 metres behind it in a Phantom</b> &mdash; and everything you do at the front is amplified back there. A flick that feels tidy from the driver's seat is a shove in the ribs three rows of leather away.</p>
+        <p style="margin:4px 0">One steering input per corner. Turn in once, hold, unwind once. A correction mid-corner is two events where there should have been none.</p>
+
+        <h3 id="pl4" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">5. Stopping &mdash; and where the rear door lands</h3>
+        <p style="margin:4px 0">Release the brake as you stop. The classic mistake is holding constant pressure to a halt, which makes the car pitch back on its springs and nod &mdash; and the nod is what wakes people. Bleed the pressure off over the last two metres and the car settles instead of rocking.</p>
+        <p style="margin:4px 0">And stop in the right <b>place</b>. Your passenger uses the <b>rear</b> door. At the hotel the carpet is laid for the rear door, not for you &mdash; which means the car stops with the front wheels <b>past</b> the mark, not on it.</p>
+
+        <h3 id="pl5" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">6. The arrival</h3>
+        <p style="margin:4px 0">The last hundred metres are the only ones anybody watching remembers. Walking pace onto the forecourt, straight, square to the entrance, and stopped before the doors open &mdash; the coach doors on this car are hinged at the back and open into the wind, so they are opened stationary or not at all.</p>
+        <p style="margin:4px 0">The White Palace route exists to practise exactly this and nothing else: four kilometres of gravel avenue where the only hard part is the last two hundred metres.</p>
+
+        <h3 id="pl6" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">7. This car: 2,560 kg and 900 Nm at 1,700</h3>
+        <p style="margin:4px 0">The Phantom is built to make this job easy and you should let it. All <b>900 Nm</b> is there at <b>1,700 rpm</b> &mdash; just above idle &mdash; so you never need the revs, and the satellite-aided transmission reads the road ahead and picks the gear before the corner arrives so that you do not have to. A Phantom that is audible is a Phantom being driven badly, which is why there is no tachometer on it and never has been.</p>
+        <p style="margin:4px 0">2,560 kg is the other half. It is what makes the car so calm over bad surfaces, and it is also what will punish a late decision: at 50 km/h this car needs real distance to stop softly. Everything above is downstream of that one number.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="control-grid">
+          <button id="learnBtn">Chauffeur Mode: Off</button>
+          <button id="demoBtn" data-demo="1">&#9654; Demo &mdash; one junction, done properly</button>
+        </div>
+        <p class="small" style="margin-top:8px">Chauffeur Mode scores the drive live &mdash; peak jerk, peak lateral g, reds stopped for and reds run &mdash; and puts the grade on screen: FAULTLESS &middot; ACCEPTABLE &middot; THEY NOTICED &middot; DISMISSED.</p>
       </section>
 
       <section class="seatpad" aria-label="Seat comfort">
@@ -1487,6 +1560,9 @@ const SPEC = {
     rearRecline: 0, rearMassage: false, tables: false, screens: false, privacy: false, cooler: true,
     frontRecline: 0, seatTempC: 22,
     roadInputG: 0, cabinHeaveG: 0,
+    // --- Chauffeur 101 (opt-in; measured, never asserted) ---
+    learnMode: false, chJerk: 0, chPeakJerk: 0, chPeakLat: 0, chLastAccel: 0,
+    chRedsRun: 0, chRedsStopped: 0, chSeconds: 0,
     shake: { x: 0, y: 0, rot: 0 },
     blinker: 0,               // -1 left, 0 none, +1 right
     blinkPhase: 0, blinkOn: false,
@@ -2341,6 +2417,22 @@ const updateDoorArt = (...args) => app.updateDoorArt(...args);
     if (state.gearMode === "P") total += -state.speedMps * SPEC.massKg * 9;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
+
+    /* CHAUFFEUR 101 SCORING. Both numbers come straight off the running integrator, which
+       is the whole point: jerk is the derivative of the acceleration the physics has just
+       produced, and lateral g is worked out from the yaw rate below. Nothing here is
+       asserted and nothing is a heuristic. It costs one subtraction and it is only read
+       when Chauffeur Mode is on, so certification never sees it. */
+    if (dt > 0) {
+      const j = Math.abs(accel - state.chLastAccel) / dt;
+      state.chJerk = state.chJerk * 0.90 + j * 0.10;          // what a person feels, not a spike
+      state.chLastAccel = accel;
+      if (state.learnMode && Math.abs(state.speedMps) > 0.6) {
+        state.chSeconds += dt;
+        if (state.chJerk > state.chPeakJerk) state.chPeakJerk = state.chJerk;
+        if (Math.abs(state.lateralG) > state.chPeakLat) state.chPeakLat = Math.abs(state.lateralG);
+      }
+    }
 
     // governor
     if (state.speedMps >= SPEC.topSpeedMps && accel > 0) { accel = 0; state.speedMps = SPEC.topSpeedMps; }
@@ -3769,8 +3861,8 @@ function signalStep(dt) {
   for (const sg of j.signals) {
     if (before < sg.at && after >= sg.at) {
       const ph = signalPhase(sg, state.routeTime);
-      if (ph.state === "red") ranARed(sg);
-      else state.sigCleared++;
+      if (ph.state === "red") { ranARed(sg); state.chRedsRun++; }
+      else { state.sigCleared++; state.chRedsStopped++; }
     }
   }
   const sg = nextSignal(j, state.distanceM);
@@ -3780,6 +3872,25 @@ function signalStep(dt) {
     state.nextSig = { name: sg.name, gap, state: ph.state, left: ph.left };
   } else state.nextSig = null;
   state.ranRedClean = state.police ? state.ranRedClean + dt : 0;
+}
+
+/* =========================================================================
+   THE MARK. Not a lap time -- a chauffeur is not judged on one. Run a red and it is over
+   at once, because that is a driving offence and no amount of smoothness answers it;
+   otherwise the grade falls out of the two numbers the integrator produced.
+   ========================================================================= */
+const CH_JERK_OK = 2.5;          // m/s^3 -- roughly where a passenger stops ignoring the car
+const CH_LAT_OK = 0.30;          // g sideways -- likewise
+function chauffeurGrade() {
+  if (state.chRedsRun > 0) return { grade: "DISMISSED", col: "#ff5a49",
+    why: state.chRedsRun + (state.chRedsRun === 1 ? " red light run" : " red lights run") };
+  const j = state.chPeakJerk / CH_JERK_OK, g = state.chPeakLat / CH_LAT_OK;
+  const worst = Math.max(j, g);
+  if (worst <= 0.75) return { grade: "FAULTLESS", col: "#3ddc84", why: "nothing they could feel" };
+  if (worst <= 1.0)  return { grade: "ACCEPTABLE", col: "#c9a85f", why: "within what a passenger ignores" };
+  return { grade: "THEY NOTICED", col: "#ffb02e",
+           why: (j >= g ? "peak jerk " + state.chPeakJerk.toFixed(1) + " m/s\u00b3"
+                        : "peak " + state.chPeakLat.toFixed(2) + " g sideways") };
 }
 
 /* the whole street, run once per physics step */
@@ -3801,6 +3912,7 @@ function streetStep(dt) {
 }
 
 Object.assign(app, {
+  chauffeurGrade, CH_JERK_OK, CH_LAT_OK,
   enterLondon, londonActive, currentRoad, junctionChoices, LDN,
   junctionAhead, currentSignals, onTowerBridge, bridgeLift, bridgeJump, TB,
   circuitNow, onJourney, halfWidthAt, journeyCurvatureAt, streetStep, buildCity,
@@ -4060,6 +4172,40 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
         const maxc = Math.max(8, Math.floor((tw / n) / (5.2 * S)));
         ctx.fillText(nm.length > maxc ? nm.slice(0, maxc - 1) + "…" : nm, x0, 15 * S);
       }
+      ctx.restore();
+    }
+
+    /* ---- CHAUFFEUR 101, live. Two numbers and a grade, because that is the whole job.
+       Everything here is read-only: the physics produced it, this only prints it. */
+    if (state.learnMode) {
+      const G = app.chauffeurGrade();
+      ctx.save();
+      ctx.translate(cx, 118 * S);
+      const tw = Math.min(w - 40, 520 * S);
+      ctx.fillStyle = "rgba(6,8,11,0.88)"; ctx.strokeStyle = G.col; ctx.lineWidth = 1.4;
+      roundRect(ctx, -tw / 2, -25 * S, tw, 50 * S, 10 * S); ctx.fill(); ctx.stroke();
+      ctx.textAlign = "left"; ctx.textBaseline = "middle";
+      ctx.fillStyle = G.col; ctx.font = "800 " + (15 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(G.grade, -tw / 2 + 14 * S, -8 * S);
+      ctx.fillStyle = "rgba(190,198,208,0.85)"; ctx.font = "600 " + (9 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(G.why, -tw / 2 + 14 * S, 10 * S);
+      // the two measurements, as bars against what a passenger can ignore
+      const bar = (label, val, ok, x, unit) => {
+        const bw = 118 * S, f = clamp(val / (ok * 1.6), 0, 1);
+        ctx.fillStyle = "rgba(255,255,255,0.08)";
+        roundRect(ctx, x, -6 * S, bw, 7 * S, 3.5 * S); ctx.fill();
+        ctx.fillStyle = val > ok ? "#ff5a49" : "#3ddc84";
+        roundRect(ctx, x, -6 * S, bw * f, 7 * S, 3.5 * S); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.35)";
+        ctx.fillRect(x + bw / 1.6, -8 * S, 1, 11 * S);          // the line they stop ignoring you at
+        ctx.fillStyle = "rgba(150,158,170,0.9)"; ctx.font = "600 " + (7.5 * S).toFixed(0) + "px ui-sans-serif";
+        ctx.fillText(label + "  " + val.toFixed(2) + unit, x, -14 * S);
+      };
+      bar("PEAK JERK", state.chPeakJerk, app.CH_JERK_OK, -tw / 2 + 176 * S, " m/s\u00b3");
+      bar("PEAK LATERAL", state.chPeakLat, app.CH_LAT_OK, -tw / 2 + 316 * S, " g");
+      ctx.textAlign = "right"; ctx.fillStyle = "rgba(190,198,208,0.85)";
+      ctx.font = "600 " + (8.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(state.chRedsStopped + " stopped \u00b7 " + state.chRedsRun + " run", tw / 2 - 14 * S, 12 * S);
       ctx.restore();
     }
 
@@ -6896,6 +7042,44 @@ const showToast = app.showToast;
 
 function bindCoreControls() {
   document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => app.setView(button.dataset.view)));
+
+  /* ---- CHAUFFEUR 101. A LAUNCH MODE, like every other 101 in the garage: the tab is
+     hidden until the garage card's Learning button calls app.enterLearning(). */
+  {
+    const lb = document.getElementById("learnBtn");
+    const resetScore = () => { state.chPeakJerk = 0; state.chPeakLat = 0; state.chRedsRun = 0; state.chRedsStopped = 0; state.chSeconds = 0; };
+    if (lb) lb.addEventListener("click", () => {
+      state.learnMode = !state.learnMode;
+      lb.textContent = "Chauffeur Mode: " + (state.learnMode ? "On" : "Off");
+      lb.classList.toggle("active", state.learnMode);
+      if (state.learnMode) resetScore();
+      app.showToast(state.learnMode
+        ? "Chauffeur Mode. Peak jerk and peak lateral g are being measured off the integrator, and every red is counted. Drive as though somebody is reading in the back."
+        : "Chauffeur Mode off.", "Whispers");
+    });
+    app.enterLearning = () => {                       // the garage's Learning button lands here
+      const tb = document.querySelector('[data-view="learn"]'); if (tb) tb.style.display = "";
+      if (!state.learnMode && lb) lb.click();
+      app.setView("learn");
+    };
+    app.learnDemo = () => {                           // put the car where the lesson is
+      const tb = document.querySelector('[data-view="learn"]'); if (tb) tb.style.display = "";
+      if (!state.learnMode && lb) lb.click();
+      app.selectDestination("London");
+      state.gearMode = "D"; state.beltLatched = true; state.chauffeur = true;
+      resetScore();
+      app.setView("drive");
+      app.showToast("Charing Cross. The junction ahead is a real one \u2014 the fingerpost and the binnacle both say what it offers. Turn the wheel, not the car.", "Whispers");
+    };
+    const pnl = document.querySelector(".panel-learn");
+    if (pnl) {
+      pnl.querySelectorAll("[data-goto]").forEach((a) => a.addEventListener("click", () => {
+        const t = document.getElementById(a.dataset.goto);
+        if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+      }));
+      pnl.querySelectorAll("[data-demo]").forEach((bEl) => bEl.addEventListener("click", () => app.learnDemo()));
+    }
+  }
   document.querySelectorAll("[data-gear]").forEach((button) => button.addEventListener("click", () => app.setGear(button.dataset.gear)));
   document.querySelectorAll("[data-door]").forEach((button) => button.addEventListener("click", () => app.toggleDoor(button.dataset.door)));
   document.querySelectorAll("[data-destination]").forEach((button) => button.addEventListener("click", () => {

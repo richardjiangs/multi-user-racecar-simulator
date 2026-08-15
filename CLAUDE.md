@@ -825,6 +825,27 @@ an hour.
 **Key Z** is not an ultimate-speed mode on these two — there isn't one. It hands the car to the
 **chauffeur**, and takes it back, because on a Rolls-Royce that is the switch that matters.
 
+### BOTH Rolls-Royces drive the London NETWORK, and both teach Chauffeur 101
+
+The network below lives in the Phantom and is **lifted verbatim into the Spectre** rather
+than rewritten, so the two cannot drift apart. Three things differ on the way across and
+are the only differences: the app global is `SpectreApp`; the Spectre's routes are
+`CIRCUITS`, not `DESTINATIONS`; and because the Spectre's street code sits at MODULE scope
+where `state`/`app`/`clamp`/`showToast` are not in a destructure, the ported block reaches
+for them through `LS()`/`LAPP()`/`LTOAST()`/`LCLAMP()`. Two Spectre-side bugs the port
+exposed: `updateLap` counted the ROAD's own length down as though it were a destination,
+so the car "arrived" a metre short of every junction and stopped; and `onArrival` called
+`kmh()`, which is not in that block's destructure, so arriving anywhere threw.
+
+**Chauffeur 101 is on both.** The Phantom's was dropped when it was rebuilt from the
+owner's file and is back as a launch mode (`data-view="learn"`, hidden until the garage
+card's Learning button calls `app.enterLearning()`), with the score taken off the running
+integrator rather than asserted: `chJerk` is the derivative of the acceleration the physics
+has just produced, lateral g is `v × yawRate / 9.81`, and `chauffeurGrade()` returns
+DISMISSED the moment you run a red, then FAULTLESS · ACCEPTABLE · THEY NOTICED against
+`CH_JERK_OK` 2.5 m/s³ and `CH_LAT_OK` 0.30 g. It costs one subtraction per step and is only
+read when the mode is on, so certification never sees it.
+
 ### The Phantom is the owner's own file, and London is a NETWORK
 
 The Phantom is not built on the garage template: it is the owner's HTML, rebuilt from it at
