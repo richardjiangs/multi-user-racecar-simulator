@@ -2590,20 +2590,307 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      Everything is placed at its real distance along the route from a fixed seed, so the
      car on the third plinth is the same car every time you drive past it.
      ========================================================================= */
+  /* =========================================================================
+     THE CARS ON THE PLINTHS, EACH DRAWN AS ITSELF.
+
+     A 250 GTO is not an F40 and neither of them is a 312 T4, so one red silhouette
+     repeated twenty times is not a museum — it is wallpaper. Every car below carries its
+     own real dimensions (length, height, wheelbase, front and rear overhang, wheel
+     diameter) and its own PROFILE: the outline written as fractions of its own length and
+     height, so the shape is the car's rather than a scaled copy of somebody else's.
+
+     `p` is the body outline, nose to tail, as [xFromNose, yFromGround] in 0..1.
+     `glass` is the daylight opening. `wheels` are [xFromNose, diameterM].
+     The flags are the things you would actually notice standing in front of one:
+     an open cockpit, cycle wings, pontoon fenders, a wing, a fan, a halo, exposed wheels.
+     ========================================================================= */
+  /* lighten or darken a hex by a factor — a body panel is the same paint lit differently,
+     not a different colour, so the highlight and the shadow both come off the car's own. */
+  function cityShade(hex, k) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = Math.min(255, Math.max(0, ((n >> 16) & 255) * k)) | 0;
+    const g = Math.min(255, Math.max(0, ((n >> 8) & 255) * k)) | 0;
+    const b = Math.min(255, Math.max(0, (n & 255) * k)) | 0;
+    return `rgb(${r},${g},${b})`;
+  }
+
   const MUSEUM_CARS = [
-    // the hall, in the order you meet them
-    ["125 S",        1947, "#c81a12"], ["166 MM Barchetta", 1948, "#c81a12"],
-    ["250 GTO",      1962, "#b81a10"], ["250 Testa Rossa", 1957, "#c81a12"],
-    ["Dino 246 GT",  1969, "#d8232a"], ["365 GTB/4 Daytona", 1968, "#e2c437"],
-    ["512 BB",       1976, "#c81a12"], ["288 GTO",        1984, "#c81a12"],
-    ["F40",          1987, "#c81a12"], ["F50",            1995, "#c81a12"],
-    ["Enzo Ferrari", 2002, "#c81a12"], ["LaFerrari",      2013, "#b8140c"],
-    ["F12tdf",       2015, "#8f0f08"], ["812 Competizione", 2021, "#1d2b45"],
-    // the Formula 1 hall
-    ["500 F2",       1952, "#c81a12"], ["312 T4",         1979, "#c81a12"],
-    ["F2004",        2004, "#c81a12"], ["F2007",          2007, "#c81a12"],
-    ["SF71H",        2018, "#c81a12"], ["SF-23",          2023, "#c81a12"],
+    // ---- the road hall, in the order the museum runs them
+    { name: "125 S", year: 1947, col: "#a51410", L: 3.65, H: 1.03, wb: 2.42, fo: 0.60, wheel: 0.66,
+      kind: "barchetta", cycle: true, open: true,
+      p: [[0,0.30],[0.05,0.52],[0.13,0.60],[0.30,0.62],[0.45,0.58],[0.62,0.60],[0.80,0.55],[0.95,0.40],[1,0.24]],
+      glass: null, wheels: [[0.20,0.66],[0.80,0.66]] },
+
+    { name: "166 MM Barchetta", year: 1948, col: "#b8140c", L: 3.96, H: 1.16, wb: 2.20, fo: 0.75, wheel: 0.64,
+      kind: "barchetta", open: true,
+      p: [[0,0.34],[0.06,0.56],[0.16,0.64],[0.34,0.66],[0.46,0.56],[0.68,0.62],[0.86,0.58],[1,0.34]],
+      glass: null, wheels: [[0.21,0.64],[0.80,0.64]] },
+
+    { name: "250 Testa Rossa", year: 1957, col: "#c01810", L: 4.17, H: 1.01, wb: 2.35, fo: 0.80, wheel: 0.66,
+      kind: "barchetta", pontoon: true, open: true,
+      p: [[0,0.26],[0.04,0.50],[0.12,0.58],[0.26,0.54],[0.40,0.50],[0.50,0.60],[0.72,0.62],[0.90,0.52],[1,0.28]],
+      glass: null, wheels: [[0.20,0.66],[0.80,0.66]] },
+
+    { name: "250 GTO", year: 1962, col: "#b81a10", L: 4.33, H: 1.21, wb: 2.40, fo: 0.86, wheel: 0.63,
+      kind: "gt", kamm: true,
+      // the long low nose, the high haunch over the rear axle, the chopped tail
+      p: [[0,0.22],[0.05,0.34],[0.16,0.40],[0.30,0.44],[0.40,0.66],[0.52,0.86],[0.68,0.88],[0.84,0.74],[0.95,0.62],[1,0.56],[1,0.30]],
+      glass: [[0.40,0.62],[0.50,0.80],[0.68,0.82],[0.76,0.66]], wheels: [[0.21,0.63],[0.79,0.63]] },
+
+    { name: "Dino 246 GT", year: 1969, col: "#d8232a", L: 4.24, H: 1.11, wb: 2.34, fo: 0.90, wheel: 0.60,
+      kind: "mid", buttress: true,
+      p: [[0,0.24],[0.06,0.36],[0.18,0.40],[0.32,0.52],[0.44,0.76],[0.58,0.84],[0.72,0.80],[0.86,0.62],[0.96,0.50],[1,0.34]],
+      glass: [[0.36,0.56],[0.46,0.76],[0.62,0.78],[0.70,0.62]], wheels: [[0.20,0.60],[0.80,0.60]] },
+
+    { name: "365 GTB/4 Daytona", year: 1968, col: "#e2c437", L: 4.43, H: 1.25, wb: 2.40, fo: 0.98, wheel: 0.63,
+      kind: "gt",
+      // a very long flat bonnet and a sharp fastback: the Daytona's whole signature
+      p: [[0,0.26],[0.10,0.36],[0.26,0.38],[0.40,0.40],[0.48,0.72],[0.62,0.84],[0.78,0.80],[0.92,0.60],[1,0.42],[1,0.30]],
+      glass: [[0.46,0.52],[0.54,0.78],[0.72,0.78],[0.82,0.58]], wheels: [[0.22,0.63],[0.79,0.63]] },
+
+    { name: "512 BB", year: 1976, col: "#c81a12", L: 4.40, H: 1.12, wb: 2.50, fo: 0.86, wheel: 0.62,
+      kind: "mid", wedge: true, twoTone: "#1c1f24",
+      p: [[0,0.18],[0.14,0.26],[0.30,0.34],[0.42,0.62],[0.56,0.72],[0.74,0.70],[0.90,0.56],[1,0.44],[1,0.26]],
+      glass: [[0.36,0.44],[0.46,0.66],[0.64,0.68],[0.72,0.52]], wheels: [[0.21,0.62],[0.80,0.62]] },
+
+    { name: "288 GTO", year: 1984, col: "#c81a12", L: 4.29, H: 1.12, wb: 2.45, fo: 0.82, wheel: 0.61,
+      kind: "mid", flares: true,
+      p: [[0,0.22],[0.10,0.32],[0.26,0.36],[0.36,0.62],[0.48,0.76],[0.66,0.76],[0.84,0.62],[0.96,0.52],[1,0.34]],
+      glass: [[0.34,0.52],[0.42,0.72],[0.60,0.72],[0.70,0.56]], wheels: [[0.21,0.61],[0.80,0.61]] },
+
+    { name: "F40", year: 1987, col: "#c81a12", L: 4.43, H: 1.13, wb: 2.45, fo: 0.90, wheel: 0.63,
+      kind: "mid", wing: { at: 0.90, h: 0.42, w: 0.20 }, naca: true, wedge: true,
+      p: [[0,0.14],[0.12,0.22],[0.28,0.30],[0.38,0.58],[0.50,0.72],[0.66,0.72],[0.82,0.60],[0.94,0.50],[1,0.44],[1,0.22]],
+      glass: [[0.36,0.48],[0.44,0.68],[0.60,0.68],[0.70,0.54]], wheels: [[0.21,0.63],[0.80,0.63]] },
+
+    { name: "F50", year: 1995, col: "#c81a12", L: 4.48, H: 1.12, wb: 2.58, fo: 0.86, wheel: 0.64,
+      kind: "mid", open: true, wing: { at: 0.92, h: 0.48, w: 0.22 },
+      p: [[0,0.16],[0.12,0.26],[0.28,0.34],[0.40,0.56],[0.52,0.60],[0.68,0.66],[0.84,0.58],[0.96,0.48],[1,0.26]],
+      glass: [[0.38,0.52],[0.44,0.62],[0.54,0.60]], wheels: [[0.20,0.64],[0.80,0.64]] },
+
+    { name: "Enzo Ferrari", year: 2002, col: "#c81a12", L: 4.70, H: 1.15, wb: 2.65, fo: 0.98, wheel: 0.65,
+      kind: "mid", f1nose: true,
+      // the F1 nose: a pointed prow with the bodywork rising away from it either side
+      p: [[0,0.10],[0.07,0.20],[0.18,0.24],[0.30,0.34],[0.40,0.62],[0.54,0.74],[0.72,0.72],[0.88,0.56],[0.97,0.46],[1,0.30]],
+      glass: [[0.36,0.52],[0.46,0.70],[0.64,0.70],[0.74,0.54]], wheels: [[0.21,0.65],[0.80,0.65]] },
+
+    { name: "LaFerrari", year: 2013, col: "#b8140c", L: 4.70, H: 1.12, wb: 2.65, fo: 0.96, wheel: 0.66,
+      kind: "mid", teardrop: true, wing: { at: 0.95, h: 0.20, w: 0.12 },
+      p: [[0,0.12],[0.10,0.22],[0.24,0.30],[0.34,0.58],[0.46,0.78],[0.62,0.76],[0.80,0.58],[0.92,0.46],[1,0.34]],
+      glass: [[0.32,0.50],[0.40,0.74],[0.58,0.72],[0.68,0.54]], wheels: [[0.20,0.66],[0.80,0.66]] },
+
+    { name: "F12tdf", year: 2015, col: "#8f0f08", L: 4.66, H: 1.27, wb: 2.72, fo: 0.92, wheel: 0.68,
+      kind: "gt", stripe: "#15171b",
+      p: [[0,0.20],[0.10,0.32],[0.26,0.36],[0.38,0.42],[0.46,0.72],[0.60,0.84],[0.76,0.78],[0.90,0.58],[1,0.46],[1,0.28]],
+      glass: [[0.44,0.54],[0.52,0.78],[0.70,0.76],[0.80,0.58]], wheels: [[0.22,0.68],[0.79,0.68]] },
+
+    { name: "812 Competizione", year: 2021, col: "#1d2b45", L: 4.70, H: 1.27, wb: 2.72, fo: 0.94, wheel: 0.68,
+      kind: "gt", blade: true,
+      p: [[0,0.18],[0.10,0.30],[0.26,0.34],[0.38,0.40],[0.46,0.70],[0.60,0.82],[0.78,0.76],[0.92,0.56],[1,0.44],[1,0.26]],
+      glass: [[0.44,0.52],[0.52,0.76],[0.72,0.74],[0.82,0.56]], wheels: [[0.22,0.68],[0.79,0.68]] },
+
+    // ---- the Formula 1 hall
+    { name: "500 F2", year: 1952, col: "#c81a12", L: 3.85, H: 0.95, wb: 2.16, fo: 0.72, wheel: 0.71,
+      kind: "openwheel", cigar: true, open: true,
+      p: [[0,0.30],[0.08,0.44],[0.22,0.48],[0.40,0.50],[0.52,0.54],[0.70,0.50],[0.88,0.42],[1,0.30]],
+      glass: null, wheels: [[0.16,0.71],[0.84,0.71]] },
+
+    { name: "312 T4", year: 1979, col: "#c81a12", L: 4.24, H: 1.00, wb: 2.70, fo: 0.76, wheel: 0.66,
+      kind: "openwheel", groundEffect: true, open: true,
+      frontWing: { at: 0.03, h: 0.10, w: 0.10 }, rearWing: { at: 0.96, h: 0.62, w: 0.16 },
+      p: [[0,0.14],[0.10,0.22],[0.22,0.26],[0.34,0.30],[0.44,0.46],[0.56,0.44],[0.74,0.40],[0.90,0.34],[1,0.24]],
+      glass: null, wheels: [[0.15,0.66],[0.85,0.70]] },
+
+    { name: "F2004", year: 2004, col: "#c81a12", L: 4.55, H: 0.95, wb: 3.05, fo: 0.86, wheel: 0.66,
+      kind: "openwheel", open: true, highNose: true,
+      frontWing: { at: 0.02, h: 0.08, w: 0.11 }, rearWing: { at: 0.97, h: 0.72, w: 0.13 },
+      p: [[0,0.26],[0.08,0.30],[0.20,0.28],[0.32,0.32],[0.42,0.50],[0.54,0.48],[0.72,0.40],[0.88,0.34],[1,0.26]],
+      glass: null, wheels: [[0.15,0.66],[0.85,0.66]] },
+
+    { name: "F2007", year: 2007, col: "#c81a12", L: 4.55, H: 0.95, wb: 3.10, fo: 0.86, wheel: 0.66,
+      kind: "openwheel", open: true, highNose: true,
+      frontWing: { at: 0.02, h: 0.09, w: 0.12 }, rearWing: { at: 0.97, h: 0.74, w: 0.11 },
+      p: [[0,0.28],[0.08,0.34],[0.20,0.30],[0.32,0.34],[0.42,0.52],[0.56,0.50],[0.74,0.40],[0.90,0.32],[1,0.24]],
+      glass: null, wheels: [[0.15,0.66],[0.85,0.66]] },
+
+    { name: "SF71H", year: 2018, col: "#c81a12", L: 5.00, H: 0.95, wb: 3.60, fo: 0.90, wheel: 0.67,
+      kind: "openwheel", open: true, halo: true, highNose: true,
+      frontWing: { at: 0.02, h: 0.07, w: 0.13 }, rearWing: { at: 0.97, h: 0.66, w: 0.12 },
+      p: [[0,0.20],[0.08,0.26],[0.20,0.24],[0.32,0.30],[0.42,0.48],[0.58,0.46],[0.76,0.38],[0.92,0.30],[1,0.22]],
+      glass: null, wheels: [[0.14,0.67],[0.86,0.67]] },
+
+    { name: "SF-23", year: 2023, col: "#c81a12", L: 5.10, H: 0.95, wb: 3.60, fo: 0.92, wheel: 0.72,
+      kind: "openwheel", open: true, halo: true, highNose: true, covers: true,
+      frontWing: { at: 0.02, h: 0.07, w: 0.13 }, rearWing: { at: 0.97, h: 0.62, w: 0.13 },
+      p: [[0,0.18],[0.08,0.24],[0.20,0.22],[0.32,0.28],[0.44,0.46],[0.60,0.44],[0.78,0.36],[0.94,0.28],[1,0.20]],
+      glass: null, wheels: [[0.14,0.72],[0.86,0.72]] },
   ];
+
+  /* Draw one of them, side on, at its real size on its plinth. Everything is in METRES
+     off the car's own length and height, multiplied by the projection scale — so a 3.65 m
+     125 S really is shorter than a 5.10 m SF-23 standing next to it. */
+  function drawMuseumCar(x, groundY, sc, car, lit) {
+    const L = car.L * sc, H = car.H * sc;
+    const px = (t) => x - L / 2 + t * L;
+    const py = (v) => groundY - v * H;
+
+    ctx.save();
+    // ---- the wheels go down first: on an open-wheeler they stand outside the body
+    const drawWheel = (t, dia, front) => {
+      const r = (dia / 2) * sc, wx = px(t), wy = groundY - r;
+      ctx.fillStyle = "#0b0d10";
+      ctx.beginPath(); ctx.arc(wx, wy, r, 0, Math.PI * 2); ctx.fill();
+      // a period car has wire wheels and a modern one has a machined rim
+      if (car.year < 1970) {
+        ctx.strokeStyle = "rgba(206,214,222,0.8)"; ctx.lineWidth = Math.max(0.5, r * 0.045);
+        for (let i = 0; i < 12; i++) {
+          const a = (i / 12) * Math.PI * 2;
+          ctx.beginPath(); ctx.moveTo(wx, wy); ctx.lineTo(wx + Math.cos(a) * r * 0.62, wy + Math.sin(a) * r * 0.62); ctx.stroke();
+        }
+        ctx.fillStyle = "#c8ced6"; ctx.beginPath(); ctx.arc(wx, wy, r * 0.16, 0, Math.PI * 2); ctx.fill();
+      } else {
+        ctx.fillStyle = car.kind === "openwheel" ? "#c9ced5" : "#7c848d";
+        ctx.beginPath(); ctx.arc(wx, wy, r * 0.58, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = "#15181c";
+        for (let i = 0; i < 5; i++) {
+          const a = (i / 5) * Math.PI * 2;
+          ctx.beginPath(); ctx.ellipse(wx + Math.cos(a) * r * 0.34, wy + Math.sin(a) * r * 0.34, r * 0.11, r * 0.20, a, 0, Math.PI * 2); ctx.fill();
+        }
+      }
+      // an F1 tyre carries its shoulder writing, which is how you know what it is
+      if (car.kind === "openwheel" && r > 9) {
+        ctx.strokeStyle = "rgba(255,255,255,0.55)"; ctx.lineWidth = Math.max(0.6, r * 0.05);
+        ctx.beginPath(); ctx.arc(wx, wy, r * 0.80, 0, Math.PI * 2); ctx.stroke();
+      }
+    };
+    car.wheels.forEach(([t, dia], i) => drawWheel(t, dia, i === 0));
+
+    // ---- the body
+    const g = ctx.createLinearGradient(0, py(1), 0, groundY);
+    g.addColorStop(0, cityShade(car.col, 1.28));
+    g.addColorStop(0.45, car.col);
+    g.addColorStop(1, cityShade(car.col, 0.38));
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(px(car.p[0][0]), py(car.p[0][1]));
+    for (let i = 1; i < car.p.length; i++) {
+      const a = car.p[i - 1], b = car.p[i];
+      const mx = (a[0] + b[0]) / 2;
+      ctx.quadraticCurveTo(px(mx), py(Math.max(a[1], b[1])), px(b[0]), py(b[1]));
+    }
+    ctx.lineTo(px(1), groundY); ctx.lineTo(px(0), groundY);
+    ctx.closePath(); ctx.fill();
+
+    // the pontoon fenders of a Testa Rossa, which are the reason anyone recognises one
+    if (car.pontoon) {
+      ctx.fillStyle = cityShade(car.col, 1.12);
+      [[0.20, 0.16], [0.80, 0.16]].forEach(([t, w]) => {
+        ctx.beginPath();
+        ctx.moveTo(px(t - w), groundY);
+        ctx.quadraticCurveTo(px(t), py(0.78), px(t + w), groundY);
+        ctx.closePath(); ctx.fill();
+      });
+    }
+    // cycle wings sit ABOVE the wheel on a 125 S, separate from the body
+    if (car.cycle) {
+      ctx.strokeStyle = cityShade(car.col, 0.9); ctx.lineWidth = Math.max(1, H * 0.05);
+      car.wheels.forEach(([t, dia]) => {
+        const r = (dia / 2) * sc;
+        ctx.beginPath(); ctx.arc(px(t), groundY - r, r * 1.12, Math.PI * 1.15, Math.PI * 1.85); ctx.stroke();
+      });
+    }
+    // the F12tdf's black roof-to-tail stripe, and the 512 BB's black lower half
+    if (car.stripe) {
+      ctx.fillStyle = car.stripe;
+      ctx.beginPath();
+      ctx.moveTo(px(0.46), py(0.72)); ctx.lineTo(px(0.60), py(0.84));
+      ctx.lineTo(px(0.76), py(0.78)); ctx.lineTo(px(0.72), py(0.70)); ctx.closePath(); ctx.fill();
+    }
+    if (car.twoTone) {
+      ctx.fillStyle = car.twoTone;
+      ctx.fillRect(px(0.06), groundY - H * 0.22, L * 0.88, H * 0.22);
+    }
+
+    // ---- glass
+    if (car.glass) {
+      ctx.fillStyle = "rgba(184,210,230,0.52)";
+      ctx.beginPath();
+      ctx.moveTo(px(car.glass[0][0]), py(car.glass[0][1]));
+      for (let i = 1; i < car.glass.length; i++) ctx.lineTo(px(car.glass[i][0]), py(car.glass[i][1]));
+      ctx.closePath(); ctx.fill();
+      ctx.strokeStyle = "rgba(20,24,28,0.55)"; ctx.lineWidth = Math.max(0.6, H * 0.012); ctx.stroke();
+    }
+    // an open car has a cockpit opening and a head rest, not a roof
+    if (car.open && car.kind !== "openwheel") {
+      ctx.fillStyle = "rgba(12,14,17,0.85)";
+      ctx.beginPath(); ctx.ellipse(px(0.52), py(0.58), L * 0.11, H * 0.07, 0, 0, Math.PI * 2); ctx.fill();
+    }
+    // an open-wheeler's cockpit, roll hoop and, from 2018, the halo
+    if (car.kind === "openwheel") {
+      ctx.fillStyle = "rgba(10,12,15,0.9)";
+      ctx.beginPath(); ctx.ellipse(px(0.47), py(0.46), L * 0.075, H * 0.055, 0, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = cityShade(car.col, 0.8);
+      ctx.beginPath();
+      ctx.moveTo(px(0.55), py(0.44)); ctx.lineTo(px(0.57), py(0.66));
+      ctx.lineTo(px(0.62), py(0.66)); ctx.lineTo(px(0.62), py(0.44)); ctx.closePath(); ctx.fill();
+      if (car.halo) {
+        ctx.strokeStyle = "#14171b"; ctx.lineWidth = Math.max(1.2, H * 0.045); ctx.lineCap = "round";
+        ctx.beginPath();
+        ctx.moveTo(px(0.395), py(0.44));
+        ctx.quadraticCurveTo(px(0.44), py(0.66), px(0.545), py(0.62));
+        ctx.stroke();
+      }
+      if (car.covers) {                                  // 2022-on wheel covers
+        ctx.fillStyle = cityShade(car.col, 0.9);
+        car.wheels.forEach(([t, dia]) => {
+          const r = (dia / 2) * sc;
+          ctx.beginPath(); ctx.arc(px(t), groundY - r, r * 0.60, 0, Math.PI * 2); ctx.fill();
+        });
+      }
+    }
+    // wings: front and rear on an open-wheeler, rear only on an F40 or an F50
+    const wing = (spec, front) => {
+      if (!spec) return;
+      const wy = py(spec.h), ww = L * spec.w;
+      ctx.fillStyle = "#14171b";
+      ctx.fillRect(px(spec.at) - ww / 2, wy, ww, Math.max(1.2, H * 0.035));
+      if (!front) {                                      // the pylons a rear wing stands on
+        ctx.fillRect(px(spec.at) - ww * 0.06, wy, ww * 0.12, groundY - wy - H * 0.18);
+      }
+    };
+    wing(car.frontWing, true); wing(car.rearWing, false);
+    if (car.wing) {
+      const ww = L * car.wing.w * 2, wy = py(car.wing.h + 0.42);
+      ctx.fillStyle = cityShade(car.col, 0.55);
+      ctx.fillRect(px(car.wing.at) - ww / 2, wy, ww, Math.max(1.4, H * 0.045));
+      [-0.28, 0.28].forEach((o) =>
+        ctx.fillRect(px(car.wing.at) + ww * o, wy, ww * 0.06, H * 0.26));
+    }
+    if (car.blade) {                                     // the 812 Competizione's aero blade
+      ctx.fillStyle = "#14171b";
+      ctx.fillRect(px(0.86), py(0.60), L * 0.11, Math.max(1, H * 0.03));
+    }
+    if (car.naca) {                                      // the F40's flank ducts
+      ctx.fillStyle = "rgba(10,12,15,0.7)";
+      ctx.beginPath();
+      ctx.moveTo(px(0.62), py(0.40)); ctx.lineTo(px(0.74), py(0.34));
+      ctx.lineTo(px(0.74), py(0.44)); ctx.closePath(); ctx.fill();
+    }
+
+    // ---- the grille or the nose badge, which is at the front of every one of them
+    ctx.fillStyle = "rgba(12,14,17,0.85)";
+    if (car.kind === "openwheel") {
+      ctx.beginPath(); ctx.ellipse(px(0.05), py(0.30), L * 0.02, H * 0.06, 0, 0, Math.PI * 2); ctx.fill();
+    } else {
+      ctx.beginPath(); ctx.ellipse(px(0.035), py(car.year < 1970 ? 0.36 : 0.24), L * 0.028, H * (car.year < 1970 ? 0.16 : 0.09), 0, 0, Math.PI * 2); ctx.fill();
+      // headlamps: faired-in and round before 1970, a slit after
+      ctx.fillStyle = "rgba(226,236,244,0.8)";
+      if (car.year < 1975) { ctx.beginPath(); ctx.arc(px(0.10), py(0.42), L * 0.018, 0, Math.PI * 2); ctx.fill(); }
+      else ctx.fillRect(px(0.08), py(0.36), L * 0.055, Math.max(0.8, H * 0.028));
+    }
+    ctx.restore();
+  }
+
   let museumProps = null, museumSeed = -1;
 
   function buildMuseum() {
@@ -2616,8 +2903,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     let i = 0;
     for (let d = 46; d < L - 34; d += 9) {
       const car = MUSEUM_CARS[i % MUSEUM_CARS.length];
-      props.push({ at: d, side: (i % 2 === 0) ? -1 : 1, t: "plinth",
-                   name: car[0], year: car[1], col: car[2], seed: R() });
+      // the plinth is as long as the car standing on it, which is why a 125 S and an
+      // SF-23 do not get the same block of stone
+      props.push({ at: d, side: (i % 2 === 0) ? -1 : 1, t: "plinth", car, seed: R() });
       i++;
     }
     // visitors, standing where visitors stand: off the walkway, near the cars
@@ -2691,7 +2979,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       }
       const lat = p.side * (HALLW / 2 - (p.t === "plinth" ? 2.5 : 1.0));
       const q = projectAhead(rel, lat); if (q.scale < 0.05) continue;
-      const sc = Math.min(q.scale, 40);
+      // a plinth is never closer than about three metres, so it can be allowed to grow to
+      // the size a car three metres away actually is -- clamped at 40 they all read as
+      // models on a shelf rather than cars you are walking past
+      const sc = Math.min(q.scale, p.t === "plinth" ? 105 : 40);
 
       if (p.t === "banner") {
         ctx.fillStyle = "#c81a12";
@@ -2715,36 +3006,14 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         continue;
       }
 
-      // ---- A CAR ON ITS PLINTH. Low, lit from above, with its board in front of it.
-      const PW = 4.6 * sc, PH = 0.26 * sc, PD = 2.1 * sc;
+      // ---- A CAR ON ITS PLINTH, and it is that car.
+      const car = p.car;
+      const PW = (car.L + 0.7) * sc, PH = 0.26 * sc;
       ctx.fillStyle = "#1a1d22";
       ctx.fillRect(q.x - PW / 2, q.y - PH, PW, PH);
       ctx.fillStyle = "#2a2e35";
       ctx.fillRect(q.x - PW / 2, q.y - PH - 0.04 * sc, PW, 0.04 * sc);
-      // the car: a low silhouette in its own colour, three-quarters on to you
-      const CH = 1.20 * sc, CW = PW * 0.94;
-      const bg = ctx.createLinearGradient(0, q.y - PH - CH, 0, q.y - PH);
-      bg.addColorStop(0, p.col); bg.addColorStop(1, "rgba(0,0,0,0.55)");
-      ctx.fillStyle = bg;
-      ctx.beginPath();
-      ctx.moveTo(q.x - CW / 2, q.y - PH);
-      ctx.lineTo(q.x - CW * 0.44, q.y - PH - CH * 0.42);
-      ctx.quadraticCurveTo(q.x - CW * 0.16, q.y - PH - CH, q.x + CW * 0.10, q.y - PH - CH * 0.96);
-      ctx.quadraticCurveTo(q.x + CW * 0.34, q.y - PH - CH * 0.90, q.x + CW * 0.44, q.y - PH - CH * 0.38);
-      ctx.lineTo(q.x + CW / 2, q.y - PH);
-      ctx.closePath(); ctx.fill();
-      // glass
-      ctx.fillStyle = "rgba(190,214,232,0.45)";
-      ctx.beginPath();
-      ctx.moveTo(q.x - CW * 0.30, q.y - PH - CH * 0.50);
-      ctx.quadraticCurveTo(q.x - CW * 0.10, q.y - PH - CH * 0.88, q.x + CW * 0.12, q.y - PH - CH * 0.84);
-      ctx.lineTo(q.x + CW * 0.18, q.y - PH - CH * 0.52);
-      ctx.closePath(); ctx.fill();
-      // wheels
-      ctx.fillStyle = "#0a0c0f";
-      [-0.30, 0.30].forEach((t) => {
-        ctx.beginPath(); ctx.arc(q.x + CW * t, q.y - PH - CH * 0.14, CH * 0.20, 0, Math.PI * 2); ctx.fill();
-      });
+      drawMuseumCar(q.x, q.y - PH, sc, car, true);
       // the spotlight that is on every one of them
       ctx.save(); ctx.globalCompositeOperation = "screen";
       const sg = ctx.createLinearGradient(q.x, q.y - WALLH * sc, q.x, q.y);
@@ -2758,14 +3027,14 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       // the board. Legible only when you are close enough to read one, like a real board.
       if (sc > 3.2) {
         ctx.fillStyle = "rgba(245,246,248,0.94)";
-        const bw = 1.9 * sc, bh = 0.60 * sc;
+        const bw = Math.min(2.6, p.car.L * 0.55) * sc, bh = 0.60 * sc;
         ctx.fillRect(q.x - bw / 2, q.y + 0.10 * sc, bw, bh);
         ctx.fillStyle = "#15171b"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
         ctx.font = `800 ${Math.round(0.26 * sc)}px Georgia, serif`;
-        ctx.fillText(p.name, q.x, q.y + 0.30 * sc);
+        ctx.fillText(p.car.name, q.x, q.y + 0.30 * sc);
         ctx.font = `600 ${Math.round(0.17 * sc)}px ui-sans-serif`;
         ctx.fillStyle = "#5a6068";
-        ctx.fillText(String(p.year), q.x, q.y + 0.52 * sc);
+        ctx.fillText(String(p.car.year), q.x, q.y + 0.52 * sc);
       }
     }
   }
