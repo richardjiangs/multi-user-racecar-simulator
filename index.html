@@ -2463,46 +2463,57 @@
           <div class="photo">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid slice" style="width:100%;height:100%;display:block" role="img" aria-label="Ferrari F12tdf development prototype illustration">
               <defs>
-                <linearGradient id="f12sky" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#0d1016"/><stop offset="1" stop-color="#242830"/>
-                </linearGradient>
-                <linearGradient id="f12body" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0" stop-color="#e2261a"/><stop offset="0.55" stop-color="#c81a12"/><stop offset="1" stop-color="#6d0c07"/>
-                </linearGradient>
+                <linearGradient id="skyf12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1b1f27"/><stop offset="0.6" stop-color="#12151b"/><stop offset="1" stop-color="#0b0d11"/></linearGradient>
+                <linearGradient id="bdf12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e8352a"/><stop offset="0.5" stop-color="#c81a12"/><stop offset="1" stop-color="#66100a"/></linearGradient>
+                <linearGradient id="flf12" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4f58"/><stop offset="1" stop-color="#2c3037"/></linearGradient>
               </defs>
-              <rect width="800" height="450" fill="url(#f12sky)"/>
-              <!-- the gallery it stands in: floor, light troughs and a wall -->
-              <rect y="300" width="800" height="150" fill="#3c4048"/>
-              <rect y="296" width="800" height="5" fill="#5c626c"/>
-              <g fill="#fff8e6" opacity="0.85">
-                <rect x="180" y="52" width="440" height="7" rx="3"/>
-                <rect x="230" y="86" width="340" height="6" rx="3"/>
-                <rect x="272" y="116" width="256" height="5" rx="2"/>
+              <rect width="800" height="450" fill="url(#skyf12)"/>
+              <!-- the gallery it stands in: the light troughs, the wall and the polished floor -->
+              <g fill="#fff8e6" opacity="0.8">
+                <rect x="150" y="46" width="500" height="8" rx="4"/>
+                <rect x="206" y="84" width="388" height="7" rx="3"/>
+                <rect x="252" y="116" width="296" height="6" rx="3"/>
               </g>
-              <text x="400" y="212" text-anchor="middle" font-family="Georgia, serif" font-size="52" fill="rgba(255,255,255,0.07)">Ferrari</text>
-              <!-- the car on its plinth -->
-              <rect x="150" y="336" width="500" height="18" rx="3" fill="#1a1d22"/>
-              <path d="M168,336 L206,300 Q262,258 366,254 Q470,252 546,278 Q606,300 632,336 Z" fill="url(#f12body)"/>
-              <path d="M268,300 Q318,268 388,266 Q452,265 496,282 L470,300 Z" fill="rgba(190,214,232,0.5)"/>
-              <path d="M168,336 L632,336" stroke="#3a0603" stroke-width="3"/>
-              <!-- the tdf's black roof-to-tail stripe -->
-              <path d="M352,258 Q380,254 404,255 L392,336 L364,336 Z" fill="#15171b" opacity="0.9"/>
-              <circle cx="264" cy="336" r="30" fill="#0a0c0f"/><circle cx="264" cy="336" r="14" fill="#6a7078"/>
-              <circle cx="546" cy="336" r="30" fill="#0a0c0f"/><circle cx="546" cy="336" r="14" fill="#6a7078"/>
-              <rect x="286" y="360" width="228" height="42" rx="4" fill="#f2f3f5"/>
-              <text x="400" y="380" text-anchor="middle" font-family="Georgia, serif" font-size="19" font-weight="700" fill="#15171b">F12tdf — prototipo</text>
-              <text x="400" y="396" text-anchor="middle" font-family="ui-sans-serif" font-size="12" fill="#5a6068">2014 · limitato a 24 km/h</text>
+              <text x="400" y="220" text-anchor="middle" font-family="Georgia, serif" font-size="62" fill="rgba(255,255,255,0.06)">Ferrari</text>
+              <rect y="300" width="800" height="150" fill="url(#flf12)"/>
+              <rect y="298" width="800" height="4" fill="#626873"/>
+              <!-- the plinth, cut to the length of the car standing on it -->
+              <rect x="146" y="338" width="508" height="20" rx="3" fill="#1a1d22"/>
+              <rect x="146" y="334" width="508" height="5" rx="2" fill="#2a2e35"/>
+              <!-- the car: long bonnet, high haunch, the tdf's clipped tail -->
+              <path d="M166,338 L206,304 Q258,268 342,262 L408,260 Q486,262 552,286 Q612,306 634,338 Z" fill="url(#bdf12)"/>
+              <path d="M352,262 L404,261 L392,338 L364,338 Z" fill="#15171b" opacity="0.92"/>
+              <path d="M300,300 Q346,270 404,268 Q462,268 502,284 L474,302 Z" fill="rgba(190,214,232,0.48)"/>
+              <path d="M540,296 L596,300 L590,312 L534,308 Z" fill="#15171b" opacity="0.6"/>
+              <circle cx="262" cy="338" r="32" fill="#0a0c0f"/><circle cx="262" cy="338" r="17" fill="#7c848d"/>
+              <circle cx="548" cy="338" r="32" fill="#0a0c0f"/><circle cx="548" cy="338" r="17" fill="#7c848d"/>
+              <!-- the spotlight every one of them stands under -->
+              <path d="M368,46 L432,46 L560,338 L240,338 Z" fill="#fff8e6" opacity="0.07"/>
+              <!-- and the museum's own board in front of it -->
+              <rect x="286" y="366" width="228" height="42" rx="4" fill="#f2f3f5"/>
+              <text x="400" y="384" text-anchor="middle" font-family="Georgia, serif" font-size="18" font-weight="700" fill="#15171b">F12tdf — prototipo</text>
+              <text x="400" y="400" text-anchor="middle" font-family="Arial, sans-serif" font-size="11" fill="#5a6068">Museo Ferrari · limitato a 24 km/h</text>
+              <text x="34" y="46" font-family="Arial, sans-serif" font-weight="700" font-size="14" fill="#cdd4dc">6.3 V12 · 780 CV</text>
             </svg>
-            <img class="realcar" alt="" loading="lazy" src="assets/cars/ferrari-f12tdf.jpg" onerror="this.style.display='none'">
+            <img class="realcar" loading="lazy" alt="Ferrari F12tdf exterior" src="assets/cars/ferrari-f12tdf.jpg" onerror="this.remove()">
+            <div class="badge-row">
+              <div class="mark">F12</div>
+              <div class="credit">Photo supplied by site owner</div>
+            </div>
           </div>
-          <div class="card-body">
-            <h3>Ferrari F12tdf <span class="badge">development prototype</span></h3>
-            <p class="tagline">A 2014 F12berlinetta taken apart and rebuilt as an F12tdf mule. It has no homologation, so at Maranello it moves under a development ECU pegged at <b>24 km/h</b> — until you take the limiter out.</p>
-            <ul class="chips">
-              <li>6.3 L NA V12</li><li>780 CV @ 8,500</li><li>705 Nm</li>
-              <li>0–100 2.9 s</li><li>340 km/h</li><li>7-DCT</li><li>1,415 kg</li>
-            </ul>
-            <div class="card-actions">
+          <div class="car-info">
+            <div class="car-title">
+              <h2>Ferrari F12tdf</h2>
+              <span>Maranello, Modena<br>6.3 NA V12 · rear-wheel drive</span>
+            </div>
+            <div class="specs">
+              <div class="spec"><b>780 CV</b><small>@ 8,500, and 8,900 to go</small></div>
+              <div class="spec"><b>705 Nm</b><small>@ 6,750</small></div>
+              <div class="spec"><b>1,415 kg</b><small>110 kg under a berlinetta</small></div>
+              <div class="spec"><b>2.9 s</b><small>0–100, 7.9 to 200</small></div>
+            </div>
+            <p class="exterior">A 2014 <b>F12berlinetta</b> taken off the line, taken apart, and rebuilt as an <b>F12tdf development prototype</b> — the tdf's engine map, gearbox calibration, aero and rear-wheel steering on a berlinetta shell. A prototype has no homologation and cannot be registered, so at Maranello it moves under a development ECU pegged at <b>24 km/h</b>, which is why a 780 CV V12 sounds like nothing at all coming out of the hall. Take the limiter out on <b>Z</b> and there is nothing between you and the whole engine. Its circuit is not a circuit: it is the <b>Museo Ferrari</b> itself, 380 metres of gallery at walking pace, with twenty cars on their plinths — the 125 S, the 250 GTO, the F40, the Enzo, the 312 T4 — each drawn as itself.</p>
+            <div class="actions">
               <button class="primary" data-practice="f12tdf">Private Practice</button>
               <button class="secondary" data-online="f12tdf">Online Race</button>
               <button class="secondary" data-learn="f12tdf" style="border-color:#2f8f6b;color:#7ce0c0" title="Race Car 101 — the course, the demo, and a live score">Learning</button>

@@ -985,6 +985,33 @@ const wiring = await page.evaluate((keys) => keys.map((k) => ({
   learn: !!document.querySelector(`[data-learn="${k}"]`),
 })), CAR_KEYS);
 const unwired = wiring.filter((w) => !w.practice || !w.online || (!w.learn && w.key !== "phantom"));
+
+/* ---------- A CARD HAS TO BE BUILT THE WAY THE PAGE IS BUILT ----------
+   The F12tdf shipped with class names the stylesheet has never heard of -- card-body,
+   tagline, chips, card-actions -- so it rendered as a bare heading, a paragraph and a
+   bulleted list between two properly typeset cards. Every rule that made the others look
+   like cards simply did not apply to it. Nothing in the tests noticed, because everything
+   it checked (the key, the buttons, the sim behind it) was correct.
+   So: every card must carry the page's OWN furniture. */
+{
+  const shape = await page.$$eval("[data-car-card]", (els) => els.map((e) => ({
+    key: e.dataset.carCard,
+    photo:  !!e.querySelector(".photo"),
+    info:   !!e.querySelector(".car-info"),
+    title:  !!e.querySelector(".car-title h2") && !!e.querySelector(".car-title span"),
+    specs:  e.querySelectorAll(".specs .spec").length,
+    prose:  !!e.querySelector("p.exterior"),
+    actions:!!e.querySelector(".actions"),
+    // and no class the stylesheet does not define
+    stray:  ["card-body", "tagline", "chips", "card-actions"]
+              .filter((c) => e.querySelector("." + c)),
+  })));
+  const wrong = shape.filter((c) => !c.photo || !c.info || !c.title || c.specs < 3 ||
+                                    !c.prose || !c.actions || c.stray.length);
+  check("every card is built out of the page's own parts", wrong.length === 0,
+    wrong.length ? JSON.stringify(wrong.slice(0, 3)) : "");
+}
+
 check("every card has practice / online / learning buttons", unwired.length === 0,
   unwired.length ? JSON.stringify(unwired) : "");
 
