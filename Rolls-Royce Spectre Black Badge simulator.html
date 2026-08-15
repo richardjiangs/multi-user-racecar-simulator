@@ -3097,8 +3097,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
     drawSky(w, h, pal);
+    if (state.city) { ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY); }
     if (state.city) drawCity(w, h, pal, "back"); else drawScenery(w, h, pal);
-    drawRoad(w, h, pal);
+    drawRoad(w, h, pal, !!state.city);
     if (state.city) { drawPavement(w, h, pal); drawCity(w, h, pal, "front"); drawCityTraffic(w, h, pal); }
     else { drawRoadside(w, h, pal); drawTraffic(w, h, pal); }
     drawPhSwitches(w, h, pal);
@@ -3140,8 +3141,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       ctx.fillRect(x - bw / 2, y, bw, bh + 2);
     }
   }
-  function drawRoad(w, h, pal) {
-    ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY);
+  function drawRoad(w, h, pal, skipGround) {
+    // GROUND. On a street this must NOT run: whatever stands beyond the kerb -- the Thames
+    // off Tower Bridge, the water off the Embankment, the park railings -- is drawn in the
+    // "back" pass, which runs first, and this one flat rectangle then painted over all of
+    // it. That is why the river vanished and Tower Bridge had grey ground either side of
+    // it. On a street the caller lays the ground itself, before the back pass.
+    if (!skipGround) { ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY); }
     const rg = ctx.createLinearGradient(0, horizonY, 0, h); rg.addColorStop(0, pal.road); rg.addColorStop(1, pal.night ? "#14171c" : "#2a2e34"); ctx.fillStyle = rg;
     let prevL = null, prevR = null;
     for (let i = 0; i < ROAD_OFFS.length; i++) { const off = ROAD_OFFS[i], H = halfAt(off); const c = centerlineAt(off); const cs = Math.cos(c.psi), sn = Math.sin(c.psi); const L = roadCorner(c.X - H * cs, c.Z + H * sn); const R = roadCorner(c.X + H * cs, c.Z - H * sn); if (prevL) fillClippedQuad([prevL, prevR, R, L]); prevL = L; prevR = R; }
