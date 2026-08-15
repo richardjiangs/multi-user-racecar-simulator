@@ -351,9 +351,9 @@
   <main class="app">
     <header class="topbar">
       <section class="brand">
-        <div class="mark">T33</div>
+        <div class="mark">F12</div>
         <h1>Ferrari F12tdf</h1>
-        <p>3.9L NA V12 · 6-speed Xtrac manual · rear-wheel drive · carbon iStream tub · 1,090 kg.</p>
+        <p>6.3 L NA V12 · 780 CV at 8,500 · 7-speed F1 DCT · rear-wheel drive · 1,415 kg — the 2014 berlinetta rebuilt as an F12tdf development prototype, and limited to 24 km/h until you say otherwise.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -810,20 +810,20 @@ const CIRCUITS = {
     ]
   },
   "Museo Ferrari, Maranello": {
-    dist: 1680, env: "museum", limitKmh: 30, loop: true, widthM: 11, corners: 10,
+    dist: 380, env: "museum", limitKmh: 24, loop: false, widthM: 11, corners: 8,
     blurb: "the Museo Ferrari at Maranello — the forecourt, the length of the main hall, the one-off room, the Formula 1 hall, and out to the Fiorano gate",
     bumps: [],
     track: [
-      c(90,   1, 70,  60,  "The forecourt"),
-      c(230,  -1, 95, 45,  "The entrance ramp"),
-      c(340,  1, 12,  260, "The main hall"),          // a hall is a place you can see the end of
-      c(700,  -1, 88, 40,  "Into the one-off room"),
-      c(820,  1, 10,  150, "Ferrari One of a Kind"),
-      c(1010, 1, 92,  38,  "Into the Formula 1 hall"),
-      c(1090, -1, 8,  210, "The Formula 1 hall"),
-      c(1340, -1, 85, 42,  "Out to the courtyard"),
-      c(1450, 1, 40,  90,  "Via Abetone Inferiore"),
-      c(1580, -1, 75, 55,  "The Fiorano gate")
+      // the real thing is about 110 m through the halls. A room is a place you can see the
+      // far end of, so the halls run nearly straight and every tight corner is a DOORWAY.
+      c(14,  1, 80,  14,  "In from the forecourt"),
+      c(40,  1, 4,   86,  "The main hall"),
+      c(132, -1, 86, 13,  "Into the one-off room"),
+      c(154, 1, 3,   54,  "Ferrari One of a Kind"),
+      c(214, 1, 88,  13,  "Into the Formula 1 hall"),
+      c(234, -1, 3,  84,  "The Formula 1 hall"),
+      c(324, -1, 84, 14,  "Out to the courtyard"),
+      c(348, 1, 46,  22,  "The Fiorano gate")
     ]
   },
   "Prologue — Yanbu": {
@@ -1554,7 +1554,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function seedRivals() {
     state.rivals = [];
     if (!state.raceGrid) return;                        // toggle off => no cars at all
-    const grid = (state.route.active && state.route.name === "Museo Ferrari, Maranello") ? T33_GRID : GRID_CARS;
+    // there is no field in a museum. The brand grid belongs on the circuits.
+    if (state.route.active && state.route.name === "Museo Ferrari, Maranello") { state.rivals = []; state.raceGrid = false; return; }
+    const grid = GRID_CARS;
     const L = lapLen(), loop = isLoop(), N = grid.length;
     grid.forEach((g, i) => state.rivals.push({
       name: g.name, body: g.body, stripe: g.stripe, topMps: g.top / 3.6, latG: g.latG, accel: g.accel,
@@ -1910,7 +1912,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       coast:    { road: "#212630", grass: "#1c3a3a", far: "#244a55", kerb: false, barrier: false },
       desert:   { road: "#a98b57", grass: "#cbb27e", far: "#c9a86f", kerb: false, barrier: false },
       dune:     { road: "#b08a4e", grass: "#d8bd80", far: "#cfa96a", kerb: false, barrier: false },
-      canyon:   { road: "#8f7a55", grass: "#9c7a53", far: "#7e6038", kerb: false, barrier: false }
+      canyon:   { road: "#8f7a55", grass: "#9c7a53", far: "#7e6038", kerb: false, barrier: false },
+      // a museum floor: polished resin, and the "verge" is the same floor because a room
+      // does not have a verge
+      museum:   { road: "#3c4048", grass: "#4a4f58", far: "#1a1d22", kerb: false, barrier: false, indoors: true }
     };
     return { env, night, ...(palettes[env] || palettes.track) };
   }
@@ -1948,7 +1953,14 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const w = innerWidth, h = innerHeight; horizonY = h * 0.46; const pal = envColors(); rebuildRoadTable();
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
-    drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
+    if (pal.indoors) {
+      // INSIDE. No sky, no scenery, no roadside furniture and no rival grid — you are in a
+      // building, and the only things in it are the building and what is on show.
+      drawRoad(w, h, pal);
+      drawMuseum(w, h, pal);
+    } else {
+      drawSky(w, h, pal); drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);
+    }
     drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,90,80,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
     drawMirrors(w, h, pal);
@@ -2539,131 +2551,470 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
+  /* =========================================================================
+     THE F12tdf's COCKPIT.
+
+     Nothing about a Ferrari's driving position is shared with anything else in this
+     garage. There are no stalks: the indicators, the wipers, the lights and the starter
+     are all ON THE WHEEL, which is the one thing everybody notices getting into a modern
+     Ferrari for the first time. The shift lights are on the wheel too, across the top of
+     the rim, where a driver looking down the road can still see them. The manettino --
+     Wet, Sport, Race, CT off, ESC off -- is a red rotary switch on the lower right spoke,
+     and the starter is a red button on the lower left.
+
+     In front of it: one big YELLOW analogue tachometer, which on a car like this is the
+     only instrument that matters, with the Cavallino on the face and the last thousand
+     revs in red. Road speed is a small window inside it, because Ferrari treat speed as
+     secondary information. Two screens flank the tach -- the left one the driver's
+     (fluids, tyres, lap), the right one everything else.
+
+     This prototype adds one thing no production tdf has: the development ECU's own
+     readout, which tells you in plain language whether the limiter is in or out.
+     ========================================================================= */
+  /* =========================================================================
+     THE MUSEO FERRARI, DRAWN AS A BUILDING.
+
+     It is a building, and a small one. The gallery at Maranello is about 2,500 square
+     metres -- roughly 110 metres end to end through the halls -- so the whole walk is
+     under four hundred metres and you do it at a walking pace. It is not a circuit, it
+     does not loop, and there is nothing to lap: the tdf lives here under its limiter and
+     the point of it is to LOOK.
+
+     So none of the circuit furniture runs. No kerbs, no armco, no trees, no start line,
+     no rival grid. What there is instead is what is actually in the room: a polished
+     resin floor with the hall lights reflected in it, white walls with the Cavallino on
+     them, a coffered ceiling of light troughs, and on both sides a row of cars on low
+     plinths, each with its board -- the 125 S, the 250 GTO, the F40, the Enzo, the
+     LaFerrari, the F2004, the 312 T4. Visitors stand between them and look at you.
+
+     Everything is placed at its real distance along the route from a fixed seed, so the
+     car on the third plinth is the same car every time you drive past it.
+     ========================================================================= */
+  const MUSEUM_CARS = [
+    // the hall, in the order you meet them
+    ["125 S",        1947, "#c81a12"], ["166 MM Barchetta", 1948, "#c81a12"],
+    ["250 GTO",      1962, "#b81a10"], ["250 Testa Rossa", 1957, "#c81a12"],
+    ["Dino 246 GT",  1969, "#d8232a"], ["365 GTB/4 Daytona", 1968, "#e2c437"],
+    ["512 BB",       1976, "#c81a12"], ["288 GTO",        1984, "#c81a12"],
+    ["F40",          1987, "#c81a12"], ["F50",            1995, "#c81a12"],
+    ["Enzo Ferrari", 2002, "#c81a12"], ["LaFerrari",      2013, "#b8140c"],
+    ["F12tdf",       2015, "#8f0f08"], ["812 Competizione", 2021, "#1d2b45"],
+    // the Formula 1 hall
+    ["500 F2",       1952, "#c81a12"], ["312 T4",         1979, "#c81a12"],
+    ["F2004",        2004, "#c81a12"], ["F2007",          2007, "#c81a12"],
+    ["SF71H",        2018, "#c81a12"], ["SF-23",          2023, "#c81a12"],
+  ];
+  let museumProps = null, museumSeed = -1;
+
+  function buildMuseum() {
+    const L = (state.route.totalM || 380);
+    museumSeed = 1;
+    let sd = 20260814;
+    const R = () => { sd = (sd * 1103515245 + 12345) & 0x7fffffff; return sd / 0x7fffffff; };
+    const props = [];
+    // the plinths: alternating sides, 9 m apart, starting once you are inside the hall
+    let i = 0;
+    for (let d = 46; d < L - 34; d += 9) {
+      const car = MUSEUM_CARS[i % MUSEUM_CARS.length];
+      props.push({ at: d, side: (i % 2 === 0) ? -1 : 1, t: "plinth",
+                   name: car[0], year: car[1], col: car[2], seed: R() });
+      i++;
+    }
+    // visitors, standing where visitors stand: off the walkway, near the cars
+    for (let d = 30; d < L - 20; d += 3.4) {
+      props.push({ at: d + R() * 2, side: R() < 0.5 ? -1 : 1, t: "person",
+                   hue: R(), tone: R(), lean: R() });
+    }
+    // the light troughs overhead, every four metres
+    for (let d = 8; d < L; d += 4) props.push({ at: d, side: 0, t: "trough" });
+    // the banners hung down the walls
+    for (let d = 60; d < L - 40; d += 52)
+      props.push({ at: d, side: R() < 0.5 ? -1 : 1, t: "banner", seed: R() });
+    props.sort((a, b) => b.at - a.at);
+    museumProps = props;
+  }
+
+  function drawMuseum(w, h, pal) {
+    if (!museumProps || museumSeed !== 1) buildMuseum();
+    const HALLW = 11, WALLH = 7.2;                 // the hall is 11 m across and 7 m high
+    // ---- the room itself: floor, two walls and a ceiling, drawn as one box down the route
+    const far = 150;
+    const fl = projectAhead(far, -HALLW / 2), fr = projectAhead(far, HALLW / 2);
+    const nl = projectAhead(2.2, -HALLW / 2), nr = projectAhead(2.2, HALLW / 2);
+    if (fl.scale > 0 && nl.scale > 0) {
+      // ceiling
+      ctx.fillStyle = "#0e1116";
+      ctx.beginPath();
+      ctx.moveTo(nl.x, nl.y - WALLH * nl.scale); ctx.lineTo(nr.x, nr.y - WALLH * nr.scale);
+      ctx.lineTo(fr.x, fr.y - WALLH * fr.scale); ctx.lineTo(fl.x, fl.y - WALLH * fl.scale);
+      ctx.closePath(); ctx.fill();
+      // the two long walls, white and lit from the troughs
+      [[nl, fl], [nr, fr]].forEach(([n, f], k) => {
+        // A GALLERY WALL IS WHITE. The gradient has to be keyed to the wall the viewer can
+        // actually SEE -- the near end, floor to ceiling -- because keying it to the span
+        // between the far top and the near floor puts almost the whole visible wall in the
+        // first stop, and the room came out as two dark triangles.
+        const g = ctx.createLinearGradient(0, n.y - WALLH * n.scale, 0, n.y);
+        g.addColorStop(0, "#b7bcc2");          // in shadow under the ceiling
+        g.addColorStop(0.30, "#eef0f1");       // the lit band the troughs throw
+        g.addColorStop(1, "#c6cacf");          // and darker again down at the skirting
+        ctx.fillStyle = g;
+        ctx.beginPath();
+        ctx.moveTo(n.x, n.y); ctx.lineTo(f.x, f.y);
+        ctx.lineTo(f.x, f.y - WALLH * f.scale); ctx.lineTo(n.x, n.y - WALLH * n.scale);
+        ctx.closePath(); ctx.fill();
+        // the Cavallino, stencilled large on the wall further down the hall
+        const bx = projectAhead(58, (k ? 1 : -1) * (HALLW / 2 - 0.05));
+        if (bx.scale > 0.4 && bx.scale < 14) {
+          ctx.save(); ctx.globalAlpha = 0.16; ctx.fillStyle = "#111";
+          ctx.font = `800 ${Math.round(2.6 * bx.scale)}px Georgia, serif`;
+          ctx.textAlign = "center"; ctx.fillText("Ferrari", bx.x, bx.y - 4.2 * bx.scale);
+          ctx.restore();
+        }
+      });
+    }
+    // ---- the props, far to near
+    for (const p of museumProps) {
+      const rel = p.at - state.distanceM;
+      if (rel < 1.2 || rel > far) continue;
+      if (p.t === "trough") {
+        const q = projectAhead(rel, 0); if (q.scale < 0.05) continue;
+        const sc = Math.min(q.scale, 40);
+        ctx.fillStyle = "rgba(255,250,235,0.85)";
+        ctx.fillRect(q.x - 1.6 * sc, q.y - (WALLH - 0.12) * sc, 3.2 * sc, 0.16 * sc);
+        ctx.save(); ctx.globalCompositeOperation = "screen";
+        const g = ctx.createRadialGradient(q.x, q.y - WALLH * sc, 1, q.x, q.y - WALLH * sc, 4.5 * sc);
+        g.addColorStop(0, "rgba(255,246,224,0.20)"); g.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(q.x, q.y - WALLH * sc, 4.5 * sc, 0, Math.PI * 2); ctx.fill();
+        ctx.restore();
+        continue;
+      }
+      const lat = p.side * (HALLW / 2 - (p.t === "plinth" ? 2.5 : 1.0));
+      const q = projectAhead(rel, lat); if (q.scale < 0.05) continue;
+      const sc = Math.min(q.scale, 40);
+
+      if (p.t === "banner") {
+        ctx.fillStyle = "#c81a12";
+        ctx.fillRect(q.x - 0.5 * sc, q.y - 6.4 * sc, 1.0 * sc, 3.4 * sc);
+        ctx.fillStyle = "rgba(255,255,255,0.85)";
+        ctx.fillRect(q.x - 0.34 * sc, q.y - 5.0 * sc, 0.68 * sc, 0.10 * sc);
+        continue;
+      }
+
+      if (p.t === "person") {
+        // a visitor: standing, mostly still, looking at a car
+        const H = 1.72 * sc;
+        ctx.fillStyle = "rgba(0,0,0,0.22)";
+        ctx.beginPath(); ctx.ellipse(q.x, q.y, 0.30 * sc, 0.09 * sc, 0, 0, Math.PI * 2); ctx.fill();
+        ctx.fillStyle = `hsl(${Math.floor(p.hue * 360)},${18 + p.tone * 22}%,${26 + p.tone * 20}%)`;
+        ctx.fillRect(q.x - 0.19 * sc, q.y - H * 0.58, 0.38 * sc, H * 0.58);
+        ctx.fillStyle = "#20242b";
+        ctx.fillRect(q.x - 0.17 * sc, q.y - H * 0.98, 0.34 * sc, H * 0.42);
+        ctx.fillStyle = `hsl(28,32%,${52 + p.lean * 18}%)`;
+        ctx.beginPath(); ctx.arc(q.x, q.y - H * 1.06, 0.115 * sc, 0, Math.PI * 2); ctx.fill();
+        continue;
+      }
+
+      // ---- A CAR ON ITS PLINTH. Low, lit from above, with its board in front of it.
+      const PW = 4.6 * sc, PH = 0.26 * sc, PD = 2.1 * sc;
+      ctx.fillStyle = "#1a1d22";
+      ctx.fillRect(q.x - PW / 2, q.y - PH, PW, PH);
+      ctx.fillStyle = "#2a2e35";
+      ctx.fillRect(q.x - PW / 2, q.y - PH - 0.04 * sc, PW, 0.04 * sc);
+      // the car: a low silhouette in its own colour, three-quarters on to you
+      const CH = 1.20 * sc, CW = PW * 0.94;
+      const bg = ctx.createLinearGradient(0, q.y - PH - CH, 0, q.y - PH);
+      bg.addColorStop(0, p.col); bg.addColorStop(1, "rgba(0,0,0,0.55)");
+      ctx.fillStyle = bg;
+      ctx.beginPath();
+      ctx.moveTo(q.x - CW / 2, q.y - PH);
+      ctx.lineTo(q.x - CW * 0.44, q.y - PH - CH * 0.42);
+      ctx.quadraticCurveTo(q.x - CW * 0.16, q.y - PH - CH, q.x + CW * 0.10, q.y - PH - CH * 0.96);
+      ctx.quadraticCurveTo(q.x + CW * 0.34, q.y - PH - CH * 0.90, q.x + CW * 0.44, q.y - PH - CH * 0.38);
+      ctx.lineTo(q.x + CW / 2, q.y - PH);
+      ctx.closePath(); ctx.fill();
+      // glass
+      ctx.fillStyle = "rgba(190,214,232,0.45)";
+      ctx.beginPath();
+      ctx.moveTo(q.x - CW * 0.30, q.y - PH - CH * 0.50);
+      ctx.quadraticCurveTo(q.x - CW * 0.10, q.y - PH - CH * 0.88, q.x + CW * 0.12, q.y - PH - CH * 0.84);
+      ctx.lineTo(q.x + CW * 0.18, q.y - PH - CH * 0.52);
+      ctx.closePath(); ctx.fill();
+      // wheels
+      ctx.fillStyle = "#0a0c0f";
+      [-0.30, 0.30].forEach((t) => {
+        ctx.beginPath(); ctx.arc(q.x + CW * t, q.y - PH - CH * 0.14, CH * 0.20, 0, Math.PI * 2); ctx.fill();
+      });
+      // the spotlight that is on every one of them
+      ctx.save(); ctx.globalCompositeOperation = "screen";
+      const sg = ctx.createLinearGradient(q.x, q.y - WALLH * sc, q.x, q.y);
+      sg.addColorStop(0, "rgba(255,247,228,0.16)"); sg.addColorStop(1, "rgba(255,247,228,0)");
+      ctx.fillStyle = sg;
+      ctx.beginPath();
+      ctx.moveTo(q.x - 0.35 * sc, q.y - WALLH * sc); ctx.lineTo(q.x + 0.35 * sc, q.y - WALLH * sc);
+      ctx.lineTo(q.x + PW * 0.6, q.y); ctx.lineTo(q.x - PW * 0.6, q.y);
+      ctx.closePath(); ctx.fill();
+      ctx.restore();
+      // the board. Legible only when you are close enough to read one, like a real board.
+      if (sc > 3.2) {
+        ctx.fillStyle = "rgba(245,246,248,0.94)";
+        const bw = 1.9 * sc, bh = 0.60 * sc;
+        ctx.fillRect(q.x - bw / 2, q.y + 0.10 * sc, bw, bh);
+        ctx.fillStyle = "#15171b"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+        ctx.font = `800 ${Math.round(0.26 * sc)}px Georgia, serif`;
+        ctx.fillText(p.name, q.x, q.y + 0.30 * sc);
+        ctx.font = `600 ${Math.round(0.17 * sc)}px ui-sans-serif`;
+        ctx.fillStyle = "#5a6068";
+        ctx.fillText(String(p.year), q.x, q.y + 0.52 * sc);
+      }
+    }
+  }
+
   function drawCabinFrame(w, h, pal) {
     const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
-    ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
-    // carbon dash cowl
-    const dashY = h * 0.66 + sway * 0.2;
+    // exposed carbon A-pillars, thin the way a front-engined GT's are
+    ctx.fillStyle = pal.night ? "#0a0b0e" : "#111318";
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.155, 0); ctx.lineTo(w * 0.065, h * 0.60); ctx.lineTo(0, h * 0.64); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.845, 0); ctx.lineTo(w * 0.935, h * 0.60); ctx.lineTo(w, h * 0.64); ctx.closePath(); ctx.fill();
+    ctx.fillStyle = pal.night ? "#07080a" : "#0c0d10"; ctx.fillRect(0, 0, w, h * 0.048);
+
+    const dashY = h * 0.645 + sway * 0.2;
+    // the dash top is Alcantara, not gloss: it has to kill the windscreen reflection
     const dg = ctx.createLinearGradient(0, dashY, 0, h);
-    dg.addColorStop(0, "#15181d"); dg.addColorStop(0.5, "#0c0e12"); dg.addColorStop(1, "#080a0d");
-    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY); ctx.lineTo(w * 0.98 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
-    // carbon weave hint on the dash
-    ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
-    for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
+    dg.addColorStop(0, "#23262c"); dg.addColorStop(0.18, "#16181d"); dg.addColorStop(1, "#07080a");
+    ctx.fillStyle = dg;
+    ctx.beginPath(); ctx.moveTo(w * 0.01 + sway, dashY); ctx.lineTo(w * 0.99 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
+    // a suede nap rather than a carbon weave — short strokes, not a lattice
+    ctx.save(); ctx.globalAlpha = 0.07; ctx.strokeStyle = "#c8ccd2"; ctx.lineWidth = 1;
+    for (let i = 0; i < 260; i++) {
+      const x = (i * 61.7) % w, y = dashY + ((i * 37.3) % (h * 0.10));
+      ctx.beginPath(); ctx.moveTo(x + sway, y); ctx.lineTo(x + 5 + sway, y + 3); ctx.stroke();
+    }
     ctx.restore();
-    // ---- F1 digital cluster: the A90's dominant central round tachometer (GR-red
-    // rev sweep, digital speed in the hub) with turbo BOOST + TEMP readouts either side ----
+    // the tdf's exposed carbon centre console running away from you
+    const cw = w * 0.13;
+    const cg = ctx.createLinearGradient(w / 2 - cw, dashY, w / 2 + cw, h);
+    cg.addColorStop(0, "#101318"); cg.addColorStop(0.5, "#1b2028"); cg.addColorStop(1, "#0b0d11");
+    ctx.fillStyle = cg;
+    ctx.beginPath();
+    ctx.moveTo(w / 2 - cw * 0.5 + sway, dashY + h * 0.09);
+    ctx.lineTo(w / 2 + cw * 0.5 + sway, dashY + h * 0.09);
+    ctx.lineTo(w / 2 + cw, h); ctx.lineTo(w / 2 - cw, h); ctx.closePath(); ctx.fill();
+    // two round eyeball vents, the ones either side of the cluster
+    [-1, 1].forEach((s) => {
+      const vx = w / 2 + s * w * 0.235 + sway, vy = dashY + h * 0.055, vr = Math.min(w, h) * 0.031;
+      ctx.fillStyle = "#0a0c0f"; ctx.beginPath(); ctx.arc(vx, vy, vr, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "rgba(180,190,200,0.5)"; ctx.lineWidth = 1.4;
+      ctx.beginPath(); ctx.arc(vx, vy, vr, 0, Math.PI * 2); ctx.stroke();
+      ctx.strokeStyle = "rgba(150,160,172,0.55)"; ctx.lineWidth = 1.1;
+      for (let i = -2; i <= 2; i++) { ctx.beginPath(); ctx.moveTo(vx - vr * 0.8, vy + i * vr * 0.32); ctx.lineTo(vx + vr * 0.8, vy + i * vr * 0.32); ctx.stroke(); }
+    });
+    // the passenger display: a Ferrari option, and the only instrument on that side
+    {
+      const px = w * 0.775 + sway, py = dashY + h * 0.042, pw = w * 0.135, ph = h * 0.05;
+      ctx.fillStyle = "#05070a"; roundRect(ctx, px, py, pw, ph, 5); ctx.fill();
+      ctx.strokeStyle = "rgba(150,160,172,0.35)"; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = "#ffd23f"; ctx.font = `700 ${Math.round(ph * 0.42)}px ui-sans-serif`;
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillText(Math.round(app.kmh(state.speedMps)) + "  km/h", px + pw / 2, py + ph * 0.36);
+      ctx.fillStyle = "rgba(200,208,218,0.7)"; ctx.font = `600 ${Math.round(ph * 0.26)}px ui-sans-serif`;
+      ctx.fillText(Math.round(state.rpm) + " rpm", px + pw / 2, py + ph * 0.72);
+    }
     drawCluster(w, h, dashY, sway);
-    // GR wheel in front of the cluster
     drawWheel(w, h);
   }
-  // instantaneous output (PS) for the left-hand pod — reads to 387 at peak
+
+  // instantaneous output (CV) for the driver's screen — reads to 780 at peak
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
-  // ---- Ferrari F12tdf: Murray's minimalism made literal — three small machined-bezel
-  // analogue dials in a row on a slim magnesium binnacle, the centre one a 12,000 rpm
-  // tachometer with the last thousand in red. No screen, no clutter, nothing extra. ----
+
+  /* ONE BIG YELLOW TACHOMETER, and two screens. The yellow face is not decoration: it is
+     what Ferrari put in front of a driver who has paid for a V12, and the needle is the
+     instrument the whole car is arranged around. */
   function drawCluster(w, h, dashY, sway) {
-    const R = Math.min(w, h) * 0.12;
-    const cx = w / 2 + sway, cy = dashY + R * 0.34;
-    const BW = R * 3.9, BH = R * 1.34, bx = cx - BW / 2, by = cy - BH / 2;
+    const R = Math.min(w, h) * 0.135;
+    const cx = w / 2 + sway, cy = dashY + R * 0.30;
+
     ctx.save();
-    const pg = ctx.createLinearGradient(0, by, 0, by + BH); pg.addColorStop(0, "#2a2f36"); pg.addColorStop(1, "#12151a");
-    ctx.fillStyle = pg; roundRect(ctx, bx, by, BW, BH, R * 0.22); ctx.fill();
-    ctx.strokeStyle = "rgba(159,184,200,0.5)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.22); ctx.stroke();
-    ctx.restore();
-    t33Dial(cx - R * 1.2, cy, R * 0.5, clamp(Math.abs(app.kmh(state.speedMps)) / 340, 0, 1), "km/h", 340, 60, null, false);
-    t33Dial(cx, cy, R * 0.62, clamp(state.rpm / 12000, 0, 1), "rpm x1000", 12, 2, (SPEC.redlineRpm || 11100) / 12000, true);
-    t33Dial(cx + R * 1.2, cy, R * 0.5, clamp(0.3 + state.rpm / 14000, 0, 1), "oil", 10, 2, null, false);
-    ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = "#9fb8c8"; ctx.font = `800 ${Math.round(R * 0.2)}px ui-sans-serif`;
-    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, by + BH + R * 0.2);
-    if (state.raceAero) { ctx.fillStyle = "#ffd24a"; ctx.font = `700 ${Math.round(R * 0.09)}px ui-sans-serif`; ctx.fillText("SPORT MAP", cx, by - R * 0.14); }
-    ctx.restore();
-  }
-  // a machined-bezel dial: brushed ring, matte black face, fine white numerals, red tip needle
-  function t33Dial(cx, cy, R, frac, label, maxN, step, redFrac, big) {
-    const a0 = Math.PI * 0.8, a1 = Math.PI * 2.2;
-    ctx.save(); ctx.translate(cx, cy);
-    const bz = ctx.createRadialGradient(-R * 0.34, -R * 0.34, R * 0.15, 0, 0, R * 1.14);
-    bz.addColorStop(0, "#e6ecf1"); bz.addColorStop(0.55, "#8c959d"); bz.addColorStop(0.8, "#c3cbd2"); bz.addColorStop(1, "#4a5158");
-    ctx.fillStyle = bz; ctx.beginPath(); ctx.arc(0, 0, R * 1.12, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#0a0c0e"; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const N = Math.round(maxN / step);
-    for (let i = 0; i <= N * 2; i++) {
-      const f = i / (N * 2), a = lerp(a0, a1, f), major = i % 2 === 0, red = redFrac != null && f >= redFrac;
-      ctx.strokeStyle = red ? "#e8322c" : "rgba(242,246,250,0.92)"; ctx.lineWidth = major ? 1.9 : 0.9;
-      const r1 = R * (major ? 0.72 : 0.82), r2 = R * 0.93;
-      ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
-      if (major && (big || i % 4 === 0)) { ctx.fillStyle = red ? "#ff8078" : "#f2f6fa";
-        ctx.font = `600 ${Math.round(R * (big ? 0.17 : 0.2))}px ui-sans-serif`;
-        ctx.fillText(String(Math.round(i / 2 * step)), Math.cos(a) * R * 0.56, Math.sin(a) * R * 0.56); }
+
+    // the binnacle hood
+    ctx.fillStyle = "#0a0c10";
+    ctx.beginPath();
+    ctx.moveTo(cx - R * 2.5, cy + R * 0.95); ctx.lineTo(cx - R * 2.25, cy - R * 1.12);
+    ctx.quadraticCurveTo(cx, cy - R * 1.42, cx + R * 2.25, cy - R * 1.12);
+    ctx.lineTo(cx + R * 2.5, cy + R * 0.95); ctx.closePath(); ctx.fill();
+    ctx.strokeStyle = "rgba(150,160,172,0.22)"; ctx.lineWidth = 1.2; ctx.stroke();
+
+    // ---- the two flanking screens
+    const scr = (sx, title, lines) => {
+      const sw2 = R * 1.10, sh2 = R * 1.32;
+      ctx.fillStyle = "#04060a"; roundRect(ctx, sx - sw2 / 2, cy - sh2 / 2, sw2, sh2, R * 0.10); ctx.fill();
+      ctx.strokeStyle = "rgba(140,150,164,0.34)"; ctx.lineWidth = 1; ctx.stroke();
+      ctx.fillStyle = "rgba(160,170,184,0.75)"; ctx.font = `600 ${Math.round(R * 0.115)}px ui-sans-serif`;
+      ctx.fillText(title, sx, cy - sh2 / 2 + R * 0.17);
+      lines.forEach((ln, i) => {
+        ctx.fillStyle = ln[2] || "#e7edf4";
+        ctx.font = `700 ${Math.round(R * 0.16)}px ui-sans-serif`;
+        ctx.fillText(ln[1], sx, cy - sh2 / 2 + R * 0.46 + i * R * 0.30);
+        ctx.fillStyle = "rgba(150,160,174,0.62)";
+        ctx.font = `600 ${Math.round(R * 0.10)}px ui-sans-serif`;
+        ctx.fillText(ln[0], sx, cy - sh2 / 2 + R * 0.60 + i * R * 0.30);
+      });
+    };
+    // LEFT: the driver's screen. On a prototype the top line is the development ECU,
+    // because it is the only thing about this car that changes what it is.
+    scr(cx - R * 1.62, "VEICOLO", [
+      ["ECU", state.limiter ? "LIMITE 24" : "LIBERO", state.limiter ? "#ffb02e" : "#3ddc84"],
+      ["POTENZA CV", String(Math.round(powerPS()))],
+      ["MARCIA", state.gearMode === "G" ? String(state.curGear) : state.gearMode],
+    ]);
+    // RIGHT: everything that is not driving
+    scr(cx + R * 1.62, "ASSETTO", [
+      ["MANETTINO", state.driveMode === "race" ? "RACE" : state.driveMode === "sport" ? "SPORT" : "WET"],
+      ["G LAT", Math.abs(state.lateralG).toFixed(2)],
+      ["GIRO", state.lap && state.lap.curMs ? app.fmtLap(state.lap.curMs) : "--:--"],
+    ]);
+
+    // ---- THE TACHOMETER
+    const face = ctx.createRadialGradient(cx, cy - R * 0.25, R * 0.1, cx, cy, R);
+    face.addColorStop(0, "#ffe067"); face.addColorStop(0.72, "#f5c518"); face.addColorStop(1, "#d9a600");
+    ctx.fillStyle = face; ctx.beginPath(); ctx.arc(cx, cy, R, 0, Math.PI * 2); ctx.fill();
+    ctx.lineWidth = R * 0.055; ctx.strokeStyle = "#15171b";
+    ctx.beginPath(); ctx.arc(cx, cy, R * 0.975, 0, Math.PI * 2); ctx.stroke();
+
+    const A0 = Math.PI * 0.76, A1 = Math.PI * 2.24, MAXK = 10;   // 0..10 x1000
+    const redFrom = (SPEC.redlineRpm / 1000) / MAXK;
+    // the red band: the last thousand, painted ON the face
+    ctx.strokeStyle = "#c81a12"; ctx.lineWidth = R * 0.10;
+    ctx.beginPath(); ctx.arc(cx, cy, R * 0.80, A0 + (A1 - A0) * redFrom, A1); ctx.stroke();
+
+    for (let i = 0; i <= MAXK * 2; i++) {
+      const a = A0 + (A1 - A0) * (i / (MAXK * 2)), big = i % 2 === 0;
+      ctx.strokeStyle = "#15171b"; ctx.lineWidth = big ? R * 0.028 : R * 0.014;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(a) * R * 0.72, cy + Math.sin(a) * R * 0.72);
+      ctx.lineTo(cx + Math.cos(a) * R * 0.87, cy + Math.sin(a) * R * 0.87);
+      ctx.stroke();
+      if (big) {
+        ctx.fillStyle = "#15171b"; ctx.font = `800 ${Math.round(R * 0.155)}px ui-sans-serif`;
+        ctx.fillText(String(i / 2), cx + Math.cos(a) * R * 0.575, cy + Math.sin(a) * R * 0.575);
+      }
     }
-    ctx.fillStyle = "rgba(180,198,212,0.8)"; ctx.font = `600 ${Math.round(R * (big ? 0.12 : 0.15))}px ui-sans-serif`;
-    ctx.fillText(label, 0, R * 0.64);
-    const na = lerp(a0, a1, clamp(frac, 0, 1));
-    ctx.strokeStyle = "#f2f6fa"; ctx.lineWidth = R * 0.045; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.moveTo(-Math.cos(na) * R * 0.14, -Math.sin(na) * R * 0.14); ctx.lineTo(Math.cos(na) * R * 0.72, Math.sin(na) * R * 0.72); ctx.stroke();
-    ctx.strokeStyle = "#e8322c"; ctx.beginPath(); ctx.moveTo(Math.cos(na) * R * 0.72, Math.sin(na) * R * 0.72); ctx.lineTo(Math.cos(na) * R * 0.86, Math.sin(na) * R * 0.86); ctx.stroke();
-    ctx.fillStyle = "#cdd4da"; ctx.beginPath(); ctx.arc(0, 0, R * 0.085, 0, Math.PI * 2); ctx.fill();
+    // the Cavallino, where Ferrari put it
+    ctx.fillStyle = "#15171b"; ctx.font = `800 ${Math.round(R * 0.13)}px Georgia, serif`;
+    ctx.fillText("Ferrari", cx, cy - R * 0.40);
+    ctx.font = `600 ${Math.round(R * 0.085)}px ui-sans-serif`;
+    ctx.fillText("giri  x1000", cx, cy + R * 0.30);
+
+    // road speed, small, inside the tach — Ferrari treat it as secondary
+    ctx.fillStyle = "#15171b"; roundRect(ctx, cx - R * 0.34, cy + R * 0.40, R * 0.68, R * 0.28, R * 0.05); ctx.fill();
+    ctx.fillStyle = "#ffd23f"; ctx.font = `800 ${Math.round(R * 0.19)}px ui-sans-serif`;
+    ctx.fillText(String(Math.round(app.kmh(state.speedMps))), cx, cy + R * 0.545);
+
+    // the needle
+    const frac = clamp(state.rpm / (MAXK * 1000), 0, 1);
+    const na = A0 + (A1 - A0) * frac;
+    ctx.strokeStyle = "#15171b"; ctx.lineWidth = R * 0.055; ctx.lineCap = "round";
+    ctx.beginPath();
+    ctx.moveTo(cx - Math.cos(na) * R * 0.13, cy - Math.sin(na) * R * 0.13);
+    ctx.lineTo(cx + Math.cos(na) * R * 0.80, cy + Math.sin(na) * R * 0.80);
+    ctx.stroke();
+    ctx.fillStyle = "#15171b"; ctx.beginPath(); ctx.arc(cx, cy, R * 0.075, 0, Math.PI * 2); ctx.fill();
+    // the gear, in the hub
+    ctx.fillStyle = "#ffd23f"; ctx.font = `800 ${Math.round(R * 0.11)}px ui-sans-serif`;
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy);
     ctx.restore();
   }
-  // the S-AWC centre display: drive map + live front/rear torque split
-  function evoSawc(cx, cy, R) {
-    const tarmac = !!state.raceAero;
-    const w2 = R * 1.28, h2 = R * 1.42, x = cx - w2 / 2, y = cy - h2 / 2;
-    ctx.save();
-    ctx.fillStyle = "rgba(4,6,9,0.95)"; roundRect(ctx, x, y, w2, h2, R * 0.08); ctx.fill();
-    ctx.strokeStyle = "rgba(200,16,46,0.45)"; ctx.lineWidth = 1.2; roundRect(ctx, x, y, w2, h2, R * 0.08); ctx.stroke();
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = tarmac ? "#ff5a49" : "rgba(170,182,194,0.85)"; ctx.font = `800 ${Math.round(R * 0.115)}px ui-sans-serif`;
-    ctx.fillText("S-AWC", cx, y + R * 0.17);
-    ctx.fillStyle = tarmac ? "#ffd24a" : "rgba(150,162,176,0.8)"; ctx.font = `700 ${Math.round(R * 0.1)}px ui-sans-serif`;
-    ctx.fillText(tarmac ? "TARMAC" : "NORMAL", cx, y + R * 0.36);
-    // live torque split — weight shifts rearward on power, forward on the brakes
-    const rear = clamp(0.5 + clamp(state.throttle, 0, 1) * 0.28 - clamp(state.brake, 0, 1) * 0.2, 0.2, 0.85);
-    const bx2 = cx - R * 0.42, bw = R * 0.84, byy = y + R * 0.56, bh = R * 0.1;
-    ctx.fillStyle = "rgba(255,255,255,0.1)"; ctx.fillRect(bx2, byy, bw, bh);
-    ctx.fillStyle = "#4aa3ff"; ctx.fillRect(bx2, byy, bw * (1 - rear), bh);
-    ctx.fillStyle = "#ff5a49"; ctx.fillRect(bx2 + bw * (1 - rear), byy, bw * rear, bh);
-    ctx.fillStyle = "rgba(170,182,194,0.85)"; ctx.font = `600 ${Math.round(R * 0.082)}px ui-sans-serif`;
-    ctx.fillText(Math.round((1 - rear) * 100) + " : " + Math.round(rear * 100), cx, byy + R * 0.24);
-    ctx.fillText("F : R", cx, byy + R * 0.4);
-    // gear
-    ctx.fillStyle = "#ff5a49"; ctx.font = `800 ${Math.round(R * 0.22)}px ui-sans-serif`;
-    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, y + h2 - R * 0.18);
-    ctx.restore();
-  }
+
+  /* THE WHEEL. Flat-bottomed, Alcantara, three carbon spokes, and every control on it:
+     the shift LEDs across the top of the rim, the manettino on the lower right, the red
+     starter on the lower left, and the indicators under your thumbs. */
   function drawWheel(w, h) {
-    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
+    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.16;
+    const R = Math.min(w, h) * 0.34;
     ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
     ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    // a small perfectly round rim — Murray put nothing on it
-    ctx.lineWidth = R * 0.085; ctx.strokeStyle = "#1a1d22"; ctx.beginPath(); ctx.arc(0, 0, R * 0.86, 0, Math.PI * 2); ctx.stroke();
-    ctx.lineWidth = R * 0.018; ctx.strokeStyle = "rgba(159,184,200,0.6)"; ctx.beginPath(); ctx.arc(0, 0, R * 0.822, 0, Math.PI * 2); ctx.stroke();
-    ctx.lineWidth = R * 0.032; ctx.strokeStyle = "#9fb8c8"; ctx.beginPath(); ctx.arc(0, 0, R * 0.86, Math.PI * 1.48, Math.PI * 1.52); ctx.stroke();
-    // three machined-aluminium spokes, milled out
+
+    // the rim: round at the top, cut flat across the bottom
+    const rim = R * 0.84, flatY = R * 0.56;
+    const th = Math.acos(clamp(flatY / rim, -1, 1));
+    ctx.lineWidth = R * 0.095; ctx.strokeStyle = "#191b1f";
+    ctx.beginPath(); ctx.arc(0, 0, rim, th, Math.PI - th, true); ctx.stroke();
+    ctx.beginPath();
+    ctx.moveTo(-Math.sin(th) * rim, flatY); ctx.lineTo(Math.sin(th) * rim, flatY);
+    ctx.stroke();
+    // an Alcantara rim is matt and slightly paler where the light catches the top
+    ctx.lineWidth = R * 0.030; ctx.strokeStyle = "rgba(196,203,212,0.30)";
+    ctx.beginPath(); ctx.arc(0, 0, rim, Math.PI * 1.15, Math.PI * 1.85); ctx.stroke();
+    // the twelve-o'clock band, in Rosso Corsa
+    ctx.lineWidth = R * 0.052; ctx.strokeStyle = "#c81a12";
+    ctx.beginPath(); ctx.arc(0, 0, rim, Math.PI * 1.470, Math.PI * 1.530); ctx.stroke();
+
+    // ---- THE SHIFT LEDS, across the top of the rim. Five, green to red, and they come on
+    //      in order as the V12 runs out of revs. This is the wheel's job on a Ferrari.
+    const led = clamp((state.rpm - SPEC.redlineRpm * 0.62) / (SPEC.redlineRpm * 0.36), 0, 1);
+    const cols = ["#3ddc84", "#3ddc84", "#ffd23f", "#ff7a1a", "#ff2b1a"];
+    for (let i = 0; i < 5; i++) {
+      const a = Math.PI * 1.36 + (Math.PI * 0.28) * (i / 4);
+      const on = led > (i + 0.5) / 5;
+      ctx.fillStyle = on ? cols[i] : "rgba(255,255,255,0.09)";
+      ctx.beginPath(); ctx.arc(Math.cos(a) * rim, Math.sin(a) * rim, R * 0.028, 0, Math.PI * 2); ctx.fill();
+      if (on) { ctx.save(); ctx.shadowColor = cols[i]; ctx.shadowBlur = R * 0.11; ctx.fill(); ctx.restore(); }
+    }
+
+    // three carbon spokes
     const sg = ctx.createLinearGradient(-R * 0.4, -R * 0.4, R * 0.4, R * 0.4);
-    sg.addColorStop(0, "#e6ecf1"); sg.addColorStop(0.5, "#8c959d"); sg.addColorStop(1, "#4a5158");
-    ctx.strokeStyle = sg; ctx.lineWidth = R * 0.055;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.78, R * 0.32); ctx.stroke(); });
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -R * 0.8); ctx.stroke();
-    ctx.fillStyle = "#0a0c0e"; [-1, 1].forEach(s => { [0.4, 0.62].forEach(t => {
-      ctx.beginPath(); ctx.arc(s * R * 0.78 * t, R * 0.32 * t, R * 0.03, 0, Math.PI * 2); ctx.fill(); }); });
-    ctx.beginPath(); ctx.arc(0, -R * 0.42, R * 0.03, 0, Math.PI * 2); ctx.fill();
-    // machined hub, no buttons, no badge clutter
-    const hg = ctx.createRadialGradient(-R * 0.05, -R * 0.05, R * 0.02, 0, 0, R * 0.18);
-    hg.addColorStop(0, "#dfe6eb"); hg.addColorStop(1, "#5a626a");
-    ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(0, 0, R * 0.17, 0, Math.PI * 2); ctx.fill();
-    ctx.fillStyle = "#0a0c0e"; ctx.font = `700 ${Math.round(R * 0.07)}px ui-sans-serif`; ctx.fillText("GMA", 0, 0);
+    sg.addColorStop(0, "#2c3239"); sg.addColorStop(0.5, "#14171c"); sg.addColorStop(1, "#0a0c0f");
+    ctx.strokeStyle = sg; ctx.lineWidth = R * 0.115; ctx.lineCap = "round";
+    [-1, 1].forEach((s) => { ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(s * R * 0.70, R * 0.30); ctx.stroke(); });
+    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -R * 0.66); ctx.stroke();
+
+    // the red ENGINE START, lower left — the button you press before anything happens
+    ctx.fillStyle = state.ignition ? "#e0231a" : "#7a1a15";
+    ctx.beginPath(); ctx.arc(-R * 0.48, R * 0.215, R * 0.072, 0, Math.PI * 2); ctx.fill();
+    ctx.strokeStyle = "rgba(255,255,255,0.35)"; ctx.lineWidth = R * 0.010; ctx.stroke();
+    ctx.fillStyle = "#fff"; ctx.font = `700 ${Math.round(R * 0.036)}px ui-sans-serif`;
+    ctx.fillText("START", -R * 0.48, R * 0.215);
+
+    // THE MANETTINO, lower right. Five positions and the pointer really moves.
+    {
+      const mx = R * 0.48, my = R * 0.215, mr = R * 0.082;
+      ctx.fillStyle = "#c81a12"; ctx.beginPath(); ctx.arc(mx, my, mr, 0, Math.PI * 2); ctx.fill();
+      ctx.strokeStyle = "rgba(0,0,0,0.55)"; ctx.lineWidth = R * 0.010; ctx.stroke();
+      const pos = state.driveMode === "race" ? 2 : state.driveMode === "sport" ? 1 : 0;   // WET / SPORT / RACE
+      const ma = -Math.PI * 0.72 + (Math.PI * 1.44) * (pos / 4);
+      ctx.strokeStyle = "#fff"; ctx.lineWidth = R * 0.016; ctx.lineCap = "round";
+      ctx.beginPath(); ctx.moveTo(mx, my); ctx.lineTo(mx + Math.cos(ma) * mr * 0.72, my + Math.sin(ma) * mr * 0.72); ctx.stroke();
+      ctx.fillStyle = "rgba(255,255,255,0.75)"; ctx.font = `700 ${Math.round(R * 0.034)}px ui-sans-serif`;
+      ctx.fillText("MANETTINO", mx, my + mr * 1.7);
+    }
+
+    // the indicator thumb buttons, which is where a Ferrari's indicators are
+    ctx.fillStyle = "rgba(230,236,244,0.55)";
+    [-1, 1].forEach((s) => {
+      ctx.beginPath(); ctx.arc(s * R * 0.235, -R * 0.135, R * 0.030, 0, Math.PI * 2); ctx.fill();
+    });
+
+    // the hub, and the horse on it
+    const hg = ctx.createRadialGradient(-R * 0.04, -R * 0.06, R * 0.02, 0, 0, R * 0.20);
+    hg.addColorStop(0, "#2a2f36"); hg.addColorStop(1, "#0b0d10");
+    ctx.fillStyle = hg; ctx.beginPath(); ctx.arc(0, 0, R * 0.185, 0, Math.PI * 2); ctx.fill();
+    ctx.fillStyle = "#f5c518"; roundRect(ctx, -R * 0.072, -R * 0.105, R * 0.144, R * 0.185, R * 0.022); ctx.fill();
+    // the horse, drawn small: a rearing shape rather than a letter
+    ctx.fillStyle = "#111";
+    ctx.beginPath();
+    ctx.moveTo(0, -R * 0.085); ctx.lineTo(R * 0.020, -R * 0.040); ctx.lineTo(R * 0.046, -R * 0.026);
+    ctx.lineTo(R * 0.026, R * 0.006); ctx.lineTo(R * 0.036, R * 0.056); ctx.lineTo(0, R * 0.030);
+    ctx.lineTo(-R * 0.036, R * 0.056); ctx.lineTo(-R * 0.022, -R * 0.006); ctx.lineTo(-R * 0.030, -R * 0.048);
+    ctx.closePath(); ctx.fill();
+    ctx.fillStyle = "#e7edf4"; ctx.font = `700 ${Math.round(R * 0.040)}px ui-sans-serif`;
+    ctx.fillText("F12tdf", 0, R * 0.125);
     ctx.restore();
   }
+
   function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();

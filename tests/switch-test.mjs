@@ -47,7 +47,7 @@ await p.goto(BASE+"switch.html", { waitUntil:"domcontentloaded" });
 await p.waitForTimeout(1200);
 
 console.log("▶ switch shell");
-ck("56 car cards render", await p.locator(".car-card").count()===56);
+ck("57 car cards render", await p.locator(".car-card").count()===57);
 ck("virtual cursor present", await p.locator("#nxCursor").count()===1);
 await frames(8);
 ck("controller detected", (await p.locator("#nxHelp").innerText()).includes("controller ready"));
@@ -115,7 +115,7 @@ ck("Y toggles the car's speed feature (Speed Key)", spBefore!==spAfter, `${spBef
 console.log("▶ B returns to the garage");
 await set({ btn:{0:1} }); await frames(6); await set({ btn:{0:0} }); await p.waitForTimeout(900);
 const back = await p.evaluate(()=>({ practice: document.body.classList.contains("practice-active"), cards: document.querySelectorAll(".car-card").length }));
-ck("B went back to the garage", back.practice===false && back.cards===56, JSON.stringify(back));
+ck("B went back to the garage", back.practice===false && back.cards===57, JSON.stringify(back));
 
 ck("no page errors", errs.length===0, errs.slice(0,2).join(" | "));
 console.log(`\n${fail===0?"All Switch controller checks passed.":fail+" FAILED"}  (${pass} passed)`);

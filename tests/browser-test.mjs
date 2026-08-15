@@ -966,7 +966,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("fifty-six car cards render", await page.locator(".car-card").count() === 56);
+check("fifty-seven car cards render", await page.locator(".car-card").count() === 57);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- every card must be WIRED, not just rendered ----------
@@ -976,7 +976,7 @@ check("host board present", await page.locator("#activeHostList").count() === 1)
    `if (!car) return;` and every button on them was inert — and this file never tried
    them, because they were not in the list. Derive, never enumerate. */
 const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
-check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 56);
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 57);
 
 const wiring = await page.evaluate((keys) => keys.map((k) => ({
   key: k,
