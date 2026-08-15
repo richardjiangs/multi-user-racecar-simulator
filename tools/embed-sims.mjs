@@ -35,6 +35,7 @@ const FILES = {
   r8: "Audi R8 V10 Performance simulator.html",
   mcf1: "McLaren F1 1993 simulator.html",
   t33: "Gordon Murray T.33 simulator.html",
+  f12tdf: "Ferrari F12tdf simulator.html",
   agera: "Koenigsegg Agera RS simulator.html",
   u9: "Yangwang U9 simulator.html",
   db5: "Aston Martin DB5 simulator.html",

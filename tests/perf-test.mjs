@@ -257,6 +257,16 @@ const CARS = {
     topSpeed: { kmh: 474.8, setup: "e85", minT: 110 },
     brake100: { target: 30, tol: 1.5 },
   },
+  f12tdf: {
+    file: "Ferrari F12tdf simulator.html",
+    app: "F12App",
+    label: "Ferrari F12tdf (F12berlinetta development prototype)",
+    marks: { 100: { target: 2.9, tol: 1e-4 }, 200: { target: 7.9, tol: 0.02, calibrateEff: true } },
+    // Ferrari quote "over 340" and no ceiling above it, so the band is where the car
+    // actually runs out of air rather than a governor
+    topSpeed: { minKmh: 336, maxKmh: 352, minT: 60 },
+    brake100: { target: 30.5, tol: 1.5 },
+  },
   phantom: {
     file: "Rolls-Royce Phantom simulator.html",
     app: "PhantomApp",
