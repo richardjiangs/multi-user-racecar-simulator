@@ -984,7 +984,7 @@ const wiring = await page.evaluate((keys) => keys.map((k) => ({
   online: !!document.querySelector(`[data-online="${k}"]`),
   learn: !!document.querySelector(`[data-learn="${k}"]`),
 })), CAR_KEYS);
-const unwired = wiring.filter((w) => !w.practice || !w.online || (!w.learn && w.key !== "phantom"));
+const unwired = wiring.filter((w) => !w.practice || !w.online || !w.learn);
 
 /* ---------- A CARD HAS TO BE BUILT THE WAY THE PAGE IS BUILT ----------
    The F12tdf shipped with class names the stylesheet has never heard of -- card-body,

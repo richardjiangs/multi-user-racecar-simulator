@@ -594,7 +594,7 @@
           <a data-goto="ls2" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">3. The line that keeps the back flat</a>
           <a data-goto="ls3" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">4. Stopping — and where the door lands</a>
           <a data-goto="ls4" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">5. The arrival</a>
-          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">6. This car: 2,560 kg and 900 Nm at 1,700</a>
+          <a data-goto="ls5" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">6. This car: 2,975 kg and 1,075 Nm from rest</a>
           </nav>
           <div style="flex:1; font-size:13px; line-height:1.6; color:#d6cfbe; min-width:0">
 
@@ -615,7 +615,7 @@
         <p style="margin:4px 0">Amber is not "go faster". Amber means stop if you can do it comfortably, and in this car you almost always can.</p>
 
         <h3 id="ls2" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">3. The line that keeps the back flat</h3>
-        <p style="margin:4px 0">The racing line and the chauffeur's line are not the same line and are sometimes opposites. A racing driver clips the apex to carry speed. You go <b>wide of the apex and slow earlier</b>, because the rear seat is a long way behind the front axle — <b>1.8 metres behind it in a Spectre</b> — and everything you do at the front is amplified back there. A quick flick that feels tidy from the driver's seat is a shove in the ribs three rows of leather away.</p>
+        <p style="margin:4px 0">The racing line and the chauffeur's line are not the same line and are sometimes opposites. A racing driver clips the apex to carry speed. You go <b>wide of the apex and slow earlier</b>, because the rear seat is a long way behind the front axle — <b>1.9 metres behind it in a Spectre</b> — and everything you do at the front is amplified back there. A quick flick that feels tidy from the driver's seat is a shove in the ribs three rows of leather away.</p>
         <p style="margin:4px 0">One steering input per corner. Turn in once, hold, unwind once. A correction mid-corner is two events where there should have been none.</p>
 
         <h3 id="ls3" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">4. Stopping — and where the door lands</h3>
@@ -626,9 +626,9 @@
         <p style="margin:4px 0">The last hundred metres are the only ones anybody watching remembers. Walking pace onto the forecourt, straight, square to the entrance, and stopped before the doors open — the coach doors on this car are hinged at the back and open into the wind, so they are opened stationary or not at all.</p>
         <p style="margin:4px 0">The White Palace route exists to practise exactly this and nothing else: four kilometres of gravel avenue where the only hard part is the last two hundred metres.</p>
 
-        <h3 id="ls5" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">6. This car: 2,560 kg and 900 Nm at 1,700</h3>
-        <p style="margin:4px 0">The Spectre is built to make this job easy and you should let it. All 900 Nm is there at <b>1,700 rpm</b>, so you never need the revs and the gearbox is set to upshift early — a Spectre that is audible is a Spectre being driven badly. The satellite-aided transmission reads the road ahead and picks the gear before the corner arrives, so that you do not have to.</p>
-        <p style="margin:4px 0">2,560 kg is the other half. It is what makes the car so calm over bad surfaces, and it is also what will punish a late decision: at 50 km/h this car needs real distance to stop softly. Everything above is downstream of that one number.</p>
+        <h3 id="ls5" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">6. This car: 2,975 kg and 1,075 Nm from rest</h3>
+        <p style="margin:4px 0">The Spectre is built to make this job easy and you should let it. There is no engine and there are no gears: all <b>1,075 Nm</b> is there from a standstill, on one ratio, so there is nothing to wait for and nothing to change. A Spectre is silent whatever you do with it, which removes the one cue a passenger normally has that you are working — and puts the whole of their impression of the drive onto how it FEELS.</p>
+        <p style="margin:4px 0">2,975 kg is the other half, and it is the heaviest thing in this garage by four hundred kilogrammes. It is what makes the car so calm over bad surfaces, and it is also what will punish a late decision: at 50 km/h this car needs real distance to stop softly. Everything above is downstream of that one number.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -660,6 +660,10 @@
               <button data-circuit="Shanghai — The Bund">Shanghai &middot; The Bund</button>
               <button data-circuit="The Royal Hotel">The Royal Hotel</button>
               <button data-circuit="The White Palace">The White Palace</button>
+            </div>
+            <div class="small" style="margin:10px 0 4px;color:#c9a85f">OR THE WHOLE NETWORK</div>
+            <div class="circuit-grid">
+              <button data-circuit="London" style="grid-column:1/-1;border-color:#c9a85f;color:#e6d9b4">London &mdash; the real road network, 20 km round Charing Cross</button>
             </div>
             <div id="nordsRoute" style="display:none">
               <div class="small" style="margin:2px 0 6px">Nürburgring Y-junction — block a side to choose your route:</div>
@@ -812,6 +816,8 @@ function circuitNow() {
    and none of the seven circuits. Everything that is about being driven rather than being
    raced hangs off this one predicate. */
 function onJourney() {
+  const st = window.SpectreApp && window.SpectreApp.state;
+  if (st && st.ldn) return true;                 // the network is the most journey there is
   const c = circuitNow();
   return !!(c && c.signals && c.signals.length);
 }
@@ -1040,6 +1046,17 @@ const CIRCUITS = {
       c(3700, 1, 50, 160, "The sweep"), c(4080, -1, 70, 90, "The forecourt")
     ]
   },
+  /* NOT A ROUTE. Choosing London puts you on a real street at a real junction on the
+     network and then leaves you alone: there is no destination, no line and nothing to be
+     pulled back onto. Its `dist` is only what the shell asks a route for; the road you are
+     on decides its own length, and the next one decides its own. */
+  "London": {
+    dist: 1200, env: "city", limitKmh: 48, loop: false, widthM: 16, corners: 0,
+    network: true, drive: "left",
+    blurb: "London itself — the road network for twenty kilometres round Charing Cross, junction by junction. Turn wherever you like; nothing is recalculating",
+    signals: [],
+    track: [],
+  },
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -1065,6 +1082,358 @@ const CIRCUITS = {
    any distance, which is what puts the paint in the right place, keeps the
    other cars in real lanes, and leaves the far side of a one-way street empty.
    ========================================================================= */
+/* ===== src/data/london.js =====
+   LONDON, HAND-DRAWN FROM THE MAP: 20 km out from Charing Cross.
+
+   This is not a route. It is the road NETWORK — the junctions London actually has and the
+   roads that actually join them — so that at every junction you may go straight on, turn
+   left or turn right onto the road that is really there, and keep driving until you decide
+   to stop. There is no scripted line to be pulled back onto, because there is no line.
+
+   COORDINATES are kilometres EAST and NORTH of Charing Cross, which is where London
+   measures its distances from and has since 1865. They are read off the map, so the
+   bearing between any two junctions is the real bearing, the distance between them is the
+   real distance, and a road that bends does so where it bends in life.
+
+   ROADS carry their real classification, their real name (the one on the sign, and the
+   number where it has one), the real kerb-to-kerb width and the real lane counts. A road
+   that changes name along its length is several edges, because that is what it is: the
+   A501 is Marylebone Road and then Euston Road and then Pentonville Road, and the sign
+   changes at Great Portland Street and again at King's Cross.
+
+   The 20 km radius takes in everything from Enfield to Croydon and from Heathrow to
+   Romford. What is drawn is the MAIN part: the two ring roads, the radials that leave
+   London in every direction, the Thames crossings, and central London street by street.
+   ========================================================================= */
+
+/* n(id, eastKm, northKm, name, district) — a junction, at its real place */
+const n = (id, e, no, name, district) => ({ id, e, n: no, name, district: district || "inner" });
+
+const LDN_NODES = [
+  /* ---------------- CHARING CROSS AND THE WEST END ------------------------ */
+  n("charingx",   0.00,  0.00, "Charing Cross",                "west-end"),
+  n("trafalgar", -0.02,  0.08, "Trafalgar Square",             "west-end"),
+  n("admiralty", -0.13,  0.10, "Admiralty Arch",               "west-end"),
+  n("pallmalle", -0.24,  0.12, "Pall Mall East",               "west-end"),
+  n("picccirc",  -0.36,  0.20, "Piccadilly Circus",            "west-end"),
+  n("oxfordcirc",-0.44,  0.62, "Oxford Circus",                "west-end"),
+  n("tottcrd",   -0.14,  0.70, "Tottenham Court Road",         "west-end"),
+  n("cambcirc",  -0.24,  0.36, "Cambridge Circus",             "west-end"),
+  n("leicester", -0.20,  0.18, "Leicester Square",             "west-end"),
+  n("hydeparkc", -1.35,  0.29, "Hyde Park Corner",             "west-end"),
+  n("marblearch",-1.42,  0.86, "Marble Arch",                  "west-end"),
+  n("victoriast",-1.06, -0.28, "Victoria Station",             "west-end"),
+  n("buckingham",-0.86,  0.06, "Buckingham Palace",            "west-end"),
+  n("parlsq",    -0.42, -0.44, "Parliament Square",            "west-end"),
+  n("whitehall", -0.20, -0.20, "Whitehall",                    "west-end"),
+  n("sloanesq",  -1.72, -0.42, "Sloane Square",                "west-end"),
+  n("knightsb",  -1.90,  0.22, "Knightsbridge",                "west-end"),
+  n("southken",  -2.52,  0.02, "South Kensington",             "west-end"),
+  n("earlsct",   -3.30,  0.02, "Earl's Court",                 "west-end"),
+  n("hammersm",  -5.10,  0.44, "Hammersmith Broadway",         "outer"),
+  n("chiswick",  -7.00,  0.60, "Chiswick Roundabout",          "outer"),
+  n("nottinghil",-2.90,  1.10, "Notting Hill Gate",            "outer"),
+  n("paddington",-1.90,  1.10, "Paddington",                   "inner"),
+  n("edgware",   -1.45,  1.20, "Edgware Road",                 "inner"),
+  n("baker",     -1.10,  1.15, "Baker Street",                 "inner"),
+  n("regentspk", -0.86,  1.42, "Regent's Park",                "inner"),
+  n("euston",    -0.24,  1.30, "Euston",                       "inner"),
+  n("kingscross", 0.06,  1.44, "King's Cross",                 "inner"),
+  n("angel",      0.42,  1.72, "Angel, Islington",             "inner"),
+  n("oldst",      0.72,  1.44, "Old Street",                   "inner"),
+  n("moorgate",   0.72,  1.06, "Moorgate",                     "city"),
+  n("bank",       0.86,  0.86, "Bank",                         "city"),
+  n("stpauls",    0.52,  0.86, "St Paul's",                    "city"),
+  n("ludgate",    0.40,  0.80, "Ludgate Circus",               "city"),
+  n("holborn",    0.16,  0.90, "Holborn Circus",               "city"),
+  n("chancery",  -0.02,  0.86, "Chancery Lane",                "city"),
+  n("aldgate",    1.32,  0.86, "Aldgate",                      "city"),
+  n("towerhill",  1.24,  0.60, "Tower Hill",                   "city"),
+  n("monument",   0.90,  0.70, "Monument",                     "city"),
+  n("blackfr",    0.34,  0.60, "Blackfriars",                  "city"),
+  n("temple",     0.10,  0.58, "Temple",                       "city"),
+  n("aldwych",   -0.02,  0.62, "Aldwych",                      "city"),
+
+  /* ---------------- THE RIVER AND THE SOUTH BANK -------------------------- */
+  n("waterloo",   0.00,  0.26, "Waterloo",                     "southbank"),
+  n("southwark",  0.44,  0.34, "Southwark",                    "southbank"),
+  n("boroughhs",  0.86,  0.30, "Borough High Street",          "southbank"),
+  n("elephant",   0.62, -0.06, "Elephant and Castle",          "southbank"),
+  n("towerbr",    1.30,  0.34, "Tower Bridge, south",          "southbank"),
+  n("bermondsey", 1.86,  0.28, "Bermondsey",                   "outer"),
+  n("rotherhithe",2.36,  0.62, "Rotherhithe",                  "outer"),
+  n("canadawater",2.30,  0.30, "Canada Water",                 "outer"),
+  n("newcross",   3.10, -0.42, "New Cross",                    "outer"),
+  n("vauxhall",  -0.66, -0.66, "Vauxhall Cross",               "southbank"),
+  n("stockwell", -0.62, -1.66, "Stockwell",                    "outer"),
+  n("brixton",   -0.62, -2.42, "Brixton",                      "outer"),
+  n("clapham",   -1.36, -2.10, "Clapham Common",               "outer"),
+  n("wandsworth",-2.30, -1.82, "Wandsworth",                   "outer"),
+  n("battersea", -1.56, -0.90, "Battersea",                    "outer"),
+  n("putney",    -3.40, -1.60, "Putney Bridge",                "outer"),
+  n("richmond",  -6.60, -2.10, "Richmond",                     "outer"),
+  n("kingston",  -9.30, -4.30, "Kingston upon Thames",         "outer"),
+  n("wimbledon", -2.90, -4.20, "Wimbledon",                    "outer"),
+  n("tooting",   -1.66, -3.60, "Tooting Broadway",             "outer"),
+  n("streatham", -0.90, -3.90, "Streatham",                    "outer"),
+  n("croydon",    0.30, -8.10, "Croydon",                      "outer"),
+  n("lewisham",   3.10, -1.60, "Lewisham",                     "outer"),
+  n("catford",    2.90, -2.60, "Catford",                      "outer"),
+  n("bromley",    5.10, -5.40, "Bromley",                      "outer"),
+  n("greenwich",  3.60,  0.10, "Greenwich",                    "outer"),
+  n("blackheath", 4.10, -0.90, "Blackheath",                   "outer"),
+  n("eltham",     6.30, -1.90, "Eltham",                       "outer"),
+  n("sidcup",     8.60, -2.30, "Sidcup",                       "outer"),
+  n("dartford",  14.90, -0.20, "Dartford Crossing",            "outer"),
+  n("woolwich",   6.10,  0.60, "Woolwich Ferry",               "outer"),
+  n("thamesmead", 7.90,  1.10, "Thamesmead",                   "outer"),
+
+  /* ---------------- THE EAST ---------------------------------------------- */
+  n("shoreditch", 1.00,  1.56, "Shoreditch High Street",       "inner"),
+  n("bethnal",    1.90,  1.66, "Bethnal Green",                "outer"),
+  n("whitechapel",1.72,  0.98, "Whitechapel",                  "inner"),
+  n("limehouse",  2.56,  0.86, "Limehouse",                    "outer"),
+  n("canarywharf",2.90,  0.52, "Canary Wharf",                 "outer"),
+  n("poplar",     3.06,  0.90, "Poplar",                       "outer"),
+  n("blackwall",  3.36,  0.76, "Blackwall Tunnel",             "outer"),
+  n("stratford",  4.10,  1.90, "Stratford",                    "outer"),
+  n("bow",        3.10,  1.60, "Bow Roundabout",               "outer"),
+  n("hackney",    1.90,  2.44, "Hackney Central",              "outer"),
+  n("leyton",     4.30,  2.90, "Leyton",                       "outer"),
+  n("walthamstow",4.00,  3.90, "Walthamstow",                  "outer"),
+  n("ilford",     7.10,  2.40, "Ilford",                       "outer"),
+  n("romford",   11.60,  3.20, "Romford",                      "outer"),
+  n("barking",    7.20,  1.60, "Barking",                      "outer"),
+
+  /* ---------------- THE NORTH --------------------------------------------- */
+  n("camden",    -0.62,  2.06, "Camden Town",                  "inner"),
+  n("chalkfarm", -0.72,  2.40, "Chalk Farm",                   "outer"),
+  n("hampstead", -1.10,  3.40, "Hampstead",                    "outer"),
+  n("archway",   -0.30,  3.30, "Archway",                      "outer"),
+  n("highbury",   0.42,  2.50, "Highbury Corner",              "inner"),
+  n("finsburypk", 0.40,  3.36, "Finsbury Park",                "outer"),
+  n("hollowayrd", 0.16,  2.94, "Holloway Road",                "outer"),
+  n("woodgreen",  0.66,  4.60, "Wood Green",                   "outer"),
+  n("tottenham",  1.50,  4.70, "Tottenham",                    "outer"),
+  n("edmonton",   1.60,  6.10, "Edmonton",                     "outer"),
+  n("enfield",    1.20,  8.60, "Enfield",                      "outer"),
+  n("golders",   -1.70,  4.60, "Golders Green",                "outer"),
+  n("hendon",    -1.90,  5.60, "Hendon",                       "outer"),
+  n("brentcross",-1.94,  5.20, "Brent Cross",                  "outer"),
+  n("finchley",  -1.20,  5.60, "North Finchley",               "outer"),
+  n("barnet",    -1.10,  7.70, "Barnet",                       "outer"),
+  n("kilburn",   -1.90,  2.30, "Kilburn",                      "outer"),
+  n("swisscott", -1.30,  2.50, "Swiss Cottage",                "outer"),
+  n("wembley",   -3.90,  3.50, "Wembley",                      "outer"),
+  n("harrow",    -5.90,  5.20, "Harrow",                       "outer"),
+  n("shepherdsb",-3.40,  0.90, "Shepherd's Bush",              "outer"),
+  n("actonw",    -4.70,  1.30, "Acton",                        "outer"),
+  n("ealing",    -6.40,  1.30, "Ealing",                       "outer"),
+  n("southall",  -8.90,  1.30, "Southall",                     "outer"),
+  n("hounslow",  -9.90, -0.40, "Hounslow",                     "outer"),
+  n("heathrow", -13.60, -0.60, "Heathrow",                     "outer"),
+  n("hangerlane",-5.30,  2.10, "Hanger Lane",                  "outer"),
+  n("neasden",   -3.30,  3.40, "Neasden",                      "outer"),
+  n("staples",   -1.10,  3.90, "Staples Corner",               "outer"),
+];
+
+/* r(a, b, name, w, fwd, back) — a road between two junctions.
+   `w` is kerb to kerb in metres and `fwd`/`back` are the lanes each way, so a one-way
+   street is `back: 0` and there is nothing at all coming the other way on it. Lengths and
+   bearings are not written here: they come out of where the two junctions ARE. */
+const r = (a, b, name, w, fwd, back) => ({ a, b, name, w, fwd, back });
+
+const LDN_ROADS = [
+  /* ---- the West End, street by street ---------------------------------- */
+  r("charingx", "trafalgar",  "Charing Cross",                     16, 2, 2),
+  r("trafalgar","admiralty",  "Trafalgar Square",                  16, 4, 0),   // one-way round the square
+  r("admiralty","buckingham", "The Mall",                          19, 3, 3),
+  r("buckingham","hydeparkc", "Constitution Hill",                  9, 1, 1),
+  r("hydeparkc","marblearch", "Park Lane (A4202)",                 11, 3, 0),   // one carriageway of a dual
+  r("marblearch","oxfordcirc","Oxford Street (A40)",               14, 2, 2),
+  r("oxfordcirc","tottcrd",   "Oxford Street east",                14, 2, 2),
+  r("oxfordcirc","picccirc",  "Regent Street (A4201)",             16, 2, 2),
+  r("picccirc","hydeparkc",   "Piccadilly (A4)",                   18, 3, 3),
+  r("picccirc","leicester",   "Coventry Street",                   12, 2, 0),
+  r("leicester","cambcirc",   "Charing Cross Road (A400)",         13, 2, 2),
+  r("cambcirc","tottcrd",     "Charing Cross Road north",          13, 2, 2),
+  r("picccirc","pallmalle",   "Regent Street St James's",          14, 2, 0),
+  r("pallmalle","trafalgar",  "Pall Mall East",                    13, 2, 0),
+  r("trafalgar","whitehall",  "Whitehall (A3212)",                 19, 3, 3),
+  r("whitehall","parlsq",     "Whitehall, Parliament Street",      19, 3, 3),
+  r("parlsq","victoriast",    "Victoria Street (A302)",            20, 3, 3),
+  r("victoriast","sloanesq",  "Buckingham Palace Road",            15, 2, 2),
+  r("hydeparkc","victoriast", "Grosvenor Place",                   14, 3, 0),
+  r("sloanesq","knightsb",    "Sloane Street",                     13, 2, 2),
+  r("knightsb","hydeparkc",   "Knightsbridge (A4)",                20, 3, 3),
+  r("knightsb","southken",    "Brompton Road (A4)",                15, 2, 2),
+  r("southken","earlsct",     "Cromwell Road (A4)",                20, 3, 3),
+  r("earlsct","hammersm",     "Talgarth Road (A4)",                22, 3, 3),
+  r("hammersm","chiswick",    "Great West Road (A4)",              24, 3, 3),
+  r("chiswick","hounslow",    "Great West Road (A4)",              24, 3, 3),
+  r("hounslow","heathrow",    "Great South West Road (A30)",       22, 3, 3),
+  r("nottinghil","marblearch","Bayswater Road (A402)",             16, 2, 2),
+  r("nottinghil","shepherdsb","Holland Park Avenue (A402)",        18, 2, 2),
+  r("shepherdsb","hammersm",  "Shepherd's Bush Road (A219)",       13, 2, 2),
+  r("shepherdsb","actonw",    "Uxbridge Road (A4020)",             14, 2, 2),
+  r("actonw","ealing",        "Uxbridge Road (A4020)",             14, 2, 2),
+  r("ealing","southall",      "Uxbridge Road (A4020)",             14, 2, 2),
+  r("paddington","edgware",   "Praed Street",                      12, 2, 2),
+  r("paddington","nottinghil","Westbourne Grove",                  11, 1, 1),
+  r("edgware","marblearch",   "Edgware Road (A5)",                 16, 2, 2),
+  r("edgware","baker",        "Marylebone Road (A501)",            22, 3, 3),
+  r("baker","regentspk",      "Baker Street (A41)",                14, 2, 2),
+  r("baker","euston",         "Euston Road (A501)",                22, 3, 3),
+  r("oxfordcirc","regentspk", "Portland Place (A4201)",            20, 2, 2),
+  r("euston","kingscross",    "Euston Road (A501)",                21, 3, 3),
+  r("euston","tottcrd",       "Gower Street (A400)",               12, 3, 0),   // one-way southbound
+  r("kingscross","angel",     "Pentonville Road (A501)",           18, 3, 3),
+  r("angel","oldst",          "City Road (A501)",                  17, 2, 2),
+  r("oldst","moorgate",       "City Road, Finsbury Square",        16, 2, 2),
+
+  /* ---- the City ---------------------------------------------------------- */
+  r("moorgate","bank",        "Moorgate",                          13, 2, 2),
+  r("bank","stpauls",         "Poultry and Cheapside",             14, 2, 2),
+  r("stpauls","ludgate",      "Ludgate Hill",                      12, 2, 2),
+  r("ludgate","blackfr",      "New Bridge Street",                 15, 2, 2),
+  r("ludgate","holborn",      "Farringdon Street",                 16, 2, 2),
+  r("holborn","chancery",     "High Holborn",                      14, 2, 2),
+  r("chancery","temple",      "Chancery Lane and Fleet Street",    12, 2, 2),
+  r("temple","aldwych",       "Fleet Street and the Strand",       15, 2, 2),
+  r("aldwych","trafalgar",    "The Strand (A4)",                   17, 2, 2),
+  r("temple","blackfr",       "Victoria Embankment (A3211)",       20, 3, 3),
+  r("blackfr","waterloo",     "Blackfriars Bridge (A201)",         18, 2, 2),
+  r("bank","aldgate",         "Cornhill and Leadenhall Street",    14, 2, 2),
+  r("aldgate","towerhill",    "Minories",                          13, 2, 2),
+  r("towerhill","monument",   "Lower Thames Street (A3211)",       19, 3, 3),
+  r("monument","bank",        "King William Street",               15, 2, 2),
+  r("holborn","moorgate",     "London Wall",                       16, 2, 2),
+
+  /* ---- the river crossings ---------------------------------------------- */
+  r("towerhill","towerbr",    "Tower Bridge (A100)",              8.2, 1, 1),
+  r("parlsq","waterloo",      "Westminster Bridge (A302)",         19, 2, 2),
+  r("aldwych","waterloo",     "Waterloo Bridge (A301)",            19, 3, 3),
+  r("vauxhall","victoriast",  "Vauxhall Bridge (A202)",            18, 3, 3),
+  r("vauxhall","parlsq",      "Millbank and Lambeth Bridge",       17, 2, 2),
+  r("battersea","sloanesq",   "Chelsea Bridge (A3216)",            15, 2, 2),
+  r("putney","wandsworth",    "Putney Bridge and the A205",        16, 2, 2),
+  r("blackwall","greenwich",  "Blackwall Tunnel (A102)",           12, 2, 2),
+  r("rotherhithe","limehouse","Rotherhithe Tunnel (A101)",        7.6, 1, 1),
+  r("dartford","thamesmead",  "the Dartford Crossing (A282)",      22, 4, 0),
+
+  /* ---- the South Bank and the south ------------------------------------- */
+  r("waterloo","southwark",   "Stamford Street",                   14, 2, 2),
+  r("southwark","boroughhs",  "Southwark Street",                  15, 2, 2),
+  r("boroughhs","towerbr",    "Tooley Street (A200)",              14, 2, 2),
+  r("boroughhs","elephant",   "Newington Causeway (A3)",           16, 2, 2),
+  r("waterloo","elephant",    "London Road (A301)",                15, 2, 2),
+  r("elephant","vauxhall",    "Kennington Lane (A3204)",           13, 2, 2),
+  r("vauxhall","stockwell",   "South Lambeth Road (A203)",         14, 2, 2),
+  r("stockwell","brixton",    "Clapham Road and Brixton Road (A23)",16, 2, 2),
+  r("brixton","streatham",    "Brixton Hill (A23)",                15, 2, 2),
+  r("streatham","croydon",    "London Road (A23)",                 18, 3, 3),
+  r("stockwell","clapham",    "Clapham Road (A3)",                 16, 2, 2),
+  r("clapham","tooting",      "Balham High Road (A24)",            15, 2, 2),
+  r("tooting","streatham",    "Tooting Bec Road",                  12, 1, 1),
+  r("tooting","wimbledon",    "Merton Road (A218)",                13, 2, 2),
+  r("clapham","wandsworth",   "Battersea Rise and the A3",         14, 2, 2),
+  r("wandsworth","putney",    "Upper Richmond Road (A205)",        14, 2, 2),
+  r("putney","richmond",      "Upper Richmond Road West (A205)",   14, 2, 2),
+  r("richmond","kingston",    "Kingston Road (A307)",              13, 2, 2),
+  r("wimbledon","kingston",   "Coombe Lane (A238)",                12, 2, 2),
+  r("battersea","vauxhall",   "Nine Elms Lane (A3205)",            17, 2, 2),
+  r("battersea","clapham",    "Queenstown Road",                   13, 2, 2),
+  r("bermondsey","towerbr",   "Jamaica Road (A200)",               17, 2, 2),
+  r("bermondsey","canadawater","Lower Road",                       13, 2, 2),
+  r("canadawater","rotherhithe","Salter Road",                     12, 2, 2),
+  r("bermondsey","newcross",  "Old Kent Road (A2)",                20, 3, 3),
+  r("elephant","newcross",    "New Kent Road (A2)",                18, 3, 3),
+  r("newcross","lewisham",    "Lewisham Way (A20)",                14, 2, 2),
+  r("lewisham","catford",     "Lewisham High Street (A21)",        15, 2, 2),
+  r("catford","bromley",      "Bromley Road (A21)",                16, 2, 2),
+  r("lewisham","blackheath",  "Blackheath Hill (A20)",             13, 2, 2),
+  r("blackheath","greenwich", "Shooters Hill Road (A2)",           17, 2, 2),
+  r("blackheath","eltham",    "Shooters Hill Road (A2)",           18, 2, 2),
+  r("eltham","sidcup",        "Sidcup Road (A20)",                 20, 3, 3),
+  r("sidcup","dartford",      "the A20 and the A2",                22, 3, 3),
+  r("greenwich","woolwich",   "Woolwich Road (A206)",              16, 2, 2),
+  r("woolwich","thamesmead",  "Western Way (A2016)",               18, 2, 2),
+  r("catford","clapham",      "the South Circular (A205)",         14, 2, 2),
+  r("catford","eltham",       "the South Circular (A205)",         14, 2, 2),
+  r("eltham","woolwich",      "the South Circular (A205)",         14, 2, 2),
+  r("richmond","chiswick",    "the South Circular (A205)",         14, 2, 2),
+  r("croydon","bromley",      "Croydon Road (A232)",               14, 2, 2),
+
+  /* ---- the East ---------------------------------------------------------- */
+  r("aldgate","whitechapel",  "Whitechapel High Street (A11)",     17, 2, 2),
+  r("whitechapel","limehouse","Commercial Road (A13)",             18, 2, 2),
+  r("limehouse","poplar",     "East India Dock Road (A13)",        20, 3, 3),
+  r("limehouse","canarywharf","Westferry Road",                    12, 2, 2),
+  r("canarywharf","poplar",   "Aspen Way (A1261)",                 18, 3, 3),
+  r("poplar","blackwall",     "Blackwall Northern Approach (A12)", 20, 3, 3),
+  r("poplar","barking",       "Newham Way (A13)",                  24, 3, 3),
+  r("barking","romford",      "Ripple Road and the A118",          16, 2, 2),
+  r("shoreditch","oldst",     "Great Eastern Street",              15, 2, 2),
+  r("shoreditch","whitechapel","Commercial Street",                14, 2, 2),
+  r("shoreditch","bethnal",   "Bethnal Green Road",                13, 2, 2),
+  r("bethnal","bow",          "Roman Road and Bow Road (A11)",     16, 2, 2),
+  r("bow","stratford",        "Bow Road (A11)",                    20, 3, 3),
+  r("bow","blackwall",        "the A12",                           20, 3, 3),
+  r("stratford","leyton",     "Leyton Road",                       13, 2, 2),
+  r("leyton","walthamstow",   "Lea Bridge Road (A104)",            14, 2, 2),
+  r("stratford","ilford",     "Romford Road (A118)",               15, 2, 2),
+  r("ilford","romford",       "the A118",                          16, 2, 2),
+  r("ilford","barking",       "Barking Road (A124)",               14, 2, 2),
+  r("hackney","bethnal",      "Cambridge Heath Road (A107)",       13, 2, 2),
+  r("hackney","highbury",     "Balls Pond Road (A104)",            13, 2, 2),
+  r("hackney","walthamstow",  "Lea Bridge Road (A104)",            14, 2, 2),
+
+  /* ---- the North --------------------------------------------------------- */
+  r("angel","highbury",       "Upper Street (A1)",                 15, 2, 2),
+  r("highbury","hollowayrd",  "Holloway Road (A1)",                16, 2, 2),
+  r("hollowayrd","archway",   "Holloway Road (A1)",                16, 2, 2),
+  r("archway","finchley",     "Archway Road (A1)",                 20, 3, 3),
+  r("finchley","barnet",      "Great North Road (A1000)",          14, 2, 2),
+  r("hollowayrd","finsburypk","Seven Sisters Road (A503)",         16, 2, 2),
+  r("finsburypk","woodgreen", "Green Lanes (A105)",                14, 2, 2),
+  r("woodgreen","tottenham",  "Lordship Lane (A109)",              13, 2, 2),
+  r("tottenham","edmonton",   "Fore Street (A1010)",               14, 2, 2),
+  r("edmonton","enfield",     "Hertford Road (A1010)",             13, 2, 2),
+  r("kingscross","camden",    "Camden Road (A503)",                14, 2, 2),
+  r("camden","chalkfarm",     "Chalk Farm Road",                   12, 2, 2),
+  r("chalkfarm","hampstead",  "Haverstock Hill (A502)",            13, 2, 2),
+  r("hampstead","golders",    "North End Road (A502)",             12, 2, 2),
+  r("golders","brentcross",   "Finchley Road (A41)",               18, 3, 3),
+  r("brentcross","hendon",    "Hendon Way (A41)",                  20, 3, 3),
+  r("hendon","barnet",        "Watford Way (A41)",                 20, 3, 3),
+  r("camden","regentspk",     "Parkway and Albany Street",         13, 2, 2),
+  r("camden","swisscott",     "Adelaide Road",                     12, 1, 1),
+  r("swisscott","kilburn",    "Finchley Road (A41)",               17, 2, 2),
+  r("swisscott","golders",    "Finchley Road (A41)",               17, 2, 2),
+  r("kilburn","neasden",      "Kilburn High Road (A5)",            16, 2, 2),
+  r("kilburn","paddington",   "Maida Vale (A5)",                   16, 2, 2),
+  r("archway","camden",       "Kentish Town Road (A400)",          13, 2, 2),
+  r("camden","euston",        "Eversholt Street",                  12, 2, 2),
+  r("archway","hampstead",    "Highgate West Hill",                10, 1, 1),
+
+  /* ---- the North Circular (A406), which really does go all the way round -- */
+  r("chiswick","hangerlane",  "the North Circular (A406)",         22, 3, 3),
+  r("hangerlane","neasden",   "the North Circular (A406)",         22, 3, 3),
+  r("neasden","staples",      "the North Circular (A406)",         22, 3, 3),
+  r("staples","brentcross",   "the North Circular (A406)",         22, 3, 3),
+  r("brentcross","finchley",  "the North Circular (A406)",         22, 3, 3),
+  r("finchley","woodgreen",   "the North Circular (A406)",         22, 3, 3),
+  r("woodgreen","edmonton",   "the North Circular (A406)",         22, 3, 3),
+  r("edmonton","walthamstow", "the North Circular (A406)",         22, 3, 3),
+  r("walthamstow","ilford",   "the North Circular (A406)",         22, 3, 3),
+  r("ilford","barking",       "the North Circular (A406)",         22, 3, 3),
+  r("neasden","wembley",      "Neasden Lane (A4088)",              14, 2, 2),
+  r("wembley","harrow",       "Harrow Road (A404)",                14, 2, 2),
+  r("hangerlane","ealing",    "Hanger Lane (A406)",                20, 3, 3),
+  r("hangerlane","actonw",    "Gunnersbury Avenue (A406)",         20, 3, 3),
+];
+
+
 const ln = (to, w, fwd, back, name) => ({ to, w, fwd, back, name });
 
 const LANE_PLAN = {
@@ -1121,6 +1490,7 @@ const LANE_PLAN = {
 /* the carriageway at `d` metres along the route you are actually on */
 function laneInfoAt(d) {
   const st = window.SpectreApp && window.SpectreApp.state;
+  if (st && st.ldn) return londonLaneAt();      // on the network, the road you are on
   if (!st || !st.route.active) return null;
   const plan = LANE_PLAN[st.route.name]; if (!plan) return null;
   const zs = plan.zones;
@@ -1129,10 +1499,18 @@ function laneInfoAt(d) {
 }
 /* which side of the centreline YOUR direction runs on: -1 in Britain and Japan,
    +1 in France, America and China. It is the country's rule, not a preference. */
+/* WHICH SIDE OF THE ROAD THE COUNTRY DRIVES ON. Reading only the LANE PLANS is right about
+   the eight fixed journeys and silently wrong about London, which has no lane plan because
+   on the network every road carries its own — and that one number is upstream of which lane
+   you start in, which side the ambient traffic drives on, and which kerb a sign stands on.
+   The route itself declares which side it drives on, so ask it. */
 function driveSide() {
   const st = window.SpectreApp && window.SpectreApp.state;
-  const plan = st && st.route.active ? LANE_PLAN[st.route.name] : null;
-  return plan && plan.drive === "left" ? -1 : 1;
+  if (!st || !st.route.active) return 1;
+  const plan = LANE_PLAN[st.route.name];
+  const circ = CIRCUITS[st.route.name];
+  const drive = (plan && plan.drive) || (circ && circ.drive);
+  return drive === "left" ? -1 : 1;
 }
 /* the centre of lane `i` of a carriageway, in metres off the road's centreline.
    i = 0 is the lane against your own kerb. On a one-way street every lane runs
@@ -1148,6 +1526,425 @@ function laneCentreAt(d, i, oncoming) { return laneCentreIn(laneInfoAt(d), i, on
 /* where a car BELONGS on this road — the nearside lane. On a journey this is the
    line the chauffeur drives and the line the assist steers to. */
 function homeLaneOffAt(d) { const z = laneInfoAt(d); return z ? laneCentreIn(z, 0, false) : 0; }
+
+/* ---------------------------------------------------------------------------
+   THE NETWORK IS MODULE-SCOPE CODE, because `curvatureAt`, `halfWidthAt` and `laneInfoAt`
+   all live in different blocks and all have to ask it questions. In the Phantom it sits
+   inside the street block and picks `state`, `app`, `clamp` and `showToast` out of a
+   destructure; at module scope here it reaches for them through the app global instead,
+   which is the only difference between the two copies.
+   --------------------------------------------------------------------------- */
+const LS = () => window.SpectreApp.state;
+const LAPP = () => window.SpectreApp;
+const LTOAST = (...a) => window.SpectreApp.showToast(...a);
+const LCLAMP = (v, a, b) => Math.min(b, Math.max(a, v));
+
+const LDN = (() => {
+  const byId = {};
+  for (const nd of LDN_NODES) { nd.roads = []; byId[nd.id] = nd; }
+  const roads = [];
+  for (const rd of LDN_ROADS) {
+    const A = byId[rd.a], B = byId[rd.b];
+    if (!A || !B) { console.warn("london: road to nowhere", rd.a, rd.b, rd.name); continue; }
+    const dx = (B.e - A.e) * 1000, dy = (B.n - A.n) * 1000;      // km on the map -> metres
+    const road = {
+      ...rd, A, B,
+      len: Math.hypot(dx, dy),
+      // bearing measured the way a compass does: 0 is north, and it increases clockwise
+      brg: Math.atan2(dx, dy),
+    };
+    roads.push(road);
+    A.roads.push({ road, out: 1 });   // leaving A you travel A -> B
+    B.roads.push({ road, out: -1 });  // leaving B you travel B -> A
+  }
+  return { byId, nodes: LDN_NODES, roads };
+})();
+
+/* the compass bearing you are travelling on a road, taking the direction into account */
+function roadBearing(road, dir) {
+  return dir > 0 ? road.brg : road.brg + Math.PI;
+}
+/* the smallest signed angle between two bearings, in radians */
+function angDiff(a, b) {
+  let d = (b - a) % (Math.PI * 2);
+  if (d > Math.PI) d -= Math.PI * 2;
+  if (d < -Math.PI) d += Math.PI * 2;
+  return d;
+}
+
+/* WHAT THIS JUNCTION OFFERS. Every road that meets it, sorted by how far left or right of
+   your current heading it lies -- which is exactly how a driver reads a junction: that one
+   is straight on, that one is the left turn, that one is sharp right. */
+function junctionChoices(node, comingFrom, headingBrg) {
+  const out = [];
+  for (const link of node.roads) {
+    const brg = roadBearing(link.road, link.out);
+    const turn = angDiff(headingBrg, brg);
+    const back = link.road === comingFrom && Math.abs(turn) > Math.PI * 0.75;
+    out.push({ link, brg, turn, back });
+  }
+  out.sort((p, q) => p.turn - q.turn);
+  return out;
+}
+
+/* ---- where you are, in a form everything else can read -------------------- */
+function currentRoad() { return LS().ldn ? LS().ldn.road : null; }
+function londonActive() { return !!LS().ldn; }
+
+/* start somewhere real */
+function enterLondon(nodeId, roadName) {
+  const node = LDN.byId[nodeId] || LDN.byId.charingx;
+  let link = node.roads.find((l) => !roadName || l.road.name === roadName) || node.roads[0];
+  LS().ldn = { road: link.road, dir: link.out, node, next: link.out > 0 ? link.road.B : link.road.A };
+  LS().edgeD = 0;
+  LS().distanceM = 0; LS().routeTime = 0;
+  LS().headingRel = 0;
+  LS().laneOffset = homeLaneOffAt(0);
+  LS().route = { active: true, name: "London", env: "city", totalM: link.road.len,
+                  remainingM: link.road.len, arrived: false, loop: false,
+                  label: link.road.name };
+  LS().ldnTurn = null;
+  LAPP().buildCornersForRoute(); LAPP().seedWorld();
+  if (LAPP().seedRivals) LAPP().seedRivals();   // the traffic IS the field on a street
+  LTOAST(`${link.road.name}, leaving ${node.name}. Every junction from here is a real one — turn wherever you like.`, "Whispers");
+}
+
+/* ---- THE TURN AT A JUNCTION, as a corner in the road ---------------------- */
+const LDN_TURN_LEN = 32;                      // metres a junction turn is taken over
+
+/* the choice the driver is committed to for the junction now coming up: whichever road
+   their steering is pointing at. It is re-read every step until the junction is reached,
+   so you can change your mind right up to the line. */
+function ldnPlanTurn() {
+  const L = LS().ldn; if (!L) return null;
+  const gap = L.road.len - LS().edgeD;
+  if (gap > LDN_TURN_LEN) { LS().ldnTurn = null; return null; }
+  const headingBrg = roadBearing(L.road, L.dir);
+  const choices = junctionChoices(L.next, L.road, headingBrg).filter((c) => !c.back);
+  if (!choices.length) {                       // a dead end: you turn round, as you would
+    LS().ldnTurn = { turn: Math.PI, link: L.next.roads.find((l) => l.road === L.road) };
+    return LS().ldnTurn;
+  }
+  const best = preferredChoice(choices);
+  LS().ldnTurn = best;
+  return best;
+}
+
+// THE DRIVER'S INTENT. Where the car is already pointing, plus where the wheel is
+// asking it to go. A full lock has to be worth about ninety degrees of intent or you
+// could never signal a right-angle turn from a standing approach, which is most of
+// London's junctions — so the wheel is worth more here than the yaw it has produced so
+// far, and the car turns because you asked, not because you had already turned.
+function preferredChoice(choices) {
+  const want = LS().headingRel * 1.1 + LS().steer * 1.75;
+  let best = choices[0], bestErr = Infinity;
+  for (const c of choices) {
+    const err = Math.abs(c.turn - want);
+    if (err < bestErr) { bestErr = err; best = c; }
+  }
+  return best;
+}
+
+/* =========================================================================
+   THE JUNCTION YOU ARE COMING TO, in a form you can SEE.
+
+   The turn was already real -- the road bent, and you came out on whichever street your
+   wheel was pointing at. What was missing was any way of knowing that: no mouth opened
+   in the frontage, no sign named the roads, and nothing told you a decision was two
+   seconds away. So a network made almost entirely of crossroads appeared to have none.
+
+   This hands the renderer and the cluster everything a driver reads at a junction: how
+   far it is, what it is called, every road out of it sorted from hard left to hard right,
+   and which one the wheel is asking for at this instant. It is live, so turning the wheel
+   changes the answer while you are still approaching -- you can change your mind up to
+   the stop line, exactly as you can in a car.
+   ========================================================================= */
+const LDN_SEE = 200;                          // metres at which the junction comes into view
+function junctionAhead() {
+  const L = LS().ldn; if (!L) return null;
+  const gap = L.road.len - LS().distanceM;
+  if (gap > LDN_SEE || gap < -10) return null;
+  const headingBrg = roadBearing(L.road, L.dir);
+  const all = junctionChoices(L.next, L.road, headingBrg);
+  const outs = all.filter((c) => !c.back);
+  if (!outs.length) return { gap, node: L.next, choices: [], picked: null, back: all };
+  return { gap, node: L.next, choices: outs, picked: preferredChoice(outs) };
+}
+
+/* the signals in force RIGHT NOW: the network's junction heads, or the journey's own.
+   Everything that used to ask `circuitNow().signals` was reading an empty list on the
+   network, so the crossings and the people waiting at them never appeared. */
+function currentSignals() {
+  if (londonActive()) return londonSignals() || [];
+  const c = circuitNow();
+  return (c && c.signals) || [];
+}
+
+/* the road's own curvature: zero along a straight London street, and the junction turn
+   spread over the last thirty metres of the approach to it */
+function londonCurvatureAt(d) {
+  const L = LS().ldn; if (!L) return null;
+  const along = LS().edgeD + (d - LS().distanceM);
+  const gap = L.road.len - along;
+  if (gap > LDN_TURN_LEN || gap < 0) return 0;
+  const t = LS().ldnTurn;
+  if (!t || Math.abs(t.turn) < 0.02) return 0;
+  const u = 1 - gap / LDN_TURN_LEN;                       // 0 at the start of the turn, 1 at the line
+  // a raised cosine, so the corner starts and finishes smoothly instead of snapping
+  const k = (t.turn / LDN_TURN_LEN) * (1 - Math.cos(2 * Math.PI * u));
+  return LCLAMP(k, -0.075, 0.075);
+}
+
+/* ---- ARRIVING AT A JUNCTION AND LEAVING IT ------------------------------- */
+function londonStep(dt) {
+  const L = LS().ldn; if (!L) return;
+  // progress along the edge tracks the route distance the physics already keeps
+  LS().edgeD = LS().distanceM;
+  ldnPlanTurn();
+  if (LS().edgeD < L.road.len) {
+    LS().route.remainingM = L.road.len - LS().edgeD;
+    return;
+  }
+  // you are through the junction. Take the road you were pointing at.
+  const t = LS().ldnTurn || { link: L.next.roads.find((l) => l.road !== L.road) || L.next.roads[0], turn: 0 };
+  const link = t.link;
+  const from = L.next;
+  const next = link.out > 0 ? link.road.B : link.road.A;
+  const straight = Math.abs(t.turn) < 0.35;
+  LS().ldn = { road: link.road, dir: link.out, node: from, next };
+  LS().distanceM = 0; LS().edgeD = 0;
+  // the heading is carried through the corner by the physics, so what is left is whatever
+  // the driver did NOT take out with the wheel -- exactly like a real junction you
+  // over- or under-shot
+  LS().headingRel = LCLAMP(LS().headingRel - t.turn, -0.6, 0.6);
+  LS().laneOffset = homeLaneOffAt(0);
+  LS().route.totalM = link.road.len;
+  LS().route.remainingM = link.road.len;
+  LS().route.label = link.road.name;
+  LS().ldnTurn = null;
+  LAPP().buildCornersForRoute(); LAPP().seedWorld();
+  if (LAPP().seedRivals) LAPP().seedRivals();
+  if (!straight || from.name !== link.road.name) {
+    LTOAST(`${link.road.name}${from.name ? " — " + from.name : ""}`, "Whispers");
+  }
+}
+
+/* the carriageway you are on, for halfWidthAt and the lane markings */
+function londonLaneAt() {
+  const L = LS().ldn; if (!L) return null;
+  return { to: L.road.len, w: L.road.w, fwd: L.road.fwd, back: L.road.back, name: L.road.name };
+}
+
+/* every junction on the network has signals if it joins three roads or more, which is
+   very nearly the rule London uses */
+function londonSignals() {
+  const L = LS().ldn; if (!L) return null;
+  if (L.next.roads.length < 3) return null;
+  // one signal, at the junction, on a cycle scaled to how big the junction is
+  const cycle = 52 + L.next.roads.length * 8;
+  return [sig(Math.max(6, L.road.len - 4), L.next.name, cycle,
+              (L.next.e * 31 + L.next.n * 17) % cycle)];
+}
+
+/* =========================================================================
+   THE FRONTAGE OF THE ROAD YOU ARE ON.
+
+   The eight city kits were written for eight fixed journeys, so their blocks sit at
+   absolute distances -- "citylondon, 340 m to 1400 m". A road on the network is whatever
+   length it is, and most of them are two or three hundred metres, so those ranges missed
+   nearly all of them and the street came out BARE: no buildings, no shopfronts, nothing
+   at the kerb, and therefore no way of telling a junction from a straight. A network road
+   builds its own frontage, for its own whole length, out of what that road really is --
+   the district at each end, and the open ground London genuinely has beside it.
+   ========================================================================= */
+const LDN_LOOK = {
+  "west-end":  { kind: "mayfair",    storeys: 6 },
+  "city":      { kind: "citylondon", storeys: 13 },
+  "southbank": { kind: "citylondon", storeys: 9 },
+  "inner":     { kind: "victorian",  storeys: 5 },
+  "outer":     { kind: "victorian",  storeys: 3 },
+};
+/* WHERE LONDON IS NOT BUILT ON. `side` is the map side -- negative is the west or south
+   side of the road as it is written in LDN_ROADS -- and it flips when you drive the road
+   the other way, because the park does not move. */
+const LDN_OPEN = [
+  { re: /^Park Lane/,             side: -1, kind: "park"  },   // Hyde Park down the west side
+  { re: /^Bayswater Road/,        side:  1, kind: "park"  },   // Hyde Park on the south
+  { re: /^Constitution Hill/,     both: 1,  kind: "park"  },   // Green Park both sides
+  { re: /^The Mall/,              both: 1,  kind: "park"  },   // St James's and Green Park
+  { re: /^Knightsbridge/,         side: -1, kind: "park"  },   // Hyde Park again
+  { re: /^Victoria Embankment/,   side:  1, kind: "river" },
+  { re: /^Lower Thames Street/,   side:  1, kind: "river" },
+  { re: /^Millbank/,              side:  1, kind: "river" },
+  // a CROSSING is not an embankment. `river` is a parapet with water beyond it, which is
+  // what you see from the Embankment; on a bridge the water is nine metres BELOW you and
+  // on both sides, and the bridge draws it itself.
+  { re: /Bridge \(A/,             both: 1,  kind: "water" },   // every Thames crossing
+  { re: /^Tower Bridge/,          both: 1,  kind: "water" },
+  { re: /^Putney Bridge/,         both: 1,  kind: "water" },
+  { re: /Dartford Crossing/,      both: 1,  kind: "water" },
+  { re: /^Marylebone Road|^Euston Road/, side: -1, kind: "park" },
+];
+function londonFrontage(road, dir, L) {
+  const nearD = (dir > 0 ? road.A : road.B).district;
+  const farD  = (dir > 0 ? road.B : road.A).district;
+  const near = LDN_LOOK[nearD] || LDN_LOOK.inner;
+  const far  = LDN_LOOK[farD]  || near;
+  const out = [];
+  // the frontage stops short of BOTH ends, because the ends are junction boxes -- that
+  // fifteen-metre gap in the buildings is what a street corner looks like from a car
+  const a = Math.min(13, L * 0.08), b = Math.max(a + 8, L - 15), mid = (a + b) / 2;
+  for (const side of [-1, 1]) {
+    const mapSide = dir > 0 ? side : -side;
+    const open = LDN_OPEN.find((o) => o.re.test(road.name) && (o.both || o.side === mapSide));
+    if (open) { out.push({ from: 0, to: L, side, kind: open.kind, storeys: 0, shops: false }); continue; }
+    // a street that runs out of the City into the West End CHANGES as you drive it, so
+    // each half takes the look of the junction at its own end
+    out.push({ from: a,   to: mid, side, kind: near.kind, storeys: near.storeys, shops: true });
+    out.push({ from: mid, to: b,   side, kind: far.kind,  storeys: far.storeys,  shops: true });
+    // and BEYOND the junction, so that standing at a crossroads you can see the street on
+    // the other side of it instead of a hole in the world
+    out.push({ from: L + 12, to: L + 90, side, kind: far.kind, storeys: far.storeys, shops: true });
+  }
+  return out;
+}
+
+/* the landmark that stands AT a junction, so it comes up as you approach that junction --
+   which is how you find them in London: you drive towards them. */
+const LDN_MARKS = {
+  trafalgar:  [{ kind: "nelson",       side:  0, in: 14 }],
+  admiralty:  [{ kind: "admiralty",    side:  0, in: 12 }],
+  buckingham: [{ kind: "palace",       side:  0, in: 30 }, { kind: "memorial", side: 0, in: 12 }],
+  parlsq:     [{ kind: "bigben",       side: -1, in: 22 }, { kind: "abbey",    side: 1, in: 30 }],
+  hydeparkc:  [{ kind: "arch",         side: -1, in: 18 }, { kind: "apsley",   side: 1, in: 34 }],
+  ludgate:    [{ kind: "stpauls",      side: -1, in: 26 }],
+  towerhill:  [{ kind: "toweroflondon",side: -1, in: 24 }],
+  towerbr:    [{ kind: "towerbridge",  side:  0, in: 10 }],
+  marblearch: [{ kind: "gate",         side: -1, in: 16 }],
+};
+function londonMarks(node, L) {
+  const set = LDN_MARKS[node.id]; if (!set) return [];
+  // placed back from the junction by their own depth, so the building stands beside the
+  // road rather than in the middle of the box
+  return set.map((m) => ({ at: Math.max(8, L - m.in), side: m.side, kind: m.kind }));
+}
+
+/* =========================================================================
+   TOWER BRIDGE.
+
+   It kept disappearing when you got close for a plain reason: it was a LANDMARK, and
+   `drawLandmark` refuses to draw anything with a projected scale above 12 -- a limit that
+   is right for a building beside the road and wrong for a structure you drive THROUGH.
+   So the towers vanished at about twenty metres, which is exactly when you arrive at them.
+
+   It is now the road itself. The crossing is a real edge of the network, 8.2 m between
+   the towers with one lane each way, the Thames is on both sides of you the whole way
+   over, and the bascules do what they really do: they lift, for a vessel, and while they
+   are up there is a gap in the carriageway.
+
+   The gap is not a wall. It is a gap, and what happens at it is arithmetic -- projectile
+   motion off a 1-in-11 ramp at whatever speed you arrive. Clear it and you land on the
+   far bascule. Come up short and you go in the river. Come up short over a vessel and you
+   land on the vessel, and whether that is survivable depends on how hard you hit it.
+   ========================================================================= */
+const TB = {
+  name: "Tower Bridge (A100)",
+  spanM: 61,            // the central span between the towers
+  liftDeg: 43,          // the bascules open to 86 degrees between them
+  rampGrade: 1 / 11,    // the slope of a raised leaf where you leave it
+  deckH: 9,             // deck above the high-water mark, in metres
+};
+function onTowerBridge() {
+  return !!(LS().ldn && /^Tower Bridge/.test(LS().ldn.road.name));
+}
+/* the bascules run to their own clock, the way the real ones do: they are raised for
+   about ninety seconds roughly every six minutes when a vessel is due, and there is a
+   bell and a barrier before they move. */
+function bridgeLift(t) {
+  const CYCLE = 360, LIFT = 96, WARN = 22;
+  const ph = ((t % CYCLE) + CYCLE) % CYCLE;
+  if (ph < CYCLE - LIFT - WARN) return { open: 0, state: "closed", left: CYCLE - LIFT - WARN - ph };
+  if (ph < CYCLE - LIFT) return { open: 0, state: "warning", left: CYCLE - LIFT - ph };
+  const u = (ph - (CYCLE - LIFT)) / LIFT;                     // 0..1 across the open period
+  // up in twelve seconds, held, down in twelve
+  const open = u < 0.14 ? u / 0.14 : u > 0.86 ? (1 - u) / 0.14 : 1;
+  return { open: LCLAMP(open, 0, 1), state: "open", left: LIFT * (1 - u) };
+}
+/* WHAT HAPPENS IF YOU TAKE IT. Called once, at the lip of the near bascule.
+   v is your speed in m/s along the deck; the leaf throws you up its own slope. */
+function bridgeJump(v, open) {
+  const g = 9.81;
+  const ang = Math.atan(TB.rampGrade) + (TB.liftDeg * Math.PI / 180) * open;
+  const vx = v * Math.cos(ang), vy = v * Math.sin(ang);
+  const gap = TB.spanM * open;                       // how much deck is missing
+  // launched from the lip, landing back at deck height on the far leaf
+  const flight = (2 * vy) / g;
+  const reach = vx * flight;
+  return { ang, gap, reach, flight, cleared: reach >= gap,
+           apexM: (vy * vy) / (2 * g), landV: Math.hypot(vx, vy) };
+}
+function bridgeStep(dt) {
+  if (!onTowerBridge()) { LS().bridge = null; return; }
+  const L = LS().ldn;
+  const lift = bridgeLift(LS().time);
+  const mid = L.road.len / 2;                        // the bascules meet at mid-span
+  const lipNear = mid - TB.spanM / 2, lipFar = mid + TB.spanM / 2;
+  const b = LS().bridge || (LS().bridge = { flying: 0, vy: 0, height: 0, outcome: null, warned: 0 });
+  b.lift = lift; b.mid = mid; b.lipNear = lipNear; b.lipFar = lipFar;
+  if (lift.state === "warning" && !b.warned) {
+    b.warned = 1;
+    LTOAST("The bell on Tower Bridge. They are lifting it — a vessel is coming through.", "Whispers");
+  }
+  if (lift.state === "closed") b.warned = 0;
+
+  // ---- in the air
+  if (b.flying > 0) {
+    b.flying += dt;
+    b.vy -= 9.81 * dt;
+    b.height += b.vy * dt;
+    if (b.height <= 0) {
+      b.height = 0;
+      const past = LS().distanceM - lipNear;
+      const gap = TB.spanM * lift.open;
+      if (past >= gap - 1) {
+        b.outcome = "cleared";
+        LTOAST(`Over. ${past.toFixed(0)} metres of open bridge, landed at ${(Math.abs(LS().speedMps) * 3.6).toFixed(0)} km/h. Do not do that again.`, "The rear compartment");
+        LS().speedMps *= 0.72;
+      } else if (b.boat) {
+        const hard = Math.abs(LS().speedMps) > 17;
+        b.outcome = hard ? "boat-crash" : "boat";
+        LS().speedMps = 0; LS().pulledOver = 16;
+        LTOAST(hard
+          ? `Down onto the deck of a vessel at ${(b.entryV * 3.6).toFixed(0)} km/h. The car is finished and so is the deck.`
+          : `Down onto a vessel — hard, but the right way up. ${(b.entryV * 3.6).toFixed(0)} km/h onto a Thames barge.`,
+          "Whispers");
+      } else {
+        b.outcome = "river";
+        LS().speedMps = 0; LS().pulledOver = 20;
+        LTOAST(`Into the Thames, ${past.toFixed(0)} metres short of the far leaf. Two and a half tonnes of Phantom at high water.`, "Whispers");
+      }
+      b.flying = 0;
+    }
+    return;
+  }
+
+  // ---- reaching the lip of the near bascule with it raised
+  if (lift.open > 0.02 && !b.outcome &&
+      LS().distanceM >= lipNear && LS().distanceM < lipNear + 2.5 && LS().speedMps > 1) {
+    const j = bridgeJump(LS().speedMps, lift.open);
+    b.entryV = LS().speedMps;
+    b.boat = ((Math.floor(LS().time / 360) * 7) % 3) === 0;   // a vessel is under it, or is not
+    b.flying = 0.0001; b.vy = LS().speedMps * Math.sin(j.ang); b.height = 0.01;
+    b.jump = j;
+    LTOAST(j.cleared
+      ? `${(LS().speedMps * 3.6).toFixed(0)} km/h at the lip. ${j.reach.toFixed(0)} m of reach against a ${j.gap.toFixed(0)} m gap — you make it.`
+      : `${(LS().speedMps * 3.6).toFixed(0)} km/h at the lip. ${j.reach.toFixed(0)} m of reach against a ${j.gap.toFixed(0)} m gap.`,
+      "Whispers");
+  }
+  if (LS().distanceM > lipFar + 6) b.outcome = null;
+}
+
+
 
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
@@ -1730,6 +2527,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   // signed road curvature (1/m) at distance d. On a circuit the corners repeat every lap.
   function curvatureAt(d) {
+    const kLdn = londonCurvatureAt(d);
+    if (kLdn !== null) return kLdn;              // a junction turn IS the road's curvature
     const r = state.route;
     if (r.active && r.trackCorners && r.totalM > 0) {
       const L = r.totalM, phase = ((d % L) + L) % L;
@@ -1748,6 +2547,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   // half track-width (m) at d — Monaco pinches at the hairpin and pool, the GP loop is wide
   function halfWidthAt(d) {
+    if (state.ldn) return (state.ldn.road.w * 1.55) / 2;   // the road you are actually on
     const r = state.route;
     let full = (r.active && r.baseWidth) ? r.baseWidth : 13;
     if (r.active && r.widthZones && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; for (const z of r.widthZones) if (phase >= z.from && phase <= z.to) full = z.w; }
@@ -2041,14 +2841,20 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function buildCity() {
     state.city = null;
     if (!onJourney()) return;
-    const kit = CITY_KITS[state.route.name];
+    // on the network the frontage vocabulary is London's own
+    const kit = CITY_KITS[state.ldn ? "London — Tower Bridge to the Palace" : state.route.name];
     if (!kit) return;
     const R = cityRand(kit.seed);
     const L = state.route.totalM || 4000;
     const props = [];
 
-    // ---- frontages: one building per plot, marching down each block
-    for (const b of kit.blocks) {
+    // ---- frontages: one building per plot, marching down each block. On the NETWORK the
+    // road builds its own, because a kit's blocks are pinned to a fixed journey's metres
+    // and a network road is typically two or three hundred of them.
+    const blocks = state.ldn ? londonFrontage(state.ldn.road, state.ldn.dir, L) : kit.blocks;
+    const overWater = blocks.length > 0 && blocks.every((bk) => bk.kind === "river" || bk.kind === "water");
+    for (const b of blocks) {
+      if (b.kind === "water") continue;    // a crossing: the bridge draws its own river
       if (b.kind === "park" || b.kind === "centralpark" || b.kind === "parkland" ||
           b.kind === "promenade" || b.kind === "moat" || b.kind === "tuileries") {
         // open ground: railings, and whatever stands beyond
@@ -2119,7 +2925,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
 
     // ---- the named landmarks, at their real distance
-    for (const m of kit.marks) props.push({ ...m, t: "mark" });
+    for (const m of (state.ldn ? londonMarks(state.ldn.next, L) : kit.marks)) props.push({ ...m, t: "mark" });
 
     // ---- CROSSINGS. Every signal is a junction, and a junction has a crossing on it.
     for (const sg of (CIRCUITS[state.route.name].signals || [])) {
@@ -2619,8 +3425,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
 
   function signalStep(dt) {
-    const circ = circuitNow();
-    if (!circ || !circ.signals) { state.sigWarn = 0; return; }
+    // on the network the signals are the JUNCTIONS themselves, computed from where you are
+    const circ = state.ldn ? { signals: londonSignals() } : circuitNow();
+    if (!circ || !circ.signals) { state.sigWarn = 0; state.nextSig = null; return; }
     for (const sg of circ.signals) {
       const before = state.distanceM, after = state.distanceM + state.speedMps * dt;
       if (before < sg.at && after >= sg.at) {
@@ -2633,7 +3440,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       }
     }
     // and being stopped at a red counts as having stopped for it
-    const sg = nextSignal(circ, state.distanceM);
+    const sg = nextSignal(circ, state.distanceM);   // `circ` is already the network's when on it
     if (sg) {
       const gap = sg.at - state.distanceM, ph = signalPhase(sg, state.routeTime);
       state.sigWarn = (ph.state === "red" && gap < 90) ? 1 : (ph.state === "amber" && gap < 70 ? 0.5 : 0);
@@ -2919,6 +3726,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     state.routeTime += dt;
     signalStep(dt);
+    if (state.ldn) londonStep(dt);         // the network hands you the next road at a junction
+    bridgeStep(dt);                        // and Tower Bridge is a real edge of it
     trafficSignalStep(dt);
     rearStep(dt);
     phStep(dt);
@@ -2987,6 +3796,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   function updateLap(dsdt, dt) {
     if (!state.route.active) { if (Math.abs(state.speedMps) > 1) state.lap.curMs += dt * 1000; return; }
+    // ON THE NETWORK there is nowhere you are going, so nothing counts down and nothing
+    // arrives — londonStep keeps the road you are on and hands you the next one. Without
+    // this the road's own length was read as a destination, the car "arrived" at the far
+    // junction and was held there a metre short of it.
+    if (state.ldn) { state.lap.curMs += dt * 1000; return; }
     state.route.remainingM = Math.max(0, state.route.remainingM - dsdt * dt);
     state.lap.curMs += dt * 1000;
     if (state.route.remainingM <= 1.5) {
@@ -3008,7 +3822,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   function fmtLap(ms) { const s = ms / 1000; const m = Math.floor(s / 60); const r = (s - m * 60); return m > 0 ? `${m}:${r.toFixed(2).padStart(5, "0")}` : `${r.toFixed(2)}s`; }
   function onArrival() {
-    state.route.arrived = true; state.arrivalKmh = Math.abs(kmh(state.speedMps));
+    state.route.arrived = true; state.arrivalKmh = Math.abs(state.speedMps) * 3.6;
     state.route.active = false; const name = state.route.name; state.adaptiveCruise = false;
     const v = state.arrivalKmh;
     const how = v < 3 ? "Stopped at the door."
@@ -3097,12 +3911,19 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.save();
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);
     drawSky(w, h, pal);
+    if (state.city) { ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY); }
     if (state.city) drawCity(w, h, pal, "back"); else drawScenery(w, h, pal);
-    drawRoad(w, h, pal);
-    if (state.city) { drawPavement(w, h, pal); drawCity(w, h, pal, "front"); drawCityTraffic(w, h, pal); }
+    drawBridgeWater(w, h, pal);           // the Thames, before the deck you look at it from
+    drawRoad(w, h, pal, !!state.city);
+    if (state.city) {
+      drawPavement(w, h, pal);
+      drawJunctionGround(w, h, pal);      // the crossroads: a real mouth per road out of it
+      drawBridge(w, h, pal);              // and if this road is Tower Bridge, the structure
+      drawCity(w, h, pal, "front"); drawCityTraffic(w, h, pal);
+    }
     else { drawRoadside(w, h, pal); drawTraffic(w, h, pal); }
     drawPhSwitches(w, h, pal);
-    drawSignals(w, h, pal); drawRivals(w, h, pal);
+    drawSignals(w, h, pal); drawJunctionPost(w, h, pal); drawRivals(w, h, pal);
     drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,90,80,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
     drawMirrors(w, h, pal);
@@ -3140,8 +3961,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       ctx.fillRect(x - bw / 2, y, bw, bh + 2);
     }
   }
-  function drawRoad(w, h, pal) {
-    ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY);
+  function drawRoad(w, h, pal, skipGround) {
+    // GROUND. On a street this must NOT run: whatever stands beyond the kerb -- the Thames
+    // off Tower Bridge, the water off the Embankment, the park railings -- is drawn in the
+    // "back" pass, which runs first, and this one flat rectangle then painted over all of
+    // it. That is why the river vanished and Tower Bridge had grey ground either side of
+    // it. On a street the caller lays the ground itself, before the back pass.
+    if (!skipGround) { ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY); }
     const rg = ctx.createLinearGradient(0, horizonY, 0, h); rg.addColorStop(0, pal.road); rg.addColorStop(1, pal.night ? "#14171c" : "#2a2e34"); ctx.fillStyle = rg;
     let prevL = null, prevR = null;
     for (let i = 0; i < ROAD_OFFS.length; i++) { const off = ROAD_OFFS[i], H = halfAt(off); const c = centerlineAt(off); const cs = Math.cos(c.psi), sn = Math.sin(c.psi); const L = roadCorner(c.X - H * cs, c.Z + H * sn); const R = roadCorner(c.X + H * cs, c.Z - H * sn); if (prevL) fillClippedQuad([prevL, prevR, R, L]); prevL = L; prevR = R; }
@@ -4401,9 +5227,330 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
+  /* =========================================================================
+     THE CROSSROADS — the thing you could not see.
+
+     A junction on the network was already REAL: turn the wheel and you came out on
+     whichever street was really there. But nothing in the picture said so. The frontage
+     ran unbroken to the end of the road, no side street opened in it, no sign named
+     anything, and the corner arrived as an unexplained bend. Asking "where are the
+     crosses" was the right question about a world that had them and drew none of them.
+
+     So the junction is drawn as what it is. Every road out of it opens a real mouth of
+     tarmac in the frontage, laid at that road's REAL bearing off yours and at its real
+     width -- a road leaving at forty degrees opens a forty-degree mouth, and one leaving
+     at a hundred and thirty opens behind your shoulder. There is a stop line across your
+     own carriageway and a fingerpost on the kerb with a blade per road, each blade
+     pointing the way that road actually goes and carrying its actual name.
+     ========================================================================= */
+  function junctionMouths(J) {
+    const out = [];
+    const WS = 1.55;
+    for (const c of J.choices) {
+      if (Math.abs(c.turn) < 0.42) continue;       // that one is straight on: it IS this road
+      out.push({ c, sh: (c.link.road.w * WS) / 2, t: c.turn });
+    }
+    return out;
+  }
+  function drawJunctionGround(w, h, pal) {
+    const J = junctionAhead(); if (!J) return;
+    const d0 = J.gap;
+    const H = halfAt(Math.max(1, d0));
+    const REACH = 48;                              // how far up each side street you can see
+
+    // a rectangle laid along a road that leaves the junction at angle t
+    const arm = (t, sh, r0, r1) => {
+      const ct = Math.cos(t), st = Math.sin(t), pts = [];
+      for (const [r, o] of [[r0, -sh], [r0, sh], [r1, sh], [r1, -sh]]) {
+        const d = d0 + r * ct - o * st, lat = r * st + o * ct;
+        const cc = centerlineAt(d);
+        pts.push(roadCorner(cc.X + lat * Math.cos(cc.psi), cc.Z - lat * Math.sin(cc.psi)));
+      }
+      fillClippedQuad(pts);
+    };
+
+    ctx.save();
+    const rg = ctx.createLinearGradient(0, horizonY, 0, h);
+    rg.addColorStop(0, pal.road);
+    rg.addColorStop(1, pal.night ? "#15181d" : "#2c3036");
+    ctx.fillStyle = rg;
+
+    const mouths = junctionMouths(J);
+    // far arms first, then the box, so the box seals the middle
+    for (const m of mouths) arm(m.t, m.sh, 0, REACH);
+    // the box itself: a square of tarmac the width of the widest thing meeting here
+    let box = H;
+    for (const m of mouths) box = Math.max(box, m.sh);
+    arm(0, box, -box, box);
+
+    // ---- the stop line across your own carriageway, and the yellow box if it is a big one
+    const sl = projectAhead(Math.max(1.2, d0 - box - 0.8), 0);
+    if (sl.scale > 0.06 && d0 > box + 1) {
+      ctx.fillStyle = "rgba(238,235,225,0.75)";
+      const a1 = projectAhead(d0 - box - 0.8, -H), a2 = projectAhead(d0 - box - 0.8, H);
+      const b1 = projectAhead(d0 - box - 0.3, -H), b2 = projectAhead(d0 - box - 0.3, H);
+      ctx.beginPath(); ctx.moveTo(a1.x, a1.y); ctx.lineTo(a2.x, a2.y);
+      ctx.lineTo(b2.x, b2.y); ctx.lineTo(b1.x, b1.y); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  /* THE FINGERPOST. One blade per road out of the junction, laid out in the order a
+     driver reads them -- hard left at the bottom, hard right at the top -- each pointing
+     the way its road really goes, and the one your wheel is currently asking for picked
+     out in gold. It stands on the kerb the country puts it on. */
+  function drawJunctionPost(w, h, pal) {
+    const J = junctionAhead(); if (!J || !J.choices.length) return;
+    const d0 = J.gap;
+    if (d0 < 3 || d0 > 150) return;
+    const H = halfAt(Math.max(1, d0));
+    const side = driveSide();       // the kerb you are nearest
+    const q = projectAhead(Math.max(2.5, d0 - 6), (H + 1.8) * side);
+    if (q.scale < 0.10) return;
+    const sc = Math.min(q.scale, 34);
+    const x = q.x, y = q.y;
+    const postH = 3.6 * sc;
+
+    ctx.save();
+    // the post
+    ctx.fillStyle = pal.night ? "#c8ccd2" : "#e9ecef";
+    ctx.fillRect(x - 0.055 * sc, y - postH, 0.11 * sc, postH);
+    ctx.beginPath(); ctx.arc(x, y - postH - 0.1 * sc, 0.13 * sc, 0, Math.PI * 2); ctx.fill();
+
+    const list = J.choices.slice().sort((a, b) => b.turn - a.turn);   // hard right on top
+    const bw = 3.1 * sc, bh = 0.46 * sc;
+    ctx.font = `700 ${Math.max(6, 0.30 * sc)}px ui-sans-serif`;
+    ctx.textBaseline = "middle";
+    for (let i = 0; i < list.length; i++) {
+      const c = list[i];
+      const dirR = c.turn > 0.05;                                // this blade points right
+      const yy = y - postH + 0.55 * sc + i * (bh + 0.16 * sc);
+      const picked = J.picked && c.link === J.picked.link;
+      const x0 = dirR ? x : x - bw;
+      ctx.fillStyle = picked ? "#c9a85f" : (pal.night ? "rgba(228,232,238,0.92)" : "#f4f6f8");
+      ctx.beginPath();
+      // a blade with a point on the end it indicates
+      if (dirR) {
+        ctx.moveTo(x0, yy - bh / 2); ctx.lineTo(x0 + bw - bh * 0.6, yy - bh / 2);
+        ctx.lineTo(x0 + bw, yy); ctx.lineTo(x0 + bw - bh * 0.6, yy + bh / 2); ctx.lineTo(x0, yy + bh / 2);
+      } else {
+        ctx.moveTo(x0 + bw, yy - bh / 2); ctx.lineTo(x0 + bh * 0.6, yy - bh / 2);
+        ctx.lineTo(x0, yy); ctx.lineTo(x0 + bh * 0.6, yy + bh / 2); ctx.lineTo(x0 + bw, yy + bh / 2);
+      }
+      ctx.closePath(); ctx.fill();
+      if (sc > 3.2) {
+        ctx.fillStyle = picked ? "#1a1508" : "#101418";
+        ctx.textAlign = dirR ? "left" : "right";
+        const nm = c.link.road.name.replace(/\s*\([^)]*\)\s*$/, "");
+        const txt = nm.length > 20 ? nm.slice(0, 19) + "…" : nm;
+        ctx.fillText(txt, dirR ? x0 + bh * 0.5 : x0 + bw - bh * 0.5, yy);
+      }
+    }
+    // the junction's own name, at the top, the way a London fingerpost carries the place
+    if (sc > 3.2 && J.node.name) {
+      ctx.fillStyle = pal.night ? "rgba(226,232,240,0.9)" : "rgba(40,46,54,0.9)";
+      ctx.textAlign = "center"; ctx.font = `800 ${Math.max(6, 0.26 * sc)}px ui-sans-serif`;
+      ctx.fillText(J.node.name.toUpperCase(), x, y - postH - 0.55 * sc);
+    }
+    ctx.restore();
+  }
+
+  /* =========================================================================
+     TOWER BRIDGE.
+
+     It used to vanish as you reached it, because it was drawn as a LANDMARK and
+     `drawLandmark` refuses anything with a projected scale over 12 -- a sensible limit
+     for a building beside the road and exactly wrong for a structure you drive through.
+     Here it is drawn as part of the road: the two towers straddling the carriageway at
+     the ends of the central span, the high-level walkways between them, the suspension
+     chains running out to the shore, the Thames on both sides the whole way over, and the
+     bascules doing what bascules do.
+     ========================================================================= */
+  /* THE THAMES, from a bridge. It runs under everything -- it is drawn before the road
+     surface and before the footway, because from up here the water is nine metres DOWN
+     and the parapet is between you and it. */
+  function drawBridgeWater(w, h, pal) {
+    if (!(onTowerBridge())) return;
+    const drop = TB.deckH;
+    const H = halfAt(6);
+    const night = pal.night;
+
+    // the far bank, low on the horizon on both sides
+    ctx.save();
+    ctx.fillStyle = night ? "#141b23" : "rgba(126,138,150,0.62)";
+    ctx.fillRect(0, horizonY - 16, w, 17);
+    for (let i = 0; i < 46; i++) {
+      const x = (i * 137.7) % w, hh = 6 + ((i * 53) % 26);
+      ctx.fillRect(x, horizonY - 16 - hh, 10 + (i % 5) * 6, hh);
+    }
+    ctx.restore();
+
+    for (const s of [-1, 1]) {
+      const pts = [];
+      for (let d = 240; d >= -24; d -= 8) {
+        const q = projectAhead(Math.max(1.2, d), (H + 2.6) * s);
+        if (q.scale < 0.02) continue;
+        pts.push({ x: q.x, y: q.y + drop * q.scale });
+      }
+      if (pts.length < 2) continue;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, horizonY);
+      for (const q of pts) ctx.lineTo(q.x, q.y);
+      const edge = s < 0 ? -60 : w + 60;
+      ctx.lineTo(edge, h + 400);
+      ctx.lineTo(edge, horizonY);
+      ctx.closePath();
+      const wg = ctx.createLinearGradient(0, horizonY, 0, h);
+      wg.addColorStop(0, night ? "#0b1a26" : "#4b6a7c");
+      wg.addColorStop(1, night ? "#050d14" : "#2c4a5a");
+      ctx.fillStyle = wg; ctx.fill();
+      ctx.clip();
+      // the chop on it. Bands that get further apart as the water comes towards you,
+      // which is the one cue that says this is a surface and not a painted wall.
+      ctx.strokeStyle = night ? "rgba(150,190,220,0.10)" : "rgba(232,242,248,0.16)";
+      for (let k = 1; k < 34; k++) {
+        const yy = horizonY + Math.pow(k / 34, 2.1) * (h - horizonY) * 1.6
+                 + ((state.time * 9) % 14);
+        ctx.lineWidth = 1 + k * 0.10;
+        ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(w, yy); ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  function drawBridge(w, h, pal) {
+    if (!(onTowerBridge())) return;
+    const b = state.bridge; if (!b) return;
+    const TBs = TB;
+    const L = state.route.totalM || 244;
+    const open = b.lift ? b.lift.open : 0;
+    const H = halfAt(6);
+
+    // ---- the parapet down both sides, so the deck reads as a deck
+    ctx.save();
+    for (const s of [-1, 1]) {
+      let prev = null;
+      for (let d = -12; d <= 220; d += 6) {
+        const q = projectAhead(Math.max(1.2, d), (H + 1.1) * s);
+        if (q.scale < 0.03) { prev = null; continue; }
+        const top = { x: q.x, y: q.y - 1.15 * Math.min(q.scale, 46) };
+        if (prev) {
+          ctx.fillStyle = pal.night ? "#2b3138" : "#8d94a0";
+          ctx.beginPath();
+          ctx.moveTo(prev.b.x, prev.b.y); ctx.lineTo(prev.t.x, prev.t.y);
+          ctx.lineTo(top.x, top.y); ctx.lineTo(q.x, q.y); ctx.closePath(); ctx.fill();
+        }
+        prev = { b: q, t: top };
+      }
+    }
+    ctx.restore();
+
+    // ---- the water where the deck is missing
+    if (open > 0.02) {
+      const gap = TBs.spanM * open;
+      const g0 = b.lipNear - state.distanceM, g1 = g0 + gap;
+      if (g1 > 0 && g0 < 220) {
+        ctx.save();
+        ctx.fillStyle = pal.night ? "#0a1a24" : "#37525f";
+        const pts = [];
+        for (const [d, lat] of [[g0, -H], [g0, H], [g1, H], [g1, -H]]) {
+          const cc = centerlineAt(Math.max(0.4, d));
+          pts.push(roadCorner(cc.X + lat * Math.cos(cc.psi), cc.Z - lat * Math.sin(cc.psi)));
+        }
+        fillClippedQuad(pts);
+        // the two leaves standing up out of it
+        for (const [lipD, dirn] of [[g0, -1], [g1, 1]]) {
+          const p = projectAhead(Math.max(1.5, lipD), 0);
+          if (p.scale < 0.05) continue;
+          const sc = Math.min(p.scale, 40);
+          const rise = Math.sin((TBs.liftDeg * Math.PI / 180) * open) * (TBs.spanM / 2) * sc;
+          ctx.fillStyle = pal.night ? "#2b3138" : "#4d5560";
+          ctx.beginPath();
+          ctx.moveTo(p.x - H * sc, p.y); ctx.lineTo(p.x + H * sc, p.y);
+          ctx.lineTo(p.x + H * sc * 0.62 + dirn * 4, p.y - rise);
+          ctx.lineTo(p.x - H * sc * 0.62 + dirn * 4, p.y - rise);
+          ctx.closePath(); ctx.fill();
+          ctx.strokeStyle = "rgba(240,236,225,0.5)"; ctx.lineWidth = Math.max(1, 0.1 * sc);
+          ctx.stroke();
+        }
+        // a vessel coming through, if there is one
+        if (b.boat) {
+          const p = projectAhead(Math.max(2, (g0 + g1) / 2), 0);
+          if (p.scale > 0.05) {
+            const sc = Math.min(p.scale, 26);
+            ctx.fillStyle = pal.night ? "#1b232b" : "#3d4954";
+            ctx.fillRect(p.x - 9 * sc, p.y - 1.1 * sc, 18 * sc, 1.6 * sc);
+            ctx.fillStyle = pal.night ? "#c8b48a" : "#e7e0cd";
+            ctx.fillRect(p.x - 2.4 * sc, p.y - 3.2 * sc, 5 * sc, 2.1 * sc);
+          }
+        }
+        ctx.restore();
+      }
+    }
+
+    // ---- the two towers, straddling the road at the ends of the central span
+    for (const at of [b.lipNear, b.lipFar]) {
+      const rel = at - state.distanceM;
+      if (rel < -20 || rel > 230) continue;
+      const p = projectAhead(Math.max(2, rel), 0);
+      if (p.scale < 0.04) continue;
+      const sc = Math.min(p.scale, 46);
+      const legW = 5.0 * sc, gapW = (H + 1.2) * sc, towH = 44 * sc;
+      ctx.save();
+      for (const s of [-1, 1]) {
+        const x0 = p.x + s * gapW - (s < 0 ? legW : 0);
+        ctx.fillStyle = pal.night ? "#3a3b3a" : "#a9a08a";
+        ctx.fillRect(x0, p.y - towH, legW, towH);
+        ctx.fillStyle = pal.night ? "#2a2b2c" : "#8d846f";      // the corner turrets
+        ctx.fillRect(x0 - 0.5 * sc, p.y - towH - 5 * sc, legW + 1 * sc, 2.2 * sc);
+        for (let k = 0; k < 2; k++) {
+          const tx = x0 + (k ? legW - 1.1 * sc : 0);
+          ctx.fillRect(tx, p.y - towH - 9 * sc, 1.1 * sc, 4.4 * sc);
+          ctx.beginPath();
+          ctx.moveTo(tx - 0.3 * sc, p.y - towH - 9 * sc);
+          ctx.lineTo(tx + 0.55 * sc, p.y - towH - 12.5 * sc);
+          ctx.lineTo(tx + 1.4 * sc, p.y - towH - 9 * sc);
+          ctx.closePath(); ctx.fill();
+        }
+        // the pointed windows
+        ctx.fillStyle = pal.night ? "rgba(255,214,150,0.55)" : "rgba(60,64,72,0.55)";
+        for (let f = 1; f < 6; f++) ctx.fillRect(x0 + legW * 0.3, p.y - towH + f * (towH / 6.5), legW * 0.4, towH / 16);
+      }
+      // the two high-level walkways between them
+      ctx.fillStyle = pal.night ? "#33373b" : "#8f9aa2";
+      ctx.fillRect(p.x - gapW, p.y - towH * 0.94, gapW * 2, 1.5 * sc);
+      ctx.fillRect(p.x - gapW, p.y - towH * 0.80, gapW * 2, 1.1 * sc);
+      ctx.restore();
+    }
+
+    // ---- the suspension chains out to the shore
+    ctx.save();
+    ctx.strokeStyle = pal.night ? "rgba(150,170,190,0.55)" : "rgba(70,88,104,0.6)";
+    for (const s of [-1, 1]) {
+      ctx.beginPath();
+      let first = true;
+      for (let d = 4; d < L; d += 8) {
+        const rel = d - state.distanceM;
+        if (rel < 1 || rel > 220) { first = true; continue; }
+        const p = projectAhead(rel, (H + 0.9) * s);
+        if (p.scale < 0.04) { first = true; continue; }
+        const sc = Math.min(p.scale, 40);
+        // the chain sags between the towers and rises to the towers themselves
+        const u = clamp(Math.abs(d - b.mid) / (L / 2), 0, 1);
+        const yy = p.y - (7 + 12 * u * u) * sc;
+        ctx.lineWidth = Math.max(1, 0.16 * sc);
+        if (first) { ctx.moveTo(p.x, yy); first = false; } else ctx.lineTo(p.x, yy);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   function drawSignals(w, h, pal) {
-    const circ = circuitNow(); if (!circ || !circ.signals) return;
-    for (const sg of circ.signals) {
+    // on the network the heads come from the junction itself, not from a route's list
+    const sigs = currentSignals();
+    for (const sg of sigs) {
       const rel = sg.at - state.distanceM;
       if (rel < -14 || rel > 220) continue;
       const ph = signalPhase(sg, state.routeTime);
@@ -5058,7 +6205,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.44)}px ui-sans-serif`;
     ctx.fillText(state.gearMode === "G" ? "D" : state.gearMode, cx, cy - R * 0.30);
 
-    const circ = circuitNow(), sg = circ && nextSignal(circ, state.distanceM);
+    const circ = state.ldn ? { signals: currentSignals() } : circuitNow();
+    const sg = circ && nextSignal(circ, state.distanceM);
     if (sg) {
       const p = signalPhase(sg, state.routeTime);
       const col = p.state === "green" ? "#3ddc84" : p.state === "amber" ? "#ffb03a" : "#ff5568";
@@ -5768,6 +6916,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function isNords(n) { return n === "Nürburgring 24h" || n === "Nordschleife" || n === "Nürburgring GP"; }
   function selectCircuit(name) {
     const circ = CIRCUITS[name]; if (!circ) { showToast(`No ${name} on file.`, "Co-Pilot"); return; }
+    state.ldn = null;
+    if (circ.network) {                    // London is the network, not a route
+      enterLondon("charingx", "Whitehall (A3212)");
+      document.querySelectorAll("[data-circuit]").forEach(b => b.classList.toggle("active", b.dataset.circuit === name));
+      return;
+    }
     // endDist is the absolute distance the destination sits at, so the car can be held
     // there rather than driving on into a world that has nothing left in it.
     state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist,
@@ -5810,7 +6964,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     showToast("Back in the pit lane.", "Spectre");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleRaceAero, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { enterLondon, londonActive, currentRoad, junctionChoices, LDN,
+                       junctionAhead, currentSignals, onTowerBridge, bridgeLift, bridgeJump, TB,
+                       setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleRaceAero, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
@@ -5856,7 +7012,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (/^(hi|hello|hey|hallo)/.test(text)) { reply("Hallo! Which circuit?"); return; }
     if (has("thank", "danke")) { reply("Gern geschehen."); return; }
     let acted = false;
-    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["London — Tower Bridge to the Palace", ["london", "tower bridge", "the bridge", "big ben", "parliament", "trafalgar", "the queen", "palace"]], ["The Mall, London", ["themall", "the mall", "hyde park", "park lane"]], ["Paris — Champs-Élysées", ["paris", "champs", "champs-elysees", "concorde", "vendome"]], ["New York — Park Avenue", ["new york", "newyork", "park avenue", "manhattan", "plaza"]], ["Tokyo — Ginza", ["tokyo", "ginza", "chuo dori", "wako"]], ["Shanghai — The Bund", ["shanghai", "the bund", "bund", "nanjing road"]], ["The Royal Hotel", ["hotel", "the hotel", "porte cochere"]], ["The White Palace", ["white palace", "the palace drive", "forecourt", "gravel"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
+    const map = [["Circuit de Monaco", ["monaco", "monte carlo", "montecarlo"]], ["Nürburgring 24h", ["nurburgring", "nürburgring", "nordschleife", "ring", "green hell"]], ["Suzuka Circuit", ["suzuka", "japan"]], ["Silverstone Circuit", ["silverstone", "britain", "british"]], ["London — Tower Bridge to the Palace", ["london", "tower bridge", "the bridge", "big ben", "parliament", "trafalgar", "the queen", "palace"]], ["The Mall, London", ["themall", "the mall", "hyde park", "park lane"]], ["Paris — Champs-Élysées", ["paris", "champs", "champs-elysees", "concorde", "vendome"]], ["New York — Park Avenue", ["new york", "newyork", "park avenue", "manhattan", "plaza"]], ["Tokyo — Ginza", ["tokyo", "ginza", "chuo dori", "wako"]], ["Shanghai — The Bund", ["shanghai", "the bund", "bund", "nanjing road"]], ["The Royal Hotel", ["hotel", "the hotel", "porte cochere"]], ["The White Palace", ["white palace", "the palace drive", "forecourt", "gravel"]], ["London", ["the network", "london network", "anywhere", "charing cross", "drive around london"]], ["Nardò Ring", ["nardo", "nardò", "nardo ring"]]];
     for (const [name, keys] of map) if (keys.some(k => text.includes(k))) { app.selectCircuit(name); acted = true; if (has("you drive", "test driver", "hot lap", "lap it")) app.toggleTestDriver(true); break; }
     const spd = numberFrom(text);
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
@@ -5912,7 +7068,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // THE NEXT SET OF LIGHTS, always first, because on these routes it is the only thing
     // that matters. Naming the junction and counting the seconds down is what lets you
     // arrive at it already slow instead of braking hard in front of a passenger.
-    { const circ = circuitNow(), sg = circ && nextSignal(circ, state.distanceM);
+    { const circ = state.ldn ? { signals: currentSignals() } : circuitNow(), sg = circ && nextSignal(circ, state.distanceM);
       if (sg) {
         const ph = signalPhase(sg, state.routeTime), gap = Math.round(sg.at - state.distanceM);
         if (gap < 260) warn.push(`${sg.name} · ${ph.state.toUpperCase()} ${Math.ceil(ph.left)}s · ${gap} m`);

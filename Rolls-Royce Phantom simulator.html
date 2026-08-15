@@ -152,7 +152,8 @@
     body.view-cockpit .panel-cockpit,
     body.view-rear .panel-rear,
     body.view-systems .panel-systems,
-    body.view-computer .panel-computer { display: block; }
+    body.view-computer .panel-computer,
+    body.view-learn .panel-learn { display: block; }
 
     .panel-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
     h2 { margin: 0; font-size: 15px; font-weight: 700; }
@@ -554,6 +555,7 @@
         <button data-view="rear">Rear Suite</button>
         <button data-view="systems">Systems</button>
         <button data-view="computer">Navigation</button>
+        <button data-view="learn" style="display:none">Chauffeur 101</button>
       </nav>
 
       <section class="quick" aria-label="Quick controls">
@@ -804,6 +806,77 @@
             <i id="brakePedal"></i>
           </div>
         </div>
+      </section>
+
+      <section class="mode-panel panel-learn">
+        <div class="panel-title"><h2>Chauffeur 101</h2><span class="small">a different job from driving fast &mdash; you are judged on what the person behind you feels, and it is measured, not asserted</span></div>
+        <div style="display:flex; gap:12px; align-items:flex-start; flex-wrap:wrap">
+          <nav style="min-width:158px; font-size:11.5px; line-height:1.95">
+          <b style="color:#c9a85f">CONTENTS</b>
+          <a data-goto="pl0" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">1. The whole job in one number</a>
+          <a data-goto="pl1" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">2. Reading the lights, early</a>
+          <a data-goto="pl2" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">3. A junction is a decision, not a corner</a>
+          <a data-goto="pl3" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">4. The line that keeps the back flat</a>
+          <a data-goto="pl4" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">5. Stopping &mdash; and where the rear door lands</a>
+          <a data-goto="pl5" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">6. The arrival</a>
+          <a data-goto="pl6" style="display:block;cursor:pointer;text-decoration:none;color:#cbb98c">7. This car: 2,560 kg, 900 Nm at 1,700</a>
+          </nav>
+          <div style="flex:1; font-size:13px; line-height:1.6; color:#d6cfbe; min-width:260px">
+
+        <h3 id="pl0" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">1. The whole job in one number</h3>
+        <p style="margin:4px 0">A racing driver is judged on lap time. A chauffeur is judged on <b>JERK</b> &mdash; the rate at which acceleration changes, in m/s&sup3;. Not how hard you accelerate: how fast the hardness changes. A passenger cannot feel a steady 0.2 g. They feel the instant it arrives and the instant it stops, and if they are reading, or pouring something, or asleep, that is the only thing about your driving they will ever notice.</p>
+        <svg viewBox="0 0 340 124" style="width:100%;max-width:340px;height:auto;margin:6px 0;background:#12161b;border-radius:6px">
+          <text x="8" y="14" font-size="9" fill="#9fb2c6">the same stop, driven two ways</text>
+          <path d="M14 48 L120 48 L128 94 L156 94" stroke="#ff7676" stroke-width="2.6" fill="none"/>
+          <text x="158" y="97" font-size="9" fill="#ff7676">braked late &mdash; one big step</text>
+          <path d="M14 48 C62 48 98 66 128 92 L156 94" stroke="#6cd49a" stroke-width="2.6" fill="none"/>
+          <text x="158" y="62" font-size="9" fill="#6cd49a">braked early &mdash; one smooth curve</text>
+          <text x="8" y="116" font-size="9" fill="#8b93a0">both stop in the same place. Only one of them spills the glass.</text>
+        </svg>
+        <p style="margin:4px 0">Chauffeur Mode scores you live on three things and nothing else: <b>peak jerk</b>, <b>peak lateral g</b> and whether you stopped at every red. Both numbers come straight off the running integrator &mdash; jerk is the derivative of the acceleration the physics is already producing, and lateral g is <code>v &times; yaw rate / 9.81</code>. Anything over <b>2.5 m/s&sup3;</b> or <b>0.30 g</b> sideways is marked, because that is roughly where a person stops being able to ignore the car. Run one red and the grade is <b>DISMISSED</b>, immediately. You cannot talk your way to a good mark.</p>
+
+        <h3 id="pl1" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">2. Reading the lights, early</h3>
+        <p style="margin:4px 0">Every junction here has a real name and a real signal on it, and <b>every other car obeys the same one</b> &mdash; the phase is a pure function of route time, so the taxi beside you and the bus in front are reading the clock you are reading. Nobody gets a private light. The binnacle names the next junction, its colour, and the seconds left on it.</p>
+        <p style="margin:4px 0">That countdown is the entire skill. If a light is red with eight seconds left and you are 120 metres away, you do not brake &mdash; you <b>lift</b>, and arrive at it as it turns green having never touched the brake pedal. Braking is what you do when you failed to look far enough ahead. New York's lights are deliberately set on a <b>green wave</b>: hold the limit exactly and you will not stop once. London's are not, and never have been.</p>
+        <p style="margin:4px 0">Amber is not "go faster". Amber means stop if you can do it comfortably, and in this car you almost always can.</p>
+
+        <h3 id="pl2" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">3. A junction is a decision, not a corner</h3>
+        <p style="margin:4px 0">Choose <b>London</b> in Navigation and there is no route at all: you are on the real road network, twenty kilometres round Charing Cross, and every junction offers the roads it really has. Nothing is recalculating and nothing is going to pull you back onto a line, because there is no line.</p>
+        <p style="margin:4px 0">The car goes where the <b>wheel</b> is pointing. From about two hundred metres out the binnacle lists what this junction offers &mdash; &larr; &uarr; &rarr; with the road names &mdash; and highlights the one you are currently asking for; a fingerpost on the kerb says the same thing in the world. Turn the wheel and the highlight moves. You may change your mind right up to the stop line.</p>
+        <svg viewBox="0 0 340 132" style="width:100%;max-width:340px;height:auto;margin:6px 0;background:#12161b;border-radius:6px">
+          <text x="8" y="14" font-size="9" fill="#9fb2c6">approaching a junction: one wheel input, held</text>
+          <path d="M150 124 L150 66 L96 40" stroke="#6cd49a" stroke-width="2.4" fill="none"/>
+          <text x="12" y="36" font-size="9" fill="#6cd49a">turn in once at walking pace, unwind once</text>
+          <path d="M186 124 L186 78 L188 62 L214 54 L246 42" stroke="#ff7676" stroke-width="2.4" fill="none"/>
+          <text x="222" y="72" font-size="9" fill="#ff7676">three corrections</text>
+          <rect x="120" y="46" width="96" height="6" fill="#2b3138"/>
+          <text x="8" y="124" font-size="9" fill="#8b93a0">the rear seat is 2.1 m behind the front axle. It feels every one of them.</text>
+        </svg>
+        <p style="margin:4px 0">Lane centring is a <b>separate switch from the chauffeur</b> and it starts off, because a car that steers itself while you are choosing a turning is a car arguing with you. When it is on, it holds the real lane you are in &mdash; and it lets go entirely for the last forty-six metres of a road.</p>
+
+        <h3 id="pl3" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">4. The line that keeps the back flat</h3>
+        <p style="margin:4px 0">The racing line and the chauffeur's line are not the same line and are sometimes opposites. A racing driver clips the apex to carry speed. You go <b>wide of the apex and slow earlier</b>, because the rear seat is a long way behind the front axle &mdash; <b>2.1 metres behind it in a Phantom</b> &mdash; and everything you do at the front is amplified back there. A flick that feels tidy from the driver's seat is a shove in the ribs three rows of leather away.</p>
+        <p style="margin:4px 0">One steering input per corner. Turn in once, hold, unwind once. A correction mid-corner is two events where there should have been none.</p>
+
+        <h3 id="pl4" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">5. Stopping &mdash; and where the rear door lands</h3>
+        <p style="margin:4px 0">Release the brake as you stop. The classic mistake is holding constant pressure to a halt, which makes the car pitch back on its springs and nod &mdash; and the nod is what wakes people. Bleed the pressure off over the last two metres and the car settles instead of rocking.</p>
+        <p style="margin:4px 0">And stop in the right <b>place</b>. Your passenger uses the <b>rear</b> door. At the hotel the carpet is laid for the rear door, not for you &mdash; which means the car stops with the front wheels <b>past</b> the mark, not on it.</p>
+
+        <h3 id="pl5" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">6. The arrival</h3>
+        <p style="margin:4px 0">The last hundred metres are the only ones anybody watching remembers. Walking pace onto the forecourt, straight, square to the entrance, and stopped before the doors open &mdash; the coach doors on this car are hinged at the back and open into the wind, so they are opened stationary or not at all.</p>
+        <p style="margin:4px 0">The White Palace route exists to practise exactly this and nothing else: four kilometres of gravel avenue where the only hard part is the last two hundred metres.</p>
+
+        <h3 id="pl6" style="color:#c9a85f;margin:14px 0 4px;font-size:14px">7. This car: 2,560 kg and 900 Nm at 1,700</h3>
+        <p style="margin:4px 0">The Phantom is built to make this job easy and you should let it. All <b>900 Nm</b> is there at <b>1,700 rpm</b> &mdash; just above idle &mdash; so you never need the revs, and the satellite-aided transmission reads the road ahead and picks the gear before the corner arrives so that you do not have to. A Phantom that is audible is a Phantom being driven badly, which is why there is no tachometer on it and never has been.</p>
+        <p style="margin:4px 0">2,560 kg is the other half. It is what makes the car so calm over bad surfaces, and it is also what will punish a late decision: at 50 km/h this car needs real distance to stop softly. Everything above is downstream of that one number.</p>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="control-grid">
+          <button id="learnBtn">Chauffeur Mode: Off</button>
+          <button id="demoBtn" data-demo="1">&#9654; Demo &mdash; one junction, done properly</button>
+        </div>
+        <p class="small" style="margin-top:8px">Chauffeur Mode scores the drive live &mdash; peak jerk, peak lateral g, reds stopped for and reds run &mdash; and puts the grade on screen: FAULTLESS &middot; ACCEPTABLE &middot; THEY NOTICED &middot; DISMISSED.</p>
       </section>
 
       <section class="seatpad" aria-label="Seat comfort">
@@ -1476,7 +1549,10 @@ const SPEC = {
     beltLatched: false,
     magicRide: true,          // Magic Carpet (true) vs Sport (false)
     chauffeur: false, chauffeurFee: 0,
-    nightVision: false, laneAssist: true, adaptiveCruise: false,
+    // lane centring starts OFF. It is a driver assist and not the chauffeur, and having it
+    // on from the moment the car started meant switching the chauffeur off still left
+    // something with a hand on the wheel.
+    nightVision: false, laneAssist: false, adaptiveCruise: false,
     cameraScan: true, hazards: false, horn: false, lights: true,
     spiritUp: true, umbrellaOut: false,
     heat: false, cool: false, massage: false, audioStudio: false,
@@ -1484,6 +1560,9 @@ const SPEC = {
     rearRecline: 0, rearMassage: false, tables: false, screens: false, privacy: false, cooler: true,
     frontRecline: 0, seatTempC: 22,
     roadInputG: 0, cabinHeaveG: 0,
+    // --- Chauffeur 101 (opt-in; measured, never asserted) ---
+    learnMode: false, chJerk: 0, chPeakJerk: 0, chPeakLat: 0, chLastAccel: 0,
+    chRedsRun: 0, chRedsStopped: 0, chSeconds: 0,
     shake: { x: 0, y: 0, rot: 0 },
     blinker: 0,               // -1 left, 0 none, +1 right
     blinkPhase: 0, blinkOn: false,
@@ -2126,46 +2205,95 @@ const updateDoorArt = (...args) => app.updateDoorArt(...args);
 
   function followDist() { return clamp(Math.abs(state.speedMps) * 1.5, 22, 60); }
 
+  /* ==========================================================================
+     THE LANES THIS ROAD ACTUALLY HAS.
+
+     All of this used to work in multiples of three metres, clamped to minus one,
+     zero and plus one -- which is not a lane on any road in the plan. On a 16 m
+     London street with two lanes each way the nearside lane centre is about
+     -6.2 m, so "hold the lane you are in" quietly rounded that to -3 and then
+     steered the car three metres towards the oncoming traffic and held it there.
+     That is the car driving itself sideways with nobody's hands on the wheel, and
+     it happened with the chauffeur switched off because lane centring is a
+     separate switch that was on by default.
+
+     Lanes now come off the road you are genuinely on -- `laneInfoAt` and
+     `laneCentreIn`, the same pair the traffic, the markings and the kerbs use --
+     so "the lane you are in" means the one you are in.
+     ========================================================================== */
+  function forwardLaneOffsets() {
+    const z = app.laneInfoAt ? app.laneInfoAt(state.distanceM) : null;
+    if (!z || !z.fwd) return [0];
+    const out = [];
+    for (let i = 0; i < z.fwd; i++) out.push(app.laneCentreIn(z, i, false));
+    return out;
+  }
+  // are we inside the turning zone at the end of the road we are on? Nothing that steers
+  // for you may steer here: this is the thirty-odd metres in which you are choosing a road.
+  function nearAJunction() {
+    const L = state.ldn;
+    return !!L && (L.road.len - state.distanceM) < 46;
+  }
+  function nearestLaneOffset(from) {
+    const offs = forwardLaneOffsets();
+    let best = offs[0], bestD = Infinity;
+    for (const o of offs) { const d = Math.abs(o - from); if (d < bestD) { bestD = d; best = o; } }
+    return best;
+  }
+  function laneIndexOf(off) {
+    const offs = forwardLaneOffsets();
+    let bi = 0, bd = Infinity;
+    for (let i = 0; i < offs.length; i++) { const d = Math.abs(offs[i] - off); if (d < bd) { bd = d; bi = i; } }
+    return bi;
+  }
+  // where a vehicle really is across the road: the city traffic carries its true lateral,
+  // and the open-road traffic still carries the old three-metre index
+  function vehLat(car) {
+    return car.lat !== undefined && car.lat !== null
+      ? car.lat : car.lane * 3 + (car.oncoming ? -3.4 : 0);
+  }
   // nearest car genuinely in our path — so pulling into another lane to overtake clears it
   function nearestLeadVehicle() {
     let best = null;
     for (const car of state.traffic) {
       if (car.oncoming) continue;
-      if (Math.abs(car.lane * 3 - state.laneOffset) > 2.0) continue;   // roughly our trajectory
+      if (Math.abs(vehLat(car) - state.laneOffset) > 2.0) continue;   // roughly our trajectory
       if (car.z > 2 && (!best || car.z < best.gapM)) best = { gapM: car.z, vMps: car.speed };
     }
     return best;
   }
-  // nearest car ahead in each lane (-1, 0, 1) — used to choose an overtaking line
+  // nearest car ahead in each REAL forward lane — used to choose an overtaking line
   function laneScan() {
-    const r = { "-1": { gap: Infinity, v: 99 }, "0": { gap: Infinity, v: 99 }, "1": { gap: Infinity, v: 99 } };
+    const offs = forwardLaneOffsets();
+    const r = offs.map(() => ({ gap: Infinity, v: 99 }));
     for (const car of state.traffic) {
       if (car.oncoming) continue;
-      const e = r[car.lane];
-      if (car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; }
+      const e = r[laneIndexOf(vehLat(car))];
+      if (e && car.z > 1 && car.z < e.gap) { e.gap = car.z; e.v = car.speed; }
     }
     return r;
   }
   // the lateral line the chauffeur/cruise should hold: stay if clear, pull out to pass a
-  // slower car when a neighbouring lane has more room, and drift back to centre when free
+  // slower car when a neighbouring lane has more room, and drift back to the kerb lane
+  // when free — which on a British street is where a chauffeur-driven car belongs.
   function chooseLaneOffset() {
+    const offs = forwardLaneOffsets();
     const lanes = laneScan();
-    const cur = clamp(Math.round(state.laneOffset / 3), -1, 1);
+    const cur = laneIndexOf(state.laneOffset);
     const follow = followDist();
     const spd = Math.abs(state.speedMps);
     const blocked = lanes[cur].gap < follow && lanes[cur].v < spd - 1.5;
     if (!blocked) {
-      if (cur !== 0 && lanes["0"].gap > follow + 10) return 0;   // return to the centre lane
-      return cur * 3;
+      if (cur !== 0 && lanes[0].gap > follow + 10) return offs[0];   // back to the kerb lane
+      return offs[cur];
     }
     let best = cur, bestGap = lanes[cur].gap + 12;               // hysteresis: need 12 m more room
-    for (let l = -1; l <= 1; l++) {
-      if (Math.abs(l - cur) > 1) continue;                       // one lane at a time
-      if (lanes[String(l)].gap > bestGap) { best = l; bestGap = lanes[String(l)].gap; }
+    for (let l = Math.max(0, cur - 1); l <= Math.min(offs.length - 1, cur + 1); l++) {
+      if (lanes[l].gap > bestGap) { best = l; bestGap = lanes[l].gap; }
     }
-    return best * 3;
+    return offs[best];
   }
-  function laneIndex() { return clamp(Math.round(state.laneOffset / 3), -1, 1); }
+  function laneIndex() { return laneIndexOf(state.laneOffset); }
 
   // Steering geometry shared by the physics and the driver-assist controllers.
   // Set to the real Phantom: 3.552 m wheelbase, 1.67 m front track and 35.27° of lock give
@@ -2217,7 +2345,11 @@ const updateDoorArt = (...args) => app.updateDoorArt(...args);
       if (Math.abs(state.touchSteer) < 0.003) state.touchSteer = 0;
     }
     if (steerInput === 0 && state.trackpadSteering) steerInput = state.touchSteer;
-    const assist = state.laneAssist && Math.abs(state.speedMps) > 5;
+    // Lane centring is a driver assist and it is NOT the chauffeur: it has its own switch
+    // and it used to be on from the moment the car started, so switching the chauffeur off
+    // still left something steering. It lets go completely at a junction, because a
+    // junction is where you have decided to go somewhere and nothing should argue.
+    const assist = state.laneAssist && Math.abs(state.speedMps) > 5 && !nearAJunction();
     const cruiseActive = state.adaptiveCruise && state.gearMode === "D" && !state.chauffeur;
 
     let throttleTarget, brakeTarget, steerTarget;
@@ -2237,8 +2369,8 @@ const updateDoorArt = (...args) => app.updateDoorArt(...args);
       throttleTarget = ownerThrottle;
       brakeTarget = ownerBrake;
       // manual lane assist just holds the lane you're in; you choose when to change lanes
-      const keepLane = clamp(Math.round(state.laneOffset / 3), -1, 1) * 3;
-      steerTarget = steerInput !== 0 ? steerInput : (assist ? pathSteer(0.7, keepLane) : 0);
+      steerTarget = steerInput !== 0 ? steerInput
+                  : (assist ? pathSteer(0.7, nearestLaneOffset(state.laneOffset)) : 0);
     }
 
     if (steerInput !== 0) state.blinker = Math.sign(steerInput);
@@ -2285,6 +2417,22 @@ const updateDoorArt = (...args) => app.updateDoorArt(...args);
     if (state.gearMode === "P") total += -state.speedMps * SPEC.massKg * 9;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
+
+    /* CHAUFFEUR 101 SCORING. Both numbers come straight off the running integrator, which
+       is the whole point: jerk is the derivative of the acceleration the physics has just
+       produced, and lateral g is worked out from the yaw rate below. Nothing here is
+       asserted and nothing is a heuristic. It costs one subtraction and it is only read
+       when Chauffeur Mode is on, so certification never sees it. */
+    if (dt > 0) {
+      const j = Math.abs(accel - state.chLastAccel) / dt;
+      state.chJerk = state.chJerk * 0.90 + j * 0.10;          // what a person feels, not a spike
+      state.chLastAccel = accel;
+      if (state.learnMode && Math.abs(state.speedMps) > 0.6) {
+        state.chSeconds += dt;
+        if (state.chJerk > state.chPeakJerk) state.chPeakJerk = state.chJerk;
+        if (Math.abs(state.lateralG) > state.chPeakLat) state.chPeakLat = Math.abs(state.lateralG);
+      }
+    }
 
     // governor
     if (state.speedMps >= SPEC.topSpeedMps && accel > 0) { accel = 0; state.speedMps = SPEC.topSpeedMps; }
@@ -2703,10 +2851,22 @@ function laneInfoAt(d) {
   return zs[zs.length - 1];
 }
 
+/* WHICH SIDE OF THE ROAD THE COUNTRY DRIVES ON.
+
+   This read the LANE PLANS and nothing else, so it was right about the eight journeys and
+   silently wrong about everything else -- including London itself, which has no lane plan
+   because on the network every road carries its own. It returned +1, the right-hand side,
+   and that one number is upstream of a great deal: `homeLaneOffAt` put you in the
+   right-hand lane of a British street, the ambient traffic drove on the right, the
+   fingerpost stood on the wrong kerb, and lane centring dragged you across the road
+   towards all of it. The destination itself declares which side it drives on, so ask it. */
 function driveSide() {
   const st = window.PhantomApp && window.PhantomApp.state;
-  const plan = st && st.route.active ? LANE_PLAN[st.route.name] : null;
-  return plan && plan.drive === "left" ? -1 : 1;
+  if (!st || !st.route.active) return 1;
+  const plan = LANE_PLAN[st.route.name];
+  const dest = app.DESTINATIONS && app.DESTINATIONS[st.route.name];
+  const drive = (plan && plan.drive) || (dest && dest.drive);
+  return drive === "left" ? -1 : 1;
 }
 
   function cityRand(seed) {
@@ -2725,8 +2885,10 @@ function driveSide() {
     const L = state.route.totalM || 4000;
     const props = [];
 
-    // ---- frontages: one building per plot, marching down each block
-    for (const b of kit.blocks) {
+    // ---- frontages: one building per plot, marching down each block. On the network the
+    // road builds its own, because a kit's blocks are pinned to a fixed journey's metres.
+    const blocks = state.ldn ? londonFrontage(state.ldn.road, state.ldn.dir, L) : kit.blocks;
+    for (const b of blocks) {
       if (b.kind === "park" || b.kind === "centralpark" || b.kind === "parkland" ||
           b.kind === "promenade" || b.kind === "moat" || b.kind === "tuileries") {
         // open ground: railings, and whatever stands beyond
@@ -2742,6 +2904,7 @@ function driveSide() {
             props.push({ at: d, side: b.side, t: "parktree", seed: R() });
         continue;
       }
+      if (b.kind === "water") continue;         // a crossing: the bridge draws its own river
       if (b.kind === "river") {
         // the Thames. A stone parapet on the kerb, water beyond it, and the far bank
         // beyond that — which is what you actually see from a bridge or the Embankment.
@@ -2769,12 +2932,14 @@ function driveSide() {
       }
     }
 
-    // ---- street furniture, both pavements
+    // ---- street furniture, both pavements. NOTHING is planted on a bridge: no plane
+    // trees, no bins, no parked cars over the Thames.
+    const overWater = blocks.length > 0 && blocks.every((bk) => bk.kind === "river" || bk.kind === "water");
     for (let d = 12; d < L; d += 26) {
       props.push({ at: d, side: -1, t: "lamp", kind: kit.lamp });
       props.push({ at: d + 13, side: 1, t: "lamp", kind: kit.lamp });
     }
-    if (kit.bin)      for (let d = 40; d < L; d += 120) props.push({ at: d, side: (d % 240 < 120 ? -1 : 1), t: "bin" });
+    if (kit.bin && !overWater) for (let d = 40; d < L; d += 120) props.push({ at: d, side: (d % 240 < 120 ? -1 : 1), t: "bin" });
     if (kit.hydrant)  for (let d = 70; d < L; d += 150) props.push({ at: d, side: (d % 300 < 150 ? -1 : 1), t: "hydrant" });
     if (kit.vending)  for (let d = 90; d < L; d += 110) props.push({ at: d, side: (d % 220 < 110 ? -1 : 1), t: "vending" });
     if (kit.kiosk)    for (let d = 150; d < L; d += 380) props.push({ at: d, side: -1, t: "kiosk" });
@@ -2783,24 +2948,28 @@ function driveSide() {
     if (kit.scaffold) for (let d = 520; d < L; d += 900) props.push({ at: d, side: -1, t: "scaffold" });
     if (kit.flag)     for (let d = 120; d < L; d += 90) props.push({ at: d, side: -1, t: "flag" });
     if (kit.banner)   for (let d = 160; d < L; d += 140) props.push({ at: d, side: 1, t: "banner", seed: Math.random() });
-    if (kit.trees) for (let d = kit.trees.from; d < kit.trees.to; d += kit.trees.every) {
+    if (kit.trees && !overWater) for (let d = kit.trees.from; d < kit.trees.to; d += kit.trees.every) {
       props.push({ at: d, side: -1, t: "tree", kind: kit.trees.kind, seed: R() });
       props.push({ at: d + kit.trees.every / 2, side: 1, t: "tree", kind: kit.trees.kind, seed: R() });
     }
 
-    // ---- parked cars along the kerb, in the gaps between junctions
-    const sigAt = (state.route.active && (circuitNow() || {}).signals || []).map(s => s.at);
-    const nearJunction = (d) => sigAt.some(a => Math.abs(a - d) < 34);
-    for (let d = 20; d < L; d += 11 + R() * 8) {
+    // ---- parked cars along the kerb, in the gaps between junctions. Nothing is parked
+    // in the last thirty metres of a network road either: that is the junction box.
+    const sigs = currentSignals();
+    const sigAt = (state.route.active ? sigs : []).map(s => s.at);
+    const nearJunction = (d) => sigAt.some(a => Math.abs(a - d) < 34) || (state.ldn && d > L - 30);
+    for (let d = 20; d < L && !overWater; d += 11 + R() * 8) {
       if (nearJunction(d) || R() > 0.55) continue;
       props.push({ at: d, side: R() < 0.5 ? -1 : 1, t: "parked", seed: R() });
     }
 
-    // ---- the named landmarks, at their real distance
-    for (const m of kit.marks) props.push({ ...m, t: "mark" });
+    // ---- the named landmarks. On a journey they sit at their measured distance along it;
+    // on the network they stand at the junction they really stand at, and come up as you
+    // drive towards it.
+    for (const m of (state.ldn ? londonMarks(state.ldn.next, L) : kit.marks)) props.push({ ...m, t: "mark" });
 
     // ---- CROSSINGS. Every signal is a junction, and a junction has a crossing on it.
-    for (const sg of ((circuitNow() || {}).signals || [])) {
+    for (const sg of sigs) {
       props.push({ at: sg.at + 4, side: 0, t: "crossing", sg, scramble: kit.marks.some(m => m.kind === "scramble" && Math.abs(m.at - sg.at) < 40) });
     }
 
@@ -2828,7 +2997,8 @@ function driveSide() {
 
   function cityStep(dt) {
     const C = state.city; if (!C) return;
-    const circ = circuitNow(); if (!circ) return;
+    if (!onJourney()) return;
+    const sigs = currentSignals();
     for (const p of C.peds) {
       // only simulate the ones you could see; the rest just hold position
       const rel = p.at - state.distanceM;
@@ -2841,7 +3011,7 @@ function driveSide() {
       }
       p.at += p.dir * p.v * dt;
       // at a crossing, and the cars are stopped? then go.
-      for (const sg of (circ.signals || [])) {
+      for (const sg of sigs) {
         if (Math.abs(p.at - (sg.at + 4)) > 2.2) continue;
         const ph = signalPhase(sg, state.routeTime);
         if (ph.state === "red" && ph.left > 2.5 && Math.random() < 0.02) {
@@ -2893,6 +3063,7 @@ function driveSide() {
 
   function cityTrafficStep(dt) {
     if (!state.city || !state.traffic.length) return;
+    const sigs = currentSignals();
     const circ = circuitNow();
     const limit = ((circ && circ.limitKmh) || 50) / 3.6;
 
@@ -2906,10 +3077,10 @@ function driveSide() {
       const nl = zc ? Math.max(1, c.oncoming ? zc.back : zc.fwd) : 2;
       c.laneIdx = Math.min(nl - 1, Math.floor(c.laneP * nl));
       c.lat = zc ? laneCentreIn(zc, c.laneIdx, c.oncoming) : (c.lane * 3 + (c.oncoming ? -3.6 : 0));
-      if (!circ || !circ.signals) continue;
+      if (!sigs.length) continue;
       // oncoming traffic meets the same signal heads coming the other way
       let sg = null, bestGap = Infinity;
-      for (const g of circ.signals) {
+      for (const g of sigs) {
         const gap = c.oncoming ? (c.routeD - g.at) : (g.at - c.routeD);
         if (gap >= -3 && gap < bestGap) { bestGap = gap; sg = g; }
       }
@@ -3088,19 +3259,59 @@ function ldnPlanTurn() {
     state.ldnTurn = { turn: Math.PI, link: L.next.roads.find((l) => l.road === L.road) };
     return state.ldnTurn;
   }
-  // THE DRIVER'S INTENT. Where the car is already pointing, plus where the wheel is
-  // asking it to go. A full lock has to be worth about ninety degrees of intent or you
-  // could never signal a right-angle turn from a standing approach, which is most of
-  // London's junctions — so the wheel is worth more here than the yaw it has produced so
-  // far, and the car turns because you asked, not because you had already turned.
+  const best = preferredChoice(choices);
+  state.ldnTurn = best;
+  return best;
+}
+
+// THE DRIVER'S INTENT. Where the car is already pointing, plus where the wheel is
+// asking it to go. A full lock has to be worth about ninety degrees of intent or you
+// could never signal a right-angle turn from a standing approach, which is most of
+// London's junctions — so the wheel is worth more here than the yaw it has produced so
+// far, and the car turns because you asked, not because you had already turned.
+function preferredChoice(choices) {
   const want = state.headingRel * 1.1 + state.steer * 1.75;
   let best = choices[0], bestErr = Infinity;
   for (const c of choices) {
     const err = Math.abs(c.turn - want);
     if (err < bestErr) { bestErr = err; best = c; }
   }
-  state.ldnTurn = best;
   return best;
+}
+
+/* =========================================================================
+   THE JUNCTION YOU ARE COMING TO, in a form you can SEE.
+
+   The turn was already real -- the road bent, and you came out on whichever street your
+   wheel was pointing at. What was missing was any way of knowing that: no mouth opened
+   in the frontage, no sign named the roads, and nothing told you a decision was two
+   seconds away. So a network made almost entirely of crossroads appeared to have none.
+
+   This hands the renderer and the cluster everything a driver reads at a junction: how
+   far it is, what it is called, every road out of it sorted from hard left to hard right,
+   and which one the wheel is asking for at this instant. It is live, so turning the wheel
+   changes the answer while you are still approaching -- you can change your mind up to
+   the stop line, exactly as you can in a car.
+   ========================================================================= */
+const LDN_SEE = 200;                          // metres at which the junction comes into view
+function junctionAhead() {
+  const L = state.ldn; if (!L) return null;
+  const gap = L.road.len - state.distanceM;
+  if (gap > LDN_SEE || gap < -10) return null;
+  const headingBrg = roadBearing(L.road, L.dir);
+  const all = junctionChoices(L.next, L.road, headingBrg);
+  const outs = all.filter((c) => !c.back);
+  if (!outs.length) return { gap, node: L.next, choices: [], picked: null, back: all };
+  return { gap, node: L.next, choices: outs, picked: preferredChoice(outs) };
+}
+
+/* the signals in force RIGHT NOW: the network's junction heads, or the journey's own.
+   Everything that used to ask `circuitNow().signals` was reading an empty list on the
+   network, so the crossings and the people waiting at them never appeared. */
+function currentSignals() {
+  if (londonActive()) return londonSignals() || [];
+  const c = circuitNow();
+  return (c && c.signals) || [];
 }
 
 /* the road's own curvature: zero along a straight London street, and the junction turn
@@ -3166,6 +3377,204 @@ function londonSignals() {
   const cycle = 52 + L.next.roads.length * 8;
   return [sig(Math.max(6, L.road.len - 4), L.next.name, cycle,
               (L.next.e * 31 + L.next.n * 17) % cycle)];
+}
+
+/* =========================================================================
+   THE FRONTAGE OF THE ROAD YOU ARE ON.
+
+   The eight city kits were written for eight fixed journeys, so their blocks sit at
+   absolute distances -- "citylondon, 340 m to 1400 m". A road on the network is whatever
+   length it is, and most of them are two or three hundred metres, so those ranges missed
+   nearly all of them and the street came out BARE: no buildings, no shopfronts, nothing
+   at the kerb, and therefore no way of telling a junction from a straight. A network road
+   builds its own frontage, for its own whole length, out of what that road really is --
+   the district at each end, and the open ground London genuinely has beside it.
+   ========================================================================= */
+const LDN_LOOK = {
+  "west-end":  { kind: "mayfair",    storeys: 6 },
+  "city":      { kind: "citylondon", storeys: 13 },
+  "southbank": { kind: "citylondon", storeys: 9 },
+  "inner":     { kind: "victorian",  storeys: 5 },
+  "outer":     { kind: "victorian",  storeys: 3 },
+};
+/* WHERE LONDON IS NOT BUILT ON. `side` is the map side -- negative is the west or south
+   side of the road as it is written in LDN_ROADS -- and it flips when you drive the road
+   the other way, because the park does not move. */
+const LDN_OPEN = [
+  { re: /^Park Lane/,             side: -1, kind: "park"  },   // Hyde Park down the west side
+  { re: /^Bayswater Road/,        side:  1, kind: "park"  },   // Hyde Park on the south
+  { re: /^Constitution Hill/,     both: 1,  kind: "park"  },   // Green Park both sides
+  { re: /^The Mall/,              both: 1,  kind: "park"  },   // St James's and Green Park
+  { re: /^Knightsbridge/,         side: -1, kind: "park"  },   // Hyde Park again
+  { re: /^Victoria Embankment/,   side:  1, kind: "river" },
+  { re: /^Lower Thames Street/,   side:  1, kind: "river" },
+  { re: /^Millbank/,              side:  1, kind: "river" },
+  // a CROSSING is not an embankment. `river` is a parapet with water beyond it, which is
+  // what you see from the Embankment; on a bridge the water is nine metres BELOW you and
+  // on both sides, and the bridge draws it itself.
+  { re: /Bridge \(A/,             both: 1,  kind: "water" },   // every Thames crossing
+  { re: /^Tower Bridge/,          both: 1,  kind: "water" },
+  { re: /^Putney Bridge/,         both: 1,  kind: "water" },
+  { re: /Dartford Crossing/,      both: 1,  kind: "water" },
+  { re: /^Marylebone Road|^Euston Road/, side: -1, kind: "park" },
+];
+function londonFrontage(road, dir, L) {
+  const nearD = (dir > 0 ? road.A : road.B).district;
+  const farD  = (dir > 0 ? road.B : road.A).district;
+  const near = LDN_LOOK[nearD] || LDN_LOOK.inner;
+  const far  = LDN_LOOK[farD]  || near;
+  const out = [];
+  // the frontage stops short of BOTH ends, because the ends are junction boxes -- that
+  // fifteen-metre gap in the buildings is what a street corner looks like from a car
+  const a = Math.min(13, L * 0.08), b = Math.max(a + 8, L - 15), mid = (a + b) / 2;
+  for (const side of [-1, 1]) {
+    const mapSide = dir > 0 ? side : -side;
+    const open = LDN_OPEN.find((o) => o.re.test(road.name) && (o.both || o.side === mapSide));
+    if (open) { out.push({ from: 0, to: L, side, kind: open.kind, storeys: 0, shops: false }); continue; }
+    // a street that runs out of the City into the West End CHANGES as you drive it, so
+    // each half takes the look of the junction at its own end
+    out.push({ from: a,   to: mid, side, kind: near.kind, storeys: near.storeys, shops: true });
+    out.push({ from: mid, to: b,   side, kind: far.kind,  storeys: far.storeys,  shops: true });
+    // and BEYOND the junction, so that standing at a crossroads you can see the street on
+    // the other side of it instead of a hole in the world
+    out.push({ from: L + 12, to: L + 90, side, kind: far.kind, storeys: far.storeys, shops: true });
+  }
+  return out;
+}
+
+/* the landmark that stands AT a junction, so it comes up as you approach that junction --
+   which is how you find them in London: you drive towards them. */
+const LDN_MARKS = {
+  trafalgar:  [{ kind: "nelson",       side:  0, in: 14 }],
+  admiralty:  [{ kind: "admiralty",    side:  0, in: 12 }],
+  buckingham: [{ kind: "palace",       side:  0, in: 30 }, { kind: "memorial", side: 0, in: 12 }],
+  parlsq:     [{ kind: "bigben",       side: -1, in: 22 }, { kind: "abbey",    side: 1, in: 30 }],
+  hydeparkc:  [{ kind: "arch",         side: -1, in: 18 }, { kind: "apsley",   side: 1, in: 34 }],
+  ludgate:    [{ kind: "stpauls",      side: -1, in: 26 }],
+  towerhill:  [{ kind: "toweroflondon",side: -1, in: 24 }],
+  towerbr:    [{ kind: "towerbridge",  side:  0, in: 10 }],
+  marblearch: [{ kind: "gate",         side: -1, in: 16 }],
+};
+function londonMarks(node, L) {
+  const set = LDN_MARKS[node.id]; if (!set) return [];
+  // placed back from the junction by their own depth, so the building stands beside the
+  // road rather than in the middle of the box
+  return set.map((m) => ({ at: Math.max(8, L - m.in), side: m.side, kind: m.kind }));
+}
+
+/* =========================================================================
+   TOWER BRIDGE.
+
+   It kept disappearing when you got close for a plain reason: it was a LANDMARK, and
+   `drawLandmark` refuses to draw anything with a projected scale above 12 -- a limit that
+   is right for a building beside the road and wrong for a structure you drive THROUGH.
+   So the towers vanished at about twenty metres, which is exactly when you arrive at them.
+
+   It is now the road itself. The crossing is a real edge of the network, 8.2 m between
+   the towers with one lane each way, the Thames is on both sides of you the whole way
+   over, and the bascules do what they really do: they lift, for a vessel, and while they
+   are up there is a gap in the carriageway.
+
+   The gap is not a wall. It is a gap, and what happens at it is arithmetic -- projectile
+   motion off a 1-in-11 ramp at whatever speed you arrive. Clear it and you land on the
+   far bascule. Come up short and you go in the river. Come up short over a vessel and you
+   land on the vessel, and whether that is survivable depends on how hard you hit it.
+   ========================================================================= */
+const TB = {
+  name: "Tower Bridge (A100)",
+  spanM: 61,            // the central span between the towers
+  liftDeg: 43,          // the bascules open to 86 degrees between them
+  rampGrade: 1 / 11,    // the slope of a raised leaf where you leave it
+  deckH: 9,             // deck above the high-water mark, in metres
+};
+function onTowerBridge() {
+  return !!(state.ldn && /^Tower Bridge/.test(state.ldn.road.name));
+}
+/* the bascules run to their own clock, the way the real ones do: they are raised for
+   about ninety seconds roughly every six minutes when a vessel is due, and there is a
+   bell and a barrier before they move. */
+function bridgeLift(t) {
+  const CYCLE = 360, LIFT = 96, WARN = 22;
+  const ph = ((t % CYCLE) + CYCLE) % CYCLE;
+  if (ph < CYCLE - LIFT - WARN) return { open: 0, state: "closed", left: CYCLE - LIFT - WARN - ph };
+  if (ph < CYCLE - LIFT) return { open: 0, state: "warning", left: CYCLE - LIFT - ph };
+  const u = (ph - (CYCLE - LIFT)) / LIFT;                     // 0..1 across the open period
+  // up in twelve seconds, held, down in twelve
+  const open = u < 0.14 ? u / 0.14 : u > 0.86 ? (1 - u) / 0.14 : 1;
+  return { open: clamp(open, 0, 1), state: "open", left: LIFT * (1 - u) };
+}
+/* WHAT HAPPENS IF YOU TAKE IT. Called once, at the lip of the near bascule.
+   v is your speed in m/s along the deck; the leaf throws you up its own slope. */
+function bridgeJump(v, open) {
+  const g = 9.81;
+  const ang = Math.atan(TB.rampGrade) + (TB.liftDeg * Math.PI / 180) * open;
+  const vx = v * Math.cos(ang), vy = v * Math.sin(ang);
+  const gap = TB.spanM * open;                       // how much deck is missing
+  // launched from the lip, landing back at deck height on the far leaf
+  const flight = (2 * vy) / g;
+  const reach = vx * flight;
+  return { ang, gap, reach, flight, cleared: reach >= gap,
+           apexM: (vy * vy) / (2 * g), landV: Math.hypot(vx, vy) };
+}
+function bridgeStep(dt) {
+  if (!onTowerBridge()) { state.bridge = null; return; }
+  const L = state.ldn;
+  const lift = bridgeLift(state.time);
+  const mid = L.road.len / 2;                        // the bascules meet at mid-span
+  const lipNear = mid - TB.spanM / 2, lipFar = mid + TB.spanM / 2;
+  const b = state.bridge || (state.bridge = { flying: 0, vy: 0, height: 0, outcome: null, warned: 0 });
+  b.lift = lift; b.mid = mid; b.lipNear = lipNear; b.lipFar = lipFar;
+  if (lift.state === "warning" && !b.warned) {
+    b.warned = 1;
+    showToast("The bell on Tower Bridge. They are lifting it — a vessel is coming through.", "Whispers");
+  }
+  if (lift.state === "closed") b.warned = 0;
+
+  // ---- in the air
+  if (b.flying > 0) {
+    b.flying += dt;
+    b.vy -= 9.81 * dt;
+    b.height += b.vy * dt;
+    if (b.height <= 0) {
+      b.height = 0;
+      const past = state.distanceM - lipNear;
+      const gap = TB.spanM * lift.open;
+      if (past >= gap - 1) {
+        b.outcome = "cleared";
+        showToast(`Over. ${past.toFixed(0)} metres of open bridge, landed at ${(Math.abs(state.speedMps) * 3.6).toFixed(0)} km/h. Do not do that again.`, "The rear compartment");
+        state.speedMps *= 0.72;
+      } else if (b.boat) {
+        const hard = Math.abs(state.speedMps) > 17;
+        b.outcome = hard ? "boat-crash" : "boat";
+        state.speedMps = 0; state.pulledOver = 16;
+        showToast(hard
+          ? `Down onto the deck of a vessel at ${(b.entryV * 3.6).toFixed(0)} km/h. The car is finished and so is the deck.`
+          : `Down onto a vessel — hard, but the right way up. ${(b.entryV * 3.6).toFixed(0)} km/h onto a Thames barge.`,
+          "Whispers");
+      } else {
+        b.outcome = "river";
+        state.speedMps = 0; state.pulledOver = 20;
+        showToast(`Into the Thames, ${past.toFixed(0)} metres short of the far leaf. Two and a half tonnes of Phantom at high water.`, "Whispers");
+      }
+      b.flying = 0;
+    }
+    return;
+  }
+
+  // ---- reaching the lip of the near bascule with it raised
+  if (lift.open > 0.02 && !b.outcome &&
+      state.distanceM >= lipNear && state.distanceM < lipNear + 2.5 && state.speedMps > 1) {
+    const j = bridgeJump(state.speedMps, lift.open);
+    b.entryV = state.speedMps;
+    b.boat = ((Math.floor(state.time / 360) * 7) % 3) === 0;   // a vessel is under it, or is not
+    b.flying = 0.0001; b.vy = state.speedMps * Math.sin(j.ang); b.height = 0.01;
+    b.jump = j;
+    showToast(j.cleared
+      ? `${(state.speedMps * 3.6).toFixed(0)} km/h at the lip. ${j.reach.toFixed(0)} m of reach against a ${j.gap.toFixed(0)} m gap — you make it.`
+      : `${(state.speedMps * 3.6).toFixed(0)} km/h at the lip. ${j.reach.toFixed(0)} m of reach against a ${j.gap.toFixed(0)} m gap.`,
+      "Whispers");
+  }
+  if (state.distanceM > lipFar + 6) b.outcome = null;
 }
 
 /* ---------------------------------------------------------------------------
@@ -3326,9 +3735,21 @@ function turnStep(dt) {
    have left. Every kit's shop list is that city's own.
    ========================================================================= */
 function shopStep(dt) {
-  if (!state.city) { state.atShop = null; return; }
+  if (!state.city) { state.atShop = null; state.shopNear = null; return; }
   const half = halfWidthAt(state.distanceM);
   const off = Math.abs(state.laneOffset);
+  // the shop you are coming up to, so that "you may drive into any of them" is something
+  // the car TELLS you rather than something you have to already know
+  {
+    let near = null;
+    for (const p of state.city.props) {
+      if (!(p.t === "block" && p.shop && p.shopName)) continue;
+      const gap = p.at - state.distanceM;
+      if (gap < -6 || gap > 55) continue;
+      if (!near || gap < near.gap) near = { gap, name: p.shopName, side: p.side };
+    }
+    state.shopNear = (near && Math.abs(state.speedMps) < 16) ? near : null;
+  }
   if (off < half - 0.6 || Math.abs(state.speedMps) > 3.2) {
     if (state.atShop && off < half - 2) state.atShop = null;
     return;
@@ -3440,8 +3861,8 @@ function signalStep(dt) {
   for (const sg of j.signals) {
     if (before < sg.at && after >= sg.at) {
       const ph = signalPhase(sg, state.routeTime);
-      if (ph.state === "red") ranARed(sg);
-      else state.sigCleared++;
+      if (ph.state === "red") { ranARed(sg); state.chRedsRun++; }
+      else { state.sigCleared++; state.chRedsStopped++; }
     }
   }
   const sg = nextSignal(j, state.distanceM);
@@ -3451,6 +3872,25 @@ function signalStep(dt) {
     state.nextSig = { name: sg.name, gap, state: ph.state, left: ph.left };
   } else state.nextSig = null;
   state.ranRedClean = state.police ? state.ranRedClean + dt : 0;
+}
+
+/* =========================================================================
+   THE MARK. Not a lap time -- a chauffeur is not judged on one. Run a red and it is over
+   at once, because that is a driving offence and no amount of smoothness answers it;
+   otherwise the grade falls out of the two numbers the integrator produced.
+   ========================================================================= */
+const CH_JERK_OK = 2.5;          // m/s^3 -- roughly where a passenger stops ignoring the car
+const CH_LAT_OK = 0.30;          // g sideways -- likewise
+function chauffeurGrade() {
+  if (state.chRedsRun > 0) return { grade: "DISMISSED", col: "#ff5a49",
+    why: state.chRedsRun + (state.chRedsRun === 1 ? " red light run" : " red lights run") };
+  const j = state.chPeakJerk / CH_JERK_OK, g = state.chPeakLat / CH_LAT_OK;
+  const worst = Math.max(j, g);
+  if (worst <= 0.75) return { grade: "FAULTLESS", col: "#3ddc84", why: "nothing they could feel" };
+  if (worst <= 1.0)  return { grade: "ACCEPTABLE", col: "#c9a85f", why: "within what a passenger ignores" };
+  return { grade: "THEY NOTICED", col: "#ffb02e",
+           why: (j >= g ? "peak jerk " + state.chPeakJerk.toFixed(1) + " m/s\u00b3"
+                        : "peak " + state.chPeakLat.toFixed(2) + " g sideways") };
 }
 
 /* the whole street, run once per physics step */
@@ -3465,13 +3905,16 @@ function streetStep(dt) {
   signalStep(dt);
   policeStep(dt);
   if (londonActive()) londonStep(dt); else turnStep(dt);
+  bridgeStep(dt);
   shopStep(dt);
   cityStep(dt);
   cityTrafficStep(dt);
 }
 
 Object.assign(app, {
+  chauffeurGrade, CH_JERK_OK, CH_LAT_OK,
   enterLondon, londonActive, currentRoad, junctionChoices, LDN,
+  junctionAhead, currentSignals, onTowerBridge, bridgeLift, bridgeJump, TB,
   circuitNow, onJourney, halfWidthAt, journeyCurvatureAt, streetStep, buildCity,
   seedCityTraffic, laneInfoAt, laneCentreAt, laneCentreIn, homeLaneOffAt, driveSide,
   signalPhase, nextSignal, takeTurn, resumeRoute, CITY_KITS, VEHICLES, LANE_PLAN,
@@ -3590,6 +4033,9 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
     ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y);
     ctx.rotate(state.shake.rot);
     ctx.translate(-w / 2, -h / 2);
+    // off the lip of a raised bascule the car is genuinely in the air, so the world drops
+    // away underneath it -- the height is the ballistic one the physics is integrating
+    if (state.bridge && state.bridge.flying > 0) ctx.translate(0, state.bridge.height * 7);
 
     const street = app.onJourney && app.onJourney() && state.city;
     drawSky(w, h, pal);
@@ -3616,107 +4062,43 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
 
 
   /* =========================================================================
-     THE SPEEDOMETER AND THE BRAKE GAUGE.
+     THE BRAKE GAUGE, AND NOTHING ELSE.
 
-     Two dials, and only two. A Phantom's fascia carries no instruments at all --
-     the Gallery runs the width of it and the driver's own dials are in the
-     binnacle you look through, which is where these are. There is no tachometer
-     because Rolls-Royce have never fitted one: the left-hand dial reads POWER
-     RESERVE, how much of the engine you have left, which is the same instrument
-     the car really has. The right-hand dial is road speed in mph, the way the
-     car reads it. Between them is what the brakes are doing, because on a car
-     driven for somebody sitting behind you that is the thing worth watching.
+     There WERE two dials here -- a speedometer and a POWER RESERVE -- and the
+     owner has asked for both of them gone. They are gone. What is left is the
+     one thing worth watching from the driver's seat of a car that is driven for
+     somebody sitting behind you: how hard the brakes are being asked for. A
+     passenger cannot feel a steady pressure and feels every jab, so the column
+     that reads brake demand is the instrument that tells you whether you are
+     doing this well. Road speed is already on the HUD above, in the car's own
+     type, which is where it belongs.
 
-     Nothing else has been added to the dash and nothing in the cabin drawing
-     has been touched.
+     Nothing has been added to the dash and nothing in the cabin drawing has
+     been touched.
      ========================================================================= */
   function drawGauges(w, h) {
     const S = Math.min(1.05, Math.max(0.62, w / 1280));
-    // the car's own console is a real element on the page, so the binnacle is placed
-    // ABOVE it rather than at a guessed height -- otherwise the dials sit behind the
-    // gear buttons and you cannot see the one instrument you actually need.
+    // the car's own console is a real element on the page, so this is placed ABOVE it
+    // rather than at a guessed height -- otherwise it sits behind the gear buttons.
     const bar = document.querySelector(".bottombar");
     const barTop = bar ? bar.getBoundingClientRect().top : h;
     const cx = w / 2, cy = Math.min(h - 96 * S, barTop - 86 * S);
-    const R = 58 * S, gap = 96 * S;
+    const R = 58 * S;
 
     ctx.save();
     ctx.translate(cx, cy);
+    ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
 
-    // the binnacle they sit in
-    ctx.fillStyle = "rgba(6,8,11,0.82)";
-    ctx.strokeStyle = "rgba(207,211,216,0.30)";
+    // the BRAKE GAUGE and the gear, in a narrow surround of their own -- with the two
+    // dials deleted there is no binnacle left to sit in, and a saloon's forward view
+    // is better for the space.
+    const bw = 15 * S, bh = R * 1.45;
+    ctx.fillStyle = "rgba(6,8,11,0.72)";
+    ctx.strokeStyle = "rgba(207,211,216,0.24)";
     ctx.lineWidth = 1.2;
-    roundRect(ctx, -gap - R - 16 * S, -R - 15 * S, (gap + R + 16 * S) * 2, (R + 15 * S) * 2, 16 * S);
+    roundRect(ctx, -30 * S, -bh / 2 - 22 * S, 60 * S, bh + 38 * S, 12 * S);
     ctx.fill(); ctx.stroke();
 
-    // ---- the dial faces
-    const face = (x, label) => {
-      ctx.save(); ctx.translate(x, 0);
-      const g = ctx.createRadialGradient(0, -R * 0.3, R * 0.1, 0, 0, R);
-      g.addColorStop(0, "#141922"); g.addColorStop(1, "#05070a");
-      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(0, 0, R, 0, Math.PI * 2); ctx.fill();
-      ctx.strokeStyle = "rgba(201,168,95,0.55)"; ctx.lineWidth = 1.6; ctx.stroke();
-      ctx.fillStyle = "rgba(150,158,170,0.85)";
-      ctx.font = "600 " + (7.5 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.textAlign = "center"; ctx.fillText(label, 0, R * 0.58);
-      ctx.restore();
-    };
-    // a needle sweeping 240 degrees, the way a real dial does: 7 o'clock to 5 o'clock
-    const A0 = Math.PI * 0.75, A1 = Math.PI * 2.25;
-    const needle = (x, frac, col) => {
-      const a = A0 + (A1 - A0) * clamp(frac, 0, 1);
-      ctx.save(); ctx.translate(x, 0);
-      ctx.strokeStyle = col; ctx.lineWidth = 2.6 * S; ctx.lineCap = "round";
-      ctx.beginPath(); ctx.moveTo(-Math.cos(a) * R * 0.16, -Math.sin(a) * R * 0.16);
-      ctx.lineTo(Math.cos(a) * R * 0.78, Math.sin(a) * R * 0.78); ctx.stroke();
-      ctx.fillStyle = "#c9a85f"; ctx.beginPath(); ctx.arc(0, 0, 3.2 * S, 0, Math.PI * 2); ctx.fill();
-      ctx.restore();
-    };
-    const ticks = (x, n, every, max, unit) => {
-      ctx.save(); ctx.translate(x, 0);
-      for (let i = 0; i <= n; i++) {
-        const a = A0 + (A1 - A0) * (i / n), big = (i % every === 0);
-        ctx.strokeStyle = big ? "rgba(238,242,247,0.85)" : "rgba(238,242,247,0.30)";
-        ctx.lineWidth = big ? 1.8 * S : 1 * S;
-        ctx.beginPath();
-        ctx.moveTo(Math.cos(a) * R * 0.80, Math.sin(a) * R * 0.80);
-        ctx.lineTo(Math.cos(a) * R * 0.92, Math.sin(a) * R * 0.92);
-        ctx.stroke();
-        if (big) {
-          ctx.fillStyle = "rgba(214,221,230,0.85)";
-          ctx.font = "600 " + (8 * S).toFixed(0) + "px ui-sans-serif";
-          ctx.textAlign = "center"; ctx.textBaseline = "middle";
-          ctx.fillText(String(Math.round(max * i / n)), Math.cos(a) * R * 0.63, Math.sin(a) * R * 0.63);
-        }
-      }
-      ctx.restore();
-    };
-
-    // ---- LEFT: POWER RESERVE. Not a tachometer -- a Rolls-Royce has never had one.
-    //      100% at rest, falling as you use the engine, and on an ordinary journey it
-    //      barely leaves the peg. It is the same instrument the real car carries.
-    const used = clamp(state.torqueNm / SPEC.peakTorqueNm, 0, 1) * 0.72
-               + clamp(state.throttle, 0, 1) * 0.28;
-    face(-gap, "POWER RESERVE %");
-    ticks(-gap, 10, 5, 100);
-    needle(-gap, 1 - used, "#c9a85f");            // fills from the far end: 100 is at rest
-    ctx.fillStyle = "#eef2f7"; ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
-    ctx.font = "800 " + (17 * S).toFixed(0) + "px ui-sans-serif";
-    ctx.fillText(String(Math.round((1 - used) * 100)), -gap, R * 0.30);
-
-    // ---- RIGHT: the SPEEDOMETER, in mph, which is how this car reads the road
-    const spdMph = Math.abs(state.speedMps) / MPH;
-    face(gap, "MPH");
-    ticks(gap, 10, 2, 160);
-    needle(gap, spdMph / 160, "#eef2f7");
-    ctx.fillStyle = "#eef2f7"; ctx.font = "800 " + (18 * S).toFixed(0) + "px ui-sans-serif";
-    ctx.fillText(String(Math.round(spdMph)), gap, R * 0.30);
-
-    // ---- MIDDLE: the BRAKE GAUGE and the gear. The brake reads as a column that fills
-    //      from the bottom, because what a chauffeur is watching is how HARD it is being
-    //      asked for -- a passenger cannot feel a steady pressure and feels every jab.
-    const bw = 15 * S, bh = R * 1.45;
     ctx.fillStyle = "rgba(255,255,255,0.06)";
     roundRect(ctx, -bw / 2, -bh / 2, bw, bh, 4 * S); ctx.fill();
     const bf = clamp(state.brake, 0, 1);
@@ -3735,13 +4117,16 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
 
     ctx.restore();
 
+    let stackY = cy - R - 34 * S;
+
     // ---- and, on a journey, the one thing that actually helps you drive one of these
     //      well: the signal you are coming to, its colour, and how long is left on it.
     const ns = state.nextSig;
     if (ns && ns.gap > -8 && ns.gap < 420) {
       const col = ns.state === "green" ? "#3ddc84" : ns.state === "amber" ? "#ffb02e" : "#ff3b34";
       ctx.save();
-      ctx.translate(cx, cy - R - 34 * S);
+      ctx.translate(cx, stackY);
+      stackY -= 32 * S;
       ctx.fillStyle = "rgba(6,8,11,0.8)"; ctx.strokeStyle = "rgba(207,211,216,0.25)";
       roundRect(ctx, -104 * S, -13 * S, 208 * S, 26 * S, 8 * S); ctx.fill(); ctx.stroke();
       ctx.fillStyle = col; ctx.beginPath(); ctx.arc(-88 * S, 0, 5.5 * S, 0, Math.PI * 2); ctx.fill();
@@ -3750,6 +4135,128 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
       ctx.fillText(ns.name.length > 22 ? ns.name.slice(0, 21) + "…" : ns.name, -76 * S, -0.5 * S);
       ctx.textAlign = "right"; ctx.fillStyle = col;
       ctx.fillText(Math.max(0, Math.round(ns.gap)) + " m · " + Math.ceil(ns.left) + "s", 92 * S, -0.5 * S);
+      ctx.restore();
+    }
+
+    /* ---- THE JUNCTION COMING UP, and the road the wheel is asking for.
+       You steer at the turning you want; this says which one that currently is, and
+       every other road you could have instead. It is live, so it changes under the
+       wheel while you are still approaching — you may change your mind up to the line. */
+    const J = app.junctionAhead && app.junctionAhead();
+    if (J && J.choices.length) {
+      const list = J.choices.slice().sort((a, b) => a.turn - b.turn);
+      const arrowFor = (t) => t < -1.9 ? "↰" : t < -0.42 ? "←" : t < 0.42 ? "↑" : t < 1.9 ? "→" : "↱";
+      ctx.save();
+      ctx.translate(cx, stackY);
+      const cw = Math.min(w - 40, 168 * S), n = list.length;
+      const tw = Math.min(w - 24, cw * n + 12 * S);
+      ctx.fillStyle = "rgba(6,8,11,0.86)"; ctx.strokeStyle = "rgba(201,168,95,0.45)"; ctx.lineWidth = 1.2;
+      roundRect(ctx, -tw / 2, -26 * S, tw, 52 * S, 10 * S); ctx.fill(); ctx.stroke();
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = "rgba(201,168,95,0.9)";
+      ctx.font = "700 " + (8.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(`${J.node.name.toUpperCase()} · ${Math.max(0, Math.round(J.gap))} m`, 0, -17 * S);
+      for (let i = 0; i < n; i++) {
+        const c = list[i], picked = J.picked && c.link === J.picked.link;
+        const x0 = -tw / 2 + 6 * S + (tw - 12 * S) * (i + 0.5) / n;
+        if (picked) {
+          ctx.fillStyle = "rgba(201,168,95,0.18)";
+          roundRect(ctx, x0 - (tw - 12 * S) / (n * 2) + 2 * S, -8 * S, (tw - 12 * S) / n - 4 * S, 30 * S, 6 * S);
+          ctx.fill();
+        }
+        ctx.fillStyle = picked ? "#f0e2bb" : "rgba(190,198,208,0.75)";
+        ctx.font = "700 " + (13 * S).toFixed(0) + "px ui-sans-serif";
+        ctx.fillText(arrowFor(c.turn), x0, 2 * S);
+        ctx.font = "600 " + (8 * S).toFixed(0) + "px ui-sans-serif";
+        const nm = c.link.road.name.replace(/\s*\([^)]*\)\s*$/, "");
+        const maxc = Math.max(8, Math.floor((tw / n) / (5.2 * S)));
+        ctx.fillText(nm.length > maxc ? nm.slice(0, maxc - 1) + "…" : nm, x0, 15 * S);
+      }
+      ctx.restore();
+    }
+
+    /* ---- CHAUFFEUR 101, live. Two numbers and a grade, because that is the whole job.
+       Everything here is read-only: the physics produced it, this only prints it. */
+    if (state.learnMode) {
+      const G = app.chauffeurGrade();
+      ctx.save();
+      ctx.translate(cx, 118 * S);
+      const tw = Math.min(w - 40, 520 * S);
+      ctx.fillStyle = "rgba(6,8,11,0.88)"; ctx.strokeStyle = G.col; ctx.lineWidth = 1.4;
+      roundRect(ctx, -tw / 2, -25 * S, tw, 50 * S, 10 * S); ctx.fill(); ctx.stroke();
+      ctx.textAlign = "left"; ctx.textBaseline = "middle";
+      ctx.fillStyle = G.col; ctx.font = "800 " + (15 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(G.grade, -tw / 2 + 14 * S, -8 * S);
+      ctx.fillStyle = "rgba(190,198,208,0.85)"; ctx.font = "600 " + (9 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(G.why, -tw / 2 + 14 * S, 10 * S);
+      // the two measurements, as bars against what a passenger can ignore
+      const bar = (label, val, ok, x, unit) => {
+        const bw = 118 * S, f = clamp(val / (ok * 1.6), 0, 1);
+        ctx.fillStyle = "rgba(255,255,255,0.08)";
+        roundRect(ctx, x, -6 * S, bw, 7 * S, 3.5 * S); ctx.fill();
+        ctx.fillStyle = val > ok ? "#ff5a49" : "#3ddc84";
+        roundRect(ctx, x, -6 * S, bw * f, 7 * S, 3.5 * S); ctx.fill();
+        ctx.fillStyle = "rgba(255,255,255,0.35)";
+        ctx.fillRect(x + bw / 1.6, -8 * S, 1, 11 * S);          // the line they stop ignoring you at
+        ctx.fillStyle = "rgba(150,158,170,0.9)"; ctx.font = "600 " + (7.5 * S).toFixed(0) + "px ui-sans-serif";
+        ctx.fillText(label + "  " + val.toFixed(2) + unit, x, -14 * S);
+      };
+      bar("PEAK JERK", state.chPeakJerk, app.CH_JERK_OK, -tw / 2 + 176 * S, " m/s\u00b3");
+      bar("PEAK LATERAL", state.chPeakLat, app.CH_LAT_OK, -tw / 2 + 316 * S, " g");
+      ctx.textAlign = "right"; ctx.fillStyle = "rgba(190,198,208,0.85)";
+      ctx.font = "600 " + (8.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(state.chRedsStopped + " stopped \u00b7 " + state.chRedsRun + " run", tw / 2 - 14 * S, 12 * S);
+      ctx.restore();
+    }
+
+    /* ---- THE SHOP YOU ARE COMING UP TO. Pull off the carriageway alongside it and stop
+       and you are there — so the car says which one, and which side it is on. */
+    const sn = state.shopNear;
+    if (sn && !state.atShop) {
+      ctx.save();
+      ctx.translate(cx, stackY - 34 * S);
+      const tw = Math.min(w - 40, 300 * S);
+      ctx.fillStyle = "rgba(6,8,11,0.78)"; ctx.strokeStyle = "rgba(201,168,95,0.30)"; ctx.lineWidth = 1;
+      roundRect(ctx, -tw / 2, -12 * S, tw, 24 * S, 8 * S); ctx.fill(); ctx.stroke();
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = "rgba(214,221,230,0.9)";
+      ctx.font = "600 " + (9 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(`${sn.side < 0 ? "◄" : "►"}  ${sn.name} — ${Math.max(0, Math.round(sn.gap))} m · pull to the kerb and stop`, 0, 0);
+      ctx.restore();
+    }
+    if (state.atShop) {
+      ctx.save();
+      ctx.translate(cx, stackY - 34 * S);
+      const tw = Math.min(w - 40, 300 * S);
+      ctx.fillStyle = "rgba(30,26,10,0.9)"; ctx.strokeStyle = "#c9a85f"; ctx.lineWidth = 1.2;
+      roundRect(ctx, -tw / 2, -12 * S, tw, 24 * S, 8 * S); ctx.fill(); ctx.stroke();
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = "#f0e2bb"; ctx.font = "700 " + (9 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(`AT ${state.atShop} — the doors will open`, 0, 0);
+      ctx.restore();
+    }
+
+    /* ---- TOWER BRIDGE, when the bascules are moving. What you need at the ramp is one
+       number: how much bridge is missing, and what your present speed is worth against
+       it. This is the same arithmetic the physics will run when you reach the lip. */
+    const bg2 = state.bridge;
+    if (bg2 && bg2.lift && bg2.lift.open > 0.01 && app.bridgeJump) {
+      const j = app.bridgeJump(Math.abs(state.speedMps), bg2.lift.open);
+      const ok = j.cleared;
+      ctx.save();
+      ctx.translate(cx, 118 * S);
+      const tw = Math.min(w - 40, 460 * S);
+      ctx.fillStyle = ok ? "rgba(10,46,26,0.88)" : "rgba(84,22,16,0.88)";
+      ctx.strokeStyle = ok ? "rgba(61,220,132,0.6)" : "rgba(255,90,74,0.6)";
+      ctx.lineWidth = 1.2;
+      roundRect(ctx, -tw / 2, -17 * S, tw, 34 * S, 9 * S); ctx.fill(); ctx.stroke();
+      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.fillStyle = ok ? "#b9f5d2" : "#ffd9d2";
+      ctx.font = "700 " + (10.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(
+        `BASCULES UP — ${j.gap.toFixed(0)} m of bridge missing · your reach at ` +
+        `${(Math.abs(state.speedMps) * 3.6).toFixed(0)} km/h is ${j.reach.toFixed(0)} m · ` +
+        (ok ? "you clear it" : "you do not"), 0, 0);
       ctx.restore();
     }
     // somebody in the back is shouting at you, and you should be able to see that
@@ -3849,14 +4356,18 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
   }
   function projPoint(p) { const s = FOCAL / p.fwd; return { x: innerWidth / 2 + p.rgt * s, y: horizonY + CAM_H * s }; }
 
-  function drawRoad(w, h, pal) {
+  function drawRoad(w, h, pal, skipGround) {
     // the carriageway at each cross-section, so a road can narrow and widen along its
     // length the way a real one does
     const halfAt = (off) => (app.halfWidthAt ? app.halfWidthAt(state.distanceM + off) : HALF_ROAD);
     const HALF = halfAt(0);
-    // ground (grass) fills everything below the horizon
-    ctx.fillStyle = pal.grass;
-    ctx.fillRect(0, horizonY, w, h - horizonY);
+    // GROUND. This fills everything below the horizon, and on a street that is a problem:
+    // whatever stands BEYOND the kerb -- the Thames off Tower Bridge, the water off the
+    // Embankment, the park railings -- is drawn in the "back" pass, which runs first, and
+    // this one flat rectangle then painted over all of it. That is why the river vanished
+    // and why the bridge you were driving over had grey ground on both sides of it. On a
+    // street the caller lays the ground itself, before the back pass, and says so here.
+    if (!skipGround) { ctx.fillStyle = pal.grass; ctx.fillRect(0, horizonY, w, h - horizonY); }
 
     // tarmac: fill the strip between adjacent road cross-sections, clipped to the near plane
     const rg = ctx.createLinearGradient(0, horizonY, 0, h);
@@ -4177,14 +4688,20 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
   const halfAt = (off) => (app.halfWidthAt ? app.halfWidthAt(state.distanceM + off) : HALF_ROAD);
 
   function drawStreet(w, h, pal) {
+    ctx.fillStyle = pal.grass;            // the ground, ONCE, and before anything stands on it
+    ctx.fillRect(0, horizonY, w, h - horizonY);
     drawCityProps(w, h, pal, "back");     // skylines, the far bank, whatever stands beyond
-    drawRoad(w, h, pal);
+    drawBridgeWater(w, h, pal);           // the Thames, before the deck you look at it from
+    drawRoad(w, h, pal, true);
     drawLaneMarkings(pal);                // the paint, off the real lane count
     drawPavement(w, h, pal);
+    drawJunctionGround(w, h, pal);        // the crossroads: a real mouth per road out of it
+    drawBridge(w, h, pal);                // and if this road is Tower Bridge, the structure
     drawCityProps(w, h, pal, "front");    // the frontages, furniture, landmarks, parked cars
     drawCityTraffic(w, h, pal);
     drawPeople(pal);
     drawSignals(w, h, pal);
+    drawJunctionPost(w, h, pal);          // the fingerpost, over everything at the corner
     drawPolice(w, h, pal);
   }
 
@@ -5154,9 +5671,330 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
   }
 
 
+  /* =========================================================================
+     THE CROSSROADS — the thing you could not see.
+
+     A junction on the network was already REAL: turn the wheel and you came out on
+     whichever street was really there. But nothing in the picture said so. The frontage
+     ran unbroken to the end of the road, no side street opened in it, no sign named
+     anything, and the corner arrived as an unexplained bend. Asking "where are the
+     crosses" was the right question about a world that had them and drew none of them.
+
+     So the junction is drawn as what it is. Every road out of it opens a real mouth of
+     tarmac in the frontage, laid at that road's REAL bearing off yours and at its real
+     width -- a road leaving at forty degrees opens a forty-degree mouth, and one leaving
+     at a hundred and thirty opens behind your shoulder. There is a stop line across your
+     own carriageway and a fingerpost on the kerb with a blade per road, each blade
+     pointing the way that road actually goes and carrying its actual name.
+     ========================================================================= */
+  function junctionMouths(J) {
+    const out = [];
+    const WS = app.WIDTH_SCALE || 1;
+    for (const c of J.choices) {
+      if (Math.abs(c.turn) < 0.42) continue;       // that one is straight on: it IS this road
+      out.push({ c, sh: (c.link.road.w * WS) / 2, t: c.turn });
+    }
+    return out;
+  }
+  function drawJunctionGround(w, h, pal) {
+    const J = app.junctionAhead && app.junctionAhead(); if (!J) return;
+    const d0 = J.gap;
+    const H = halfAt(Math.max(1, d0));
+    const REACH = 48;                              // how far up each side street you can see
+
+    // a rectangle laid along a road that leaves the junction at angle t
+    const arm = (t, sh, r0, r1) => {
+      const ct = Math.cos(t), st = Math.sin(t), pts = [];
+      for (const [r, o] of [[r0, -sh], [r0, sh], [r1, sh], [r1, -sh]]) {
+        const d = d0 + r * ct - o * st, lat = r * st + o * ct;
+        const cc = centerlineAt(d);
+        pts.push(roadCorner(cc.X + lat * Math.cos(cc.psi), cc.Z - lat * Math.sin(cc.psi)));
+      }
+      fillClippedQuad(pts);
+    };
+
+    ctx.save();
+    const rg = ctx.createLinearGradient(0, horizonY, 0, h);
+    rg.addColorStop(0, pal.road);
+    rg.addColorStop(1, pal.night ? "#15181d" : "#2c3036");
+    ctx.fillStyle = rg;
+
+    const mouths = junctionMouths(J);
+    // far arms first, then the box, so the box seals the middle
+    for (const m of mouths) arm(m.t, m.sh, 0, REACH);
+    // the box itself: a square of tarmac the width of the widest thing meeting here
+    let box = H;
+    for (const m of mouths) box = Math.max(box, m.sh);
+    arm(0, box, -box, box);
+
+    // ---- the stop line across your own carriageway, and the yellow box if it is a big one
+    const sl = projectAhead(Math.max(1.2, d0 - box - 0.8), 0);
+    if (sl.scale > 0.06 && d0 > box + 1) {
+      ctx.fillStyle = "rgba(238,235,225,0.75)";
+      const a1 = projectAhead(d0 - box - 0.8, -H), a2 = projectAhead(d0 - box - 0.8, H);
+      const b1 = projectAhead(d0 - box - 0.3, -H), b2 = projectAhead(d0 - box - 0.3, H);
+      ctx.beginPath(); ctx.moveTo(a1.x, a1.y); ctx.lineTo(a2.x, a2.y);
+      ctx.lineTo(b2.x, b2.y); ctx.lineTo(b1.x, b1.y); ctx.closePath(); ctx.fill();
+    }
+    ctx.restore();
+  }
+
+  /* THE FINGERPOST. One blade per road out of the junction, laid out in the order a
+     driver reads them -- hard left at the bottom, hard right at the top -- each pointing
+     the way its road really goes, and the one your wheel is currently asking for picked
+     out in gold. It stands on the kerb the country puts it on. */
+  function drawJunctionPost(w, h, pal) {
+    const J = app.junctionAhead && app.junctionAhead(); if (!J || !J.choices.length) return;
+    const d0 = J.gap;
+    if (d0 < 3 || d0 > 150) return;
+    const H = halfAt(Math.max(1, d0));
+    const side = (app.driveSide ? app.driveSide() : -1);       // the kerb you are nearest
+    const q = projectAhead(Math.max(2.5, d0 - 6), (H + 1.8) * side);
+    if (q.scale < 0.10) return;
+    const sc = Math.min(q.scale, 34);
+    const x = q.x, y = q.y;
+    const postH = 3.6 * sc;
+
+    ctx.save();
+    // the post
+    ctx.fillStyle = pal.night ? "#c8ccd2" : "#e9ecef";
+    ctx.fillRect(x - 0.055 * sc, y - postH, 0.11 * sc, postH);
+    ctx.beginPath(); ctx.arc(x, y - postH - 0.1 * sc, 0.13 * sc, 0, Math.PI * 2); ctx.fill();
+
+    const list = J.choices.slice().sort((a, b) => b.turn - a.turn);   // hard right on top
+    const bw = 3.1 * sc, bh = 0.46 * sc;
+    ctx.font = `700 ${Math.max(6, 0.30 * sc)}px ui-sans-serif`;
+    ctx.textBaseline = "middle";
+    for (let i = 0; i < list.length; i++) {
+      const c = list[i];
+      const dirR = c.turn > 0.05;                                // this blade points right
+      const yy = y - postH + 0.55 * sc + i * (bh + 0.16 * sc);
+      const picked = J.picked && c.link === J.picked.link;
+      const x0 = dirR ? x : x - bw;
+      ctx.fillStyle = picked ? "#c9a85f" : (pal.night ? "rgba(228,232,238,0.92)" : "#f4f6f8");
+      ctx.beginPath();
+      // a blade with a point on the end it indicates
+      if (dirR) {
+        ctx.moveTo(x0, yy - bh / 2); ctx.lineTo(x0 + bw - bh * 0.6, yy - bh / 2);
+        ctx.lineTo(x0 + bw, yy); ctx.lineTo(x0 + bw - bh * 0.6, yy + bh / 2); ctx.lineTo(x0, yy + bh / 2);
+      } else {
+        ctx.moveTo(x0 + bw, yy - bh / 2); ctx.lineTo(x0 + bh * 0.6, yy - bh / 2);
+        ctx.lineTo(x0, yy); ctx.lineTo(x0 + bh * 0.6, yy + bh / 2); ctx.lineTo(x0 + bw, yy + bh / 2);
+      }
+      ctx.closePath(); ctx.fill();
+      if (sc > 3.2) {
+        ctx.fillStyle = picked ? "#1a1508" : "#101418";
+        ctx.textAlign = dirR ? "left" : "right";
+        const nm = c.link.road.name.replace(/\s*\([^)]*\)\s*$/, "");
+        const txt = nm.length > 20 ? nm.slice(0, 19) + "…" : nm;
+        ctx.fillText(txt, dirR ? x0 + bh * 0.5 : x0 + bw - bh * 0.5, yy);
+      }
+    }
+    // the junction's own name, at the top, the way a London fingerpost carries the place
+    if (sc > 3.2 && J.node.name) {
+      ctx.fillStyle = pal.night ? "rgba(226,232,240,0.9)" : "rgba(40,46,54,0.9)";
+      ctx.textAlign = "center"; ctx.font = `800 ${Math.max(6, 0.26 * sc)}px ui-sans-serif`;
+      ctx.fillText(J.node.name.toUpperCase(), x, y - postH - 0.55 * sc);
+    }
+    ctx.restore();
+  }
+
+  /* =========================================================================
+     TOWER BRIDGE.
+
+     It used to vanish as you reached it, because it was drawn as a LANDMARK and
+     `drawLandmark` refuses anything with a projected scale over 12 -- a sensible limit
+     for a building beside the road and exactly wrong for a structure you drive through.
+     Here it is drawn as part of the road: the two towers straddling the carriageway at
+     the ends of the central span, the high-level walkways between them, the suspension
+     chains running out to the shore, the Thames on both sides the whole way over, and the
+     bascules doing what bascules do.
+     ========================================================================= */
+  /* THE THAMES, from a bridge. It runs under everything -- it is drawn before the road
+     surface and before the footway, because from up here the water is nine metres DOWN
+     and the parapet is between you and it. */
+  function drawBridgeWater(w, h, pal) {
+    if (!(app.onTowerBridge && app.onTowerBridge())) return;
+    const drop = app.TB.deckH;
+    const H = halfAt(6);
+    const night = pal.night;
+
+    // the far bank, low on the horizon on both sides
+    ctx.save();
+    ctx.fillStyle = night ? "#141b23" : "rgba(126,138,150,0.62)";
+    ctx.fillRect(0, horizonY - 16, w, 17);
+    for (let i = 0; i < 46; i++) {
+      const x = (i * 137.7) % w, hh = 6 + ((i * 53) % 26);
+      ctx.fillRect(x, horizonY - 16 - hh, 10 + (i % 5) * 6, hh);
+    }
+    ctx.restore();
+
+    for (const s of [-1, 1]) {
+      const pts = [];
+      for (let d = 240; d >= -24; d -= 8) {
+        const q = projectAhead(Math.max(1.2, d), (H + 2.6) * s);
+        if (q.scale < 0.02) continue;
+        pts.push({ x: q.x, y: q.y + drop * q.scale });
+      }
+      if (pts.length < 2) continue;
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(pts[0].x, horizonY);
+      for (const q of pts) ctx.lineTo(q.x, q.y);
+      const edge = s < 0 ? -60 : w + 60;
+      ctx.lineTo(edge, h + 400);
+      ctx.lineTo(edge, horizonY);
+      ctx.closePath();
+      const wg = ctx.createLinearGradient(0, horizonY, 0, h);
+      wg.addColorStop(0, night ? "#0b1a26" : "#4b6a7c");
+      wg.addColorStop(1, night ? "#050d14" : "#2c4a5a");
+      ctx.fillStyle = wg; ctx.fill();
+      ctx.clip();
+      // the chop on it. Bands that get further apart as the water comes towards you,
+      // which is the one cue that says this is a surface and not a painted wall.
+      ctx.strokeStyle = night ? "rgba(150,190,220,0.10)" : "rgba(232,242,248,0.16)";
+      for (let k = 1; k < 34; k++) {
+        const yy = horizonY + Math.pow(k / 34, 2.1) * (h - horizonY) * 1.6
+                 + ((state.time * 9) % 14);
+        ctx.lineWidth = 1 + k * 0.10;
+        ctx.beginPath(); ctx.moveTo(0, yy); ctx.lineTo(w, yy); ctx.stroke();
+      }
+      ctx.restore();
+    }
+  }
+
+  function drawBridge(w, h, pal) {
+    if (!(app.onTowerBridge && app.onTowerBridge())) return;
+    const b = state.bridge; if (!b) return;
+    const TBs = app.TB;
+    const L = state.route.totalM || 244;
+    const open = b.lift ? b.lift.open : 0;
+    const H = halfAt(6);
+
+    // ---- the parapet down both sides, so the deck reads as a deck
+    ctx.save();
+    for (const s of [-1, 1]) {
+      let prev = null;
+      for (let d = -12; d <= 220; d += 6) {
+        const q = projectAhead(Math.max(1.2, d), (H + 1.1) * s);
+        if (q.scale < 0.03) { prev = null; continue; }
+        const top = { x: q.x, y: q.y - 1.15 * Math.min(q.scale, 46) };
+        if (prev) {
+          ctx.fillStyle = pal.night ? "#2b3138" : "#8d94a0";
+          ctx.beginPath();
+          ctx.moveTo(prev.b.x, prev.b.y); ctx.lineTo(prev.t.x, prev.t.y);
+          ctx.lineTo(top.x, top.y); ctx.lineTo(q.x, q.y); ctx.closePath(); ctx.fill();
+        }
+        prev = { b: q, t: top };
+      }
+    }
+    ctx.restore();
+
+    // ---- the water where the deck is missing
+    if (open > 0.02) {
+      const gap = TBs.spanM * open;
+      const g0 = b.lipNear - state.distanceM, g1 = g0 + gap;
+      if (g1 > 0 && g0 < 220) {
+        ctx.save();
+        ctx.fillStyle = pal.night ? "#0a1a24" : "#37525f";
+        const pts = [];
+        for (const [d, lat] of [[g0, -H], [g0, H], [g1, H], [g1, -H]]) {
+          const cc = centerlineAt(Math.max(0.4, d));
+          pts.push(roadCorner(cc.X + lat * Math.cos(cc.psi), cc.Z - lat * Math.sin(cc.psi)));
+        }
+        fillClippedQuad(pts);
+        // the two leaves standing up out of it
+        for (const [lipD, dirn] of [[g0, -1], [g1, 1]]) {
+          const p = projectAhead(Math.max(1.5, lipD), 0);
+          if (p.scale < 0.05) continue;
+          const sc = Math.min(p.scale, 40);
+          const rise = Math.sin((TBs.liftDeg * Math.PI / 180) * open) * (TBs.spanM / 2) * sc;
+          ctx.fillStyle = pal.night ? "#2b3138" : "#4d5560";
+          ctx.beginPath();
+          ctx.moveTo(p.x - H * sc, p.y); ctx.lineTo(p.x + H * sc, p.y);
+          ctx.lineTo(p.x + H * sc * 0.62 + dirn * 4, p.y - rise);
+          ctx.lineTo(p.x - H * sc * 0.62 + dirn * 4, p.y - rise);
+          ctx.closePath(); ctx.fill();
+          ctx.strokeStyle = "rgba(240,236,225,0.5)"; ctx.lineWidth = Math.max(1, 0.1 * sc);
+          ctx.stroke();
+        }
+        // a vessel coming through, if there is one
+        if (b.boat) {
+          const p = projectAhead(Math.max(2, (g0 + g1) / 2), 0);
+          if (p.scale > 0.05) {
+            const sc = Math.min(p.scale, 26);
+            ctx.fillStyle = pal.night ? "#1b232b" : "#3d4954";
+            ctx.fillRect(p.x - 9 * sc, p.y - 1.1 * sc, 18 * sc, 1.6 * sc);
+            ctx.fillStyle = pal.night ? "#c8b48a" : "#e7e0cd";
+            ctx.fillRect(p.x - 2.4 * sc, p.y - 3.2 * sc, 5 * sc, 2.1 * sc);
+          }
+        }
+        ctx.restore();
+      }
+    }
+
+    // ---- the two towers, straddling the road at the ends of the central span
+    for (const at of [b.lipNear, b.lipFar]) {
+      const rel = at - state.distanceM;
+      if (rel < -20 || rel > 230) continue;
+      const p = projectAhead(Math.max(2, rel), 0);
+      if (p.scale < 0.04) continue;
+      const sc = Math.min(p.scale, 46);
+      const legW = 5.0 * sc, gapW = (H + 1.2) * sc, towH = 44 * sc;
+      ctx.save();
+      for (const s of [-1, 1]) {
+        const x0 = p.x + s * gapW - (s < 0 ? legW : 0);
+        ctx.fillStyle = pal.night ? "#3a3b3a" : "#a9a08a";
+        ctx.fillRect(x0, p.y - towH, legW, towH);
+        ctx.fillStyle = pal.night ? "#2a2b2c" : "#8d846f";      // the corner turrets
+        ctx.fillRect(x0 - 0.5 * sc, p.y - towH - 5 * sc, legW + 1 * sc, 2.2 * sc);
+        for (let k = 0; k < 2; k++) {
+          const tx = x0 + (k ? legW - 1.1 * sc : 0);
+          ctx.fillRect(tx, p.y - towH - 9 * sc, 1.1 * sc, 4.4 * sc);
+          ctx.beginPath();
+          ctx.moveTo(tx - 0.3 * sc, p.y - towH - 9 * sc);
+          ctx.lineTo(tx + 0.55 * sc, p.y - towH - 12.5 * sc);
+          ctx.lineTo(tx + 1.4 * sc, p.y - towH - 9 * sc);
+          ctx.closePath(); ctx.fill();
+        }
+        // the pointed windows
+        ctx.fillStyle = pal.night ? "rgba(255,214,150,0.55)" : "rgba(60,64,72,0.55)";
+        for (let f = 1; f < 6; f++) ctx.fillRect(x0 + legW * 0.3, p.y - towH + f * (towH / 6.5), legW * 0.4, towH / 16);
+      }
+      // the two high-level walkways between them
+      ctx.fillStyle = pal.night ? "#33373b" : "#8f9aa2";
+      ctx.fillRect(p.x - gapW, p.y - towH * 0.94, gapW * 2, 1.5 * sc);
+      ctx.fillRect(p.x - gapW, p.y - towH * 0.80, gapW * 2, 1.1 * sc);
+      ctx.restore();
+    }
+
+    // ---- the suspension chains out to the shore
+    ctx.save();
+    ctx.strokeStyle = pal.night ? "rgba(150,170,190,0.55)" : "rgba(70,88,104,0.6)";
+    for (const s of [-1, 1]) {
+      ctx.beginPath();
+      let first = true;
+      for (let d = 4; d < L; d += 8) {
+        const rel = d - state.distanceM;
+        if (rel < 1 || rel > 220) { first = true; continue; }
+        const p = projectAhead(rel, (H + 0.9) * s);
+        if (p.scale < 0.04) { first = true; continue; }
+        const sc = Math.min(p.scale, 40);
+        // the chain sags between the towers and rises to the towers themselves
+        const u = clamp(Math.abs(d - b.mid) / (L / 2), 0, 1);
+        const yy = p.y - (7 + 12 * u * u) * sc;
+        ctx.lineWidth = Math.max(1, 0.16 * sc);
+        if (first) { ctx.moveTo(p.x, yy); first = false; } else ctx.lineTo(p.x, yy);
+      }
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
   function drawSignals(w, h, pal) {
-    const circ = circuitNow(); if (!circ || !circ.signals) return;
-    for (const sg of circ.signals) {
+    // the network's junction heads come from the junction, not from a route's fixed list
+    const sigs = app.currentSignals ? app.currentSignals() : [];
+    for (const sg of sigs) {
       const rel = sg.at - state.distanceM;
       if (rel < -14 || rel > 220) continue;
       const ph = signalPhase(sg, state.routeTime);
@@ -6070,7 +6908,13 @@ function updateUi() {
   el.sigL.classList.toggle("on", left);
   el.sigR.classList.toggle("on", right);
 
-  if (state.route.active) {
+  if (state.ldn) {
+    // ON THE NETWORK there is nowhere you are going, so a distance-to-destination is a
+    // lie. What a driver wants instead is the road they are on and the junction coming.
+    const J = app.junctionAhead && app.junctionAhead();
+    el.etaText.textContent = state.ldn.road.name + (J ? ` · ${Math.max(0, Math.round(J.gap))} m to ${J.node.name}` : "");
+    el.distRead.textContent = `${Math.max(0, Math.round(state.route.remainingM))} m`;
+  } else if (state.route.active) {
     const miles = (state.route.remainingM / 1609).toFixed(1);
     const etaMin = state.speedMps > 1 ? Math.ceil(state.route.remainingM / state.speedMps / 60) : null;
     el.etaText.textContent = `${miles} mi to ${state.route.name}${etaMin ? ` · ${etaMin} min` : ""}`;
@@ -6092,7 +6936,7 @@ function updateUi() {
   el.roadRead.textContent = state.roadInputG.toFixed(2) + " g";
   el.shiftRead.textContent = state.cameraScan ? "SAT" : "Auto";
   el.satStatus.textContent = state.cameraScan ? "Satellite-aided transmission holding gears through the bends" : "Conventional automatic shift map";
-  el.navRead.textContent = state.route.active ? state.route.name : "City cruise";
+  el.navRead.textContent = state.ldn ? state.ldn.road.name : (state.route.active ? state.route.name : "City cruise");
   el.driverRead.textContent = state.chauffeur ? "Chauffeur" : "You";
   el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetMph)} mph` : "Off";
   el.laneRead.textContent = state.laneAssist ? "Active" : "Off";
@@ -6198,6 +7042,44 @@ const showToast = app.showToast;
 
 function bindCoreControls() {
   document.querySelectorAll("[data-view]").forEach((button) => button.addEventListener("click", () => app.setView(button.dataset.view)));
+
+  /* ---- CHAUFFEUR 101. A LAUNCH MODE, like every other 101 in the garage: the tab is
+     hidden until the garage card's Learning button calls app.enterLearning(). */
+  {
+    const lb = document.getElementById("learnBtn");
+    const resetScore = () => { state.chPeakJerk = 0; state.chPeakLat = 0; state.chRedsRun = 0; state.chRedsStopped = 0; state.chSeconds = 0; };
+    if (lb) lb.addEventListener("click", () => {
+      state.learnMode = !state.learnMode;
+      lb.textContent = "Chauffeur Mode: " + (state.learnMode ? "On" : "Off");
+      lb.classList.toggle("active", state.learnMode);
+      if (state.learnMode) resetScore();
+      app.showToast(state.learnMode
+        ? "Chauffeur Mode. Peak jerk and peak lateral g are being measured off the integrator, and every red is counted. Drive as though somebody is reading in the back."
+        : "Chauffeur Mode off.", "Whispers");
+    });
+    app.enterLearning = () => {                       // the garage's Learning button lands here
+      const tb = document.querySelector('[data-view="learn"]'); if (tb) tb.style.display = "";
+      if (!state.learnMode && lb) lb.click();
+      app.setView("learn");
+    };
+    app.learnDemo = () => {                           // put the car where the lesson is
+      const tb = document.querySelector('[data-view="learn"]'); if (tb) tb.style.display = "";
+      if (!state.learnMode && lb) lb.click();
+      app.selectDestination("London");
+      state.gearMode = "D"; state.beltLatched = true; state.chauffeur = true;
+      resetScore();
+      app.setView("drive");
+      app.showToast("Charing Cross. The junction ahead is a real one \u2014 the fingerpost and the binnacle both say what it offers. Turn the wheel, not the car.", "Whispers");
+    };
+    const pnl = document.querySelector(".panel-learn");
+    if (pnl) {
+      pnl.querySelectorAll("[data-goto]").forEach((a) => a.addEventListener("click", () => {
+        const t = document.getElementById(a.dataset.goto);
+        if (t) t.scrollIntoView({ behavior: "smooth", block: "start" });
+      }));
+      pnl.querySelectorAll("[data-demo]").forEach((bEl) => bEl.addEventListener("click", () => app.learnDemo()));
+    }
+  }
   document.querySelectorAll("[data-gear]").forEach((button) => button.addEventListener("click", () => app.setGear(button.dataset.gear)));
   document.querySelectorAll("[data-door]").forEach((button) => button.addEventListener("click", () => app.toggleDoor(button.dataset.door)));
   document.querySelectorAll("[data-destination]").forEach((button) => button.addEventListener("click", () => {
