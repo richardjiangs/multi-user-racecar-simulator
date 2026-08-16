@@ -890,6 +890,21 @@ things that were wrong about it, and are the kind of thing to check on any stree
   because lane centring is a separate switch and it was **on by default**. Lanes now come off
   `laneInfoAt`/`laneCentreIn`, the assist starts **OFF**, and `nearAJunction()` makes it let go
   entirely for the last 46 m of a road, because that is where you are choosing where to go.
+- **A degree of steering put you on a side street.** `preferredChoice` took the road whose
+  angle was NEAREST the driver's intent, with no deadband — so at a junction whose arms are
+  at −66°, −66° and +14°, a twitch of the wheel (or the yaw the car already had, weighted
+  1.1) flipped which one you were taking. Straight on is now the DEFAULT: the road nearest
+  to straight ahead wins unless the wheel asks for at least `LDN_DEADBAND` (0.30 rad) of
+  intent AND another road looks `LDN_STICK` (0.28 rad) better than carrying on. The heading
+  counts for less than the wheel (0.7 against 1.55), and inside the last nine metres the
+  choice is COMMITTED, because a car that changed which street it was taking as the bumper
+  crossed the line would be undriveable. Measured: ±0.3 of lock keeps you straight on, half
+  lock takes the turn.
+- **The tarmac stopped dead at 240 m.** On a bend you never see it; on a straight London
+  street it is a black end to the road with bare ground beyond it. `ROAD_OFFS` now carries
+  the surface, the footway and the frontage out to **700 m** — `centerlineAt` extrapolates
+  along the last sample's heading and the road past a junction is straight in the model
+  anyway, so it costs fifteen more quads and the street simply runs on into the haze.
 - **A junction was a track SWITCH, not a place.** It was drawn only ahead of the car, only
   within two hundred metres, and it stopped being drawn ten metres after you passed it — so
   you drove through a crossroads and it evaporated behind you. `junctionsInSight()` returns
