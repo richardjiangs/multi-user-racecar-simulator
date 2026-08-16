@@ -825,6 +825,22 @@ an hour.
 **Key Z** is not an ultimate-speed mode on these two — there isn't one. It hands the car to the
 **chauffeur**, and takes it back, because on a Rolls-Royce that is the switch that matters.
 
+### On a street car the ROAD is the instrument
+
+Four full-width strips — the shop prompt, the junction, the signal, the brake column —
+each drawn as its own panel and each stacked above the last, between them covered the
+middle of the screen. That is a worse fault than any of them was worth fixing. The Phantom
+now has ONE binnacle, 88 px tall at full scale, sitting low in the band the bonnet occupies
+anyway, carrying the four things in a row instead of a column: signal ahead · brake and
+gear · the junction and what the wheel is asking for. The Chauffeur 101 score runs along
+its foot when the mode is on. The whole carriageway is above it. The only thing still
+allowed to interrupt the view is the Tower Bridge jump readout, and only while the
+bascules are actually up, because that is the one number you cannot work out in time.
+
+The Spectre already had a proper binnacle, so the junction went into it and into the
+warning line — a DOM element in a corner the car already uses, which can never cover the
+carriageway at all.
+
 ### BOTH Rolls-Royces drive the London NETWORK, and both teach Chauffeur 101
 
 The network below lives in the Phantom and is **lifted verbatim into the Spectre** rather

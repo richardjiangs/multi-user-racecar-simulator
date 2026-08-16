@@ -4062,203 +4062,187 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
 
 
   /* =========================================================================
-     THE BRAKE GAUGE, AND NOTHING ELSE.
+     ONE BINNACLE, LOW, AND NOTHING FLOATING OVER THE ROAD.
 
-     There WERE two dials here -- a speedometer and a POWER RESERVE -- and the
-     owner has asked for both of them gone. They are gone. What is left is the
-     one thing worth watching from the driver's seat of a car that is driven for
-     somebody sitting behind you: how hard the brakes are being asked for. A
-     passenger cannot feel a steady pressure and feels every jab, so the column
-     that reads brake demand is the instrument that tells you whether you are
-     doing this well. Road speed is already on the HUD above, in the car's own
-     type, which is where it belongs.
+     This was four full-width bars stacked up the middle of the screen -- the shop
+     prompt, the junction, the signal and the brake column, each its own panel,
+     each climbing higher than the last, until between them they covered the road
+     you were supposed to be looking at. That is a worse fault than any of them
+     was worth fixing, because on a street car the road IS the instrument.
 
-     Nothing has been added to the dash and nothing in the cabin drawing has
-     been touched.
+     So it is one panel now, and it sits LOW, in the band the bonnet occupies
+     anyway. It is 88 px tall at full scale and the whole of the carriageway is
+     above it. It carries the four things a driver of this car actually reads --
+     the signal ahead, the brakes, the junction and what the wheel is asking for --
+     laid out left to right in one row instead of stacked on top of each other.
+     There is still no speedometer and no tachometer: a Rolls-Royce has never had
+     the second, and the owner asked for the first to go.
      ========================================================================= */
   function drawGauges(w, h) {
     const S = Math.min(1.05, Math.max(0.62, w / 1280));
-    // the car's own console is a real element on the page, so this is placed ABOVE it
-    // rather than at a guessed height -- otherwise it sits behind the gear buttons.
+    // the car's own console is a real element on the page, so this is placed relative to
+    // it rather than at a guessed height -- otherwise it sits behind the gear buttons.
     const bar = document.querySelector(".bottombar");
     const barTop = bar ? bar.getBoundingClientRect().top : h;
-    const cx = w / 2, cy = Math.min(h - 96 * S, barTop - 86 * S);
-    const R = 58 * S;
+    const H = 88 * S;                                  // the WHOLE panel, once
+    const PW = Math.min(w - 28, 720 * S);
+    const cx = w / 2, top = Math.min(h - H - 10, barTop - H - 8);
+
+    const J = app.junctionAhead && app.junctionAhead();
+    const ns = state.nextSig;
 
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.textAlign = "center"; ctx.textBaseline = "alphabetic";
+    ctx.translate(cx, top);
+    ctx.textBaseline = "middle";
 
-    // the BRAKE GAUGE and the gear, in a narrow surround of their own -- with the two
-    // dials deleted there is no binnacle left to sit in, and a saloon's forward view
-    // is better for the space.
-    const bw = 15 * S, bh = R * 1.45;
-    ctx.fillStyle = "rgba(6,8,11,0.72)";
-    ctx.strokeStyle = "rgba(207,211,216,0.24)";
+    // the housing
+    ctx.fillStyle = "rgba(6,8,11,0.80)";
+    ctx.strokeStyle = "rgba(201,168,95,0.30)";
     ctx.lineWidth = 1.2;
-    roundRect(ctx, -30 * S, -bh / 2 - 22 * S, 60 * S, bh + 38 * S, 12 * S);
-    ctx.fill(); ctx.stroke();
+    roundRect(ctx, -PW / 2, 0, PW, H, 12 * S); ctx.fill(); ctx.stroke();
 
-    ctx.fillStyle = "rgba(255,255,255,0.06)";
-    roundRect(ctx, -bw / 2, -bh / 2, bw, bh, 4 * S); ctx.fill();
-    const bf = clamp(state.brake, 0, 1);
-    if (bf > 0.002) {
-      const bg = ctx.createLinearGradient(0, bh / 2, 0, -bh / 2);
-      bg.addColorStop(0, "#c8462f"); bg.addColorStop(1, "#ff7a5c");
-      ctx.fillStyle = bg;
-      roundRect(ctx, -bw / 2, bh / 2 - bh * bf, bw, bh * bf, 4 * S); ctx.fill();
-    }
-    ctx.strokeStyle = "rgba(207,211,216,0.35)"; ctx.lineWidth = 1;
-    roundRect(ctx, -bw / 2, -bh / 2, bw, bh, 4 * S); ctx.stroke();
-    ctx.fillStyle = "rgba(150,158,170,0.9)"; ctx.font = "600 " + (7 * S).toFixed(0) + "px ui-sans-serif";
-    ctx.fillText("BRAKE", 0, bh / 2 + 11 * S);
-    ctx.fillStyle = "#eef2f7"; ctx.font = "800 " + (15 * S).toFixed(0) + "px ui-sans-serif";
-    ctx.fillText(state.gearMode, 0, -bh / 2 - 7 * S);
+    const L = -PW / 2, colW = PW / 3;
 
-    ctx.restore();
-
-    let stackY = cy - R - 34 * S;
-
-    // ---- and, on a journey, the one thing that actually helps you drive one of these
-    //      well: the signal you are coming to, its colour, and how long is left on it.
-    const ns = state.nextSig;
+    /* ---- LEFT: the signal you are coming to. Colour, name, distance and the seconds
+       left on it -- which is the one number that lets you arrive at a green without
+       having touched the brake. */
+    ctx.textAlign = "left";
     if (ns && ns.gap > -8 && ns.gap < 420) {
       const col = ns.state === "green" ? "#3ddc84" : ns.state === "amber" ? "#ffb02e" : "#ff3b34";
-      ctx.save();
-      ctx.translate(cx, stackY);
-      stackY -= 32 * S;
-      ctx.fillStyle = "rgba(6,8,11,0.8)"; ctx.strokeStyle = "rgba(207,211,216,0.25)";
-      roundRect(ctx, -104 * S, -13 * S, 208 * S, 26 * S, 8 * S); ctx.fill(); ctx.stroke();
-      ctx.fillStyle = col; ctx.beginPath(); ctx.arc(-88 * S, 0, 5.5 * S, 0, Math.PI * 2); ctx.fill();
-      ctx.fillStyle = "rgba(226,232,240,0.92)"; ctx.textAlign = "left"; ctx.textBaseline = "middle";
-      ctx.font = "600 " + (9.5 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.fillText(ns.name.length > 22 ? ns.name.slice(0, 21) + "…" : ns.name, -76 * S, -0.5 * S);
-      ctx.textAlign = "right"; ctx.fillStyle = col;
-      ctx.fillText(Math.max(0, Math.round(ns.gap)) + " m · " + Math.ceil(ns.left) + "s", 92 * S, -0.5 * S);
+      ctx.fillStyle = col;
+      ctx.beginPath(); ctx.arc(L + 20 * S, H * 0.36, 6 * S, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = "rgba(226,232,240,0.92)";
+      ctx.font = "700 " + (10 * S).toFixed(0) + "px ui-sans-serif";
+      const nm = ns.name.length > 20 ? ns.name.slice(0, 19) + "…" : ns.name;
+      ctx.fillText(nm, L + 33 * S, H * 0.36);
+      ctx.fillStyle = col; ctx.font = "800 " + (12 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(Math.max(0, Math.round(ns.gap)) + " m · " + Math.ceil(ns.left) + "s", L + 33 * S, H * 0.64);
+    } else {
+      ctx.fillStyle = "rgba(120,128,140,0.7)";
+      ctx.font = "600 " + (9 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText("no signal ahead", L + 20 * S, H * 0.5);
+    }
+
+    /* ---- CENTRE: the brake, and the gear. On a car driven for somebody sitting behind
+       you, how hard the brakes are being asked for is the instrument that matters --
+       a passenger cannot feel a steady pressure and feels every jab. */
+    {
+      const bx = L + colW + colW * 0.5, bw = 13 * S, bh = H * 0.58;
+      ctx.save(); ctx.translate(bx, H * 0.5);
+      ctx.fillStyle = "rgba(255,255,255,0.06)";
+      roundRect(ctx, -bw / 2, -bh / 2, bw, bh, 4 * S); ctx.fill();
+      const bf = clamp(state.brake, 0, 1);
+      if (bf > 0.002) {
+        const bg = ctx.createLinearGradient(0, bh / 2, 0, -bh / 2);
+        bg.addColorStop(0, "#c8462f"); bg.addColorStop(1, "#ff7a5c");
+        ctx.fillStyle = bg;
+        roundRect(ctx, -bw / 2, bh / 2 - bh * bf, bw, bh * bf, 4 * S); ctx.fill();
+      }
+      ctx.strokeStyle = "rgba(207,211,216,0.35)"; ctx.lineWidth = 1;
+      roundRect(ctx, -bw / 2, -bh / 2, bw, bh, 4 * S); ctx.stroke();
+      ctx.textAlign = "center";
+      ctx.fillStyle = "rgba(150,158,170,0.9)"; ctx.font = "600 " + (7 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText("BRAKE", 0, bh / 2 + 9 * S);
+      ctx.fillStyle = "#eef2f7"; ctx.font = "800 " + (16 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(state.gearMode, -26 * S, 0);
       ctx.restore();
     }
 
-    /* ---- THE JUNCTION COMING UP, and the road the wheel is asking for.
-       You steer at the turning you want; this says which one that currently is, and
-       every other road you could have instead. It is live, so it changes under the
-       wheel while you are still approaching — you may change your mind up to the line. */
-    const J = app.junctionAhead && app.junctionAhead();
+    /* ---- RIGHT: the junction, and the road the wheel is asking for. Three arrows in a
+       row rather than three panels: you need to know WHICH ONE, not read a menu. */
+    const Rx = L + colW * 2 + 14 * S, Rw = colW - 28 * S;
     if (J && J.choices.length) {
       const list = J.choices.slice().sort((a, b) => a.turn - b.turn);
       const arrowFor = (t) => t < -1.9 ? "↰" : t < -0.42 ? "←" : t < 0.42 ? "↑" : t < 1.9 ? "→" : "↱";
-      ctx.save();
-      ctx.translate(cx, stackY);
-      const cw = Math.min(w - 40, 168 * S), n = list.length;
-      const tw = Math.min(w - 24, cw * n + 12 * S);
-      ctx.fillStyle = "rgba(6,8,11,0.86)"; ctx.strokeStyle = "rgba(201,168,95,0.45)"; ctx.lineWidth = 1.2;
-      roundRect(ctx, -tw / 2, -26 * S, tw, 52 * S, 10 * S); ctx.fill(); ctx.stroke();
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
+      ctx.textAlign = "left";
       ctx.fillStyle = "rgba(201,168,95,0.9)";
       ctx.font = "700 " + (8.5 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.fillText(`${J.node.name.toUpperCase()} · ${Math.max(0, Math.round(J.gap))} m`, 0, -17 * S);
+      ctx.fillText(`${J.node.name.toUpperCase()} · ${Math.max(0, Math.round(J.gap))} m`, Rx, H * 0.26);
+      const n = list.length, cw = Rw / n;
+      ctx.textAlign = "center";
       for (let i = 0; i < n; i++) {
         const c = list[i], picked = J.picked && c.link === J.picked.link;
-        const x0 = -tw / 2 + 6 * S + (tw - 12 * S) * (i + 0.5) / n;
+        const x0 = Rx + cw * (i + 0.5);
         if (picked) {
-          ctx.fillStyle = "rgba(201,168,95,0.18)";
-          roundRect(ctx, x0 - (tw - 12 * S) / (n * 2) + 2 * S, -8 * S, (tw - 12 * S) / n - 4 * S, 30 * S, 6 * S);
-          ctx.fill();
+          ctx.fillStyle = "rgba(201,168,95,0.20)";
+          roundRect(ctx, x0 - cw / 2 + 2 * S, H * 0.40, cw - 4 * S, H * 0.50, 5 * S); ctx.fill();
         }
-        ctx.fillStyle = picked ? "#f0e2bb" : "rgba(190,198,208,0.75)";
-        ctx.font = "700 " + (13 * S).toFixed(0) + "px ui-sans-serif";
-        ctx.fillText(arrowFor(c.turn), x0, 2 * S);
-        ctx.font = "600 " + (8 * S).toFixed(0) + "px ui-sans-serif";
-        const nm = c.link.road.name.replace(/\s*\([^)]*\)\s*$/, "");
-        const maxc = Math.max(8, Math.floor((tw / n) / (5.2 * S)));
-        ctx.fillText(nm.length > maxc ? nm.slice(0, maxc - 1) + "…" : nm, x0, 15 * S);
+        ctx.fillStyle = picked ? "#f0e2bb" : "rgba(170,178,190,0.7)";
+        ctx.font = "700 " + (12 * S).toFixed(0) + "px ui-sans-serif";
+        ctx.fillText(arrowFor(c.turn), x0, H * 0.55);
+        ctx.font = "600 " + (7.5 * S).toFixed(0) + "px ui-sans-serif";
+        const nm2 = c.link.road.name.replace(/\s*\([^)]*\)\s*$/, "");
+        const maxc = Math.max(6, Math.floor(cw / (4.6 * S)));
+        ctx.fillText(nm2.length > maxc ? nm2.slice(0, maxc - 1) + "…" : nm2, x0, H * 0.78);
       }
-      ctx.restore();
+    } else if (state.atShop) {
+      ctx.textAlign = "left";
+      ctx.fillStyle = "#c9a85f"; ctx.font = "700 " + (10 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText("AT " + state.atShop, Rx, H * 0.38);
+      ctx.fillStyle = "rgba(190,198,208,0.8)"; ctx.font = "600 " + (8.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText("the doors will open", Rx, H * 0.66);
+    } else if (state.shopNear) {
+      const sn = state.shopNear;
+      ctx.textAlign = "left";
+      ctx.fillStyle = "rgba(214,221,230,0.9)"; ctx.font = "700 " + (9.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(`${sn.side < 0 ? "◄" : "►"}  ${sn.name}`, Rx, H * 0.38);
+      ctx.fillStyle = "rgba(150,158,170,0.85)"; ctx.font = "600 " + (8.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(`${Math.max(0, Math.round(sn.gap))} m · pull to the kerb and stop`, Rx, H * 0.66);
+    } else if (state.route.active) {
+      ctx.textAlign = "left";
+      ctx.fillStyle = "rgba(190,198,208,0.85)"; ctx.font = "600 " + (9.5 * S).toFixed(0) + "px ui-sans-serif";
+      const lbl = state.ldn ? state.ldn.road.name : state.route.name;
+      ctx.fillText(lbl.length > 26 ? lbl.slice(0, 25) + "…" : lbl, Rx, H * 0.5);
     }
 
-    /* ---- CHAUFFEUR 101, live. Two numbers and a grade, because that is the whole job.
-       Everything here is read-only: the physics produced it, this only prints it. */
+    /* ---- and, ACROSS THE FOOT of the panel only when it is on, the Chauffeur 101 score.
+       Two bars and a grade, inside the housing, so it costs no road either. */
     if (state.learnMode) {
       const G = app.chauffeurGrade();
-      ctx.save();
-      ctx.translate(cx, 118 * S);
-      const tw = Math.min(w - 40, 520 * S);
-      ctx.fillStyle = "rgba(6,8,11,0.88)"; ctx.strokeStyle = G.col; ctx.lineWidth = 1.4;
-      roundRect(ctx, -tw / 2, -25 * S, tw, 50 * S, 10 * S); ctx.fill(); ctx.stroke();
-      ctx.textAlign = "left"; ctx.textBaseline = "middle";
-      ctx.fillStyle = G.col; ctx.font = "800 " + (15 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.fillText(G.grade, -tw / 2 + 14 * S, -8 * S);
-      ctx.fillStyle = "rgba(190,198,208,0.85)"; ctx.font = "600 " + (9 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.fillText(G.why, -tw / 2 + 14 * S, 10 * S);
-      // the two measurements, as bars against what a passenger can ignore
-      const bar = (label, val, ok, x, unit) => {
-        const bw = 118 * S, f = clamp(val / (ok * 1.6), 0, 1);
-        ctx.fillStyle = "rgba(255,255,255,0.08)";
-        roundRect(ctx, x, -6 * S, bw, 7 * S, 3.5 * S); ctx.fill();
+      ctx.textAlign = "left";
+      ctx.fillStyle = G.col; ctx.font = "800 " + (9 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(G.grade, L + 20 * S, H + 12 * S);
+      const bar2 = (val, ok, x, unit) => {
+        const bw2 = 92 * S, f = clamp(val / (ok * 1.6), 0, 1);
+        ctx.fillStyle = "rgba(255,255,255,0.10)";
+        roundRect(ctx, x, H + 8 * S, bw2, 6 * S, 3 * S); ctx.fill();
         ctx.fillStyle = val > ok ? "#ff5a49" : "#3ddc84";
-        roundRect(ctx, x, -6 * S, bw * f, 7 * S, 3.5 * S); ctx.fill();
-        ctx.fillStyle = "rgba(255,255,255,0.35)";
-        ctx.fillRect(x + bw / 1.6, -8 * S, 1, 11 * S);          // the line they stop ignoring you at
-        ctx.fillStyle = "rgba(150,158,170,0.9)"; ctx.font = "600 " + (7.5 * S).toFixed(0) + "px ui-sans-serif";
-        ctx.fillText(label + "  " + val.toFixed(2) + unit, x, -14 * S);
+        roundRect(ctx, x, H + 8 * S, bw2 * f, 6 * S, 3 * S); ctx.fill();
+        ctx.fillStyle = "rgba(190,198,208,0.8)"; ctx.font = "600 " + (7.5 * S).toFixed(0) + "px ui-sans-serif";
+        ctx.fillText(val.toFixed(2) + unit, x + bw2 + 5 * S, H + 12 * S);
       };
-      bar("PEAK JERK", state.chPeakJerk, app.CH_JERK_OK, -tw / 2 + 176 * S, " m/s\u00b3");
-      bar("PEAK LATERAL", state.chPeakLat, app.CH_LAT_OK, -tw / 2 + 316 * S, " g");
-      ctx.textAlign = "right"; ctx.fillStyle = "rgba(190,198,208,0.85)";
-      ctx.font = "600 " + (8.5 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.fillText(state.chRedsStopped + " stopped \u00b7 " + state.chRedsRun + " run", tw / 2 - 14 * S, 12 * S);
-      ctx.restore();
+      bar2(state.chPeakJerk, app.CH_JERK_OK, L + 92 * S, " m/s³");
+      bar2(state.chPeakLat, app.CH_LAT_OK, L + 250 * S, " g");
+      ctx.textAlign = "right";
+      ctx.fillStyle = "rgba(150,158,170,0.85)"; ctx.font = "600 " + (8 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.fillText(state.chRedsStopped + " stopped · " + state.chRedsRun + " run", PW / 2 - 8 * S, H + 12 * S);
     }
+    ctx.restore();
 
-    /* ---- THE SHOP YOU ARE COMING UP TO. Pull off the carriageway alongside it and stop
-       and you are there — so the car says which one, and which side it is on. */
-    const sn = state.shopNear;
-    if (sn && !state.atShop) {
-      ctx.save();
-      ctx.translate(cx, stackY - 34 * S);
-      const tw = Math.min(w - 40, 300 * S);
-      ctx.fillStyle = "rgba(6,8,11,0.78)"; ctx.strokeStyle = "rgba(201,168,95,0.30)"; ctx.lineWidth = 1;
-      roundRect(ctx, -tw / 2, -12 * S, tw, 24 * S, 8 * S); ctx.fill(); ctx.stroke();
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillStyle = "rgba(214,221,230,0.9)";
-      ctx.font = "600 " + (9 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.fillText(`${sn.side < 0 ? "◄" : "►"}  ${sn.name} — ${Math.max(0, Math.round(sn.gap))} m · pull to the kerb and stop`, 0, 0);
-      ctx.restore();
-    }
-    if (state.atShop) {
-      ctx.save();
-      ctx.translate(cx, stackY - 34 * S);
-      const tw = Math.min(w - 40, 300 * S);
-      ctx.fillStyle = "rgba(30,26,10,0.9)"; ctx.strokeStyle = "#c9a85f"; ctx.lineWidth = 1.2;
-      roundRect(ctx, -tw / 2, -12 * S, tw, 24 * S, 8 * S); ctx.fill(); ctx.stroke();
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillStyle = "#f0e2bb"; ctx.font = "700 " + (9 * S).toFixed(0) + "px ui-sans-serif";
-      ctx.fillText(`AT ${state.atShop} — the doors will open`, 0, 0);
-      ctx.restore();
-    }
-
-    /* ---- TOWER BRIDGE, when the bascules are moving. What you need at the ramp is one
-       number: how much bridge is missing, and what your present speed is worth against
-       it. This is the same arithmetic the physics will run when you reach the lip. */
+    /* ---- TOWER BRIDGE. The ONE thing that is allowed to interrupt the view, because it
+       is the one thing you cannot see for yourself in time: how much bridge is missing
+       and what your present speed is worth against it. It appears only while the
+       bascules are actually up. */
     const bg2 = state.bridge;
     if (bg2 && bg2.lift && bg2.lift.open > 0.01 && app.bridgeJump) {
       const j = app.bridgeJump(Math.abs(state.speedMps), bg2.lift.open);
       const ok = j.cleared;
       ctx.save();
-      ctx.translate(cx, 118 * S);
+      ctx.translate(cx, top - 22 * S);
       const tw = Math.min(w - 40, 460 * S);
-      ctx.fillStyle = ok ? "rgba(10,46,26,0.88)" : "rgba(84,22,16,0.88)";
+      ctx.fillStyle = ok ? "rgba(10,46,26,0.90)" : "rgba(84,22,16,0.90)";
       ctx.strokeStyle = ok ? "rgba(61,220,132,0.6)" : "rgba(255,90,74,0.6)";
       ctx.lineWidth = 1.2;
-      roundRect(ctx, -tw / 2, -17 * S, tw, 34 * S, 9 * S); ctx.fill(); ctx.stroke();
+      roundRect(ctx, -tw / 2, -13 * S, tw, 26 * S, 8 * S); ctx.fill(); ctx.stroke();
       ctx.textAlign = "center"; ctx.textBaseline = "middle";
       ctx.fillStyle = ok ? "#b9f5d2" : "#ffd9d2";
-      ctx.font = "700 " + (10.5 * S).toFixed(0) + "px ui-sans-serif";
+      ctx.font = "700 " + (9.5 * S).toFixed(0) + "px ui-sans-serif";
       ctx.fillText(
-        `BASCULES UP — ${j.gap.toFixed(0)} m of bridge missing · your reach at ` +
-        `${(Math.abs(state.speedMps) * 3.6).toFixed(0)} km/h is ${j.reach.toFixed(0)} m · ` +
-        (ok ? "you clear it" : "you do not"), 0, 0);
+        `BASCULES UP · ${j.gap.toFixed(0)} m gap · reach ${j.reach.toFixed(0)} m at ` +
+        `${(Math.abs(state.speedMps) * 3.6).toFixed(0)} km/h · ` + (ok ? "you clear it" : "you do not"), 0, 0);
       ctx.restore();
     }
+
     // somebody in the back is shouting at you, and you should be able to see that
     if (state.passengerAngry > 0 && state.passengerLine) {
       ctx.save();
