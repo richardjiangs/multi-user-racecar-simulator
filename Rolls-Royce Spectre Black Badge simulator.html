@@ -1626,6 +1626,9 @@ function ldnPlanTurn() {
     LS().ldnTurn = { turn: Math.PI, link: L.next.roads.find((l) => l.road === L.road) };
     return LS().ldnTurn;
   }
+  // COMMITTED. Inside the last few metres the choice stops moving: a car that changed
+  // which street it was taking as the bumper crossed the line would be undriveable.
+  if (gap < 9 && LS().ldnTurn && choices.some((c) => c.link === LS().ldnTurn.link)) return LS().ldnTurn;
   const best = preferredChoice(choices);
   LS().ldnTurn = best;
   return best;
@@ -1636,12 +1639,31 @@ function ldnPlanTurn() {
 // could never signal a right-angle turn from a standing approach, which is most of
 // London's junctions — so the wheel is worth more here than the yaw it has produced so
 // far, and the car turns because you asked, not because you had already turned.
+const LDN_DEADBAND = 0.30;   // radians of intent before you leave the road you are on
+const LDN_STICK = 0.28;      // and how much better another road has to look than carrying on
 function preferredChoice(choices, wantOverride) {
   // `want` is normally read off the car, but reversing INTO a junction the heading is
   // measured against the road and the road is behind you, so the caller supplies it.
+  // The heading counts for LESS than the wheel here: at a junction the car is usually
+  // already yawing a little, and reading that as an instruction is what made a degree of
+  // steering put you on a side street.
   const want = wantOverride !== undefined ? wantOverride
-             : LS().headingRel * 1.1 + LS().steer * 1.75;
-  let best = choices[0], bestErr = Infinity;
+             : LS().headingRel * 0.7 + LS().steer * 1.55;
+
+  /* STRAIGHT ON IS THE DEFAULT, and it has to be. A driver who does nothing carries on
+     down the road they are on; they are not put onto a side street because the wheel
+     moved. So the road nearest to straight ahead wins unless the wheel is genuinely
+     asking for a different one -- at least LDN_DEADBAND of intent, and that other road
+     has to look clearly better than carrying on, not merely a fraction better. Without
+     the deadband the nearest-match rule picked whichever arm noise happened to favour,
+     and the junction read as a track switch you could trip with a twitch. */
+  let straight = choices[0], sErr = Infinity;
+  for (const c of choices) {
+    const e = Math.abs(c.turn);
+    if (e < sErr) { sErr = e; straight = c; }
+  }
+  if (Math.abs(want) < LDN_DEADBAND) return straight;
+  let best = straight, bestErr = Math.abs(straight.turn - want) - LDN_STICK;
   for (const c of choices) {
     const err = Math.abs(c.turn - want);
     if (err < bestErr) { bestErr = err; best = c; }
@@ -1878,10 +1900,11 @@ function londonFrontage(road, dir, L) {
     // each half takes the look of the junction at its own end
     out.push({ from: a,   to: mid, side, kind: near.kind, storeys: near.storeys, shops: true });
     out.push({ from: mid, to: b,   side, kind: far.kind,  storeys: far.storeys,  shops: true });
-    // and BEYOND BOTH junctions, so that standing at a crossroads you can see the street on
-    // the other side of it -- in either direction -- instead of a hole in the world
-    out.push({ from: L + 12, to: L + 90, side, kind: far.kind, storeys: far.storeys, shops: true });
-    out.push({ from: -90, to: -12, side, kind: near.kind, storeys: near.storeys, shops: true });
+    // and BEYOND BOTH junctions, as far as the tarmac is drawn, so that a long straight
+    // street runs away to the horizon with buildings down it rather than ending in a wall
+    // of haze with bare ground under it
+    out.push({ from: L + 12, to: L + 520, side, kind: far.kind, storeys: far.storeys, shops: true });
+    out.push({ from: -420, to: -12, side, kind: near.kind, storeys: near.storeys, shops: true });
   }
   return out;
 }
@@ -3978,7 +4001,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function projectRoad(Xr, Zr) { const phi = state.headingRel, n0 = state.laneOffset; const dX = Xr - n0, dZ = Zr; const fwd = dX * Math.sin(phi) + dZ * Math.cos(phi); const rgt = dX * Math.cos(phi) - dZ * Math.sin(phi); if (fwd <= 0.12) return { x: innerWidth / 2, y: horizonY, scale: -1, fwd }; const scale = FOCAL / fwd; return { x: innerWidth / 2 + rgt * scale, y: horizonY + CAM_H * scale, scale, fwd }; }
 
   const halfAt = (off) => (app.halfWidthAt ? app.halfWidthAt(state.distanceM + off) : 6.5);
-  const ROAD_OFFS = (function () { const o = []; for (let d = -240; d < -80; d += 12) o.push(d); for (let d = -80; d < -6; d += 8) o.push(d); for (let d = -6; d < 6; d += 0.6) o.push(d); for (let d = 6; d < 32; d += 2.4) o.push(d); for (let d = 32; d <= 240; d += 6) o.push(d); return o; })();
+  const ROAD_OFFS = (function () { const o = []; for (let d = -240; d < -80; d += 12) o.push(d); for (let d = -80; d < -6; d += 8) o.push(d); for (let d = -6; d < 6; d += 0.6) o.push(d); for (let d = 6; d < 32; d += 2.4) o.push(d); for (let d = 32; d <= 240; d += 6) o.push(d);
+    // and ON TO THE HORIZON: the tarmac used to stop dead at 240 m, which is a black end to
+    // a straight street with bare ground beyond it. centerlineAt extrapolates, and past the
+    // junction the road is straight anyway, so the surface runs on for fifteen more quads.
+    for (let d = 264; d <= 700; d += 24) o.push(d);
+    return o; })();
   const NEAR_PLANE = 0.15;
   function roadCorner(Xr, Zr) { const phi = state.headingRel, n0 = state.laneOffset; const dX = Xr - n0, dZ = Zr; return { rgt: dX * Math.cos(phi) - dZ * Math.sin(phi), fwd: dX * Math.sin(phi) + dZ * Math.cos(phi) }; }
   function projPoint(p) { const s = FOCAL / p.fwd; return { x: innerWidth / 2 + p.rgt * s, y: horizonY + CAM_H * s }; }
@@ -4284,7 +4312,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const seen = [];
     for (const p of C.props) {
       const rel = p.at - state.distanceM;
-      if (rel < -240 || rel > 340) continue;   // the road behind reaches 240 m, so props do
+      if (rel < -240 || rel > 640) continue;   // as far as the tarmac is drawn, both ways
       seen.push(p);
     }
     // far to near
@@ -5279,7 +5307,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     for (const side of [-1, 1]) {
       let prev = null;
       ctx.fillStyle = kit.kerb;
-      for (let d = -20; d <= 240; d += 6) {
+      // the footway runs as far as the tarmac does, or the street ends before the road
+      for (let d = -20; d <= 700; d += (d < 240 ? 6 : 24)) {
         const half = halfAt(d);
         const a = projectAhead(Math.max(1.2, d), half * side);
         const b = projectAhead(Math.max(1.2, d), (half + 0.5) * side);
