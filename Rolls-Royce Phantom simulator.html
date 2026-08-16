@@ -2196,7 +2196,10 @@ const updateDoorArt = (...args) => app.updateDoorArt(...args);
     }
     // slow to a stop as we arrive
     let arriveCap = Infinity;
-    if (state.route.active) {
+    // ON THE NETWORK THERE IS NOWHERE YOU ARE GOING. `remainingM` is the distance to the
+    // next junction, not to a destination, and feeding it to the arrival cap wound the car
+    // down to a standstill at every junction -- which is exactly where the red lights are.
+    if (state.route.active && !state.ldn) {
       const rem = state.route.remainingM;
       if (rem < 140) arriveCap = clamp((rem - 4) / 140, 0, 1) * 13;
     }
@@ -2915,19 +2918,42 @@ function driveSide() {
         for (let d = b.from; d < b.to; d += 12) props.push({ at: d, side: b.side, t: "gardenwall" });
         continue;
       }
-      // a real frontage: plots of 14-26 m, each its own building
+      /* THE FRONTAGE IS KEYED TO THE WORLD, NOT TO THE EDGE.
+
+         This walk used to take its plot widths and everything else out of one sequential
+         RNG, so the buildings past a junction were generated once as "the road ahead" and
+         then AGAIN, from a different point in the stream, as "this road" the instant you
+         crossed the line. Half a metre of travel re-randomised the entire street, which is
+         what made a junction look like the road being exchanged for another one.
+
+         Every plot is now a pure function of where it stands in a world frame that never
+         resets — `state.ldn.origin + at` — walked from a fixed 22 m grid. Generate the same
+         stretch of London from either side of a junction and you get the same buildings, in
+         the same places, with the same shops over the same doors. Nothing moves. */
+      const O = state.ldn ? (state.ldn.origin || 0) : null;
+      const PR = (x, salt) => {
+        let h = Math.imul((Math.floor(x) | 0) ^ Math.imul(salt, 0x9e3779b9), 0x85ebca6b);
+        h ^= h >>> 13; h = Math.imul(h, 0xc2b2ae35); h ^= h >>> 16;
+        return (h >>> 0) / 4294967296;
+      };
       let d = b.from;
+      if (O !== null) d = Math.floor((O + b.from) / 22) * 22 - O;    // start on the world grid
       while (d < b.to) {
-        const wM = 14 + R() * 12;
-        const storeys = Math.max(2, Math.round(b.storeys * (0.72 + R() * 0.5)));
-        props.push({
-          at: d + wM / 2, side: b.side, t: "block", kind: b.kind, wM, storeys,
-          seed: R(), arcade: !!b.arcade, vertical: !!b.vertical,
-          shop: b.shops && R() < 0.82,
-          shopName: kit.shopNames.length ? kit.shopNames[Math.floor(R() * kit.shopNames.length)] : "",
-          shopAlt: (kit.shopNamesAlt || kit.shopNames)[Math.floor(R() * ((kit.shopNamesAlt || kit.shopNames).length || 1))] || "",
-          lit: R() < 0.75, awn: R() < 0.4, hue: R(),
-        });
+        const K = O !== null ? O + d : null;
+        const rnd = K !== null ? ((i) => PR(K, i)) : (() => R());
+        const wM = 14 + rnd(1) * 12;
+        if (d + wM > b.from) {
+          const storeys = Math.max(2, Math.round(b.storeys * (0.72 + rnd(2) * 0.5)));
+          const names = kit.shopNames, alts = kit.shopNamesAlt || kit.shopNames;
+          props.push({
+            at: d + wM / 2, side: b.side, t: "block", kind: b.kind, wM, storeys,
+            seed: rnd(3), arcade: !!b.arcade, vertical: !!b.vertical,
+            shop: b.shops && rnd(4) < 0.82,
+            shopName: names.length ? names[Math.floor(rnd(5) * names.length)] : "",
+            shopAlt: (alts[Math.floor(rnd(6) * (alts.length || 1))]) || "",
+            lit: rnd(7) < 0.75, awn: rnd(8) < 0.4, hue: rnd(9),
+          });
+        }
         d += wM;
       }
     }
@@ -2935,9 +2961,15 @@ function driveSide() {
     // ---- street furniture, both pavements. NOTHING is planted on a bridge: no plane
     // trees, no bins, no parked cars over the Thames.
     const overWater = blocks.length > 0 && blocks.every((bk) => bk.kind === "river" || bk.kind === "water");
-    for (let d = 12; d < L; d += 26) {
-      props.push({ at: d, side: -1, t: "lamp", kind: kit.lamp });
-      props.push({ at: d + 13, side: 1, t: "lamp", kind: kit.lamp });
+    {
+      // the lamps are world-aligned too, or they shuffle along the kerb at every junction
+      const O2 = state.ldn ? (state.ldn.origin || 0) : 0;
+      const from = state.ldn ? Math.floor((O2 - 460) / 26) * 26 - O2 : 12;
+      const to = state.ldn ? L + 560 : L;
+      for (let d = from; d < to; d += 26) {
+        props.push({ at: d, side: -1, t: "lamp", kind: kit.lamp });
+        props.push({ at: d + 13, side: 1, t: "lamp", kind: kit.lamp });
+      }
     }
     if (kit.bin && !overWater) for (let d = 40; d < L; d += 120) props.push({ at: d, side: (d % 240 < 120 ? -1 : 1), t: "bin" });
     if (kit.hydrant)  for (let d = 70; d < L; d += 150) props.push({ at: d, side: (d % 300 < 150 ? -1 : 1), t: "hydrant" });
@@ -3230,7 +3262,10 @@ function londonActive() { return !!state.ldn; }
 function enterLondon(nodeId, roadName) {
   const node = LDN.byId[nodeId] || LDN.byId.charingx;
   let link = node.roads.find((l) => !roadName || l.road.name === roadName) || node.roads[0];
-  state.ldn = { road: link.road, dir: link.out, node, next: link.out > 0 ? link.road.B : link.road.A };
+  // `origin` is where distanceM = 0 on this edge sits in a WORLD frame that never resets.
+  // The frontage is generated against it, which is what stops the street re-randomising
+  // every time you cross a junction.
+  state.ldn = { road: link.road, dir: link.out, node, next: link.out > 0 ? link.road.B : link.road.A, origin: 0 };
   state.edgeD = 0;
   state.distanceM = 0; state.routeTime = 0;
   state.headingRel = 0;
@@ -3418,7 +3453,8 @@ function londonStep(dt) {
     if (!best) { state.distanceM = 0; state.edgeD = 0; return; }
     const link = best.link;
     const next = link.out > 0 ? link.road.B : link.road.A;
-    state.ldn = { road: link.road, dir: link.out, node: from, next, inTurn: best.turn };
+    state.ldn = { road: link.road, dir: link.out, node: from, next, inTurn: best.turn,
+                  origin: (L.origin || 0) - link.road.len };
     state.distanceM = 0; state.edgeD = 0;
     state.headingRel = clamp(rel - best.turn, -0.6, 0.6);
     state.laneOffset = homeLaneOffAt(0);
@@ -3443,7 +3479,8 @@ function londonStep(dt) {
   const straight = Math.abs(t.turn) < 0.35;
   // `inTurn` is the angle you came through this junction at, and it is what keeps the
   // junction in the road behind you instead of the world forgetting it
-  state.ldn = { road: link.road, dir: link.out, node: from, next, inTurn: t.turn };
+  state.ldn = { road: link.road, dir: link.out, node: from, next, inTurn: t.turn,
+                origin: (L.origin || 0) + L.road.len };
   state.distanceM = 0; state.edgeD = 0;
   // the heading is carried through the corner by the physics, so what is left is whatever
   // the driver did NOT take out with the wheel -- exactly like a real junction you
@@ -3524,7 +3561,10 @@ function londonFrontage(road, dir, L) {
   const out = [];
   // the frontage stops short of BOTH ends, because the ends are junction boxes -- that
   // fifteen-metre gap in the buildings is what a street corner looks like from a car
-  const a = Math.min(13, L * 0.08), b = Math.max(a + 8, L - 15), mid = (a + b) / 2;
+  // 12 m at both ends, exactly: the "beyond the junction" block of one road and the "near"
+  // block of the next have to begin at the same WORLD position or the street re-randomises
+  // the instant you cross the line
+  const a = 12, b = Math.max(a + 8, L - 15), mid = (a + b) / 2;
   for (const side of [-1, 1]) {
     const mapSide = dir > 0 ? side : -side;
     const open = LDN_OPEN.find((o) => o.re.test(road.name) && (o.both || o.side === mapSide));

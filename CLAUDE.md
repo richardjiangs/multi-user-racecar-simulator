@@ -890,6 +890,19 @@ things that were wrong about it, and are the kind of thing to check on any stree
   because lane centring is a separate switch and it was **on by default**. Lanes now come off
   `laneInfoAt`/`laneCentreIn`, the assist starts **OFF**, and `nearAJunction()` makes it let go
   entirely for the last 46 m of a road, because that is where you are choosing where to go.
+- **The whole street re-randomised as you crossed a junction.** The frontage was generated
+  out of ONE sequential RNG walked from the start of the current edge — so the buildings
+  past a junction were generated once as "the road ahead" and then again, from a different
+  point in the stream, as "this road" the instant you crossed the line. Half a metre of
+  travel and every building, shop sign and lamp jumped: that, and not the turning logic, is
+  what made a junction look like the road being exchanged. `state.ldn.origin` now carries
+  the world position of `distanceM = 0` and every plot is a pure function of `origin + at`,
+  walked from a fixed 22 m world grid (`PR()`, a position hash, in place of `R()`). Generate
+  the same stretch of London from either side of a junction and you get the same buildings
+  in the same places with the same shops over the same doors — proved: blocks at world 557
+  and 573 before the line, and at 17 and 33 with `origin` 540 after it. The lamps are
+  world-aligned for the same reason. What still changes at a junction is the view, because
+  you turned a corner.
 - **A degree of steering put you on a side street.** `preferredChoice` took the road whose
   angle was NEAREST the driver's intent, with no deadband — so at a junction whose arms are
   at −66°, −66° and +14°, a twitch of the wheel (or the yaw the car already had, weighted
