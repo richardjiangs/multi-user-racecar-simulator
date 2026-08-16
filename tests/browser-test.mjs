@@ -787,6 +787,28 @@ const check = (label, ok, detail) => {
     bad.length === 0, bad.join(" | "));
 }
 
+/* ---------- A JUNCTION IS A PLACE, NOT A TRACK SWITCH ----------
+   The crossroads was drawn only ahead of the car and only until you were ten metres past
+   it, so you drove through one and it evaporated: turn round and there was nothing there.
+   Both Rolls-Royces must draw every junction in sight — the one ahead AND the one they
+   came out of — must keep the turn they already took in the road behind them, and must let
+   you drive back INTO the junction rather than treating the start of a road as a wall. */
+{
+  const { readFileSync } = await import("node:fs");
+  const bad = [];
+  for (const f of ["Rolls-Royce Phantom simulator.html", "Rolls-Royce Spectre Black Badge simulator.html"]) {
+    const src = readFileSync(ROOT + "/" + f, "utf8");
+    const n = f.replace(/ simulator.html/i, "");
+    if (!/function junctionsInSight\(/.test(src)) bad.push(n + ": only ever looks at the junction ahead");
+    if (!/ahead: false/.test(src)) bad.push(n + ": no junction behind the car");
+    if (!/inTurn/.test(src)) bad.push(n + ": the road behind forgets the turn it just made");
+    if (!/edgeD\) < 0|edgeD < 0/.test(src)) bad.push(n + ": cannot drive back into a junction");
+    // and both renderers must iterate the set rather than the single one
+    if ((src.match(/junctionsInSight/g) || []).length < 3) bad.push(n + ": the renderer still draws one junction");
+  }
+  check("2 street cars — a junction is a place you can turn round in", bad.length === 0, bad.slice(0, 4).join(" | "));
+}
+
 /* ---------- the co-pilot knows its own circuit ----------
    The voice map's fifth entry is the BRAND slot. On seven clones it was never re-derived,
    so "take me to Sebring" did nothing on a Corvette and the Venom F5 answered to "gotland" —
