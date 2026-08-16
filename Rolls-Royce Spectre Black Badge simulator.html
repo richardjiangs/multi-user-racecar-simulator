@@ -6225,6 +6225,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       ctx.fillText("PASSENGER ABOARD", cx, cy + R * 0.72);
     }
     ctx.restore();
+
   }
   /* one dial: a dark face, painted numerals, and a thin needle. `reserve` reverses the
      sense of the sweep so 100 sits where a tachometer would put zero — a Power Reserve
@@ -7074,6 +7075,19 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         if (gap < 260) warn.push(`${sg.name} · ${ph.state.toUpperCase()} ${Math.ceil(ph.left)}s · ${gap} m`);
       } }
     if (state.sigRuns) warn.push(`${state.sigRuns} RED LIGHT${state.sigRuns > 1 ? "S" : ""} RUN`);
+    // THE JUNCTION, in the corner the car already uses for what it is telling you. It was
+    // a panel across the middle of the screen, which covered the one thing you are
+    // supposed to be looking at; a street car's road IS its instrument.
+    {
+      const J = state.ldn && app.junctionAhead && app.junctionAhead();
+      if (J && J.choices.length) {
+        const arrow = (t) => t < -1.9 ? "\u21b0" : t < -0.42 ? "\u2190" : t < 0.42 ? "\u2191" : t < 1.9 ? "\u2192" : "\u21b1";
+        const list = J.choices.slice().sort((a, b) => a.turn - b.turn)
+          .map((c) => (J.picked && c.link === J.picked.link ? "\u25b8" : " ") + arrow(c.turn) + " " +
+                      c.link.road.name.replace(/\s*\([^)]*\)\s*$/, ""));
+        warn.push(`${J.node.name.toUpperCase()} ${Math.max(0, Math.round(J.gap))} m \u2014 ${list.join("   ")}`);
+      }
+    }
     if (state.learnMode) {
       const g = chauffeurGrade();
       warn.push(`CHAUFFEUR ${g.mark} · jerk ${state.chJerk.toFixed(1)}/${CH_JERK_OK} m/s³ · smooth ${Math.floor(state.chSmoothS)}s`);
