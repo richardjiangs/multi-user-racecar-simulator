@@ -890,6 +890,20 @@ things that were wrong about it, and are the kind of thing to check on any stree
   because lane centring is a separate switch and it was **on by default**. Lanes now come off
   `laneInfoAt`/`laneCentreIn`, the assist starts **OFF**, and `nearAJunction()` makes it let go
   entirely for the last 46 m of a road, because that is where you are choosing where to go.
+- **A junction was a track SWITCH, not a place.** It was drawn only ahead of the car, only
+  within two hundred metres, and it stopped being drawn ten metres after you passed it — so
+  you drove through a crossroads and it evaporated behind you. `junctionsInSight()` returns
+  both ends of the road you are on, the one behind at a NEGATIVE distance (the road table
+  has reached 240 m back since the world stopped ending behind the car), and both renderers
+  iterate the set. `londonCurvatureAt` lays the raised cosine over the thirty metres BEFORE
+  the start of the edge as well as the thirty before the end, using the `inTurn` the
+  transition records — so looking back, the street you came in on leaves the junction at the
+  angle it really leaves it at instead of the world having forgotten the road ever bent. And
+  the start of a road is no longer a wall: drive back and `edgeD` goes below zero, you are in
+  the junction you came out of, and you leave it on whichever road your nose points at. That
+  last one needs the heading measured against the direction of TRAVEL rather than against the
+  road — reversed they differ by a hundred and eighty degrees, and handing the junction the
+  wrong one made it spit you straight back out the way you came.
 - **A junction was real but invisible.** The turn always worked — turn the wheel and you came
   out on whichever street was really there — but nothing drew it, so a network made almost
   entirely of crossroads appeared to have none. `junctionAhead()` now hands the renderer and the

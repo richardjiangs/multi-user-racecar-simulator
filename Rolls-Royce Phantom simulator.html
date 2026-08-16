@@ -3235,6 +3235,7 @@ function enterLondon(nodeId, roadName) {
   state.distanceM = 0; state.routeTime = 0;
   state.headingRel = 0;
   state.laneOffset = homeLaneOffAt(0);
+  state.ldn.inTurn = 0;
   state.route = { active: true, name: "London", env: "city", totalM: link.road.len,
                   remainingM: link.road.len, arrived: false, loop: false,
                   label: link.road.name };
@@ -3269,8 +3270,11 @@ function ldnPlanTurn() {
 // could never signal a right-angle turn from a standing approach, which is most of
 // London's junctions — so the wheel is worth more here than the yaw it has produced so
 // far, and the car turns because you asked, not because you had already turned.
-function preferredChoice(choices) {
-  const want = state.headingRel * 1.1 + state.steer * 1.75;
+function preferredChoice(choices, wantOverride) {
+  // `want` is normally read off the car, but reversing INTO a junction the heading is
+  // measured against the road and the road is behind you, so the caller supplies it.
+  const want = wantOverride !== undefined ? wantOverride
+             : state.headingRel * 1.1 + state.steer * 1.75;
   let best = choices[0], bestErr = Infinity;
   for (const c of choices) {
     const err = Math.abs(c.turn - want);
@@ -3294,6 +3298,7 @@ function preferredChoice(choices) {
    the stop line, exactly as you can in a car.
    ========================================================================= */
 const LDN_SEE = 200;                          // metres at which the junction comes into view
+const LDN_KEEP = 230;                         // and metres for which it stays there behind you
 function junctionAhead() {
   const L = state.ldn; if (!L) return null;
   const gap = L.road.len - state.distanceM;
@@ -3305,6 +3310,32 @@ function junctionAhead() {
   return { gap, node: L.next, choices: outs, picked: preferredChoice(outs) };
 }
 
+/* EVERY JUNCTION IN SIGHT -- the one you are coming to AND the one you came out of.
+   A crossroads is a place. You drive through it and it is still behind you; turn round and
+   it is in front of you again, with the same roads leaving it. Drawing it only ahead, and
+   only until you were ten metres past, is what made it read as a switch rather than a
+   junction. The one behind is at a NEGATIVE distance, which is fine: the road table has
+   reached 240 m back since the day the world stopped ending behind the car. */
+function junctionsInSight() {
+  const L = state.ldn; if (!L) return [];
+  const brg = roadBearing(L.road, L.dir);
+  const out = [];
+  const gapF = L.road.len - state.distanceM;
+  if (gapF <= LDN_SEE && gapF > -12) {
+    const outs = junctionChoices(L.next, L.road, brg).filter((c) => !c.back);
+    out.push({ gap: gapF, node: L.next, choices: outs,
+               picked: outs.length ? preferredChoice(outs) : null, ahead: true });
+  }
+  const gapB = -state.distanceM;
+  if (gapB > -LDN_KEEP && gapB < 12) {
+    // seen from this road, looking forward: the arms of the junction you came out of,
+    // including the street you arrived on
+    out.push({ gap: gapB, node: L.node, choices: junctionChoices(L.node, L.road, brg),
+               picked: null, ahead: false });
+  }
+  return out;
+}
+
 /* the signals in force RIGHT NOW: the network's junction heads, or the journey's own.
    Everything that used to ask `circuitNow().signals` was reading an empty list on the
    network, so the crossings and the people waiting at them never appeared. */
@@ -3314,19 +3345,31 @@ function currentSignals() {
   return (c && c.signals) || [];
 }
 
-/* the road's own curvature: zero along a straight London street, and the junction turn
-   spread over the last thirty metres of the approach to it */
+/* THE ROAD'S OWN CURVATURE. Zero along a straight London street; the turn you are about to
+   take laid over the last thirty metres of the approach; AND -- this is what makes a
+   junction a place rather than a switch -- the turn you have already taken still lying in
+   the road behind you, so that looking back you see the street you came in on leaving the
+   junction at the angle it really leaves it at. Without it the world forgot the road had
+   bent the moment you were through, and a crossroads you had just driven across was a
+   straight line in your mirror. */
+const bendK = (t, u) => clamp((t / LDN_TURN_LEN) * (1 - Math.cos(2 * Math.PI * u)), -0.075, 0.075);
 function londonCurvatureAt(d) {
   const L = state.ldn; if (!L) return null;
   const along = state.edgeD + (d - state.distanceM);
   const gap = L.road.len - along;
-  if (gap > LDN_TURN_LEN || gap < 0) return 0;
-  const t = state.ldnTurn;
-  if (!t || Math.abs(t.turn) < 0.02) return 0;
-  const u = 1 - gap / LDN_TURN_LEN;                       // 0 at the start of the turn, 1 at the line
-  // a raised cosine, so the corner starts and finishes smoothly instead of snapping
-  const k = (t.turn / LDN_TURN_LEN) * (1 - Math.cos(2 * Math.PI * u));
-  return clamp(k, -0.075, 0.075);
+  // the junction ahead
+  if (gap >= 0 && gap <= LDN_TURN_LEN) {
+    const t = state.ldnTurn;
+    if (!t || Math.abs(t.turn) < 0.02) return 0;
+    return bendK(t.turn, 1 - gap / LDN_TURN_LEN);         // 0 at the start of the turn, 1 at the line
+  }
+  // the junction behind, still bending the way it bent when you came through it
+  if (along < 0 && along >= -LDN_TURN_LEN) {
+    const t = L.inTurn || 0;
+    if (Math.abs(t) < 0.02) return 0;
+    return bendK(t, 1 + along / LDN_TURN_LEN);            // 0 at the far side, 1 at the line
+  }
+  return 0;
 }
 
 /* ---- ARRIVING AT A JUNCTION AND LEAVING IT ------------------------------- */
@@ -3335,6 +3378,37 @@ function londonStep(dt) {
   // progress along the edge tracks the route distance the physics already keeps
   state.edgeD = state.distanceM;
   ldnPlanTurn();
+
+  /* BACKWARDS INTO THE JUNCTION YOU CAME OUT OF. Turn the car round and the distance along
+     the edge falls; when it goes below zero you are in that junction, and you leave it on
+     whichever road you are now pointing at -- including, normally, the one you arrived on.
+     Without this the start of a road was a wall you could not drive back through, which is
+     the other half of a junction not being a place. */
+  if (state.edgeD < 0) {
+    const from = L.node;
+    const travelBrg = roadBearing(L.road, L.dir) + Math.PI;   // the way you are actually going
+    // your heading against the direction of TRAVEL, not against the road: reversed, the
+    // first is about zero and the second is about a hundred and eighty degrees, and giving
+    // the junction the second one made it hand you straight back out the way you came.
+    const rel = state.headingRel - Math.PI * Math.sign(state.headingRel || 1);
+    const choices = junctionChoices(from, L.road, travelBrg);
+    const best = choices.length ? preferredChoice(choices, rel * 1.1 + state.steer * 1.75) : null;
+    if (!best) { state.distanceM = 0; state.edgeD = 0; return; }
+    const link = best.link;
+    const next = link.out > 0 ? link.road.B : link.road.A;
+    state.ldn = { road: link.road, dir: link.out, node: from, next, inTurn: best.turn };
+    state.distanceM = 0; state.edgeD = 0;
+    state.headingRel = clamp(rel - best.turn, -0.6, 0.6);
+    state.laneOffset = homeLaneOffAt(0);
+    state.route.totalM = link.road.len;
+    state.route.remainingM = link.road.len;
+    state.route.label = link.road.name;
+    state.ldnTurn = null;
+    app.buildCornersForRoute(); app.seedWorld();
+    showToast(`Back through ${from.name} onto ${link.road.name}.`, "Whispers");
+    return;
+  }
+
   if (state.edgeD < L.road.len) {
     state.route.remainingM = L.road.len - state.edgeD;
     return;
@@ -3345,7 +3419,9 @@ function londonStep(dt) {
   const from = L.next;
   const next = link.out > 0 ? link.road.B : link.road.A;
   const straight = Math.abs(t.turn) < 0.35;
-  state.ldn = { road: link.road, dir: link.out, node: from, next };
+  // `inTurn` is the angle you came through this junction at, and it is what keeps the
+  // junction in the road behind you instead of the world forgetting it
+  state.ldn = { road: link.road, dir: link.out, node: from, next, inTurn: t.turn };
   state.distanceM = 0; state.edgeD = 0;
   // the heading is carried through the corner by the physics, so what is left is whatever
   // the driver did NOT take out with the wheel -- exactly like a real junction you
@@ -3435,9 +3511,10 @@ function londonFrontage(road, dir, L) {
     // each half takes the look of the junction at its own end
     out.push({ from: a,   to: mid, side, kind: near.kind, storeys: near.storeys, shops: true });
     out.push({ from: mid, to: b,   side, kind: far.kind,  storeys: far.storeys,  shops: true });
-    // and BEYOND the junction, so that standing at a crossroads you can see the street on
-    // the other side of it instead of a hole in the world
+    // and BEYOND BOTH junctions, so that standing at a crossroads you can see the street on
+    // the other side of it -- in either direction -- instead of a hole in the world
     out.push({ from: L + 12, to: L + 90, side, kind: far.kind, storeys: far.storeys, shops: true });
+    out.push({ from: -90, to: -12, side, kind: near.kind, storeys: near.storeys, shops: true });
   }
   return out;
 }
@@ -3914,7 +3991,7 @@ function streetStep(dt) {
 Object.assign(app, {
   chauffeurGrade, CH_JERK_OK, CH_LAT_OK,
   enterLondon, londonActive, currentRoad, junctionChoices, LDN,
-  junctionAhead, currentSignals, onTowerBridge, bridgeLift, bridgeJump, TB,
+  junctionAhead, junctionsInSight, currentSignals, onTowerBridge, bridgeLift, bridgeJump, TB,
   circuitNow, onJourney, halfWidthAt, journeyCurvatureAt, streetStep, buildCity,
   seedCityTraffic, laneInfoAt, laneCentreAt, laneCentreIn, homeLaneOffAt, driveSide,
   signalPhase, nextSignal, takeTurn, resumeRoute, CITY_KITS, VEHICLES, LANE_PLAN,
@@ -4730,7 +4807,7 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
     const seen = [];
     for (const p of C.props) {
       const rel = p.at - state.distanceM;
-      if (rel < -30 || rel > 340) continue;
+      if (rel < -240 || rel > 340) continue;   // the road behind reaches 240 m, so props do
       seen.push(p);
     }
     // far to near
@@ -5681,9 +5758,11 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
     return out;
   }
   function drawJunctionGround(w, h, pal) {
-    const J = app.junctionAhead && app.junctionAhead(); if (!J) return;
+    for (const J of (app.junctionsInSight ? app.junctionsInSight() : [])) drawOneJunction(w, h, pal, J);
+  }
+  function drawOneJunction(w, h, pal, J) {
     const d0 = J.gap;
-    const H = halfAt(Math.max(1, d0));
+    const H = halfAt(d0);
     const REACH = 48;                              // how far up each side street you can see
 
     // a rectangle laid along a road that leaves the junction at angle t
@@ -5711,9 +5790,10 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
     for (const m of mouths) box = Math.max(box, m.sh);
     arm(0, box, -box, box);
 
-    // ---- the stop line across your own carriageway, and the yellow box if it is a big one
-    const sl = projectAhead(Math.max(1.2, d0 - box - 0.8), 0);
-    if (sl.scale > 0.06 && d0 > box + 1) {
+    // ---- the stop line across your own carriageway (only on the one you are coming to;
+    // the one behind you has its stop line on the far side, where you cannot see it)
+    const sl = projectAhead(d0 - box - 0.8, 0);
+    if (J.ahead !== false && sl.scale > 0.06 && d0 > box + 1) {
       ctx.fillStyle = "rgba(238,235,225,0.75)";
       const a1 = projectAhead(d0 - box - 0.8, -H), a2 = projectAhead(d0 - box - 0.8, H);
       const b1 = projectAhead(d0 - box - 0.3, -H), b2 = projectAhead(d0 - box - 0.3, H);
@@ -5728,12 +5808,16 @@ const curvatureAt = (...args) => app.curvatureAt(...args);
      the way its road really goes, and the one your wheel is currently asking for picked
      out in gold. It stands on the kerb the country puts it on. */
   function drawJunctionPost(w, h, pal) {
-    const J = app.junctionAhead && app.junctionAhead(); if (!J || !J.choices.length) return;
+    for (const J of (app.junctionsInSight ? app.junctionsInSight() : [])) drawOnePost(w, h, pal, J);
+  }
+  function drawOnePost(w, h, pal, J) {
+    if (!J.choices.length) return;
     const d0 = J.gap;
-    if (d0 < 3 || d0 > 150) return;
-    const H = halfAt(Math.max(1, d0));
+    // it stands at the junction whether the junction is ahead of you or behind you
+    if (Math.abs(d0) < 3 || d0 > 150 || d0 < -150) return;
+    const H = halfAt(d0);
     const side = (app.driveSide ? app.driveSide() : -1);       // the kerb you are nearest
-    const q = projectAhead(Math.max(2.5, d0 - 6), (H + 1.8) * side);
+    const q = projectAhead(d0 + (d0 > 0 ? -6 : 6), (H + 1.8) * side);
     if (q.scale < 0.10) return;
     const sc = Math.min(q.scale, 34);
     const x = q.x, y = q.y;
