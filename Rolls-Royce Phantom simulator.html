@@ -594,7 +594,7 @@
 
       <aside class="drive-help">
         <strong>Drive it yourself</strong><br>
-        <kbd>W</kbd>/<kbd>&uarr;</kbd> accelerate · <kbd>S</kbd>/<kbd>&darr;</kbd> or <kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>Space</kbd>+<kbd>T</kbd> trackpad steer · <kbd>P R N D</kbd> gears · <kbd>H</kbd> horn.<br>
+        <kbd>W</kbd>/<kbd>&uarr;</kbd> accelerate · <kbd>S</kbd>/<kbd>&darr;</kbd> or <kbd>Space</kbd> brake · <kbd>A</kbd>/<kbd>D</kbd> steer · <kbd>Shift</kbd> gear up · <kbd>Command</kbd>/<kbd>Control</kbd>/<kbd>Option</kbd> gear down · <kbd>Space</kbd>+<kbd>T</kbd> trackpad steer · <kbd>P R N D</kbd> select · <kbd>H</kbd> horn.<br>
         Or open <strong>Navigation</strong>, choose a destination, and your chauffeur takes the wheel.
       </aside>
 
@@ -1542,7 +1542,7 @@ const SPEC = {
     windowsOpen: false,       // glass down changes the cabin sound
     throttle: 0, brake: 0,
     rpm: SPEC.idleRpm, torqueNm: 0,
-    gearMode: "P", autoGear: 1, shiftTimer: 0, shiftFrom: 1,
+    gearMode: "P", autoGear: 1, shiftTimer: 0, shiftFrom: 1, manualShiftHoldS: 0,
     wheelRotation: 0,
     curvature: 0, lateralG: 0, bodyRoll: 0,
     doors: { driver: false, passenger: false, rearLeft: false, rearRight: false },
@@ -2066,6 +2066,7 @@ const updateDoorArt = (...args) => app.updateDoorArt(...args);
   function updateTransmission(dt) {
     if (state.shiftTimer > 0) { state.shiftTimer -= dt; return; }
     if (state.gearMode !== "D") return;
+    if (state.manualShiftHoldS > 0) { state.manualShiftHoldS = Math.max(0, state.manualShiftHoldS - dt); return; }
 
     const ratio = SPEC.gearRatios[state.autoGear - 1];
     const wheelRps = Math.abs(state.speedMps) / (2 * Math.PI * SPEC.wheelRadiusM);
@@ -6468,6 +6469,30 @@ function setGear(mode) {
   updateGearButtons();
 }
 
+function manualShift(direction) {
+  if (state.gearMode !== "D") {
+    if (direction < 0) return;
+    setGear("D");
+    state.manualShiftHoldS = 2.5;
+    showToast("Drive selected — 1.", "Phantom");
+    return;
+  }
+  const next = clamp(state.autoGear + Math.sign(direction), 1, SPEC.gearRatios.length);
+  if (next === state.autoGear) {
+    showToast(next === SPEC.gearRatios.length ? "Eighth gear is the top ratio." : "First gear selected.", "Phantom");
+    return;
+  }
+  state.shiftFrom = state.autoGear;
+  state.autoGear = next;
+  state.shiftTimer = SPEC.shiftTimeS;
+  state.manualShiftHoldS = 2.5;
+  audio.click(direction > 0 ? 1500 : 900);
+  showToast(`${direction > 0 ? "Upshift" : "Downshift"} — ${state.autoGear}.`, "Phantom");
+}
+
+function paddleUp() { manualShift(1); }
+function paddleDown() { manualShift(-1); }
+
 function updateGearButtons() {
   document.querySelectorAll("[data-gear]").forEach((button) => {
     button.classList.toggle("active", button.dataset.gear === state.gearMode);
@@ -6616,6 +6641,7 @@ function resetCar() {
     padBrake: 0,
     rpm: SPEC.idleRpm,
     autoGear: 1,
+    manualShiftHoldS: 0,
     gearMode: "P",
     chauffeur: false,
     adaptiveCruise: false
@@ -6670,7 +6696,9 @@ Object.assign(app, {
   setCruiseSpeed,
   resetCar,
   toggleCruise,
-  toggleWindows
+  toggleWindows,
+  paddleUp,
+  paddleDown
 });
 }
 
@@ -7441,7 +7469,18 @@ function bindKeyboard() {
   window.addEventListener("keydown", (event) => {
     state.keys[event.code] = true;
     if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(event.code)) event.preventDefault();
-    if (event.metaKey || event.ctrlKey) return;
+    const gearUpKey = event.key === "Shift" || event.code === "ShiftLeft" || event.code === "ShiftRight";
+    const gearDownKey = ["Meta", "Control", "Alt", "Fn", "FnLock", "Globe"].includes(event.key) ||
+      ["MetaLeft", "MetaRight", "ControlLeft", "ControlRight", "AltLeft", "AltRight", "Fn"].includes(event.code);
+    if (gearUpKey || gearDownKey) {
+      event.preventDefault();
+      if (!event.repeat) {
+        if (gearUpKey) app.paddleUp();
+        else app.paddleDown();
+      }
+      return;
+    }
+    if (event.metaKey || event.ctrlKey || event.altKey) return;
     if (event.code === "KeyP") app.setGear("P");
     if (event.code === "KeyR") app.setGear("R");
     if (event.code === "KeyN") app.setGear("N");
