@@ -28,7 +28,7 @@
       }
     }
     if (!html) throw lastErr || new Error("no garage source");
-    const inject = '<script src="vir-inject.js?v=vir5"><\\/script>';
+    const inject = '<script src="vir-inject.js?v=vir5"><\/script>';
     const out = html.replace("</body>", inject + "\n</body>");
     document.open();
     document.write(out);
