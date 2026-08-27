@@ -10,15 +10,18 @@
   <div id="boot">Loading garage…</div>
   <script>
   (async () => {
-    const src = "https://raw.githubusercontent.com/richardjiangs/multi-user-racecar-simulator/28adc8fd90e8bd59c54cf1545c39df0faffd9e60/index.html";
-    const html = await fetch(src, { cache: "no-store" }).then((r) => {
-      if (!r.ok) throw new Error("hub " + r.status);
+    const names = ["hub.0.b64","hub.1.b64","hub.2.b64"];
+    const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir3", { cache: "no-store" }).then((r) => {
+      if (!r.ok) throw new Error(n + " " + r.status);
       return r.text();
-    });
-    const inject = '<script src="vir-inject.js"><\/script>';
-    const out = html.replace("</body>", inject + "\n</body>");
+    })));
+    const bin = Uint8Array.from(atob(parts.join("").replace(/\s+/g, "")), (c) => c.charCodeAt(0));
+    const ds = new DecompressionStream("gzip");
+    const w = ds.writable.getWriter();
+    w.write(bin); w.close();
+    const html = await new Response(ds.readable).text();
     document.open();
-    document.write(out);
+    document.write(html);
     document.close();
   })().catch((err) => {
     const el = document.getElementById("boot");
