@@ -29,9 +29,7 @@
     const w = ds.writable.getWriter();
     w.write(bin); w.close();
     let html = await new Response(ds.readable).text();
-    if (html.indexOf("vir-inject.js") === -1) {
-      html = html.replace("</body>", '<script src="vir-inject.js?v=vir11"><\\/script>\n</body>');
-    }
+    html = html.replace("</body>", '<script src="vir-drs25.js?v=vir11"><\/script>\n</body>');
     document.open();
     document.write(html);
     document.close();
