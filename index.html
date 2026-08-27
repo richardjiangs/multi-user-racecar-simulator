@@ -4,38 +4,30 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Multi User Car Simulator</title>
-  <style>html,body{margin:0;background:#07090d;color:#f2f5f8;font-family:Inter,system-ui,sans-serif}#boot{padding:24px;color:#a6b0bc}</style>
+  <style>html,body{margin:0;background:#07090d;color:#f2f5f8;font-family:Inter,system-ui,sans-serif}</style>
 </head>
 <body>
-  <div id="boot">Loading garage…</div>
   <script>
   (async () => {
-    const sources = [
-      "https://raw.githubusercontent.com/richardjiangs/multi-user-racecar-simulator/28adc8fd90e8bd59c54cf1545c39df0faffd9e60/index.html",
-      "index-offline.html"
-    ];
-    let html = null;
-    let lastErr = null;
-    for (const src of sources) {
-      try {
-        const r = await fetch(src, { cache: "no-store" });
-        if (!r.ok) throw new Error(src + " " + r.status);
-        html = await r.text();
-        if (html && html.indexOf("simFrame") !== -1) break;
-        html = null;
-      } catch (err) {
-        lastErr = err;
-      }
+    const names = ["hub.0.b64","hub.1.b64","hub.2.b64","hub.3.b64","hub.4.b64","hub.5.b64","hub.6.b64","hub.7.b64"];
+    const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir7", { cache: "no-store" }).then((r) => {
+      if (!r.ok) throw new Error(n + " " + r.status);
+      return r.text();
+    })));
+    const bin = Uint8Array.from(atob(parts.join("").replace(/\s+/g, "")), (c) => c.charCodeAt(0));
+    const ds = new DecompressionStream("gzip");
+    const w = ds.writable.getWriter();
+    w.write(bin); w.close();
+    let html = await new Response(ds.readable).text();
+    if (html.indexOf("VIR Grand Course") === -1) throw new Error("hub missing VIR");
+    if (html.indexOf("vir-inject.js") === -1) {
+      html = html.replace("</body>", '<script src="vir-inject.js?v=vir7"><\\/script>\n</body>');
     }
-    if (!html) throw lastErr || new Error("no garage source");
-    const inject = '<script src="vir-inject.js?v=vir5"><\/script>';
-    const out = html.replace("</body>", inject + "\n</body>");
     document.open();
-    document.write(out);
+    document.write(html);
     document.close();
   })().catch((err) => {
-    const el = document.getElementById("boot");
-    if (el) el.textContent = "Failed to load garage: " + err;
+    document.body.textContent = "Failed to load garage: " + err;
   });
   </script>
 </body>
