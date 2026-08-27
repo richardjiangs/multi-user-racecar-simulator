@@ -9,17 +9,30 @@
 <body>
   <script>
   (async () => {
-    const names = ["hub.0.b64","hub.1.b64","hub.2.b64","hub.3.b64","hub.4.b64","hub.5.b64","hub.6.b64","hub.7.b64"];
-    const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir7", { cache: "no-store" }).then((r) => {
-      if (!r.ok) throw new Error(n + " " + r.status);
-      return r.text();
-    })));
-    const bin = Uint8Array.from(atob(parts.join("").replace(/\s+/g, "")), (c) => c.charCodeAt(0));
-    const ds = new DecompressionStream("gzip");
-    const w = ds.writable.getWriter();
-    w.write(bin); w.close();
-    let html = await new Response(ds.readable).text();
-    if (html.indexOf("VIR Grand Course") === -1) throw new Error("hub missing VIR");
+    async function fromHub() {
+      const names = ["hub.0.b64","hub.1.b64","hub.2.b64","hub.3.b64","hub.4.b64","hub.5.b64","hub.6.b64","hub.7.b64"];
+      const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir7", { cache: "no-store" }).then((r) => {
+        if (!r.ok) throw new Error(n + " " + r.status);
+        return r.text();
+      })));
+      const joined = parts.join("").replace(/\s+/g, "");
+      if (joined.indexOf("PLACEHOLDER") !== -1 || joined.length < 70000) throw new Error("hub incomplete");
+      const bin = Uint8Array.from(atob(joined), (c) => c.charCodeAt(0));
+      const ds = new DecompressionStream("gzip");
+      const w = ds.writable.getWriter();
+      w.write(bin); w.close();
+      const html = await new Response(ds.readable).text();
+      if (html.indexOf("simFrame") === -1) throw new Error("hub not garage");
+      return html;
+    }
+    async function fromRaw() {
+      const r = await fetch("https://raw.githubusercontent.com/richardjiangs/multi-user-racecar-simulator/28adc8fd90e8bd59c54cf1545c39df0faffd9e60/index.html", { cache: "no-store" });
+      if (!r.ok) throw new Error("raw " + r.status);
+      return await r.text();
+    }
+    let html = null;
+    try { html = await fromHub(); } catch (e) { html = await fromRaw(); }
+    if (!html || html.indexOf("simFrame") === -1) throw new Error("no garage source");
     if (html.indexOf("vir-inject.js") === -1) {
       html = html.replace("</body>", '<script src="vir-inject.js?v=vir7"><\\/script>\n</body>');
     }
