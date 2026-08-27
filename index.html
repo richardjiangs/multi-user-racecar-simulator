@@ -4,13 +4,23 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Multi User Car Simulator</title>
-  <style>html,body{margin:0;background:#07090d;color:#f2f5f8;font-family:Inter,system-ui,sans-serif;height:100%}</style>
+  <style>
+    html,body{margin:0;background:#07090d;color:#f2f5f8;font-family:Inter,ui-sans-serif,system-ui,sans-serif;min-height:100%}
+    body{overflow:hidden}
+    .boot-head{padding:28px 24px 0;max-width:980px}
+    .boot-head h1{margin:0;font-size:28px;letter-spacing:-.03em}
+    .boot-head p{margin:10px 0 0;color:#a6b0bc;max-width:52rem;line-height:1.45}
+  </style>
 </head>
 <body>
+  <div class="boot-head">
+    <h1>Choose your hypercar.</h1>
+    <p>57 factory-exact simulators, one garage.</p>
+  </div>
   <script>
   (async () => {
     const names = ["hub.0.b64","hub.1.b64","hub.2.b64","hub.3.b64","hub.4.b64","hub.5.b64","hub.6.b64","hub.7.b64"];
-    const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir10", { cache: "no-store" }).then((r) => {
+    const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir11", { cache: "no-store" }).then((r) => {
       if (!r.ok) throw new Error(n + " " + r.status);
       return r.text();
     })));
@@ -18,7 +28,10 @@
     const ds = new DecompressionStream("gzip");
     const w = ds.writable.getWriter();
     w.write(bin); w.close();
-    const html = await new Response(ds.readable).text();
+    let html = await new Response(ds.readable).text();
+    if (html.indexOf("vir-inject.js") === -1) {
+      html = html.replace("</body>", '<script src="vir-inject.js?v=vir11"><\\/script>\n</body>');
+    }
     document.open();
     document.write(html);
     document.close();
