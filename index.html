@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Multi User Car Simulator</title>
-  <style>html,body{margin:0;background:#07090d;color:#f2f5f8;font-family:Inter,system-ui,sans-serif}</style>
+  <style>html,body{margin:0;background:#07090d;color:#f2f5f8;font-family:Inter,system-ui,sans-serif;height:100%}</style>
 </head>
 <body>
   <script>
   (async () => {
     const names = ["hub.0.b64","hub.1.b64","hub.2.b64","hub.3.b64","hub.4.b64","hub.5.b64","hub.6.b64","hub.7.b64"];
-    const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir9", { cache: "no-store" }).then((r) => {
+    const parts = await Promise.all(names.map((n) => fetch(n + "?v=vir10", { cache: "no-store" }).then((r) => {
       if (!r.ok) throw new Error(n + " " + r.status);
       return r.text();
     })));
