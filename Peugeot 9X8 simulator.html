@@ -454,15 +454,15 @@
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
-          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat recline</span></div>
+          <div class="readout"><b id="frontSeatRead">0 mm</b><span>pedal box position</span></div>
           <div class="readout"><b id="climateRead">22&deg;C</b><span>cabin climate</span></div>
           <div class="readout"><b id="beltRead">Open</b><span>safety harness</span></div>
           <div class="readout"><b id="modeReadCab">Sport</b><span>drive mode</span></div>
         </div>
         <div class="divider"></div>
         <div class="control-grid">
-          <button id="frontForward">Recline +</button>
-          <button id="frontBack">Recline -</button>
+          <button id="frontForward">Pedals +</button>
+          <button id="frontBack">Pedals -</button>
           <button id="harnessBtn">Harness</button>
           <button id="heatBtn">Seat Pad</button>
           <button id="coolBtn">Cockpit Fan</button>
@@ -470,7 +470,8 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="hybridBtn" class="race" title="Prioritise front-MGU deployment above the regulated activation speed; the fixed wing does not move">Hybrid Attack</button>
+          <button id="hybridBtn" class="race" title="Cycle stint, attack and charge strategies for the front MGU">Hybrid STINT</button>
+          <button id="brakeMigBtn" title="Cycle the brake-by-wire migration setting">Brake Mig 52%</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -765,7 +766,7 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "MotorLand Aragón": {dist:5397,env:"track",limitKmh:330,loop:true,widthM:12,corners:22,blurb:"MotorLand Aragón FIA circuit — 5.397 km where the 9X8 began track testing",bumps:[],track:[c(180,1,88,82,"T1"),c(390,-1,52,118,"T2"),c(620,1,38,165,"T3"),c(845,1,42,150,"T4"),c(1050,-1,74,88,"T5"),c(1245,1,58,102,"T6"),c(1460,-1,92,72,"T7"),c(1640,1,68,92,"T8"),c(1830,-1,44,125,"T9"),c(2070,1,38,160,"T10"),c(2310,-1,96,68,"T11"),c(2490,1,72,88,"T12"),c(2700,-1,48,118,"T13"),c(2950,1,36,170,"T14"),c(3180,-1,82,78,"T15"),c(3380,1,52,110,"T16"),c(3630,-1,40,150,"T17"),c(3920,1,34,190,"T18"),c(4210,-1,66,95,"T19"),c(4470,1,48,125,"T20"),c(4800,-1,92,72,"T21"),c(5160,1,54,115,"T22") ]},
+  "MotorLand Aragón": {dist:5397,env:"track",limitKmh:330,loop:true,widthM:16,corners:22,blurb:"MotorLand Aragón FIA circuit — 5.397 km where the 9X8 began track testing",bumps:[],track:[c(180,1,88,82,"T1"),c(390,-1,52,118,"T2"),c(620,1,38,165,"T3"),c(845,1,42,150,"T4"),c(1050,-1,74,88,"T5"),c(1245,1,58,102,"T6"),c(1460,-1,92,72,"T7"),c(1640,1,68,92,"T8"),c(1830,-1,44,125,"T9"),c(2070,1,38,160,"T10"),c(2310,-1,96,68,"T11"),c(2490,1,72,88,"T12"),c(2700,-1,48,118,"T13"),c(2950,1,36,170,"T14"),c(3180,-1,82,78,"T15"),c(3380,1,52,110,"T16"),c(3630,-1,40,150,"T17"),c(3920,1,34,190,"T18"),c(4210,-1,66,95,"T19"),c(4470,1,48,125,"T20"),c(4800,-1,92,72,"T21"),c(5160,1,54,115,"T22") ]},
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -811,7 +812,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    hybridAttack: false,           // driver-requested front-MGU priority deployment
+    hybridAttack: false, energyMode: 0, brakeMigration: 52, // LMH deployment strategy and brake-by-wire migration
     hybridEnergy: 75,              // usable state-of-charge percentage
     hybridAttackVis: 0,            // display animation only; the 2024 rear wing is fixed
     testDriver: false,
@@ -904,11 +905,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       // Little LMH V6: bright, hard-edged, climbing to a 9,000 rpm scream —
       // thin fundamental, aggressive saw stack, strong high harmonics
       const defs = [
-        {type:"sawtooth",mul:.5,gain:.17,toShaper:true},
-        {type:"triangle",mul:1,gain:.27,toShaper:true},
-        {type:"square",mul:1.5,gain:.09,toShaper:true},
-        {type:"sine",mul:3,gain:.045,toShaper:false},
-        {type:"sine",mul:7.4,gain:.025,toShaper:false}
+        {type:"sawtooth",mul:.25,gain:.10,toShaper:true},
+        {type:"square",mul:.5,gain:.18,toShaper:true},
+        {type:"sawtooth",mul:1,gain:.29,toShaper:true},
+        {type:"square",mul:1.5,gain:.078,toShaper:true},
+        {type:"sawtooth",mul:3.5,gain:.031,toShaper:false}
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -918,6 +919,14 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       });
 
       this.noiseBuf = this._noiseBuffer(2.0);
+      this.combNoise=c.createBufferSource();this.combNoise.buffer=this.noiseBuf;this.combNoise.loop=true;
+      this.combFilter=c.createBiquadFilter();this.combFilter.type="bandpass";this.combFilter.frequency.value=270;this.combFilter.Q.value=.72;
+      this.combVca=c.createGain();this.combVca.gain.value=0;this.combNoise.connect(this.combFilter);this.combFilter.connect(this.combVca);this.combVca.connect(this.synthGain);
+      this.combPulse=c.createOscillator();this.combPulse.type="sawtooth";this.combPulse.frequency.value=82;
+      this.pulseShape=c.createWaveShaper();{const q=new Float32Array(256);for(let i=0;i<q.length;i++){const x=i/(q.length-1)*2-1;q[i]=x>.66?Math.pow((x-.66)/.34,.45):0;}this.pulseShape.curve=q;}
+      this.pulseDepth=c.createGain();this.pulseDepth.gain.value=0;this.combPulse.connect(this.pulseShape);this.pulseShape.connect(this.pulseDepth);this.pulseDepth.connect(this.combVca.gain);this.combNoise.start();this.combPulse.start();
+      this.gearOsc=c.createOscillator();this.gearOsc.type="square";this.gearGain=c.createGain();this.gearGain.gain.value=0;const gearFilter=c.createBiquadFilter();gearFilter.type="bandpass";gearFilter.frequency.value=4300;gearFilter.Q.value=10;this.gearOsc.connect(gearFilter);gearFilter.connect(this.gearGain);this.gearGain.connect(this.master);this.gearOsc.start();
+      this.mguOsc=c.createOscillator();this.mguOsc.type="sine";this.mguGain=c.createGain();this.mguGain.gain.value=0;this.mguOsc.connect(this.mguGain);this.mguGain.connect(this.master);this.mguOsc.start();
       const mkNoise = (type, freq, q) => {
         const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
         const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
@@ -940,9 +949,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     update(s, dt) {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
-      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
+      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); this._set(this.pulseDepth.gain,0,.08);this._set(this.gearGain.gain,0,.08);this._set(this.mguGain.gain,0,.08); return; }
       const firing = Math.max(18,(s.rpm/60)*3) // 90-degree V6: three combustion events per revolution;
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
+      this.combPulse.frequency.setTargetAtTime(firing,t,.016);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
       const load = clamp(s.throttle, 0, 1);
@@ -959,6 +969,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
 
       this._set(this.engineBus.gain, engLevel, 0.05);
+      this._set(this.pulseDepth.gain,engLevel*.67,.035);this.combFilter.frequency.setTargetAtTime(210+rpmN*1080+load*260,t,.04);
+      this.gearOsc.frequency.setTargetAtTime(720+rpmN*4700+Math.max(1,s.curGear)*115,t,.035);this._set(this.gearGain.gain,Math.abs(s.speedMps)>4?.004+load*.01:0,.06);
+      const mguAudible=Math.abs(s.speedMps)>52.8&&s.hybridEnergy>2&&load>.45;this.mguOsc.frequency.setTargetAtTime(450+Math.abs(s.speedMps)*34,t,.05);this._set(this.mguGain.gain,mguAudible?.0025:0,.08);
       this._set(this.engFilter.frequency, clamp(cutoff, 200, 8200), 0.05);
       this._set(this.turboGain.gain, turbo * 0.9, 0.06);
       this.turboNode.f.frequency.setTargetAtTime(turboFreq, t, 0.06);
@@ -1480,13 +1493,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const torqueAvail = engineTorque(state.rpm) * boostFactor;
     state.torqueNm = canMove ? engineTorque(state.rpm) * state.throttle * shiftCut : 0;  // display = crank torque
 
-    const mguLive = speedAbs > 52.8 && state.hybridEnergy > 2;
-    if (state.brake > .12) state.hybridEnergy = clamp(state.hybridEnergy + state.brake * dt * 3.2, 0, 100);
-    else if (mguLive) state.hybridEnergy = clamp(state.hybridEnergy - state.throttle * dt * (state.hybridAttack ? 2.0 : .75), 0, 100);
+    const mguLive = speedAbs > 52.8 && state.hybridEnergy > 2 && state.energyMode !== 2;
+    if (state.brake > .12) state.hybridEnergy = clamp(state.hybridEnergy + state.brake * dt * 3.2 * (0.72 + state.brakeMigration / 100), 0, 100);
+    else if (mguLive) state.hybridEnergy = clamp(state.hybridEnergy - state.throttle * dt * (state.energyMode === 1 ? 2.0 : .75), 0, 100);
     // BoP caps combined output at 520 kW: deployment redistributes torque to the front axle
     // instead of adding power. The benefit appears as improved traction above 190 km/h.
     const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff / SPEC.wheelRadiusM;
-    const cap = tractionCapN() * (mguLive ? (state.hybridAttack ? 1.055 : 1.025) : 1);
+    const cap = tractionCapN() * (mguLive ? (state.energyMode === 1 ? 1.055 : 1.025) : 1);
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
     if (state.tractionControl || state.esc) usable = Math.min(rawForce, cap * mode().tc);
@@ -2270,9 +2283,23 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
-  function drawCabinFrame(w,h,pal){const y=h*.63,s=state.bodyRoll;ctx.fillStyle="#05070a";ctx.fillRect(0,y,w,h-y);ctx.strokeStyle="#d8e229";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,y+12);ctx.lineTo(w*.22,y-26+s);ctx.lineTo(w*.78,y-26+s);ctx.lineTo(w,y+12);ctx.stroke();drawCluster(w,h,y,s);drawWheel(w,h);}
-  function drawCluster(w,h,y,s){const R=Math.min(w,h)*.1,cx=w*.5+s,cy=y+R*.48,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);ctx.fillStyle="#020406";ctx.strokeStyle="#d8e229";ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-R*1.8,-R*.74,R*3.6,R*1.5,6);ctx.fill();ctx.stroke();ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="900 "+(R*.58)+"px sans-serif";ctx.fillText(state.gearMode==="G"?state.curGear:state.gearMode,R*.72,8);ctx.font="800 "+(R*.4)+"px sans-serif";ctx.fillText(Math.round(km),-R*.65,8);ctx.font="700 "+(R*.11)+"px monospace";ctx.fillStyle="#d8e229";ctx.fillText("MGU "+(state.hybridAttack?"ATTACK":"AUTO")+" · "+Math.round(state.hybridEnergy||75)+"%",0,R*.52);ctx.strokeStyle="#20303a";ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(-R*1.5,-R*.48);ctx.lineTo(R*1.5,-R*.48);ctx.stroke();ctx.strokeStyle="#e52a35";ctx.beginPath();ctx.moveTo(-R*1.5,-R*.48);ctx.lineTo(-R*1.5+R*3*clamp(state.rpm/SPEC.redlineRpm,0,1),-R*.48);ctx.stroke();ctx.restore();}
-  function drawWheel(w,h){const R=Math.min(w,h)*.29;ctx.save();ctx.translate(w*.5,h*1.16);ctx.rotate(state.steer*.9);ctx.fillStyle="#080b0f";ctx.strokeStyle="#d8e229";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-R*.82,-R*.5);ctx.lineTo(-R*.68,R*.45);ctx.quadraticCurveTo(0,R*.68,R*.68,R*.45);ctx.lineTo(R*.82,-R*.5);ctx.quadraticCurveTo(0,-R*.72,-R*.82,-R*.5);ctx.fill();ctx.stroke();ctx.fillStyle="#020406";ctx.strokeStyle="#e52a35";ctx.strokeRect(-R*.35,-R*.24,R*.7,R*.45);ctx.restore();}
+  function drawCabinFrame(w,h,pal){
+    const y=h*.64,s=state.bodyRoll;ctx.fillStyle="#020406";ctx.fillRect(0,y-14,w,h-y+14);
+    ctx.strokeStyle="#687078";ctx.lineWidth=15;ctx.beginPath();ctx.moveTo(w*.03,h);ctx.lineTo(w*.15,y-92+s);ctx.lineTo(w*.41,y-48+s);ctx.moveTo(w*.97,h);ctx.lineTo(w*.86,y-92+s);ctx.lineTo(w*.61,y-48+s);ctx.stroke();
+    ctx.strokeStyle="#e52a35";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(w*.05,h);ctx.lineTo(w*.15,y-92+s);ctx.lineTo(w*.5,y-63+s);ctx.lineTo(w*.86,y-92+s);ctx.lineTo(w*.95,h);ctx.stroke();
+    ctx.fillStyle="#101317";ctx.beginPath();ctx.moveTo(0,h);ctx.lineTo(w*.2,y+7);ctx.lineTo(w*.34,h);ctx.fill();ctx.beginPath();ctx.moveTo(w,h);ctx.lineTo(w*.8,y+7);ctx.lineTo(w*.66,h);ctx.fill();ctx.strokeStyle="#d8e229";ctx.lineWidth=2;ctx.strokeRect(w*.74,y+12,w*.2,h*.17);drawCluster(w,h,y,s);drawWheel(w,h);
+  }
+  function drawCluster(w,h,y,s){
+    const R=Math.min(w,h)*.068,cx=w*.5+s,cy=y-R*.82,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);
+    ctx.fillStyle="#010304";ctx.strokeStyle="#d8e229";ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-R*2.7,-R*.72,R*5.4,R*1.43,5);ctx.fill();ctx.stroke();
+    const rpmN=clamp(state.rpm/SPEC.redlineRpm,0,1);for(let i=0;i<14;i++){ctx.fillStyle=i/13<rpmN?(i>10?"#e52a35":"#d8e229"):"#202629";ctx.fillRect(-R*2.45+i*R*.35,-R*.55,R*.27,R*.1);}
+    ctx.textAlign="center";ctx.fillStyle="#f5f7f5";ctx.font=`900 ${R*.52}px sans-serif`;ctx.fillText(state.gearMode==="G"?state.curGear:state.gearMode,0,R*.19);ctx.font=`800 ${R*.26}px monospace`;ctx.fillText(`${Math.round(km)} KM/H`,-R*1.55,R*.18);ctx.fillStyle="#d8e229";ctx.fillText(`${Math.round(state.hybridEnergy||75)}%`,R*1.55,R*.1);ctx.font=`700 ${R*.1}px monospace`;ctx.fillText(["STINT","ATTACK","CHARGE"][state.energyMode]||"STINT",R*1.55,R*.38);ctx.restore();
+  }
+  function drawWheel(w,h){
+    const R=Math.min(w,h)*.295;ctx.save();ctx.translate(w*.5,h*1.18);ctx.rotate(state.steer*.9);
+    ctx.fillStyle="#080a0d";ctx.strokeStyle="#d8e229";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-R*.92,-R*.4);ctx.lineTo(-R*.72,R*.45);ctx.lineTo(-R*.36,R*.61);ctx.lineTo(R*.36,R*.61);ctx.lineTo(R*.72,R*.45);ctx.lineTo(R*.92,-R*.4);ctx.lineTo(R*.62,-R*.61);ctx.lineTo(-R*.62,-R*.61);ctx.closePath();ctx.fill();ctx.stroke();
+    ctx.fillStyle="#020406";ctx.strokeStyle="#e52a35";ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-R*.37,-R*.27,R*.74,R*.46,4);ctx.fill();ctx.stroke();for(const p of [[-.68,-.27,"#55c7ff"],[.68,-.27,"#55c7ff"],[-.72,.13,"#e52a35"],[.72,.13,"#e52a35"],[-.5,.38,"#d8e229"],[.5,.38,"#d8e229"]]){ctx.fillStyle=p[2];ctx.beginPath();ctx.arc(R*p[0],R*p[1],R*.06,0,Math.PI*2);ctx.fill();}ctx.restore();
+  }
     function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
@@ -2374,7 +2401,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      2720 mm wheelbase, 1160 mm tall, 1030/1050 mm
      overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
      shared with any other car. The source is tools/bodykit/drawn.mjs. */
-  function injectExterior(){app.el.exteriorArt.innerHTML=`
+  function injectExteriorLegacy(){app.el.exteriorArt.innerHTML=`
     <svg viewBox="0 0 1000 400" role="img" aria-label="Peugeot 9X8 2024 Le Mans Hypercar side profile">
       <defs><linearGradient id="p9w" x2="0" y2="1"><stop stop-color="#f7f7f1"/><stop offset=".48" stop-color="#dadbd5"/><stop offset="1" stop-color="#70736f"/></linearGradient><linearGradient id="p9g" x2="0" y2="1"><stop stop-color="#91a7b0"/><stop offset="1" stop-color="#03070a"/></linearGradient></defs><ellipse cx="500" cy="340" rx="414" ry="11" fill="rgba(0,0,0,.6)"/>
       <g id="rearWingArt"><path d="M126 169V93M280 155V82" stroke="#111418" stroke-width="9"/><path d="M78 76l244-18 3 20-245 20z" fill="#07090c" stroke="#d9e528"/></g>
@@ -2388,13 +2415,41 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       <g><circle cx="274" cy="270" r="66" fill="#07090c" stroke="#20252b" stroke-width="8"/><circle cx="274" cy="270" r="53" fill="#11151a" stroke="#d9e528" stroke-opacity=".55"/><path d="M286,270 L321.80573118457573,265.6858296384955 L321.80573118457573,274.3141703615045 Z" fill="#59616b"/><path d="M281.4818776223048,279.38197778961637 L307.1793400733377,304.6861844586257 L300.4334316546283,310.06586690638426 Z" fill="#59616b"/><path d="M271.32974879252424,281.69913494618186 L267.56822915168203,317.56713491219256 L259.1562189450054,315.6471484760153 Z" fill="#59616b"/><path d="M263.18837358517095,275.2066048694107 L232.80037286302516,294.62906258415546 L229.0566761277457,286.85519621106965 Z" fill="#59616b"/><path d="M263.18837358517095,264.7933951305893 L229.0566761277457,253.14480378893035 L232.80037286302516,245.37093741584454 Z" fill="#59616b"/><path d="M271.32974879252424,258.30086505381814 L259.1562189450054,224.35285152398473 L267.56822915168203,222.43286508780744 Z" fill="#59616b"/><path d="M281.4818776223048,260.61802221038363 L300.4334316546283,229.93413309361574 L307.1793400733377,235.3138155413743 Z" fill="#59616b"/><circle cx="274" cy="270" r="9" fill="#d9e528"/></g><g><circle cx="758" cy="270" r="67" fill="#07090c" stroke="#20252b" stroke-width="8"/><circle cx="758" cy="270" r="54" fill="#11151a" stroke="#d9e528" stroke-opacity=".55"/><path d="M770,270 L806.8016839175878,265.59595108929744 L806.8016839175878,274.40404891070256 Z" fill="#59616b"/><path d="M765.4818776223048,279.38197778961637 L791.8705763248656,305.4088133015137 L784.984128147433,310.9005724669339 Z" fill="#59616b"/><path d="M755.3297487925242,281.69913494618186 L751.4342339256754,318.5581168895299 L742.8469735063596,316.5981307359323 Z" fill="#59616b"/><path d="M747.188373585171,275.2066048694107 L715.9420472976715,295.1421680546587 L712.120356880407,287.2063461321336 Z" fill="#59616b"/><path d="M747.188373585171,264.7933951305893 L712.120356880407,252.7936538678664 L715.9420472976715,244.8578319453413 Z" fill="#59616b"/><path d="M755.3297487925242,258.30086505381814 L742.8469735063596,223.40186926406773 L751.4342339256754,221.44188311047012 Z" fill="#59616b"/><path d="M765.4818776223048,260.61802221038363 L784.984128147433,229.0994275330661 L791.8705763248656,234.59118669848627 Z" fill="#59616b"/><circle cx="758" cy="270" r="9" fill="#d9e528"/></g>
     </svg>`;app.el.doorArt=document.getElementById("doorArt");app.el.quadExhaustArt=document.getElementById("quadExhaustArt");app.el.bcBody=document.getElementById("bcBody");}
   function turbine(){return "";}
-  function injectArt(){injectExterior();app.el.cabinArt.innerHTML=`
+  function injectArtLegacy(){injectExteriorLegacy();app.el.cabinArt.innerHTML=`
     <svg viewBox="0 0 1000 360" role="img" aria-label="Peugeot 9X8 endurance racing cockpit">
       <defs><linearGradient id="p9c" x2="1" y2="1"><stop stop-color="#202329"/><stop offset="1" stop-color="#040608"/></linearGradient></defs><rect width="1000" height="360" fill="url(#p9c)"/><path d="M84 174Q500 72 916 174L878 236H122Z" fill="#080a0d" stroke="#d9e528"/><path d="M110 184Q500 96 890 184" stroke="#e72a35" stroke-width="3"/><path d="M100 72L250 270M900 72L750 270" stroke="#656b72" stroke-width="14" opacity=".7"/>
       <g transform="translate(410 110)"><rect x="-125" y="-48" width="250" height="112" rx="8" fill="#020406" stroke="#d9e528" stroke-width="3"/><g><rect x="-112" y="-35" width="18" height="10" fill="#51c7ff"/><rect x="-90" y="-35" width="18" height="10" fill="#51c7ff"/><rect x="-68" y="-35" width="18" height="10" fill="#d9e528"/><rect x="-46" y="-35" width="18" height="10" fill="#d9e528"/><rect x="-24" y="-35" width="18" height="10" fill="#e72a35"/></g><text x="-82" y="6" fill="#bfc5c9" font-size="10">HYBRID MJ</text><text x="48" y="15" text-anchor="middle" fill="#fff" font-size="38" id="tachGearArt">N</text><text x="-70" y="42" text-anchor="middle" fill="#fff" font-size="31" id="cabSpeedArt">0</text><text x="-70" y="57" text-anchor="middle" fill="#adb3b8" font-size="9">KM/H</text><text x="61" y="49" text-anchor="middle" fill="#d9e528" font-size="9">SOC 78 · BBW 52</text></g>
       <g id="cabinWheelG" transform="translate(410 292)"><path d="M-88-45Q0-68 88-45L73 48Q0 70-73 48Z" fill="#090c10" stroke="#d9e528" stroke-width="4"/><rect x="-45" y="-25" width="90" height="46" rx="4" fill="#020406" stroke="#e72a35"/><g fill="#e72a35"><circle cx="-66" cy="8" r="8"/><circle cx="66" cy="8" r="8"/></g><g fill="#51c7ff"><circle cx="-55" cy="-19" r="6"/><circle cx="55" cy="-19" r="6"/></g></g>
       <path d="M683 202l132 25v92H651z" fill="#07090c" stroke="#80858b"/><g fill="#d9e528"><rect x="672" y="231" width="38" height="14"/><rect x="720" y="231" width="38" height="14"/><rect x="768" y="231" width="28" height="14"/></g><text x="500" y="349" text-anchor="middle" fill="#b8bec2" font-size="10" letter-spacing="3">LMH · BRAKE-BY-WIRE · FRONT MGU · 7-SPEED</text>
     </svg>`;}
+
+  function peugeotWheel(cx,r){let s="";for(let i=0;i<7;i++){const a=i*Math.PI*2/7;s+=`<path d="M${cx+Math.cos(a)*r*.24} ${287+Math.sin(a)*r*.24}L${cx+Math.cos(a)*r*.76} ${287+Math.sin(a)*r*.76}"/>`;}return `<g><circle cx="${cx}" cy="287" r="${r}" fill="#050709" stroke="#252a2e" stroke-width="9"/><circle cx="${cx}" cy="287" r="${r*.73}" fill="#15191c" stroke="#dce629" stroke-width="2"/><g stroke="#5d666d" stroke-width="8">${s}</g><circle cx="${cx}" cy="287" r="${r*.19}" fill="#d6df28"/></g>`;}
+  function injectExterior(){
+    app.el.exteriorArt.innerHTML=`<svg viewBox="0 0 1000 400" role="img" aria-label="Peugeot 9X8 2024 Le Mans Hypercar endurance-prototype side elevation">
+      <defs><linearGradient id="p2paint" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset=".45" stop-color="#d7d9d4"/><stop offset="1" stop-color="#6c716e"/></linearGradient><linearGradient id="p2glass" x2="0" y2="1"><stop stop-color="#8da5af"/><stop offset=".5" stop-color="#20333a"/><stop offset="1" stop-color="#020507"/></linearGradient><linearGradient id="p2carbon" x2="1"><stop stop-color="#22272b"/><stop offset=".5" stop-color="#030507"/><stop offset="1" stop-color="#2a3034"/></linearGradient></defs>
+      <rect width="1000" height="400" fill="#121518"/><path d="M0 329H1000V400H0Z" fill="#171b1e"/><path d="M0 346H1000" stroke="#d7e22a" stroke-width="4"/><ellipse cx="506" cy="348" rx="444" ry="16" fill="#000" opacity=".74"/>
+      <g id="rearWingArt"><path d="M130 190L143 94M287 174L299 85" stroke="#111519" stroke-width="11"/><path d="M75 69Q194 52 340 57L335 86Q193 77 78 101Z" fill="url(#p2carbon)" stroke="#dce629" stroke-width="3"/><path d="M83 81Q199 64 329 69" stroke="#e8f04b" stroke-width="3"/></g>
+      <g id="bcBody"><path d="M80 304L189 312A84 89 0 0 1 357 312L669 312A81 89 0 0 1 831 314L944 307L958 250Q916 198 833 193L699 188L638 146Q553 81 463 105Q377 130 324 179L137 189Q66 216 58 258Q50 284 80 304Z" fill="url(#p2paint)" stroke="#fbfcfa" stroke-width="3"/>
+        <path d="M333 177Q387 129 469 106Q550 87 620 147L675 187L561 180L529 113L456 122L397 179Z" fill="url(#p2glass)" stroke="#80949c" stroke-width="2"/><path d="M466 106L506 77L534 84L537 114Z" fill="#15191c"/><path d="M499 99L499 52L532 54L551 119Z" fill="url(#p2carbon)" stroke="#7b8185"/>
+        <path d="M58 258Q154 201 317 189L251 226L70 283Z" fill="#d82835"/><path d="M337 192Q279 183 218 233L260 285L366 221Z" fill="#030608"/><path d="M368 204L480 187L446 294H348Z" fill="url(#p2carbon)"/><g id="doorArt"><path d="M398 179L641 151L686 270L516 294L480 201Z" fill="rgba(255,255,255,.035)" stroke="#91958f" stroke-width="2"/><path d="M520 290L552 186L650 170L666 262Z" fill="#0a0e10"/><path d="M412 181L490 278" stroke="#dce629" stroke-width="3"/></g>
+        <path d="M687 188L833 193Q901 198 943 236L847 258L735 228Z" fill="#c7cac4"/><path d="M785 201l151 33-75 26-127-30z" fill="#111518"/><g stroke="#dce629" stroke-width="6"><path d="M881 216l49 16"/><path d="M866 229l49 16"/><path d="M850 242l49 16"/></g><path d="M70 239h67l-18 25H56" fill="#d62835"/><path d="M82 293Q507 318 944 286" fill="none" stroke="#030507" stroke-width="16"/>
+        <g fill="#1a1e21"><path d="M228 183l18-26 19 22-2 31-30 6z"/><path d="M274 181l17-25 18 22-4 29-28 7z"/><path d="M706 190l18-28 19 26-3 28-30 6z"/><path d="M751 191l17-26 19 25-4 28-28 6z"/></g><text x="580" y="255" text-anchor="middle" fill="#171a1d" font-size="31" font-weight="900">93</text><text x="630" y="253" fill="#d62835" font-size="16" font-weight="900">9X8</text>
+      </g><g id="frontFlapArt"><path d="M817 297L968 276L949 316L784 326Z" fill="url(#p2carbon)"/><path d="M908 247l53-12-9 17-52 13z" fill="#0a0e10"/></g><g id="quadExhaustArt"><ellipse cx="111" cy="267" rx="18" ry="11" fill="#aeb6bc"/><ellipse cx="111" cy="267" rx="10" ry="6" fill="#14181c"/></g>
+      ${peugeotWheel(275,67)}${peugeotWheel(754,69)}
+    </svg>`;app.el.doorArt=document.getElementById("doorArt");app.el.quadExhaustArt=document.getElementById("quadExhaustArt");app.el.bcBody=document.getElementById("bcBody");app.el.rearWingArt=document.getElementById("rearWingArt");app.el.frontFlapArt=document.getElementById("frontFlapArt");
+  }
+  function injectArt(){
+    injectExterior();
+    app.el.cabinArt.innerHTML=`<svg viewBox="0 0 1000 360" role="img" aria-label="Peugeot 9X8 i-Cockpit endurance racing cell with high display and compact control wheel">
+      <defs><linearGradient id="p2cab" x2="1" y2="1"><stop stop-color="#2b2f34"/><stop offset=".5" stop-color="#0b0e11"/><stop offset="1" stop-color="#020304"/></linearGradient><pattern id="p2weave" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 10L10 0M-2 2L2-2M8 12l4-4" stroke="#252b2f" stroke-width="2"/></pattern></defs><rect width="1000" height="360" fill="url(#p2cab)"/>
+      <path d="M43 352L126 67L243 182L345 128M957 352L874 67L757 182L655 128" fill="none" stroke="#686f75" stroke-width="18"/><path d="M43 352L126 67L243 182M957 352L874 67L757 182" fill="none" stroke="#d62936" stroke-width="4"/><path d="M0 360V218L206 171L305 360ZM1000 360V218L794 171L695 360Z" fill="url(#p2weave)" stroke="#444b50"/>
+      <g transform="translate(500 93)"><rect x="-151" y="-37" width="302" height="85" rx="5" fill="#010304" stroke="#dbe52a" stroke-width="3"/><g>${[0,1,2,3,4,5,6,7,8,9].map(i=>`<rect x="${-133+i*27}" y="-22" width="20" height="8" fill="${i>7?'#e52a36':i>4?'#dbe52a':'#4bb9e9'}"/>`).join("")}</g><text x="-93" y="20" text-anchor="middle" fill="#f5f6f4" font-size="25" id="cabSpeedArt">0</text><text x="-93" y="36" text-anchor="middle" fill="#9ca5a9" font-size="9">KM/H</text><text x="0" y="24" text-anchor="middle" fill="#fff" font-size="37" font-weight="900" id="tachGearArt">N</text><text x="96" y="11" text-anchor="middle" fill="#dbe52a" font-size="12">SOC 78%</text><text x="96" y="30" text-anchor="middle" fill="#e52a36" font-size="10">BBW 52 · STINT</text></g>
+      <path d="M225 360L248 199Q288 160 331 198L352 360Z" fill="#080b0d" stroke="#596168"/><path d="M264 216l-18 126M317 216l18 126" stroke="#dbe52a" stroke-width="12"/><path d="M730 360L747 198Q786 159 830 198L852 360Z" fill="#080b0d" stroke="#596168"/><path d="M766 217l-17 124M816 217l18 124" stroke="#e52a36" stroke-width="12"/>
+      <g id="cabinWheelG" transform="translate(500 286)"><path d="M-110-49L-88 52L-47 72H47L88 52L110-49L70-73H-70Z" fill="#070a0d" stroke="#dbe52a" stroke-width="4"/><rect x="-51" y="-39" width="102" height="67" rx="4" fill="#010304" stroke="#e52a36"/><text x="0" y="-13" text-anchor="middle" fill="#b7bec2" font-size="8">ENERGY STRATEGY</text><text x="0" y="11" text-anchor="middle" fill="#dbe52a" font-size="17">LMH</text><g fill="#4dbbe8"><circle cx="-82" cy="-22" r="8"/><circle cx="82" cy="-22" r="8"/></g><g fill="#e52a36"><circle cx="-88" cy="13" r="8"/><circle cx="88" cy="13" r="8"/></g><g fill="#dbe52a"><circle cx="-68" cy="44" r="7"/><circle cx="68" cy="44" r="7"/></g></g>
+      <g transform="translate(742 189)"><path d="M0 0l151 25-12 132-158-30z" fill="#06080a" stroke="#777e83"/><text x="66" y="23" text-anchor="middle" fill="#dbe52a" font-size="10">HYBRID / BBW</text><g fill="#dbe52a"><rect x="16" y="42" width="35" height="15" rx="3"/><rect x="61" y="49" width="35" height="15" rx="3"/><rect x="106" y="56" width="30" height="15" rx="3"/></g><g fill="#e52a36"><circle cx="31" cy="91" r="11"/><circle cx="77" cy="99" r="11"/></g><path d="M115 90v42" stroke="#4dbbe8" stroke-width="9"/></g><text x="500" y="349" text-anchor="middle" fill="#aeb5b8" font-size="10" letter-spacing="3">PEUGEOT i-COCKPIT · FRONT MGU · BRAKE-BY-WIRE · DRIVER NET</text></svg>`;
+    app.el.engineBay.innerHTML=`<div class="heat-haze"></div><div class="turbo left" id="turboL"></div><div class="turbo right" id="turboR"></div><svg viewBox="0 0 1000 360" style="position:absolute;inset:2%;width:96%;height:88%" role="img" aria-label="Detailed Peugeot 9X8 V6 hybrid power unit bay"><defs><linearGradient id="peMetal" x2="0" y2="1"><stop stop-color="#e4e6e1"/><stop offset="1" stop-color="#555c5d"/></linearGradient></defs><rect x="24" y="18" width="952" height="316" rx="34" fill="#0d1114" stroke="#525b60" stroke-width="5"/><path d="M68 42L345 126M932 42L655 126M83 307L348 204M917 307L652 204" stroke="url(#peMetal)" stroke-width="14"/><path d="M500 37V320" stroke="#d9e32a" stroke-width="5"/><g fill="#cfd2ce" stroke="#f5f6f2" stroke-width="4"><path d="M182 105L451 79L466 254L151 278L123 208Z"/><path d="M818 105L549 79L534 254L849 278L877 208Z"/></g><g fill="#3e464b" stroke="#141a1e" stroke-width="4"><circle cx="240" cy="133" r="28"/><circle cx="332" cy="143" r="28"/><circle cx="421" cy="152" r="28"/><circle cx="760" cy="133" r="28"/><circle cx="668" cy="143" r="28"/><circle cx="579" cy="152" r="28"/></g><path d="M429 76h142l42 113-113 90-113-90z" fill="#11161a" stroke="#747d82" stroke-width="4"/><text x="500" y="145" text-anchor="middle" fill="#f1f2ef" font-size="23" font-weight="900">PEUGEOT SPORT</text><text x="500" y="176" text-anchor="middle" fill="#dce629" font-size="17">2.6 V6 HYBRID</text><text x="500" y="206" text-anchor="middle" fill="#e52a36" font-size="13">520 kW BoP</text><g fill="#b4bec3" stroke="#283137" stroke-width="5"><circle cx="111" cy="93" r="42"/><circle cx="889" cy="93" r="42"/></g><g fill="none" stroke="#e52a36" stroke-width="7"><circle cx="111" cy="93" r="24"/><circle cx="889" cy="93" r="24"/></g><path d="M152 96Q225 79 283 109M848 96Q775 79 717 109" fill="none" stroke="#333d42" stroke-width="18"/><rect x="360" y="275" width="280" height="48" rx="13" fill="#262d31" stroke="#dce629" stroke-width="3"/><circle cx="401" cy="299" r="17" fill="#55bde8"/><circle cx="599" cy="299" r="17" fill="#55bde8"/><text x="500" y="304" text-anchor="middle" fill="#edf1e9" font-size="13">900 V · 200 kW FRONT MGU</text><path d="M337 281L240 296M663 281L760 296" stroke="#57bfe9" stroke-width="10"/></svg><div class="emotor" id="eAxleArt">200 kW FRONT MGU · 900 V · BRAKE-BY-WIRE</div><div class="bay-exhaust"><i></i><i></i><i></i><i></i></div><div class="cover" id="engineCover">LMH BODYWORK CLOSED</div>`;
+    app.el.engineCover=document.getElementById("engineCover");app.el.turboL=document.getElementById("turboL");app.el.turboR=document.getElementById("turboR");
+  }
 
     function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -2455,15 +2510,20 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   // Hybrid Attack prioritises front-MGU deployment above the regulated activation speed.
   // It does not change the homologated rear wing or the drag coefficient.
   function toggleHybridAttack() {
-    const next = !state.hybridAttack;
-    state.hybridAttack = next; setActive("hybridBtn", next);
-    if (next) {
-      audio.motor(0.7); audio.click(2200);
-      showToast("HYBRID ATTACK — front MGU prioritises deployment above the BoP threshold; watch the energy store.","9X8");
-    } else {
-      audio.motor(0.5);
-      showToast("HYBRID AUTO — deployment balanced with regeneration for the stint.","9X8");
-    }
+    state.energyMode = (state.energyMode + 1) % 3;
+    state.hybridAttack = state.energyMode === 1;
+    const names = ["STINT", "ATTACK", "CHARGE"];
+    document.getElementById("hybridBtn").textContent = `Hybrid ${names[state.energyMode]}`;
+    setActive("hybridBtn", state.energyMode === 1);
+    audio.motor(state.energyMode === 1 ? 0.7 : 0.5); audio.click(1200 + state.energyMode * 500);
+    const notes = ["deployment and regeneration balanced over the stint", "front MGU prioritises deployment above the regulated speed threshold", "front deployment withheld while brake-by-wire recovery replenishes the store"];
+    showToast(`${names[state.energyMode]} strategy — ${notes[state.energyMode]}.`, "9X8");
+  }
+  function cycleBrakeMigration() {
+    state.brakeMigration = state.brakeMigration >= 58 ? 48 : state.brakeMigration + 2;
+    document.getElementById("brakeMigBtn").textContent = `Brake Mig ${state.brakeMigration}%`;
+    audio.click(760 + (state.brakeMigration - 48) * 35);
+    showToast(`Brake-by-wire migration set to ${state.brakeMigration}% — regeneration and rear stability rebalanced.`, "9X8");
   }
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
   function toggleLift() { state.rideHeight = state.rideHeight === 1 ? 0 : 1; audio.motor(0.8); showToast(state.rideHeight === 1 ? "Nose raised for the ramp." : "Nose lowered to ride height."); }
@@ -2499,8 +2559,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "9X8"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { hybridEnergy:75, hybridAttack:false, speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
+    Object.assign(state, { hybridEnergy:75, hybridAttack:false, energyMode:0, brakeMigration:52, speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, frontRecline: 0 });
     setActive("hybridBtn", false);
+    document.getElementById("hybridBtn").textContent = "Hybrid STINT"; document.getElementById("brakeMigBtn").textContent = "Brake Mig 52%";
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2512,7 +2573,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     showToast("Back in the pit lane.", "9X8");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleHybridAttack, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleHybridAttack, cycleBrakeMigration, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
@@ -2535,7 +2596,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       case "ignition": break;
     }
   }
-  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
+  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -40, 40); audio.motor(0.4); showToast(`Safety cell and seat stay fixed; pedal box set ${state.frontRecline} mm from datum.`); }
   function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Paddle blip — the 90-degree LMH V6 snaps up through the sequential box."); }
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Hybrid-ready sequence — pumps prime, V6 catches and the 900 V system arms."); }
   function setIgnition(on) {
@@ -2613,11 +2674,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.hybridAttack) warn.push(`HYBRID ATTACK · energy ${Math.round(state.hybridEnergy)}%`);
+    if (state.energyMode === 1) warn.push(`HYBRID ATTACK · energy ${Math.round(state.hybridEnergy)}%`);
+    if (state.energyMode === 2) warn.push(`HYBRID CHARGE · brake migration ${state.brakeMigration}%`);
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (!state.hybridAttack && speed >= 300) warn.push("HYBRID AUTO · balanced deployment and regeneration");
+    if (state.energyMode === 0 && speed >= 300) warn.push("HYBRID STINT · balanced deployment and regeneration");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -2636,7 +2698,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.doorState.textContent = app.anyDoorOpen() ? "Open" : "Closed";
     el.rideHeightRead.textContent = state.rideHeight === 1 ? "Lifted" : state.rideHeight === -1 ? "Lowered" : "Standard";
     el.lightState.textContent = state.lights ? "Active" : "Off";
-    el.frontSeatRead.textContent = `${state.frontRecline}°`;
+    el.frontSeatRead.textContent = `${state.frontRecline} mm`;
     el.climateRead.textContent = `${Math.round(state.seatTempC)}°C`;
     el.modeReadCab.textContent = state.driveMode === "wet" ? "Wet" : state.driveMode === "sport" ? "Sport" : "Race";
     el.rideRead.textContent = state.driveMode === "wet" ? "Soft" : state.driveMode === "sport" ? "Sport" : "Race";
@@ -2652,7 +2714,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
     el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetKmh)} km/h` : "Off";
     el.tcRead.textContent = state.esc ? (state.tractionControl ? "On" : "ESC only") : "Off";
-    el.dynStatus.textContent = `${state.driveMode === "race" ? "Race" : state.driveMode === "sport" ? "Stint" : "Wet"} · hybrid ${state.hybridAttack ? "attack" : "auto"} · energy ${Math.round(state.hybridEnergy)}%`;
+    el.dynStatus.textContent = `${state.driveMode === "race" ? "Race" : state.driveMode === "sport" ? "Stint" : "Wet"} · hybrid ${["stint", "attack", "charge"][state.energyMode] || "stint"} · migration ${state.brakeMigration}% · energy ${Math.round(state.hybridEnergy)}%`;
 
     if (state.route.active && !app.isLoop()) { el.distRead.textContent = `${(state.route.remainingM / 1000).toFixed(2)} km`; }
     else el.distRead.textContent = app.isLoop() && state.route.active ? "lap" : "—";
@@ -2840,11 +2902,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     document.getElementById("coverBtn").addEventListener("click", () => app.setToggle("engineCoverOpen"));
     document.getElementById("blipBtn").addEventListener("click", app.blipThrottle);
     document.getElementById("coldStartBtn").addEventListener("click", app.coldStartFlair);
-    document.getElementById("frontForward").addEventListener("click", () => app.adjustSeat(-2));
-    document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
+    document.getElementById("frontForward").addEventListener("click", () => app.adjustSeat(5));
+    document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(-5));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
     document.getElementById("hybridBtn").addEventListener("click", () => app.toggleHybridAttack());
+    document.getElementById("brakeMigBtn").addEventListener("click", () => app.cycleBrakeMigration());
   }
 
   function bindMedia() {

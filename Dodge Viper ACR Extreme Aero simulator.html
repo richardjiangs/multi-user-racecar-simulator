@@ -471,6 +471,8 @@
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
           <button id="setupBtn" class="race" title="Record Setup — maximum wing and splitter angle with the 10-way dampers in circuit positions">Record Setup</button>
+          <button id="damperBtn" title="Cycle the real 10-way Bilstein racing-damper adjustment">Bilstein 6 / 10</button>
+          <button id="perfPageBtn" title="Cycle the SRT Performance Pages in the centre display">Page: G-Meter</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -480,7 +482,7 @@
       </section>
 
       <!-- ENGINE -->
-      <section class="mode-panel panel-engine"><div class="panel-title"><h2>Engine Bay — 8.4 L Viper V10</h2><span class="small" id="engineStatus">8,382 cc aluminium OHV V10 · dry sump · 481 kW / 645 hp · 813 Nm</span></div><div class="engine-bay" id="engineBay"><div class="heat-haze"></div><div style="position:absolute;inset:9% 11% 18%"><svg viewBox="0 0 700 250" style="width:100%;height:100%"><path d="M70 55L305 25l80 170-255 30zM630 55L395 25l-80 170 255 30z" fill="#b8252f" stroke="#e6e8eb"/><g fill="#181b20"><circle cx="145" cy="73" r="17"/><circle cx="555" cy="73" r="17"/><circle cx="189" cy="76" r="17"/><circle cx="511" cy="76" r="17"/><circle cx="233" cy="79" r="17"/><circle cx="467" cy="79" r="17"/><circle cx="277" cy="82" r="17"/><circle cx="423" cy="82" r="17"/><circle cx="321" cy="85" r="17"/><circle cx="379" cy="85" r="17"/></g><rect x="305" y="16" width="90" height="185" rx="28" fill="#1a1e23" stroke="#969da5"/><text x="350" y="118" text-anchor="middle" fill="#f4f5f6" font-size="25" font-weight="800" transform="rotate(90 350 118)">VIPER V10</text><path d="M25 42L175 15M675 42L525 15" stroke="#aab1b8" stroke-width="10"/></svg></div><div class="bay-exhaust"><i></i><i></i><i></i><i></i></div><div class="cover" id="engineCover">CLAMSHELL HOOD CLOSED</div></div><div class="control-grid"><button id="coverBtn">Open Clamshell</button><button id="exhaustBtn3" class="active">Side Exhaust</button><button id="fansBtn" class="active">Cooling Fans</button><button id="blipBtn">Heel-Toe Blip</button><button id="coldStartBtn">Cold Start</button><button id="antiLagBtn">Performance Pages</button></div><div class="divider"></div><div class="readout-grid"><div class="readout"><b id="oilTempRead">90°C</b><span>dry-sump oil</span></div><div class="readout"><b id="waterTempRead">88°C</b><span>coolant</span></div><div class="readout"><b id="boostRead">0%</b><span>naturally aspirated load</span></div><div class="readout"><b id="egtRead">320°C</b><span>side-exhaust gas</span></div></div><div class="studio-bar"><input type="file" id="engineFile" accept="audio/*" hidden><button id="engineLoadBtn">♫ Use a real Viper V10 recording</button><span class="small now" id="engineSoundStatus">Engine voice: synthesised 8.4 L V10 with side-exhaust pulse</span></div></section>
+      <section class="mode-panel panel-engine"><div class="panel-title"><h2>Engine Bay — 8.4 L Viper V10</h2><span class="small" id="engineStatus">8,382 cc aluminium OHV V10 · dry sump · 481 kW / 645 hp · 813 Nm</span></div><div class="engine-bay" id="engineBay"><div class="heat-haze"></div><div style="position:absolute;inset:9% 11% 18%"><svg viewBox="0 0 700 250" style="width:100%;height:100%"><path d="M70 55L305 25l80 170-255 30zM630 55L395 25l-80 170 255 30z" fill="#b8252f" stroke="#e6e8eb"/><g fill="#181b20"><circle cx="145" cy="73" r="17"/><circle cx="555" cy="73" r="17"/><circle cx="189" cy="76" r="17"/><circle cx="511" cy="76" r="17"/><circle cx="233" cy="79" r="17"/><circle cx="467" cy="79" r="17"/><circle cx="277" cy="82" r="17"/><circle cx="423" cy="82" r="17"/><circle cx="321" cy="85" r="17"/><circle cx="379" cy="85" r="17"/></g><rect x="305" y="16" width="90" height="185" rx="28" fill="#1a1e23" stroke="#969da5"/><text x="350" y="118" text-anchor="middle" fill="#f4f5f6" font-size="25" font-weight="800" transform="rotate(90 350 118)">VIPER V10</text><path d="M25 42L175 15M675 42L525 15" stroke="#aab1b8" stroke-width="10"/></svg></div><div class="bay-exhaust"><i></i><i></i><i></i><i></i></div><div class="cover" id="engineCover">CLAMSHELL HOOD CLOSED</div></div><div class="control-grid"><button id="coverBtn">Open Clamshell</button><button id="exhaustBtn3" class="active">Side Exhaust</button><button id="fansBtn" class="active">Cooling Fans</button><button id="blipBtn">Heel-Toe Blip</button><button id="coldStartBtn">Cold Start</button><button id="antiLagBtn">Dry-Sump Prime</button></div><div class="divider"></div><div class="readout-grid"><div class="readout"><b id="oilTempRead">90°C</b><span>dry-sump oil</span></div><div class="readout"><b id="waterTempRead">88°C</b><span>coolant</span></div><div class="readout"><b id="boostRead">0%</b><span>naturally aspirated load</span></div><div class="readout"><b id="egtRead">320°C</b><span>side-exhaust gas</span></div></div><div class="studio-bar"><input type="file" id="engineFile" accept="audio/*" hidden><button id="engineLoadBtn">♫ Use a real Viper V10 recording</button><span class="small now" id="engineSoundStatus">Engine voice: synthesised 8.4 L V10 with side-exhaust pulse</span></div></section>
 
       <!-- DYNAMICS -->
       <section class="mode-panel panel-dynamics">
@@ -765,7 +767,7 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Virginia International Raceway Grand Course": {dist:6760,env:"track",limitKmh:285,loop:true,widthM:13,corners:20,blurb:"VIR Grand Course — 6.76 km, 130 ft of elevation and the Climbing Esses",bumps:[{from:3050,to:3450,r:.18}],track:[c(250,1,72,120,"Horseshoe"),c(610,-1,54,105,"NASCAR Bend"),c(920,1,82,85,"Left Hook"),c(1210,-1,52,150,"Snake"),c(1580,1,42,220,"Esses 1"),c(1840,-1,46,190,"Esses 2"),c(2090,1,48,200,"Esses 3"),c(2390,-1,62,130,"South Bend"),c(2730,1,95,75,"Oak Tree"),c(3150,-1,34,280,"Back straight kink"),c(3550,1,36,250,"Roller Coaster 1"),c(3830,-1,58,140,"Roller Coaster 2"),c(4120,1,86,90,"Hog Pen"),c(4480,-1,48,150,"Front kink"),c(4860,1,64,115,"Spiral"),c(5200,-1,88,85,"Grand right"),c(5510,1,52,150,"Bend"),c(5840,-1,70,105,"Lower esses"),c(6180,1,42,180,"Climb"),c(6500,-1,36,180,"Pit entry") ]},
+  "Virginia International Raceway Grand Course": {dist:6760,env:"track",limitKmh:285,loop:true,widthM:16,corners:20,blurb:"VIR Grand Course — 6.76 km, 130 ft of elevation and the Climbing Esses",bumps:[{from:3050,to:3450,r:.18}],track:[c(250,1,72,120,"Horseshoe"),c(610,-1,54,105,"NASCAR Bend"),c(920,1,82,85,"Left Hook"),c(1210,-1,52,150,"Snake"),c(1580,1,42,220,"Esses 1"),c(1840,-1,46,190,"Esses 2"),c(2090,1,48,200,"Esses 3"),c(2390,-1,62,130,"South Bend"),c(2730,1,95,75,"Oak Tree"),c(3150,-1,34,280,"Back straight kink"),c(3550,1,36,250,"Roller Coaster 1"),c(3830,-1,58,140,"Roller Coaster 2"),c(4120,1,86,90,"Hog Pen"),c(4480,-1,48,150,"Front kink"),c(4860,1,64,115,"Spiral"),c(5200,-1,88,85,"Grand right"),c(5510,1,52,150,"Bend"),c(5840,-1,70,105,"Lower esses"),c(6180,1,42,180,"Climb"),c(6500,-1,36,180,"Pit entry") ]},
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -810,7 +812,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    record: false,                    // VIR record setup: maximum splitter/wing attack and circuit damper positions
+    acrSetup: false,                  // VIR record setup: maximum splitter/wing attack and circuit damper positions
+    damperClick: 6, performancePage: 0,
     acrSetupVis: 0,                     // fuel-map swap glow on the cluster
     testDriver: false,
     lights: true, hazards: false, horn: false,
@@ -906,11 +909,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       // supercharger rotor or turbo shaft in this stack because the production engine is
       // naturally aspirated; the separate noise band below is broad intake rush only.
       const defs = [
-        {type:"sawtooth",mul:.5,gain:.24,toShaper:true},
-        {type:"triangle",mul:1,gain:.34,toShaper:true},
-        {type:"sawtooth",mul:2,gain:.13,toShaper:true},
-        {type:"square",mul:2.5,gain:.055,toShaper:false},
-        {type:"triangle",mul:5,gain:.035,toShaper:false}
+        {type:"sawtooth",mul:.2,gain:.22,toShaper:true},
+        {type:"square",mul:.5,gain:.27,toShaper:true},
+        {type:"sawtooth",mul:1,gain:.24,toShaper:true},
+        {type:"sawtooth",mul:1.5,gain:.075,toShaper:false},
+        {type:"square",mul:2,gain:.038,toShaper:false}
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -920,6 +923,14 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       });
 
       this.noiseBuf = this._noiseBuffer(2.0);
+      // A narrow unipolar pulse chops broadband exhaust gas at the V10 firing rate.
+      // This makes the side-pipe bark percussive instead of a smooth electric-like hum.
+      this.combNoise=c.createBufferSource();this.combNoise.buffer=this.noiseBuf;this.combNoise.loop=true;
+      this.combFilter=c.createBiquadFilter();this.combFilter.type="bandpass";this.combFilter.frequency.value=155;this.combFilter.Q.value=.62;
+      this.combVca=c.createGain();this.combVca.gain.value=0;this.combNoise.connect(this.combFilter);this.combFilter.connect(this.combVca);this.combVca.connect(this.synthGain);
+      this.combPulse=c.createOscillator();this.combPulse.type="sawtooth";this.combPulse.frequency.value=70;
+      this.pulseShape=c.createWaveShaper();{const q=new Float32Array(256);for(let i=0;i<q.length;i++){const x=i/(q.length-1)*2-1;q[i]=x>.68?Math.pow((x-.68)/.32,.34):0;}this.pulseShape.curve=q;}
+      this.pulseDepth=c.createGain();this.pulseDepth.gain.value=0;this.combPulse.connect(this.pulseShape);this.pulseShape.connect(this.pulseDepth);this.pulseDepth.connect(this.combVca.gain);this.combNoise.start();this.combPulse.start();
       const mkNoise = (type, freq, q) => {
         const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
         const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
@@ -942,9 +953,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     update(s, dt) {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
-      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
+      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); this._set(this.pulseDepth.gain,0,.08); return; }
       const firing = Math.max(18,(s.rpm/60)*5) // ten cylinders: five combustion events per crank revolution;
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
+      this.combPulse.frequency.setTargetAtTime(firing,t,.018);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
       const load = clamp(s.throttle, 0, 1);
@@ -961,6 +973,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
 
       this._set(this.engineBus.gain, engLevel, 0.05);
+      this._set(this.pulseDepth.gain,engLevel*.78,.035);this.combFilter.frequency.setTargetAtTime(115+rpmN*520+load*130,t,.04);
       this._set(this.engFilter.frequency, clamp(cutoff, 200, 8200), 0.05);
       this._set(this.turboGain.gain, turbo * 1.1, 0.06);
       this.turboNode.f.frequency.setTargetAtTime(turboFreq, t, 0.06);
@@ -1559,7 +1572,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const tex = Math.abs(Math.sin(state.distanceM * 0.7)) * 0.5 + Math.abs(Math.sin(state.distanceM * 2.7)) * 0.3 + Math.abs(Math.sin(state.distanceM * 6.1)) * 0.2;
     const joint = Math.max(0, Math.sin(state.distanceM * 0.10)) ** 16;
     state.roadInputG = rough * speedF * (0.04 + tex * 0.05) + rough * joint * 0.10;
-    const damp = mode().damp;                         // Race firms the adaptive dampers -> more reaches you
+    const damp = mode().damp * (0.72 + state.damperClick * 0.047); // Bilstein click setting changes transmitted road input
     state.cabinHeaveG = approach(state.cabinHeaveG, state.roadInputG * (0.35 + damp * 0.4), 0.004, dt);
 
     // The view only shakes over bumps/kerbs and through gearshifts — NOT from cornering grip.
@@ -2269,9 +2282,29 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
-  function drawCabinFrame(w,h,pal){const y=h*.66,s=state.bodyRoll*1.2;ctx.fillStyle=pal.night?"#090b0e":"#14171b";ctx.fillRect(0,y,w,h-y);ctx.strokeStyle="#c92a35";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,y+8);ctx.quadraticCurveTo(w*.5,y-42+s,w,y+8);ctx.stroke();drawCluster(w,h,y,s);drawWheel(w,h);}
-  function drawCluster(w,h,y,s){const R=Math.min(w,h)*.105,cx=w*.5+s,cy=y+R*.62,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);for(const d of [[-R*1.18,state.rpm/SPEC.redlineRpm,(state.rpm/1000).toFixed(1),"RPM"],[R*1.18,km/300,Math.round(km),"KM/H"]]){ctx.beginPath();ctx.arc(d[0],0,R,0,Math.PI*2);ctx.fillStyle="#05070a";ctx.fill();ctx.strokeStyle="#7f8790";ctx.stroke();ctx.strokeStyle="#d52b35";ctx.lineWidth=5;ctx.beginPath();ctx.arc(d[0],0,R*.78,Math.PI*.75,Math.PI*(.75+1.5*clamp(d[1],0,1)));ctx.stroke();ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="800 "+(R*.32)+"px sans-serif";ctx.fillText(d[2],d[0],5);ctx.font="700 "+(R*.12)+"px sans-serif";ctx.fillStyle="#aab2bb";ctx.fillText(d[3],d[0],R*.45);}ctx.fillStyle="#d52b35";ctx.font="900 "+(R*.52)+"px sans-serif";ctx.fillText(state.gearMode==="G"?state.curGear:state.gearMode,0,8);ctx.restore();}
-  function drawWheel(w,h){const R=Math.min(w,h)*.31;ctx.save();ctx.translate(w*.5,h*1.19);ctx.rotate(state.steer*.9);ctx.strokeStyle="#090b0e";ctx.lineWidth=R*.15;ctx.beginPath();ctx.arc(0,0,R,0,Math.PI*2);ctx.stroke();ctx.strokeStyle="#333941";ctx.lineWidth=R*.1;for(const a of [-2.7,-.44,1.57]){ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*R*.82,Math.sin(a)*R*.82);ctx.stroke();}ctx.fillStyle="#11151a";ctx.strokeStyle="#d52b35";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-R*.18);ctx.lineTo(R*.18,R*.16);ctx.lineTo(-R*.18,R*.16);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();}
+  function drawCabinFrame(w,h,pal){
+    const y=h*.67,s=state.bodyRoll*1.2;
+    const dash=ctx.createLinearGradient(0,y-56,0,h);dash.addColorStop(0,pal.night?"#07090c":"#252a30");dash.addColorStop(1,"#060709");
+    ctx.fillStyle=dash;ctx.fillRect(0,y-10,w,h-y+10);
+    ctx.fillStyle="#15181d";ctx.beginPath();ctx.moveTo(0,y+8);ctx.quadraticCurveTo(w*.23,y-34+s,w*.42,y-28+s);ctx.lineTo(w*.61,y-15+s);ctx.quadraticCurveTo(w*.82,y-32+s,w,y+6);ctx.lineTo(w,h);ctx.lineTo(0,h);ctx.fill();
+    ctx.strokeStyle="#aeb4bb";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,y+5);ctx.quadraticCurveTo(w*.48,y-54+s,w,y+5);ctx.stroke();
+    for(const x of [w*.09,w*.76]){ctx.fillStyle="#050608";ctx.beginPath();ctx.arc(x,y+4,17,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#5d646c";ctx.stroke();}
+    ctx.fillStyle="#9d1721";ctx.fillRect(0,y-2,w,3);ctx.fillStyle="#090b0e";ctx.fillRect(w*.7,y+12,w*.21,h*.18);
+    drawCluster(w,h,y,s);drawWheel(w,h);
+  }
+  function drawCluster(w,h,y,s){
+    const R=Math.min(w,h)*.097,cx=w*.46+s,cy=y+R*.56,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);
+    ctx.fillStyle="#030507";ctx.strokeStyle="#565d65";ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-R*2.45,-R*1.03,R*4.9,R*2.05,18);ctx.fill();ctx.stroke();
+    const gauges=[[-R*1.45,state.rpm/SPEC.redlineRpm,(state.rpm/1000).toFixed(1),"x1000 RPM"],[R*1.43,km/300,Math.round(km),"KM/H"]];
+    for(const d of gauges){ctx.beginPath();ctx.arc(d[0],0,R,0,Math.PI*2);ctx.fillStyle="#05070a";ctx.fill();ctx.strokeStyle="#858c94";ctx.stroke();for(let i=0;i<9;i++){const a=Math.PI*.72+i*Math.PI*1.56/8;ctx.strokeStyle=i>6?"#d52b35":"#d5d9dd";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(d[0]+Math.cos(a)*R*.69,Math.sin(a)*R*.69);ctx.lineTo(d[0]+Math.cos(a)*R*.86,Math.sin(a)*R*.86);ctx.stroke();}const a=Math.PI*.72+Math.PI*1.56*clamp(d[1],0,1);ctx.strokeStyle="#e33640";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(d[0],0);ctx.lineTo(d[0]+Math.cos(a)*R*.72,Math.sin(a)*R*.72);ctx.stroke();ctx.fillStyle="#f6f7f8";ctx.textAlign="center";ctx.font="800 "+(R*.28)+"px sans-serif";ctx.fillText(d[2],d[0],7);ctx.font="700 "+(R*.105)+"px sans-serif";ctx.fillStyle="#9fa7b0";ctx.fillText(d[3],d[0],R*.48);}
+    ctx.fillStyle="#11151a";ctx.fillRect(-R*.47,-R*.72,R*.94,R*1.44);ctx.fillStyle="#ff3a45";ctx.textAlign="center";ctx.font="900 "+(R*.46)+"px sans-serif";ctx.fillText(state.gearMode==="G"?state.curGear:state.gearMode,0,-R*.1);ctx.font="700 "+(R*.1)+"px monospace";ctx.fillStyle="#d7dbe0";const pages=[`${Math.abs(state.lateralG||0).toFixed(2)}G  G-METER`,state.lap&&state.lap.curMs?`LAP ${app.fmtLap(state.lap.curMs)}`:"LAP --:--.---",`BRAKE ${Math.round(state.brakeTempC||120)}°`];ctx.fillText(pages[state.performancePage]||pages[0],0,R*.28);ctx.fillStyle=state.acrSetup?"#ff4652":"#7f8790";ctx.fillRect(-R*.34,R*.43,R*.68,R*.07);ctx.restore();
+  }
+  function drawWheel(w,h){
+    const R=Math.min(w,h)*.315;ctx.save();ctx.translate(w*.46,h*1.21);ctx.rotate(state.steer*.9);
+    ctx.strokeStyle="#050608";ctx.lineWidth=R*.17;ctx.beginPath();ctx.arc(0,0,R,0,Math.PI*2);ctx.stroke();ctx.strokeStyle="#a31520";ctx.lineWidth=R*.025;ctx.beginPath();ctx.arc(0,0,R*1.01,-2.05,-1.09);ctx.stroke();
+    ctx.fillStyle="#20252b";ctx.beginPath();ctx.moveTo(-R*.83,-R*.2);ctx.lineTo(-R*.19,-R*.08);ctx.lineTo(-R*.16,R*.2);ctx.lineTo(-R*.36,R*.46);ctx.lineTo(R*.36,R*.46);ctx.lineTo(R*.16,R*.2);ctx.lineTo(R*.19,-R*.08);ctx.lineTo(R*.83,-R*.2);ctx.lineTo(R*.72,R*.09);ctx.lineTo(R*.18,R*.13);ctx.lineTo(0,R*.34);ctx.lineTo(-R*.18,R*.13);ctx.lineTo(-R*.72,R*.09);ctx.closePath();ctx.fill();
+    ctx.fillStyle="#0b0e12";ctx.strokeStyle="#d52b35";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,-R*.18);ctx.lineTo(R*.2,R*.16);ctx.lineTo(-R*.2,R*.16);ctx.closePath();ctx.fill();ctx.stroke();ctx.restore();
+  }
     function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
@@ -2373,7 +2406,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      2718 mm wheelbase, 1331 mm tall, 890/1223 mm
      overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
      shared with any other car. The source is tools/bodykit/drawn.mjs. */
-  function injectExterior() {
+  function injectExteriorLegacy() {
     app.el.exteriorArt.innerHTML = `
     <svg viewBox="0 0 1000 400" role="img" aria-label="Dodge Viper ACR Extreme Aero side profile">
       <defs><linearGradient id="vipPaint" x2="0" y2="1"><stop stop-color="#f7f8fa"/><stop offset=".42" stop-color="#d9dde2"/><stop offset="1" stop-color="#727982"/></linearGradient><linearGradient id="vipGlass" x2="0" y2="1"><stop stop-color="#8fb3ce"/><stop offset="1" stop-color="#071018"/></linearGradient><filter id="vipGlow"><feGaussianBlur stdDeviation="3"/></filter></defs>
@@ -2396,7 +2429,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     app.el.doorArt=document.getElementById("doorArt"); app.el.quadExhaustArt=document.getElementById("quadExhaustArt"); app.el.bcBody=document.getElementById("bcBody");
   }
   function turbine(){return "";}
-  function injectArt(){ injectExterior(); app.el.cabinArt.innerHTML=`
+  function injectArtLegacy(){ injectExteriorLegacy(); app.el.cabinArt.innerHTML=`
     <svg viewBox="0 0 1000 360" role="img" aria-label="Viper ACR cockpit with Alcantara, manual shifter and SRT Performance Pages">
       <defs><linearGradient id="vc" x2="0" y2="1"><stop stop-color="#292d33"/><stop offset="1" stop-color="#07090c"/></linearGradient></defs><rect width="1000" height="360" fill="url(#vc)"/><path d="M60 160Q500 76 940 160L900 230H100Z" fill="#111419" stroke="#aeb5be"/><path d="M80 168Q500 96 920 168" stroke="#d91f2a" stroke-width="4"/>
       <g transform="translate(330 125)"><circle cx="-60" r="62" fill="#05070a" stroke="#69727c"/><circle cx="70" r="62" fill="#05070a" stroke="#69727c"/><path d="M-102 20A48 48 0 1 1-18 20" fill="none" stroke="#d91f2a" stroke-width="7"/><text x="-60" y="7" text-anchor="middle" fill="#fff" font-size="22" id="tachGearArt">N</text><text x="70" y="7" text-anchor="middle" fill="#fff" font-size="25" id="cabSpeedArt">0</text><text x="70" y="27" text-anchor="middle" fill="#aab3bd" font-size="10">KM/H</text></g>
@@ -2404,6 +2437,43 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       <g id="cabinWheelG" transform="translate(330 302)"><circle r="82" fill="none" stroke="#090b0e" stroke-width="18"/><path d="M-72-22L-20-4M72-22L20-4M0 20v55" stroke="#343a42" stroke-width="14"/><path d="M0-19l20 34h-40z" fill="#111419" stroke="#d91f2a" stroke-width="3"/></g>
       <g transform="translate(790 282)"><path d="M0 34v-72" stroke="#aeb5be" stroke-width="9"/><circle cy="-42" r="20" fill="#15191e" stroke="#d91f2a"/><path d="M-28 28h56" stroke="#30363d" stroke-width="8"/></g><text x="500" y="349" text-anchor="middle" fill="#a9b0b9" font-size="10" letter-spacing="3">VIPER ACR · 6-SPEED · SIDE EXHAUST</text>
     </svg>`; }
+
+  function viperWheel(cx, r) {
+    let spokes=""; for(let i=0;i<10;i++){const a=i*Math.PI/5,x1=cx+Math.cos(a)*r*.25,y1=286+Math.sin(a)*r*.25,x2=cx+Math.cos(a)*r*.76,y2=286+Math.sin(a)*r*.76;spokes+=`<path d="M${x1.toFixed(1)} ${y1.toFixed(1)}L${x2.toFixed(1)} ${y2.toFixed(1)}"/>`;}
+    return `<g><circle cx="${cx}" cy="286" r="${r}" fill="#07090c" stroke="#222830" stroke-width="9"/><circle cx="${cx}" cy="286" r="${r*.72}" fill="#15191e" stroke="#aeb4ba" stroke-width="2"/><g stroke="#77808a" stroke-width="7">${spokes}</g><circle cx="${cx}" cy="286" r="${r*.19}" fill="#b91d2a" stroke="#e7ebef" stroke-width="2"/></g>`;
+  }
+  function injectExterior() {
+    app.el.exteriorArt.innerHTML=`<svg viewBox="0 0 1000 400" role="img" aria-label="Dodge Viper ACR Extreme Aero, long-hood side elevation">
+      <defs><linearGradient id="v2paint" x2="0" y2="1"><stop stop-color="#ffffff"/><stop offset=".42" stop-color="#d7dce1"/><stop offset="1" stop-color="#737b84"/></linearGradient><linearGradient id="v2glass" x2="0" y2="1"><stop stop-color="#87a9bf"/><stop offset=".55" stop-color="#253743"/><stop offset="1" stop-color="#06090c"/></linearGradient><linearGradient id="v2carbon"><stop stop-color="#21262b"/><stop offset=".5" stop-color="#050709"/><stop offset="1" stop-color="#333941"/></linearGradient></defs>
+      <rect width="1000" height="400" fill="#10151b"/><path d="M0 330H1000V400H0Z" fill="#090b0e"/><path d="M0 344L1000 316" stroke="#293039" stroke-width="4"/><ellipse cx="515" cy="346" rx="433" ry="15" fill="#000" opacity=".7"/>
+      <g id="rearWingArt"><path d="M118 180L128 105M244 170L260 101" stroke="#14181d" stroke-width="11"/><path d="M65 87Q174 71 310 76L305 99Q166 94 69 111Z" fill="url(#v2carbon)" stroke="#8d959d" stroke-width="2"/><path d="M73 94Q174 81 300 86" stroke="#c51f2c" stroke-width="4"/><path d="M67 87l-9 34 19-10" fill="#15191e"/></g>
+      <g id="bcBody"><path d="M91 299L190 307A82 84 0 0 1 353 307L681 307A82 84 0 0 1 843 309L939 300L948 248Q892 199 805 194L640 190L572 142Q511 103 444 119Q373 134 322 185L130 193Q73 207 67 240Q59 281 91 299Z" fill="url(#v2paint)" stroke="#f9fbfc" stroke-width="3"/>
+        <path d="M130 193Q232 166 359 173L337 201L164 214Z" fill="#e9edf0"/><path d="M367 172Q399 130 452 120Q515 109 566 146L618 188L523 185L491 137L430 141L401 178Z" fill="url(#v2glass)" stroke="#7890a0" stroke-width="2"/><path d="M450 122Q459 108 478 116M486 116Q505 105 517 123" fill="none" stroke="#f9fbfc" stroke-width="7"/>
+        <path d="M618 188L804 194Q865 198 914 228L844 241L711 224L637 211Z" fill="#e5e9ec"/><path d="M686 207L848 211L800 236L684 231Z" fill="#12171d"/><g fill="#05080b" stroke="#515961"><path d="M731 206l30-12 35 1-29 12z"/><path d="M777 207l28-11 34 3-27 12z"/><path d="M821 213l26-11 29 7-25 11z"/></g>
+        <g id="doorArt"><path d="M395 180L615 190L616 282L361 286L340 219Z" fill="rgba(255,255,255,.035)" stroke="#777f88" stroke-width="2"/><path d="M585 210h30v7h-30" stroke="#252a30" stroke-width="4"/><path d="M365 278L430 199L610 197" fill="none" stroke="#b9c0c7" opacity=".45"/></g>
+        <path d="M348 203Q289 197 242 227L267 268Q297 237 354 234Z" fill="#070a0d"/><path d="M348 203Q292 200 247 226" fill="none" stroke="#c91f2c" stroke-width="4"/><path d="M357 285H607L590 302H370Z" fill="#11161b"/><ellipse cx="465" cy="292" rx="25" ry="7" fill="#87919a"/><path d="M89 237h54l-12 19H76" fill="#b81927"/><path d="M907 231l31 17-62 12-30-19z" fill="#e9fbff"/><path d="M112 293H923" stroke="#bf1d2a" stroke-width="5"/><text x="512" y="265" text-anchor="middle" fill="#aa1623" font-size="22" font-weight="900" letter-spacing="9">VIPER ACR</text>
+      </g>
+      <g id="frontFlapArt"><path d="M832 300L956 287L947 311L809 320Z" fill="url(#v2carbon)"/><path d="M883 253l61-9-8 13-60 12zM894 269l49-8-7 12-48 10z" fill="#10151a"/></g><g id="quadExhaustArt"><ellipse cx="468" cy="301" rx="21" ry="8" fill="#9aa3ac"/><ellipse cx="468" cy="301" rx="13" ry="4" fill="#171b20"/></g>
+      ${viperWheel(272,66)}${viperWheel(764,67)}
+    </svg>`;
+    app.el.doorArt=document.getElementById("doorArt");app.el.quadExhaustArt=document.getElementById("quadExhaustArt");app.el.bcBody=document.getElementById("bcBody");app.el.rearWingArt=document.getElementById("rearWingArt");app.el.frontFlapArt=document.getElementById("frontFlapArt");
+  }
+  function injectArt(){
+    injectExterior();
+    app.el.cabinArt.innerHTML=`<svg viewBox="0 0 1000 360" role="img" aria-label="Viper ACR road cockpit with round vents, analogue cluster, manual shifter and Performance Pages">
+      <defs><linearGradient id="v2cab" x2="0" y2="1"><stop stop-color="#353a41"/><stop offset=".48" stop-color="#15191e"/><stop offset="1" stop-color="#050709"/></linearGradient><pattern id="v2alc" width="8" height="8" patternUnits="userSpaceOnUse"><path d="M0 8L8 0M-2 2L2-2M6 10l4-4" stroke="#34383d" stroke-width="1"/></pattern></defs><rect width="1000" height="360" fill="url(#v2cab)"/>
+      <path d="M38 172Q180 112 369 104Q622 89 952 165L920 234H76Z" fill="#12161a" stroke="#757d85" stroke-width="2"/><path d="M61 169Q404 98 938 172" fill="none" stroke="#b91d2a" stroke-width="4"/>
+      <g fill="#050709" stroke="#727a83" stroke-width="3"><circle cx="105" cy="171" r="28"/><circle cx="686" cy="147" r="27"/><circle cx="896" cy="173" r="27"/></g><g stroke="#59616a" stroke-width="3"><path d="M84 171h42M105 150v42M665 147h42M686 126v42M875 173h42M896 152v42"/></g>
+      <g transform="translate(330 141)"><path d="M-132 2Q0-72 132 2V65H-132Z" fill="#06080b" stroke="#49515a"/><circle cx="-62" cy="5" r="53" fill="#020406" stroke="#8a929b" stroke-width="3"/><circle cx="61" cy="5" r="53" fill="#020406" stroke="#8a929b" stroke-width="3"/><path d="M-103 18A46 46 0 1 1-22 18" fill="none" stroke="#d12632" stroke-width="7"/><text x="-62" y="9" text-anchor="middle" fill="#f3f5f6" font-size="23" id="tachGearArt">N</text><text x="61" y="8" text-anchor="middle" fill="#f3f5f6" font-size="26" id="cabSpeedArt">0</text><text x="61" y="28" text-anchor="middle" fill="#aeb5bd" font-size="10">KM/H</text><rect x="-19" y="-23" width="39" height="49" rx="4" fill="#151a1f"/><text y="-3" text-anchor="middle" fill="#ff3f4b" font-size="9">ACR</text><text y="13" text-anchor="middle" fill="#d9dde1" font-size="8">TRACK</text></g>
+      <g transform="translate(565 125)"><path d="M0 0h220v125H0z" fill="#080b0e" stroke="#aa1e29" stroke-width="3"/><rect x="11" y="11" width="198" height="103" rx="4" fill="#101820"/><text x="110" y="28" text-anchor="middle" fill="#ff4651" font-size="12" font-weight="800">SRT PERFORMANCE PAGES</text><path d="M35 84Q66 42 104 77T184 55" fill="none" stroke="#ff4651" stroke-width="4"/><circle cx="72" cy="73" r="19" fill="none" stroke="#637181"/><path d="M72 73l12-11" stroke="#f3f5f6"/><text x="155" y="88" text-anchor="middle" fill="#d9e0e5" font-size="10">BRAKE 30.8 m</text><text x="155" y="104" text-anchor="middle" fill="#9aa5af" font-size="9">LAP · G-METER</text></g>
+      <g id="cabinWheelG" transform="translate(330 305)"><circle r="88" fill="none" stroke="url(#v2alc)" stroke-width="21"/><path d="M-76-18L-24-7M76-18L24-7M0 22v61" stroke="#343a42" stroke-width="16"/><path d="M0-22l24 42h-48z" fill="#111419" stroke="#c5222e" stroke-width="3"/><path d="M-18-89h36" stroke="#d32632" stroke-width="6"/></g>
+      <g transform="translate(796 246)"><path d="M0 91L-27 11L-5-23L20 7L36 91Z" fill="#0c1014" stroke="#6a737d"/><path d="M5 40V-14" stroke="#bfc5cb" stroke-width="9"/><circle cx="5" cy="-23" r="22" fill="url(#v2alc)" stroke="#bd222d" stroke-width="3"/><path d="M55 79L41 16" stroke="#9ba3aa" stroke-width="7"/><rect x="35" y="7" width="18" height="17" rx="4" fill="#171b20"/><text x="5" y="-20" text-anchor="middle" fill="#eee" font-size="8">6MT</text></g>
+      <path d="M115 225Q150 189 194 222L211 360H89Z" fill="#12161b" stroke="#565e67"/><path d="M139 229l-22 94M166 229l22 94" stroke="#cf2632" stroke-width="11"/><text x="500" y="349" text-anchor="middle" fill="#aab2ba" font-size="10" letter-spacing="3">ANALOGUE V10 · 6-SPEED MANUAL · PERFORMANCE PAGES</text></svg>`;
+    app.el.engineBay.innerHTML=`<div class="heat-haze"></div><svg viewBox="0 0 1000 360" style="position:absolute;inset:2%;width:96%;height:88%" role="img" aria-label="Detailed Viper 8.4 litre V10 engine bay"><defs><linearGradient id="veMetal" x2="0" y2="1"><stop stop-color="#dfe3e6"/><stop offset="1" stop-color="#4c535a"/></linearGradient><linearGradient id="veRed" x2="0" y2="1"><stop stop-color="#d6313b"/><stop offset="1" stop-color="#651018"/></linearGradient></defs><rect x="25" y="18" width="950" height="315" rx="35" fill="#11151a" stroke="#626970" stroke-width="5"/><path d="M70 38L316 116M930 38L684 116M92 292L330 181M908 292L670 181" stroke="url(#veMetal)" stroke-width="15"/><circle cx="500" cy="161" r="83" fill="#252b31" stroke="#929aa2" stroke-width="5"/><path d="M433 73h134l36 50-32 118H429l-32-118z" fill="#171b20" stroke="#6f7780" stroke-width="4"/><text x="500" y="154" text-anchor="middle" fill="#f2f4f5" font-size="28" font-weight="900">VIPER</text><text x="500" y="183" text-anchor="middle" fill="#d12a35" font-size="18" font-weight="800">8.4L V10</text><path d="M500 76V38" stroke="#b7bec5" stroke-width="21"/><ellipse cx="500" cy="35" rx="52" ry="20" fill="#0b0d10" stroke="#737b83" stroke-width="4"/>
+      <g fill="url(#veRed)" stroke="#e0e3e6" stroke-width="4"><path d="M155 95L397 80L420 241L145 264L112 205Z"/><path d="M845 95L603 80L580 241L855 264L888 205Z"/></g><g fill="#11151a" stroke="#616972" stroke-width="3">${[0,1,2,3,4].map(i=>`<rect x="${170+i*43}" y="${112+i*3}" width="30" height="112" rx="13"/>`).join("")}${[0,1,2,3,4].map(i=>`<rect x="${800-i*43}" y="${112+i*3}" width="30" height="112" rx="13"/>`).join("")}</g>
+      <path d="M180 274Q262 297 342 272M820 274Q738 297 658 272" fill="none" stroke="#8d959d" stroke-width="12"/><g fill="#d9dfe4" stroke="#49515a" stroke-width="4"><circle cx="92" cy="103" r="28"/><circle cx="906" cy="103" r="28"/><rect x="75" y="240" width="75" height="56" rx="10"/><rect x="850" y="240" width="75" height="56" rx="10"/></g><path d="M102 103C160 65 195 67 244 92M898 103C840 65 805 67 756 92" fill="none" stroke="#20252b" stroke-width="18"/><text x="500" y="318" text-anchor="middle" fill="#9ca5ae" font-size="14" letter-spacing="5">DRY SUMP · X-BRACE · SIDE-PIPE COLLECTORS</text></svg><div class="bay-exhaust"><i></i><i></i><i></i><i></i></div><div class="cover" id="engineCover">CLAMSHELL HOOD CLOSED</div>`;
+    app.el.engineCover=document.getElementById("engineCover");
+  }
 
     function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -2478,6 +2548,19 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       showToast("Road setup restored — Extreme Aero hardware remains fitted.", "Viper ACR");
     }
   }
+  function cycleDamper() {
+    state.damperClick = state.damperClick >= 10 ? 1 : state.damperClick + 1;
+    document.getElementById("damperBtn").textContent = `Bilstein ${state.damperClick} / 10`;
+    audio.click(620 + state.damperClick * 55);
+    showToast(`Bilstein racing dampers set to click ${state.damperClick} of 10 — ${state.damperClick >= 8 ? "firm circuit control" : state.damperClick <= 3 ? "compliant road setting" : "balanced response"}.`, "Viper ACR");
+  }
+  function cyclePerformancePage() {
+    state.performancePage = (state.performancePage + 1) % 3;
+    const names = ["G-Meter", "Lap Timer", "Brake Temp"];
+    document.getElementById("perfPageBtn").textContent = `Page: ${names[state.performancePage]}`;
+    audio.click(980);
+    showToast(`SRT Performance Page: ${names[state.performancePage]}.`, "Viper ACR");
+  }
   function toggleLights() { state.lights = !state.lights; showToast(state.lights ? "Headlamps on." : "Headlamps off."); }
   function toggleLift() { state.rideHeight = state.rideHeight === -1 ? 0 : -1; audio.click(820); showToast(state.rideHeight === -1 ? "Circuit ride height selected — a pit setup change." : "Road ride height restored."); }
   function armLaunch() {
@@ -2512,9 +2595,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Viper ACR"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, damperClick: 6, performancePage: 0 });
     if (state.acrSetup) { state.acrSetup = false; SPEC.peakPowerW = SPEC.road.peakPowerW; SPEC.peakPowerPS = SPEC.road.peakPowerPS; SPEC.peakPowerHp = SPEC.road.peakPowerHp; SPEC.peakTorqueNm = SPEC.road.peakTorqueNm; }
     setActive("setupBtn", false);
+    document.getElementById("damperBtn").textContent = "Bilstein 6 / 10";
+    document.getElementById("perfPageBtn").textContent = "Page: G-Meter";
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2526,7 +2611,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     showToast("Back in the pit lane.", "Viper ACR");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleAcrSetup, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleAcrSetup, cycleDamper, cyclePerformancePage, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
@@ -2545,7 +2630,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cabin audio — “${audio.userTrackName}”.` : "Music paused."); } else { app.setNowPlaying(on ? "Cabin audio playing" : "Cabin silent — engine only", on); showToast(on ? "Cabin audio on." : "Cabin audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
       case "engineCoverOpen": el.engineBay.style.setProperty("--cover", on ? "0%" : "-101%"); el.engineCover.textContent = on ? "CLAMSHELL HOOD OPEN" : "CLAMSHELL HOOD CLOSED"; audio.motor(0.9); showToast(on ? "The clamshell hood is open — the naturally aspirated V10 is on show." : "Clamshell hood closed."); break;
-      case "antiLag": audio.click(on ? 1500 : 650); showToast(on ? "SRT Performance Pages open — lap timer, G-meter and brake distance visible." : "Performance Pages closed."); break;
+      case "antiLag": audio.click(on ? 1500 : 650); showToast(on ? "Dry-sump pre-oiler running — pressure building before restart." : "Dry-sump pre-oiler off."); break;
       case "ignition": break;
     }
   }
@@ -2859,6 +2944,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
     document.getElementById("setupBtn").addEventListener("click", () => app.toggleAcrSetup());
+    document.getElementById("damperBtn").addEventListener("click", () => app.cycleDamper());
+    document.getElementById("perfPageBtn").addEventListener("click", () => app.cyclePerformancePage());
   }
 
   function bindMedia() {

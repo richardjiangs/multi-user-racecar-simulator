@@ -367,7 +367,7 @@
       </nav>
 
       <section class="quick" aria-label="Quick controls">
-        <button id="aeroBtn" class="active" title="Active rear wing / airbrake">Aero</button>
+        <button id="aeroBtn" class="active" title="Cycle automatic, maximum-attack and V-max aero maps">Aero AUTO</button>
         <button id="doorAllBtn" title="Scissor doors">Doors</button>
         <button id="exhaustBtn" class="active" title="Exhaust flap">Exhaust</button>
         <button id="liftBtn" title="Front axle lift">Lift</button>
@@ -433,7 +433,7 @@
           <button data-door="driver">Driver Door</button>
           <button data-door="passenger">Passenger Door</button>
           <button data-door="all">Both Doors</button>
-          <button id="wingBtn" class="active">Rear Wing</button>
+          <button id="wingBtn" class="active">Aero AUTO</button>
           <button id="exhaustBtn2" class="active">Exhaust Flap</button>
           <button id="lightsBtn2" class="active">Headlamps</button>
         </div>
@@ -454,15 +454,15 @@
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
-          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat recline</span></div>
+          <div class="readout"><b id="frontSeatRead">0 mm</b><span>pedal box position</span></div>
           <div class="readout"><b id="climateRead">22&deg;C</b><span>cabin climate</span></div>
           <div class="readout"><b id="beltRead">Open</b><span>safety harness</span></div>
           <div class="readout"><b id="modeReadCab">Sport</b><span>drive mode</span></div>
         </div>
         <div class="divider"></div>
         <div class="control-grid">
-          <button id="frontForward">Recline +</button>
-          <button id="frontBack">Recline -</button>
+          <button id="frontForward">Pedals +</button>
+          <button id="frontBack">Pedals -</button>
           <button id="harnessBtn">Harness</button>
           <button id="heatBtn">Heated Seats</button>
           <button id="coolBtn">Climate A/C</button>
@@ -765,7 +765,7 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Goodwood Hillclimb": {dist:1867,env:"road",limitKmh:300,loop:false,widthM:8,corners:9,blurb:"Goodwood Festival of Speed hillclimb — 1.16 miles from the start line past the flint wall",bumps:[{from:820,to:1050,r:.12}],track:[c(120,1,38,90,"Start curve"),c(315,-1,44,82,"Kennel"),c(520,1,32,115,"Crossroads"),c(715,-1,48,78,"Molecomb"),c(930,1,27,145,"Library sweep"),c(1120,-1,35,105,"Flint wall"),c(1325,1,42,85,"Wall right"),c(1540,-1,30,125,"Top paddock"),c(1760,1,24,95,"Finish bend")]},
+  "Goodwood Hillclimb": {dist:1867,env:"road",limitKmh:300,loop:false,widthM:16,corners:9,blurb:"Goodwood Festival of Speed hillclimb — 1.16 miles from the start line past the flint wall",bumps:[{from:820,to:1050,r:.12}],track:[c(120,1,38,90,"Start curve"),c(315,-1,44,82,"Kennel"),c(520,1,32,115,"Crossroads"),c(715,-1,48,78,"Molecomb"),c(930,1,27,145,"Library sweep"),c(1120,-1,35,105,"Flint wall"),c(1325,1,42,85,"Wall right"),c(1540,-1,30,125,"Top paddock"),c(1760,1,24,95,"Finish bend")]},
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -813,7 +813,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     hybridVis: 0,                  // hybrid-boost indicator
     testDriver: false,
     lights: true, hazards: false, horn: false,
-    aeroAuto: true, aeroDeploy: 0, aeroDragDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
+    aeroAuto: true, aeroMode: 0, aeroDeploy: 0, aeroDragDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
     rideHeight: 0,                 // 0 standard, 1 lifted, -1 race-low
     heat: false, cool: false, ambient: true, audioCabin: false, shifterLight: true,
@@ -901,12 +901,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       // The V12 supplies the hard 9,800 rpm firing order; four small VGT shaft voices
       // sit above it and the P2 motor contributes a separate electric tone.
       const defs = [
-        {type:"triangle",mul:.5,gain:.16,toShaper:true},
-        {type:"sawtooth",mul:1,gain:.30,toShaper:true},
-        {type:"triangle",mul:2,gain:.12,toShaper:true},
-        {type:"sine",mul:3,gain:.065,toShaper:false},
-        {type:"square",mul:4,gain:.028,toShaper:false},
-        {type:"sine",mul:8,gain:.018,toShaper:false}
+        {type:"sawtooth",mul:.333,gain:.12,toShaper:true},
+        {type:"square",mul:.5,gain:.13,toShaper:true},
+        {type:"sawtooth",mul:1,gain:.27,toShaper:true},
+        {type:"sawtooth",mul:2,gain:.09,toShaper:true},
+        {type:"square",mul:3,gain:.038,toShaper:false},
+        {type:"sawtooth",mul:4,gain:.022,toShaper:false}
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -916,6 +916,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       });
 
       this.noiseBuf = this._noiseBuffer(2.0);
+      this.combNoise=c.createBufferSource();this.combNoise.buffer=this.noiseBuf;this.combNoise.loop=true;
+      this.combFilter=c.createBiquadFilter();this.combFilter.type="bandpass";this.combFilter.frequency.value=320;this.combFilter.Q.value=.78;
+      this.combVca=c.createGain();this.combVca.gain.value=0;this.combNoise.connect(this.combFilter);this.combFilter.connect(this.combVca);this.combVca.connect(this.synthGain);
+      this.combPulse=c.createOscillator();this.combPulse.type="sawtooth";this.combPulse.frequency.value=95;
+      this.pulseShape=c.createWaveShaper();{const q=new Float32Array(256);for(let i=0;i<q.length;i++){const x=i/(q.length-1)*2-1;q[i]=x>.61?Math.pow((x-.61)/.39,.52):0;}this.pulseShape.curve=q;}
+      this.pulseDepth=c.createGain();this.pulseDepth.gain.value=0;this.combPulse.connect(this.pulseShape);this.pulseShape.connect(this.pulseDepth);this.pulseDepth.connect(this.combVca.gain);this.combNoise.start();this.combPulse.start();
       const mkNoise = (type, freq, q) => {
         const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
         const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
@@ -945,9 +951,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     update(s, dt) {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
-      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this.turboVoices.forEach(n => this._set(n.g.gain, 0, 0.1)); this._set(this.p2Gain.gain, 0, 0.1); return; }
+      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this.turboVoices.forEach(n => this._set(n.g.gain, 0, 0.1)); this._set(this.p2Gain.gain, 0, 0.1); this._set(this.pulseDepth.gain,0,.08); return; }
       const firing = Math.max(20,(s.rpm/60)*6) // 90-degree V12: six combustion events per revolution;
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
+      this.combPulse.frequency.setTargetAtTime(firing,t,.015);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
       const load = clamp(s.throttle, 0, 1);
@@ -964,12 +971,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
 
       this._set(this.engineBus.gain, engLevel, 0.05);
+      this._set(this.pulseDepth.gain,engLevel*.59,.035);this.combFilter.frequency.setTargetAtTime(250+rpmN*1250+load*280,t,.04);
       this._set(this.engFilter.frequency, clamp(cutoff, 200, 8200), 0.05);
       this.turboVoices.forEach((n, i) => {
         this._set(n.g.gain, turbo * [0.31, 0.27, 0.23, 0.19][i], 0.06);
         n.f.frequency.setTargetAtTime(turboFreq + [-380, -120, 170, 430][i], t, 0.06);
       });
-      this._set(this.p2Gain.gain, s.hybrid ? (0.004 + load * 0.018) : 0, 0.06);
+      this._set(this.p2Gain.gain, s.hybrid ? (load > .55 ? .0015 + load * .004 : 0) : 0, 0.06);
       this.p2Osc.frequency.setTargetAtTime(300 + rpmN * 3300, t, 0.05);
       this._set(this.windGain.gain, wind, 0.1);
       this.windNode.f.frequency.setTargetAtTime(windFreq, t, 0.1);
@@ -1155,7 +1163,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function updateAero(dt) {
     const spd = Math.abs(state.speedMps);
     let frontT, rearT, dragT;
-    if (state.aeroAuto) {
+    if (state.aeroMode === 0) {
       // Standing downforce rises through mid-speed as the aero loads up.
       const rise = clamp((spd - 16) / 70, 0, 1);          // air does not care about driver aids
       // ACTIVE AERO TRIMS FOR THE RUN. A wing that stays loaded at maximum speed is a wing
@@ -1171,8 +1179,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       // Drag follows the wing's speed and braking positions, not steering angle alone.
       dragT = clamp(Math.max(speedComp, state.brake * 1.00), 0, 1);
     } else {
-      rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
-      dragT = rearT;                      // a wing you wound up by hand really does cost drag
+      rearT = state.aeroMode === 1 ? 1 : 0.08;
+      frontT = state.aeroMode === 1 ? 0.72 : 0.04;
+      dragT = state.aeroMode === 1 ? 1 : 0.04;
     }
     // (Hybrid boost changes the engine output rather than the aero; see toggleFuel.)
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
@@ -2337,9 +2346,24 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
-  function drawCabinFrame(w,h,pal){const y=h*.65,s=state.bodyRoll*1.1;ctx.fillStyle=pal.night?"#070805":"#15160f";ctx.fillRect(0,y,w,h-y);ctx.strokeStyle="#d4b431";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,y+8);ctx.quadraticCurveTo(w*.5,y-52+s,w,y+8);ctx.stroke();drawCluster(w,h,y,s);drawWheel(w,h);}
-  function drawCluster(w,h,y,s){const R=Math.min(w,h)*.085,cx=w*.5+s,cy=y+R*.58,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);[[-R*2.2,(state.rpm/1000).toFixed(1),"RPM"],[0,Math.round(km),"KM/H"],[R*2.2,state.hybrid?"P2":"V12","HYBRID"]].forEach((d,i)=>{ctx.beginPath();ctx.arc(d[0],0,R*(i===1?1.12:1),0,Math.PI*2);ctx.fillStyle="#030506";ctx.fill();ctx.strokeStyle="#e1c23d";ctx.lineWidth=3;ctx.stroke();ctx.fillStyle="#fff4aa";ctx.textAlign="center";ctx.font="800 "+(R*(i===1?.36:.27))+"px sans-serif";ctx.fillText(d[1],d[0],4);ctx.font="700 "+(R*.11)+"px sans-serif";ctx.fillStyle="#a99f68";ctx.fillText(d[2],d[0],R*.42);});ctx.restore();}
-  function drawWheel(w,h){const R=Math.min(w,h)*.3;ctx.save();ctx.translate(w*.5,h*1.18);ctx.rotate(state.steer*.9);ctx.strokeStyle="#080a0b";ctx.lineWidth=R*.15;ctx.beginPath();ctx.moveTo(-R*.56,-R*.75);ctx.quadraticCurveTo(0,-R,R*.56,-R*.75);ctx.lineTo(R*.82,R*.42);ctx.quadraticCurveTo(0,R*.8,-R*.82,R*.42);ctx.closePath();ctx.stroke();ctx.strokeStyle="#34383b";ctx.lineWidth=R*.1;for(const a of [-2.6,-.54,2.6,.54]){ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*R*.75,Math.sin(a)*R*.75);ctx.stroke();}ctx.fillStyle="#e1c23d";ctx.beginPath();ctx.arc(0,0,R*.12,0,Math.PI*2);ctx.fill();ctx.restore();}
+  function drawCabinFrame(w,h,pal){
+    const y=h*.65,s=state.bodyRoll*1.1;ctx.fillStyle=pal.night?"#030504":"#11140f";ctx.fillRect(0,y-10,w,h-y+10);
+    ctx.strokeStyle="#343b31";ctx.lineWidth=18;ctx.beginPath();ctx.moveTo(w*.06,h);ctx.lineTo(w*.18,y-70+s);ctx.lineTo(w*.33,y-30+s);ctx.moveTo(w*.94,h);ctx.lineTo(w*.83,y-72+s);ctx.lineTo(w*.68,y-30+s);ctx.stroke();
+    ctx.strokeStyle="#b89b2e";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,y+4);ctx.quadraticCurveTo(w*.5,y-65+s,w,y+4);ctx.stroke();
+    ctx.fillStyle="#0a0d0b";ctx.beginPath();ctx.moveTo(w*.05,h);ctx.lineTo(w*.21,y+6);ctx.lineTo(w*.31,h);ctx.fill();ctx.beginPath();ctx.moveTo(w*.95,h);ctx.lineTo(w*.79,y+6);ctx.lineTo(w*.69,h);ctx.fill();
+    ctx.strokeStyle="#e1c23d";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(w*.5,y-58+s);ctx.lineTo(w*.5,h);ctx.stroke();drawCluster(w,h,y,s);drawWheel(w,h);
+  }
+  function drawCluster(w,h,y,s){
+    const R=Math.min(w,h)*.078,cx=w*.5+s,cy=y+R*.5,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);
+    const dial=[[-R*2.55,(state.rpm/1000).toFixed(1),"V12 · 9800"],[0,Math.round(km),"KM/H"],[R*2.55,state.hybrid?"P2 ON":"ICE","TORQUE FILL"]];
+    dial.forEach((d,i)=>{const rr=R*(i===1?1.3:1);ctx.shadowColor="#d8b72e";ctx.shadowBlur=8;ctx.beginPath();ctx.arc(d[0],0,rr,0,Math.PI*2);ctx.fillStyle="#020403";ctx.fill();ctx.shadowBlur=0;ctx.strokeStyle="#9c8425";ctx.lineWidth=4;ctx.stroke();for(let q=0;q<12;q++){const a=-Math.PI*.8+q*Math.PI*1.6/11;ctx.strokeStyle=q>9?"#ef5d32":"#d8c56b";ctx.lineWidth=1.5;ctx.beginPath();ctx.moveTo(d[0]+Math.cos(a)*rr*.76,Math.sin(a)*rr*.76);ctx.lineTo(d[0]+Math.cos(a)*rr*.9,Math.sin(a)*rr*.9);ctx.stroke();}ctx.fillStyle="#fff3b0";ctx.textAlign="center";ctx.font="800 "+(rr*.29)+"px sans-serif";ctx.fillText(d[1],d[0],5);ctx.fillStyle="#817a53";ctx.font="700 "+(rr*.1)+"px monospace";ctx.fillText(d[2],d[0],rr*.46);});ctx.restore();
+  }
+  function drawWheel(w,h){
+    const R=Math.min(w,h)*.3;ctx.save();ctx.translate(w*.5,h*1.2);ctx.rotate(state.steer*.9);
+    ctx.strokeStyle="#050706";ctx.lineWidth=R*.16;ctx.beginPath();ctx.moveTo(-R*.64,-R*.71);ctx.quadraticCurveTo(0,-R*1.02,R*.64,-R*.71);ctx.lineTo(R*.82,R*.32);ctx.quadraticCurveTo(R*.5,R*.72,0,R*.69);ctx.quadraticCurveTo(-R*.5,R*.72,-R*.82,R*.32);ctx.closePath();ctx.stroke();
+    ctx.strokeStyle="#373d38";ctx.lineWidth=R*.085;for(const a of [-2.68,-.46,2.68,.46]){ctx.beginPath();ctx.moveTo(0,0);ctx.lineTo(Math.cos(a)*R*.78,Math.sin(a)*R*.78);ctx.stroke();}
+    ctx.fillStyle="#121713";ctx.beginPath();ctx.arc(0,0,R*.2,0,Math.PI*2);ctx.fill();ctx.strokeStyle="#e1c23d";ctx.lineWidth=3;ctx.stroke();ctx.fillStyle="#e1c23d";ctx.font=`900 ${R*.12}px sans-serif`;ctx.textAlign="center";ctx.fillText("Z",0,R*.045);ctx.restore();
+  }
     function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
@@ -2441,7 +2465,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      2779 mm wheelbase, 1160 mm tall, 1010/1158 mm
      overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
      shared with any other car. The source is tools/bodykit/drawn.mjs. */
-  function injectExterior(){ app.el.exteriorArt.innerHTML=`
+  function injectExteriorLegacy(){ app.el.exteriorArt.innerHTML=`
     <svg viewBox="0 0 1000 400" role="img" aria-label="Zenvo Aurora Agil side profile">
       <defs><linearGradient id="za" x2="0" y2="1"><stop stop-color="#f6d95b"/><stop offset=".45" stop-color="#d7a900"/><stop offset="1" stop-color="#5c4300"/></linearGradient><linearGradient id="zg" x2="0" y2="1"><stop stop-color="#bfe9f4"/><stop offset="1" stop-color="#071018"/></linearGradient></defs><ellipse cx="500" cy="338" rx="402" ry="11" fill="rgba(0,0,0,.55)"/>
       <g id="rearWingArt"><path d="M110 158l42-58M260 145l18-58" stroke="#161a1f" stroke-width="8"/><path d="M84 94l230-18 2 17-230 20z" fill="#0b0e12" stroke="#edcf4b"/></g>
@@ -2454,13 +2478,42 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       <g><circle cx="278" cy="270" r="65" fill="#07090c" stroke="#20252b" stroke-width="8"/><circle cx="278" cy="270" r="52" fill="#11151a" stroke="#f1cf42" stroke-opacity=".55"/><path d="M290,270 L324.8097784515637,265.77570818769345 L324.8097784515637,274.22429181230655 Z" fill="#59616b"/><path d="M287.1925333174277,277.7134513162385 L316.5736931031018,296.8527503319067 L311.14304822979994,303.32474086976754 Z" fill="#59616b"/><path d="M280.08377813200315,281.8176930361465 L290.28854805285226,315.3650921607434 L281.9683173973613,316.8321733110241 Z" fill="#59616b"/><path d="M272,280.39230484541326 L258.2534547966742,312.6506031907289 L250.9367667517621,308.4263113784223 Z" fill="#59616b"/><path d="M266.7236885505691,274.10424171990803 L235.45798949953686,289.9794229791174 L232.56840371734782,282.0403512909759 Z" fill="#59616b"/><path d="M266.7236885505691,265.89575828009197 L232.56840371734782,257.9596487090241 L235.45798949953686,250.02057702088263 Z" fill="#59616b"/><path d="M272,259.60769515458674 L250.93676675176206,231.57368862157767 L258.25345479667413,227.34939680927116 Z" fill="#59616b"/><path d="M280.08377813200315,258.1823069638535 L281.9683173973613,223.16782668897588 L290.2885480528522,224.63490783925658 Z" fill="#59616b"/><path d="M287.1925333174277,262.2865486837615 L311.14304822979994,236.67525913023246 L316.5736931031018,243.14724966809325 Z" fill="#59616b"/><circle cx="278" cy="270" r="9" fill="#f1cf42"/></g><g><circle cx="758" cy="270" r="67" fill="#07090c" stroke="#20252b" stroke-width="8"/><circle cx="758" cy="270" r="54" fill="#11151a" stroke="#f1cf42" stroke-opacity=".55"/><path d="M770,270 L806.8016839175878,265.59595108929744 L806.8016839175878,274.40404891070256 Z" fill="#59616b"/><path d="M767.1925333174278,277.7134513162385 L798.21512685217,297.99542055879635 L792.5533907076638,304.7428149493321 Z" fill="#59616b"/><path d="M760.0837781320032,281.8176930361465 L770.8114649912715,317.29552161439204 L762.1371819674619,318.8250317497911 Z" fill="#59616b"/><path d="M752,280.39230484541326 L737.4131762773837,314.4655224754407 L729.7851398050286,310.0614735647382 Z" fill="#59616b"/><path d="M746.7236885505691,274.10424171990803 L713.6476911803683,290.82961119099474 L710.6351443010648,282.55270666505993 Z" fill="#59616b"/><path d="M746.7236885505691,265.89575828009197 L710.6351443010648,257.44729333494007 L713.6476911803682,249.1703888090053 Z" fill="#59616b"/><path d="M752,259.60769515458674 L729.7851398050285,229.93852643526182 L737.4131762773837,225.5344775245593 Z" fill="#59616b"/><path d="M760.0837781320032,258.1823069638535 L762.1371819674619,221.1749682502089 L770.8114649912715,222.70447838560796 Z" fill="#59616b"/><path d="M767.1925333174278,262.2865486837615 L792.5533907076638,235.25718505066789 L798.21512685217,242.00457944120362 Z" fill="#59616b"/><circle cx="758" cy="270" r="9" fill="#f1cf42"/></g>
     </svg>`; app.el.doorArt=document.getElementById("doorArt");app.el.quadExhaustArt=document.getElementById("quadExhaustArt");app.el.bcBody=document.getElementById("bcBody"); }
   function turbine(){return "";}
-  function injectArt(){injectExterior();app.el.cabinArt.innerHTML=`
+  function injectArtLegacy(){injectExteriorLegacy();app.el.cabinArt.innerHTML=`
     <svg viewBox="0 0 1000 360" role="img" aria-label="Zenvo Aurora Agil exposed-carbon cockpit with three circular instruments">
       <defs><linearGradient id="zc" x2="1" y2="1"><stop stop-color="#282a22"/><stop offset="1" stop-color="#070805"/></linearGradient></defs><rect width="1000" height="360" fill="url(#zc)"/><path d="M70 176Q500 68 930 176L885 235H115Z" fill="#0b0d0e" stroke="#d6b733"/><path d="M105 184Q500 94 895 184" stroke="#f1cf42" stroke-width="3"/>
       <g transform="translate(390 116)"><circle cx="-94" r="58" fill="#06080a" stroke="#f1cf42" stroke-width="3"/><circle r="70" fill="#06080a" stroke="#f1cf42" stroke-width="3"/><circle cx="106" r="52" fill="#06080a" stroke="#f1cf42" stroke-width="3"/><text x="-94" y="5" text-anchor="middle" fill="#fff7c0" font-size="20" id="tachGearArt">N</text><text y="8" text-anchor="middle" fill="#fff7c0" font-size="30" id="cabSpeedArt">0</text><text y="28" text-anchor="middle" fill="#a9a47d" font-size="9">KM/H</text><text x="106" y="4" text-anchor="middle" fill="#fff7c0" font-size="13">P2</text><path d="M-42 26A48 48 0 0 1 42 26" fill="none" stroke="#f1cf42" stroke-width="6"/></g>
       <g id="cabinWheelG" transform="translate(390 302)"><path d="M-68-48Q0-78 68-48L56 48Q0 70-56 48Z" fill="none" stroke="#0b0d0f" stroke-width="18"/><path d="M-58-44L-18-7M58-44L18-7M-50 42L-16 12M50 42L16 12" stroke="#30343a" stroke-width="12"/><circle r="19" fill="#101317" stroke="#f1cf42" stroke-width="3"/><text y="5" text-anchor="middle" fill="#f1cf42" font-size="11" font-weight="800">Z</text></g>
       <path d="M710 210l90 40-36 70-96-46z" fill="#0a0d10" stroke="#f1cf42"/><g fill="#f1cf42"><circle cx="727" cy="244" r="6"/><circle cx="751" cy="254" r="6"/><circle cx="775" cy="264" r="6"/></g><text x="500" y="349" text-anchor="middle" fill="#c8bf82" font-size="10" letter-spacing="3">EXPOSED CARBON · THREE-DIAL INTERFACE · 9,800 RPM</text>
     </svg>`; }
+
+  function auroraWheel(cx,r){let s="";for(let i=0;i<9;i++){const a=i*Math.PI*2/9;s+=`<path d="M${cx+Math.cos(a)*r*.22} ${286+Math.sin(a)*r*.22}L${cx+Math.cos(a)*r*.76} ${286+Math.sin(a)*r*.76}"/>`;}return `<g><circle cx="${cx}" cy="286" r="${r}" fill="#060807" stroke="#242a27" stroke-width="9"/><circle cx="${cx}" cy="286" r="${r*.73}" fill="#101511" stroke="#b99c2b" stroke-width="2"/><g stroke="#59615a" stroke-width="7">${s}</g><circle cx="${cx}" cy="286" r="${r*.18}" fill="#d6b536"/></g>`;}
+  function injectExterior(){
+    app.el.exteriorArt.innerHTML=`<svg viewBox="0 0 1000 400" role="img" aria-label="Zenvo Aurora Agil exposed-carbon wedge side elevation">
+      <defs><linearGradient id="z2paint" x2="0" y2="1"><stop stop-color="#ffe77a"/><stop offset=".43" stop-color="#d6b22a"/><stop offset="1" stop-color="#66510c"/></linearGradient><linearGradient id="z2glass" x2="0" y2="1"><stop stop-color="#9ccbd4"/><stop offset=".5" stop-color="#18272d"/><stop offset="1" stop-color="#020405"/></linearGradient><linearGradient id="z2carbon" x2="1"><stop stop-color="#252b28"/><stop offset=".48" stop-color="#050706"/><stop offset="1" stop-color="#303733"/></linearGradient></defs>
+      <rect width="1000" height="400" fill="#0c1112"/><path d="M0 326H1000V400H0Z" fill="#111512"/><ellipse cx="505" cy="346" rx="430" ry="15" fill="#000" opacity=".72"/>
+      <g id="rearWingArt"><path d="M130 186L153 93M280 167L300 82" stroke="#171b1a" stroke-width="10"/><path d="M82 66Q203 44 338 55L331 84Q205 72 87 97Z" fill="url(#z2carbon)" stroke="#d9b93b" stroke-width="3"/><path d="M91 77Q214 56 329 65" stroke="#f3d55b" stroke-width="3"/><path d="M84 66l-12 43 24-13" fill="#121615"/></g>
+      <g id="bcBody"><path d="M88 301L192 308A83 85 0 0 1 357 308L675 308A81 86 0 0 1 837 310L938 303L949 250Q905 201 824 195L718 191L661 159Q575 76 473 101Q388 124 329 178L139 189Q73 211 65 249Q58 283 88 301Z" fill="url(#z2paint)" stroke="#ffe87d" stroke-width="3"/>
+        <path d="M339 176Q394 123 480 102Q562 83 637 157L680 190L566 181L532 112L461 119L407 176Z" fill="url(#z2glass)" stroke="#76929a" stroke-width="2"/><path d="M472 103L542 181L509 185L444 117Z" fill="#0c1110" opacity=".9"/>
+        <path d="M71 250Q171 197 318 191L264 229L88 273Z" fill="#131817"/><path d="M346 192Q278 183 222 231L266 282L364 224Z" fill="url(#z2carbon)" stroke="#454d48"/><path d="M375 207L521 193L484 289H356Z" fill="#030504" stroke="#a99029"/><path d="M390 218l88-9-25 59h-78z" fill="#171c1a"/>
+        <g id="doorArt"><path d="M405 178L661 162L677 270L508 291L476 203Z" fill="rgba(255,255,255,.045)" stroke="#9a8123" stroke-width="2"/><path d="M508 287L550 195L658 178L642 266Z" fill="url(#z2carbon)" opacity=".92"/><path d="M428 185L503 277" stroke="#f4d55a" stroke-width="3"/></g>
+        <path d="M678 193L824 195Q887 200 929 235L840 255L724 232Z" fill="#d0ad27"/><path d="M794 205l116 29-55 21-91-26z" fill="#111615"/><path d="M866 225l52 15-44 12-35-16z" fill="#efffff"/><path d="M77 236h62l-14 21H66" fill="#ec5b32"/><path d="M89 292Q504 312 937 286" fill="none" stroke="#050706" stroke-width="14"/><text x="594" y="255" text-anchor="middle" fill="#fff0a8" font-size="19" font-weight="900" letter-spacing="9">AURORA</text>
+      </g>
+      <g id="frontFlapArt"><path d="M819 294L956 278L943 310L791 322Z" fill="url(#z2carbon)"/><path d="M903 248l43-11-7 15-43 12z" fill="#090c0b"/></g><g id="quadExhaustArt"><path d="M105 260l38-10 13 14-45 14z" fill="#b9c1c1"/><path d="M114 262l26-7" stroke="#111" stroke-width="8"/></g>
+      ${auroraWheel(276,66)}${auroraWheel(758,68)}
+    </svg>`;app.el.doorArt=document.getElementById("doorArt");app.el.quadExhaustArt=document.getElementById("quadExhaustArt");app.el.bcBody=document.getElementById("bcBody");app.el.rearWingArt=document.getElementById("rearWingArt");app.el.frontFlapArt=document.getElementById("frontFlapArt");
+  }
+  function injectArt(){
+    injectExterior();
+    app.el.cabinArt.innerHTML=`<svg viewBox="0 0 1000 360" role="img" aria-label="Zenvo Aurora Agil exposed-carbon monocoque cockpit with three circular instruments">
+      <defs><linearGradient id="z2cab" x2="1" y2="1"><stop stop-color="#343a32"/><stop offset=".52" stop-color="#121713"/><stop offset="1" stop-color="#030504"/></linearGradient><pattern id="z2weave" width="12" height="12" patternUnits="userSpaceOnUse"><path d="M-3 3L3-3M0 12L12 0M9 15l6-6" stroke="#3e4640" stroke-width="2"/></pattern></defs><rect width="1000" height="360" fill="url(#z2cab)"/>
+      <path d="M18 326L126 94L226 170L343 119L500 155L656 119L779 169L874 92L982 328" fill="none" stroke="#282e2a" stroke-width="26"/><path d="M18 326L126 94L226 170M982 328L874 92L779 169" fill="none" stroke="#d4b22f" stroke-width="3"/>
+      <path d="M0 360L0 216L207 175L290 360ZM1000 360V216L793 175L710 360Z" fill="url(#z2weave)" stroke="#525b54"/><path d="M230 360L250 205Q282 166 326 204L347 360Z" fill="#080b09" stroke="#565f57"/><path d="M262 225l-15 110M313 225l17 110" stroke="#d6b536" stroke-width="12"/>
+      <g transform="translate(500 119)"><circle cx="-112" r="57" fill="#020403" stroke="#c6a52a" stroke-width="4"/><circle r="73" fill="#020403" stroke="#e0bd34" stroke-width="4"/><circle cx="119" r="52" fill="#020403" stroke="#a98d24" stroke-width="4"/><g stroke="#776a35" stroke-width="2"><path d="M-151 20A43 43 0 1 1-75 20"/><path d="M-53 22A58 58 0 1 1 53 22"/><path d="M83 17A39 39 0 1 1 155 17"/></g><text x="-112" y="7" text-anchor="middle" fill="#fff3b5" font-size="25" id="tachGearArt">N</text><text y="10" text-anchor="middle" fill="#fff3b5" font-size="34" id="cabSpeedArt">0</text><text y="32" text-anchor="middle" fill="#9b926b" font-size="10">KM/H</text><text x="119" y="4" text-anchor="middle" fill="#fff3b5" font-size="15">P2</text><text x="119" y="23" text-anchor="middle" fill="#8d865f" font-size="9">TORQUE FILL</text><path d="M-49-37h98" stroke="#20291f" stroke-width="8"/><path d="M-49-37h65" stroke="#e0bd34" stroke-width="8"/></g>
+      <g id="cabinWheelG" transform="translate(500 304)"><path d="M-76-54Q0-88 76-54L90 30Q49 75 0 67Q-49 75-90 30Z" fill="none" stroke="#050706" stroke-width="20"/><path d="M-70-45L-20-8M70-45L20-8M-75 30L-18 12M75 30L18 12" stroke="#323934" stroke-width="13"/><circle r="23" fill="#121713" stroke="#d6b536" stroke-width="4"/><text y="6" text-anchor="middle" fill="#e5c348" font-size="16" font-weight="900">Z</text></g>
+      <g transform="translate(752 220)"><path d="M0 0l125 42-31 96-132-52z" fill="#070a08" stroke="#a48a29"/><text x="42" y="28" fill="#d8c76e" font-size="10">AERO · P2 · VGT</text><g fill="#e0bd34"><circle cx="18" cy="49" r="8"/><circle cx="48" cy="58" r="8"/><circle cx="78" cy="67" r="8"/></g><g fill="#657066"><rect x="10" y="78" width="30" height="14" rx="3"/><rect x="48" y="89" width="30" height="14" rx="3"/><rect x="85" y="99" width="25" height="14" rx="3"/></g></g><text x="500" y="349" text-anchor="middle" fill="#aaa274" font-size="10" letter-spacing="3">CARBON MONOCOQUE · FIXED SEAT SHELLS · THREE-DIAL INTERFACE</text></svg>`;
+    app.el.engineBay.innerHTML=`<div class="heat-haze"></div><div class="turbo left" id="turboL"></div><div class="turbo right" id="turboR"></div><div class="turbo" id="turboL2" style="left:17%;top:58%"></div><div class="turbo" id="turboR2" style="right:17%;top:58%"></div><svg viewBox="0 0 1000 360" style="position:absolute;inset:2%;width:96%;height:88%" role="img" aria-label="Detailed Zenvo Mjølner hot-V quad turbo engine bay"><defs><linearGradient id="zeGold" x2="0" y2="1"><stop stop-color="#f0d45a"/><stop offset="1" stop-color="#7d6513"/></linearGradient></defs><rect x="24" y="18" width="952" height="316" rx="34" fill="#101512" stroke="#596159" stroke-width="5"/><path d="M73 40L346 121M927 40L654 121M86 305L337 199M914 305L663 199" stroke="#707970" stroke-width="13"/><path d="M500 35L500 318" stroke="#d2b333" stroke-width="6"/><path d="M500 67L401 244L190 276L268 88Z" fill="#171d18" stroke="#9a8228" stroke-width="4"/><path d="M500 67L599 244L810 276L732 88Z" fill="#171d18" stroke="#9a8228" stroke-width="4"/><g fill="url(#zeGold)" stroke="#f1dc72" stroke-width="3">${[0,1,2,3,4,5].map(i=>`<rect x="${280+i*29}" y="${113+i*13}" width="37" height="106" rx="14" transform="rotate(${8+i*2} ${298+i*29} ${166+i*13})"/>`).join("")}${[0,1,2,3,4,5].map(i=>`<rect x="${683-i*29}" y="${113+i*13}" width="37" height="106" rx="14" transform="rotate(${-8-i*2} ${701-i*29} ${166+i*13})"/>`).join("")}</g><path d="M430 74h140l34 116-104 85-104-85z" fill="#080b09" stroke="#626b63" stroke-width="4"/><text x="500" y="152" text-anchor="middle" fill="#f3d85c" font-size="24" font-weight="900">MJØLNER</text><text x="500" y="181" text-anchor="middle" fill="#e7ebdf" font-size="17">6.6 V12 · 9800</text><path d="M500 77V37" stroke="#879088" stroke-width="21"/><ellipse cx="500" cy="34" rx="56" ry="19" fill="#060806" stroke="#8f978f" stroke-width="4"/><g fill="#aeb7af" stroke="#343a35" stroke-width="5"><circle cx="151" cy="105" r="43"/><circle cx="849" cy="105" r="43"/><circle cx="151" cy="250" r="38"/><circle cx="849" cy="250" r="38"/></g><g fill="none" stroke="#d2b333" stroke-width="7"><circle cx="151" cy="105" r="24"/><circle cx="849" cy="105" r="24"/><circle cx="151" cy="250" r="21"/><circle cx="849" cy="250" r="21"/></g><path d="M192 105Q254 91 298 121M808 105Q746 91 702 121M189 250Q255 262 305 226M811 250Q745 262 695 226" fill="none" stroke="#353d37" stroke-width="17"/><rect x="421" y="275" width="158" height="41" rx="12" fill="#252c26" stroke="#d2b333"/><text x="500" y="300" text-anchor="middle" fill="#f0d86a" font-size="13">P2 MOTOR · 8-SPEED</text></svg><div class="emotor">200 BHP P2 MOTOR · 8-SPEED</div><div class="bay-exhaust"><i></i><i></i><i></i><i></i></div><div class="cover" id="engineCover">CARBON ENGINE COVER CLOSED</div>`;
+    app.el.engineCover=document.getElementById("engineCover");app.el.turboL=document.getElementById("turboL");app.el.turboR=document.getElementById("turboR");app.el.turboL2=document.getElementById("turboL2");app.el.turboR2=document.getElementById("turboR2");
+  }
 
     function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -2516,7 +2569,15 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
-  function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
+  function toggleAero() {
+    state.aeroMode = (state.aeroMode + 1) % 3;
+    state.aeroAuto = state.aeroMode === 0;
+    const names = ["AUTO", "ATTACK", "V-MAX"];
+    const notes = ["active wing trims continuously for cornering and airbraking", "maximum front and rear aero load", "wing and front elements flatten for the straight"];
+    for (const id of ["aeroBtn", "wingBtn"]) { const b = document.getElementById(id); if (b) { b.textContent = `Aero ${names[state.aeroMode]}`; b.classList.toggle("active", state.aeroMode !== 2); } }
+    audio.motor(0.5);
+    showToast(`${names[state.aeroMode]} aero — ${notes[state.aeroMode]}.`, "Aurora Agil");
+  }
   function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — the 9,800 rpm V12 howls." : "Exhaust flap closed — muted."); }
   // The Agil's estimated 1,450 bhp combines the 1,250 bhp Mjølner V12 with one
   // 200 bhp P2 motor in the rear transaxle. Switching it off isolates the V12.
@@ -2569,9 +2630,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Aurora Agil"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, aeroMode: 0, aeroAuto: true, frontRecline: 0 });
     if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
     setActive("hybridBtn", true);
+    for (const id of ["aeroBtn", "wingBtn"]) { const b = document.getElementById(id); if (b) { b.textContent = "Aero AUTO"; b.classList.add("active"); } }
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2606,7 +2668,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       case "ignition": break;
     }
   }
-  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat recline ${state.frontRecline}°.`); }
+  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -40, 40); audio.motor(0.4); showToast(`Fixed seat retained; the adjustable pedal box is ${state.frontRecline} mm from datum.`); }
   function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the V12 howls to 9,800 like a race engine."); }
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the Mjølner V12 barks and wails toward 4,000."); }
   function setIgnition(on) {
@@ -2679,7 +2741,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     el.flapFront.style.width = clamp(state.frontFlap * 100, 0, 100) + "%";
     el.flapRear.style.width = clamp(state.aeroDeploy * 100, 0, 100) + "%";
-    el.aeroState.textContent = state.aeroAuto ? "AUTO" : "FIX";
+    el.aeroState.textContent = ["AUTO", "ATK", "VMAX"][state.aeroMode] || "AUTO";
 
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
@@ -2707,7 +2769,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.doorState.textContent = app.anyDoorOpen() ? "Open" : "Closed";
     el.rideHeightRead.textContent = state.rideHeight === 1 ? "Lifted" : state.rideHeight === -1 ? "Lowered" : "Standard";
     el.lightState.textContent = state.lights ? "Active" : "Off";
-    el.frontSeatRead.textContent = `${state.frontRecline}°`;
+    el.frontSeatRead.textContent = `${state.frontRecline} mm`;
     el.climateRead.textContent = `${Math.round(state.seatTempC)}°C`;
     el.modeReadCab.textContent = state.driveMode === "wet" ? "Wet" : state.driveMode === "sport" ? "Sport" : "Race";
     el.rideRead.textContent = state.driveMode === "wet" ? "Soft" : state.driveMode === "sport" ? "Sport" : "Race";
@@ -2723,7 +2785,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
     el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetKmh)} km/h` : "Off";
     el.tcRead.textContent = state.esc ? (state.tractionControl ? "On" : "ESC only") : "Off";
-    el.dynStatus.textContent = `${state.driveMode === "race" ? "Race" : state.driveMode === "sport" ? "Sport" : "Wet"} · ESC ${state.esc ? "on" : "off"} · aero ${state.aeroAuto ? "auto" : "fixed"}`;
+    el.dynStatus.textContent = `${state.driveMode === "race" ? "Race" : state.driveMode === "sport" ? "Sport" : "Wet"} · ESC ${state.esc ? "on" : "off"} · aero ${["auto", "attack", "V-max"][state.aeroMode] || "auto"}`;
 
     if (state.route.active && !app.isLoop()) { el.distRead.textContent = `${(state.route.remainingM / 1000).toFixed(2)} km`; }
     else el.distRead.textContent = app.isLoop() && state.route.active ? "lap" : "—";
@@ -2813,7 +2875,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const tachArt = document.getElementById("tachArt"); if (tachArt) tachArt.setAttribute("opacity", state.shifterLight ? "1" : "0.4");
 
     // button states
-    setActive("aeroBtn", state.aeroAuto); setActive("wingBtn", state.aeroAuto);
+    setActive("aeroBtn", state.aeroMode !== 2); setActive("wingBtn", state.aeroMode !== 2);
     setActive("doorAllBtn", app.anyDoorOpen());
     setActive("exhaustBtn", state.exhaustValve); setActive("exhaustBtn2", state.exhaustValve); setActive("exhaustBtn3", state.exhaustValve);
     setActive("lightsBtn", state.lights); setActive("lightsBtn2", state.lights);
@@ -2911,8 +2973,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     document.getElementById("coverBtn").addEventListener("click", () => app.setToggle("engineCoverOpen"));
     document.getElementById("blipBtn").addEventListener("click", app.blipThrottle);
     document.getElementById("coldStartBtn").addEventListener("click", app.coldStartFlair);
-    document.getElementById("frontForward").addEventListener("click", () => app.adjustSeat(-2));
-    document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
+    document.getElementById("frontForward").addEventListener("click", () => app.adjustSeat(5));
+    document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(-5));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
     document.getElementById("hybridBtn").addEventListener("click", () => app.toggleFuel());

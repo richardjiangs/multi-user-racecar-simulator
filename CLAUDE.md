@@ -17,7 +17,7 @@ then two **Rolls-Royces** — the **Phantom VIII** and the **Spectre Black Badge
 not sports cars at all and are the reason the garage now has city journeys, working traffic
 signals and a course in being a chauffeur. The next set adds the **Ferrari F12tdf development
 prototype**, **Dodge Viper ACR Extreme Aero**, **Zenvo Aurora Agil**, **Maserati MCXtrema** and
-**Peugeot 9X8**; the last two are track/racing cars placed after the F1 block. `index.html` bundles all of them together with
+**Peugeot 9X8**; all five stay together at the end of the normal-car block before Formula 1. `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
@@ -105,11 +105,14 @@ Ferrari F12tdf simulator.html               ← a 2014 F12berlinetta rebuilt at 
                                                FERRARI at Maranello: a 380 m walk through five real rooms with
                                                twenty individually-drawn cars on plinths.
 Dodge Viper ACR Extreme Aero simulator.html ← 8.4 L naturally aspirated V10, 6-speed Tremec manual,
-Zenvo Aurora Agil simulator.html               fixed Extreme Aero + VIR; 6.6 L quad-VGT V12, one rear P2
-                                               motor, active aero + Goodwood. Both are the final road-block cars.
-Maserati MCXtrema simulator.html            ← track-only Nettuno V6, 6-speed sequential, 12-step TC/ABS,
-Peugeot 9X8 simulator.html                     4-step EPS + Varano; 2024 LMH V6/front-MGU hybrid, 900 V,
-                                               fixed rear wing + MotorLand Aragón. Both follow the F1 block.
+                                               fixed Extreme Aero, 10-way Bilstein control + full-width VIR.
+Zenvo Aurora Agil simulator.html            ← 6.6 L quad-VGT V12, rear P2 motor, AUTO/ATTACK/V-MAX active
+                                               aero + full-width Goodwood.
+Maserati MCXtrema simulator.html            ← track-only Nettuno V6, 6-speed sequential, live 12-step TC,
+                                               qualify/endurance map, rear camera + full-width Varano.
+Peugeot 9X8 simulator.html                  ← 2024 LMH V6/front-MGU hybrid, 900 V, STINT/ATTACK/CHARGE
+                                               strategies, brake migration + full-width MotorLand Aragón.
+                                               All four sit before the F1 block on the homepage.
 Dacia Sandrider Dakar simulator.html        ← 2026 Dakar Rally raid cars (4, one shared T1+ Ultimate chassis SPEC):
 Ford Raptor T1+ Dakar simulator.html           Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter.
 Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound (Ford = 5.0 NA V8; the rest twin-turbo V6),

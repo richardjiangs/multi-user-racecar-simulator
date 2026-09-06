@@ -454,15 +454,15 @@
         </div>
         <div class="art-wrap" id="cabinArt"><!-- svg injected --></div>
         <div class="readout-grid">
-          <div class="readout"><b id="frontSeatRead">0&deg;</b><span>seat position</span></div>
+          <div class="readout"><b id="frontSeatRead">0 mm</b><span>pedal box position</span></div>
           <div class="readout"><b id="climateRead">22&deg;C</b><span>cabin climate</span></div>
           <div class="readout"><b id="beltRead">Open</b><span>safety belt</span></div>
           <div class="readout"><b id="modeReadCab">Sport</b><span>drive mode</span></div>
         </div>
         <div class="divider"></div>
         <div class="control-grid">
-          <button id="frontForward">Seat +</button>
-          <button id="frontBack">Seat -</button>
+          <button id="frontForward">Pedals +</button>
+          <button id="frontBack">Pedals -</button>
           <button id="harnessBtn">Belt</button>
           <button id="heatBtn">Heated Screen</button>
           <button id="coolBtn">Air Conditioning</button>
@@ -471,6 +471,8 @@
           <button id="shifterLightBtn" class="active">Shift Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
           <button id="corseMapBtn" class="race" title="Toggle between TC 3 / ABS 6 / EPS 2 and endurance electronics">TC · ABS · EPS Map</button>
+          <button id="tcBtn" title="Cycle the wheel-mounted 12-step traction-control rotary">TC 6 / 12</button>
+          <button id="rearCameraBtn" title="Switch the high-mounted rear-camera display">Rear Camera</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -765,7 +767,7 @@ const CIRCUITS = {
       c(4600, 1, 70, 90, "Stowe"), c(5050, -1, 50, 45, "Vale"), c(5200, 1, 110, 120, "Club")
     ]
   },
-  "Autodromo di Varano": {dist:2350,env:"track",limitKmh:325,loop:true,widthM:12,corners:14,blurb:"Autodromo di Varano de’ Melegari — Maserati's 2.350 km development circuit",bumps:[],track:[c(120,1,62,95,"Nuova Variante"),c(300,-1,74,78,"Ferro di Cavallo"),c(485,1,48,112,"Ickx"),c(665,-1,42,130,"Parabolica"),c(850,1,82,68,"Esse"),c(1015,-1,66,82,"Tornantino"),c(1165,1,35,150,"Farnese"),c(1340,-1,48,110,"Curva della Quercia"),c(1515,1,76,76,"Seconda Esse"),c(1665,-1,58,95,"Variante"),c(1820,1,41,128,"Compressore"),c(1990,-1,70,82,"Hairpin"),c(2160,1,35,125,"Finale"),c(2290,-1,22,80,"Pit bend")]},
+  "Autodromo di Varano": {dist:2350,env:"track",limitKmh:325,loop:true,widthM:16,corners:14,blurb:"Autodromo di Varano de’ Melegari — Maserati's 2.350 km development circuit",bumps:[],track:[c(120,1,62,95,"Nuova Variante"),c(300,-1,74,78,"Ferro di Cavallo"),c(485,1,48,112,"Ickx"),c(665,-1,42,130,"Parabolica"),c(850,1,82,68,"Esse"),c(1015,-1,66,82,"Tornantino"),c(1165,1,35,150,"Farnese"),c(1340,-1,48,110,"Curva della Quercia"),c(1515,1,76,76,"Seconda Esse"),c(1665,-1,58,95,"Variante"),c(1820,1,41,128,"Compressore"),c(1990,-1,70,82,"Hairpin"),c(2160,1,35,125,"Finale"),c(2290,-1,22,80,"Pit bend")]},
   "Nardò Ring": {
     dist: 12600, env: "ring", limitKmh: 350, loop: true, widthM: 18.0, corners: 1,
     blurb: "the 12.6 km Nardò high-speed banked ring",
@@ -810,7 +812,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    raceAero: false,               // low-intervention TC / ABS / EPS qualifying map
+    raceAero: false, tcLevel: 6, rearCamera: false, // wheel rotaries and high rear-view camera
     raceAeroVis: 0,                // electronics-map indicator
     testDriver: false,
     lights: true, hazards: false, horn: false,
@@ -902,11 +904,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       // Twin-scroll twin-turbo V6 (Nettuno Racing): inherently balanced, smooth and creamy with a
       // hard-edged howl building to the limiter and the turbo whistling underneath
       const defs = [
+        {type:"square",mul:.333,gain:.14,toShaper:true},
         {type:"sawtooth",mul:.5,gain:.19,toShaper:true},
-        {type:"triangle",mul:1,gain:.29,toShaper:true},
-        {type:"sawtooth",mul:1.5,gain:.12,toShaper:true},
-        {type:"square",mul:3,gain:.052,toShaper:false},
-        {type:"sine",mul:6,gain:.025,toShaper:false}
+        {type:"sawtooth",mul:1,gain:.28,toShaper:true},
+        {type:"square",mul:1.5,gain:.085,toShaper:true},
+        {type:"sawtooth",mul:3,gain:.034,toShaper:false}
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -916,6 +918,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       });
 
       this.noiseBuf = this._noiseBuffer(2.0);
+      this.combNoise=c.createBufferSource();this.combNoise.buffer=this.noiseBuf;this.combNoise.loop=true;
+      this.combFilter=c.createBiquadFilter();this.combFilter.type="bandpass";this.combFilter.frequency.value=230;this.combFilter.Q.value=.84;
+      this.combVca=c.createGain();this.combVca.gain.value=0;this.combNoise.connect(this.combFilter);this.combFilter.connect(this.combVca);this.combVca.connect(this.synthGain);
+      this.combPulse=c.createOscillator();this.combPulse.type="sawtooth";this.combPulse.frequency.value=80;
+      this.pulseShape=c.createWaveShaper();{const q=new Float32Array(256);for(let i=0;i<q.length;i++){const x=i/(q.length-1)*2-1;q[i]=x>.72?Math.pow((x-.72)/.28,.28):0;}this.pulseShape.curve=q;}
+      this.pulseDepth=c.createGain();this.pulseDepth.gain.value=0;this.combPulse.connect(this.pulseShape);this.pulseShape.connect(this.pulseDepth);this.pulseDepth.connect(this.combVca.gain);this.combNoise.start();this.combPulse.start();
+      this.gearOsc=c.createOscillator();this.gearOsc.type="sawtooth";this.gearGain=c.createGain();this.gearGain.gain.value=0;const gearFilter=c.createBiquadFilter();gearFilter.type="bandpass";gearFilter.frequency.value=3900;gearFilter.Q.value=8;this.gearOsc.connect(gearFilter);gearFilter.connect(this.gearGain);this.gearGain.connect(this.master);this.gearOsc.start();
       const mkNoise = (type, freq, q) => {
         const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
         const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
@@ -938,9 +947,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     update(s, dt) {
       if (!this.ready) return;
       const t = this.ctx.currentTime;
-      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
+      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); this._set(this.pulseDepth.gain,0,.08);this._set(this.gearGain.gain,0,.08); return; }
       const firing = Math.max(18,(s.rpm/60)*3) // Nettuno 90-degree V6: three combustion events per revolution;
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
+      this.combPulse.frequency.setTargetAtTime(firing,t,.017);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
       const load = clamp(s.throttle, 0, 1);
@@ -961,6 +971,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
 
       this._set(this.engineBus.gain, engLevel, 0.05);
+      this._set(this.pulseDepth.gain,engLevel*.73,.035);this.combFilter.frequency.setTargetAtTime(175+rpmN*930+load*240,t,.04);
+      this.gearOsc.frequency.setTargetAtTime(650+rpmN*4300+Math.max(1,s.curGear)*95,t,.035);this._set(this.gearGain.gain,Math.abs(s.speedMps)>3?.004+load*.012:0,.06);
       this._set(this.engFilter.frequency, clamp(cutoff, 200, 8200), 0.05);
       this._set(this.turboGain.gain, turbo, 0.06);
       this.turboNode.f.frequency.setTargetAtTime(turboFreq, t, 0.06);
@@ -1518,7 +1530,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const cap = tractionCapN();
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
-    if (state.tractionControl || state.esc) usable = Math.min(rawForce, cap * mode().tc);
+    if (state.tractionControl || state.esc) usable = Math.min(rawForce, cap * mode().tc * (1.06 - state.tcLevel * 0.01));
     else usable = rawForce > cap ? cap * 0.82 + (rawForce - cap) * 0.04 : rawForce;
     const engineForce = usable * direction * realPower();
 
@@ -2306,9 +2318,25 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
-  function drawCabinFrame(w,h,pal){const y=h*.63,s=state.bodyRoll;ctx.fillStyle="#06090d";ctx.fillRect(0,y,w,h-y);ctx.strokeStyle="#4ca7f3";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(0,y+15);ctx.lineTo(w*.2,y-22+s);ctx.lineTo(w*.8,y-22+s);ctx.lineTo(w,y+15);ctx.stroke();drawCluster(w,h,y,s);drawWheel(w,h);}
-  function drawCluster(w,h,y,s){const R=Math.min(w,h)*.1,cx=w*.5+s,cy=y+R*.48,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);ctx.fillStyle="#020507";ctx.strokeStyle="#4ca7f3";ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-R*1.7,-R*.72,R*3.4,R*1.45,8);ctx.fill();ctx.stroke();ctx.fillStyle="#fff";ctx.textAlign="center";ctx.font="900 "+(R*.55)+"px sans-serif";ctx.fillText(state.gearMode==="G"?state.curGear:state.gearMode,R*.67,8);ctx.font="800 "+(R*.4)+"px sans-serif";ctx.fillText(Math.round(km),-R*.62,8);ctx.font="700 "+(R*.11)+"px monospace";ctx.fillStyle="#75c4ff";ctx.fillText("TC "+(state.raceAero?"03":"06")+"  ABS "+(state.driveMode==="wet"?"10":"06"),0,R*.5);ctx.strokeStyle="#1b3d58";ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(-R*1.42,-R*.48);ctx.lineTo(R*1.42,-R*.48);ctx.stroke();ctx.strokeStyle="#4ca7f3";ctx.beginPath();ctx.moveTo(-R*1.42,-R*.48);ctx.lineTo(-R*1.42+R*2.84*clamp(state.rpm/SPEC.redlineRpm,0,1),-R*.48);ctx.stroke();ctx.restore();}
-  function drawWheel(w,h){const R=Math.min(w,h)*.29;ctx.save();ctx.translate(w*.5,h*1.16);ctx.rotate(state.steer*.9);ctx.fillStyle="#090d12";ctx.strokeStyle="#4ca7f3";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-R*.8,-R*.5);ctx.lineTo(-R*.65,R*.46);ctx.quadraticCurveTo(0,R*.72,R*.65,R*.46);ctx.lineTo(R*.8,-R*.5);ctx.quadraticCurveTo(0,-R*.78,-R*.8,-R*.5);ctx.fill();ctx.stroke();ctx.fillStyle="#020507";ctx.fillRect(-R*.34,-R*.22,R*.68,R*.42);ctx.restore();}
+  function drawCabinFrame(w,h,pal){
+    const y=h*.61,s=state.bodyRoll;ctx.fillStyle="#030609";ctx.fillRect(0,y-18,w,h-y+18);
+    ctx.strokeStyle="#59646e";ctx.lineWidth=16;ctx.beginPath();ctx.moveTo(w*.04,h);ctx.lineTo(w*.17,y-84+s);ctx.lineTo(w*.36,y-36+s);ctx.moveTo(w*.96,h);ctx.lineTo(w*.83,y-84+s);ctx.lineTo(w*.65,y-36+s);ctx.stroke();
+    ctx.strokeStyle="#2f78b7";ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(w*.06,h);ctx.lineTo(w*.17,y-84+s);ctx.lineTo(w*.5,y-62+s);ctx.lineTo(w*.83,y-84+s);ctx.lineTo(w*.94,h);ctx.stroke();
+    ctx.fillStyle="#07101a";ctx.beginPath();ctx.moveTo(0,h);ctx.lineTo(w*.19,y+2);ctx.lineTo(w*.33,h);ctx.fill();ctx.beginPath();ctx.moveTo(w,h);ctx.lineTo(w*.81,y+2);ctx.lineTo(w*.67,h);ctx.fill();
+    if(state.rearCamera){const mx=w*.5,mw=w*.3,mh=h*.105,my=h*.075;const g=ctx.createLinearGradient(0,my,0,my+mh);g.addColorStop(0,"#6a8799");g.addColorStop(.48,"#24343e");g.addColorStop(.5,"#10171b");g.addColorStop(1,"#384046");ctx.fillStyle="#020508";ctx.fillRect(mx-mw/2-5,my-5,mw+10,mh+10);ctx.fillStyle=g;ctx.fillRect(mx-mw/2,my,mw,mh);ctx.strokeStyle="#eef2f4";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(mx-mw*.34,my+mh);ctx.lineTo(mx-mw*.11,my+mh*.54);ctx.moveTo(mx+mw*.34,my+mh);ctx.lineTo(mx+mw*.11,my+mh*.54);ctx.stroke();ctx.fillStyle="#62bcff";ctx.font=`700 ${Math.max(8,h*.015)}px monospace`;ctx.textAlign="left";ctx.fillText("REAR CAMERA",mx-mw*.46,my+13);}
+    ctx.fillStyle="#cfd5da";ctx.font=`700 ${Math.max(9,h*.018)}px monospace`;ctx.fillText("FIRE",w*.08,y+28);ctx.fillText("RADIO",w*.86,y+28);drawCluster(w,h,y,s);drawWheel(w,h);
+  }
+  function drawCluster(w,h,y,s){
+    const R=Math.min(w,h)*.07,cx=w*.5+s,cy=y-R*.45,km=Math.abs(app.kmh(state.speedMps));ctx.save();ctx.translate(cx,cy);
+    ctx.fillStyle="#020507";ctx.strokeStyle="#3c85c2";ctx.lineWidth=3;ctx.beginPath();ctx.roundRect(-R*2.15,-R*.72,R*4.3,R*1.44,8);ctx.fill();ctx.stroke();
+    const rpmN=clamp(state.rpm/SPEC.redlineRpm,0,1);for(let i=0;i<12;i++){ctx.fillStyle=i/11<rpmN?(i>8?"#ff4d45":"#55b9ff"):"#122130";ctx.fillRect(-R*1.9+i*R*.32,-R*.53,R*.24,R*.12);}
+    ctx.textAlign="center";ctx.fillStyle="#f4f8fb";ctx.font=`900 ${R*.48}px sans-serif`;ctx.fillText(state.gearMode==="G"?state.curGear:state.gearMode,R*.82,R*.18);ctx.font=`800 ${R*.33}px sans-serif`;ctx.fillText(Math.round(km),-R*.75,R*.13);ctx.fillStyle="#7dbbe8";ctx.font=`700 ${R*.1}px monospace`;ctx.fillText(`TC ${String(state.tcLevel).padStart(2,"0")}  ABS ${state.driveMode==="wet"?"10":"06"}  EPS ${state.raceAero?"2":"4"}`,0,R*.5);ctx.restore();
+  }
+  function drawWheel(w,h){
+    const R=Math.min(w,h)*.3;ctx.save();ctx.translate(w*.5,h*1.15);ctx.rotate(state.steer*.9);
+    ctx.fillStyle="#080c11";ctx.strokeStyle="#4ca7f3";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-R*.88,-R*.48);ctx.lineTo(-R*.69,R*.43);ctx.quadraticCurveTo(-R*.38,R*.69,0,R*.62);ctx.quadraticCurveTo(R*.38,R*.69,R*.69,R*.43);ctx.lineTo(R*.88,-R*.48);ctx.quadraticCurveTo(R*.45,-R*.72,0,-R*.69);ctx.quadraticCurveTo(-R*.45,-R*.72,-R*.88,-R*.48);ctx.fill();ctx.stroke();
+    ctx.fillStyle="#010305";ctx.fillRect(-R*.38,-R*.28,R*.76,R*.48);ctx.strokeStyle="#2d6b9e";ctx.strokeRect(-R*.38,-R*.28,R*.76,R*.48);for(const p of [[-.66,-.18,"#f3c84d"],[.66,-.18,"#f3c84d"],[-.67,.16,"#e84242"],[.67,.16,"#e84242"],[-.47,.37,"#62bcff"],[.47,.37,"#62bcff"]]){ctx.fillStyle=p[2];ctx.beginPath();ctx.arc(R*p[0],R*p[1],R*.06,0,Math.PI*2);ctx.fill();}ctx.restore();
+  }
     function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
@@ -2410,7 +2438,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      2700 mm wheelbase, 1145 mm tall, 830/822 mm
      overhangs. One hand-written outline, its own shut lines, its own lamps. Nothing about it is
      shared with any other car. The source is tools/bodykit/drawn.mjs. */
-  function injectExterior(){app.el.exteriorArt.innerHTML=`
+  function injectExteriorLegacy(){app.el.exteriorArt.innerHTML=`
     <svg viewBox="0 0 1000 400" role="img" aria-label="Maserati MCXtrema side profile">
       <defs><linearGradient id="mxp" x2="0" y2="1"><stop stop-color="#4da2ff"/><stop offset=".4" stop-color="#0b5ca8"/><stop offset="1" stop-color="#072849"/></linearGradient><linearGradient id="mxg" x2="0" y2="1"><stop stop-color="#9fd8f4"/><stop offset="1" stop-color="#040a10"/></linearGradient></defs><ellipse cx="500" cy="339" rx="410" ry="11" fill="rgba(0,0,0,.58)"/>
       <g id="rearWingArt"><path d="M120 170v-74M272 155V82" stroke="#11161c" stroke-width="9"/><path d="M75 76l240-20 4 20-242 22z" fill="#080b0f" stroke="#49a8ff"/></g>
@@ -2424,13 +2452,40 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       <g><circle cx="276" cy="270" r="65" fill="#07090c" stroke="#20252b" stroke-width="8"/><circle cx="276" cy="270" r="52" fill="#11151a" stroke="#4da2ff" stroke-opacity=".55"/><path d="M288,270 L322.8097784515637,265.77570818769345 L322.8097784515637,274.22429181230655 Z" fill="#59616b"/><path d="M284.4852813742386,278.4852813742386 L312.0865371551334,300.1124863827479 L306.1124863827479,306.0865371551334 Z" fill="#59616b"/><path d="M276,282 L280.22429181230655,316.8097784515637 L271.77570818769345,316.8097784515637 Z" fill="#59616b"/><path d="M267.5147186257614,278.4852813742386 L245.8875136172521,306.0865371551334 L239.91346284486661,300.1124863827479 Z" fill="#59616b"/><path d="M264,270 L229.19022154843628,274.22429181230655 L229.19022154843628,265.7757081876935 Z" fill="#59616b"/><path d="M267.5147186257614,261.5147186257614 L239.91346284486661,239.8875136172521 L245.8875136172521,233.91346284486661 Z" fill="#59616b"/><path d="M276,258 L271.77570818769345,223.19022154843628 L280.2242918123065,223.19022154843628 Z" fill="#59616b"/><path d="M284.4852813742386,261.5147186257614 L306.1124863827479,233.91346284486661 L312.0865371551334,239.8875136172521 Z" fill="#59616b"/><circle cx="276" cy="270" r="9" fill="#4da2ff"/></g><g><circle cx="758" cy="270" r="66" fill="#07090c" stroke="#20252b" stroke-width="8"/><circle cx="758" cy="270" r="53" fill="#11151a" stroke="#4da2ff" stroke-opacity=".55"/><path d="M770,270 L805.8057311845757,265.6858296384955 L805.8057311845757,274.3141703615045 Z" fill="#59616b"/><path d="M766.4852813742385,278.4852813742386 L794.8543358180086,300.75317758238083 L788.7531775823808,306.85433581800856 Z" fill="#59616b"/><path d="M758,282 L762.3141703615046,317.80573118457573 L753.6858296384954,317.80573118457573 Z" fill="#59616b"/><path d="M749.5147186257615,278.4852813742386 L727.2468224176192,306.85433581800856 L721.1456641819914,300.75317758238083 Z" fill="#59616b"/><path d="M746,270 L710.1942688154243,274.3141703615045 L710.1942688154243,265.6858296384955 Z" fill="#59616b"/><path d="M749.5147186257615,261.5147186257614 L721.1456641819914,239.24682241761917 L727.2468224176191,233.14566418199144 Z" fill="#59616b"/><path d="M758,258 L753.6858296384954,222.19426881542427 L762.3141703615045,222.19426881542427 Z" fill="#59616b"/><path d="M766.4852813742385,261.5147186257614 L788.7531775823808,233.14566418199144 L794.8543358180085,239.24682241761917 Z" fill="#59616b"/><circle cx="758" cy="270" r="9" fill="#4da2ff"/></g>
     </svg>`;app.el.doorArt=document.getElementById("doorArt");app.el.quadExhaustArt=document.getElementById("quadExhaustArt");app.el.bcBody=document.getElementById("bcBody");}
   function turbine(){return "";}
-  function injectArt(){injectExterior();app.el.cabinArt.innerHTML=`
+  function injectArtLegacy(){injectExteriorLegacy();app.el.cabinArt.innerHTML=`
     <svg viewBox="0 0 1000 360" role="img" aria-label="Maserati MCXtrema single-seat racing cockpit">
       <defs><linearGradient id="mxc" x2="1" y2="1"><stop stop-color="#18222d"/><stop offset="1" stop-color="#05080c"/></linearGradient></defs><rect width="1000" height="360" fill="url(#mxc)"/><path d="M90 178Q500 68 910 178L874 236H126Z" fill="#080b10" stroke="#397db8"/><path d="M110 188Q500 94 890 188" stroke="#4da2ff" stroke-width="3"/><path d="M120 80L245 265M880 80L755 265" stroke="#5a626c" stroke-width="14" opacity=".65"/>
       <g transform="translate(420 113)"><rect x="-112" y="-50" width="224" height="112" rx="14" fill="#05090d" stroke="#4da2ff" stroke-width="3"/><path d="M-95-35h190" stroke="#173653" stroke-width="10"/><path d="M-95-35h118" stroke="#4da2ff" stroke-width="10"/><text x="-68" y="0" fill="#a9c9e5" font-size="10">LAP DELTA</text><text x="58" y="14" text-anchor="middle" fill="#fff" font-size="36" id="tachGearArt">N</text><text x="-60" y="35" text-anchor="middle" fill="#fff" font-size="30" id="cabSpeedArt">0</text><text x="-60" y="52" text-anchor="middle" fill="#8fb8dc" font-size="9">KM/H</text><text x="56" y="46" text-anchor="middle" fill="#6ec0ff" font-size="9">TC 06 · ABS 06</text></g>
       <g id="cabinWheelG" transform="translate(420 294)"><path d="M-84-42Q0-70 84-42L68 44Q0 69-68 44Z" fill="#0a0e13" stroke="#4da2ff" stroke-width="4"/><rect x="-44" y="-22" width="88" height="42" rx="5" fill="#020609" stroke="#397db8"/><g fill="#e84545"><circle cx="-62" cy="10" r="8"/><circle cx="62" cy="10" r="8"/></g><g fill="#f2c84b"><circle cx="-55" cy="-18" r="6"/><circle cx="55" cy="-18" r="6"/></g></g>
       <path d="M690 205l120 24v90H660z" fill="#080c10" stroke="#397db8"/><g fill="#4da2ff"><rect x="683" y="232" width="36" height="14" rx="3"/><rect x="730" y="232" width="36" height="14" rx="3"/><rect x="683" y="258" width="36" height="14" rx="3"/><rect x="730" y="258" width="36" height="14" rx="3"/></g><text x="500" y="349" text-anchor="middle" fill="#8fb8dc" font-size="10" letter-spacing="3">SINGLE SEAT · 5-INCH WHEEL DISPLAY · TELEMETRY</text>
     </svg>`;}
+
+  function mcxWheel(cx,r){let s="";for(let i=0;i<8;i++){const a=i*Math.PI/4;s+=`<path d="M${cx+Math.cos(a)*r*.24} ${286+Math.sin(a)*r*.24}L${cx+Math.cos(a)*r*.77} ${286+Math.sin(a)*r*.77}"/>`;}return `<g><circle cx="${cx}" cy="286" r="${r}" fill="#05080b" stroke="#182631" stroke-width="9"/><circle cx="${cx}" cy="286" r="${r*.73}" fill="#111820" stroke="#49a8ff" stroke-width="2"/><g stroke="#596673" stroke-width="8">${s}</g><circle cx="${cx}" cy="286" r="${r*.19}" fill="#307ab8"/></g>`;}
+  function injectExterior(){
+    app.el.exteriorArt.innerHTML=`<svg viewBox="0 0 1000 400" role="img" aria-label="Maserati MCXtrema single-seat shark-nose track car side elevation">
+      <defs><linearGradient id="m2paint" x2="0" y2="1"><stop stop-color="#70beff"/><stop offset=".38" stop-color="#1468ad"/><stop offset="1" stop-color="#062743"/></linearGradient><linearGradient id="m2glass" x2="0" y2="1"><stop stop-color="#a5d9ec"/><stop offset=".52" stop-color="#183443"/><stop offset="1" stop-color="#020608"/></linearGradient><linearGradient id="m2carbon" x2="1"><stop stop-color="#202831"/><stop offset=".5" stop-color="#030608"/><stop offset="1" stop-color="#26323d"/></linearGradient></defs>
+      <rect width="1000" height="400" fill="#0b1219"/><path d="M0 330H1000V400H0Z" fill="#111820"/><ellipse cx="505" cy="347" rx="438" ry="16" fill="#000" opacity=".72"/>
+      <g id="rearWingArt"><path d="M120 188L139 88M275 168L290 75" stroke="#12191f" stroke-width="11"/><path d="M72 58Q193 40 335 48L328 78Q188 66 75 90Z" fill="url(#m2carbon)" stroke="#4aa8f1" stroke-width="3"/><path d="M83 69Q196 52 323 59" stroke="#78c5ff" stroke-width="3"/></g>
+      <g id="bcBody"><path d="M84 302L189 310A83 86 0 0 1 354 310L672 310A81 87 0 0 1 834 311L942 305L954 248Q905 198 823 193L691 188L636 146Q555 80 466 100Q377 125 326 178L143 187Q72 211 62 255Q54 283 84 302Z" fill="url(#m2paint)" stroke="#78c7ff" stroke-width="3"/>
+        <path d="M334 176Q382 129 466 104Q548 87 618 148L665 188L565 180L530 111L457 120L397 177Z" fill="url(#m2glass)" stroke="#75a4bd" stroke-width="2"/><path d="M469 101L518 82L553 91L540 112Z" fill="#080d11" stroke="#57b2f7"/><path d="M500 95L500 50L529 51L548 111Z" fill="url(#m2carbon)" stroke="#3a8fca"/>
+        <path d="M61 255Q153 200 318 188L250 227L74 281Z" fill="#071019"/><path d="M337 190Q281 184 221 232L264 282L362 221Z" fill="#02070a"/><path d="M366 202L482 185L444 292H347Z" fill="url(#m2carbon)"/><g id="doorArt"><path d="M398 178L636 149L681 268L516 292L482 200Z" fill="rgba(255,255,255,.035)" stroke="#2479b5" stroke-width="2"/><path d="M520 288L551 185L644 169L659 259Z" fill="#06101a"/><path d="M412 181L491 276" stroke="#62b8f4" stroke-width="3"/></g>
+        <path d="M681 188L823 193Q893 198 937 236L844 255L730 228Z" fill="#10588f"/><path d="M790 201l139 34-73 23-115-30z" fill="#081019"/><g stroke="#eaf8ff" stroke-width="5"><path d="M875 220l48 15"/><path d="M862 231l48 15"/><path d="M849 242l48 15"/></g><path d="M73 239h65l-16 23H60" fill="#e8383f"/><path d="M85 292Q505 316 942 285" fill="none" stroke="#030608" stroke-width="15"/><path d="M120 287l120-32M826 259l107 20" stroke="#4aa8f1" stroke-width="3"/><text x="587" y="252" text-anchor="middle" fill="#eff8ff" font-size="20" font-weight="900" letter-spacing="8">MCXTREMA</text>
+      </g><g id="frontFlapArt"><path d="M817 296L963 276L947 313L785 323Z" fill="url(#m2carbon)"/><path d="M902 246l54-12-10 17-53 13z" fill="#081019"/></g><g id="quadExhaustArt"><circle cx="117" cy="266" r="13" fill="#adb8c0"/><circle cx="117" cy="266" r="7" fill="#12181d"/></g>
+      ${mcxWheel(274,66)}${mcxWheel(754,68)}
+    </svg>`;app.el.doorArt=document.getElementById("doorArt");app.el.quadExhaustArt=document.getElementById("quadExhaustArt");app.el.bcBody=document.getElementById("bcBody");app.el.rearWingArt=document.getElementById("rearWingArt");app.el.frontFlapArt=document.getElementById("frontFlapArt");
+  }
+  function injectArt(){
+    injectExterior();
+    app.el.cabinArt.innerHTML=`<svg viewBox="0 0 1000 360" role="img" aria-label="Maserati MCXtrema single-seat racing cell with wheel-mounted five-inch display and electronics rotaries">
+      <defs><linearGradient id="m2cab" x2="1" y2="1"><stop stop-color="#202d39"/><stop offset=".5" stop-color="#0a1118"/><stop offset="1" stop-color="#020507"/></linearGradient><pattern id="m2weave" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 10L10 0M-2 2L2-2M8 12l4-4" stroke="#26333d" stroke-width="2"/></pattern></defs><rect width="1000" height="360" fill="url(#m2cab)"/>
+      <path d="M49 352L133 74L241 181L332 131M951 352L867 74L759 181L668 131" fill="none" stroke="#59636c" stroke-width="18"/><path d="M49 352L133 74L241 181M951 352L867 74L759 181" fill="none" stroke="#2a83c2" stroke-width="3"/>
+      <path d="M0 360V221L201 173L302 360ZM1000 360V221L799 173L698 360Z" fill="url(#m2weave)" stroke="#40505d"/><path d="M238 360L260 194Q305 150 350 194L370 360Z" fill="#070b0f" stroke="#535f69"/><path d="M277 213l-17 125M332 213l18 125" stroke="#3c8dca" stroke-width="13"/>
+      <g transform="translate(500 82)"><rect x="-90" y="-25" width="180" height="58" rx="7" fill="#020507" stroke="#2e7daf" stroke-width="3"/><text x="0" y="-7" text-anchor="middle" fill="#70bff2" font-size="10">REAR CAMERA</text><path d="M-71 20L-35 2L0 17L35 2L71 20" fill="none" stroke="#6e8798" stroke-width="3"/></g>
+      <g id="cabinWheelG" transform="translate(500 281)"><path d="M-100-58L-83 51L-45 72H45L83 51L100-58L62-77H-62Z" fill="#080c11" stroke="#4ca7f3" stroke-width="4"/><g fill="#e34242"><circle cx="-74" cy="-26" r="9"/><circle cx="74" cy="-26" r="9"/></g><g fill="#f0c64a"><circle cx="-76" cy="8" r="8"/><circle cx="76" cy="8" r="8"/></g><g fill="#61b9ed"><circle cx="-63" cy="40" r="7"/><circle cx="63" cy="40" r="7"/></g><rect x="-48" y="-42" width="96" height="74" rx="5" fill="#010305" stroke="#357fb2"/><path d="M-39-32h78" stroke="#17334a" stroke-width="8"/><path d="M-39-32h48" stroke="#54b0eb" stroke-width="8"/><text x="18" y="7" text-anchor="middle" fill="#fff" font-size="31" font-weight="900" id="tachGearArt">N</text><text x="-20" y="7" text-anchor="middle" fill="#fff" font-size="18" id="cabSpeedArt">0</text><text y="24" text-anchor="middle" fill="#75bff0" font-size="8">TC 06 · ABS 06</text></g>
+      <g transform="translate(733 198)"><path d="M0 0l143 24-13 129-151-28z" fill="#06090c" stroke="#3d82b5"/><text x="61" y="24" text-anchor="middle" fill="#b8c8d4" font-size="10">DRIVER CONTROLS</text><g fill="#4aa8eb"><circle cx="30" cy="53" r="17"/><circle cx="78" cy="61" r="17"/><circle cx="124" cy="68" r="17"/></g><text x="30" y="57" text-anchor="middle" fill="#071019" font-size="8" font-weight="900">TC</text><text x="78" y="65" text-anchor="middle" fill="#071019" font-size="8" font-weight="900">ABS</text><text x="124" y="72" text-anchor="middle" fill="#071019" font-size="8" font-weight="900">EPS</text><g fill="#e24343"><rect x="14" y="89" width="34" height="15" rx="4"/><rect x="58" y="97" width="34" height="15" rx="4"/></g></g><text x="500" y="349" text-anchor="middle" fill="#8cb7d5" font-size="10" letter-spacing="3">SINGLE FIXED SEAT · 5-INCH WHEEL DISPLAY · ADJUSTABLE PEDAL BOX</text></svg>`;
+    app.el.engineBay.innerHTML=`<div class="heat-haze"></div><div class="turbo left" id="turboL"></div><div class="turbo right" id="turboR"></div><svg viewBox="0 0 1000 360" style="position:absolute;inset:2%;width:96%;height:88%" role="img" aria-label="Detailed Maserati Nettuno racing V6 engine bay"><defs><linearGradient id="meBlue" x2="0" y2="1"><stop stop-color="#64b8f5"/><stop offset="1" stop-color="#133d5b"/></linearGradient></defs><rect x="25" y="18" width="950" height="316" rx="35" fill="#0c1218" stroke="#435462" stroke-width="5"/><path d="M72 42L342 122M928 42L658 122M82 305L349 204M918 305L651 204" stroke="#6a7781" stroke-width="14"/><path d="M500 38L500 320" stroke="#3b91ca" stroke-width="6"/><g fill="url(#meBlue)" stroke="#83c9f6" stroke-width="4"><path d="M181 103L450 77L466 256L153 277L124 207Z"/><path d="M819 103L550 77L534 256L847 277L876 207Z"/></g><g fill="#d8e2e8" stroke="#25323c" stroke-width="4"><circle cx="235" cy="130" r="27"/><circle cx="330" cy="139" r="27"/><circle cx="419" cy="149" r="27"/><circle cx="765" cy="130" r="27"/><circle cx="670" cy="139" r="27"/><circle cx="581" cy="149" r="27"/></g><path d="M429 73h142l42 115-113 91-113-91z" fill="#060a0e" stroke="#64717b" stroke-width="4"/><path d="M500 76V37" stroke="#7f8c96" stroke-width="22"/><ellipse cx="500" cy="34" rx="58" ry="20" fill="#06090c" stroke="#596872" stroke-width="4"/><text x="500" y="146" text-anchor="middle" fill="#67b9f2" font-size="24" font-weight="900">NETTUNO</text><path d="M470 168Q500 142 530 168Q500 205 470 168Z" fill="#e7edf1"/><text x="500" y="223" text-anchor="middle" fill="#dce5ea" font-size="15">3.0 TT · MTC</text><g fill="#aab7c0" stroke="#263039" stroke-width="5"><circle cx="110" cy="92" r="42"/><circle cx="890" cy="92" r="42"/></g><g fill="none" stroke="#45a6e8" stroke-width="7"><circle cx="110" cy="92" r="24"/><circle cx="890" cy="92" r="24"/></g><path d="M150 95Q225 78 283 107M850 95Q775 78 717 107" fill="none" stroke="#303c45" stroke-width="18"/><path d="M320 285Q500 325 680 285" fill="none" stroke="#969fa7" stroke-width="12"/><ellipse cx="500" cy="290" rx="48" ry="23" fill="#171d22" stroke="#74808a" stroke-width="4"/><text x="500" y="295" text-anchor="middle" fill="#64b9f2" font-size="12">6-SEQUENTIAL</text></svg><div class="emotor">6-SPEED SEQUENTIAL · MECHANICAL LSD</div><div class="bay-exhaust"><i></i><i></i><i></i><i></i></div><div class="cover" id="engineCover">REAR CLAMSHELL CLOSED</div>`;
+    app.el.engineCover=document.getElementById("engineCover");app.el.turboL=document.getElementById("turboL");app.el.turboR=document.getElementById("turboR");
+  }
 
     function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -2493,6 +2548,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleRaceAero() {
     const next = !state.raceAero;
     state.raceAero = next; setActive("corseMapBtn", next);
+    state.tcLevel = next ? 3 : 6;
+    document.getElementById("tcBtn").textContent = `TC ${state.tcLevel} / 12`;
     if (next) {
       if (state.driveMode !== "race") setMode("race");
       audio.motor(0.9); setTimeout(() => audio.motor(0.6), 260); audio.chime([392, 523, 659, 784]);
@@ -2501,6 +2558,17 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       audio.motor(0.5);
       showToast("ENDURANCE ELECTRONICS — TC 6, ABS 8 and EPS 3 selected.","MCXtrema");
     }
+  }
+  function cycleTc() {
+    state.tcLevel = state.tcLevel >= 12 ? 1 : state.tcLevel + 1;
+    state.raceAero = false; setActive("corseMapBtn", false);
+    document.getElementById("tcBtn").textContent = `TC ${state.tcLevel} / 12`;
+    audio.click(560 + state.tcLevel * 52);
+    showToast(`Wheel TC rotary set to ${state.tcLevel} of 12 — ${state.tcLevel <= 3 ? "low intervention" : state.tcLevel >= 9 ? "strong intervention" : "balanced traction support"}.`, "MCXtrema");
+  }
+  function toggleRearCamera() {
+    state.rearCamera = !state.rearCamera; setActive("rearCameraBtn", state.rearCamera); audio.click(1150);
+    showToast(state.rearCamera ? "High-mounted rear-camera display on." : "Rear-camera display off.", "MCXtrema");
   }
 
   function toggleLights() { state.lights = !state.lights; audio.click(state.lights ? 760 : 520); showToast(state.lights ? "Adaptive LED headlamps on — the road lights up." : "Headlamps off."); }
@@ -2537,9 +2605,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "MCXtrema"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
+    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tcLevel: 6, rearCamera: false, frontRecline: 0 });
     if (state.raceAero) state.raceAero = false;
     setActive("corseMapBtn", false);
+    setActive("rearCameraBtn", false); document.getElementById("tcBtn").textContent = "TC 6 / 12";
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
     state.route = { active: false, name: "Free run", env: "track", totalM: 0, remainingM: 0, arrived: false };
@@ -2551,7 +2620,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     showToast("Back in the pit lane.", "MCXtrema");
   }
 
-  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleRaceAero, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
+  Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleRaceAero, cycleTc, toggleRearCamera, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
 }
 
 /* ===== cockpit / engine feature effects ===== */
@@ -2563,9 +2632,6 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function setToggle(key, value) { const next = value === undefined ? !state[key] : value; state[key] = next; applyEffect(key, next); }
   function applyEffect(key, on) {
     switch (key) {
-      case "heat": if (on) state.cool = false; if (on) audio.motor(0.7); else audio.click(820); showToast(on ? "Heated windscreen on." : "Heated screen off."); break;
-      case "cool": if (on) state.heat = false; if (on) audio.whoosh(0.5); showToast(on ? "Air conditioning on — the one concession to comfort." : "Air conditioning off."); break;
-      case "ambient": if (on) audio.click(1100); else audio.click(360); showToast(on ? "Map light on — a single machined lamp." : "Map light off."); break;
       case "shifterLight": audio.click(1500); showToast(on ? "Shift light armed at 7,700 rpm." : "Shift light off."); break;
       case "audioCabin": audio.setMusic(on); if (audio.hasUserTrack()) { app.setNowPlaying(on ? `${audio.userTrackIsVideo ? "♪ From your film: " : "♪ Now playing: "}${audio.userTrackName}` : `Paused — ${audio.userTrackName}`, on); showToast(on ? `Cockpit audio — “${audio.userTrackName}”.` : "Audio paused."); } else { app.setNowPlaying(on ? "Pit-radio audio playing" : "Cockpit silent — engine only", on); showToast(on ? "Pit-radio audio on." : "Pit-radio audio off — engine only."); } break;
       case "coolingFans": el.engineBay.classList.toggle("glow", false); if (on) audio.motor(0.6); showToast(on ? "Cooling fans running." : "Cooling fans off."); break;
@@ -2574,7 +2640,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       case "ignition": break;
     }
   }
-  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -4, 22); audio.motor(0.4); showToast(`Seat position ${state.frontRecline}.`); }
+  function adjustSeat(delta) { state.frontRecline = clamp(state.frontRecline + delta, -40, 40); audio.motor(0.4); showToast(`Single seat remains fixed; pedal box set ${state.frontRecline} mm from datum.`); }
   function blipThrottle() { if (!state.ignition) return; audio.blip(1); state.rpm = Math.min(app.SPEC.redlineRpm, state.rpm + 2600); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); showToast("Throttle blip — the V6 spins up smooth and hard."); }
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V6 clears its throat to 3,000."); }
   function setIgnition(on) {
@@ -2677,7 +2743,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.doorState.textContent = app.anyDoorOpen() ? "Open" : "Closed";
     el.rideHeightRead.textContent = state.rideHeight === 1 ? "Lifted" : state.rideHeight === -1 ? "Lowered" : "Standard";
     el.lightState.textContent = state.lights ? "Active" : "Off";
-    el.frontSeatRead.textContent = `${state.frontRecline}°`;
+    el.frontSeatRead.textContent = `${state.frontRecline} mm`;
     el.climateRead.textContent = `${Math.round(state.seatTempC)}°C`;
     el.modeReadCab.textContent = state.driveMode === "wet" ? "Wet" : state.driveMode === "sport" ? "Sport" : "Race";
     el.rideRead.textContent = state.driveMode === "wet" ? "Soft" : state.driveMode === "sport" ? "Sport" : "Race";
@@ -2692,8 +2758,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.lapRead.textContent = state.lap.bestMs ? `${app.fmtLap(state.lap.curMs)} / ${app.fmtLap(state.lap.bestMs)}` : (state.lap.curMs > 0 ? app.fmtLap(state.lap.curMs) : "—");
     el.driverRead.textContent = state.testDriver ? "Test Driver" : "You";
     el.cruiseRead.textContent = state.adaptiveCruise ? `${Math.round(state.cruiseSetKmh)} km/h` : "Off";
-    el.tcRead.textContent = state.esc ? (state.tractionControl ? "On" : "ESC only") : "Off";
-    el.dynStatus.textContent = `${state.driveMode === "race" ? "Race" : state.driveMode === "sport" ? "Sport" : "Wet"} · ${state.raceAero ? "TC 3 / ABS 6 / EPS 2" : "TC 6 / ABS 8 / EPS 3"} · fixed aero`;
+    el.tcRead.textContent = state.esc ? (state.tractionControl ? `TC ${state.tcLevel}` : "ESC only") : "Off";
+    el.dynStatus.textContent = `${state.driveMode === "race" ? "Race" : state.driveMode === "sport" ? "Sport" : "Wet"} · TC ${state.tcLevel} / ABS ${state.raceAero ? "6" : "8"} / EPS ${state.raceAero ? "2" : "3"} · fixed aero`;
 
     if (state.route.active && !app.isLoop()) { el.distRead.textContent = `${(state.route.remainingM / 1000).toFixed(2)} km`; }
     else el.distRead.textContent = app.isLoop() && state.route.active ? "lap" : "—";
@@ -2881,11 +2947,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     document.getElementById("coverBtn").addEventListener("click", () => app.setToggle("engineCoverOpen"));
     document.getElementById("blipBtn").addEventListener("click", app.blipThrottle);
     document.getElementById("coldStartBtn").addEventListener("click", app.coldStartFlair);
-    document.getElementById("frontForward").addEventListener("click", () => app.adjustSeat(-2));
-    document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(2));
+    document.getElementById("frontForward").addEventListener("click", () => app.adjustSeat(5));
+    document.getElementById("frontBack").addEventListener("click", () => app.adjustSeat(-5));
     document.getElementById("harnessBtn").addEventListener("click", () => app.latchHarness());
     document.getElementById("startSwitchBtn").addEventListener("click", () => app.setIgnition(!state.ignition));
     document.getElementById("corseMapBtn").addEventListener("click", () => app.toggleRaceAero());
+    document.getElementById("tcBtn").addEventListener("click", () => app.cycleTc());
+    document.getElementById("rearCameraBtn").addEventListener("click", () => app.toggleRearCamera());
   }
 
   function bindMedia() {
