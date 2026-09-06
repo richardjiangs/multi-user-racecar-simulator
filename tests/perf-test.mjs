@@ -25,6 +25,9 @@ import { fileURLToPath } from "node:url";
 
 async function loadPlaywright() {
   try { return await import("playwright"); } catch {}
+  if (process.env.CODEX_NODE_MODULES) {
+    return import(pathToFileURL(resolve(process.env.CODEX_NODE_MODULES, "playwright/index.mjs")).href);
+  }
   const { execSync } = await import("node:child_process");
   const globalRoot = execSync("npm root -g").toString().trim();
   return import(pathToFileURL(resolve(globalRoot, "playwright/index.mjs")).href);
@@ -266,6 +269,30 @@ const CARS = {
     // actually runs out of air rather than a governor
     topSpeed: { minKmh: 336, maxKmh: 352, minT: 60 },
     brake100: { target: 30.5, tol: 1.5 },
+  },
+  viperacr: {
+    file: "Dodge Viper ACR Extreme Aero simulator.html", app: "ViperApp", label: "Dodge Viper ACR Extreme Aero",
+    marks: { 100: { target: 3.6, tol: 1e-4 } },
+    topSpeed: { kmh: 285, minT: 65 },
+    brake100: { target: 30.8, tol: 1.5 },
+  },
+  aurora: {
+    file: "Zenvo Aurora Agil simulator.html", app: "AuroraApp", label: "Zenvo Aurora Agil",
+    marks: { 100: { target: 2.5, tol: 1e-4 } },
+    topSpeed: { kmh: 360, minT: 70 },
+    brake100: { target: 29, tol: 1.5 },
+  },
+  mcxtrema: {
+    file: "Maserati MCXtrema simulator.html", app: "MCXtremaApp", label: "Maserati MCXtrema",
+    marks: { 100: { target: 2.7, tol: 1e-4 } },
+    topSpeed: { kmh: 325, minT: 70 },
+    brake100: { target: 28.5, tol: 1.5 },
+  },
+  peugeot9x8: {
+    file: "Peugeot 9X8 simulator.html", app: "Peugeot9X8App", label: "Peugeot 9X8 (2024 LMH)",
+    marks: { 100: { target: 2.8, tol: 1e-4 } },
+    topSpeed: { kmh: 330, minT: 70 },
+    brake100: { target: 25.8, tol: 1.5 },
   },
   phantom: {
     file: "Rolls-Royce Phantom simulator.html",
@@ -543,7 +570,9 @@ async function openSim(browser, car) {
   return page;
 }
 
-const fmt = (v, d = 4) => (v == null ? "—" : Number(v).toFixed(d));
+// Launch tolerances are intentionally sub-millisecond, so keep enough digits in
+// failures to distinguish a real calibration miss from display rounding.
+const fmt = (v, d = 6) => (v == null ? "—" : Number(v).toFixed(d));
 let failures = 0;
 const check = (label, ok, detail) => {
   console.log(`   ${ok ? "✔" : "✘ FAIL"}  ${label}${detail ? "  " + detail : ""}`);
@@ -603,12 +632,12 @@ async function calibrateCar(browser, key) {
       const eff = await page.evaluate(PAGE_FNS.calibrate, {
         appName: car.app, field: "drivelineEff", target: m.target, mode: "launch", markKmh: Number(kmh), lo: 0.55, hi: 0.99,
       });
-      console.log(`   drivelineEff  = ${eff.value.toFixed(6)}   -> 0-${kmh} = ${eff.measured.toFixed(5)} s (target ${m.target})`);
+      console.log(`   drivelineEff  = ${eff.value.toFixed(9)}   -> 0-${kmh} = ${eff.measured.toFixed(6)} s (target ${m.target})`);
     }
     const grip = await page.evaluate(PAGE_FNS.calibrate, {
       appName: car.app, field: "tractionCoeff", target: t100, mode: "launch", lo: 0.3, hi: 2.6, rollout: !!car.rollout,
     });
-    console.log(`   tractionCoeff = ${grip.value.toFixed(6)}   -> 0-100 = ${grip.measured.toFixed(5)} s (target ${t100})`);
+    console.log(`   tractionCoeff = ${grip.value.toFixed(9)}   -> 0-100 = ${grip.measured.toFixed(6)} s (target ${t100})`);
   }
   if (car.brake100) {
     const bk = await page.evaluate(PAGE_FNS.calibrate, {

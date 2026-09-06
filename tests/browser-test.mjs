@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* ============================================================================
-   BROWSER SMOKE TEST — index.html shell + all six embedded simulators.
+   BROWSER SMOKE TEST — index.html shell + all 61 embedded simulators.
    Serves the repo over localhost, then verifies:
-     1. the garage renders all six car cards
+     1. the garage renders all 61 car cards
      2. PRIVATE PRACTICE keeps the AI rival grid alive (the old shell cleared
         it every 750 ms — the "no AI cars" bug this suite pins down)
      3. each embedded sim boots inside the shell and its physics advance
@@ -19,6 +19,9 @@ import { fileURLToPath, pathToFileURL } from "node:url";
 
 async function loadPlaywright() {
   try { return await import("playwright"); } catch {}
+  if (process.env.CODEX_NODE_MODULES) {
+    return import(pathToFileURL(resolve(process.env.CODEX_NODE_MODULES, "playwright/index.mjs")).href);
+  }
   const { execSync } = await import("node:child_process");
   const g = execSync("npm root -g").toString().trim();
   return import(pathToFileURL(resolve(g, "playwright/index.mjs")).href);
@@ -591,7 +594,7 @@ const check = (label, ok, detail) => {
   }
   // and they must not all look alike: the housings differ per car the way the dashboards do
   check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
-    bad.length === 0 && side === 13 && centre === 43 && frames.size >= 6, bad.slice(0, 4).join(" | "));
+    bad.length === 0 && side === 13 && centre === 47 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------
@@ -940,6 +943,7 @@ const check = (label, ok, detail) => {
     "Alpine": "Alpine", "Williams": "Williams", "Racing": "Racing Bulls", "Haas": "Haas",
     "Cadillac": "Cadillac", "Red": "Red Bull", "Alfa": "Alfa Romeo", "SSC": "SSC", "Jaguar": "Jaguar",
     "Honda": "Honda", "Mazda": "Mazda", "Rolls-Royce": "Rolls-Royce",
+    "Dodge": "Dodge|Viper", "Zenvo": "Zenvo", "Maserati": "Maserati", "Peugeot": "Peugeot",
   };
   const bad = [];
   let checked = 0;
@@ -981,14 +985,17 @@ const check = (label, ok, detail) => {
   check(checked + " ceiling warnings, each quoting its own car's top speed", bad.length === 0, bad.join(" | "));
 }
 
-const browser = await chromium.launch({ args: ["--autoplay-policy=no-user-gesture-required"] });
+const browser = await chromium.launch({
+  executablePath: process.env.CHROMIUM_PATH || undefined,
+  args: ["--autoplay-policy=no-user-gesture-required"],
+});
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const pageErrors = [];
 page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("fifty-seven car cards render", await page.locator(".car-card").count() === 57);
+check("sixty-one car cards render", await page.locator(".car-card").count() === 61);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- every card must be WIRED, not just rendered ----------
@@ -998,7 +1005,7 @@ check("host board present", await page.locator("#activeHostList").count() === 1)
    `if (!car) return;` and every button on them was inert — and this file never tried
    them, because they were not in the list. Derive, never enumerate. */
 const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
-check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 57);
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 61);
 
 const wiring = await page.evaluate((keys) => keys.map((k) => ({
   key: k,

@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of fifty-seven simulators — each a **single self-contained HTML file** —
-forty-one road/classic cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
+A garage of sixty-one simulators — each a **single self-contained HTML file** —
+forty-six road/classic/track cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
 Supra MK4 (A80), the six later hypercars (Hennessey Venom F5 · Lotus Evija · Mercedes-AMG
@@ -13,9 +13,11 @@ DB5** with its Q Branch equipment · **Mercedes-Benz 300 SLR Uhlenhaut Coupé** 
 21C**), and five more after those (**Alfa Romeo 33 Stradale** · **SSC Tuatara** · **Gordon
 Murray T.50s Niki Lauda** · **Jaguar XE SV Project 8** — the only four-door in the garage —
 · **Honda S2000**), two more after those (**Ford Mustang GTD** · **Mazda RX-7 Spirit R**), and
-finally two **Rolls-Royces** — the **Phantom VIII** and the **Spectre Black Badge** — which are
+then two **Rolls-Royces** — the **Phantom VIII** and the **Spectre Black Badge** — which are
 not sports cars at all and are the reason the garage now has city journeys, working traffic
-signals and a course in being a chauffeur. `index.html` bundles all of them together with
+signals and a course in being a chauffeur. The next set adds the **Ferrari F12tdf development
+prototype**, **Dodge Viper ACR Extreme Aero**, **Zenvo Aurora Agil**, **Maserati MCXtrema** and
+**Peugeot 9X8**; the last two are track/racing cars placed after the F1 block. `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
@@ -102,6 +104,12 @@ Ferrari F12tdf simulator.html               ← a 2014 F12berlinetta rebuilt at 
                                                24 km/h until you switch it out on Z. Its circuit is the MUSEO
                                                FERRARI at Maranello: a 380 m walk through five real rooms with
                                                twenty individually-drawn cars on plinths.
+Dodge Viper ACR Extreme Aero simulator.html ← 8.4 L naturally aspirated V10, 6-speed Tremec manual,
+Zenvo Aurora Agil simulator.html               fixed Extreme Aero + VIR; 6.6 L quad-VGT V12, one rear P2
+                                               motor, active aero + Goodwood. Both are the final road-block cars.
+Maserati MCXtrema simulator.html            ← track-only Nettuno V6, 6-speed sequential, 12-step TC/ABS,
+Peugeot 9X8 simulator.html                     4-step EPS + Varano; 2024 LMH V6/front-MGU hybrid, 900 V,
+                                               fixed rear wing + MotorLand Aragón. Both follow the F1 block.
 Dacia Sandrider Dakar simulator.html        ← 2026 Dakar Rally raid cars (4, one shared T1+ Ultimate chassis SPEC):
 Ford Raptor T1+ Dakar simulator.html           Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter.
 Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound (Ford = 5.0 NA V8; the rest twin-turbo V6),
@@ -243,7 +251,11 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Rolls-Royce Phantom VIII | 420 kW / 563 PS / 571 hp @ 5,000 (6.75 L twin-turbo V12, N74B68) | **900 Nm at 1,700 rpm** — all of it, just above idle | 5.4 s | 250 governed | 8-ZF, satellite-aided | 2,560 kg |
 | Rolls-Royce Spectre Black Badge | 485 kW / 659 PS (two motors, 102 kWh) — 430 kW / 584 PS as the standard Spectre | 1,075 Nm from rest (900 standard) | 4.1 s | 250 governed | 1-speed | 2,975 kg |
 | Ferrari F12tdf (F12berlinetta prototype) | 574 kW / 780 CV / 769 hp @ 8,500 (6.3 L F140 FC naturally-aspirated 65° V12, front-mounted behind the axle line, dry sump) | 705 Nm @ 6,750 — 80% of it from 2,500 | 2.9 s (0-200 7.9) | 340; **24 governed** on the development ECU, until you switch it out | 7-F1 DCT | 1,415 kg (dry) |
+| Dodge Viper ACR Extreme Aero | 481 kW / 645 hp @ 6,200 (8.4 L naturally-aspirated OHV V10) | 813 Nm @ 5,000 | **3.6 s — DERIVED** | 285 (Extreme Aero) | 6-Tremec manual | 1,539 kg |
+| Zenvo Aurora Agil | estimated 1,081 kW / 1,450 bhp combined (1,250 bhp quad-turbo V12 + 200 bhp P2 motor) | estimated 1,400 Nm | estimated 2.5 s | estimated 360 | 8-hybrid | 1,360 kg target dry |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
+| Maserati MCXtrema | 540 kW / 740 CV (3.0 L 90° twin-turbo Nettuno racing V6) | 730 Nm | **2.7 s — DERIVED** | 325 claimed | 6-sequential | ~1,300 kg dry |
+| Peugeot 9X8 (2024) | 480–520 kW total under BoP (2.6 L twin-turbo V6 hybrid; front MGU up to 200 kW) | not published; 900 Nm simulator envelope | **2.8 s — DERIVED** | ~330 derived | 7-sequential | 1,030 kg minimum |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 
 **The five newest road cars** each carry one *real* ultimate-speed feature on **key Z**, opt-in
@@ -989,7 +1001,7 @@ reality cannot come out identical:
 | **e-motor** | a hybrid carries an inverter whine under the engine note. |
 | **EV** | no firing order at all: inverter switching + reduction-stage and rotor whine, pitched by motor speed (a 30,000 rpm U9 Xtreme rotor whines far higher than a Nevera's). |
 
-**49 distinct voices across 56 cars.** The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
+The voice audit covers all **61 cars**. The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
 that really do share a power unit — the Mercedes, Ferrari and Red Bull Ford F1 customer
 teams, and the Jesko/Agera RS 5.0 twin-turbo V8. `tests/browser-test.mjs` hashes every
 oscillator stack and **fails on any shared voice outside that allow-list**, so this cannot
@@ -1033,7 +1045,7 @@ from the numbers perf-test certifies.
 
 ## index.html — garage + online race shell
 
-- Fifty-seven `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
+- Sixty-one `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
   the six later hypercars, each with a real-photo `<img class="realcar">` slot that reveals
   a supplied photo and otherwise falls back to the SVG livery) + spec chips; buttons
   `data-practice` / `data-online` per car key (`pagani, bugatti, mclaren, ferrari,
@@ -1042,7 +1054,8 @@ from the numbers perf-test certifies.
   f1williams, f1racingbulls, f1haas, f1audi, f1cadillac, dacia, fordraptor, grhilux,
   hunter`; plus the later road cars `evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5,
   slr300, czinger, alfa33, tuatara, t50s, project8, s2000, mustanggtd, rx7, phantom,
-  spectre, f12tdf`). New normal cars insert at the END of the road block, BEFORE the F1 cards.
+  spectre, f12tdf, viperacr, aurora`; plus the racing-car keys `mcxtrema, peugeot9x8`).
+  New normal cars insert at the END of the road block, BEFORE the F1 cards.
 - **Lazy sim loading** (so the homepage isn't a 12 MB download): between the
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers index.html now carries only a
   tiny `SIM_FILES = {key: "filename.html"}` map. `loadEmbeddedSim` branches on
