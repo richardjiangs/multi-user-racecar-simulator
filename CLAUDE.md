@@ -223,7 +223,8 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Koenigsegg Jesko | 954 kW / 1,280 hp @ 7,800 (E85: 1,193 kW / 1,600 hp) | 1,000 Nm @ 2,700–6,170 (E85 1,500 @ 5,100) | 2.5 s | ~425 drag-limited (Attack) / **531 claimed (Absolut)** | 9-LST | 1,420 kg |
 | Tesla Model S Plaid | 760 kW / 1,020 hp tri-motor | ~1,420 Nm combined | 2.1 s (w/ 1-ft rollout: 0-60 1.99 s) | 262 governed / 322 Track Pack | 1-speed | 2,162 kg |
 | Mercedes-AMG GT Black Series | 537 kW / 730 PS / 720 hp @ 6,900 (flat-plane V8) | 800 Nm @ 2,000–6,000 | 3.2 s | 325 governed | 7-DCT | 1,615 kg |
-| Aston Martin Valkyrie AMR Pro | 746 kW / 1,014 PS / 1,000 bhp (modified 6.5 L NA V12, no hybrid, 11,000 rpm) | 740 Nm simulator envelope | 2.3 s | 402 simulator target | 7-seq | 1,000 kg simulator target |
+| Aston Martin Valkyrie (road default) | 865 kW / 1,176 PS / 1,160 bhp (2019 launch hybrid spec, 11,100 rpm) | 900 Nm | 2.5 s simulator target | 350 simulator target | 7-seq | 1,030 kg simulator target |
+| Aston Martin Valkyrie AMR Pro (Y / cockpit opt-in) | 746 kW / 1,014 PS / 1,000 bhp (modified 6.5 L NA V12, no hybrid, 11,000 rpm) | 740 Nm simulator envelope | 2.3 s | 402 simulator target | 7-seq | 1,000 kg simulator target |
 | Ferrari 250 GTO | 221 kW / 300 PS @ 7,500 (Colombo V12, six Webers) | 294 Nm @ 5,500 | 6.1 s | ~280 | 5-manual | 880 kg (dry) |
 | Lamborghini Revuelto | 747 kW / 1,015 CV combined (825 CV V12 @ 9,250 + 3 e-motors) | ~1,100 Nm combined | 2.5 s | 350 | 8-DCT | 1,772 kg (dry) |
 | Porsche 918 Spyder | 652 kW / 887 PS combined (608 PS V8 @ 8,700 + 2 e-motors) | ~1,280 Nm combined | 2.6 s | 345 | 7-PDK | 1,674 kg |
@@ -1135,3 +1136,5 @@ GitHub Pages is already enabled on this repo in classic branch mode (source:
 `https://richardjiangs.github.io/multi-user-racecar-simulator/`.
 No Actions workflow needed (the auto-created `github-pages` environment
 rejects deploys from non-main branches anyway).
+
+September 2026 track-special revision: see `docs/TRACK_SPECIALS_ART.md` for drawing references, sound-model assumptions and the road/AMR Pro state contract. Run `node tests/track-specials-test.mjs` alongside the standard suites when changing these five cars.

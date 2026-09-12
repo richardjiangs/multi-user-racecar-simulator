@@ -1382,6 +1382,7 @@ export function drawAston(spec) {
 
       ${wheel(axR, G - rR, rR, "dish", "#9ef0d8", ID("Hub"))}
       ${wheel(axF, G - rF, rF, "dish", "#9ef0d8", ID("Hub"))}
+      <g class="amr-variant-art" aria-label="AMR Pro extended tail and race wing"><path d="M44 257L130 264L154 293L95 300L42 289Z" fill="url(#hdastonPaint)" stroke="#7cac59"/><path d="M75 223L84 146M156 220L155 151" stroke="#202b26" stroke-width="8"/><path d="M30 135Q114 126 217 139L211 155L31 153Z" fill="#111d17" stroke="#a8d07a"/></g>
     </svg>`;
 }
 

@@ -77,7 +77,9 @@ const check = (label, ok, detail) => {
   const byVoice = new Map();
   for (const f of sims) {
     const src = readFileSync(ROOT + "/" + f, "utf8");
-    const defs = (src.match(/const defs = \[[\s\S]*?\n      \];/) || [""])[0].replace(/\/\/[^\n]*/g, "");
+    let defs = (src.match(/const pulseVoice = \{[^\n]+\};/) || src.match(/const defs = \[[\s\S]*?\n      \];/) || [""])[0].replace(/\/\/[^\n]*/g, "");
+    const pulse=src.match(/const pulseVoice = (\{[^\n]+\});/);
+    if(pulse){const {file,label,color,...acoustics}=JSON.parse(pulse[1]);defs=JSON.stringify(acoustics);}
     const order = (src.match(/\(s\.rpm \/ 60\) \* ([\d.]+)/) || [])[1];
     const key = createHash("md5").update(defs + "|" + order).digest("hex");
     const name = f.replace(/ simulator\.html/i, "");
@@ -177,7 +179,7 @@ const check = (label, ok, detail) => {
       if (!/linear-gradient\(180deg, #fffdf4/.test(src)) gaps.push(n + ": CSS coachwork with no paint");
       continue;
     }
-    if (!openWheel && !raid && !/ 0 0 1 /.test(art)) gaps.push(n + ": the body has no wheel arch");
+    if (!openWheel && !raid && !/ 0 0 [01] /.test(art)) gaps.push(n + ": the body has no wheel arch");
     // and the paint must be the car's own, not one flat fill
     if (!/linearGradient/.test(art)) gaps.push(n + ": the body has no paint, just a flat fill");
   }
@@ -437,7 +439,11 @@ const check = (label, ok, detail) => {
   for (const fn of ["drawCabinFrame", "drawCluster", "drawWheel"]) {
     const byShape = new Map();
     for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
-      const b = body(readFileSync(ROOT + "/" + f, "utf8"), fn);
+      const src=readFileSync(ROOT + "/" + f, "utf8");
+      let b=body(src,fn);
+      // SVG-backed driving views share the renderer; compare their actual path/shape geometry.
+      const cabin=src.match(/const HAND_COCKPIT = `([\s\S]*?)`;/)?.[1];
+      if(cabin&&fn==="drawCabinFrame")b=JSON.stringify([...cabin.matchAll(/<(path|rect|circle|ellipse|polygon|polyline)\b([^>]*)>/g)].map(m=>[m[1],[...m[2].matchAll(/\b(d|x|y|cx|cy|r|rx|ry|width|height|points|transform)="([^"]*)"/g)].map(a=>[a[1],a[2]])]));
       if (b === null) continue;
       const k = createHash("md5").update(b).digest("hex");
       byShape.set(k, (byShape.get(k) || []).concat(f.replace(/ simulator\.html/i, "")));

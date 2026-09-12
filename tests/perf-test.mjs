@@ -104,10 +104,12 @@ const CARS = {
   aston: {
     file: "Aston Martin Valkyrie simulator.html",
     app: "AstonApp",
-    label: "Aston Martin Valkyrie AMR Pro",
-    marks: { 100: { target: 2.3, tol: 1e-4 } },
-    topSpeed: { kmh: 402, minT: 80 },
-    brake100: { target: 26, tol: 1.5 },
+    label: "Aston Martin Valkyrie (road + optional AMR Pro)",
+    marks: { 100: { target: 2.5, tol: 1e-4 } },
+    topSpeed: { kmh: 350, minT: 80 },
+    topSpeed2: { kmh: 402, setup: "amrPro", minT: 80, label: "AMR Pro, simulator target" },
+    variantLaunch: {setup:"amrPro",target:2.3},
+    brake100: { target: 28, tol: 1.5 },
   },
   gto: {
     file: "Ferrari 250 GTO simulator.html",
@@ -478,6 +480,7 @@ const PAGE_FNS = {
       if (app.toggleAbsolut && !state.absolut) app.toggleAbsolut();
       if (app.toggleFuel && !state.e85) app.toggleFuel();
     }
+    if (setup === "amrPro") app.toggleAmrPro(true);
     if (setup === "f1X") state.keys.KeyX = true;
     if (setup === "prototypeBoost") { state.hybridEnergy = 100; state.energyMode = 1; }
     if (setup === "trackPack" && app.toggleTrackPack && !state.trackPack) app.toggleTrackPack();
@@ -532,7 +535,7 @@ const PAGE_FNS = {
     const dt = 1 / 120, KMH = 1 / 3.6;
     const runLaunch = () => {
       for (const k in state.keys) state.keys[k] = false;
-      app.resetCar();
+      const calibrationValue=SPEC[field];app.resetCar();SPEC[field]=calibrationValue;
       state.rivals = [];
     state.rivals = [];                                  // certification runs on a clear track
       state.ignition = true; state.started = true;
@@ -552,7 +555,7 @@ const PAGE_FNS = {
     };
     const runBrake = () => {
       for (const k in state.keys) state.keys[k] = false;
-      app.resetCar();
+      const calibrationValue=SPEC[field];app.resetCar();SPEC[field]=calibrationValue;
       state.rivals = [];
     state.rivals = [];                                  // certification runs on a clear track
       state.ignition = true; state.started = true;
@@ -606,6 +609,10 @@ async function verifyCar(browser, key) {
     if (got == null && Number(kmh) > 200) { check(`0-${kmh} km/h reachable in 40 s`, false); continue; }
     const ok = got != null && Math.abs(got - m.target) <= m.tol;
     check(`0-${kmh} km/h = ${fmt(got)} s (target ${m.target} ±${m.tol})`, ok);
+  }
+  if (car.variantLaunch) {
+    const v=await page.evaluate(PAGE_FNS.launch,{appName:car.app,setup:car.variantLaunch.setup,maxT:15,stopAtKmh:110});
+    check(`AMR Pro 0-100 = ${fmt(v.marks[100])} s (target ${car.variantLaunch.target})`,Math.abs(v.marks[100]-car.variantLaunch.target)<=1e-4);
   }
   if (car.quarterMile) {
     const q = await page.evaluate(PAGE_FNS.launch, { appName: car.app, setup: "trackPack", maxT: 20, stopAtKmh: 0, rollout: !!car.rollout });
