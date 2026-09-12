@@ -261,7 +261,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Ferrari F12tdf (F12berlinetta prototype) | 574 kW / 780 CV / 769 hp @ 8,500 (6.3 L F140 FC naturally-aspirated 65° V12, front-mounted behind the axle line, dry sump) | 705 Nm @ 6,750 — 80% of it from 2,500 | 2.9 s (0-200 7.9) | 340; **24 governed** on the development ECU, until you switch it out | 7-F1 DCT | 1,415 kg (dry) |
 | Dodge Viper ACR Extreme Aero | 481 kW / 645 hp @ 6,200 (8.4 L naturally-aspirated OHV V10) | 813 Nm @ 5,000 | **3.6 s — DERIVED** | 285 (Extreme Aero) | 6-Tremec manual | 1,539 kg |
 | Zenvo Aurora Agil | estimated 1,081 kW / 1,450 bhp combined (1,250 bhp quad-turbo V12 + 200 bhp P2 motor) | estimated 1,400 Nm | estimated 2.5 s | estimated 360 | 8-hybrid | 1,360 kg target dry |
-| 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
+| 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | 354 Normal; Real energy/drag-limited | 8-seq | 768 kg (min.) |
 | Maserati MCXtrema | 540 kW / 740 CV (3.0 L 90° twin-turbo Nettuno racing V6) | 730 Nm | **2.7 s — DERIVED** | 325 claimed | 6-sequential | ~1,300 kg dry |
 | Peugeot 9X8 (2024) | 480–520 kW total under BoP (2.6 L twin-turbo V6 hybrid; front MGU up to 200 kW) | not published; 900 Nm simulator envelope | **2.8 s — DERIVED** | ~330 derived | 7-sequential | 1,030 kg minimum |
 | Porsche 919 Hybrid (2017) | >662 kW / >900 PS system (2.0 L 90° turbo V4 + front MGU) | 825 Nm simulator envelope | 2.2 s simulator target | 334.9 (2017 Le Mans race maximum) | 7-sequential | 875 kg minimum |
@@ -670,19 +670,24 @@ overtaking it 3× black-flags you out**. HUD panel (position, lap, stops,
 tyre/fuel/damage bars, PIT LANE/limiter/LAP INVALID) draws in `drawTelemetry`. All
 state is real-mode-gated, so perf-test is unaffected.
 
-**2026 racing controls (v4, all modes, certification-safe because opt-in)** —
-**hold X = X-mode**: active aero sheds drag (`ERS.xShed` off `cdA`) and 45% of
-downforce-grip; auto-snaps back to Z under braking, >1.7 lateral g, or <~100 km/h.
-**Hold V = ERS Manual Override**: `ERS.boost` power multiplier draining `ersStore`
-(`ERS.storeS` seconds full-boost; recharges at `ERS.regen`, 3.5× under braking).
-Each team has its own `const ERS = {storeS, regen, boost, xShed, blurb}` — real
-2026 PU pecking order (Ferrari hits hardest 1.14, Aston/Honda biggest store 7.2 s,
-Audi fastest recharge, Red Bull slipperiest X-mode 0.34, Cadillac smallest store).
-ERS bar + X-MODE/OVERRIDE flags draw in `drawTelemetry`; keys listed in the help
-panel. Perf-test never holds X/V, so the certified figures are untouched.
+**2026 racing controls (September 2026 correction)** — all eleven Normal Mode cars
+reach and sustain 354 km/h with ordinary throttle, full usable ERS and automatic
+straight-line X-mode. Braking/cornering returns to Z. The 2.6 s launch calibration
+is retained. Real Mode uses finite 4 MJ energy, FIA electrical/torque limits and
+manual X/V controls. X-mode no longer also pays the extra Z-mode drag penalty.
+Harvest is bounded by store headroom, electrical/torque limits and the configured
+lap allowance; coasting harvest takes kinetic energy and brake harvest blends with
+friction brakes. Team drag, ICE maps and race wear remain simulation estimates.
+See `docs/ENDURANCE_AND_2026_POWER.md`; do not claim exact proprietary performance.
+`tests/driving-regression-test.mjs` checks both modes on every team, including
+60 seconds continuously at 354 after acceleration, mode switching and energy bounds.
 
-
-
+**Track-special visibility and prototype wheels** — the Viper, MCXtrema, 9X8 and
+Aurora driving dashboards stay below 68% of viewport height. Compact Drive controls
+leave the horizon clear; full interactive drawings remain in Cockpit. The 919 and
+499P SVGs in `tools/endurance-art/` contain rotating disc/rim/tyre groups and fixed
+calipers. `updateUi` applies signed physical wheel angles to those groups, including
+reverse. Regression checks render both axles and check phone/desktop visibility.
 
 ## The two Rolls-Royces — journeys, signals and the rear compartment
 

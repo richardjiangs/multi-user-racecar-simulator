@@ -415,8 +415,8 @@ const CARS = {
 
 /* 2026 Formula 1 grid — eleven teams built from one shared chassis SPEC (identical
    physics), so a single calibration certifies all eleven. Each is still verified so a
-   later per-team SPEC edit can't drift unnoticed. No fixed top-speed governor: F1 top
-   speed is drag-limited and varies with the active-aero mode, so assert a plausible band. */
+   later per-team SPEC edit can't drift unnoticed. Normal Mode has a fixed 354 km/h practice target; Real Mode remains energy/drag limited.
+   tests/driving-regression-test.mjs additionally checks sustained speed and FIA energy bounds. */
 const F1_TEAMS = [
   ["f1mercedes",   "Mercedes F1 2026 simulator.html",     "MercedesF1App",   "Mercedes-AMG F1 W17"],
   ["f1redbull",    "Red Bull F1 2026 simulator.html",     "RedbullF1App",    "Oracle Red Bull RB22"],
@@ -434,7 +434,7 @@ for (const [key, file, app, label] of F1_TEAMS) {
   CARS[key] = {
     file, app, label,
     marks: { 100: { target: 2.6, tol: 1e-4 } },
-    topSpeed: { minKmh: 330, maxKmh: 362, setup: "f1X", minT: 80 },   // drag-limited (active aero)
+    topSpeed: { kmh: 354, minT: 80 },   // Normal Mode: sustained hybrid + automatic straight-line aero
     brake100: { target: 17, tol: 1.5 },
   };
 }

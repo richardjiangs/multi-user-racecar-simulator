@@ -25,6 +25,10 @@ The road Valkyrie is the default. `Y`, the cockpit's **Enable AMR Pro** button a
 
 The road model uses the [2019 launch powertrain specification](https://media.astonmartin.com/aston-martin-valkyrie-the-ultimate-hybrid-powertrain-for-the-ultimate-hypercar/?lang=eng): 1,160 bhp combined and KERS. Its 2.5 s, 350 km/h and 1,030 kg values are simulator targets. The [AMR Pro announcement](https://media.astonmartin.com/aston-martin-valkyrie-amr-pro-the-ultimate-no-rules-hypercar/?lang=eng) establishes the 1,000 bhp naturally aspirated V12 and removal of the hybrid hardware. Its 2.3 s, 402 km/h and 1,000 kg values remain user-requested simulator targets, not published or measured factory performance. `Z` controls road KERS or, in AMR Pro, Le Mans/maximum-downforce aero trim. The latter never adds electric power.
 
+## Driving visibility
+
+The driving projection now occupies the lower 32% of the viewport, with compact controls and a smaller HUD. It keeps the road from the horizon through 66% of the screen clear at desktop, laptop and phone sizes. Cockpit retains the full drawing and interactive controls. The two phone touch controls occupy opposite corners without overlapping.
+
 ## Maintenance and checks
 
 Edit the paths in `tools/draw-track-specials.mjs`, then run:
@@ -36,6 +40,7 @@ node tools/embed-sims.mjs
 node tests/perf-test.mjs
 node tests/browser-test.mjs
 node tests/track-specials-test.mjs
+node tests/driving-regression-test.mjs
 ```
 
 The Valkyrie exterior is maintained by `drawAston` in `tools/bodykit/drawn.mjs`, including the optional AMR Pro tail and wing. The new track-special test checks live instruments, actual cockpit controls, both Valkyrie selection paths and reset behavior. It also renders the shipped audio graphs at 1,500 and 4,500 rpm in `OfflineAudioContext`, checking output levels, clipping, crank frequency and the different spectral balance of the two V6s. Set `VERIFICATION_DIR` to save WAV files and measured audio metrics. Visual review covers all twelve drawings and all four driving dashboards; automated checks do not establish photographic or acoustic fidelity.

@@ -495,7 +495,7 @@
       <section class="mode-panel panel-engine">
         <div class="panel-title">
           <h2>Power Unit — 1.6L V6 Turbo Hybrid</h2>
-          <span class="small" id="engineStatus">1.6L Red Bull Ford V6 turbo hybrid · ~400 kW ICE + ~350 kW MGU-K = ~745 kW (~1,013 PS) · 15,000 rpm · 8-speed seamless · 0–100 in 2.6 s · ~350 km/h · 768 kg</span>
+          <span class="small" id="engineStatus">1.6L Red Bull Ford V6 turbo hybrid · ~400 kW ICE + ~350 kW MGU-K = ~745 kW (~1,013 PS) · 15,000 rpm · 8-speed seamless · 0–100 in 2.6 s · 354 km/h in Normal Mode · 768 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -598,11 +598,11 @@
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
         <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. Downforce — grip that grows with speed</h3><p style="margin:4px 0">An F1 car corners harder the faster it goes: at 250 km/h the wings press it into the road with more than its own weight. Trust the car in fast corners; in slow ones the wings can't help — it's all mechanical grip and traction.</p>
-        <h3 id="ls6" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">7. 2026 active aero — X-mode & Z-mode</h3><p style="margin:4px 0">Hold <kbd>X</kbd> on the straights: the wings flatten (X-mode) and shed drag. Brake or load the car and it snaps back to high-downforce Z-mode automatically. It replaced DRS in 2026 and works every lap.</p>
-        <h3 id="ls7" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">8. ERS & the Manual Override (MOM)</h3><p style="margin:4px 0">Hold <kbd>V</kbd> for Manual Override: standard deployment tapers from 290 to zero at 345 km/h; Override tapers from 337.5 to zero at 355 km/h. In a race it only arms within ~1 s of the car ahead — the 2026 overtaking rule. The store drains in seconds and recharges under braking.</p>
+        <h3 id="ls6" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">7. 2026 active aero — X-mode & Z-mode</h3><p style="margin:4px 0">Normal Mode automatically flattens the wings on straights and sustains 354 km/h. In Real Mode, hold <kbd>X</kbd> on the straights: the wings flatten (X-mode) and shed drag. Brake or load the car and it snaps back to high-downforce Z-mode automatically. It replaced DRS in 2026 and works every lap.</p>
+        <h3 id="ls7" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">8. ERS & the Manual Override (MOM)</h3><p style="margin:4px 0">Normal Mode has sustained electrical power. In Real Mode, the 4 MJ battery is finite. Hold <kbd>V</kbd> for Manual Override: standard deployment tapers from 290 to zero at 345 km/h; Override tapers from 337.5 to zero at 355 km/h. In a race it only arms within ~1 s of the car ahead — the 2026 overtaking rule. The store drains in seconds and recharges under braking.</p>
         <h3 id="ls8" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">9. Strat, brake bias, and the pit</h3><p style="margin:4px 0">Strat Push buys ~2% power at double PU wear; Lean saves fuel and engine. Rearward brake bias rotates the car into slow corners. When the wall calls "box box": drive LEFT into the pit lane in the last 260 m — the limiter is automatic — and stop at YOUR team's garage. The garages run in 2025 championship order from the pit entry (McLaren first, Cadillac last), so driving past other teams' boxes to reach yours is exactly how real F1 works. The crew fixes everything the X-ray shows; refuelling has been banned since 2010.</p>
         <h3 id="ls9" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">10. The rulebook that bites</h3><p style="margin:4px 0">Track limits: all four wheels over the white line deletes the lap; three race warnings is a penalty. Contact damages both cars. The safety car bunches the field — never pass it. Reliability is probabilistic per team: nurse the PU with short-shifts when the engineer warns you.</p>
-        <h3 id="ls10" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">11. This team: Racing Bulls in 2026</h3><p style="margin:4px 0">P6 and punching: reliable (best midfield finisher) with a 2.25 s crew — 4th fastest stops in 2026. Nimble in X-mode. Garage 6th from entry.</p>
+        <h3 id="ls10" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">11. This team: Racing Bulls in 2026</h3><p style="margin:4px 0">This team's pace, tyre wear and reliability are simulator tuning, not measured 2026 race data. All teams share the FIA electrical limits and 4 MJ usable energy window. Manage the battery in Real Mode and hold X on straights; Normal Mode sustains 354 km/h automatically.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -911,12 +911,12 @@ const SPEC = {
   airDensity: 1.225,
   drivelineEff: 0.92,
   tractionCoeff: 1.143144,      // calibrated -> 0–100 km/h = 2.6000 s ±0.0001 (slicks + launch) — see tests/perf-test.mjs
-  topSpeedKmh: 350,             // ~350 km/h in X-mode (low-drag active aero)
-  topSpeedMps: 350 * KMH,
-  topSpeedLimitedKmh: 350,
-  topSpeedLimitedMps: 350 * KMH,
-  topSpeedRecordKmh: 350,
-  topSpeedRecordMps: 350 * KMH,
+  topSpeedKmh: 354,             // Normal-mode target; Real Mode is determined by power, energy and drag
+  topSpeedMps: 354 * KMH,
+  topSpeedLimitedKmh: 354,
+  topSpeedLimitedMps: 354 * KMH,
+  topSpeedRecordKmh: 354,
+  topSpeedRecordMps: 354 * KMH,
   zeroTo100Kmh: 2.6,           // s (traction-limited off the line)
   hybrid: {                     // electrical deployment system armed
     peakPowerW: 745000,
@@ -968,7 +968,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     hybrid: true,                  // standard MGU-K deployment armed; hold V for Manual Override
     hybridVis: 0,                  // deploy indicator
     testDriver: false,
-    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, mguKPowerKw: 0, powerUnitKw: 0, strat: "standard", bbias: "std", rainLight: false, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
+    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, ersHarvestMJ: 0, ersHarvestKw: 0, ersLapLimitMJ: 8.5, ersPowerLimited: false, standingStart: true, mguKPowerKw: 0, powerUnitKw: 0, strat: "standard", bbias: "std", rainLight: false, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroDragDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
@@ -1229,12 +1229,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   const showToast = app.showToast;
   const anyDoorOpen = () => app.anyDoorOpen();
 
-  // FIA C5.2.8: continuous electrical power envelope (Issue 16, 27 February 2026).
-  // https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_c_technical_-_iss_16_-_2026-02-27.pdf
+  // FIA C5.2.8: continuous electrical power envelope (Issue 20, 5 August 2026).
+  // https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_c_technical_-_iss_20_-_2026-08-05.pdf
   // The 350 kW cap intersects the standard line at 290 and Override at 337.5 km/h.
-  function mguKPowerKwAt(speedKmh, overrideMode = false) {
+  function mguKPowerKwAt(speedKmh, overrideMode = false, powerLimited = false) {
     const v = Math.max(0, speedKmh);
-    return clamp(overrideMode ? 7100 - 20 * v : v < 340 ? 1800 - 5 * v : 6900 - 20 * v, 0, 350);
+    return clamp(overrideMode ? 7100 - 20 * v : v < 340 ? 1800 - 5 * v : 6900 - 20 * v, 0, powerLimited && !overrideMode ? 250 : 350);
   }
   app.mguKPowerKwAt = mguKPowerKwAt;
 
@@ -1457,7 +1457,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
      car can neutralise the race and hand it to someone else. Everything shows on the HUD. */
   const TEAM = { name: "Racing Bulls", pace: 0.986, top: 0.989, corner: 0.985, tyreDeg: 1.03, pitCrew: 2.25, rel: 1.05, dnf: 0.05, dns: 0.01, slot: 5, fix: 0.95, causeEng: "a power-unit failure" };
   const RADIO_LINES = ["Crew's hot today — 2.2 flat last stop.","Best of the rest is ours if we hold this.","Energy target met — push mode approved.","Box this lap — in, out, no mistakes.","Faenza flair — go get them."];
-  const ERS = { storeS: 5.3, regen: 0.026, boost: 1.11, xShed: 0.32, blurb: "RBPT power with a nimble, low-drag rear end." };   // this team's 2026 power-unit character
+  const ERS = { regen: 0.026, xShed: 0.32, blurb: "Real Mode: 4 MJ usable energy. Lift or brake to harvest, and hold X on straights." };   // per-team aero/harvest tuning; proprietary performance is not public
   // grid reliability/pace table: [name, body, pace, corner, dnf/race, dns prob]
   // July 2026 form, 9 rounds in (real): Mercedes lead but the battery module keeps failing;
   // Ferrari P2 with the fastest crew (2.00 s, Suzuka); McLaren quick but fragile (double DNS,
@@ -1482,7 +1482,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function newSys() { return { engine:0, gearbox:0, hydraulics:0, brakes:0, tyre:0, nose:0 }; }
   const CAUSE = { engine:"a power-unit failure", gearbox:"a gearbox failure", hydraulics:"a hydraulics failure", brakes:"brake failure", tyre:"a puncture", nose:"terminal front-wing damage" };
   function realPower() { if (!state.realMode) return 1; if (state.retired) return 0; const dmg = 1 - state.damage * 0.35, fuel = 1 + (100 - state.fuelKg) / 100 * 0.03, tyre = 1 - state.tyreWear * 0.10; return TEAM.pace * dmg * fuel * tyre; }
-  function realTop() { return TEAM.top; }   // per-team straight-line speed, every mode (launch is unaffected)
+  function realTop() { return state.realMode ? TEAM.top : 1; }
   function realGrip() { if (!state.realMode) return 1; return TEAM.corner * (1 - state.tyreWear * 0.28) * (1 - state.damage * 0.20); }
   // ---- team radio: real engineer content (box calls, deg, gaps, corner guidance), spoken aloud ----
   function radioSay(text) {
@@ -1535,6 +1535,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   function toggleRealMode() {
     const on = !state.realMode; state.realMode = on;
+    state.ersStore = 1; state.ersHarvestMJ = 0; state.ersHarvestKw = 0; state.standingStart = Math.abs(state.speedMps) < 1;
     if (app.setActive) app.setActive("realBtn", on);
     const rb = document.getElementById("realBtn"); if (rb) rb.textContent = "Real Race Mode: " + (on ? "On" : "Off");
     if (on) {
@@ -1544,10 +1545,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       state.tyreWear = 0; state.tyreComp = "soft"; state.fuelKg = 100; state.damage = 0; state.failRisk = 0;
       state.retired = false; state.inPit = false; state.pitTimer = 0; state.pitStops = 0; state.safetyCar = false; state.scTimer = 0; state.raceLap = 0; state._rmAcc = 0;
       seedRivals();
-      showToast("REAL RACE MODE — assists off, the full 2026 grid, real per-team pace. Tyres wear, fuel burns, reliability bites. Drive into the pit lane to box. Hold X for X-mode, V for ERS override. " + ERS.blurb, TEAM.name);
+      showToast("REAL RACE MODE — assists off, finite 4 MJ ERS, FIA power limits and simulated team pace. Tyres wear, fuel burns, reliability bites. Drive into the pit lane to box. Hold X for X-mode, V for ERS override. " + ERS.blurb, TEAM.name);
     } else {
       state.retired = false; state.safetyCar = false; state.inPit = false;
-      showToast("Real Race Mode off — back to a clear practice lap.", "Pit Wall");
+      state.inPitLane = false; state.pitArmed = false; state.pitStage = ""; state.pitMenuOpen = false;
+      showToast("Normal Mode — sustained hybrid power, automatic straight-line aero, 354 km/h target.", "Pit Wall");
     }
   }
   function pitInOut() {
@@ -1603,7 +1605,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       }
     }
   }
-  function onRaceLap() { if (state.realMode) state.raceLap++; }
+  function onRaceLap() { state.ersHarvestMJ = 0; if (state.realMode) state.raceLap++; }
   function realStep(dt, dsdt) {
     if (!state.realMode) return;
     const spd = Math.abs(state.speedMps), moving = spd > 1;
@@ -1936,7 +1938,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     // ---- 2026 racing controls: X-mode active aero (hold X) + ERS Manual Override (hold V) ----
     const _spdc = Math.abs(state.speedMps);
-    state.xMode = !!state.keys.KeyX && _spdc > 28 && state.brake < 0.2 && Math.abs(state.lateralG) < 1.7 && !state.inPitLane && !state.retired;
+    state.xMode = (!state.realMode || !!state.keys.KeyX) && _spdc > 28 && state.brake < 0.2 && Math.abs(state.lateralG) < 1.7 && !state.inPitLane && !state.retired;
     const momOk = () => { if (!state.realMode) return true; const Lm = lapLen(); let best = 1e9;
       for (const rr of state.rivals) { if (rr.out || rr.dns || rr.gone || rr.isSC) continue; let d2 = ((rr.distM - state.distanceM) % Lm + Lm) % Lm; if (d2 > 2 && d2 < best) best = d2; }
       return best < Math.max(35, Math.abs(state.speedMps)); };          // ~1 s behind the car ahead, like the real MOM
@@ -1960,23 +1962,33 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     // Override changes only the electrical speed envelope. It cannot multiply ICE power,
     // bypass battery depletion, or create electric output past 355 km/h.
-    const mguAvailable = state.hybrid && state.ersStore > 0.001 && !state.retired && !state.inPitLane;
-    const mguKw = mguAvailable ? Math.min(mguKPowerKwAt(speedAbs / KMH, state.ersBoost), state.ersStore * 4000 / dt) : 0;
+    if (speedAbs >= 50 * KMH) state.standingStart = false;
+    const mguAvailable = state.hybrid && (!state.realMode || (state.ersStore > 0 && !state.standingStart)) && !state.retired && !state.inPitLane;
+    const mguKw = mguAvailable ? (state.realMode
+      ? Math.min(mguKPowerKwAt(speedAbs / KMH, state.ersBoost, state.ersPowerLimited), state.ersStore * 4000 / dt, 500 * state.rpm * Math.PI * 2 / 60 / 1000 / .97)
+      : 350) : 0;
     const iceKw = 400 * (state.strat === "push" ? 1.02 : state.strat === "lean" ? 0.98 : 1);
-    const requestedPowerW = (iceKw + mguKw) * 1000;
+    const electricMechanicalKw = mguKw * (state.realMode ? .97 : 1);
+    const requestedPowerW = (iceKw + electricMechanicalKw) * 1000;
     const hybridSpeedFactor = requestedPowerW / SPEC.peakPowerW;
     const outputW = Math.min(torqueAvail * state.rpm * Math.PI * 2 / 60 * hybridSpeedFactor, requestedPowerW);
-    const deliveredW = canMove ? outputW * state.throttle * harnessLimiter * shiftCut * realPower() : 0;
-    state.mguKPowerKw = deliveredW / 1000 * mguKw / Math.max(iceKw + mguKw, 1);
+    const deliveredW = canMove ? Math.min(requestedPowerW, outputW * realPower()) * state.throttle * harnessLimiter * shiftCut : 0;
+    state.mguKPowerKw = Math.min(mguKw, deliveredW / 1000 * mguKw / Math.max(iceKw + electricMechanicalKw, 1));
     state.powerUnitKw = deliveredW / 1000;
     const rawForce = canMove ? Math.min(torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff * hybridSpeedFactor * realPower() / SPEC.wheelRadiusM, requestedPowerW * state.throttle * SPEC.drivelineEff / Math.max(speedAbs, 5)) : 0;
-    // Full-throttle standard deployment spends the store too. Reduced-speed taper extends
-    // its duration; lift/coast and braking harvest. Usable energy is the FIA 4 MJ window;
-    // per-team regeneration remains a simplified tuning, not a proprietary engine map.
-    const used = state.mguKPowerKw / 4000; // 4 MJ usable energy window
-    const recovered = state.ignition && speedAbs > 8 && state.throttle < .25
-      ? ERS.regen * (state.brake > .2 ? 3.5 : 1) : 0;
-    state.ersStore = clamp(state.ersStore + dt * (recovered - used), 0, 1);
+    // Normal practice has sustained deployment. Real Mode uses the FIA 4 MJ window,
+    // <=350 kW harvesting, and the standard 8.5 MJ/lap recharge allowance (event-configurable).
+    // Regeneration takes energy from vehicle motion: never free energy while coasting.
+    state.ersHarvestKw = 0;
+    if (state.realMode) {
+      const desiredRegenKw = canMove && speedAbs > 8 && state.throttle < .25
+        ? Math.min(350, 500 * state.rpm * Math.PI * 2 / 60 * .97 / 1000, ERS.regen * 4000 * (state.brake > .2 ? 3.5 : 1)) : 0;
+      state.ersHarvestKw = Math.max(0, Math.min(desiredRegenKw,
+        (1 - state.ersStore) * 4000 / dt,
+        (state.ersLapLimitMJ - state.ersHarvestMJ) * 1000 / dt));
+      state.ersHarvestMJ += state.ersHarvestKw * dt / 1000;
+      state.ersStore = clamp(state.ersStore + dt * (state.ersHarvestKw - state.mguKPowerKw) / 4000, 0, 1);
+    } else state.ersStore = 1;
     const cap = tractionCapN();
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
@@ -1986,21 +1998,23 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     // The wings and floor make colossal downforce — their drag is always in the baseline.
     const baseCd = SPEC.dragCd;
-    const cdA = baseCd * SPEC.frontalAreaM2 * (1 + state.aeroDragDeploy * SPEC.aeroDragAdd) * (state.xMode ? 1 - ERS.xShed : 1);
+    const cdA = baseCd * SPEC.frontalAreaM2 * (state.xMode ? 1 - ERS.xShed : 1 + state.aeroDragDeploy * SPEC.aeroDragAdd);
     const drag = 0.5 * SPEC.airDensity * cdA * state.speedMps * speedAbs;
     const roll = speedAbs > 0.05 ? SPEC.rollingResistance * SPEC.massKg * 9.81 * Math.sign(state.speedMps) : 0;
     const brakeGrip = 1 + (state.downforceN / (SPEC.massKg * 9.81)) * 0.6;   // aero helps the carbon-ceramics
     const brakeForce = state.brake * SPEC.brakeMaxMps2 * SPEC.massKg * brakeGrip * Math.sign(state.speedMps || direction);
 
-    let total = engineForce - drag - roll - brakeForce;
+    // Blend regeneration into the requested brake force; coast harvesting adds real drag.
+    const regenForce = state.ersHarvestKw * 1000 / .97 / Math.max(speedAbs, 8);
+    let total = engineForce - drag - roll - Math.max(Math.abs(brakeForce), regenForce) * Math.sign(state.speedMps || direction);
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Numerical safety ceiling only; real top speed follows the electrical taper and aerodynamic drag.
-    const govMps = 500 * KMH; // numerical safety bound; velocity is determined by power and drag
+    // Normal Mode holds its advertised 354 km/h target without battery depletion.
+    const govMps = (state.realMode ? 500 : 354) * KMH; // normal practice target; Real Mode remains power/drag-limited
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
-    state.speedMps += accel * dt;
+    state.speedMps = Math.min(govMps, state.speedMps + accel * dt);
     if (Math.abs(state.speedMps) < 0.05 && state.throttle < 0.02) state.speedMps = 0;
     if (state.gearMode !== "R" && state.speedMps < 0) state.speedMps = 0;
     if (!driven && state.speedMps > 0) state.speedMps = Math.max(0, state.speedMps - dt * 0.7);
@@ -3355,6 +3369,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   function isNords(n) { return n === "Nürburgring 24h" || n === "Nordschleife" || n === "Nürburgring GP"; }
   function selectCircuit(name) {
+    state.ersHarvestMJ = 0;
     const circ = CIRCUITS[name]; if (!circ) { showToast(`No ${name} on file.`, "Co-Pilot"); return; }
     state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist, arrived: false };
     state.lap = { running: true, startDist: state.distanceM, lastMs: 0, bestMs: 0, curMs: 0 };
@@ -3376,7 +3391,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Pit Wall"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { shiftTimer:0, manualHold:0, aeroDeploy:0, aeroRearDeploy:0, aeroFrontDeploy:0, aeroDragDeploy:0, downforceN:0, mguKPowerKw:0, powerUnitKw:0, voiceOverrideUntil:0, speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0, xMode: false, ersBoost: false, ersStore: 1, strat: "standard", bbias: "std" });
+    Object.assign(state, { shiftTimer:0, manualHold:0, aeroDeploy:0, aeroRearDeploy:0, aeroFrontDeploy:0, aeroDragDeploy:0, downforceN:0, mguKPowerKw:0, powerUnitKw:0, voiceOverrideUntil:0, speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0, xMode: false, ersBoost: false, ersStore: 1, ersHarvestMJ: 0, ersHarvestKw: 0, ersLapLimitMJ: 8.5, ersPowerLimited: false, standingStart: true, strat: "standard", bbias: "std" });
     state.rivals = state.rivals.filter(r => !r.isSC);
     if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
     setActive("hybridBtn", true);

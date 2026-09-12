@@ -350,7 +350,37 @@
     #rearWingArt,#frontFlapArt{transform:none!important}
     #engineWaveform{width:100%;height:88px;background:#070f17;border:1px solid #324b5b;border-radius:5px}
     #doorArt{transform-box:fill-box;transition:transform .5s}#doorArt.open{transform-origin:left top;transform:rotate(-65deg)}
-    </style>
+
+    /* Driving keeps the horizon and the next corner clear. Full art is in Cockpit. */
+    body.view-drive .topbar{grid-template-columns:minmax(160px,.7fr) minmax(0,2fr);padding:8px;gap:8px}
+    body.view-drive .brand{min-height:0;padding:8px 10px}
+    body.view-drive .brand .mark,body.view-drive .brand p,body.view-drive .quick,
+    body.view-drive .drive-help,body.view-drive .telepad,body.view-drive .hud .meter-grid,
+    body.view-drive .hud .aero-row{display:none}
+    body.view-drive .tabs{flex-wrap:nowrap;overflow-x:auto;padding:5px;gap:4px}
+    body.view-drive .tabs button{flex:1 0 auto;min-height:32px;padding:5px 8px}
+    body.view-drive .hud{top:0;left:8px;width:180px;padding:8px;background:rgba(6,8,11,.45)}
+    body.view-drive .speed{font-size:36px}body.view-drive .gear-tile{width:40px;height:40px;font-size:25px}
+    body.view-drive .warning{font-size:10px;min-height:0;margin-top:4px}
+    body.view-drive .bottombar{grid-template-columns:minmax(0,1fr) minmax(300px,1fr);padding:0 8px 8px;gap:6px}
+    body.view-drive .console{display:flex;flex-wrap:wrap;align-content:center;gap:4px;padding:5px}
+    body.view-drive .console button{flex:1;min-height:32px;padding:5px;font-size:11px}
+    body.view-drive .gearbox{padding:5px;gap:5px}
+    body.view-drive .gearbox .cluster{grid-template-columns:repeat(4,34px);gap:3px}
+    body.view-drive .pedal{min-height:48px;padding:3px 5px;gap:2px}
+    body.view-drive .pedal i{display:none}
+    @media(max-width:700px){
+      body.view-drive .topbar{grid-template-columns:minmax(0,1fr);gap:4px}
+      body.view-drive .brand{padding:4px 8px;border:0;background:none;box-shadow:none}
+      body.view-drive .brand h1{font-size:14px}
+      body.view-drive .hud{width:150px}
+      body.view-drive .bottombar{grid-template-columns:minmax(0,1fr)}
+      body.view-drive .console{flex-wrap:nowrap;overflow-x:auto}
+      body.view-drive .console button{flex:1 0 auto}
+      body.view-drive .touch-wheel{bottom:142px;width:96px;height:96px;left:12px;right:auto}
+      body.view-drive .mobile-pad{bottom:142px;right:12px;left:auto}
+    }
+  </style>
 </head>
 <body class="view-drive">
   <canvas id="worldCanvas" aria-label="Peugeot 9X8 driving view"></canvas>
@@ -2370,9 +2400,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   function drawCabinFrame(w,h,pal){
     if(!cockpitBaseImage||!cockpitBaseImage.complete||!cockpitBaseImage.naturalWidth)return;
-    const scale=Math.min(w/1000,h/900),x=(w-1000*scale)/2,y=h*.70-cockpitWheelOrigin[1]*scale;
-    ctx.fillStyle='#0c151c';ctx.fillRect(0,h*.68,w,h*.32);
-    ctx.save();ctx.translate(x,y);ctx.scale(scale,scale);ctx.drawImage(cockpitBaseImage,0,0,1000,500);
+    // Preserve the forward view above 68% of the viewport at every aspect ratio.
+    const scale=Math.min(w/1000,h*.34/500),x=(w-1000*scale)/2,y=h*.68-110*scale;
+    ctx.save();ctx.beginPath();ctx.rect(0,h*.68,w,h*.32);ctx.clip();
+    ctx.fillStyle='#0c151c';ctx.fillRect(0,h*.86,w,h*.14);
+    ctx.translate(x,y);ctx.scale(scale,scale);ctx.drawImage(cockpitBaseImage,0,0,1000,500);
     const [wx,wy]=cockpitWheelOrigin,angle=state.steer*52*Math.PI/180;
     if(cockpitWheelImage.complete&&cockpitWheelImage.naturalWidth){ctx.save();ctx.translate(wx,wy);ctx.rotate(angle);ctx.translate(-wx,-wy);ctx.drawImage(cockpitWheelImage,0,0,1000,500);ctx.restore();}
     const rev=clamp(state.rpm/SPEC.redlineRpm,0,1);

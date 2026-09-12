@@ -19,8 +19,16 @@ Primary references: [Porsche 919 Hybrid 2017 press kit](https://newsroom.porsche
 
 Primary references: [FIA 499P technical overview](https://www.fia.com/news/wec-ferrari-499p-hypercar-breaks-cover), [Ferrari 499P introduction](https://www.ferrari.com/en-US/magazine/articles/ferrari-499p-the-comeback), [2023 Hypercar BoP table](https://www.fia.com/sites/default/files/wec_2023_d0054_hypercar_bop_03072023.pdf).
 
-## 2026 Formula 1 MGU-K envelope
+## 2026 Formula 1 driving modes
 
-All eleven 2026 F1 simulators use the FIA electrical-power curve. Standard deployment is limited to `min(350, 1800 - 5v)` kW below 340 km/h, tapers as `6900 - 20v` kW from 340 to 345 km/h, and is zero at or above 345 km/h. Manual Override uses `clamp(7100 - 20v, 0, 350)` kW, remaining at 350 kW through 337.5 km/h and reaching zero at 355 km/h. Once the electrical curve reaches zero, only the roughly 400 kW combustion engine continues to drive the car.
+Normal Mode is the user-requested practice model: all eleven cars reach and sustain **354 km/h** using ordinary throttle. It has sustained electrical assistance and automatically selects low drag on straights. Braking and cornering restore downforce. The existing 2.6 s launch target is unchanged. The 354 figure is a simulator target, not a universal measured F1 top speed.
 
-Primary reference: [FIA 2026 Formula 1 Technical Regulations, section C5.2.7–C5.2.8](https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_c_technical_-_iss_16_-_2026-02-27.pdf).
+Real Mode uses finite energy and a speed-dependent electrical envelope. The 350 kW standard curve tapers above 290 km/h to zero at 345; Overtake holds 350 to 337.5 and reaches zero at 355. The usable energy window is 4 MJ. Deployment and harvest respect 500 Nm at crankshaft speed and the 0.97 electrical/mechanical conversion. Standing starts withhold deployment until 50 km/h. Recharge uses an 8.5 MJ/lap default. The model exposes a configurable lap limit and 250 kW power-limited envelope for event configuration. Reference: [FIA Technical Regulations, Issue 20, 5 August 2026, C5.2](https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_c_technical_-_iss_20_-_2026-08-05.pdf).
+
+These are implemented regulatory bounds, not a claim of complete event-level compliance. FIA sector eligibility, wet-session maps, standing-start safety-net logic and proprietary team deployment/aero/ICE data are unavailable here. The approximate one-second Overtake check, team tuning and 400 kW ICE map remain simulation assumptions. Real Mode top speed follows power, energy and drag rather than a 270 or 354 km/h governor. Hold **X** for low drag; **V** requests Overtake when eligible. Low drag now replaces the extra high-downforce drag term instead of being penalized by both settings. Lift/coast harvesting takes kinetic energy; brake harvesting blends with friction braking. Empty or full stores cannot create energy.
+
+## Regression verification
+
+`tests/driving-regression-test.mjs` drives all eleven cars for 120 seconds on a clear straight and asserts every sample in the final minute is 354 km/h. It checks braking cancels low drag, switching modes restores practice energy, Real Mode spends exactly its 4 MJ window, and launch/deployment/recharge limits hold. `tests/perf-test.mjs` retains acceleration and braking calibration checks for all 63 cars.
+
+For the 919 and 499P, the same regression test renders both axles before/after physics updates, checks forward and reverse rotation, and verifies the drawings stay still when stopped. SVG disc, spoke and tyre groups rotate around their own axle origin; brake calipers remain fixed.
