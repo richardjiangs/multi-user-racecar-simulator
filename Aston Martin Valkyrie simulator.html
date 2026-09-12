@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <title>Aston Martin Valkyrie — naturally-aspirated V12 hybrid</title>
+  <title>Aston Martin Valkyrie AMR Pro — 11,000 rpm V12 track car</title>
   <style>
     :root {
       color-scheme: dark;
@@ -346,14 +346,14 @@
   </style>
 </head>
 <body class="view-drive">
-  <canvas id="worldCanvas" aria-label="Aston Martin Valkyrie driving view"></canvas>
+  <canvas id="worldCanvas" aria-label="Aston Martin Valkyrie AMR Pro driving view"></canvas>
 
   <main class="app">
     <header class="topbar">
       <section class="brand">
         <div class="mark">AM</div>
-        <h1>Aston Martin Valkyrie</h1>
-        <p>6.5L naturally-aspirated Cosworth V12 + KERS · 7-speed Ricardo single-clutch · rear-wheel drive · pushrod suspension · ground-effect aero.</p>
+        <h1>Aston Martin Valkyrie AMR Pro</h1>
+        <p>AMR Pro 6.5 L naturally-aspirated Cosworth V12 · 7-speed racing transmission · rear-wheel drive · carbon pushrod suspension · extreme ground-effect aero.</p>
       </section>
 
       <nav class="tabs" aria-label="View modes">
@@ -470,7 +470,7 @@
           <button id="audioBtn">Cabin Audio</button>
           <button id="shifterLightBtn" class="active">Spine Light</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="hybridBtn" class="race active" title="KERS hybrid deploy — the electric motor adds ~160 hp to the V12 for the full 1,160 PS combined">KERS Deploy</button>
+          <button id="hybridBtn" class="race active" title="Switch between the AMR Pro Le Mans low-drag trim and its maximum-downforce track trim">Le Mans Trim</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -482,8 +482,8 @@
       <!-- ENGINE -->
       <section class="mode-panel panel-engine">
         <div class="panel-title">
-          <h2>Engine Bay — 6.5L NA V12 + KERS</h2>
-          <span class="small" id="engineStatus">6.5L naturally-aspirated Cosworth V12 · 1,000 hp @ 10,500 (1,160 PS combined with KERS) · 900 Nm · 11,100 rpm · 7-speed Ricardo · 0–100 in 2.5 s · 350 km/h · 1,030 kg</span>
+          <h2>Engine Bay — AMR Pro 6.5 L NA V12</h2>
+          <span class="small" id="engineStatus">AMR Pro Cosworth 6.5 L naturally-aspirated V12 · 1,000 bhp / 1,014 PS · 11,000 rpm · track-only 7-speed · 0–100 in 2.3 s · 402 km/h simulator target</span>
         </div>
         <div class="engine-bay" id="engineBay">
           <div class="heat-haze"></div>
@@ -492,8 +492,8 @@
           <div style="position:absolute;left:15%;right:15%;top:14%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs>
   <linearGradient id="ebk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient>
   <radialGradient id="eck" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient>
-  <radialGradient id="esk" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#c8e87a"/><stop offset="0.5" stop-color="#5a7f10"/><stop offset="1" stop-color="#20300a"/></radialGradient></defs><rect x="60" y="4" width="60" height="106" rx="11" fill="url(#ebk)" stroke="#83d400" stroke-opacity="0.45"/><rect x="180" y="4" width="60" height="106" rx="11" fill="url(#ebk)" stroke="#83d400" stroke-opacity="0.45"/><rect x="134" y="8" width="32" height="98" rx="6" fill="url(#ebk)" stroke="rgba(150,160,170,0.4)"/><circle cx="88" cy="12" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="12" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="12" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="12" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="12" x2="128" y2="12" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="12" x2="172" y2="12" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="31.6" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="31.6" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="31.6" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="31.6" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="31.6" x2="128" y2="31.6" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="31.6" x2="172" y2="31.6" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="51.2" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="51.2" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="51.2" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="51.2" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="51.2" x2="128" y2="51.2" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="51.2" x2="172" y2="51.2" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="70.80000000000001" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="70.80000000000001" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="70.80000000000001" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="70.80000000000001" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="70.80000000000001" x2="128" y2="70.80000000000001" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="70.80000000000001" x2="172" y2="70.80000000000001" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="90.4" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="90.4" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="90.4" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="90.4" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="90.4" x2="128" y2="90.4" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="90.4" x2="172" y2="90.4" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="110" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="110" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="110" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="110" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="110" x2="128" y2="110" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="110" x2="172" y2="110" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="150" cy="12" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="12" r="2.6" fill="#0a1204"/><circle cx="150" cy="31.6" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="31.6" r="2.6" fill="#0a1204"/><circle cx="150" cy="51.2" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="51.2" r="2.6" fill="#0a1204"/><circle cx="150" cy="70.80000000000001" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="70.80000000000001" r="2.6" fill="#0a1204"/><circle cx="150" cy="90.4" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="90.4" r="2.6" fill="#0a1204"/><circle cx="150" cy="110" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="110" r="2.6" fill="#0a1204"/><rect x="120" y="112" width="60" height="12" rx="3" fill="#0c130a" stroke="#83d400" stroke-opacity="0.6"/><rect x="125" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><rect x="138" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><rect x="151" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><rect x="164" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><text x="186" y="122" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#83d400">KERS</text><text x="150" y="8" text-anchor="middle" font-family="ui-sans-serif" font-size="9.5" font-weight="700" fill="#83d400" letter-spacing="1">6.5 NA V12</text></svg></div>
-          <div class="emotor" id="airTankArt">KERS · MGU-K + 1.8 kWh BATTERY</div>
+  <radialGradient id="esk" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#c8e87a"/><stop offset="0.5" stop-color="#5a7f10"/><stop offset="1" stop-color="#20300a"/></radialGradient></defs><rect x="60" y="4" width="60" height="106" rx="11" fill="url(#ebk)" stroke="#83d400" stroke-opacity="0.45"/><rect x="180" y="4" width="60" height="106" rx="11" fill="url(#ebk)" stroke="#83d400" stroke-opacity="0.45"/><rect x="134" y="8" width="32" height="98" rx="6" fill="url(#ebk)" stroke="rgba(150,160,170,0.4)"/><circle cx="88" cy="12" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="12" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="12" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="12" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="12" x2="128" y2="12" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="12" x2="172" y2="12" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="31.6" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="31.6" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="31.6" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="31.6" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="31.6" x2="128" y2="31.6" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="31.6" x2="172" y2="31.6" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="51.2" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="51.2" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="51.2" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="51.2" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="51.2" x2="128" y2="51.2" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="51.2" x2="172" y2="51.2" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="70.80000000000001" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="70.80000000000001" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="70.80000000000001" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="70.80000000000001" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="70.80000000000001" x2="128" y2="70.80000000000001" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="70.80000000000001" x2="172" y2="70.80000000000001" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="90.4" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="90.4" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="90.4" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="90.4" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="90.4" x2="128" y2="90.4" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="90.4" x2="172" y2="90.4" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="88" cy="110" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="88" cy="110" r="3.8" fill="#83d400" opacity="0.7"/><circle cx="212" cy="110" r="8.5" fill="url(#eck)" stroke="rgba(190,200,210,0.5)"/><circle cx="212" cy="110" r="3.8" fill="#83d400" opacity="0.7"/><line x1="97" y1="110" x2="128" y2="110" stroke="#83d400" stroke-width="2" opacity="0.6"/><line x1="203" y1="110" x2="172" y2="110" stroke="#83d400" stroke-width="2" opacity="0.6"/><circle cx="150" cy="12" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="12" r="2.6" fill="#0a1204"/><circle cx="150" cy="31.6" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="31.6" r="2.6" fill="#0a1204"/><circle cx="150" cy="51.2" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="51.2" r="2.6" fill="#0a1204"/><circle cx="150" cy="70.80000000000001" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="70.80000000000001" r="2.6" fill="#0a1204"/><circle cx="150" cy="90.4" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="90.4" r="2.6" fill="#0a1204"/><circle cx="150" cy="110" r="7" fill="url(#esk)" stroke="rgba(200,230,140,0.55)" stroke-width="1"/><circle cx="150" cy="110" r="2.6" fill="#0a1204"/><rect x="120" y="112" width="60" height="12" rx="3" fill="#0c130a" stroke="#83d400" stroke-opacity="0.6"/><rect x="125" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><rect x="138" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><rect x="151" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><rect x="164" y="114" width="9" height="8" rx="1.5" fill="#83d400" opacity="0.65"/><text x="186" y="122" font-family="ui-sans-serif" font-size="7.5" font-weight="700" fill="#83d400">AMR AERO</text><text x="150" y="8" text-anchor="middle" font-family="ui-sans-serif" font-size="9.5" font-weight="700" fill="#83d400" letter-spacing="1">6.5 NA V12</text></svg></div>
+          <div class="emotor" id="airTankArt">AMR PRO · DRY-SUMP V12 · RACE TRANSAXLE</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
@@ -509,12 +509,12 @@
         <div class="readout-grid">
           <div class="readout"><b id="oilTempRead">90&deg;C</b><span>oil temperature</span></div>
           <div class="readout"><b id="waterTempRead">88&deg;C</b><span>coolant</span></div>
-          <div class="readout"><b id="boostRead">0%</b><span>KERS deploy</span></div>
+          <div class="readout"><b id="boostRead">LM</b><span>aero trim</span></div>
           <div class="readout"><b id="egtRead">320&deg;C</b><span>exhaust gas</span></div>
         </div>
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
-          <button id="engineLoadBtn" title="Load a real Valkyrie V12 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
+          <button id="engineLoadBtn" title="Load a real Valkyrie V12 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real AMR Pro V12 recording</button>
           <span class="small now" id="engineSoundStatus">Engine voice: synthesised naturally-aspirated V12</span>
         </div>
       </section>
@@ -583,7 +583,7 @@
         <h3 id="ls2" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">3. Racecraft — the line changes in real time</h3><p style="margin:4px 0">The perfect line is only perfect in clear air. <b>Defending</b> (a car within ~1.5 s behind): brake a touch earlier, take an EARLY apex and own the inside — a slower line that can't be dived on. <b>Attacking</b> (within ~1 s of the car ahead): take a LATER apex for a stronger exit run into the next straight. Learning Mode watches the gaps live and switches the apex advice the moment your race situation changes.</p>
         <h3 id="ls3" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">4. Braking — the countdown boards</h3><p style="margin:4px 0">The red boards count 300 · 200 · 150 · 100 · 50 metres <b>to the apex</b>. Hit maximum brake pressure early in a straight line, then bleed off pressure as you add steering (trail braking) — the released weight keeps the nose planted and the front tyres biting to the TURN IN board.</p>
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
-        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: trust the downforce</h3><p style="margin:4px 0">1,030 kg and F1-grade underbody aero: the Valkyrie is the road car that behaves like the F1 cars here — fast corners get EASIER with speed. The 10,500 rpm V12 wants revs; short-shifting wastes it.</p>
+        <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. This car: trust the downforce</h3><p style="margin:4px 0">The AMR Pro deletes the road car's hybrid hardware and is built around its 11,000 rpm Cosworth V12 and enormous floor. Fast corners gain grip with speed; switch out of Le Mans trim when maximum downforce matters more than straight-line efficiency.</p>
           </div>
         </div>
         <div class="divider"></div>
@@ -618,7 +618,7 @@
             <button id="gridBtn" class="active">Rival Grid: On</button>
             <button id="realBtn" class="race" title="Real Mode — real tyre wear, damage and reliability; a failed system retires you">Real Mode: Off</button>
             <div class="voice">
-              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “KERS deploy”">
+              <input id="voiceInput" autocomplete="off" placeholder="“take me to Nardò”, “race mode”, “launch”, “Le Mans trim”">
               <button id="voiceBtn">Tell Co-Pilot</button>
             </div>
             <div class="status-list">
@@ -693,8 +693,8 @@
   <div class="key-overlay" id="keyOverlay">
     <div class="key-card">
       <div class="pmark">AM</div>
-      <h1>Valkyrie</h1>
-      <p>The dihedral doors drop shut around the carbon tub, the naturally-aspirated V12 screams to life, the KERS spools, and the rear wing loads up. Drive it yourself, or hand it to the test driver.</p>
+      <h1>Valkyrie AMR Pro</h1>
+      <p>The dihedral doors drop shut around the carbon tub, the naturally-aspirated V12 screams to life, the dry-sump V12 catches, and the AMR Pro aero loads up. Drive it yourself, or hand it to the test driver.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
       <div class="ring">Aston Martin · Gaydon, England</div>
     </div>
@@ -702,10 +702,10 @@
 
   <script type="module">
 /* ===========================================================================
-      ASTON MARTIN VALKYRIE (browser naturally-aspirated V12 hybrid simulator)
-   Real Web-Audio 6.5 L NA Cosworth V12, factory-matched physics (0–100 km/h
-   2.5 s; 1,160 PS combined — 1,000 hp V12 @ 10,500 + ~160 hp KERS; 11,100 rpm;
-   1,030 kg; 350 km/h; enormous ground-effect downforce),
+      ASTON MARTIN VALKYRIE AMR PRO (browser naturally-aspirated V12 simulator)
+   Real Web-Audio 6.5 L NA Cosworth V12, calibrated physics (0–100 km/h
+   2.3 s; 1,014 PS / 1,000 bhp V12 at 11,000 rpm; 1,000 kg; 402 km/h;
+   enormous ground-effect downforce),
    a 7-speed Ricardo single-clutch box with paddle shifts, and a test driver
    who can lap for you.
    Performances are researched, not copied — see tests/perf-test.mjs.
@@ -823,66 +823,54 @@ const CIRCUITS = {
 };
 const TRACK_WIDTH_SCALE = 3.75;   // ×1.5 — wide, readable roads everywhere
 
-/* ===== data: vehicle spec — EXACT Aston Martin Valkyrie figures =====
-   Cosworth 6.5 L (6,498 cc) naturally-aspirated V12: 1,000 hp (1,014 PS / 746 kW) @
-   10,500 rpm, revving to 11,100 rpm — combined with a battery-electric KERS to a total
-   1,160 PS (1,140 hp / 853 kW) and 900 Nm. Dry weight ~1,030 kg (near 1:1 power-to-weight).
-   0–100 km/h ~2.5 s; top speed 350 km/h; 7-speed Ricardo single-clutch, rear-wheel drive.
-   Ground-effect underbody + rear wing make enormous downforce — the road-going Le Mans car. */
-
-const KMH = 1 / 3.6;            // m/s per km/h
+/* ===== Aston Martin Valkyrie AMR Pro =====
+   Aston Martin specifies the track-only AMR Pro's modified Cosworth 6.5 L naturally
+   aspirated V12 at 1,000 bhp, revving to 11,000 rpm. Unlike the road Valkyrie, AMR Pro
+   does not use the battery-electric hybrid system. 1,014 PS is the metric equivalent;
+   2.3 s and 402 km/h are the requested simulator performance targets. */
+const KMH = 1 / 3.6;
 const MPH = 0.44704;
 const SPEC = {
-  name: "Aston Martin Valkyrie",
-  engineLabel: "Cosworth 6.5 L naturally-aspirated V12 + KERS hybrid",
+  name: "Aston Martin Valkyrie AMR Pro",
+  engineLabel: "AMR Pro Cosworth 6.5 L naturally-aspirated V12",
   displacementCc: 6498,
-  massKg: 1030,                 // dry weight (manufacturer target, ~1:1 power-to-weight)
-  rotInertia: 1.03,
-  peakPowerW: 853000,           // 853 kW = 1,160 PS combined (1,000 hp V12 @ 10,500 + ~160 hp electric KERS)
-  peakPowerPS: 1160,
-  peakPowerHp: 1140,
-  peakPowerKw: 853,
+  massKg: 1000,
+  rotInertia: .94,
+  peakPowerW: 746000,
+  peakPowerPS: 1014,
+  peakPowerHp: 1000,
+  peakPowerKw: 746,
   peakPowerRpm: 10500,
-  peakTorqueNm: 900,            // 900 Nm combined (740 Nm V12 + electric fill)
+  peakTorqueNm: 740,
   torqueLoRpm: 6000,
   torqueHiRpm: 9000,
   idleRpm: 1100,
-  redlineRpm: 11100,            // the Cosworth V12 revs to 11,100 rpm
+  redlineRpm: 11000,
   finalDrive: 3.10,
-  gearRatios: [4.914, 3.954, 3.181, 2.56, 2.06, 1.657, 1.334],               // 7-speed single-clutch racing box
+  gearRatios: [4.914,3.954,3.181,2.56,2.06,1.657,1.334],
   reverseRatio: 2.90,
-  wheelRadiusM: 0.364,          // 325/30 R21 rear
-  dragCd: 0.60,                 // enormous underbody + wing downforce carries real drag
+  wheelRadiusM: .364,
+  dragCd: .40,
   frontalAreaM2: 1.90,
-  rollingResistance: 0.012,
+  rollingResistance: .012,
   airDensity: 1.225,
-  drivelineEff: 0.90,
-  tractionCoeff: 1.215097,      // calibrated -> 0–100 km/h = 2.5000 s ±0.0001 with launch control (see tests/perf-test.mjs)
-  topSpeedKmh: 350,             // manufacturer top speed
-  topSpeedMps: 350 * KMH,
-  topSpeedLimitedKmh: 350,
-  topSpeedLimitedMps: 350 * KMH,
-  topSpeedRecordKmh: 350,
-  topSpeedRecordMps: 350 * KMH,
-  zeroTo100Kmh: 2.5,            // s (widely-cited figure — Aston Martin quotes ~2.5 s)
-  hybrid: {                     // full combined output (DEFAULT — the headline figures)
-    peakPowerW: 853000,
-    peakPowerPS: 1160,
-    peakPowerHp: 1140,
-    peakTorqueNm: 900
-  },
-  v12only: {                    // V12 alone, electric assist idle (battery-save)
-    peakPowerW: 746000,
-    peakPowerPS: 1014,
-    peakPowerHp: 1000,
-    peakTorqueNm: 740
-  },
-  brakeMaxMps2: 12.7425,        // carbon-ceramic + huge downforce; calibrated to 28.0 m 100-0 km/h (aero adds grip with speed)
-  brakeDist100to0M: 28,         // target 100-0 km/h braking distance
-  shiftTimeS: 0.05,             // Ricardo single-clutch automated manual
-  launchRpm: 5200,
-  aeroClA: 4.2,                 // downforce coefficient*area (lumped) — the Valkyrie makes enormous downforce
-  aeroDragAdd: 0.45             // extra CdA as the rear wing element trims fully
+  drivelineEff: .90,
+  tractionCoeff: 1.197413524,
+  topSpeedKmh: 402,
+  topSpeedMps: 402 * KMH,
+  topSpeedLimitedKmh: 402,
+  topSpeedLimitedMps: 402 * KMH,
+  topSpeedRecordKmh: 402,
+  topSpeedRecordMps: 402 * KMH,
+  zeroTo100Kmh: 2.3,
+  hybrid: {peakPowerW:746000,peakPowerPS:1014,peakPowerHp:1000,peakTorqueNm:740},
+  v12only:{peakPowerW:746000,peakPowerPS:1014,peakPowerHp:1000,peakTorqueNm:740},
+  brakeMaxMps2: 12.4181,
+  brakeDist100to0M: 26,
+  shiftTimeS: .045,
+  launchRpm: 5400,
+  aeroClA: 6.4,
+  aeroDragAdd: .38
 };
 
 /* the car AS BUILT. Every opt-in setting restores to exactly this, so pressing a
@@ -912,8 +900,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    hybrid: true,                  // KERS deploy engaged (full 1,160 PS combined) — default on
-    hybridVis: 0,                  // KERS-deploy indicator
+    hybrid: true,                  // true = Le Mans low-drag trim; false = maximum-downforce trim
+    hybridVis: 0,                  // retained animation channel for the aero-trim indicator
     testDriver: false,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroDragDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
@@ -1002,7 +990,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(3.2); shaper.oversample = "4x"; shaper.connect(this.synthGain);
 
       // Naturally-aspirated V12: a hard metallic wail that keeps rising and
-      // sharpening all the way to the 11,100 rpm limiter
+      // sharpening all the way to the 11,000 rpm limiter
       const defs = [
         { type: "sine",       mul: 0.5,    gain: 0.52, toShaper: false },   // twelve cylinders of bottom end
         { type: "sawtooth",   mul: 1,      gain: 0.64, toShaper: true  },
@@ -1010,8 +998,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         { type: "triangle",   mul: 1.5,    gain: 0.30, toShaper: true  },   // individual throttle bodies: a hard induction honk
         { type: "sawtooth",   mul: 2,      gain: 0.22, toShaper: true  },
         { type: "sawtooth",   mul: 3,      gain: 0.25, toShaper: true  },
-        { type: "square",     mul: 6,      gain: 0.13, toShaper: true  },   // the top end at 11,100 rpm
-        { type: "triangle",   mul: 15,     gain: 0.09, toShaper: false },   // the e-motor inverter under the engine
+        { type: "square",     mul: 6,      gain: 0.13, toShaper: true  },   // the top end at 11,000 rpm
+        { type: "triangle",   mul: 4.5,    gain: 0.09, toShaper: false },   // high-order intake and valvetrain edge
       ];
       this.oscs = defs.map(d => {
         const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
@@ -1044,7 +1032,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (!this.ready) return;
       const t = this.ctx.currentTime;
       if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); return; }
-      const firing = Math.max(20, (s.rpm / 60) * 6);   // Cosworth V12 to 11,100: 6 firing pulses / rev
+      const firing = Math.max(20, (s.rpm / 60) * 6);   // Cosworth V12 to 11,000: 6 firing pulses / rev
       for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
 
       const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
@@ -1182,7 +1170,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const plateau = rpm <= SPEC.torqueLoRpm
       ? 520 + (SPEC.peakTorqueNm - 520) * clamp((rpm - SPEC.idleRpm) / (SPEC.torqueLoRpm - SPEC.idleRpm), 0, 1)
       : SPEC.peakTorqueNm;
-    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps power at the active KERS map (853 kW combined / 746 kW V12-only)
+    const powerCap = SPEC.peakPowerW / Math.max(omega, 1);     // caps output at the naturally aspirated V12 peak
     return Math.max(0, Math.min(plateau, powerCap));
   }
 
@@ -1273,7 +1261,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       rearT = clamp(state.wingManual, 0, 1); frontT = rearT * 0.6;
       dragT = rearT;                      // a wing you wound up by hand really does cost drag
     }
-    // (KERS deploy changes the engine output rather than the aero; see toggleFuel.)
+    // Le Mans trim sheds wing/floor load and drag; maximum-downforce trim restores it.
+    if (state.hybrid) { rearT *= .82; frontT *= .84; dragT *= .58; }
     state.aeroRearDeploy = approach(state.aeroRearDeploy, rearT, 0.004, dt);
     state.aeroFrontDeploy = approach(state.aeroFrontDeploy, frontT, 0.004, dt);
     state.aeroDeploy = state.aeroRearDeploy;            // what the wing LOOKS like
@@ -1404,7 +1393,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     /* The Aston Martin owners track day is an Aston-only event — so its grid is
      Aston Martins, with their real (or, where limited, best-known) top speeds and grip. */
   const ASTON_GRID = [
-    { name: "Aston Martin Valkyrie AMR Pro", body: "#0d5c63", stripe: "#c0c4c8", top: 360, latG: 2.20, accel: 13.4 },
+    { name: "Aston Martin Valkyrie AMR Pro", body: "#0d5c63", stripe: "#c0c4c8", top: 402, latG: 2.20, accel: 13.4 },
     { name: "Aston Martin Valhalla",         body: "#16604f", stripe: "#d0d4d8", top: 350, latG: 1.72, accel: 12.4 },
     { name: "Aston Martin Vulcan",           body: "#f5c518", stripe: "#0a0c10", top: 330, latG: 1.85, accel: 12.0 },
     { name: "Aston Martin One-77",           body: "#1b1d22", stripe: "#c9cfd6", top: 354, latG: 1.15, accel: 11.6 },
@@ -1677,7 +1666,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     updateLap(dsdt, dt);
 
     // nose-lift auto-drops once you're moving, like the real hydraulic front lift
-    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "Valkyrie"); }
+    if (state.rideHeight === 1 && speedAbs > 14) { state.rideHeight = 0; showToast("Nose lowered to ride height.", "AMR Pro"); }
 
     // ride quality: only the SURFACE moves the car. roughnessAt() makes smooth straights
     // glassy and broken sections (the Nordschleife, Monaco's harbour) genuinely rough.
@@ -2417,7 +2406,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     // Aston Martin F1-style detachable wheel in front of the instrument screen
     drawWheel(w, h);
   }
-  // instantaneous output (PS) for the left-hand pod — reads to 1,160 combined
+  // instantaneous output (PS) for the left-hand pod — reads to 1,014 from the V12
   function powerPS() {
     const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
@@ -2434,7 +2423,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.fillStyle = pg; roundRectC(px, py, pw, ph, R * 0.13); ctx.fill();
     ctx.strokeStyle = "rgba(131,212,0,0.5)"; ctx.lineWidth = 1.4; roundRectC(px, py, pw, ph, R * 0.13); ctx.stroke();
     // horizontal shift-light strip across the top (green -> AMR lime -> red)
-    const rev = clamp(state.rpm / (SPEC.redlineRpm || 11100), 0, 1), redline = rev > 0.95;
+    const rev = clamp(state.rpm / (SPEC.redlineRpm || 11000), 0, 1), redline = rev > 0.95;
     const seg = 20, bw = pw * 0.84, bx = cx - bw / 2, by = py + R * 0.13, sw = bw / seg;
     for (let i = 0; i < seg; i++) {
       const f = i / (seg - 1), lit = redline || rev >= f;
@@ -2452,11 +2441,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.textAlign = "left";
     ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.26)}px ui-sans-serif`; ctx.fillText(String(Math.round(state.rpm)), cx + R * 0.68, cy - R * 0.1);
     ctx.fillStyle = "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("rpm", cx + R * 0.68, cy + R * 0.12);
-    // F1 data fields along the bottom: power, the NA V12, KERS deploy
+    // F1 data fields along the bottom: power, the NA V12, AMR AERO deploy
     const deploy = Math.round(clamp(state.boostBar / 1.35, 0, 1) * 100), fy = cy + R * 0.56;
     valField(cx - R * 1.16, fy, "PWR", Math.round(powerPS()) + " PS", "#9cd2ff");
     valField(cx, fy, "V12", "6.5 NA", "#c6f57a");
-    valField(cx + R * 1.16, fy, "KERS", deploy + "%", "#f0a23c");
+    valField(cx + R * 1.16, fy, "AMR AERO", deploy + "%", "#f0a23c");
     ctx.restore();
   }
   function valField(x, baseY, label, val, col) {
@@ -2737,11 +2726,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   /* BODYKIT:END */  function turbine() { let s = ""; for (let a = 0; a < 360; a += 45) s += `<path d="M0,0 L${(38*Math.cos(a*Math.PI/180)).toFixed(1)},${(38*Math.sin(a*Math.PI/180)).toFixed(1)} L${(32*Math.cos((a+20)*Math.PI/180)).toFixed(1)},${(32*Math.sin((a+20)*Math.PI/180)).toFixed(1)} Z" fill="#2b3138"/>`; return `<circle r="40" fill="none" stroke="#1a1d22" stroke-width="5"/>${s}`; }
 
-  /* Aston Martin Valkyrie cockpit SVG — exposed carbon tub, F1-style wheel with a central screen */
+  /* Aston Martin Valkyrie AMR Pro cockpit SVG — exposed carbon tub, F1-style wheel with a central screen */
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Aston Martin Valkyrie cockpit">
+    <svg viewBox="0 0 1000 360" role="img" aria-label="Aston Martin Valkyrie AMR Pro cockpit">
       <defs>
         <linearGradient id="carbonG" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#161d1a"/><stop offset="1" stop-color="#06090c"/></linearGradient>
         <linearGradient id="aluG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
@@ -2773,7 +2762,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         <!-- central display -->
         <rect x="-40" y="-30" width="80" height="46" rx="6" fill="url(#screenG)" stroke="rgba(131,212,0,0.7)" stroke-width="1.6" id="tachArt"/>
         <text x="0" y="-7.4" text-anchor="middle" font-size="17.2" font-weight="700" fill="#e9ffe9" id="tachGearArt">N</text><text x="0" y="14.1" text-anchor="middle" font-size="15.8" font-weight="800" fill="#e9ffe9" id="cabSpeedArt">0</text><text x="0" y="24.2" text-anchor="middle" font-size="6.6" fill="#e9ffe9" opacity="0.65">KM/H</text>
-        <text x="0" y="30" text-anchor="middle" font-size="7" fill="#8fd400" letter-spacing="2">KERS</text>
+        <text x="0" y="30" text-anchor="middle" font-size="7" fill="#8fd400" letter-spacing="2">AMR AERO</text>
         <!-- top grips + rotary switches + buttons -->
         <rect x="-60" y="-42" width="30" height="16" rx="5" fill="#111a15"/>
         <rect x="30" y="-42" width="30" height="16" rx="5" fill="#111a15"/>
@@ -2806,7 +2795,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
   function setGear(mode, gear) {
     if (mode === "R" && Math.abs(state.speedMps) > 0.7) { showToast("Reverse engages once you're stopped."); return; }
-    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Dihedral doors drop shut to drive.", "Valkyrie"); }
+    if ((mode === "G" || mode === "R") && anyDoorOpen()) { closeAllDoors(true); showToast("Dihedral doors drop shut to drive.", "AMR Pro"); }
     if (mode === "G") { state.gearMode = "G"; state.curGear = clamp(gear || state.curGear || 1, 1, SPEC.gearRatios.length); }
     else { state.gearMode = mode; if (mode === "N") { state.launchArmed = false; state.launchActive = false; } if (mode === "R") state.curGear = 1; }
     if (mode === "G" && !state.harness) latchHarness(true);
@@ -2837,28 +2826,20 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (m === "race") { state.exhaustValve = true; }
     if (m === "wet") { state.tractionControl = true; state.esc = true; }
     audio.click(1400);
-    showToast(m === "race" ? "Race: pushrod suspension firm, ESC trail, exhaust open, wing loaded." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "Valkyrie");
+    showToast(m === "race" ? "Race: pushrod suspension firm, ESC trail, exhaust open, wing loaded." : m === "sport" ? "Sport: balanced throttle and shifts." : "Wet: throttle softened, traction protected.", "AMR Pro");
   }
   function cycleMode() { setMode(state.driveMode === "wet" ? "sport" : state.driveMode === "sport" ? "race" : "wet"); }
 
   function toggleAero() { state.aeroAuto = !state.aeroAuto; if (!state.aeroAuto) state.wingManual = 1; audio.motor(0.5); showToast(state.aeroAuto ? "Wing element: AUTO — trimming for downforce and airbraking." : "Wing element fixed (manual)."); }
-  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — the 11,100 rpm Cosworth V12 screams." : "Exhaust flap closed — muted."); }
-    // KERS hybrid: the Valkyrie's headline 1,160 PS is the V12 (1,000 hp) plus the
-  // battery-electric motor (~160 hp). Deploy is ON by default; switching it off runs
-  // the V12 alone (1,014 PS) to conserve the battery.
+  function toggleExhaust() { state.exhaustValve = !state.exhaustValve; audio.click(1200); if (state.exhaustValve) { audio.crackle(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 220); } showToast(state.exhaustValve ? "Exhaust flap open — the 11,000 rpm Cosworth V12 screams." : "Exhaust flap closed — muted."); }
+  // AMR Pro has no road-car hybrid system. This control changes the aero setup only;
+  // both positions retain the same naturally-aspirated 1,000 bhp V12 output.
   function toggleFuel() {
-    const next = !state.hybrid;
-    state.hybrid = next; setActive("hybridBtn", next);
-    const map = next ? SPEC.hybrid : SPEC.v12only;
-    SPEC.peakPowerW = map.peakPowerW; SPEC.peakPowerPS = map.peakPowerPS;
-    SPEC.peakPowerHp = map.peakPowerHp; SPEC.peakTorqueNm = map.peakTorqueNm;
-    if (next) {
-      audio.motor(0.6); audio.chime([523, 659, 784, 1047]);
-      showToast("KERS deploy on — full 1,160 PS combined. The V12 gets the electric fill.", "Valkyrie");
-    } else {
-      audio.motor(0.5);
-      showToast("KERS off — V12 only, 1,014 PS. Battery conserved.", "Valkyrie");
-    }
+    state.hybrid = !state.hybrid;
+    setActive("hybridBtn", state.hybrid);
+    document.getElementById("hybridBtn").textContent = state.hybrid ? "Le Mans Trim" : "Max Downforce";
+    audio.motor(.55); audio.click(state.hybrid ? 1200 : 760);
+    showToast(state.hybrid ? "Le Mans trim — lower drag for the straight, full V12 output unchanged." : "Maximum downforce — floor and wing load restored, full V12 output unchanged.", "AMR Pro");
   }
 
   function toggleLights() { state.lights = !state.lights; audio.click(state.lights ? 760 : 520); showToast(state.lights ? "Headlamps on — the road lights up." : "Headlamps off."); }
@@ -2867,7 +2848,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (state.driveMode !== "race") setMode("race");
     if (state.gearMode !== "G") setGear("G", 1);
     state.launchArmed = !state.launchArmed; setActive("launchBtn", state.launchArmed);
-    showToast(state.launchArmed ? "Launch control armed — build the revs on the brake, then release." : "Launch control off.", "Valkyrie");
+    showToast(state.launchArmed ? "Launch control armed — build the revs on the brake, then release." : "Launch control off.", "AMR Pro");
   }
   function toggleEsc() { state.esc = !state.esc; if (!state.esc) state.tractionControl = false; else state.tractionControl = true; setActive("escBtn", state.esc); showToast(state.esc ? "ESC + traction control on." : "ESC off — traction control off. Mind the rear."); }
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
@@ -2892,11 +2873,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     setActive("testDriverBtn", next);
   }
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
-  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Valkyrie"); } else showToast("Cruise off."); }
+  function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "AMR Pro"); } else showToast("Cruise off."); }
 
   function resetCar() {
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
-    if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
+    state.hybrid = true; document.getElementById("hybridBtn").textContent = "Le Mans Trim";
     setActive("hybridBtn", true);
     document.documentElement.classList.remove("trackpad-steer");
     if (document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
@@ -2906,7 +2887,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const nr = document.getElementById("nordsRoute"); if (nr) nr.style.display = "none";
     const t = document.getElementById("throttleSlider"), b = document.getElementById("brakeSlider"); if (t) t.value = 0; if (b) b.value = 0;
     document.querySelectorAll("[data-circuit]").forEach(b2 => b2.classList.remove("active"));
-    showToast("Back in the pit lane.", "Valkyrie");
+    showToast("Back in the pit lane.", "AMR Pro");
   }
 
   Object.assign(app, { setActive, setActiveSafe, anyDoorOpen, setView, setGear, updateGearButtons, paddleUp, paddleDown, latchHarness, closeAllDoors, toggleDoor, updateDoorArt, setMode, cycleMode, toggleAero, toggleExhaust, toggleLights, toggleLift, armLaunch, toggleEsc, togglePit, toggleFuel, selectCircuit, toggleTestDriver, setCruiseSpeed, toggleCruise, resetCar });
@@ -2937,7 +2918,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function coldStartFlair() { audio.startupFlair(); el.engineBay.classList.add("glow"); setTimeout(() => el.engineBay.classList.remove("glow"), 600); showToast("Cold-start flare — the V12 wails to 4,000 with a hard metallic edge."); }
   function setIgnition(on) {
     state.ignition = on; app.setActive("startSwitchBtn", on);
-    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V12 lit.", "Valkyrie"); }
+    if (on) { audio.startupFlair(); state.rpm = app.SPEC.idleRpm; showToast("Ignition on — V12 lit.", "AMR Pro"); }
     else { if (state.gearMode === "G" || state.gearMode === "R") app.setGear("N"); state.rpm = 0; showToast("Ignition off."); }
   }
   Object.assign(app, { setToggle, applyEffect, adjustSeat, blipThrottle, coldStartFlair, setIgnition });
@@ -2961,7 +2942,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("kers", "hybrid", "deploy", "electric")) { app.toggleFuel(); acted = true; }
+    if (has("le mans", "low drag", "aero trim", "maximum downforce")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
@@ -2973,7 +2954,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (has("music", "play", "song", "audio")) { app.setToggle("audioCabin", true); acted = true; }
     if (has("horn", "honk", "clacson")) { audio.horn(true); setTimeout(() => audio.horn(false), 600); acted = true; }
     if (has("stop", "pull over", "pit")) { state.adaptiveCruise = false; state.testDriver = false; state.padThrottle = 0; reply("Pulling in."); acted = true; }
-    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “KERS deploy”, or “cruise at 200”.");
+    if (!acted) reply("Didn't catch that. Try “take me to Nardò”, “race mode”, “launch”, “Le Mans trim”, or “cruise at 200”.");
   }
   app.processVoice = processVoice;
 }
@@ -3010,11 +2991,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (!state.hybrid) warn.push("KERS OFF · V12 only, 1,014 PS");
+    if (!state.hybrid) warn.push("MAX DOWNFORCE · 1,014 PS V12");
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (speed >= 340) warn.push("approaching the 350 km/h mark");
+    if (speed >= 340) warn.push("approaching the 402 km/h mark");
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -3042,7 +3023,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     el.brakeTempRead.textContent = `${Math.round(state.brakeTempC)}°C`;
     el.oilTempRead.textContent = `${Math.round(state.oilTempC)}°C`;
     el.waterTempRead.textContent = `${Math.round(state.waterTempC)}°C`;
-    el.boostRead.textContent = `${Math.round(state.boostBar / 1.35 * 100)}%`;
+    el.boostRead.textContent = state.hybrid ? "LM" : "MAX";
     el.egtRead.textContent = `${Math.round(state.egtC)}°C`;
     el.navRead.textContent = state.route.active ? state.route.name : "Free run";
     el.lapRead.textContent = state.lap.bestMs ? `${app.fmtLap(state.lap.curMs)} / ${app.fmtLap(state.lap.bestMs)}` : (state.lap.curMs > 0 ? app.fmtLap(state.lap.curMs) : "—");
@@ -3259,7 +3240,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     });
     const engineFile = document.getElementById("engineFile");
     document.getElementById("engineLoadBtn").addEventListener("click", () => { audio.init(); audio.resume(); engineFile.click(); });
-    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "Valkyrie"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V8 recording loaded — pitched with the revs.", "Valkyrie"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V8 works best.", "Valkyrie"); }); });
+    engineFile.addEventListener("change", e => { const file = e.target.files && e.target.files[0]; e.target.value = ""; if (!file) return; audio.init(); audio.resume(); if (!audio.ready) { showToast("This browser can't open the audio engine.", "AMR Pro"); return; } const name = file.name.replace(/\.[^.]+$/, ""); app.setEngineStatus(`Loading “${name}”…`); audio.loadEngineFromFile(file).then(() => { app.setEngineStatus(`Engine voice: ${name} — real recording`); showToast("Real V12 recording loaded — pitched with the revs.", "AMR Pro"); }).catch(() => { app.setEngineStatus("Couldn't read that file — try a clean MP3 or WAV."); showToast("Couldn't decode that audio. A short MP3/WAV of the V12 works best.", "AMR Pro"); }); });
   }
 
   function setupPedals() {
@@ -3294,7 +3275,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (e.code === "KeyQ" && !e.repeat) app.paddleDown();
       if (e.code === "KeyL" && !e.repeat) app.armLaunch();
       if (e.code === "KeyH" && !e.repeat) app.hornOn();
-      if (e.code === "KeyZ" && !e.repeat) app.toggleFuel();   // Z = this car's ultimate-speed feature (KERS boost)
+      if (e.code === "KeyZ" && !e.repeat) app.toggleFuel();   // Z = switch between Le Mans and maximum-downforce aero trims
     });
     window.addEventListener("keyup", e => { state.keys[e.code] = false; if (e.code === "KeyH") app.hornOff(); });
   }
@@ -3338,7 +3319,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           ownFullscreen = true;
           if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
         })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Valkyrie"); });
+        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "AMR Pro"); });
     };
     const leaveFullscreen = () => {
       fullscreenWanted = false;
@@ -3358,7 +3339,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         document.documentElement.classList.remove("trackpad-steer");
         leaveFullscreen();
       }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Valkyrie");
+      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "AMR Pro");
     };
     const clearHold = () => { holdArmed = false; };
     const isTypingTarget = (e) => {
@@ -3377,7 +3358,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       e.preventDefault();
       chordArmed = true;
       enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Valkyrie");
+      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "AMR Pro");
       chordTimer = setTimeout(() => {
         chordTimer = null; chordArmed = false;
         if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
@@ -3420,7 +3401,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     window.addEventListener("keyup", e => {
       if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
         clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Valkyrie");
+        showToast("Trackpad steering hold cancelled.", "AMR Pro");
       }
     });
     document.addEventListener("fullscreenchange", () => {
@@ -3430,7 +3411,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
           state.trackpadSteering = false;
           resetTrackpadWheel();
           document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Valkyrie");
+          showToast("Trackpad steering off.", "AMR Pro");
         }
       }
     });
@@ -3438,7 +3419,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
     window.addEventListener("pointerdown", wake); window.addEventListener("keydown", wake);
-    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("V12 lit, KERS armed. Pull the right paddle for 1st, or open Circuit for a hot lap.", "Valkyrie"); });
+    document.getElementById("startBtn").addEventListener("click", () => { audio.init(); audio.resume(); el.keyOverlay.classList.add("hide"); state.started = true; state.ignition = true; if (state.raceGrid) app.seedRivals(); audio.startupFlair(); setTimeout(() => audio.chime([523, 784, 1047]), 700); showToast("AMR Pro V12 lit. Pull the right paddle for 1st, or open Circuit for a hot lap.", "AMR Pro"); });
   }
 
   bindCore(); bindCockpit(); bindMedia(); setupPedals(); bindHorn(); bindKeyboard(); bindMobilePad(); bindTouchWheel(); bindTrackpadSteering(); bindStart();

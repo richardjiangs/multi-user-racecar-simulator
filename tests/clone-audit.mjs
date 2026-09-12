@@ -4,7 +4,9 @@
 // panel copy — not the rival grids (a Ferrari SF90 is legitimately in the Chiron's field)
 // and not the shared circuit list.
 import { readdirSync, readFileSync } from "node:fs";
-process.chdir("/home/user/multi-user-racecar-simulator");
+import { fileURLToPath } from "node:url";
+import { dirname, resolve } from "node:path";
+process.chdir(resolve(dirname(fileURLToPath(import.meta.url)), ".."));
 
 // a distinctive token per car — the thing that must not appear in anyone else's copy
 const MARK = {

@@ -104,10 +104,10 @@ const CARS = {
   aston: {
     file: "Aston Martin Valkyrie simulator.html",
     app: "AstonApp",
-    label: "Aston Martin Valkyrie",
-    marks: { 100: { target: 2.5, tol: 1e-4 } },
-    topSpeed: { kmh: 350, minT: 70 },
-    brake100: { target: 28, tol: 1.0 },
+    label: "Aston Martin Valkyrie AMR Pro",
+    marks: { 100: { target: 2.3, tol: 1e-4 } },
+    topSpeed: { kmh: 402, minT: 80 },
+    brake100: { target: 26, tol: 1.5 },
   },
   gto: {
     file: "Ferrari 250 GTO simulator.html",
@@ -294,6 +294,18 @@ const CARS = {
     topSpeed: { kmh: 330, minT: 70 },
     brake100: { target: 25.8, tol: 1.5 },
   },
+  porsche919: {
+    file: "Porsche 919 Hybrid simulator.html", app: "Porsche919App", label: "Porsche 919 Hybrid #2 (2017)",
+    marks: { 100: { target: 2.2, tol: 1e-4 } },
+    topSpeed: { kmh: 334.9, minT: 80 },
+    brake100: { target: 24.5, tol: 1.5 },
+  },
+  ferrari499p: {
+    file: "Ferrari 499P simulator.html", app: "Ferrari499PApp", label: "Ferrari 499P #51",
+    marks: { 100: { target: 2.3, tol: 1e-4 } },
+    topSpeed: { kmh: 347, minT: 80 },
+    brake100: { target: 25, tol: 1.5 },
+  },
   phantom: {
     file: "Rolls-Royce Phantom simulator.html",
     app: "PhantomApp",
@@ -420,7 +432,7 @@ for (const [key, file, app, label] of F1_TEAMS) {
   CARS[key] = {
     file, app, label,
     marks: { 100: { target: 2.6, tol: 1e-4 } },
-    topSpeed: { minKmh: 330, maxKmh: 362, minT: 80 },   // drag-limited (active aero)
+    topSpeed: { minKmh: 330, maxKmh: 362, setup: "f1X", minT: 80 },   // drag-limited (active aero)
     brake100: { target: 17, tol: 1.5 },
   };
 }
@@ -466,6 +478,8 @@ const PAGE_FNS = {
       if (app.toggleAbsolut && !state.absolut) app.toggleAbsolut();
       if (app.toggleFuel && !state.e85) app.toggleFuel();
     }
+    if (setup === "f1X") state.keys.KeyX = true;
+    if (setup === "prototypeBoost") { state.hybridEnergy = 100; state.energyMode = 1; }
     if (setup === "trackPack" && app.toggleTrackPack && !state.trackPack) app.toggleTrackPack();
     app.armLaunch();
     state.keys.KeyW = true;
@@ -565,6 +579,8 @@ const PAGE_FNS = {
 async function openSim(browser, car) {
   const page = await browser.newPage();
   page.on("pageerror", (e) => { throw new Error(`[${car.label}] page error: ${e.message}`); });
+  // Physics is stepped explicitly below; suppress the independent display-loop clock.
+  await page.addInitScript(() => { window.requestAnimationFrame = () => 0; });
   await page.goto(pathToFileURL(resolve(ROOT, car.file)).href);
   await page.waitForFunction((appName) => !!window[appName] && !!window[appName].updatePhysics, car.app, { timeout: 15000 });
   return page;

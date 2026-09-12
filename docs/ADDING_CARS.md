@@ -5,9 +5,9 @@
 > car end-to-end, the ordering rules, and the hard-won warnings from building the 24-car garage.
 > When they disagree, `CLAUDE.md` wins and should be updated.
 
-The garage is **47 self-contained HTML simulators** + `index.html` (the garage shell that
-lazily loads all 47, base64-embedding them only for `file://`). Today: **24 road cars/hypercars**
-then the **11-team 2026 F1 grid** then the **four 2026 Dakar Rally raid cars**.
+The garage is **63 self-contained HTML simulators** + `index.html` (the garage shell that
+lazily loads all 63, base64-embedding them only for `file://`). Today: **48 normal and special
+cars**, then the **11-team 2026 F1 grid**, then the **four 2026 Dakar Rally raid cars**.
 Every sim shares one template; you add a car by **cloning the closest existing sim and
 changing only the per-car deltas**, never by writing a sim from scratch.
 
@@ -15,24 +15,23 @@ changing only the per-car deltas**, never by writing a sim from scratch.
 
 ## 0. The two categories and the ORDERING RULE (important)
 
-There are two kinds of car, and they sort into two blocks in **every ordered list**
+There are three placement blocks in **every ordered list**
 (the `index.html` car-cards, `EMBEDDED_SIM_BASE64`, the `tests/perf-test.mjs` `CARS`
 registry, and the docs):
 
-1. **Normal cars** — road cars & hypercars (Bugatti … Toyota Supra MK4 (A80)). No Real Race Mode
-   by default (though they all have Learning Mode + a "Race Car 101").
-2. **Special racing cars** — the F1 grid today; any purpose-built racer you add next
-   (LMH/Le Mans Hypercar, IndyCar, GT3, NASCAR, …). **These get a Real Mode.**
+1. **Normal and special cars** — road cars, hypercars, classics and the dedicated track/endurance
+   group. New track/endurance cars join the tail of this block and get Real Mode.
+2. **Formula 1** — the complete eleven-car 2026 grid stays contiguous.
+3. **Dakar** — the four rally-raid cars stay contiguous after Formula 1.
 
 **Rule — keep the blocks grouped, insert within the correct block:**
 
-- A new **normal car** goes **at the end of the normal-car block, BEFORE the first racing car**
-  (i.e. after `supra`, before `f1mercedes`). **Never append a normal car at the very end**
-  (after the F1 cars) — that splits the road group.
-- A new **special racing car** goes **at the end of the racing block** (after `f1cadillac`),
-  or starts a new racing sub-block if it is a different series.
+- A new **normal car** goes **at the end of the normal-car block, BEFORE `f1mercedes`**.
+- A new **special track/endurance car** also goes **before `f1mercedes`**, after the existing
+  special group. Never split the eleven Formula 1 cards.
+- A new F1 or Dakar entry belongs only in its corresponding series block.
 
-The current order is already correct (13 road cars, then 11 F1). Preserve it. If you ever
+The current order is already correct (48 normal/special cars, then 11 F1, then four Dakar cars). Preserve it. If you ever
 find a car out of its block, re-arrange **all** ordered lists together (cards, embed line,
 perf-test registry) and re-run the full verification pipeline (§7).
 

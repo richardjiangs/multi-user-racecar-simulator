@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of sixty-one simulators — each a **single self-contained HTML file** —
-forty-six road/classic/track cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
+A garage of sixty-three simulators — each a **single self-contained HTML file** —
+forty-eight road/classic/track cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
 Supra MK4 (A80), the six later hypercars (Hennessey Venom F5 · Lotus Evija · Mercedes-AMG
@@ -17,15 +17,15 @@ then two **Rolls-Royces** — the **Phantom VIII** and the **Spectre Black Badge
 not sports cars at all and are the reason the garage now has city journeys, working traffic
 signals and a course in being a chauffeur. The next set adds the **Ferrari F12tdf development
 prototype**, **Dodge Viper ACR Extreme Aero**, **Zenvo Aurora Agil**, **Maserati MCXtrema** and
-**Peugeot 9X8**; all five stay together at the end of the normal-car block before Formula 1. `index.html` bundles all of them together with
+**Peugeot 9X8**, **Porsche 919 Hybrid** and **Ferrari 499P**; all seven stay together at the end of the normal-car block before Formula 1. `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
 
 > **Extending the garage?** Read **`docs/ADDING_CARS.md`** — the step-by-step playbook for
-> adding a new car (normal vs special-racing), the ordering rules (new **normal** cars go at the
-> end of the road block **before** the F1 cars, never last; new **racing** cars get a **Real Mode**
-> and go after the racing block), the calibration/verification pipeline, the hard warnings, and the
+> adding a new car (normal vs special-racing), the ordering rules (new **normal** and dedicated
+> **track/endurance** cars go at the end of their group **before** the intact F1 block; new racing
+> cars get a **Real Mode**), the calibration/verification pipeline, the hard warnings, and the
 > current known open bug (learning-mode apex side + real-time apex marks).
 
 ## Repository layout
@@ -112,7 +112,11 @@ Maserati MCXtrema simulator.html            ← track-only Nettuno V6, 6-speed s
                                                qualify/endurance map, rear camera + full-width Varano.
 Peugeot 9X8 simulator.html                  ← 2024 LMH V6/front-MGU hybrid, 900 V, STINT/ATTACK/CHARGE
                                                strategies, brake migration + full-width MotorLand Aragón.
-                                               All four sit before the F1 block on the homepage.
+Porsche 919 Hybrid simulator.html           ← 2017 LMP1 turbo-V4/front-MGU hybrid, 8 MJ AUTO/BOOST/RECUP,
+                                               24-control wheel + full-width Circuit de la Sarthe.
+Ferrari 499P simulator.html                 ← 120° twin-turbo V6/front-ERS LMH, 900 V, three energy maps,
+                                               brake migration + full-width Imola.
+                                               All seven racing specials sit before the F1 block on the homepage.
 Dacia Sandrider Dakar simulator.html        ← 2026 Dakar Rally raid cars (4, one shared T1+ Ultimate chassis SPEC):
 Ford Raptor T1+ Dakar simulator.html           Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter.
 Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound (Ford = 5.0 NA V8; the rest twin-turbo V6),
@@ -219,7 +223,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Koenigsegg Jesko | 954 kW / 1,280 hp @ 7,800 (E85: 1,193 kW / 1,600 hp) | 1,000 Nm @ 2,700–6,170 (E85 1,500 @ 5,100) | 2.5 s | ~425 drag-limited (Attack) / **531 claimed (Absolut)** | 9-LST | 1,420 kg |
 | Tesla Model S Plaid | 760 kW / 1,020 hp tri-motor | ~1,420 Nm combined | 2.1 s (w/ 1-ft rollout: 0-60 1.99 s) | 262 governed / 322 Track Pack | 1-speed | 2,162 kg |
 | Mercedes-AMG GT Black Series | 537 kW / 730 PS / 720 hp @ 6,900 (flat-plane V8) | 800 Nm @ 2,000–6,000 | 3.2 s | 325 governed | 7-DCT | 1,615 kg |
-| Aston Martin Valkyrie | 853 kW / 1,160 PS combined (1,000 hp V12 @ 10,500 + ~160 hp KERS) | 900 Nm combined | 2.5 s | 350 | 7-seq | 1,030 kg (dry) |
+| Aston Martin Valkyrie AMR Pro | 746 kW / 1,014 PS / 1,000 bhp (modified 6.5 L NA V12, no hybrid, 11,000 rpm) | 740 Nm simulator envelope | 2.3 s | 402 simulator target | 7-seq | 1,000 kg simulator target |
 | Ferrari 250 GTO | 221 kW / 300 PS @ 7,500 (Colombo V12, six Webers) | 294 Nm @ 5,500 | 6.1 s | ~280 | 5-manual | 880 kg (dry) |
 | Lamborghini Revuelto | 747 kW / 1,015 CV combined (825 CV V12 @ 9,250 + 3 e-motors) | ~1,100 Nm combined | 2.5 s | 350 | 8-DCT | 1,772 kg (dry) |
 | Porsche 918 Spyder | 652 kW / 887 PS combined (608 PS V8 @ 8,700 + 2 e-motors) | ~1,280 Nm combined | 2.6 s | 345 | 7-PDK | 1,674 kg |
@@ -259,6 +263,8 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | ~350 (drag-limited, active aero) | 8-seq | 768 kg (min.) |
 | Maserati MCXtrema | 540 kW / 740 CV (3.0 L 90° twin-turbo Nettuno racing V6) | 730 Nm | **2.7 s — DERIVED** | 325 claimed | 6-sequential | ~1,300 kg dry |
 | Peugeot 9X8 (2024) | 480–520 kW total under BoP (2.6 L twin-turbo V6 hybrid; front MGU up to 200 kW) | not published; 900 Nm simulator envelope | **2.8 s — DERIVED** | ~330 derived | 7-sequential | 1,030 kg minimum |
+| Porsche 919 Hybrid (2017) | >662 kW / >900 PS system (2.0 L 90° turbo V4 + front MGU) | 825 Nm simulator envelope | 2.2 s simulator target | 334.9 (2017 Le Mans race maximum) | 7-sequential | 875 kg minimum |
+| Ferrari 499P | 500 kW / 680 cv combined (3.0 L 120° twin-turbo V6 + 200 kW front ERS) | 860 Nm simulator envelope | 2.3 s simulator target | 347 simulator target | 7-sequential | 1,030 kg minimum |
 | 2026 Dakar (all 4 cars) | ~265 kW / ~360 hp (air-restricted T1+ Ultimate; Ford = 5.0 NA V8, rest = twin-turbo V6) | ~620 Nm | 5.3 s | 170 km/h governed | 6-seq | ~2,000 kg (T1+ min.) |
 
 **The five newest road cars** each carry one *real* ultimate-speed feature on **key Z**, opt-in
@@ -1004,7 +1010,7 @@ reality cannot come out identical:
 | **e-motor** | a hybrid carries an inverter whine under the engine note. |
 | **EV** | no firing order at all: inverter switching + reduction-stage and rotor whine, pitched by motor speed (a 30,000 rpm U9 Xtreme rotor whines far higher than a Nevera's). |
 
-The voice audit covers all **61 cars**. The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
+The voice audit covers all **63 cars**. The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
 that really do share a power unit — the Mercedes, Ferrari and Red Bull Ford F1 customer
 teams, and the Jesko/Agera RS 5.0 twin-turbo V8. `tests/browser-test.mjs` hashes every
 oscillator stack and **fails on any shared voice outside that allow-list**, so this cannot
@@ -1048,7 +1054,7 @@ from the numbers perf-test certifies.
 
 ## index.html — garage + online race shell
 
-- Sixty-one `car-card`s with real photos (road cars) / liveried SVG cards (2026 F1 +
+- Sixty-three `car-card`s with real photos (road cars) / liveried SVG cards (racing specials + 2026 F1 +
   the six later hypercars, each with a real-photo `<img class="realcar">` slot that reveals
   a supplied photo and otherwise falls back to the SVG livery) + spec chips; buttons
   `data-practice` / `data-online` per car key (`pagani, bugatti, mclaren, ferrari,
@@ -1057,7 +1063,8 @@ from the numbers perf-test certifies.
   f1williams, f1racingbulls, f1haas, f1audi, f1cadillac, dacia, fordraptor, grhilux,
   hunter`; plus the later road cars `evo, gtr, m5, r8, mclarenf1, t33, agera, u9, db5,
   slr300, czinger, alfa33, tuatara, t50s, project8, s2000, mustanggtd, rx7, phantom,
-  spectre, f12tdf, viperacr, aurora`; plus the racing-car keys `mcxtrema, peugeot9x8`).
+  spectre, f12tdf, viperacr, aurora`; plus the racing-car keys `mcxtrema, peugeot9x8,
+  porsche919, ferrari499p`).
   New normal cars insert at the END of the road block, BEFORE the F1 cards.
 - **Lazy sim loading** (so the homepage isn't a 12 MB download): between the
   `/*__EMBED_START__*/ … /*__EMBED_END__*/` markers index.html now carries only a

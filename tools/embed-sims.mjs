@@ -36,10 +36,6 @@ const FILES = {
   mcf1: "McLaren F1 1993 simulator.html",
   t33: "Gordon Murray T.33 simulator.html",
   f12tdf: "Ferrari F12tdf simulator.html",
-  viperacr: "Dodge Viper ACR Extreme Aero simulator.html",
-  aurora: "Zenvo Aurora Agil simulator.html",
-  mcxtrema: "Maserati MCXtrema simulator.html",
-  peugeot9x8: "Peugeot 9X8 simulator.html",
   agera: "Koenigsegg Agera RS simulator.html",
   u9: "Yangwang U9 simulator.html",
   db5: "Aston Martin DB5 simulator.html",
@@ -62,6 +58,12 @@ const FILES = {
   p1: "McLaren P1 simulator.html",
   f40: "Ferrari F40 simulator.html",
   p917: "Porsche 917 simulator.html",
+  viperacr: "Dodge Viper ACR Extreme Aero simulator.html",
+  aurora: "Zenvo Aurora Agil simulator.html",
+  mcxtrema: "Maserati MCXtrema simulator.html",
+  peugeot9x8: "Peugeot 9X8 simulator.html",
+  porsche919: "Porsche 919 Hybrid simulator.html",
+  ferrari499p: "Ferrari 499P simulator.html",
   f1mercedes: "Mercedes F1 2026 simulator.html",
   f1redbull: "Red Bull F1 2026 simulator.html",
   f1ferrari: "Ferrari F1 2026 simulator.html",
@@ -88,7 +90,7 @@ for (const [key, file] of Object.entries(FILES)) {
 
 // A content hash over every sim, stamped into the page as SIM_BUILD and appended to each
 // sim URL as ?v=. Without it the sim files sit on stable URLs, and prefetchSims() warms
-// all 61 into the browser cache on every visit — so a visitor could take a fresh
+// all 63 into the browser cache on every visit — so a visitor could take a fresh
 // index.html and still open last week's simulator out of disk cache. It only changes when
 // a sim actually changes, so it does not defeat caching, it just ends staleness.
 const SIM_BUILD = createHash("sha1")

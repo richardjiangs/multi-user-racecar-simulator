@@ -482,7 +482,7 @@
           <button id="audioBtn">Team Radio</button>
           <button id="shifterLightBtn" class="active">Shift Lights</button>
           <button id="startSwitchBtn" class="active">Ignition</button>
-          <button id="hybridBtn" class="race active" title="Override — full MGU-K electric deploy for the complete ~1,013 PS combined; off runs the V6 alone">Override</button>
+          <button id="hybridBtn" class="race active" title="Enable standard MGU-K deployment; hold V for Manual Override">MGU-K Armed</button>
         </div>
         <div class="studio-bar">
           <input type="file" id="studioFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*,.mp4,.mov,.m4v,.webm,.mkv,video/*" hidden>
@@ -501,7 +501,7 @@
           <div class="heat-haze"></div>
           <div class="turbo left" id="turboL" style="display:none"></div>
           <div class="turbo right" id="turboR" style="display:none"></div>
-          <div style="position:absolute;left:15%;right:15%;top:13%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebf1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecf1" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="etf1" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#f0b48a"/><stop offset="0.5" stop-color="#a5431f"/><stop offset="1" stop-color="#3a160a"/></radialGradient><radialGradient id="emf1" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bff3fb"/><stop offset="0.5" stop-color="#219fb8"/><stop offset="1" stop-color="#0c2f3c"/></radialGradient></defs><rect x="56" y="10" width="70" height="104" rx="11" fill="url(#ebf1)" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="174" y="10" width="70" height="104" rx="11" fill="url(#ebf1)" stroke="#c8d0d8" stroke-opacity="0.4"/><circle cx="90" cy="24" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="99" y1="24" x2="128" y2="24" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="210" cy="24" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="201" y1="24" x2="172" y2="24" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="90" cy="62" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="99" y1="62" x2="128" y2="62" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="210" cy="62" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="201" y1="62" x2="172" y2="62" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="90" cy="100" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="99" y1="100" x2="128" y2="100" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="210" cy="100" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="201" y1="100" x2="172" y2="100" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="150" cy="34" r="15" fill="url(#etf1)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="150" cy="34" r="6" fill="#2a120a"/><circle cx="150" cy="72" r="11" fill="url(#emf1)" stroke="rgba(160,240,250,0.6)" stroke-width="1.2"/><circle cx="150" cy="72" r="4" fill="#0c2f3c"/><circle cx="150" cy="106" r="11" fill="url(#emf1)" stroke="rgba(160,240,250,0.6)" stroke-width="1.2"/><circle cx="150" cy="106" r="4" fill="#0c2f3c"/><text x="150" y="8" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#c8d0d8" letter-spacing="0.5">1.6 V6 TURBO-HYBRID</text><text x="150" y="52" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" font-weight="700" fill="#39d0e0">MGU-H</text><text x="150" y="124" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" font-weight="700" fill="#39d0e0">MGU-K</text></svg></div>
+          <div style="position:absolute;left:15%;right:15%;top:13%;height:158px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs><linearGradient id="ebf1" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient><radialGradient id="ecf1" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient><radialGradient id="etf1" cx="40%" cy="34%" r="70%"><stop offset="0" stop-color="#f0b48a"/><stop offset="0.5" stop-color="#a5431f"/><stop offset="1" stop-color="#3a160a"/></radialGradient><radialGradient id="emf1" cx="40%" cy="34%" r="72%"><stop offset="0" stop-color="#bff3fb"/><stop offset="0.5" stop-color="#219fb8"/><stop offset="1" stop-color="#0c2f3c"/></radialGradient></defs><rect x="56" y="10" width="70" height="104" rx="11" fill="url(#ebf1)" stroke="#c8d0d8" stroke-opacity="0.4"/><rect x="174" y="10" width="70" height="104" rx="11" fill="url(#ebf1)" stroke="#c8d0d8" stroke-opacity="0.4"/><circle cx="90" cy="24" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="99" y1="24" x2="128" y2="24" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="210" cy="24" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="201" y1="24" x2="172" y2="24" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="90" cy="62" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="99" y1="62" x2="128" y2="62" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="210" cy="62" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="201" y1="62" x2="172" y2="62" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="90" cy="100" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="99" y1="100" x2="128" y2="100" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="210" cy="100" r="9" fill="url(#ecf1)" stroke="rgba(190,200,210,0.5)"/><line x1="201" y1="100" x2="172" y2="100" stroke="#c8d0d8" stroke-width="2" opacity="0.5"/><circle cx="150" cy="34" r="15" fill="url(#etf1)" stroke="rgba(240,190,150,0.6)" stroke-width="1.4"/><circle cx="150" cy="34" r="6" fill="#2a120a"/><circle cx="150" cy="72" r="11" fill="url(#emf1)" stroke="rgba(160,240,250,0.6)" stroke-width="1.2"/><circle cx="150" cy="72" r="4" fill="#0c2f3c"/><circle cx="150" cy="106" r="11" fill="url(#emf1)" stroke="rgba(160,240,250,0.6)" stroke-width="1.2"/><circle cx="150" cy="106" r="4" fill="#0c2f3c"/><text x="150" y="8" text-anchor="middle" font-family="ui-sans-serif" font-size="9" font-weight="700" fill="#c8d0d8" letter-spacing="0.5">1.6 V6 TURBO-HYBRID</text><text x="150" y="52" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" font-weight="700" fill="#39d0e0">TURBO</text><text x="150" y="124" text-anchor="middle" font-family="ui-sans-serif" font-size="6.5" font-weight="700" fill="#39d0e0">MGU-K</text></svg></div>
           <div class="emotor" id="airTankArt">MGU-K + ENERGY STORE · SINGLE TURBO</div>
           <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
           <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
@@ -599,7 +599,7 @@
         <h3 id="ls4" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">5. Vision</h3><p style="margin:4px 0">Look through the corner at the exit, not at the tarmac ahead of the nose. Eyes up to the next reference — the car follows your eyes, and every correction gets smaller.</p>
         <h3 id="ls5" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">6. Downforce — grip that grows with speed</h3><p style="margin:4px 0">An F1 car corners harder the faster it goes: at 250 km/h the wings press it into the road with more than its own weight. Trust the car in fast corners; in slow ones the wings can't help — it's all mechanical grip and traction.</p>
         <h3 id="ls6" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">7. 2026 active aero — X-mode & Z-mode</h3><p style="margin:4px 0">Hold <kbd>X</kbd> on the straights: the wings flatten (X-mode) and shed drag. Brake or load the car and it snaps back to high-downforce Z-mode automatically. It replaced DRS in 2026 and works every lap.</p>
-        <h3 id="ls7" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">8. ERS & the Manual Override (MOM)</h3><p style="margin:4px 0">Hold <kbd>V</kbd> for full electric deploy past the 290 km/h taper. In a race it only arms within ~1 s of the car ahead — the 2026 overtaking rule. The store drains in seconds and recharges under braking.</p>
+        <h3 id="ls7" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">8. ERS & the Manual Override (MOM)</h3><p style="margin:4px 0">Hold <kbd>V</kbd> for Manual Override: standard deployment tapers from 290 to zero at 345 km/h; Override tapers from 337.5 to zero at 355 km/h. In a race it only arms within ~1 s of the car ahead — the 2026 overtaking rule. The store drains in seconds and recharges under braking.</p>
         <h3 id="ls8" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">9. Strat, brake bias, and the pit</h3><p style="margin:4px 0">Strat Push buys ~2% power at double PU wear; Lean saves fuel and engine. Rearward brake bias rotates the car into slow corners. When the wall calls "box box": drive LEFT into the pit lane in the last 260 m — the limiter is automatic — and stop at YOUR team's garage. The garages run in 2025 championship order from the pit entry (McLaren first, Cadillac last), so driving past other teams' boxes to reach yours is exactly how real F1 works. The crew fixes everything the X-ray shows; refuelling has been banned since 2010.</p>
         <h3 id="ls9" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">10. The rulebook that bites</h3><p style="margin:4px 0">Track limits: all four wheels over the white line deletes the lap; three race warnings is a penalty. Contact damages both cars. The safety car bunches the field — never pass it. Reliability is probabilistic per team: nurse the PU with short-shifts when the engineer warns you.</p>
         <h3 id="ls10" style="color:#7ce0c0;margin:14px 0 4px;font-size:14px">11. This team: Cadillac in 2026</h3><p style="margin:4px 0">Year one: the smallest energy store, the slowest crew (3.1 s) and the LAST garage — the full length of the pit lane from the entry. Every point is history; keep it clean and finish.</p>
@@ -917,7 +917,7 @@ const SPEC = {
   topSpeedRecordKmh: 350,
   topSpeedRecordMps: 350 * KMH,
   zeroTo100Kmh: 2.6,           // s (traction-limited off the line)
-  hybrid: {                     // full deploy — MGU-K delivering (DEFAULT)
+  hybrid: {                     // electrical deployment system armed
     peakPowerW: 745000,
     peakPowerPS: 1013,
     peakPowerHp: 999,
@@ -964,10 +964,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     harness: false,
     driveMode: "race",             // wet | sport | race
     esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
-    hybrid: true,                  // MGU-K override engaged (full ~1,013 PS combined) — default on
+    hybrid: true,                  // standard MGU-K deployment armed; hold V for Manual Override
     hybridVis: 0,                  // deploy indicator
     testDriver: false,
-    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, strat: "standard", bbias: "std", rainLight: false, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
+    realMode: false, tyreWear: 0, tyreComp: "medium", fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, pitService: 0, pitFuelAdd: 0, pitTireSel: "medium", pitLimitKmh: 80, xMode: false, ersBoost: false, ersStore: 1, mguKPowerKw: 0, powerUnitKw: 0, strat: "standard", bbias: "std", rainLight: false, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, lapInvalid: false, tlWarnings: 0, tlCool: 0, penaltyS: 0, contactCool: 0,
     lights: true, hazards: false, horn: false,
     aeroAuto: true, aeroDeploy: 0, aeroDragDeploy: 0, aeroFrontDeploy: 0, aeroRearDeploy: 0, wingManual: 1, frontFlap: 0,
     exhaustValve: true, antiLag: false, coolingFans: true, engineCoverOpen: false, ignition: true,
@@ -1227,6 +1227,15 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   const audio = app.audio;
   const showToast = app.showToast;
   const anyDoorOpen = () => app.anyDoorOpen();
+
+  // FIA C5.2.8: continuous electrical power envelope (Issue 16, 27 February 2026).
+  // https://www.fia.com/system/files/documents/fia_2026_f1_regulations_-_section_c_technical_-_iss_16_-_2026-02-27.pdf
+  // The 350 kW cap intersects the standard line at 290 and Override at 337.5 km/h.
+  function mguKPowerKwAt(speedKmh, overrideMode = false) {
+    const v = Math.max(0, speedKmh);
+    return clamp(overrideMode ? 7100 - 20 * v : v < 340 ? 1800 - 5 * v : 6900 - 20 * v, 0, 350);
+  }
+  app.mguKPowerKwAt = mguKPowerKwAt;
 
   /* --- engine torque (identical curve to the verification test) --- */
   function engineTorque(rpm) {
@@ -1930,16 +1939,17 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const momOk = () => { if (!state.realMode) return true; const Lm = lapLen(); let best = 1e9;
       for (const rr of state.rivals) { if (rr.out || rr.dns || rr.gone || rr.isSC) continue; let d2 = ((rr.distM - state.distanceM) % Lm + Lm) % Lm; if (d2 > 2 && d2 < best) best = d2; }
       return best < Math.max(35, Math.abs(state.speedMps)); };          // ~1 s behind the car ahead, like the real MOM
-    state.ersBoost = !!state.keys.KeyV && state.ersStore > 0.02 && state.throttle > 0.2 && !state.inPitLane && !state.retired && momOk();
-    if (state.keys.KeyV && !state.ersBoost && state.realMode && state.ersStore > 0.3 && !state._vBlock) { state._vBlock = true; showToast("Override arms within a second of the car ahead — that's the 2026 MOM rule.", "Pit Wall"); }
-    if (!state.keys.KeyV) state._vBlock = false;
-    state.ersStore = clamp(state.ersStore + dt * (state.ersBoost ? -1 / ERS.storeS : state.brake > 0.2 ? ERS.regen * 3.5 : _spdc > 8 ? ERS.regen : 0), 0, 1);
+    const overrideRequest = !!state.keys.KeyV || state.voiceOverrideUntil > state.time;
+    state.ersBoost = overrideRequest && state.ersStore > 0.02 && state.throttle > 0.2 && !state.inPitLane && !state.retired && momOk();
+    if (overrideRequest && !state.ersBoost && state.realMode && state.ersStore > 0.3 && !state._vBlock) { state._vBlock = true; showToast("Override arms within a second of the car ahead — that's the 2026 MOM rule.", "Pit Wall"); }
+    if (!overrideRequest) state._vBlock = false;
+    // Energy accounting follows actual delivered MGU-K power below.
     if (state.radioLive && !state.retired && state.started) {                 // live radio: the wall keeps talking
       state._radioT = (state._radioT == null ? 10 : state._radioT) - dt;
       if (state._radioT <= 0) { state._radioT = 25 + Math.random() * 15; radioCall(true); }
     }
     if (state.xMode && !state._xTold) { state._xTold = true; showToast("X-mode — the wings shed drag down the straight, and snap back to Z under braking or cornering load. " + ERS.blurb, "Pit Wall"); }
-    if (state.ersBoost && !state._vTold) { state._vTold = true; showToast("ERS Manual Override — full deploy past the taper. The store drains fast and recharges under braking.", "Pit Wall"); }
+    if (state.ersBoost && !state._vTold) { state._vTold = true; showToast("ERS Manual Override — 350 kW to 337.5 km/h, tapering to zero at 355 km/h. The store drains fast and recharges under braking.", "Pit Wall"); }
     const shiftCut = state.shiftTimer > 0 ? 0.12 : 1;
     const canMove = driven && state.ignition && !anyDoorOpen();
     const harnessLimiter = state.harness ? 1 : 0.32;
@@ -1947,7 +1957,25 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const torqueAvail = engineTorque(state.rpm) * boostFactor;
     state.torqueNm = canMove ? engineTorque(state.rpm) * state.throttle * shiftCut : 0;  // display = crank torque
 
-    const rawForce = torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff * realPower() * (state.ersBoost ? ERS.boost : 1) * (state.strat === "push" ? 1.02 : state.strat === "lean" ? 0.98 : 1) / SPEC.wheelRadiusM;
+    // Override changes only the electrical speed envelope. It cannot multiply ICE power,
+    // bypass battery depletion, or create electric output past 355 km/h.
+    const mguAvailable = state.hybrid && state.ersStore > 0.001 && !state.retired && !state.inPitLane;
+    const mguKw = mguAvailable ? Math.min(mguKPowerKwAt(speedAbs / KMH, state.ersBoost), state.ersStore * 4000 / dt) : 0;
+    const iceKw = 400 * (state.strat === "push" ? 1.02 : state.strat === "lean" ? 0.98 : 1);
+    const requestedPowerW = (iceKw + mguKw) * 1000;
+    const hybridSpeedFactor = requestedPowerW / SPEC.peakPowerW;
+    const outputW = Math.min(torqueAvail * state.rpm * Math.PI * 2 / 60 * hybridSpeedFactor, requestedPowerW);
+    const deliveredW = canMove ? outputW * state.throttle * harnessLimiter * shiftCut * realPower() : 0;
+    state.mguKPowerKw = deliveredW / 1000 * mguKw / Math.max(iceKw + mguKw, 1);
+    state.powerUnitKw = deliveredW / 1000;
+    const rawForce = canMove ? Math.min(torqueAvail * state.throttle * harnessLimiter * shiftCut * ratio * SPEC.finalDrive * SPEC.drivelineEff * hybridSpeedFactor * realPower() / SPEC.wheelRadiusM, requestedPowerW * state.throttle * SPEC.drivelineEff / Math.max(speedAbs, 5)) : 0;
+    // Full-throttle standard deployment spends the store too. Reduced-speed taper extends
+    // its duration; lift/coast and braking harvest. Usable energy is the FIA 4 MJ window;
+    // per-team regeneration remains a simplified tuning, not a proprietary engine map.
+    const used = state.mguKPowerKw / 4000; // 4 MJ usable energy window
+    const recovered = state.ignition && speedAbs > 8 && state.throttle < .25
+      ? ERS.regen * (state.brake > .2 ? 3.5 : 1) : 0;
+    state.ersStore = clamp(state.ersStore + dt * (recovered - used), 0, 1);
     const cap = tractionCapN();
     // ESC/TC cut wheelspin; with TC off you can exceed grip but lose efficiency
     let usable;
@@ -1967,8 +1995,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (state.gearMode === "N" && state.speedMps !== 0) total -= Math.sign(state.speedMps) * SPEC.rollingResistance * SPEC.massKg * 9.81 * 0.5;
 
     let accel = total / (SPEC.massKg * SPEC.rotInertia);
-    // Safety ceiling only — the Attack is drag-limited far below this in practice.
-    const govMps = SPEC.topSpeedMps * realTop();
+    // Numerical safety ceiling only; real top speed follows the electrical taper and aerodynamic drag.
+    const govMps = 500 * KMH; // numerical safety bound; velocity is determined by power and drag
     if (state.speedMps >= govMps && accel > 0) { accel = 0; state.speedMps = govMps; }
 
     state.speedMps += accel * dt;
@@ -2900,7 +2928,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
   // instantaneous output (PS) for the left-hand pod — reads to 1,013 combined
   function powerPS() {
-    const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
+    const p = (state.powerUnitKw || 0) * 1000;
     return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
   }
   // ---- the F1 wheel LCD: a gear-centric colour display — a rev bar across the top,
@@ -2909,7 +2937,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const ACC = (getComputedStyle(document.documentElement).getPropertyValue('--teal').trim() || '#7ad0ff');
     const kmh = Math.abs(app.kmh(state.speedMps));
     // the ERS STORE (0..1) — charged by harvesting, spent by holding V. NOT turbo boost.
-    const ers = clamp(state.ersStore == null ? 0 : state.ersStore, 0, 1), deploying = !!state.ersBoost;
+    const ers = clamp(state.ersStore == null ? 0 : state.ersStore, 0, 1), deploying = (state.mguKPowerKw || 0) > 0;
     const W = R * 3.1, H = R * 1.68, x = cx - W / 2, y = cy - H / 2;
     ctx.save();
     const pg = ctx.createLinearGradient(0, y, 0, y + H); pg.addColorStop(0, "#0c1014"); pg.addColorStop(1, "#05070a");
@@ -2922,7 +2950,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.textAlign = "left"; ctx.fillStyle = ACC; ctx.font = `800 ${Math.round(R * 0.3)}px ui-sans-serif`; ctx.fillText(String(Math.round(kmh)), x + R * 0.22, cy - R * 0.06);
     ctx.fillStyle = "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText("km/h", x + R * 0.22, cy + R * 0.16);
     ctx.textAlign = "right"; ctx.fillStyle = deploying ? "#ffd24a" : "#f5c518"; ctx.font = `800 ${Math.round(R * 0.3)}px ui-sans-serif`; ctx.fillText(Math.round(ers * 100) + "%", x + W - R * 0.22, cy - R * 0.06);
-    ctx.fillStyle = deploying ? "#ffd24a" : "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(deploying ? "ERS DEPLOY" : "ERS STORE", x + W - R * 0.22, cy + R * 0.16);
+    ctx.fillStyle = deploying ? "#ffd24a" : "rgba(150,166,180,0.85)"; ctx.font = `600 ${Math.round(R * 0.1)}px ui-sans-serif`; ctx.fillText(Math.round(state.mguKPowerKw || 0) + " kW MGU-K", x + W - R * 0.22, cy + R * 0.16);
     const eb = W * 0.7, ex = cx - eb / 2, ey = y + H - R * 0.24;
     ctx.fillStyle = "rgba(255,255,255,0.08)"; ctx.fillRect(ex, ey, eb, R * 0.09);
     ctx.fillStyle = deploying ? "#ffd24a" : ACC; ctx.fillRect(ex, ey, eb * ers, R * 0.09);
@@ -3296,7 +3324,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     else { app.showToast("Radio muted.", "Pit Wall"); try { speechSynthesis.cancel(); } catch (e) {} }
   }
       // 2026 power unit: the MGU-K delivers up to ~350 kW of electric alongside the ~400 kW V6.
-  // Override (default ON) unleashes full combined ~1,013 PS deploy; switching it off runs the
+  // Standard deployment is armed by default; this control disables deployment and runs the
   // combustion V6 alone (~544 PS) while the battery harvests.
   function toggleFuel() {
     const next = !state.hybrid;
@@ -3306,10 +3334,10 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     SPEC.peakPowerHp = map.peakPowerHp; SPEC.peakTorqueNm = map.peakTorqueNm;
     if (next) {
       audio.motor(0.6); audio.chime([784, 988, 1319, 1568]);
-      showToast("Override — full MGU-K deploy, ~1,013 PS combined.", "Pit Wall");
+      showToast("MGU-K armed — standard deployment curve active; hold V for Manual Override.", "Pit Wall");
     } else {
       audio.motor(0.5);
-      showToast("No deploy — V6 alone, harvesting the battery.", "Pit Wall");
+      showToast("MGU-K deployment disabled — V6 drive with energy harvesting.", "Pit Wall");
     }
   }
 
@@ -3347,7 +3375,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Pit Wall"); } else showToast("Cruise off."); }
 
   function resetCar() {
-    Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0, xMode: false, ersBoost: false, ersStore: 1, strat: "standard", bbias: "std" });
+    Object.assign(state, { shiftTimer:0, manualHold:0, aeroDeploy:0, aeroRearDeploy:0, aeroFrontDeploy:0, aeroDragDeploy:0, downforceN:0, mguKPowerKw:0, powerUnitKw:0, voiceOverrideUntil:0, speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, tyreWear: 0, fuelKg: 100, damage: 0, failRisk: 0, retired: false, inPit: false, pitTimer: 0, pitStops: 0, safetyCar: false, scTimer: 0, raceLap: 0, _rmAcc: 0, sys: { engine: 0, gearbox: 0, hydraulics: 0, brakes: 0, tyre: 0, nose: 0 }, scWarns: 0, scCool: 0, pitArmed: false, inPitLane: false, pitStage: "", pitMenuOpen: false, lapInvalid: false, tlWarnings: 0, penaltyS: 0, contactCool: 0, xMode: false, ersBoost: false, ersStore: 1, strat: "standard", bbias: "std" });
     state.rivals = state.rivals.filter(r => !r.isSC);
     if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
     setActive("hybridBtn", true);
@@ -3414,7 +3442,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (spd !== null && has("cruise", "km", "hold", "maintain", "keep", "drive at", "go at")) { if (state.gearMode !== "G") app.setGear("G", 1); state.adaptiveCruise = true; app.setCruiseSpeed(spd, false); reply(`Holding ${state.cruiseSetKmh} km/h.`); acted = true; }
     else if (has("faster", "speed up")) { app.setCruiseSpeed(state.cruiseSetKmh + 10, true); acted = true; }
     else if (has("slower", "slow down")) { app.setCruiseSpeed(state.cruiseSetKmh - 10, true); acted = true; }
-    if (has("override", "deploy", "ers", "mgu", "boost")) { app.toggleFuel(); acted = true; }
+    if (has("manual override", "override")) { state.voiceOverrideUntil = state.time + 5; reply("Manual Override requested for five seconds — subject to the race proximity rule."); acted = true; }
+    else if (has("deploy", "ers", "mgu", "boost")) { app.toggleFuel(); acted = true; }
     if (has("launch")) { app.armLaunch(); acted = true; }
     if (has("race")) { app.setMode("race"); acted = true; } else if (has("sport")) { app.setMode("sport"); acted = true; } else if (has("wet", "rain")) { app.setMode("wet"); acted = true; }
     if (has("aero", "wing", "downforce")) { app.toggleAero(); acted = true; }
