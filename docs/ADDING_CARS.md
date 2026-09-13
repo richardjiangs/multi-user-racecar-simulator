@@ -5,8 +5,8 @@
 > car end-to-end, the ordering rules, and the hard-won warnings from building the 24-car garage.
 > When they disagree, `CLAUDE.md` wins and should be updated.
 
-The garage is **63 self-contained HTML simulators** + `index.html` (the garage shell that
-lazily loads all 63, base64-embedding them only for `file://`). Today: **48 normal and special
+The garage is **64 self-contained HTML simulators** + `index.html` (the garage shell that
+lazily loads all 64, base64-embedding them only for `file://`). Today: **49 normal and special
 cars**, then the **11-team 2026 F1 grid**, then the **four 2026 Dakar Rally raid cars**.
 Every sim shares one template; you add a car by **cloning the closest existing sim and
 changing only the per-car deltas**, never by writing a sim from scratch.
@@ -31,7 +31,7 @@ registry, and the docs):
   special group. Never split the eleven Formula 1 cards.
 - A new F1 or Dakar entry belongs only in its corresponding series block.
 
-The current order is already correct (48 normal/special cars, then 11 F1, then four Dakar cars). Preserve it. If you ever
+The current order is already correct (49 normal/special cars, then 11 F1, then four Dakar cars). Preserve it. If you ever
 find a car out of its block, re-arrange **all** ordered lists together (cards, embed line,
 perf-test registry) and re-run the full verification pipeline (§7).
 

@@ -38,7 +38,7 @@ try{
   if(out)await page.screenshot({path:resolve(out,file+'-wheels.png')});
   reports.push({file,...result});await page.close();console.log('✔',file,'both rendered wheels turn forward/reverse and stop');
  }
- const specials=[['Dodge Viper ACR Extreme Aero','ViperApp'],['Maserati MCXtrema','MCXtremaApp'],['Peugeot 9X8','Peugeot9X8App'],['Zenvo Aurora Agil','AuroraApp']];
+ const specials=[['Dodge Viper ACR Extreme Aero','ViperApp'],['Maserati MCXtrema','MCXtremaApp'],['Peugeot 9X8','Peugeot9X8App'],['Zenvo Aurora Agil','AuroraApp'],['McLaren Solus GT','SolusApp']];
  for(const [file,name] of specials){
   for(const [width,height] of [[1440,1000],[1280,720],[390,844]]){
    const page=await open(file,name,{width,height});await page.waitForFunction(n=>window[n]?.cockpitArtReady?.(),name);

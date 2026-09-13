@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of sixty-three simulators — each a **single self-contained HTML file** —
-forty-eight road/classic/track cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
+A garage of sixty-four simulators — each a **single self-contained HTML file** —
+forty-nine road/classic/track cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
 Supra MK4 (A80), the six later hypercars (Hennessey Venom F5 · Lotus Evija · Mercedes-AMG
@@ -17,7 +17,7 @@ then two **Rolls-Royces** — the **Phantom VIII** and the **Spectre Black Badge
 not sports cars at all and are the reason the garage now has city journeys, working traffic
 signals and a course in being a chauffeur. The next set adds the **Ferrari F12tdf development
 prototype**, **Dodge Viper ACR Extreme Aero**, **Zenvo Aurora Agil**, **Maserati MCXtrema** and
-**Peugeot 9X8**, **Porsche 919 Hybrid** and **Ferrari 499P**; all seven stay together at the end of the normal-car block before Formula 1. `index.html` bundles all of them together with
+**Peugeot 9X8**, **Porsche 919 Hybrid** and **Ferrari 499P** and **McLaren Solus GT**; all eight stay together at the end of the normal-car block before Formula 1. `index.html` bundles all of them together with
 real photos / liveried cards / performance cards, a **Private Practice** mode
 (the untouched simulator) and an **Online Race** mode (browser-to-browser WebRTC,
 no paid server).
@@ -116,7 +116,9 @@ Porsche 919 Hybrid simulator.html           ← 2017 LMP1 turbo-V4/front-MGU hyb
                                                24-control wheel + full-width Circuit de la Sarthe.
 Ferrari 499P simulator.html                 ← 120° twin-turbo V6/front-ERS LMH, 900 V, three energy maps,
                                                brake migration + full-width Imola.
-                                               All seven racing specials sit before the F1 block on the homepage.
+                                               All eight racing specials sit before the F1 block on the homepage.
+McLaren Solus GT simulator.html             ← 5.2 L NA V10, central seat, sliding canopy, fixed twin wing,
+                                               four response maps + full-width Donington Park GP. See docs/SOLUS_GT.md.
 Dacia Sandrider Dakar simulator.html        ← 2026 Dakar Rally raid cars (4, one shared T1+ Ultimate chassis SPEC):
 Ford Raptor T1+ Dakar simulator.html           Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR Hilux · Prodrive Hunter.
 Toyota GR DKR Hilux simulator.html             Each: real engine + unique sound (Ford = 5.0 NA V8; the rest twin-turbo V6),
@@ -261,6 +263,7 @@ engine-bay art (turbo count/e-motors) · toasts & co-pilot lines.
 | Ferrari F12tdf (F12berlinetta prototype) | 574 kW / 780 CV / 769 hp @ 8,500 (6.3 L F140 FC naturally-aspirated 65° V12, front-mounted behind the axle line, dry sump) | 705 Nm @ 6,750 — 80% of it from 2,500 | 2.9 s (0-200 7.9) | 340; **24 governed** on the development ECU, until you switch it out | 7-F1 DCT | 1,415 kg (dry) |
 | Dodge Viper ACR Extreme Aero | 481 kW / 645 hp @ 6,200 (8.4 L naturally-aspirated OHV V10) | 813 Nm @ 5,000 | **3.6 s — DERIVED** | 285 (Extreme Aero) | 6-Tremec manual | 1,539 kg |
 | Zenvo Aurora Agil | estimated 1,081 kW / 1,450 bhp combined (1,250 bhp quad-turbo V12 + 200 bhp P2 motor) | estimated 1,400 Nm | estimated 2.5 s | estimated 360 | 8-hybrid | 1,360 kg target dry |
+| McLaren Solus GT | >840 PS / 650 Nm, 5.2 L NA V10 | 650 Nm | 2.5 s claim | >200 mph; 322 Normal benchmark | 7-sequential | <1,000 kg dry; 990 model |
 | 2026 F1 (all 11 teams) | 745 kW / 1,013 PS combined (1.6 L V6 turbo-hybrid, ~50/50 split) | 900 Nm combined | 2.6 s | 354 Normal; Real energy/drag-limited | 8-seq | 768 kg (min.) |
 | Maserati MCXtrema | 540 kW / 740 CV (3.0 L 90° twin-turbo Nettuno racing V6) | 730 Nm | **2.7 s — DERIVED** | 325 claimed | 6-sequential | ~1,300 kg dry |
 | Peugeot 9X8 (2024) | 480–520 kW total under BoP (2.6 L twin-turbo V6 hybrid; front MGU up to 200 kW) | not published; 900 Nm simulator envelope | **2.8 s — DERIVED** | ~330 derived | 7-sequential | 1,030 kg minimum |
@@ -1016,7 +1019,7 @@ reality cannot come out identical:
 | **e-motor** | a hybrid carries an inverter whine under the engine note. |
 | **EV** | no firing order at all: inverter switching + reduction-stage and rotor whine, pitched by motor speed (a 30,000 rpm U9 Xtreme rotor whines far higher than a Nevera's). |
 
-The voice audit covers all **63 cars**. The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
+The voice audit covers all **64 cars**. The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
 that really do share a power unit — the Mercedes, Ferrari and Red Bull Ford F1 customer
 teams, and the Jesko/Agera RS 5.0 twin-turbo V8. `tests/browser-test.mjs` hashes every
 oscillator stack and **fails on any shared voice outside that allow-list**, so this cannot

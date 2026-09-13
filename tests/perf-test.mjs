@@ -411,6 +411,12 @@ const CARS = {
     topSpeed: { kmh: 360, minT: 55 },     // Le Mans-spec vmax
     brake100: { target: 40, tol: 1.5 },
   },
+  solusgt: {
+    file: "McLaren Solus GT simulator.html", app: "SolusApp", label: "McLaren Solus GT",
+    marks: {100: {target: 2.5, tol: 1e-4}},
+    topSpeed: {kmh: 322, minT: 80}, // Normal benchmark; official claim >200 mph
+    brake100: {target: 26, tol: .05}, // model braking target; no manufacturer distance
+  },
 };
 
 /* 2026 Formula 1 grid — eleven teams built from one shared chassis SPEC (identical

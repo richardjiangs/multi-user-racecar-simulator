@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* ============================================================================
-   BROWSER SMOKE TEST — index.html shell + all 63 embedded simulators.
+   BROWSER SMOKE TEST — index.html shell + all 64 embedded simulators.
    Serves the repo over localhost, then verifies:
-     1. the garage renders all 63 car cards
+     1. the garage renders all 64 car cards
      2. PRIVATE PRACTICE keeps the AI rival grid alive (the old shell cleared
         it every 750 ms — the "no AI cars" bug this suite pins down)
      3. each embedded sim boots inside the shell and its physics advance
@@ -494,7 +494,7 @@ const check = (label, ok, detail) => {
    has no induction at all. Assert the filter matches the engine. */
 {
   const { readdirSync, readFileSync } = await import("node:fs");
-  const NA = /250 GTO|Porsche 917|300 SLR|DB5|R8 V10|McLaren F1 1993|T\.33|Valkyrie|Revuelto|918 Spyder|Ford Raptor/;
+  const NA = /250 GTO|Porsche 917|300 SLR|DB5|R8 V10|McLaren F1 1993|T\.33|Valkyrie|Revuelto|918 Spyder|Ford Raptor|Solus GT/;
   // The Tesla keeps its ORIGINAL inverter noise: the user saved that build and asked for
   // it back, and their preference outranks the rule. Everything else is exempt from
   // nothing.
@@ -502,8 +502,8 @@ const check = (label, ok, detail) => {
   const bad = [];
   for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
     const src = readFileSync(ROOT + "/" + f, "utf8");
-    const m = src.match(/this\.turboNode = mkNoise\("bandpass", ([\d.]+), ([\d.]+)\)/);
-    const gain = (src.match(/const turbo = ([^;]*);/) || [])[1] || "";
+    const m = src.match(/this\.(?:turboNode|intakeNode) = mkNoise\("bandpass", ([\d.]+), ([\d.]+)\)/);
+    const gain = (src.match(/const (?:turbo|induction) = ([^;]*);/) || [])[1] || "";
     const name = f.replace(/ simulator\.html/i, "");
     if (!m) { bad.push(name + ": no induction node"); continue; }
     const freq = +m[1], q = +m[2];
@@ -511,7 +511,7 @@ const check = (label, ok, detail) => {
     // the user saved that build and asked for it back
     const keepsOriginal = /Tesla/.test(name);
     if (!keepsOriginal && freq >= 1800 && freq <= 3200 && q >= 3) bad.push(name + ": 2.4 kHz hiss band is back");
-    if (/turboGain = this\.turboNode\.g/.test(src) === false) bad.push(name + ": turboGain assignment lost");
+    if (/(?:turboGain = this\.turboNode\.g|intakeGain = this\.intakeNode\.g)/.test(src) === false) bad.push(name + ": turboGain assignment lost");
     if (EVc.test(name) && !/^0\b/.test(gain.trim())) bad.push(name + ": an EV must have no induction noise");
     if (NA.test(name) && /boostBar/.test(gain)) bad.push(name + ": naturally aspirated but driven by boost");
     if (NA.test(name) && freq > 1200) bad.push(name + ": NA intake should be low, not a whistle");
@@ -600,7 +600,7 @@ const check = (label, ok, detail) => {
   }
   // and they must not all look alike: the housings differ per car the way the dashboards do
   check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
-    bad.length === 0 && side === 13 && centre === 49 && frames.size >= 6, bad.slice(0, 4).join(" | "));
+    bad.length === 0 && side === 13 && centre === 50 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------
@@ -1001,7 +1001,7 @@ page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("sixty-three car cards render", await page.locator(".car-card").count() === 63);
+check("sixty-four car cards render", await page.locator(".car-card").count() === 64);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- every card must be WIRED, not just rendered ----------
@@ -1011,7 +1011,7 @@ check("host board present", await page.locator("#activeHostList").count() === 1)
    `if (!car) return;` and every button on them was inert — and this file never tried
    them, because they were not in the list. Derive, never enumerate. */
 const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
-check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 63);
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 64);
 
 const wiring = await page.evaluate((keys) => keys.map((k) => ({
   key: k,

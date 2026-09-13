@@ -85,7 +85,7 @@ await f1.close();
 const offline = await browser.newPage();
 await offline.goto(pathToFileURL(resolve(ROOT, "index-offline.html")).href, { waitUntil: "domcontentloaded" });
 const offlineCards = await offline.locator(".car-card").count();
-check("offline garage contains all 63 cars", offlineCards === 63, `${offlineCards} cards`);
+check("offline garage contains all 64 cars", offlineCards === 64, `${offlineCards} cards`);
 await offline.locator('[data-practice="porsche919"]').click();
 await offline.waitForFunction(() => !!document.getElementById("simFrame")?.contentWindow?.Porsche919App, null, { timeout: 15000 });
 const offline919 = await offline.evaluate(() => document.getElementById("simFrame").contentWindow.Porsche919App.SPEC.name);
