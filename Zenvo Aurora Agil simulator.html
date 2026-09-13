@@ -672,7 +672,7 @@
         <div class="tele-actions">
           <button id="lapResetBtn" title="Reset lap timer">Lap</button>
           <button id="dataBtn" title="Toggle telemetry overlay" class="active">HUD</button>
-          <button id="assistBtn" class="active" title="Steering assist — helps the car follow the line">Asst</button>
+          <button id="assistBtn" aria-pressed="false" title="Steering assist — P toggles on or off">Asst · P</button>
           <button id="wetBtn" title="Wet mode">Wet</button>
           <button id="raceBtn" title="Race mode">Race</button>
         </div>
@@ -695,6 +695,7 @@
       <div class="pmark">Z</div>
       <h1>Aurora Agil</h1>
       <p>The quad-turbo Mjølner V12 fires, four variable-geometry turbo voices gather around its 9,800 rpm wail, and the single P2 motor fills the rear-drive transaxle. Run the Goodwood hill yourself or hand it to the test driver.</p>
+      <p class="small">Steering assist starts off. Press <kbd>P</kbd> to turn it on or off.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
       <div class="ring">Zenvo Automotive · Præstø, Denmark</div>
     </div>
@@ -845,7 +846,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     doors: { driver: false, passenger: false },
     harness: false,
     driveMode: "race",             // wet | sport | race
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     hybrid: true,                  // hybrid boost engaged (estimated 1,450 bhp combined) — default on
     hybridVis: 0,                  // hybrid-boost indicator
     testDriver: false,
@@ -2747,6 +2748,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Aurora Agil"); } else showToast("Cruise off."); }
 
   function resetCar() {
+    state.assist = false;
+    setActive("assistBtn", false);
+    document.getElementById("assistBtn").setAttribute("aria-pressed", "false");
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, aeroMode: 0, aeroAuto: true, frontRecline: 0 });
     if (!state.hybrid) { state.hybrid = true; SPEC.peakPowerW = SPEC.hybrid.peakPowerW; SPEC.peakPowerPS = SPEC.hybrid.peakPowerPS; SPEC.peakPowerHp = SPEC.hybrid.peakPowerHp; SPEC.peakTorqueNm = SPEC.hybrid.peakTorqueNm; }
     setActive("hybridBtn", true);
@@ -2867,7 +2871,8 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");
     if (state.pitLimiter) warn.push("pit limiter");
-    if (speed >= 340) warn.push("approaching the 350 km/h mark");
+    const speedLimitKmh = Math.round(kmh(SPEC.topSpeedMps));
+    if (speed >= speedLimitKmh * 0.98) warn.push(`approaching ${speedLimitKmh} km/h limit`);
     if (!warn.length) warn.push(state.testDriver ? `test driver lapping ${state.route.active ? state.route.name : ""}` : (state.adaptiveCruise ? "cruise" : (state.driveMode + " mode")));
     el.warning.textContent = warn.join(" · ");
 
@@ -3081,6 +3086,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         app.setActive("testDriverBtn", false);
       }
       app.setActive("assistBtn", state.assist);
+      document.getElementById("assistBtn").setAttribute("aria-pressed", String(state.assist));
       showToast(state.assist ? "Steering assist on — the car helps follow the line." : "Steering assist off — fully manual.");
     });
   }
@@ -3129,6 +3135,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function bindHorn() { const b = document.getElementById("hornBtn"); const on = () => { state.horn = true; audio.horn(true); }; const off = () => { state.horn = false; audio.horn(false); }; b.addEventListener("pointerdown", e => { e.preventDefault(); on(); }); b.addEventListener("pointerup", off); b.addEventListener("pointerleave", off); app.hornOn = on; app.hornOff = off; }
   function bindKeyboard() {
     window.addEventListener("keydown", e => {
+      if (e.code === "KeyP") {
+        if (e.repeat || e.ctrlKey || e.metaKey || e.altKey ||
+            e.target?.closest?.('input,textarea,select,[contenteditable]:not([contenteditable="false"])')) return;
+        e.preventDefault();
+        document.getElementById("assistBtn").click();
+        return;
+      }
       state.keys[e.code] = true;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
       const gearUpKey = e.key === "Shift" || e.code === "ShiftLeft" || e.code === "ShiftRight";

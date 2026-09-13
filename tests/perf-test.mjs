@@ -476,7 +476,9 @@ const PAGE_FNS = {
     app.resetCar();
     state.rivals = [];                                  // certification runs on a clear track
     state.ignition = true; state.started = true;
-    if (assistOff) state.assist = false;
+    // Certification launches use the original assisted-line setup explicitly.
+    // A user's per-car default must not silently change the calibrated test inputs.
+    state.assist = !assistOff;
     if (setup === "speedKey" && app.toggleSpeedKey) app.toggleSpeedKey();
     if (setup === "velocity" && app.toggleVelocity) app.toggleVelocity();
     if (setup === "e85" && app.toggleFuel && !state.e85) app.toggleFuel();

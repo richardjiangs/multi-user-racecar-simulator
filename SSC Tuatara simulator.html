@@ -2409,7 +2409,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
     ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
     // carbon dash cowl
-    const dashY = h * 0.66 + sway * 0.2;
+    const dashY = h * 0.70 + sway * 0.2;
     const dg = ctx.createLinearGradient(0, dashY, 0, h);
     dg.addColorStop(0, "#15181d"); dg.addColorStop(0.5, "#0c0e12"); dg.addColorStop(1, "#080a0d");
     ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY); ctx.lineTo(w * 0.98 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
@@ -2417,117 +2417,64 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
     for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
     ctx.restore();
-    // ---- Tuatara cluster: two stacked round pods either side of the wheel, revs left and
-    // road speed right, with the gear, the fuel map and boost on a strip between them ----
-drawCluster(w, h, dashY, sway);
-        drawWheel(w, h);
+    drawCluster(w, h, dashY, sway);
+    drawWheel(w, h);
   }
-  // instantaneous output (hp) for the left-hand pod — reads to 1,600 on E85
-  function powerPS() {
-    const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
-    return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
-  }
-  // the driver display: speed arc to 500 km/h (megacar graduation) with the E85 zone
-  /* TWO STACKED PODS, not a landscape TFT. SSC put a tall round instrument either side of
-     the wheel — revs on the left, road speed on the right, both graduated all the way round
-     — with a narrow strip between them carrying the gear, the fuel map and the boost. The
-     speed pod reads to 500, because this car has been to 474.8. */
+  // Production Tuatara: a single digital HMI beneath a stitched angular cowl.
   function drawCluster(w, h, dashY, sway) {
-    const R = Math.min(w, h) * 0.098;
-    const cx = w / 2 + sway, cy = dashY + R * 0.60, gap = R * 1.52;
-    ctx.save();
-    // the carbon binnacle the pods are let into
-    const BW = R * 5.4, BH = R * 2.4, bx = cx - BW / 2, by = cy - BH * 0.5;
-    const bgm = ctx.createLinearGradient(0, by, 0, by + BH);
-    bgm.addColorStop(0, "#141a20"); bgm.addColorStop(1, "#05070a");
-    ctx.fillStyle = bgm; roundRect(ctx, bx, by, BW, BH, R * 0.16); ctx.fill();
-    ctx.strokeStyle = "rgba(200,16,46,0.35)"; ctx.lineWidth = 1.4; roundRect(ctx, bx, by, BW, BH, R * 0.16); ctx.stroke();
-    // the woven edge — this binnacle is bare carbon, and it is meant to look it
-    ctx.save(); ctx.globalAlpha = 0.28; ctx.strokeStyle = "#39414a"; ctx.lineWidth = 1;
-    for (let x = bx; x < bx + BW; x += 5) { ctx.beginPath(); ctx.moveTo(x, by); ctx.lineTo(x + 6, by + BH); ctx.stroke(); }
-    ctx.restore();
-    ctx.restore();
-
-    sscPod(cx - gap, cy, R, { max: 9, redFrom: 8.8, value: state.rpm / 1000, label: "RPM x1000", step: 1, arc: "#c8102e" });
-    sscPod(cx + gap, cy, R, { max: 500, redFrom: 9e9, value: Math.abs(app.kmh(state.speedMps)), label: "KM/H", step: 100, arc: "#e8eef4" });
-
-    // the strip between them: gear, fuel map, boost
-    ctx.save(); ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    ctx.fillStyle = "#04060a"; roundRect(ctx, cx - R * 0.52, cy - R * 0.86, R * 1.04, R * 1.72, R * 0.1); ctx.fill();
-    ctx.strokeStyle = "rgba(200,16,46,0.5)"; ctx.lineWidth = 1.1; ctx.stroke();
-    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.5)}px ui-sans-serif`;
-    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, cx, cy - R * 0.22);
-    ctx.fillStyle = state.e85 ? "#ffd24a" : "rgba(150,162,176,0.85)";
-    ctx.font = `700 ${Math.round(R * 0.17)}px ui-sans-serif`;
-    ctx.fillText(state.e85 ? "E85" : "91", cx, cy + R * 0.24);
-    const boost = clamp((state.boostBar || 0) / 2.2, 0, 1);
-    ctx.fillStyle = "rgba(255,255,255,0.12)"; ctx.fillRect(cx - R * 0.34, cy + R * 0.46, R * 0.68, R * 0.12);
-    ctx.fillStyle = "#ff6a3c"; ctx.fillRect(cx - R * 0.34, cy + R * 0.46, R * 0.68 * boost, R * 0.12);
-    ctx.restore();
-  }
-
-  /* one pod: a deep round instrument with the scale carried all the way round the rim, a
-     thin arc that fills as you use it, and a flat digital readout in the middle. */
-  function sscPod(cx, cy, R, o) {
-    const a0 = Math.PI * 0.62, a1 = Math.PI * 2.38;
-    ctx.save(); ctx.translate(cx, cy);
-    ctx.fillStyle = "#0a0d12"; ctx.beginPath(); ctx.arc(0, 0, R * 1.05, 0, Math.PI * 2); ctx.fill();
-    ctx.strokeStyle = "#39414a"; ctx.lineWidth = R * 0.06;
-    ctx.beginPath(); ctx.arc(0, 0, R * 1.02, 0, Math.PI * 2); ctx.stroke();
-    // the graduations
-    ctx.textAlign = "center"; ctx.textBaseline = "middle";
-    const N = Math.round(o.max / o.step);
-    for (let k = 0; k <= N * 2; k++) {
-      const v = (k / 2) * o.step, f = v / o.max; if (f > 1) break;
-      const a = lerp(a0, a1, f), major = k % 2 === 0, red = v >= o.redFrom;
-      ctx.strokeStyle = red ? "#ff3b30" : "rgba(220,230,242,0.8)";
-      ctx.lineWidth = major ? 2 : 1;
-      const r1 = R * (major ? 0.78 : 0.87), r2 = R * 0.95;
-      ctx.beginPath(); ctx.moveTo(Math.cos(a) * r1, Math.sin(a) * r1); ctx.lineTo(Math.cos(a) * r2, Math.sin(a) * r2); ctx.stroke();
-      if (major) {
-        ctx.fillStyle = red ? "#ff8078" : "rgba(200,212,226,0.9)";
-        ctx.font = `700 ${Math.round(R * 0.14)}px ui-sans-serif`;
-        ctx.fillText(String(Math.round(v)), Math.cos(a) * R * 0.63, Math.sin(a) * R * 0.63);
-      }
+    const scale = Math.min(w / 1200, h / 850), cx = w / 2 + sway;
+    const cy = dashY + 36 * scale;
+    ctx.save(); ctx.translate(cx, cy); ctx.scale(scale, scale);
+    const polygon = points => { ctx.beginPath(); points.forEach(([x,y],i) => i ? ctx.lineTo(x,y) : ctx.moveTo(x,y)); ctx.closePath(); };
+    polygon([[-172,-62],[140,-62],[174,-34],[153,85],[-157,85],[-179,-20]]);
+    const cowl = ctx.createLinearGradient(0,-70,0,90); cowl.addColorStop(0,"#333738"); cowl.addColorStop(1,"#0a0e11");
+    ctx.fillStyle = cowl; ctx.fill(); ctx.strokeStyle = "#6a5a4f"; ctx.lineWidth = 3; ctx.stroke();
+    polygon([[-158,-48],[130,-48],[156,-27],[139,71],[-143,71],[-163,-18]]);
+    ctx.fillStyle = "#02080c"; ctx.fill();
+    const rev = clamp(state.rpm / SPEC.redlineRpm,0,1);
+    for (let i=0;i<32;i++) {
+      const a = Math.PI * (1.04 + i / 31 * .88), x = Math.cos(a)*113, y = 48 + Math.sin(a)*81;
+      ctx.save(); ctx.translate(x,y); ctx.rotate(a + Math.PI/2);
+      ctx.fillStyle = i < rev*32 ? (i>27 ? "#ff5848" : "#e3edf0") : "#27333c"; ctx.fillRect(-3,-8,6,14); ctx.restore();
     }
-    // the fill arc — how much of the instrument you are using
-    const f = clamp(o.value / o.max, 0, 1);
-    ctx.strokeStyle = "rgba(255,255,255,0.08)"; ctx.lineWidth = R * 0.10;
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.70, a0, a1); ctx.stroke();
-    ctx.strokeStyle = o.arc; ctx.lineCap = "round";
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.70, a0, lerp(a0, a1, f)); ctx.stroke();
-    // the digital middle
-    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.40)}px ui-monospace, monospace`;
-    ctx.fillText(String(Math.round(o.value)), 0, -R * 0.02);
-    ctx.fillStyle = "rgba(150,166,182,0.85)"; ctx.font = `700 ${Math.round(R * 0.12)}px ui-sans-serif`;
-    ctx.fillText(o.label, 0, R * 0.30);
+    ctx.textAlign = "center"; ctx.fillStyle = "#ed5c48"; ctx.font = "600 44px ui-sans-serif";
+    ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode,0,25);
+    ctx.fillStyle = "#edf6fa"; ctx.font = "24px ui-sans-serif"; ctx.fillText(String(Math.round(Math.abs(app.kmh(state.speedMps)))),0,54);
+    ctx.fillStyle = "#93a5b0"; ctx.font = "9px ui-sans-serif"; ctx.fillText("km/h",43,54);
+    ctx.textAlign = "left"; ctx.fillText("BOOST",-142,25); ctx.fillText((state.boostBar||0).toFixed(1)+" bar",-142,41);
+    ctx.textAlign = "right"; ctx.fillText("OIL °C",139,26); ctx.fillText(String(Math.round(state.oilTempC)),139,43);
+    ctx.fillStyle = "#ce997a"; ctx.font = "8px ui-sans-serif"; ctx.fillText(state.e85 ? "E85" : "91 OCT",132,62);
+    // The two circles to the right are central air vents above the portrait touchscreen.
+    [237,308].forEach(x => {
+      ctx.fillStyle="#b4bdc2";ctx.beginPath();ctx.arc(x,-4,26,0,Math.PI*2);ctx.fill();
+      ctx.fillStyle="#0a1115";ctx.beginPath();ctx.arc(x,-4,21,0,Math.PI*2);ctx.fill();
+      ctx.strokeStyle="#646f74";ctx.lineWidth=2;
+      for(let y=-16;y<=12;y+=7){ctx.beginPath();ctx.moveTo(x-16,y);ctx.lineTo(x+16,y);ctx.stroke();}
+    });
+    polygon([[220,33],[318,33],[348,208],[216,208]]); ctx.fillStyle="#b4babd";ctx.fill();
+    polygon([[229,42],[310,42],[335,200],[224,200]]); ctx.fillStyle="#071018";ctx.fill();
+    ctx.textAlign="center";ctx.fillStyle="#d6e0e5";ctx.font="9px ui-sans-serif";ctx.fillText("TUATARA",271,57);
+    ctx.strokeStyle="#85969f";ctx.lineWidth=2;roundRect(ctx,256,70,36,62,10);ctx.stroke();
+    ctx.fillStyle="#071018";ctx.strokeRect(261,81,26,17);
+    ctx.fillStyle="#dd9b76";ctx.fillText(state.driveMode.toUpperCase(),276,156);
+    ctx.fillStyle="#9caeb9";ctx.fillText(state.cool ? "A/C ON" : "A/C OFF",278,178);
     ctx.restore();
   }
-
-  // SSC wheel: a round rim with a flat bottom and the SSC shield on the boss
   function drawWheel(w, h) {
-    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    // squared off top AND bottom — the Tuatara's rim is a squircle, not a circle
-    ctx.lineWidth = R * 0.13; ctx.strokeStyle = "#0f1115"; ctx.beginPath();
-    ctx.moveTo(-R * 0.46, -R * 0.94); ctx.lineTo(R * 0.46, -R * 0.94);
-    ctx.quadraticCurveTo(R, -R * 0.72, R, 0); ctx.quadraticCurveTo(R, R * 0.7, R * 0.46, R * 0.9);
-    ctx.lineTo(-R * 0.46, R * 0.9); ctx.quadraticCurveTo(-R, R * 0.7, -R, 0);
-    ctx.quadraticCurveTo(-R, -R * 0.72, -R * 0.46, -R * 0.94); ctx.stroke();
-    ctx.lineWidth = R * 0.03; ctx.strokeStyle = "rgba(200,16,46,0.55)"; ctx.stroke();
-    // two horizontal spokes only, meeting a wide flat boss
-    ctx.strokeStyle = "#161a20"; ctx.lineWidth = R * 0.15;
-    [-1, 1].forEach(s => { ctx.beginPath(); ctx.moveTo(0, R * 0.02); ctx.lineTo(s * R * 0.9, R * 0.02); ctx.stroke(); });
-    ctx.fillStyle = "#0c0f13"; ctx.beginPath();
-    ctx.roundRect ? ctx.roundRect(-R * 0.3, -R * 0.16, R * 0.6, R * 0.36, R * 0.07) : ctx.rect(-R * 0.3, -R * 0.16, R * 0.6, R * 0.36);
-    ctx.fill(); ctx.strokeStyle = "rgba(200,16,46,0.7)"; ctx.lineWidth = R * 0.016; ctx.stroke();
-    // the SSC shield
-    ctx.fillStyle = "#c8102e"; ctx.beginPath();
-    ctx.moveTo(0, -R * 0.1); ctx.lineTo(R * 0.09, -R * 0.03); ctx.lineTo(0, R * 0.11); ctx.lineTo(-R * 0.09, -R * 0.03); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#eef2f7"; ctx.font = `800 ${Math.round(R * 0.075)}px ui-sans-serif`;
-    ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText("SSC", 0, R * 0.28);
+    const R = Math.min(w / 1200, h / 850) * 142, cx = w/2 + state.shake.x*.3, cy = h*.97;
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(state.steer*.9);ctx.scale(R,R);
+    const rim=()=>{ctx.beginPath();ctx.moveTo(-.56,-.81);ctx.quadraticCurveTo(0,-.95,.56,-.81);ctx.bezierCurveTo(1.13,-.55,1.12,.25,.61,.79);ctx.lineTo(-.61,.79);ctx.bezierCurveTo(-1.12,.25,-1.13,-.55,-.56,-.81);};
+    rim();ctx.strokeStyle="#080b0d";ctx.lineWidth=.22;ctx.stroke();ctx.strokeStyle="#43372e";ctx.lineWidth=.16;ctx.stroke();
+    ctx.strokeStyle="#ad6748";ctx.lineWidth=.009;ctx.setLineDash([.028,.023]);ctx.stroke();ctx.setLineDash([]);
+    ctx.strokeStyle="#f0804e";ctx.lineWidth=.047;ctx.beginPath();ctx.moveTo(0,-.94);ctx.lineTo(0,-.78);ctx.stroke();
+    ctx.fillStyle="#a1a9ad";ctx.beginPath();ctx.moveTo(-.94,-.13);ctx.lineTo(.94,-.13);ctx.lineTo(.94,.07);ctx.lineTo(.28,.16);ctx.lineTo(.18,.72);ctx.lineTo(-.18,.72);ctx.lineTo(-.28,.16);ctx.lineTo(-.94,.07);ctx.closePath();ctx.fill();
+    ctx.fillStyle="#171d22";ctx.beginPath();ctx.moveTo(-.43,-.25);ctx.quadraticCurveTo(0,-.38,.43,-.25);ctx.lineTo(.35,.12);ctx.lineTo(0,.4);ctx.lineTo(-.35,.12);ctx.closePath();ctx.fill();
+    ctx.fillStyle="#e0e5e7";ctx.beginPath();ctx.moveTo(-.1,-.14);ctx.lineTo(.1,-.14);ctx.lineTo(.08,.08);ctx.lineTo(0,.18);ctx.lineTo(-.08,.08);ctx.closePath();ctx.fill();
+    ctx.fillStyle="#11191f";ctx.fillRect(-.08,-.12,.08,.08);ctx.fillRect(0,-.04,.08,.08);ctx.fillRect(-.07,.04,.07,.07);
+    for(let i=0;i<6;i++){ctx.fillStyle=state.ignition&&state.rpm/SPEC.redlineRpm>.65+i*.05?(i<4?"#f6bc51":"#fd5542"):"#322c25";ctx.fillRect(-.17+i*.056,-.84,.039,.023);}
     ctx.restore();
-  }  function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
+  }
+  function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
     ctx.fillStyle = "rgba(156,198,255,0.85)"; ctx.font = "11px ui-monospace, monospace"; ctx.textAlign = "left";
@@ -2737,65 +2684,75 @@ drawCluster(w, h, dashY, sway);
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="SSC Tuatara cockpit">
-      <defs>
-        <linearGradient id="tuDashG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#232931"/><stop offset="1" stop-color="#0a0d11"/></linearGradient>
-        <radialGradient id="tuPodG" cx="42%" cy="34%" r="70%"><stop offset="0" stop-color="#1d232a"/><stop offset="1" stop-color="#06080b"/></radialGradient>
-      </defs>
-      <rect width="1000" height="360" fill="#080a0e"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 470" role="img" aria-label="SSC Tuatara production cockpit: digital driver display, twin centre vents and portrait touchscreen" data-hand-drawn="ssc-production-cabin">
+  <defs>
+    <linearGradient id="sscSuede" x2="0" y2="1"><stop stop-color="#3b3836"/><stop offset=".5" stop-color="#211f1e"/><stop offset="1" stop-color="#111213"/></linearGradient>
+    <linearGradient id="sscMetal" x2=".7" y2="1"><stop stop-color="#e3e5e5"/><stop offset=".27" stop-color="#8c949a"/><stop offset=".5" stop-color="#d9dfe2"/><stop offset="1" stop-color="#40494e"/></linearGradient>
+    <linearGradient id="sscGlass" x2=".4" y2="1"><stop stop-color="#16232a"/><stop offset="1" stop-color="#050a0e"/></linearGradient>
+    <pattern id="sscWeave" width="8" height="8" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#14181b"/><path d="M0 0L8 8M-4 0L4 8M4 0L12 8" stroke="#262b2e" stroke-width="2"/></pattern>
+    <pattern id="sscMesh" width="8" height="7" patternUnits="userSpaceOnUse"><path d="M2 0H6L8 3.5 6 7H2L0 3.5Z" fill="#090d0f" stroke="#3d4447" stroke-width=".7"/></pattern>
+    <g id="sscVent"><circle r="33" fill="url(#sscMetal)" stroke="#111519" stroke-width="5"/><circle r="24" fill="url(#sscMesh)" stroke="#78838a" stroke-width="2"/><path d="M-21 -3H21M0 -23V23" stroke="#687378" stroke-width="3"/><g fill="#0a0e10"><circle cy="-28" r="1.5"/><circle cx="28" r="1.5"/><circle cy="28" r="1.5"/><circle cx="-28" r="1.5"/></g></g>
+    <g id="sscShield"><path d="M-14 -18Q0 -24 14 -18L11 7 0 19 -11 7Z" fill="#dce1e4" stroke="#89949b"/><path d="M-10 -15H0V-6H10V3H0V12L-8 4V-6H0V-15" fill="#111519"/><text y="-25" text-anchor="middle" fill="#eee" font-size="7" letter-spacing="2">SSC</text></g>
+  </defs>
+  <style>[data-control]{cursor:pointer;outline:none}[data-control]:focus-visible{filter:drop-shadow(0 0 4px #82dfff)}[data-control]:hover{filter:brightness(1.4)}[data-control][aria-pressed="true"] .touch-face{stroke:#ed713e;fill:#30241e}text{font-family:Arial,sans-serif;user-select:none}</style>
+  <!-- Low, wide windscreen above the stitched passenger dashboard. -->
+  <rect width="1000" height="470" fill="#0a0e12"/>
+  <path d="M66 0H934L979 117Q771 89 526 98T21 134Z" fill="url(#sscGlass)"/>
+  <path d="M98 0L135 93 90 115 49 0M889 0L863 89 905 104 951 0" fill="#202324" stroke="#575653" stroke-width="2"/>
+  <path d="M0 129Q159 60 397 83Q501 88 563 115Q737 89 1000 122V470H0Z" fill="url(#sscSuede)"/>
+  <path d="M18 146Q182 77 394 103Q489 109 544 137Q761 105 981 140" fill="none" stroke="#b75733" stroke-width="2" stroke-dasharray="4 3"/>
+  <path d="M660 143Q805 121 996 164L1000 220Q804 190 681 203Z" fill="url(#sscWeave)" stroke="#51585a"/>
+  <path d="M677 207Q804 196 1000 228" fill="none" stroke="url(#sscMetal)" stroke-width="5"/>
+  <path d="M700 252Q846 246 1000 281M704 258Q846 252 1000 287" fill="none" stroke="#a24b31" stroke-width="2"/>
+  <text x="811" y="177" fill="#b5b6b4" font-size="14" letter-spacing="5" transform="rotate(3 811 177)">TUATARA</text>
+  <use href="#sscVent" x="51" y="179"/>
+  <!-- One angular HMI, set behind the steering wheel. -->
+  <path d="M132 111Q257 73 418 102L458 136 438 250 120 252 99 160Z" fill="url(#sscWeave)" stroke="#626667" stroke-width="3"/>
+  <path d="M139 121L401 114 431 139 418 241 132 240 117 159Z" fill="#04090d" stroke="#282f33" stroke-width="5"/>
+  <path d="M176 191Q181 123 279 126Q370 126 393 170" fill="none" stroke="#334047" stroke-width="16"/>
+  <g id="cabRevSegs" data-on="#e4eef1" data-off="#2c383f" data-red=".88" data-redcol="#fb5146" data-redoff="#402626"><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(172.33 183.93) rotate(279.00)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(174.15 179.09) rotate(283.88)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(176.73 174.35) rotate(288.75)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(180.06 169.75) rotate(293.63)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(184.10 165.32) rotate(298.51)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(188.82 161.08) rotate(303.39)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(194.20 157.08) rotate(308.26)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(200.20 153.34) rotate(313.14)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(206.76 149.88) rotate(318.02)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(213.85 146.74) rotate(322.90)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(221.41 143.93) rotate(327.77)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(229.38 141.48) rotate(332.65)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(237.72 139.40) rotate(337.53)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(246.36 137.71) rotate(342.41)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(255.23 136.42) rotate(347.28)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(264.27 135.54) rotate(352.16)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(273.42 135.08) rotate(357.04)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(282.61 135.03) rotate(361.92)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(291.78 135.41) rotate(366.79)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(300.85 136.20) rotate(371.67)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(309.76 137.40) rotate(376.55)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(318.45 139.01) rotate(381.43)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(326.86 141.01) rotate(386.30)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(334.92 143.38) rotate(391.18)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(342.57 146.11) rotate(396.06)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(349.76 149.18) rotate(400.94)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(356.44 152.57) rotate(405.81)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(362.56 156.26) rotate(410.69)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(368.08 160.20) rotate(415.57)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(372.95 164.39) rotate(420.45)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(377.14 168.78) rotate(425.32)"/><rect x="-2.6" y="-6" width="5.2" height="12" fill="#2c383f" transform="translate(380.62 173.35) rotate(430.20)"/></g>
+  <g fill="#b8c4ca" font-size="9" text-anchor="middle"><text x="181" y="163">1</text><text x="205" y="140">2</text><text x="239" y="123">3</text><text x="280" y="121">4</text><text x="320" y="123">5</text><text x="354" y="135">6</text><text x="378" y="153">7</text><text x="396" y="176" fill="#fc5c4d">8</text></g>
+  <g stroke="#8da1ad" stroke-width="3"><path d="M136 164L164 159M139 177L166 172M142 190L167 185"/></g>
+  <g font-size="8" fill="#9aabb4"><text x="138" y="157">BOOST</text><text id="sscBoostArt" x="141" y="206">0.0 BAR</text><text x="360" y="201">OIL °C</text><text id="sscOilArt" x="376" y="217" fill="#e5edef">90</text></g>
+  <text id="cabGearArt" x="279" y="185" font-size="50" font-weight="600" fill="#ef513d" text-anchor="middle">N</text>
+  <text id="cabSpeedArt" x="280" y="220" font-size="28" fill="#f2f6f7" text-anchor="middle">0</text>
+  <text x="315" y="220" font-size="8" fill="#9eacb6">km/h</text>
+  <text id="cabRpmArt" x="210" y="235" fill="#aebec7" font-size="9">0</text><text x="247" y="235" fill="#6c808d" font-size="8">RPM</text>
+  <text id="sscFuelArt" x="377" y="233" fill="#ebb67e" font-size="8">91 OCT</text>
+  <!-- Twin metallic circular vents above a portrait console; the circles are vents, not dials. -->
+  <path d="M501 111Q565 97 643 113L671 177 651 218 499 213 479 174Z" fill="url(#sscWeave)" stroke="#747b7d" stroke-width="2"/>
+  <use href="#sscVent" x="527" y="157"/><use href="#sscVent" x="615" y="157"/>
+  <path d="M565 126L577 126 583 185 559 185Z" fill="#21272b" stroke="#4c5559"/>
+  <path d="M499 213L647 214 704 459 478 459Z" fill="url(#sscWeave)" stroke="#3c454a" stroke-width="3"/>
+  <path d="M502 211L491 456M647 213L693 456" stroke="url(#sscMetal)" stroke-width="11"/>
+  <path d="M518 225H630L668 426H508Z" fill="#04080c" stroke="#444f58" stroke-width="2"/>
+  <text x="574" y="244" text-anchor="middle" fill="#dce4e8" font-size="10" letter-spacing="3">TUATARA</text>
+  <path d="M559 265Q577 255 590 269L600 333Q581 348 559 336L553 279Z" fill="#292f34" stroke="#87949c"/>
+  <path d="M561 278L585 278 590 296H560ZM560 318H594L597 331H562Z" fill="#09131c" stroke="#63727e"/>
+  <path d="M548 277V291M595 278V292M552 318V334M606 318V334" stroke="#b5c1c7" stroke-width="5"/>
+  <text x="527" y="271" fill="#91a0a9" font-size="7">COOLANT</text><text id="sscWaterArt" x="528" y="283" fill="#e6edf1" font-size="9">88°C</text>
+  <g data-control="liftBtn" role="button" tabindex="0" aria-label="Toggle front axle lift"><rect class="touch-face" x="615" y="302" width="29" height="33" rx="4" fill="#141d24" stroke="#445661"/><path d="M622 320H638M630 317V308M626 312L630 307 634 312" fill="none" stroke="#c8d4dd"/><text x="629" y="331" text-anchor="middle" fill="#dce8f0" font-size="6">LIFT</text></g>
+  <g data-control="modeBtn" role="button" tabindex="0" aria-label="Cycle driving mode"><rect class="touch-face" x="526" y="352" width="113" height="25" rx="3" fill="#1e2529" stroke="#596369"/><text id="sscModeArt" x="583" y="368" text-anchor="middle" fill="#efb295" font-size="10">RACE</text></g>
+  <g data-control="coolBtn" role="button" tabindex="0" aria-label="Toggle climate air conditioning"><rect class="touch-face" x="526" y="384" width="50" height="28" rx="3" fill="#101e29" stroke="#526571"/><text x="551" y="402" text-anchor="middle" fill="#d7e6ef" font-size="10">A/C</text></g>
+  <g data-control="audioBtn" role="button" tabindex="0" aria-label="Toggle cabin audio"><rect class="touch-face" x="583" y="384" width="64" height="28" rx="3" fill="#141e25" stroke="#526571"/><text x="615" y="402" text-anchor="middle" fill="#d7e6ef" font-size="10">AUDIO</text></g>
+  <g data-control="startSwitchBtn" role="button" tabindex="0" aria-label="Toggle engine ignition"><circle cx="581" cy="444" r="15" fill="#191f23" stroke="url(#sscMetal)" stroke-width="3"/><text x="581" y="446" text-anchor="middle" fill="#f3946f" font-size="6">START</text></g>
+  <!-- Column paddles, sculpted three-spoke wheel, stitched suede and SSC shield. -->
+  <g data-control="downPaddle" role="button" tabindex="0" aria-label="Downshift"><path d="M139 258Q121 300 141 340L159 334 158 260Z" fill="url(#sscMetal)"/><text x="140" y="281" fill="#111820" font-size="16">−</text></g>
+  <g data-control="upPaddle" role="button" tabindex="0" aria-label="Upshift"><path d="M420 258Q438 300 418 340L400 334 401 260Z" fill="url(#sscMetal)"/><text x="412" y="281" fill="#111820" font-size="16">+</text></g>
+  <g id="cabinWheelG" transform="translate(280,335)">
+    <path d="M-68 -90Q0 -106 68 -90Q119 -61 124 -7Q131 51 74 94L-74 94Q-131 51 -124 -7Q-119 -61 -68 -90Z" fill="none" stroke="#080b0d" stroke-width="29"/>
+    <path d="M-68 -90Q0 -106 68 -90Q119 -61 124 -7Q131 51 74 94L-74 94Q-131 51 -124 -7Q-119 -61 -68 -90Z" fill="none" stroke="#41372f" stroke-width="20"/>
+    <path d="M-69 -85Q0 -101 69 -85M-113 -26Q-136 41 -70 87H70Q136 41 113 -26" fill="none" stroke="#ac6042" stroke-width="1.5" stroke-dasharray="3 3"/>
+    <path d="M-4 -107V-85" stroke="#ed794b" stroke-width="7"/>
+    <path d="M-116 -14L-34 -26H34L116 -14 115 8 39 18 25 83H-25L-39 18 -115 8Z" fill="url(#sscMetal)" stroke="#424b50" stroke-width="2"/>
+    <path d="M-52 -30Q0 -43 52 -30L44 12 0 51 -44 12Z" fill="#161b20" stroke="#626b71" stroke-width="2"/>
+    <path d="M-42 -27Q0 -34 42 -27" stroke="#af694b" fill="none" stroke-dasharray="3 2"/>
+    <use href="#sscShield" y="0"/>
+    <g id="sscShiftLights" transform="translate(-25,-94)"><rect x="0" width="7" height="4" rx="1" fill="#45392d"/><rect x="10" width="7" height="4" rx="1" fill="#45392d"/><rect x="20" width="7" height="4" rx="1" fill="#45392d"/><rect x="30" width="7" height="4" rx="1" fill="#45392d"/><rect x="40" width="7" height="4" rx="1" fill="#45392d"/><rect x="50" width="7" height="4" rx="1" fill="#45392d"/></g>
+    <path d="M-18 58H18L13 73H-13Z" fill="#0d151c"/>
+  </g>
+</svg>
 
-      <!-- the canopy: it wraps a long way down, which is why this cabin feels like a jet -->
-      <path d="M96,14 L904,14 L846,140 L154,140 Z" fill="#0b141d" stroke="#39414a" stroke-width="2"/>
-      <path d="M154,140 L846,140 L826,128 L174,128 Z" fill="rgba(140,180,210,0.12)"/>
-      <path d="M96,14 L154,140 L118,150 L60,26 Z" fill="#0d1620" stroke="#39414a" stroke-width="1.4"/>
-      <path d="M904,14 L846,140 L882,150 L940,26 Z" fill="#0d1620" stroke="#39414a" stroke-width="1.4"/>
-
-      <!-- dash: bare carbon, one strip of switches, no screen sprawl -->
-      <path d="M120,140 L880,140 L902,240 L98,240 Z" fill="url(#tuDashG)" stroke="#39414a" stroke-width="1.6"/>
-      <g opacity="0.35" stroke="#4a535d" stroke-width="1">
-        <path d="M130,146 l760,0 M126,158 l768,0 M122,170 l776,0"/>
-      </g>
-      <text x="500" y="158" text-anchor="middle" font-size="9" fill="rgba(190,206,222,0.55)" letter-spacing="6">TUATARA</text>
-
-      <!-- the two pods, either side of the wheel -->
-      <g transform="translate(352,196)">
-        <circle r="46" fill="url(#tuPodG)" stroke="#4a535d" stroke-width="3"/>
-        <circle r="33" fill="none" stroke="rgba(200,16,46,0.55)" stroke-width="5" stroke-dasharray="150 400" transform="rotate(120)"/>
-        <text y="4" text-anchor="middle" font-size="17" fill="#eef2f7" font-family="ui-monospace, monospace" id="cabRpmArt">0</text>
-        <text y="20" text-anchor="middle" font-size="7" fill="#8d97a2" letter-spacing="1.4">RPM</text>
-      </g>
-      <g transform="translate(648,196)">
-        <circle r="46" fill="url(#tuPodG)" stroke="#4a535d" stroke-width="3"/>
-        <circle r="33" fill="none" stroke="rgba(232,238,244,0.6)" stroke-width="5" stroke-dasharray="210 400" transform="rotate(120)"/>
-        <text y="4" text-anchor="middle" font-size="17" fill="#eef2f7" font-family="ui-monospace, monospace" id="cabSpeedArt">0</text>
-        <text y="20" text-anchor="middle" font-size="7" fill="#8d97a2" letter-spacing="1.4">KM/H</text>
-      </g>
-      <!-- the strip between them -->
-      <rect x="478" y="158" width="44" height="76" rx="6" fill="#04060a" stroke="rgba(200,16,46,0.5)"/>
-      <text x="500" y="192" text-anchor="middle" font-size="22" fill="#eef2f7" font-weight="800" id="cabGearArt">N</text>
-      <text x="500" y="212" text-anchor="middle" font-size="9" fill="#ffd24a">E85</text>
-      <rect x="486" y="220" width="28" height="6" rx="2" fill="#ff6a3c"/>
-
-      <!-- flat-bottomed wheel with the SSC shield -->
-      <g id="cabinWheelG" transform="translate(500,262)">
-        <path d="M-84,-22 A86,86 0 1,1 84,-22 L72,26 Q0,50 -72,26 Z" fill="none" stroke="#15181d" stroke-width="17"/>
-        <path d="M-72,26 Q0,50 72,26" fill="none" stroke="#15181d" stroke-width="17"/>
-        <rect x="-22" y="-14" width="44" height="30" rx="6" fill="#0d1116" stroke="#4a535d"/>
-        <rect x="-13" y="-8" width="26" height="18" rx="3" fill="#c8102e"/>
-        <text y="6" text-anchor="middle" font-size="9" fill="#fff" font-weight="700">SSC</text>
-        <path d="M-102,-38 l-16,-8 l0,26 l16,4 Z" fill="#232931" stroke="#78828c"/>
-        <path d="M102,-38 l16,-8 l0,26 l-16,4 Z" fill="#232931" stroke="#78828c"/>
-      </g>
-
-      <!-- two carbon buckets with six-point slots -->
-      <g fill="#171c22" stroke="#39414a" stroke-width="1.4">
-        <path d="M172,246 q-14,-86 24,-98 l58,0 q34,14 20,98 Z"/>
-        <path d="M828,246 q14,-86 -24,-98 l-58,0 q-34,14 -20,98 Z"/>
-      </g>
-      <g fill="#c8102e"><rect x="196" y="152" width="9" height="18" rx="3"/><rect x="220" y="152" width="9" height="18" rx="3"/>
-        <rect x="771" y="152" width="9" height="18" rx="3"/><rect x="795" y="152" width="9" height="18" rx="3"/></g>
-      <text x="500" y="330" text-anchor="middle" font-size="8" fill="#5e6670" letter-spacing="4">Cd 0.279 · 1.86 m²</text>
-      </svg>
   `;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
@@ -3120,6 +3077,17 @@ drawCluster(w, h, dashY, sway);
       };
       num("cabSpeedArt", spd);
       num("cabRpmArt", state.rpm);
+      // SSC live touchscreen and driver HMI.
+      put("sscBoostArt", (state.boostBar || 0).toFixed(1) + " BAR");
+      put("sscOilArt", String(Math.round(state.oilTempC)));
+      put("sscWaterArt", Math.round(state.waterTempC) + "°C");
+      put("sscModeArt", state.driveMode.toUpperCase());
+      put("sscFuelArt", state.e85 ? "E85" : "91 OCT");
+      for (const node of document.querySelectorAll('#cabinArt [data-control]')) {
+        const active = {liftBtn: state.rideHeight === 1, coolBtn: state.cool, audioBtn: state.audioCabin, startSwitchBtn: state.ignition}[node.dataset.control];
+        if (active !== undefined) node.setAttribute('aria-pressed', String(active));
+      }
+      document.querySelectorAll('#sscShiftLights rect').forEach((node,i)=>node.setAttribute('fill',state.ignition && rev > .65+i*.05 ? (i<4?'#f8bf57':'#fb5447'):'#45392d'));
       num("cabDownforceArt", (state.downforceN || 0) / 9.81);
       put("cabGearArt", state.gearMode === "G" ? String(state.curGear) : state.gearMode);
       const bar = document.getElementById("cabRevBar");
@@ -3241,6 +3209,15 @@ drawCluster(w, h, dashY, sway);
   }
 
   function bindCockpit() {
+    // SSC production touchscreen bindings use the existing vehicle controls.
+    const activate = e => {
+      const control = e.target.closest('[data-control]'); if (!control) return;
+      if (e.type === 'keydown' && !['Enter', ' '].includes(e.key)) return;
+      e.preventDefault(); e.stopPropagation();
+      if (!e.repeat) document.getElementById(control.dataset.control)?.click();
+    };
+    el.cabinArt.addEventListener('click', activate);
+    el.cabinArt.addEventListener('keydown', activate);
     const t = (id, key) => document.getElementById(id).addEventListener("click", () => app.setToggle(key));
     t("heatBtn", "heat"); t("coolBtn", "cool"); t("ambientBtn", "ambient"); t("audioBtn", "audioCabin"); t("shifterLightBtn", "shifterLight");
     t("fansBtn", "coolingFans"); t("antiLagBtn", "antiLag");

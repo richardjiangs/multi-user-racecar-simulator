@@ -673,7 +673,7 @@
         <div class="tele-actions">
           <button id="lapResetBtn" title="Reset lap timer">Lap</button>
           <button id="dataBtn" title="Toggle telemetry overlay" class="active">HUD</button>
-          <button id="assistBtn" class="active" title="Steering assist — helps the car follow the line">Asst</button>
+          <button id="assistBtn" aria-pressed="false" title="Steering assist — P toggles on or off">Asst · P</button>
           <button id="wetBtn" title="Wet mode">Wet</button>
           <button id="raceBtn" title="Race mode">Race</button>
         </div>
@@ -696,6 +696,7 @@
       <div class="pmark">9X8</div>
       <h1>9X8</h1>
       <p>Settle into the carbon LMH safety cell. The rear 2.6-litre twin-turbo V6 catches, the front MGU arms, and the wheel display shows the hybrid energy store. Manage a stint yourself or hand the 9X8 to the test driver at MotorLand Aragón.</p>
+      <p class="small">Steering assist starts off. Press <kbd>P</kbd> to turn it on or off.</p>
       <button class="ignition" id="startBtn">Press to Start</button>
       <div class="ring">Peugeot Sport · Satory, France · Le Mans Hypercar</div>
     </div>
@@ -848,7 +849,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     doors: { driver: false, passenger: false },
     harness: false,
     driveMode: "race",             // wet | sport | race
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     hybridAttack: false, energyMode: 0, brakeMigration: 52, // LMH deployment strategy and brake-by-wire migration
     hybridEnergy: 75,              // usable state-of-charge percentage
     hybridAttackVis: 0,            // display animation only; the 2024 rear wing is fixed
@@ -2682,6 +2683,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "9X8"); } else showToast("Cruise off."); }
 
   function resetCar() {
+    state.assist = false;
+    setActive("assistBtn", false);
+    document.getElementById("assistBtn").setAttribute("aria-pressed", "false");
     Object.assign(state, { hybridEnergy:75, hybridAttack:false, energyMode:0, brakeMigration:52, speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0, frontRecline: 0 });
     setActive("hybridBtn", false);
     document.getElementById("hybridBtn").textContent = "Hybrid STINT"; document.getElementById("brakeMigBtn").textContent = "Brake Mig 52%";
@@ -3016,6 +3020,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
         app.setActive("testDriverBtn", false);
       }
       app.setActive("assistBtn", state.assist);
+      document.getElementById("assistBtn").setAttribute("aria-pressed", String(state.assist));
       showToast(state.assist ? "Steering assist on — the car helps follow the line." : "Steering assist off — fully manual.");
     });
   }
@@ -3065,6 +3070,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   function bindHorn() { const b = document.getElementById("hornBtn"); const on = () => { state.horn = true; audio.horn(true); }; const off = () => { state.horn = false; audio.horn(false); }; b.addEventListener("pointerdown", e => { e.preventDefault(); on(); }); b.addEventListener("pointerup", off); b.addEventListener("pointerleave", off); app.hornOn = on; app.hornOff = off; }
   function bindKeyboard() {
     window.addEventListener("keydown", e => {
+      if (e.code === "KeyP") {
+        if (e.repeat || e.ctrlKey || e.metaKey || e.altKey ||
+            e.target?.closest?.('input,textarea,select,[contenteditable]:not([contenteditable="false"])')) return;
+        e.preventDefault();
+        document.getElementById("assistBtn").click();
+        return;
+      }
       state.keys[e.code] = true;
       if (["ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight", "Space"].includes(e.code)) e.preventDefault();
       const gearUpKey = e.key === "Shift" || e.code === "ShiftLeft" || e.code === "ShiftRight";

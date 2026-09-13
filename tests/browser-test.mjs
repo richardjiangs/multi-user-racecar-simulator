@@ -502,7 +502,10 @@ const check = (label, ok, detail) => {
   const bad = [];
   for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
     const src = readFileSync(ROOT + "/" + f, "utf8");
-    const m = src.match(/this\.(?:turboNode|intakeNode) = mkNoise\("bandpass", ([\d.]+), ([\d.]+)\)/);
+    const voice = src.match(/const pulseVoice = (\{[^\n]+\});/);
+    const f1Turbo = src.match(/this\.turboNode = noise\("bandpass", pulseVoice\.turboHz, ([\d.]+), this\.synthGain\)/);
+    const m = src.match(/this\.(?:turboNode|intakeNode) = mkNoise\("bandpass", ([\d.]+), ([\d.]+)\)/) ||
+      (voice && f1Turbo ? [f1Turbo[0], JSON.parse(voice[1]).turboHz, f1Turbo[1]] : null);
     const gain = (src.match(/const (?:turbo|induction) = ([^;]*);/) || [])[1] || "";
     const name = f.replace(/ simulator\.html/i, "");
     if (!m) { bad.push(name + ": no induction node"); continue; }

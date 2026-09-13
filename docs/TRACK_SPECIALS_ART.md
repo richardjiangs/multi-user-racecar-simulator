@@ -31,6 +31,8 @@ The driving projection now occupies the lower 32% of the viewport, with compact 
 
 ## Maintenance and checks
 
+Viper, MCXtrema, Peugeot 9X8, Aurora Agil and Solus GT now start and reset with steering assist **off**. Press **P** to toggle it; other cars retain their original defaults and shortcuts. See [dashboard and audio revision](DASHBOARD_AND_AUDIO.md) for behavior and checks.
+
 Edit the paths in `tools/draw-track-specials.mjs`, then run:
 
 ```sh

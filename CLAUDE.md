@@ -60,7 +60,7 @@ Mercedes F1 2026 simulator.html             ← 2026 F1 grid (11 teams, one shar
 Red Bull F1 2026 simulator.html                Mercedes · Red Bull · Ferrari · McLaren · Aston Martin ·
 Ferrari F1 2026 simulator.html                 Alpine · Williams · Racing Bulls · Haas · Audi · Cadillac.
 McLaren F1 2026 simulator.html                 Each: unique livery (var(--f1body)/var(--teal)), number,
-Aston Martin F1 2026 simulator.html            and per-engine _satCurve; V6 turbo-hybrid, halo, active aero.
+Aston Martin F1 2026 simulator.html            and per-power-unit V6 pressure voice; hybrid, halo, active aero.
 Alpine F1 2026 simulator.html
 Williams F1 2026 simulator.html
 Racing Bulls F1 2026 simulator.html
