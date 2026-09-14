@@ -63,14 +63,15 @@ const check = (label, ok, detail) => {
    on top of it is the timbre, and cloning a sim copies it verbatim: at one point three
    classics (250 GTO, F40, 917) shared a byte-identical stack, so a Colombo V12, a
    twin-turbo V8 and an air-cooled flat-12 were one instrument at three pitches. The only
-   cars allowed to share a voice are the ones that really do share a power unit. */
+   cars allowed to share a voice either share a power unit or have an explicit user override. */
 {
   const { readdirSync, readFileSync } = await import("node:fs");
   const { createHash } = await import("node:crypto");
   const ALLOWED_SHARED = [
-    ["Mercedes F1 2026", "McLaren F1 2026", "Williams F1 2026", "Alpine F1 2026"],   // Mercedes PU
-    ["Ferrari F1 2026", "Haas F1 2026", "Cadillac F1 2026"],                          // Ferrari PU
-    ["Red Bull F1 2026", "Racing Bulls F1 2026"],                                     // Red Bull Ford PU
+    // Explicit user request: all eleven F1 cars must use Porsche 919's existing sound.
+    ["Porsche 919 Hybrid", "Mercedes F1 2026", "McLaren F1 2026", "Williams F1 2026", "Alpine F1 2026",
+      "Ferrari F1 2026", "Haas F1 2026", "Cadillac F1 2026", "Red Bull F1 2026", "Racing Bulls F1 2026",
+      "Aston Martin F1 2026", "Audi F1 2026"],
     ["Koenigsegg Jesko", "Koenigsegg Agera RS"],                                      // same 5.0 TT V8
   ].map((g) => g.slice().sort().join("|"));
   const sims = readdirSync(ROOT).filter((f) => /simulator\.html$/i.test(f));

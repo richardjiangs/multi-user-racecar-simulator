@@ -18,13 +18,13 @@ Edit `tools/tuatara-dashboard.svg` and `tools/tuatara-driving-dashboard.js`, the
 
 ## F1 audio
 
-All eleven F1 graphs use six exhaust-pressure events per 720-degree cycle, with two banks locked to `rpm / 120`. Pressure waveforms and pulse-gated combustion noise replace the detuned sawtooth/square stack. Porsche 919 suggested the separation of combustion, gearbox and electric-drive sounds; its file and V4 audio remain unchanged.
+**User selection, 14 September 2026:** all eleven F1 cars now use Porsche 919's existing sound. This replaces the earlier five-family V6 synthesis. Porsche 919 itself is unchanged.
 
-Pitch follows RPM, the shift timer reduces exhaust output, turbo noise follows boost with finite spool time, and electric whine follows actual MGU-K deployment or harvesting. Ignition shutoff fades the powertrain bus. Recording playback replaces all continuous synthetic powertrain layers. Wind, road and cabin audio remain separate. Steady throttle no longer triggers repeated random exhaust pops. A master compressor provides headroom.
+The copied graph preserves the 919's oscillator stack, pulse order, filters, gains, turbo/gearbox/motor layers, startup, blips, lift transients and recording behavior. F1's `mguKPowerKw` and `ersHarvestKw` feed the corresponding 919 motor-sound inputs. Its audio-only 9,000 rpm normalization is retained so identical engine inputs produce matching sound; actual F1 RPM still drives pitch. This does not modify the F1 physics specification, rev limit, power, energy model or performance.
 
-Shared-engine groups remain Mercedes/McLaren/Williams/Alpine, Ferrari/Haas/Cadillac and Red Bull/Racing Bulls; Aston Martin uses Honda and Audi its own family. Five acoustic profiles vary pressure width, bank balance, filtering and compressor frequency. These are **synthesis assumptions**, not recordings or measured manufacturer timings. Architecture reference: [Formula 1's 2026 power-unit explanation](https://www.formula1.com/en/latest/article/2026-regulations-explained-all-you-need-to-know-about-f1s-new-power-units.14jfv7a36905uDJDdNyfQd).
+This is an intentional sound preference, not a claim that the real engines are identical. The voice audit explicitly permits the 919 and all eleven F1 cars to share this sound.
 
-Edit `tools/f1-audio.js` and the profiles in `tools/refresh-f1-audio.mjs`, then run the latter. Every HTML keeps its audio embedded for offline use. F1 performance and energy models are unchanged.
+Run `node tools/refresh-f1-audio.mjs` to copy the audio directly from `Porsche 919 Hybrid simulator.html`. There is no separate F1 sound template to drift away from the reference. Every HTML keeps its audio embedded for offline use.
 
 ## Verification
 
@@ -41,6 +41,6 @@ node tests/track-specials-test.mjs
 node tests/solus-test.mjs
 ```
 
-The targeted test exercises assist defaults and keyboard edge cases, SSC live instruments and SVG controls, and both issue links. It renders shipped F1 graphs at 6,000 and 12,000 rpm, checking pulse frequency, headroom, pitch tracking, shift cuts, shutoff, recording isolation, electric power and boost response, and five distinct family spectra. `VERIFICATION_DIR` saves screenshots, WAV files and metrics. Numerical checks do not establish acoustic fidelity.
+The targeted test exercises assist defaults and keyboard edge cases, SSC live instruments and SVG controls, and both issue links. It renders the actual 919 and F1 graphs with identical noise seeds, checking audio samples match within 0.000001 at idle, load, high RPM, electrical deployment and regeneration (allowing a few floating-point rounding steps across audio contexts). Additional scenarios compare startup, downshift, lift, ignition shutoff and recording playback. `VERIFICATION_DIR` saves screenshots, WAV files and metrics. These checks establish equivalence to the chosen simulator sound, not real-world acoustic fidelity.
 
 Performance certification explicitly selects its original assisted-line launch setup, so user-facing defaults cannot change calibrated test inputs. Its tolerance, physics and expected times remain unchanged; top-speed runs still use assist off.

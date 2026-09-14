@@ -60,7 +60,7 @@ Mercedes F1 2026 simulator.html             ← 2026 F1 grid (11 teams, one shar
 Red Bull F1 2026 simulator.html                Mercedes · Red Bull · Ferrari · McLaren · Aston Martin ·
 Ferrari F1 2026 simulator.html                 Alpine · Williams · Racing Bulls · Haas · Audi · Cadillac.
 McLaren F1 2026 simulator.html                 Each: unique livery (var(--f1body)/var(--teal)), number,
-Aston Martin F1 2026 simulator.html            and per-power-unit V6 pressure voice; hybrid, halo, active aero.
+Aston Martin F1 2026 simulator.html            and Porsche 919 audio by user request; hybrid, halo, active aero.
 Alpine F1 2026 simulator.html
 Williams F1 2026 simulator.html
 Racing Bulls F1 2026 simulator.html
@@ -997,6 +997,12 @@ screen before you commit.
 
 ## Engine voice — every car sounds like its own engine
 
+**User override, 14 September 2026:** all eleven F1 cars use the existing Porsche 919
+audio, exactly as requested. This supersedes their former per-power-unit voices.
+`tools/refresh-f1-audio.mjs` copies the 919 graph without modifying the 919, maps F1's
+electric-power field names, and preserves the 919's audio RPM normalization. F1 physics
+and performance remain unchanged. The voice audit explicitly allows this twelve-car group.
+
 Firing frequency is `rpm/60 × pulses-per-rev` (I4=2, I6/V6=3, V8/straight-8=4, V10=5,
 V12/flat-12=6, W16=8, EV=inverter). That was always right. The **oscillator stack on top of
 it is the timbre**, and cloning a sim copies it verbatim — which is how the 250 GTO, F40 and
@@ -1020,8 +1026,8 @@ reality cannot come out identical:
 | **EV** | no firing order at all: inverter switching + reduction-stage and rotor whine, pitched by motor speed (a 30,000 rpm U9 Xtreme rotor whines far higher than a Nevera's). |
 
 The voice audit covers all **64 cars**. The Mustang GTD and the RX-7 are why the derivation matters: the Mustang GTD is the only **belt-driven supercharger** here, so its blower screams at a fixed ~6.9× crank order and never spools, lags or falls away the way a turbo does; and the RX-7 is the only **Wankel**, which has no crankshaft, no valve and no bank — so it has *no* half-order burble and *no* two-bank beat, an unusually strong 2nd and 3rd harmonic (the brap), and a 1/3-order rotor whir underneath because the eccentric shaft turns three times per rotor revolution. The groups that still share one are the ones
-that really do share a power unit — the Mercedes, Ferrari and Red Bull Ford F1 customer
-teams, and the Jesko/Agera RS 5.0 twin-turbo V8. `tests/browser-test.mjs` hashes every
+that share a power unit (Jesko/Agera RS 5.0 twin-turbo V8), plus the user-requested
+Porsche 919/all-eleven-F1 sound group above. `tests/browser-test.mjs` hashes every
 oscillator stack and **fails on any shared voice outside that allow-list**, so this cannot
 silently regress.
 

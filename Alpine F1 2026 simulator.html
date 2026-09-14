@@ -524,7 +524,7 @@
         <div class="studio-bar">
           <input type="file" id="engineFile" accept=".mp3,.m4a,.aac,.wav,.ogg,.oga,.flac,audio/*" hidden>
           <button id="engineLoadBtn" title="Load a real F1 V6 recording — it becomes the engine voice, pitched with the revs">&#9835; Use a real V8 recording</button>
-          <span class="small now" id="engineSoundStatus">Engine voice: synthesised V6 turbo hybrid</span>
+          <span class="small now" id="engineSoundStatus">Engine voice: Porsche 919</span>
         </div>
       </section>
 
@@ -1025,10 +1025,12 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   Object.assign(app, { setNowPlaying, setEngineStatus });
 }
 
-/* ===== audio: synthesised V6 turbo hybrid, deploy whine, wastegate, crackle ===== */
+/* ===== audio: user-selected Porsche 919 sound ===== */
 {
   const app = window.AlpineF1App;
-  const { SPEC, clamp } = app;
+  const { clamp } = app;
+  // Audio normalization from Porsche 919 only; the F1 physics SPEC is unchanged.
+  const SPEC = { redlineRpm: 9000 };
 
   const audio = {
     ctx: null, ready: false,
@@ -1041,79 +1043,81 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (this.ready) return;
       const AC = window.AudioContext || window.webkitAudioContext;
       if (!AC) return;
-      const c = this.ctx = new AC();
-      const pulseVoice = {"family":"Mercedes","cyl":6,"pulseWidth":0.01,"bankDelay":0.0015,"bankGain":0.67,"harmonics":58,"resonance":920,"brightness":4900,"grain":0.43,"turboHz":5900};
-      this.voiceModel = pulseVoice;
-      this.master = c.createGain(); this.master.gain.value = .82;
-      const limiter = c.createDynamicsCompressor();
-      limiter.threshold.value = -3; limiter.knee.value = 3; limiter.ratio.value = 12;
-      limiter.attack.value = .002; limiter.release.value = .08;
-      this.master.connect(limiter); limiter.connect(c.destination);
-      this.engineBus = c.createGain(); this.engineBus.gain.value = 0;
-      this.analyser = c.createAnalyser(); this.analyser.fftSize = 2048;
-      this.engineBus.connect(this.analyser); this.analyser.connect(this.master);
-      this.engFilter = c.createBiquadFilter(); this.engFilter.type = "lowpass";
-      this.engFilter.frequency.value = 1600; this.engFilter.Q.value = .62;
-      this.engFilter.connect(this.engineBus);
-      this.synthGain = c.createGain(); this.synthGain.connect(this.engFilter);
-      this.recGain = c.createGain(); this.recGain.gain.value = 0; this.recGain.connect(this.engFilter);
-      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(1.35);
-      shaper.oversample = "4x"; shaper.connect(this.synthGain);
+      const c = new AC();
+      this.ctx = c;
+      this.master = c.createGain(); this.master.gain.value = 0.92; this.master.connect(c.destination);
 
-      // A four-stroke V6 produces six exhaust events per 720-degree crank cycle.
-      // The two banks share one frequency: there are no detuned sawtooth layers.
-      // Pulse shape/pipe response are synthesis estimates, not manufacturer recordings.
-      const bankWave = bank => {
-        const real = new Float32Array(97), imag = new Float32Array(97);
-        for (let n = 1; n < real.length; n++) {
-          const w = 2 * Math.PI * n * pulseVoice.pulseWidth;
-          const tail = w * 3.4;
-          const hr = 1 / (1 + w*w) - .68 / (1 + tail*tail);
-          const hi = -w / (1 + w*w) + .68 * tail / (1 + tail*tail);
-          for (let event = bank; event < 6; event += 2) {
-            const phase = -2 * Math.PI * n * (event / 6 + bank * pulseVoice.bankDelay);
-            const amp = [1, .97, 1.015, 1, .985, 1.025][event];
-            const rolloff = Math.exp(-Math.pow(n / pulseVoice.harmonics, 1.25));
-            real[n] += amp * rolloff * (hr * Math.cos(phase) - hi * Math.sin(phase));
-            imag[n] += amp * rolloff * (hr * Math.sin(phase) + hi * Math.cos(phase));
-          }
+      this.engFilter = c.createBiquadFilter(); this.engFilter.type = "lowpass"; this.engFilter.frequency.value = 900; this.engFilter.Q.value = 1.1;
+      this.engineBus = c.createGain(); this.engineBus.gain.value = 0.0;
+      this.engFilter.connect(this.engineBus); this.engineBus.connect(this.master);
+
+      this.synthGain = c.createGain(); this.synthGain.gain.value = 1.0; this.synthGain.connect(this.engFilter);
+      this.recGain = c.createGain(); this.recGain.gain.value = 0.0; this.recGain.connect(this.engFilter);
+
+      const shaper = c.createWaveShaper(); shaper.curve = this._satCurve(4.65); shaper.oversample = "4x"; shaper.connect(this.synthGain);
+
+      // Porsche 919: uneven compact turbo-V4 pulse, hard wastegate edge and prominent straight-cut transaxle.
+      const defs = [
+        {
+                type: "square",
+                mul: 0.5,
+                gain: 0.16,
+                toShaper: true
+        },
+        {
+                type: "sawtooth",
+                mul: 1,
+                gain: 0.31,
+                toShaper: true
+        },
+        {
+                type: "triangle",
+                mul: 1.5,
+                gain: 0.11,
+                toShaper: true
+        },
+        {
+                type: "square",
+                mul: 2.25,
+                gain: 0.056,
+                toShaper: false
+        },
+        {
+                type: "sawtooth",
+                mul: 4.5,
+                gain: 0.023,
+                toShaper: false
         }
-        return c.createPeriodicWave(real, imag);
-      };
-      this.oscs = [0, 1].map(bank => {
-        const o = c.createOscillator(); o.setPeriodicWave(bankWave(bank)); o.frequency.value = 30;
-        const g = c.createGain(); g.gain.value = bank ? pulseVoice.bankGain : .72;
-        o.connect(g); g.connect(shaper); o.start(); return {o, g, mul: 1};
+      ];
+      this.oscs = defs.map(d => {
+        const o = c.createOscillator(); o.type = d.type; o.frequency.value = 85 * d.mul;
+        const g = c.createGain(); g.gain.value = d.gain;
+        o.connect(g); g.connect(d.toShaper ? shaper : this.synthGain); o.start();
+        return { o, g, mul: d.mul };
       });
-      this.noiseBuf = this._noiseBuffer(2);
-      const noise = (type, frequency, q, bus) => {
+
+      this.noiseBuf = this._noiseBuffer(2.0);
+      this.combNoise=c.createBufferSource();this.combNoise.buffer=this.noiseBuf;this.combNoise.loop=true;
+      this.combFilter=c.createBiquadFilter();this.combFilter.type="bandpass";this.combFilter.frequency.value=235;this.combFilter.Q.value=0.92;
+      this.combVca=c.createGain();this.combVca.gain.value=0;this.combNoise.connect(this.combFilter);this.combFilter.connect(this.combVca);this.combVca.connect(this.synthGain);
+      this.combPulse=c.createOscillator();this.combPulse.type="sawtooth";this.combPulse.frequency.value=82;
+      this.pulseShape=c.createWaveShaper();{const q=new Float32Array(256);for(let i=0;i<q.length;i++){const x=i/(q.length-1)*2-1;q[i]=x>.52?Math.pow((x-.52)/.48,.28):0;}this.pulseShape.curve=q;}
+      this.pulseDepth=c.createGain();this.pulseDepth.gain.value=0;this.combPulse.connect(this.pulseShape);this.pulseShape.connect(this.pulseDepth);this.pulseDepth.connect(this.combVca.gain);this.combNoise.start();this.combPulse.start();
+      this.gearOsc=c.createOscillator();this.gearOsc.type="sawtooth";this.gearGain=c.createGain();this.gearGain.gain.value=0;const gearFilter=c.createBiquadFilter();gearFilter.type="bandpass";gearFilter.frequency.value=5100;gearFilter.Q.value=13;this.gearOsc.connect(gearFilter);gearFilter.connect(this.gearGain);this.gearGain.connect(this.master);this.gearOsc.start();
+      this.mguOsc=c.createOscillator();this.mguOsc.type="sine";this.mguGain=c.createGain();this.mguGain.gain.value=0;this.mguOsc.connect(this.mguGain);this.mguGain.connect(this.master);this.mguOsc.start();
+      const mkNoise = (type, freq, q) => {
         const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
-        const f = c.createBiquadFilter(); f.type = type; f.frequency.value = frequency; f.Q.value = q;
+        const f = c.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
         const g = c.createGain(); g.gain.value = 0;
-        src.connect(f); f.connect(g); g.connect(bus); src.start(); return {src, f, g};
+        src.connect(f); f.connect(g); g.connect(this.master); src.start();
+        return { src, f, g };
       };
-      this.combNode = noise("bandpass", pulseVoice.resonance, .7, this.synthGain);
-      // Pressure-gated broadband combustion adds exhaust grain rather than a continuous hiss.
-      this.combPulse = c.createOscillator(); this.combPulse.type = "sawtooth";
-      const gate = c.createWaveShaper(), curve = new Float32Array(1024);
-      for (let i = 0; i < curve.length; i++) {
-        const x = 2 * i / (curve.length - 1) - 1;
-        curve[i] = x > .15 ? Math.pow((x - .15) / .85, 2) : 0;
-      }
-      gate.curve = curve;
-      this.combDepth = c.createGain(); this.combDepth.gain.value = 0;
-      this.combPulse.connect(gate); gate.connect(this.combDepth); this.combDepth.connect(this.combNode.g.gain); this.combPulse.start();
-      this.turboNode = noise("bandpass", pulseVoice.turboHz, 5, this.synthGain); this.turboGain = this.turboNode.g;
-      const tone = (type, bus) => {
-        const o = c.createOscillator(); o.type = type;
-        const g = c.createGain(); g.gain.value = 0; o.connect(g); g.connect(bus); o.start(); return {o, g};
-      };
-      this.gearTone = tone("triangle", this.synthGain);
-      this.mguTone = tone("sine", this.synthGain);
-      this.windNode = noise("lowpass", 520, .7, this.master); this.windGain = this.windNode.g;
-      this.roadNode = noise("bandpass", 190, .8, this.master); this.roadGain = this.roadNode.g;
+      this.windNode = mkNoise("lowpass", 520);  this.windGain = this.windNode.g;
+      this.roadNode = mkNoise("bandpass", 190, 0.8); this.roadGain = this.roadNode.g;
+      this.turboNode = mkNoise("bandpass", 8350, 17); this.turboGain = this.turboNode.g;  // turbo whistle: narrow and high
+
       this.musicGain = c.createGain(); this.musicGain.gain.value = 0; this.musicGain.connect(this.master);
-      this.lastThrottle = 0; this.ready = true;
+      this.ready = true;
     },
     resume() { if (this.ctx && this.ctx.state === "suspended") this.ctx.resume(); },
     _satCurve(k) { const n = 1024, curve = new Float32Array(n); for (let i = 0; i < n; i++) { const x = (i/(n-1))*2-1; curve[i] = Math.tanh(k*x); } return curve; },
@@ -1122,43 +1126,52 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     update(s, dt) {
       if (!this.ready) return;
-      const t = this.ctx.currentTime, v = this.voiceModel;
-      const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1), load = clamp(s.throttle, 0, 1);
-      const spd = Math.abs(s.speedMps), running = s.ignition && !s.retired;
-      this._set(this.windGain.gain, clamp((spd - 6) / 90, 0, 1) * .09, .1);
-      this._set(this.windNode.f.frequency, 420 + spd * 16, .1);
-      this._set(this.roadGain.gain, clamp(spd / 80, 0, 1) * .07 * (1 + (s.roadInputG || 0)), .08);
-      if (!running) {
-        this._set(this.engineBus.gain, 0, .035); this.lastThrottle = 0; return;
+      const t = this.ctx.currentTime;
+      if (!s.ignition) { this._set(this.engineBus.gain, 0, 0.1); this._set(this.turboGain.gain, 0, 0.1); this._set(this.pulseDepth.gain,0,.08);this._set(this.gearGain.gain,0,.08);this._set(this.mguGain.gain,0,.08); return; }
+      const firing = Math.max(18,(s.rpm/60)*2); // 90° V4: two combustion events per crank revolution, deliberately rougher than the V6s
+      for (const osc of this.oscs) osc.o.frequency.setTargetAtTime(firing * osc.mul, t, 0.025);
+      this.combPulse.frequency.setTargetAtTime(firing,t,.016);
+
+      const rpmN = clamp(s.rpm / SPEC.redlineRpm, 0, 1);
+      const load = clamp(s.throttle, 0, 1);
+      const spd = Math.abs(s.speedMps);
+      const valve = s.exhaustValve ? 1 : 0.45;            // exhaust flap
+      const modeGain = s.driveMode === "race" ? 1.0 : s.driveMode === "sport" ? 0.82 : 0.62;
+
+      const engLevel = (0.05 + load * 0.5 + rpmN * 0.22) * valve * modeGain;
+      const cutoff=260+s.rpm*.34+load*3150+(s.exhaustValve?980:0);
+      const turbo = clamp(s.boostBar - 0.12, 0, 1.4) * 0.2 * (0.25 + rpmN * 0.75) * (s.exhaustValve ? 1 : 0.8);
+      const turboFreq=7100+rpmN*4100+s.boostBar*1750; // single turbo and exhaust-recovery turbine shaft
+      const wind = clamp((spd - 6) / 70, 0, 1) * (s.windowsOpen ? 0.22 : 0.12);
+      const windFreq = 420 + spd * 16;
+      const road = clamp(spd / 60, 0, 1) * 0.13 * (1 + s.roadInputG * 2.2);
+
+      this._set(this.engineBus.gain, engLevel, 0.05);
+      this._set(this.pulseDepth.gain,engLevel*.82,.022);this.combFilter.frequency.setTargetAtTime(180+rpmN*1350+load*430,t,.025);
+      this.gearOsc.frequency.setTargetAtTime(920+rpmN*5200+Math.max(1,s.curGear)*142,t,.03);this._set(this.gearGain.gain,Math.abs(s.speedMps)>3?.006+load*.014:0,.05);
+      const mguAudible = (s.mguKPowerKw || 0) + (s.ersHarvestKw || 0) > 1;
+      this.mguOsc.frequency.setTargetAtTime(610+Math.abs(s.speedMps)*41,t,.04);this._set(this.mguGain.gain,mguAudible?.0034:0,.06);
+      this._set(this.engFilter.frequency, clamp(cutoff, 200, 8200), 0.05);
+      this._set(this.turboGain.gain, turbo * .20, 0.06);
+      this.turboNode.f.frequency.setTargetAtTime(turboFreq, t, 0.06);
+      this._set(this.windGain.gain, wind, 0.1);
+      this.windNode.f.frequency.setTargetAtTime(windFreq, t, 0.1);
+      this._set(this.roadGain.gain, road, 0.08);
+
+      if (this.synthGain && this.recGain) {
+        this._set(this.synthGain.gain, this.useRecording ? 0 : 1, 0.12);
+        this._set(this.recGain.gain, this.useRecording ? 1 : 0, 0.12);
       }
-      const cycleHz = Math.max(1, s.rpm / 120);
-      for (const osc of this.oscs) this._set(osc.o.frequency, cycleHz, .012);
-      this._set(this.combPulse.frequency, cycleHz * 6, .012);
-      const shifting = s.shiftTimer > 0;
-      const torqueCut = shifting ? .22 : 1;
-      const valve = s.exhaustValve ? 1 : .65;
-      const mode = s.driveMode === "race" ? 1 : s.driveMode === "sport" ? .9 : .78;
-      this._set(this.engineBus.gain, (.13 + .34 * load + .18 * rpmN) * valve * mode * torqueCut, shifting ? .004 : .016);
-      this._set(this.engFilter.frequency, 1500 + rpmN * v.brightness + load * 1900, .025);
-      this._set(this.combDepth.gain, v.grain * (.15 + load * .85), .025);
-      this._set(this.combNode.f.frequency, v.resonance + rpmN * 950 + load * 350, .04);
-      // No MGU-H: the turbo follows exhaust load with a finite spool/decay time.
-      const boost = clamp((s.boostBar || 0) / 2.5, 0, 1);
-      this._set(this.turboGain.gain, boost * (.014 + load * .035), .18);
-      this._set(this.turboNode.f.frequency, v.turboHz + boost * 1300 + rpmN * 650, .18);
-      this._set(this.gearTone.o.frequency, 800 + s.rpm * .30 + (s.curGear || 1) * 85, .022);
-      this._set(this.gearTone.g.gain, spd > 2 ? .005 + .017 * load : 0, .04);
-      const electricKw = Math.max(s.mguKPowerKw || 0, s.ersHarvestKw || 0);
-      this._set(this.mguTone.o.frequency, 1300 + s.rpm * .31, .03);
-      this._set(this.mguTone.g.gain, clamp(electricKw / 350, 0, 1) * .022, .04);
-      this._set(this.synthGain.gain, this.useRecording ? 0 : 1, .08);
-      this._set(this.recGain.gain, this.useRecording ? 1 : 0, .08);
-      if (this.useRecording && this.engineSrc) this._set(this.engineSrc.playbackRate, .8 + rpmN * 1.5, .05);
-      if (!this.useRecording && this.lastThrottle - load > .35 && boost > .25 && t - this.blowoffAt > .45) {
-        this.blowoffAt = t; this.blowoff();
+      if (this.useRecording && this.engineSrc) {
+        const rate = 0.8 + rpmN * 1.5;
+        this.engineSrc.playbackRate.setTargetAtTime(rate, t, 0.05);
       }
-      // Short lift transients only; steady throttle must not machine-gun random pops.
-      if (!this.useRecording && this.lastThrottle - load > .5 && rpmN > .4 && t - this.crackleAt > .35) {
+
+      // turbo blow-off on a quick lift
+      if (this.lastThrottle - load > 0.25 && s.rpm > 2600 && t - this.blowoffAt > 0.4) { this.blowoffAt = t; this.blowoff(); }
+      // exhaust crackle/overrun on trailing throttle at revs (Race + Sport)
+      const overrun = load < 0.12 && s.rpm > 3200 && s.driveMode !== "wet" && (s.exhaustValve || s.antiLag);
+      if ((overrun || (s.antiLag && load > 0.5 && s.rpm > 4500)) && t - this.crackleAt > 0.05 + Math.random()*0.12) {
         this.crackleAt = t; this.crackle();
       }
       this.lastThrottle = load;
@@ -1166,28 +1179,37 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     blowoff() {
       const c = this.ctx, t = c.currentTime;
-      const src = c.createBufferSource(); src.buffer = this.noiseBuf;
-      const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 2900; f.Q.value = .8;
-      const g = c.createGain(); this._env(src, g, t, .07, .008, .13);
-      src.connect(f); f.connect(g); g.connect(this.synthGain); src.start(t); src.stop(t + .16);
+      const src = c.createBufferSource(); src.buffer = this.noiseBuf; src.loop = true;
+      const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 3600; f.Q.value = 1.4;
+      const g = c.createGain(); g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.16, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.3);
+      src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.32);
     },
     crackle() {
       const c = this.ctx, t = c.currentTime;
       const src = c.createBufferSource(); src.buffer = this.noiseBuf;
-      const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 1100; f.Q.value = .9;
-      const g = c.createGain(); this._env(src, g, t, .11, .002, .028);
-      src.connect(f); f.connect(g); g.connect(this.synthGain); src.start(t); src.stop(t + .04);
+      const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = 1600 + Math.random()*1800; f.Q.value = 3;
+      const g = c.createGain(); g.gain.setValueAtTime(0.0001, t);
+      g.gain.exponentialRampToValueAtTime(0.10 + Math.random()*0.08, t + 0.004); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.07);
+      src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.08);
     },
-    _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(.0001, t + attack + decay); },
-    startupFlair() {
-      if (!this.ready) return;
-      // Catch and flare the same V6 pressure oscillators, never a separate V12/saw voice.
-      const t = this.ctx.currentTime;
-      for (const {o} of this.oscs) { o.frequency.cancelScheduledValues(t); o.frequency.setValueAtTime(8, t); o.frequency.linearRampToValueAtTime(SPEC.idleRpm / 120, t + .22); }
+    _env(node, g, t, peak, attack, decay) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + attack + decay); },
+    startupFlair() { // V6 catch + rev flare on ignition
+      if (!this.ready) return; const c = this.ctx, t = c.currentTime;
+      const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(70, t);
+      o.frequency.exponentialRampToValueAtTime(300, t + 0.5); o.frequency.exponentialRampToValueAtTime(120, t + 1.4);
+      const f = c.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1400;
+      const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.3, t + 0.12); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.6);
+      o.connect(f); f.connect(g); g.connect(this.master); o.start(t); o.stop(t + 1.7);
     },
-    blip() {
-      // Physics supplies rev-matching RPM to update(); avoid a second fixed-pitch engine.
-      if (this.ready) this.click(1800);
+    blip(strength) { // throttle blip / downshift rev-match
+      if (!this.ready) return; const c = this.ctx, t = c.currentTime; strength = strength || 1;
+      const o = c.createOscillator(); o.type = "sawtooth"; o.frequency.setValueAtTime(150, t);
+      o.frequency.exponentialRampToValueAtTime(150 + 260 * strength, t + 0.08); o.frequency.exponentialRampToValueAtTime(120, t + 0.34);
+      const f = c.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 2400;
+      const g = c.createGain(); g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.2 * strength, t + 0.03); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.36);
+      o.connect(f); f.connect(g); g.connect(this.master); o.start(t); o.stop(t + 0.4);
+      this.crackle();
     },
     click(freq) { if (!this.ready) return; const c = this.ctx, t = c.currentTime; const src = c.createBufferSource(); src.buffer = this.noiseBuf; const f = c.createBiquadFilter(); f.type = "bandpass"; f.frequency.value = freq || 2400; f.Q.value = 6; const g = c.createGain(); this._env(src, g, t, 0.18, 0.001, 0.03); src.connect(f); f.connect(g); g.connect(this.master); src.start(t); src.stop(t + 0.05); },
     chime(notes) { if (!this.ready) return; const c = this.ctx; let t = c.currentTime; (notes || [659, 880, 1175]).forEach((freq, i) => { const o = c.createOscillator(); o.type = "triangle"; o.frequency.value = freq; const g = c.createGain(); const tt = t + i * 0.13; g.gain.setValueAtTime(0.0001, tt); g.gain.exponentialRampToValueAtTime(0.14, tt + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, tt + 0.9); o.connect(g); g.connect(this.master); o.start(tt); o.stop(tt + 1.0); }); },
@@ -1233,6 +1255,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   };
 
   app.audio = audio;
+  audio.voiceSource = "porsche919";
 }
 
 /* ===== physics: V6 hybrid, 8-speed seamless, active aero, launch, world, test driver ===== */

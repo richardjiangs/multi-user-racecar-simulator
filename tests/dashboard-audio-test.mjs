@@ -64,59 +64,70 @@ try{
     await p.close();
   }
   console.log('✔ SSC live display, touchscreen, keyboard controls; other cars’ P behavior unchanged');
-  const teams=[['Mercedes','MercedesF1App'],['McLaren','MclarenF1App'],['Williams','WilliamsF1App'],['Alpine','AlpineF1App'],['Ferrari','FerrariF1App'],['Haas','HaasF1App'],['Cadillac','CadillacF1App'],['Red Bull','RedbullF1App'],['Racing Bulls','RacingbullsF1App'],['Aston Martin','AstonF1App'],['Audi','AudiF1App']];
+  // Compare real rendered samples with the selected 919 voice, not a second synth model.
+  const teams=[['Porsche 919','Porsche919App'],['Mercedes','MercedesF1App'],['McLaren','MclarenF1App'],['Williams','WilliamsF1App'],['Alpine','AlpineF1App'],['Ferrari','FerrariF1App'],['Haas','HaasF1App'],['Cadillac','CadillacF1App'],['Red Bull','RedbullF1App'],['Racing Bulls','RacingbullsF1App'],['Aston Martin','AstonF1App'],['Audi','AudiF1App']];
+  const reference=new Map();
   for(const [team,name] of teams){
-    const p=await open(team+' F1 2026 simulator',name);
-    const scenarios=team==='Mercedes'?['low','high','off','shift','recording','electric','boost']:['low','high'];
+    const isReference=name==='Porsche919App';
+    const p=await open(isReference?'Porsche 919 Hybrid simulator':team+' F1 2026 simulator',name);
+    const scenarios=['idle','loaded','high','electric','regen'];
+    if(isReference||team==='Mercedes')scenarios.push('startup','downshift','lift','off','recording');
     for(const scenario of scenarios){
-      const r=await p.evaluate(async({name,scenario})=>{
-        const a=window[name],au=a.audio;au.ready=false;au.useRecording=false;au.engineSrc=null;
+      const r=await p.evaluate(async({name,scenario,isReference})=>{
+        const a=window[name],au=a.audio;
+        au.ready=false;au.useRecording=false;au.engineSrc=null;au.lastThrottle=0;au.blowoffAt=0;au.crackleAt=0;
         window.AudioContext=function(){return new OfflineAudioContext(1,88200,44100);};
-        const random=Math.random;let seed=12345;Math.random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
-        try{au.init();}finally{Math.random=random;}
-        const rpm=scenario==='low'?6000:12000;
-        const s={...a.state,ignition:true,retired:false,rpm,throttle:.85,boostBar:scenario==='boost'?2.2:0,speedMps:60,roadInputG:0,curGear:6,driveMode:'race',exhaustValve:true,shiftTimer:scenario==='shift'?.04:0,mguKPowerKw:scenario==='electric'?350:0,ersHarvestKw:0};
-        if(scenario==='recording')au.useEngineRecording(au.ctx.createBuffer(1,44100,44100));
-        au.update(s,1/60);
-        for(const g of [au.windGain,au.roadGain]){g.gain.cancelScheduledValues(0);g.gain.value=0;}
+        const random=Math.random;let seed=12345;
+        Math.random=()=>((seed=(Math.imul(seed,1664525)+1013904223)>>>0)/4294967296);
         let rendering;
-        if(scenario==='off'){
-          const paused=au.ctx.suspend(.5);rendering=au.ctx.startRendering();await paused;
-          au.update({...s,ignition:false,speedMps:0},1/60);await au.ctx.resume();
-        }else rendering=au.ctx.startRendering();
-        const samples=(await rendering).getChannelData(0),tail=samples.slice(66150);
-        let sum=0,peak=0;for(const v of tail){sum+=v*v;peak=Math.max(peak,Math.abs(v));}
-        const N=4096;let total=0,weighted=0,dominant=0,best=0;
-        for(let k=1;k<1024;k++){
-          let re=0,im=0;for(let j=0;j<N;j++){const x=tail[j]*(.5-.5*Math.cos(2*Math.PI*j/(N-1))),p=2*Math.PI*k*j/N;re+=x*Math.cos(p);im-=x*Math.sin(p);}
-          const power=re*re+im*im;total+=power;weighted+=power*k*44100/N;if(power>best){best=power;dominant=k*44100/N;}
-        }
-        return {rpm,family:au.voiceModel.family,cycleHz:au.oscs[0].o.frequency.value,pulsesHz:au.combPulse.frequency.value,rms:Math.sqrt(sum/tail.length),peak,centroid:weighted/total,dominant,electricGain:au.mguTone.g.gain.value,turboGain:au.turboGain.gain.value,samples:[...samples]};
-      },{name,scenario});
-      assert(Math.abs(r.cycleHz-r.rpm/120)<.001);assert(Math.abs(r.pulsesHz-r.rpm/20)<.001);
-      assert(r.peak<.98,`${team} ${scenario} clips: ${r.peak}`);
-      if(['off','recording'].includes(scenario))assert(r.rms<.00001,`${scenario} leaked synthesized audio: ${r.rms}`);
-      else assert(r.rms>.01&&r.rms<.5,`${team} ${scenario} audio level ${r.rms}`);
-      if(scenario==='high')assert.equal(r.electricGain,0,'Electric motor is silent when neither deploying nor regenerating');
-      if(scenario==='electric')assert(r.electricGain>.02);
-      if(scenario==='boost')assert(r.turboGain>.03);
-      if(out&&scenario==='high'){
-        const b=Buffer.alloc(44+r.samples.length*2);b.write('RIFF');b.writeUInt32LE(b.length-8,4);b.write('WAVEfmt ',8);b.writeUInt32LE(16,16);b.writeUInt16LE(1,20);b.writeUInt16LE(1,22);b.writeUInt32LE(44100,24);b.writeUInt32LE(88200,28);b.writeUInt16LE(2,32);b.writeUInt16LE(16,34);b.write('data',36);b.writeUInt32LE(r.samples.length*2,40);r.samples.forEach((v,i)=>b.writeInt16LE(Math.round(Math.max(-1,Math.min(1,v))*32767),44+i*2));writeFileSync(resolve(out,`f1-${team.replaceAll(' ','-')}.wav`),b);
+        const rpm=['idle','startup'].includes(scenario)?1100:['high','electric'].includes(scenario)?12000:6000;
+        try{
+          au.init();
+          const electric=scenario==='electric'?350:0,regen=scenario==='regen'?180:0;
+          const power=isReference?{mguPowerKw:electric,regenPowerKw:regen}:{mguKPowerKw:electric,ersHarvestKw:regen};
+          const s={...a.state,...power,ignition:true,rpm,throttle:['idle','startup','regen','lift'].includes(scenario)?0:.85,boostBar:scenario==='idle'?0:1.4,speedMps:['idle','startup'].includes(scenario)?0:60,roadInputG:0,curGear:6,driveMode:'race',exhaustValve:true,windowsOpen:false,antiLag:false};
+          if(scenario==='recording')au.useEngineRecording(au.ctx.createBuffer(1,44100,44100));
+          if(scenario==='lift'){au.lastThrottle=.85;au.blowoffAt=-1;au.crackleAt=-1;}
+          au.update(s,1/60);
+          for(const g of [au.windGain,au.roadGain]){g.gain.cancelScheduledValues(0);g.gain.value=0;}
+          if(scenario==='startup')au.startupFlair();
+          if(scenario==='downshift')au.blip(.9);
+          if(scenario==='off'){
+            const paused=au.ctx.suspend(.5);rendering=au.ctx.startRendering();await paused;
+            au.update({...s,ignition:false},1/60);await au.ctx.resume();
+          }else rendering=au.ctx.startRendering();
+          const samples=(await rendering).getChannelData(0);
+          let energy=0,peak=0;for(const v of samples.slice(66150)){energy+=v*v;peak=Math.max(peak,Math.abs(v));}
+          return {rpm,rms:Math.sqrt(energy/22050),peak,pulsesHz:au.combPulse.frequency.value,electricGain:au.mguGain.gain.value,samples:[...samples]};
+        }finally{Math.random=random;}
+      },{name,scenario,isReference});
+      assert(Math.abs(r.pulsesHz-r.rpm/30)<.001,'The selected sound keeps the 919 pulse order');
+      assert(Number.isFinite(r.rms)&&r.peak<.98,team+' '+scenario+' invalid or clipped output');
+      if(scenario==='off')assert(r.rms<.00001,'Engine must fade out after ignition off');
+      else assert(r.rms>.001,team+' '+scenario+' unexpectedly silent');
+      if(scenario==='high')assert.equal(r.electricGain,0);
+      if(['electric','regen'].includes(scenario))assert(r.electricGain>.003,'F1 deployment/harvest must drive the copied motor sound');
+      let maxSampleError=0;
+      if(isReference)reference.set(scenario,r.samples);
+      else{
+        const expected=reference.get(scenario);assert.equal(r.samples.length,expected.length);
+        for(let i=0;i<expected.length;i++)maxSampleError=Math.max(maxSampleError,Math.abs(r.samples[i]-expected[i]));
+        // Web Audio graph summation can differ by a few Float32 ULPs between contexts.
+        assert(maxSampleError<1e-6,team+' '+scenario+' differs from Porsche 919: '+maxSampleError);
       }
-      delete r.samples;reports.push({team,scenario,...r});
+      if(out&&scenario==='loaded'){
+        const b=Buffer.alloc(44+r.samples.length*2);b.write('RIFF');b.writeUInt32LE(b.length-8,4);b.write('WAVEfmt ',8);b.writeUInt32LE(16,16);b.writeUInt16LE(1,20);b.writeUInt16LE(1,22);b.writeUInt32LE(44100,24);b.writeUInt32LE(88200,28);b.writeUInt16LE(2,32);b.writeUInt16LE(16,34);b.write('data',36);b.writeUInt32LE(r.samples.length*2,40);r.samples.forEach((v,i)=>b.writeInt16LE(Math.round(Math.max(-1,Math.min(1,v))*32767),44+i*2));writeFileSync(resolve(out,'f1-'+team.replaceAll(' ','-')+'.wav'),b);
+      }
+      delete r.samples;reports.push({team,scenario,maxSampleError,...r});
     }
-    await p.close();console.log('✔',team,'F1 rendered audio, engine cycle, pulse frequency and headroom');
+    await p.close();console.log('✔',team,isReference?'reference audio rendered':'matches Porsche 919 rendered sound');
   }
-  const mer=reports.filter(r=>r.team==='Mercedes'),high=mer.find(r=>r.scenario==='high'),low=mer.find(r=>r.scenario==='low'),shift=mer.find(r=>r.scenario==='shift');
-  assert(high.dominant>low.dominant*1.8,'Exhaust pitch must rise with RPM');assert(shift.rms<high.rms*.4,'Shift must cut engine torque audibly');
-  const families=new Map(reports.filter(r=>r.scenario==='high').map(r=>[r.family,r.centroid]));assert.equal(families.size,5);
-  assert(new Set([...families.values()].map(v=>Math.round(v))).size===5,'Power unit families must have distinguishable spectra');
   for(const file of ['index','index-offline']){
     const p=await browser.newPage();await p.goto(pathToFileURL(resolve(root,file+'.html')).href);
     const link=p.getByRole('link',{name:'Report issue',exact:true});assert.equal(await link.getAttribute('href'),'https://github.com/richardjiangs/multi-user-racecar-simulator/issues/new/choose');assert(await link.isVisible());await p.close();
   }
   assert.deepEqual(errors,[]);
   if(out)writeFileSync(resolve(out,'f1-audio-metrics.json'),JSON.stringify(reports,null,2));
-  console.log('✔ Both garage issue links, pitch tracking, shift cut, engine-off silence, recording isolation, five family spectra');
-  console.table(reports.filter(r=>r.scenario==='high').map(({team,rms,peak,centroid,dominant})=>({team,rms,peak,centroid,dominant})));
+  console.log('✔ Both garage issue links; all eleven F1 voices match Porsche 919; hybrid adapter, transients, recording and ignition verified');
+  console.table(reports.filter(r=>r.scenario==='loaded').map(({team,rms,peak,maxSampleError})=>({team,rms,peak,maxSampleError})));
 }finally{await browser.close();}
