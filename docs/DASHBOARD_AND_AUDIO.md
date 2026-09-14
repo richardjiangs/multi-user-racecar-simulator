@@ -1,5 +1,9 @@
 # Dashboard, assist and F1 audio — 13 September 2026
 
+## Garage restoration and lighting — 14 September 2026
+
+The full garage was restored from `2f55334` after a later change replaced it with a network-dependent loader. Its layout, photos, controls and assist behavior are preserved. All 63 simulators with a cabin/map/ambient-light control now initialize `ambient` to false and render that button inactive. Users can still turn it on. Phantom's separate `stars` and `galleryLit` defaults remain true; its simulator is unchanged. Exterior lights and other lighting controls retain their previous behavior. Rebuild both garage entry points with `node tools/embed-sims.mjs` so offline use receives the same defaults.
+
 ## Assist defaults
 
 Only Viper ACR Extreme Aero, MCXtrema, Peugeot 9X8, Aurora Agil and Solus GT start and reset with assist off. **P** invokes the existing toggle and status toast. Held-key repeats, modified shortcuts and typing in editable fields do not toggle it. Other cars retain their previous defaults and keyboard behavior. Zenvo's near-limit message now reads `SPEC.topSpeedMps`, producing “approaching 360 km/h limit” at 98% of its current limit.
