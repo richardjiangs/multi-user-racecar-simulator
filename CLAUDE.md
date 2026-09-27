@@ -1152,3 +1152,5 @@ No Actions workflow needed (the auto-created `github-pages` environment
 rejects deploys from non-main branches anyway).
 
 September 2026 track-special revision: see `docs/TRACK_SPECIALS_ART.md` for drawing references, sound-model assumptions and the road/AMR Pro state contract. Run `node tests/track-specials-test.mjs` alongside the standard suites when changing these five cars.
+
+September 2026 road-hypercar revision: `docs/ROAD_HYPERCARS_ART.md` documents the Chiron Super Sport 300+, Jesko, P1, F80 and modern 33 Stradale's individual **1.0** drawings and control mappings. Edit `tools/road-hypercars/`, run `tools/refresh-road-hypercars-art.mjs` and `tools/bodykit/apply.mjs`, then `tests/road-hypercars-art-test.mjs` plus the standard suites. Do not turn these into the 2.0 track-special layout or change their performance/audio as part of an art refresh.
