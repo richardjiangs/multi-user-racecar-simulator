@@ -52,6 +52,20 @@ Cabin lighting still starts off. The 919/eleven-F1 sound override is untouched.
 Small screens retain the original controls in a compact layout. Driving touch
 controls hide when a view panel is open, so they cannot obstruct its buttons.
 
+### Driving view placement and finish
+
+The driving fascia follows the SSC's **placement**, with the dash at 70% of
+viewport height and the wheel centre at 97%. The original bottom console can
+overlap the lower wheel, as it does in SSC. Never lift the entire wheel above
+the footer: that places the fascia near the horizon and covers the road. Jesko's
+wheel-mounted display has a small model-specific offset to keep it readable.
+
+The driving drawings include clipped suede grain, subtle carbon twill, brushed
+metal, stitched cowl edges, machined dial rims, paddle hardware and individually
+drawn emblems. Instrument markings, vents, console geometry, wheel spokes and
+switches remain specific to each car. The separate SVG Cockpit controls and
+exterior/engine drawings are unchanged by the sightline correction.
+
 ## Sources used for drawing
 
 Manufacturer material establishes the models and design features; actual cabin,
@@ -91,6 +105,7 @@ so regeneration cannot silently replace them with older shapes.
 node tools/refresh-road-hypercars-art.mjs
 node tools/bodykit/apply.mjs
 node tests/road-hypercars-art-test.mjs
+node tests/dashboard-sightline-test.mjs
 node tools/embed-sims.mjs
 node tests/perf-test.mjs
 node tests/browser-test.mjs
@@ -101,3 +116,8 @@ SVG IDs and control targets, actual clicks and keyboard activation, live
 instruments, doors, cover visibility, wheel rotation from physics, real-loop
 keyboard steering, portrait/landscape rendering and panel clearances.
 Set `VERIFICATION_DIR` to save view screenshots.
+
+The sightline test renders SSC and all five cars at six viewport sizes, measures
+the road pixels in the same forward corridor, and checks that the new cars leave
+at least as much of that corridor clear. It also renders the previous `d99def1`
+Chiron and confirms that the test detects the high-dashboard regression there.
