@@ -120,3 +120,4 @@ export function alfaEngine(){return start('Alfa Romeo 33 Stradale • modern twi
  `+end(`<path d="M174 49Q450-3 726 49L795 380 705 441H195L105 380Z" fill="#982b31" stroke="#d96964" stroke-width="2"/><path d="M277 70Q450 19 623 70L672 364 618 404H282L228 364Z" fill="url(#rhGlass)" stroke="#98a5a3" stroke-width="4"/><path d="M255 152L647 132M248 216L657 193M239 279L666 257M230 343L674 321" stroke="#17212a" stroke-width="12"/>`,'33 STRADALE · GLASS REAR CLAMSHELL');}
 
 export const ENGINES={bugatti:bugattiEngine,koenigsegg:jeskoEngine,p1:p1Engine,ferrari:f80Engine,alfa33:alfaEngine};
+export {pipe,ribs,fasteners,fan,start as startEngine,end as endEngine};

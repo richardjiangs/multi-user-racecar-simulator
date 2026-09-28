@@ -15,6 +15,7 @@
 
 import { FRAME, wheel } from "./bodykit.mjs";
 import { drawBugatti as preciseBugatti, drawJesko as preciseJesko, drawP1 as preciseP1, drawF80 as preciseF80, drawAlfa33 as preciseAlfa33 } from "../road-hypercars/exteriors.mjs";
+import {drawNextVenom,drawNextAmgOne,drawNextAston} from '../road-hypercars/next-exteriors.mjs';
 
 /* ------------------------------------------------------------------ *
  * Chevrolet Corvette ZR1 (C8, LT7)                                    *
@@ -166,8 +167,8 @@ export const DRAWN = {
   zr1: drawZr1, nevera: drawNevera, gto: drawGto, f40: drawF40, evija: drawEvija,
   tuatara: drawTuatara, bugatti: drawBugatti,
   pagani: drawPagani, mclaren: drawMclaren, ferrari: drawFerrariF80,
-  koenigsegg: drawKoenigsegg, aston: drawAston,
-  venom: drawVenom, amgone: drawAmgOne, p1: drawP1, p917: drawP917, revuelto: drawRevuelto,
+  koenigsegg: drawKoenigsegg, aston: drawNextAston,
+  venom: drawNextVenom, amgone: drawNextAmgOne, p1: drawP1, p917: drawP917, revuelto: drawRevuelto,
   tesla: drawTesla, taycan: drawTaycan, amg: drawAmgGt, porsche918: drawPorsche918, supra: drawSupra,
   t50s: drawT50s, alfa33: drawAlfa33, project8: drawProject8, s2000: drawS2000,
   mustanggtd: drawMustangGtd, rx7: drawRx7,

@@ -16,7 +16,7 @@ const lamp=(d)=>p(d,'#d4ecfa','class="rhLamp"');
 // Visible through the door opening: shaped seats, belts, wheel, footwell and carbon sill.
 // Each opening is clipped to its own hand-drawn aperture, not a shared body template.
 function doorInterior(aperture,key){
- const trim={bugatti:'#cc772e',jesko:'#9c866d',p1:'#bb753c',ferrari:'#bc2736',alfa33:'#b4774c'}[key];
+ const trim={bugatti:'#cc772e',jesko:'#9c866d',p1:'#bb753c',ferrari:'#bc2736',alfa33:'#b4774c',venom:'#bdc4b6',amgone:'#61c1b0',aston:'#9baa73',mcf1:'#b89565'}[key];
  const leather=key==='alfa33'?'url(#rhTan)':key==='ferrari'?'#8e1c29':'url(#rhLeather)';
  return `<defs><clipPath id="rhDoorOpening"><path d="${aperture}"/></clipPath></defs><g clip-path="url(#rhDoorOpening)">
  <path d="${aperture}" fill="#060c12"/>
@@ -46,6 +46,7 @@ function wheel(x,r,type,caliper){
  <path d="M${-r*.65}-${r*.53}A${r*.84} ${r*.84} 0 0 1 ${r*.65}-${r*.53}" fill="none" stroke="#606e76" stroke-dasharray="2 3" stroke-width="1"/>
  </g>`;
 }
+export {setup,finishBody,lamp,doorInterior,wheel};
 
 export function drawBugatti(){
  const body='M78 207L83 269 109 294 220 310A71 117 0 0 1 362 310L679 310A71 109 0 0 1 821 310L902 307Q925 301 922 272L915 239Q884 207 828 196Q785 179 749 184Q702 183 677 190Q615 137 566 125Q484 106 430 139Q373 168 338 179Q211 181 78 207Z';

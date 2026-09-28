@@ -552,7 +552,7 @@ const check = (label, ok, detail) => {
        run through 180 deg and flipped, and every car has it in one of two layouts. */
 {
   const { readdirSync, readFileSync } = await import("node:fs");
-  const SIDE = /Valkyrie|Speedtail|F1 2026/;    // camera pods / wing mirrors, always live
+  const SIDE = /Valkyrie|Speedtail|F1 2026|McLaren F1 1993/;    // includes the user's requested F1 camera retrofit
   const bad = [];
   let side = 0, centre = 0; const frames = new Set();
   for (const f of readdirSync(ROOT).filter((x) => /simulator\.html$/i.test(x))) {
@@ -586,12 +586,19 @@ const check = (label, ok, detail) => {
         const [l, r] = cfg.pods;
         if (!(l.eye < 0 && r.eye > 0)) bad.push(n + ": pods are not mounted on opposite flanks");
         if (!(l.yaw < 0 && r.yaw > 0)) bad.push(n + ": pods are not aimed outboard");
+        const responsive=/NEXT_REAR_VIEWS:BEGIN/.test(src);
+        if (responsive) {
+          // These cameras fit around the measured DOM controls; their real rendered
+          // positions and occlusion are checked at six sizes by dashboard-sightline-test.
+          if (!/rearLayoutCache\.views\[i\]/.test(src) || !/app\.rearViews\.push/.test(src)) bad.push(n + ": responsive camera positions missing");
+        } else {
         if (!(l.fx < 0.5 && r.fx > 0.5)) bad.push(n + ": pods are not on the left and right of the screen");
         // the HUD is an HTML panel OVER the canvas, so the canvas can never draw on top of
         // it — a pod has to live where the panel is not. The free band is hard outboard,
         // below the HUD aside and above the bottom bar.
         if (!(l.fx < 0.13 && r.fx > 0.87)) bad.push(n + ": pods are inboard, under the HUD panel");
         if (!(l.fy > 0.62 && l.fy < 0.74)) bad.push(n + ": pods are not in the clear band below the HUD (fy " + l.fy + ")");
+        }
       }
     } else {
       centre++;
@@ -604,7 +611,7 @@ const check = (label, ok, detail) => {
   }
   // and they must not all look alike: the housings differ per car the way the dashboards do
   check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
-    bad.length === 0 && side === 13 && centre === 50 && frames.size >= 6, bad.slice(0, 4).join(" | "));
+    bad.length === 0 && side === 14 && centre === 49 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------

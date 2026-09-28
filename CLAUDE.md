@@ -467,9 +467,10 @@ in one and not the other, and each shows a slice of your own bodywork on its inb
 |---|---|---|
 | `side` | **Valkyrie** | two camera screens in the **dash corners** — teal bezel, scanlines, a live tally |
 | `side` | **Speedtail** | no mirrors in reality: two screens flanking the **central seat** |
+| `side` | **McLaren F1 (1993)** | user's requested simulator camera screens; retain the period analogue cabin |
 | `side` | the eleven **2026 F1** cars | small pods on **sidepod stalks**, aimed wide, team-coloured |
 | `centre` | 1950s–60s (250 GTO · DB5 · 300 SLR · 917K) | a small **chromed** oval, high on the screen |
-| `centre` | 80s–90s (F40 · McLaren F1 · Supra · Evo · GT-R) | a black **plastic** rectangle |
+| `centre` | 80s–90s (F40 · Supra · Evo · GT-R) | a black **plastic** rectangle |
 | `centre` | the hypercars | a thin **carbon** blade with a woven edge |
 | `centre` | the EVs (Tesla · Taycan · Evija · Nevera · U9) | a **frameless** glass slab on a stalk |
 | `centre` | the four **Dakar** cars | a **rally** mirror, thick matte bezel, bolted to the cage |
@@ -1156,3 +1157,10 @@ September 2026 track-special revision: see `docs/TRACK_SPECIALS_ART.md` for draw
 September 2026 road-hypercar revision: `docs/ROAD_HYPERCARS_ART.md` documents the Chiron Super Sport 300+, Jesko, P1, F80 and modern 33 Stradale's individual **1.0** drawings and control mappings. Edit `tools/road-hypercars/`, run `tools/refresh-road-hypercars-art.mjs` and `tools/bodykit/apply.mjs`, then `tests/road-hypercars-art-test.mjs` plus the standard suites. Do not turn these into the 2.0 track-special layout or change their performance/audio as part of an art refresh.
 
 For their driving view, preserve the SSC reference's low placement (dash at 70% of viewport height, wheel near the bottom). Do not fit the entire wheel above the bottom console; this obstructs the road. Run `tests/dashboard-sightline-test.mjs` when changing their canvas art or layout.
+
+The same 1.0 approach now covers Venom F5, AMG ONE, Valkyrie and McLaren F1 (1993).
+See `docs/NEXT_HYPERCARS_ART.md`; regenerate with `tools/refresh-next-hypercars-art.mjs`
+and `tools/bodykit/apply.mjs`. Run `tests/next-hypercars-art-test.mjs`, the sightline
+test and standard suites. Valkyrie/F1 side cameras stay live without traffic;
+their responsive placement is checked against actual DOM controls. Keep each
+car's own design, the Valkyrie's road/AMR Pro toggle and all existing performance/audio.

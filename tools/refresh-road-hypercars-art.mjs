@@ -1,13 +1,14 @@
 import {readFileSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
+import {fileURLToPath} from 'node:url';
 import {CABINS} from './road-hypercars/cabins.mjs';
 import {ENGINES} from './road-hypercars/engines.mjs';
 import {namespaceMaterials} from './road-hypercars/materials.mjs';
 
 export const CARS={bugatti:['Bugatti Chiron Super Sport 300+','BugattiApp'],koenigsegg:['Koenigsegg Jesko','KoenigseggApp'],p1:['McLaren P1','P1App'],ferrari:['Ferrari F80','FerrariApp'],alfa33:['Alfa Romeo 33 Stradale','Alfa33App']};
 const root=resolve(import.meta.dirname,'..'),art=resolve(import.meta.dirname,'road-hypercars');
-function replaceBounded(s,start,end,body){const a=s.indexOf(start),b=s.indexOf(end,a);if(a<0||b<0)throw Error('Missing boundary: '+start);return s.slice(0,a)+body+s.slice(b);}
-const bindings=`    // ROAD_ART_BINDINGS:BEGIN
+export function replaceBounded(s,start,end,body){const a=s.indexOf(start),b=s.indexOf(end,a);if(a<0||b<0)throw Error('Missing boundary: '+start);return s.slice(0,a)+body+s.slice(b);}
+export const bindings=`    // ROAD_ART_BINDINGS:BEGIN
     // Drawn controls invoke existing actions; no powertrain or sound model lives here.
     const activateCabin = e => {
       const n=e.target.closest('[data-control],[data-cabin-action]'); if(!n)return;
@@ -42,7 +43,7 @@ const bindings=`    // ROAD_ART_BINDINGS:BEGIN
     el.cabinArt.addEventListener('keydown',activateCabin);
     // ROAD_ART_BINDINGS:END
 `;
-const live=`      // ROAD_ART_LIVE:BEGIN
+export const live=`      // ROAD_ART_LIVE:BEGIN
       put('rhWater',Math.round(state.waterTempC)+'°C');
       put('rhBoost',(state.boostBar||0).toFixed(1));
       put('rhTempSet',(state.cabinSetpoint??22)+'°');put('rhFanSet','FAN '+(state.cabinFanLevel??2));put('rhClimateAuto',(state.cabinClimateAuto??true)?'AUTO':'MAN');
@@ -68,7 +69,7 @@ const live=`      // ROAD_ART_LIVE:BEGIN
       document.getElementById('coverBtn').textContent=state.engineCoverOpen?'Close Cover':'Open Cover';
       // ROAD_ART_LIVE:END
 `;
-const css=`
+export const css=`
     /* ROAD_ART_CSS:BEGIN */
     #cabinArt {background:#091219;}
     #cabinArt svg {isolation:isolate;}
@@ -101,6 +102,7 @@ const css=`
     /* ROAD_ART_CSS:END */
 `;
 
+export function refreshRoadHypercars(){
 for(const [key,[name]] of Object.entries(CARS)){
  const file=resolve(root,name+' simulator.html');let s=readFileSync(file,'utf8');
  let cabin=CABINS[key]().replace(/data-control="__(\w+)"/g,'data-cabin-action="$1"');
@@ -147,3 +149,5 @@ for(const [key,[name]] of Object.entries(CARS)){
  }
  writeFileSync(file,s);console.log('Refreshed '+name+' — 1.0 layout, individual hand-drawn art');
 }
+}
+if(process.argv[1]&&resolve(process.argv[1])===fileURLToPath(import.meta.url))refreshRoadHypercars();

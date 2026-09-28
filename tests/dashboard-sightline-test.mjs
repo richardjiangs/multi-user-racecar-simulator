@@ -3,8 +3,9 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
+import {NEXT_CARS} from '../tools/refresh-next-hypercars-art.mjs';
 const root=resolve(import.meta.dirname,'..'),out=process.env.VERIFICATION_DIR;
-const cars={ssc:['SSC Tuatara','TuataraApp'],bugatti:['Bugatti Chiron Super Sport 300+','BugattiApp'],koenigsegg:['Koenigsegg Jesko','KoenigseggApp'],p1:['McLaren P1','P1App'],ferrari:['Ferrari F80','FerrariApp'],alfa33:['Alfa Romeo 33 Stradale','Alfa33App']};
+const cars={ssc:['SSC Tuatara','TuataraApp'],bugatti:['Bugatti Chiron Super Sport 300+','BugattiApp'],koenigsegg:['Koenigsegg Jesko','KoenigseggApp'],p1:['McLaren P1','P1App'],ferrari:['Ferrari F80','FerrariApp'],alfa33:['Alfa Romeo 33 Stradale','Alfa33App'],...NEXT_CARS};
 const {chromium}=await import(process.env.CODEX_NODE_MODULES?pathToFileURL(resolve(process.env.CODEX_NODE_MODULES,'playwright/index.mjs')).href:'playwright');
 if(out)mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined}),errors=[],results=[],reference=new Map();
@@ -29,17 +30,33 @@ try{
   const page=await browser.newPage({viewport:{width:1440,height:900}});page.on('pageerror',e=>errors.push(key+': '+e.message));
   await page.addInitScript(()=>window.requestAnimationFrame=()=>0);
   await page.goto(pathToFileURL(resolve(root,name+' simulator.html')).href);await page.waitForFunction(n=>!!window[n]?.drawWorld,appName);
-  for(const [w,h] of [[1440,900],[1774,778],[1366,768],[1024,768],[390,844],[844,390]]){
+  const sizes=[[1440,900],[1774,778],[1366,768],[1024,768],[390,844],[844,390]];
+  if(key==='ssc'||key==='aston'||key==='mcf1')sizes.push([900,600],[800,600],[600,800],[390,650]);
+  for(const [w,h] of sizes){
    await page.setViewportSize({width:w,height:h});await page.waitForTimeout(90);await prepare(page,appName);
    const visible=await corridor(page,appName);results.push({key,w,h,roadFraction:visible});
    if(key==='ssc'){assert(visible>.8,'SSC reference road must be visible');reference.set(w+'x'+h,visible);}
    else assert(visible>=reference.get(w+'x'+h)-.025,key+' road corridor is more obscured than SSC at '+w+'x'+h+': '+visible);
+   if(key==='aston'||key==='mcf1'){
+    const views=await page.evaluate(n=>window[n].rearViews,appName);
+    assert.equal(views.length,2);assert.equal(views[0].y,views[1].y,'rear screens remain level');assert(views[0].x+views[0].w<w/2&&views[1].x>w/2,'rear screens stay on opposite sides');
+    const overlaps=await page.evaluate(n=>{
+     const obstacles=[...document.querySelectorAll('.topbar,.hud,.bottombar,.mobile-pad,.touch-wheel,.drive-help')].filter(e=>e.checkVisibility()).map(e=>({name:e.className,rect:e.getBoundingClientRect()}));
+     return window[n].rearViews.flatMap((v,i)=>{
+      const b={left:v.x-7,top:v.y-7,right:v.x+v.w+7,bottom:v.y+v.h+17};
+      const hit=obstacles.filter(({rect:r})=>b.left<r.right&&b.right>r.left&&b.top<r.bottom&&b.bottom>r.top).map(o=>o.name);
+      if(b.left<0||b.right>innerWidth||b.top<0||b.bottom>innerHeight)hit.push('viewport');
+      return hit.map(name=>(i?'right':'left')+' camera overlaps '+name);
+     });
+    },appName);
+    assert.deepEqual(overlaps,[],key+' visible rear cameras at '+w+'x'+h);
+   }
    if(out){
     await page.screenshot({path:resolve(out,key+'-'+w+'x'+h+'.png')});
     if(w===1440){const png=await page.evaluate(n=>window[n].canvas.toDataURL('image/png'),appName);writeFileSync(resolve(out,key+'-drawing.png'),Buffer.from(png.split(',')[1],'base64'));}
    }
   }
-  await page.close();console.log('PASS '+key+': unobstructed road at six viewport sizes');
+  await page.close();console.log('PASS '+key+': unobstructed road at '+sizes.length+' viewport sizes');
  }
  // Prove the check catches the reported regression in the previous release.
  const old=execFileSync('git',['show','d99def1:Bugatti Chiron Super Sport 300+ simulator.html'],{cwd:root,encoding:'utf8',maxBuffer:2e6});
