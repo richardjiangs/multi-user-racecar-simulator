@@ -3,9 +3,10 @@ import {mkdirSync,writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';
 import {pathToFileURL} from 'node:url';
 import {execFileSync} from 'node:child_process';
+import {TOURING_CARS} from '../tools/refresh-touring-art.mjs';
 import {NEXT_CARS} from '../tools/refresh-next-hypercars-art.mjs';
 const root=resolve(import.meta.dirname,'..'),out=process.env.VERIFICATION_DIR;
-const cars={ssc:['SSC Tuatara','TuataraApp'],bugatti:['Bugatti Chiron Super Sport 300+','BugattiApp'],koenigsegg:['Koenigsegg Jesko','KoenigseggApp'],p1:['McLaren P1','P1App'],ferrari:['Ferrari F80','FerrariApp'],alfa33:['Alfa Romeo 33 Stradale','Alfa33App'],...NEXT_CARS};
+const cars={ssc:['SSC Tuatara','TuataraApp'],bugatti:['Bugatti Chiron Super Sport 300+','BugattiApp'],koenigsegg:['Koenigsegg Jesko','KoenigseggApp'],p1:['McLaren P1','P1App'],ferrari:['Ferrari F80','FerrariApp'],alfa33:['Alfa Romeo 33 Stradale','Alfa33App'],...NEXT_CARS,...Object.fromEntries(Object.entries(TOURING_CARS).map(([k,[f,n]])=>[k,[f.replace(/ [Ss]imulator.html$/,''),n]]))};
 const {chromium}=await import(process.env.CODEX_NODE_MODULES?pathToFileURL(resolve(process.env.CODEX_NODE_MODULES,'playwright/index.mjs')).href:'playwright');
 if(out)mkdirSync(out,{recursive:true});
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||undefined}),errors=[],results=[],reference=new Map();
@@ -29,15 +30,15 @@ try{
  for(const [key,[name,appName]] of Object.entries(cars)){
   const page=await browser.newPage({viewport:{width:1440,height:900}});page.on('pageerror',e=>errors.push(key+': '+e.message));
   await page.addInitScript(()=>window.requestAnimationFrame=()=>0);
-  await page.goto(pathToFileURL(resolve(root,name+' simulator.html')).href);await page.waitForFunction(n=>!!window[n]?.drawWorld,appName);
+  await page.goto(pathToFileURL(resolve(root,TOURING_CARS[key]?.[0]||name+' simulator.html')).href);await page.waitForFunction(n=>!!window[n]?.drawWorld,appName);
   const sizes=[[1440,900],[1774,778],[1366,768],[1024,768],[390,844],[844,390]];
-  if(key==='ssc'||key==='aston'||key==='mcf1')sizes.push([900,600],[800,600],[600,800],[390,650]);
+  if(key==='ssc'||key==='aston'||key==='mcf1'||key==='mclaren')sizes.push([900,600],[800,600],[600,800],[390,650]);
   for(const [w,h] of sizes){
    await page.setViewportSize({width:w,height:h});await page.waitForTimeout(90);await prepare(page,appName);
    const visible=await corridor(page,appName);results.push({key,w,h,roadFraction:visible});
    if(key==='ssc'){assert(visible>.8,'SSC reference road must be visible');reference.set(w+'x'+h,visible);}
    else assert(visible>=reference.get(w+'x'+h)-.025,key+' road corridor is more obscured than SSC at '+w+'x'+h+': '+visible);
-   if(key==='aston'||key==='mcf1'){
+   if(key==='aston'||key==='mcf1'||key==='mclaren'){
     const views=await page.evaluate(n=>window[n].rearViews,appName);
     assert.equal(views.length,2);assert.equal(views[0].y,views[1].y,'rear screens remain level');assert(views[0].x+views[0].w<w/2&&views[1].x>w/2,'rear screens stay on opposite sides');
     const overlaps=await page.evaluate(n=>{

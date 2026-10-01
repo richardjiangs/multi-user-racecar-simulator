@@ -44,6 +44,22 @@ try{
   await page.locator('#cabinArt [data-control="hornBtn"]').click();assert.equal(await page.evaluate(n=>window[n].state.horn,appName),true);await page.waitForTimeout(210);assert.equal(await page.evaluate(n=>window[n].state.horn,appName),false);
   await page.evaluate(n=>{const a=window[n];a.state.speedMps=123/3.6;a.state.rpm=6000;a.state.gearMode='G';a.state.curGear=4;a.state.steer=.25;a.updateUi();a.drawWorld();},appName);
   assert.equal(await page.locator('#cabSpeedArt').textContent(),'123');assert.equal(await page.locator('#cabGearArt').textContent(),'4');assert.equal(await page.locator('#cabRpmArt').textContent(),'6000');
+  if(key==='amgone'){
+   assert.equal(await page.locator('#rhAmgDrive').textContent(),'123 km/h · 4 · 6000 rpm');
+   await page.evaluate(()=>{Object.assign(AmgOneApp.state,{oilTempC:112,waterTempC:97,boostBar:2.1,drs:true});AmgOneApp.updateUi();});
+   assert.equal(await page.locator('#rhAmgTemps').textContent(),'WATER 97°C · OIL 112°C');
+   assert.equal(await page.locator('#rhAmgBoost').textContent(),'BOOST 2.1 bar · DRS OPEN');
+   await page.evaluate(()=>{AmgOneApp.state.drs=false;AmgOneApp.updateUi();});
+  }
+  if(key==='mcf1'){
+   const file=readFileSync(resolve(root,name+' simulator.html'),'utf8');
+   assert(file.includes('"frame":"road-pod"'),'F1 uses reflective mirror housings');
+   assert(file.includes('case "road-pod":'),'F1 mirror has its own stalk and glass frame');
+   assert(!await page.locator('#cabinArt').textContent().then(t=>t.includes('LEFT')||t.includes('RIGHT')),'F1 has no electronic monitor labels');
+   const needle=await page.locator('#cabRevNeedle').getAttribute('transform');
+   await page.evaluate(()=>{McF1App.state.rpm=1200;McF1App.updateUi();});
+   assert.notEqual(await page.locator('#cabRevNeedle').getAttribute('transform'),needle,'F1 analog tachometer follows RPM');
+  }
   const variant={venom:['fuelBtn','e85'],amgone:['drsBtn','drs'],mcf1:['raceAeroBtn','raceAero']}[key];
   if(variant){const [id,field]=variant;const old=await page.evaluate(({n,f})=>window[n].state[f],{n:appName,f:field});await page.locator('#cabinArt [data-control="'+id+'"]').first().click();assert.equal(await page.evaluate(({n,f})=>window[n].state[f],{n:appName,f:field}),!old);await page.locator('#cabinArt [data-control="'+id+'"]').first().click();}
   if(key==='aston'){

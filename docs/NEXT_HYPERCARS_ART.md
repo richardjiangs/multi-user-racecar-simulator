@@ -12,9 +12,9 @@ Materials and small hardware are shared; the layouts and body paths are not.
 | Aston Martin Valkyrie | Carbon tub, wheel-mounted instruments, separate console display, harness seats and two live camera monitors | Low canopy, open underbody tunnels, thin lighting, gullwing door and separate road/AMR Pro tails; long Cosworth V12 plenum, six exhaust branches per bank, gearbox and dampers |
 | McLaren F1 (1993) | Central analogue instruments with white faces, green LCDs, simple Nardi wheel, right-hand manual lever and three-seat arrangement | Low road-car tail, roof scoop, dihedral door and five-spoke wheels; twin BMW plenums, gold thermal lining, intake ducts, brace and four exhaust sections |
 
-The McLaren's two electronic rear screens are the user's requested simulator
-addition to the period analogue cockpit, not a claim about the original car's
-factory equipment.
+The McLaren F1 has period reflective side mirrors in painted housings on inboard
+stalks. This corrects the former electronic-screen interpretation. Its analogue
+tachometer now binds to the live RPM needle and its 8,000-rpm dial scale.
 
 ## Driving view and cameras
 
@@ -24,10 +24,18 @@ instruments live inside it. The forward road corridor remains clear at desktop,
 tablet and phone sizes. The original console can cover part of the lower wheel.
 The separate Cockpit tab shows the complete wheel and clickable cabin controls.
 
-Valkyrie and McLaren F1 have permanent left and right camera feeds in Drive and
-in their drawn Cockpit monitors. They use independent eye positions and outward
-angles in the existing rear projection; they are live with or without traffic.
-On resize, both screens are placed at the same height in free space around the
+Following the feedback about similar driving dashboards, the F5 now has separate
+cream shoulder pads, an exposed driver recess and visible open yoke crossbar;
+AMG ONE has its own grey wing fascia, rectangular instruments and buttoned wheel;
+Valkyrie has separate carbon cowl wings and wheel-mounted instruments rather than
+a continuous dashboard shelf. These are separate paths and layouts, not a colour
+swap of a common dashboard.
+
+Valkyrie's camera monitors and McLaren F1's reflective side mirrors remain
+visible in Drive and Cockpit. Their rear scenes use independent eye positions
+and outward angles in the existing projection, with or without traffic. The
+F1 has curved glass, silver frames and stalks, without screen labels or scanlines.
+On resize, both rear views are placed at the same height in free space around the
 actual header, HUD, footer and touch controls. The layout reserves the forward
 road corridor. DOM measurements are cached between resize/view changes.
 
@@ -40,8 +48,10 @@ Drawn buttons support pointer activation, Enter and Space and delegate to the
 existing controls. The original console and shortcuts remain available.
 
 - F5 mode uses the existing fuel/mode action; no new engine calibration.
-- AMG DRS uses its existing action. INFO/ENERGY select the existing data display;
-  there is no new manual hybrid boost model. The oil readout uses oil temperature.
+- AMG DRS uses its existing action. The second screen now displays live vehicle
+  data in both Canvas and SVG: speed, temperatures, boost and DRS; the Canvas
+  view also has live throttle/brake bars. The SVG includes RPM and gear. It does
+  not invent battery state or electrical output that this simulation does not model.
 - Valkyrie starts in the road variant. Y and the drawn AMR Pro button retain the
   existing toggle; the AMR tail appears and road hybrid hardware hides with it.
 - McLaren F1 uses the manual lever and existing neutral/reverse controls; it has
@@ -98,7 +108,8 @@ node tests/browser-test.mjs
 The focused test checks preserved powertrain/audio source, idempotence, SVG IDs,
 control targets, click/keyboard parity, live instruments, special modes, both
 camera projections, doors, wheels, covers and real-loop steering. The sightline
-test compares all nine updated cars with SSC at six viewport sizes; both camera
-cars additionally check four intermediate sizes, bezel/label clearance, opposite
+test now compares all fifteen updated cars with SSC at six viewport sizes; the
+three cars with permanent side views additionally check four intermediate sizes,
+bezel/label clearance, opposite
 sides and level placement. It still detects the old high-dashboard regression.
 Set `VERIFICATION_DIR` to save rendered screenshots and result files.

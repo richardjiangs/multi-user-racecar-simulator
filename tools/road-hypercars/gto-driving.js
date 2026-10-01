@@ -1,0 +1,8 @@
+  function drawCabinFrame(w,h,pal){tcClassicPillars(w,h,'gto');const d=rhLayout(w,h).dashY;
+    rhLeather(`M0 ${d+10}Q${w*.47} ${d-9} ${w} ${d+17}V${d+153}H0Z`,[0,d-9,w,166],'#697278');rhMetal(`M0 ${d+150}H${w}V${h}H0Z`,[0,d+150,w,h-d-150]);drawCluster(w,h,d);drawWheel(w,h);}
+  function drawCluster(w,h,d){const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,d+44*s);ctx.scale(s,s);
+    tcDial(0,0,57,'GIRI × 100',100,state.rpm/100);tcDial(-107,-9,26,'OLIO',150,state.oilTempC);tcDial(-105,58,24,'ACQUA',150,state.waterTempC);tcDial(107,-9,25,'OLIO',150,state.oilTempC);tcDial(112,58,24,'km/h',300,nxSpeed());tcSwitch(-178,46,'IGNIZIONE',state.ignition);tcSwitch(198,39,'LUCI',state.lights);tcSwitch(250,39,'VENTOLA',state.coolingFans);rhKnob(300,39,12,'ARIA');
+    rhPath('M394-22H517V19H394Z','#050c11','#66777f',1);for(let i=0;i<3;i++){rhMetal(`M${402+i*42} 16v-22h21v22Z`,[402+i*42,-6,21,22]);ctx.save();ctx.translate(413+i*42,-6);ctx.scale(1,.47);rhCircle(0,0,14,'#0c1b24','#c5d4d7',3);ctx.restore();}
+    rhPath('M173 107L247 281M527 109L372 282',null,'#95a5a6',7);for(let i=0;i<9;i++)rhScrew(190+i*40,102);tcManual(303,192);ctx.restore();}
+  function drawWheel(w,h){const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,tcWheelPosition(w,h)+9*s);ctx.scale(s,s);ctx.rotate(state.steer*.9);tcThinWheel(122,true);
+    rhMetal('M-118-32L-26-15H26L118-32 122-8 29 13 17 116H-17L-29 13-122-8Z',[-122,-32,244,148]);[[-69,-15],[69,-15],[0,71]].forEach(([x,y])=>rhCircle(x,y,7,'#101d25'));rhCircle(0,0,31,'#16282f','#cbd6d2',3);rhCircle(0,0,22,'#d9c247','#b4bf9c',.8);rhText(0,9,'♞',32,'#18251d');rhScrew(-25,13);rhScrew(25,13);rhScrew(0,-28);ctx.restore();}

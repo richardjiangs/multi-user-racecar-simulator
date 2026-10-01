@@ -9,7 +9,7 @@ import {replaceBounded,bindings,live,css} from './refresh-road-hypercars-art.mjs
 
 export const NEXT_CARS={venom:['Hennessey Venom F5','VenomApp'],amgone:['Mercedes-AMG One','AmgOneApp'],aston:['Aston Martin Valkyrie','AstonApp'],mcf1:['McLaren F1 1993','McF1App']};
 const root=resolve(import.meta.dirname,'..'),art=resolve(import.meta.dirname,'road-hypercars');
-const mirrors=`  // NEXT_REAR_VIEWS:BEGIN
+export const mirrors=`  // NEXT_REAR_VIEWS:BEGIN
   let rearLayoutCache=null;
   function drawMirrors(w,h,pal){
     // Permanent independent views, anchored outside the forward road corridor.
@@ -67,23 +67,38 @@ for(const [key,[name]] of Object.entries(NEXT_CARS)){
  s=injectBlock(s,'    // ROAD_ART_BINDINGS:BEGIN','    // ROAD_ART_BINDINGS:END',bindings,'  function bindCockpit() {');
  // Add the same live drawing bindings without changing the first five cars.
  let extra=live.replace('velocityBtn:state.velocity,','velocityBtn:state.velocity,drsBtn:state.drs,fuelBtn:state.e85,hybridBtn:state.hybrid,raceAeroBtn:state.raceAero,').replace("put('rhWater'", "put('rhOil',Math.round(state.oilTempC)+'°C');put('rhWater'");
- s=injectBlock(s,'      // ROAD_ART_LIVE:BEGIN','      // ROAD_ART_LIVE:END',extra,'      num("cabRpmArt", state.rpm);');
+ if(key==='amgone')extra=extra.replace('      // ROAD_ART_LIVE:END',`      put('rhAmgDrive',Math.round(Math.abs(app.kmh(state.speedMps)))+' km/h · '+(state.gearMode==='G'?state.curGear:state.gearMode)+' · '+Math.round(state.rpm)+' rpm');
+      put('rhAmgTemps','WATER '+Math.round(state.waterTempC)+'°C · OIL '+Math.round(state.oilTempC)+'°C');
+      put('rhAmgBoost','BOOST '+(state.boostBar||0).toFixed(1)+' bar · DRS '+(state.drs?'OPEN':'CLOSED'));
+      // ROAD_ART_LIVE:END`);
+ s=injectBlock(s,'      // ROAD_ART_LIVE:BEGIN' ,'      // ROAD_ART_LIVE:END',extra,'      num("cabRpmArt", state.rpm);');
  const nextCss=css.replace('@media(max-width:600px),(max-width:1040px) and (max-height:520px){','@media(max-width:1040px){');
  if(s.includes('    /* ROAD_ART_CSS:BEGIN */'))s=replaceBounded(s,'    /* ROAD_ART_CSS:BEGIN */','    /* ROAD_ART_CSS:END */',nextCss.slice(nextCss.indexOf('    /* ROAD_ART_CSS:BEGIN */'),nextCss.indexOf('    /* ROAD_ART_CSS:END */')));
  else s=s.replace('  </style>',nextCss+'  </style>');
  if(key==='aston'&&!s.includes('.amr-pro .road-variant-art{'))s=s.replace('  </style>','    .amr-pro .road-variant-art{display:none}\n  </style>');
  if(key==='aston'||key==='mcf1'){
-  const config={style:'side',frame:'screen',tint:key==='aston'?'#829b8e':'#8d9799',flank:key==='aston'?'#315d58':'#899da8',label:'REAR',pods:[{eye:-.92,yaw:-.30},{eye:.92,yaw:.30}]};
+  const config={style:'side',frame:key==='mcf1'?'road-pod':'screen',tint:key==='aston'?'#829b8e':'#8d9799',flank:key==='aston'?'#315d58':'#899da8',label:key==='mcf1'?'':'REAR',pods:[{eye:-.92,yaw:-.30},{eye:.92,yaw:.30}]};
   s=s.replace(/  const MIRROR = [^\n]+;/,'  const MIRROR = '+JSON.stringify(config)+';');
   const start=s.includes('  // NEXT_REAR_VIEWS:BEGIN')?'  // NEXT_REAR_VIEWS:BEGIN':'  function drawMirrors(';
   s=replaceBounded(s,start,'  // Drawing primitives only;',mirrors);
  }
  if(key==='mcf1'){
+  s=s.replace('requested simulator rear-camera displays','period exterior glass mirrors');
+  s=s.replace('sweep("cabRevNeedle", rev);','sweep("cabRevNeedle", state.rpm / 8000);');
+  if(!s.includes('case "road-pod":'))s=s.replace('      case "chrome": {',`      case "road-pod": { // Sculpted painted production F1 mirror on an inboard stalk.
+        const inward=p.eye<0?1:-1,ax=mx+(inward>0?mw-13:13);
+        ctx.strokeStyle="#9da9af";ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(ax,my+mh-3);ctx.lineTo(ax+inward*9,my+mh+12);ctx.stroke();
+        const g=ctx.createLinearGradient(mx,my,mx,my+mh);g.addColorStop(0,"#e3e9e8");g.addColorStop(.48,"#778b95");g.addColorStop(1,"#bac5c9");
+        ctx.strokeStyle=g;ctx.lineWidth=5;ctx.beginPath();ctx.roundRect(mx-1,my-1,mw+2,mh+2,mh*.3);ctx.stroke();
+        ctx.strokeStyle="rgba(233,246,250,.22)";ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(mx+mw*.17,my+3);ctx.lineTo(mx+mw*.42,my+mh-3);ctx.stroke();break;
+      }
+      case "chrome": {`);
+  s=s.replace('MIRROR.frame === "chrome" ? mh * 0.4 : 6','MIRROR.frame === "chrome" ? mh * 0.4 : MIRROR.frame === "road-pod" ? mh*.3 : 6');
   // This individually drawn car is deliberately excluded from the general bodykit generator.
   const exteriorMarker='    app.el.exteriorArt.innerHTML = `',e=s.indexOf(exteriorMarker,s.indexOf('  function injectExterior()')),end=s.indexOf('`;',e+exteriorMarker.length);
   if(e<0||end<0)throw Error('Missing McLaren F1 exterior');
   s=s.slice(0,e)+exteriorMarker+'\n'+drawNextMcf1()+'\n    `;'+s.slice(end+2);
-  s=s.replace('McLaren F1 cockpit SVG — digital GR cluster, round GR wheel, F1 Command touchscreen','McLaren F1: central analog instruments, simple Nardi wheel and manual gear lever; requested simulator rear-camera displays');
+  s=s.replace('McLaren F1 cockpit SVG — digital GR cluster, round GR wheel, F1 Command touchscreen','McLaren F1: central analog instruments, simple Nardi wheel and manual gear lever; period exterior glass mirrors');
  }
  if(key==='amgone')s=s.replace('Engine cover raised — the F163CF on show.','Engine cover raised — the F1-derived V6 and hybrid hardware on show.');
  s=s.replace(/(<div class="tw-hub">)[^<]+/, '$1'+({venom:'F5',amgone:'AMG',aston:'AM',mcf1:'F1'}[key]));

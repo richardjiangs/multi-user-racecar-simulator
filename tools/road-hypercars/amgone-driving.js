@@ -8,16 +8,23 @@
     const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,d+38*s);ctx.scale(s,s);
     rhMetal('M-146-61H146V58H-146Z',[-146,-61,292,119]);rhScreen('M-143-58H143V55H-143Z');nxRev(-130,-42,260,38);
     rhPath('M-119 34L-65-13H65L119 34',null,'#b26372',1.3);rhPath('M-110 34L-58-6H58L110 34',null,'#325981',1.2);
-    rhText(0,17,nxGear(),38,'#f3f1e3');rhText(0,41,nxSpeed(),18,'#c9e7ed');rhText(-99,-9,'OIL TEMP',5,'#809bab');rhText(-99,5,Math.round(state.oilTempC)+'°C',9);rhText(97,-9,'ENGINE',5,'#809bab');rhText(97,5,Math.round(state.rpm),11);rhText(97,18,'rpm',5,'#809bab');rhText(-111,46,'AMG',7,'#a7bbbf');
-    rhScreen('M233-48L431-49 438 83 234 90Z');rhText(334,-26,'AMG ONE',12,'#b9d9dc');rhText(334,-7,'ENERGY FLOW',7,'#799fad');
-    rhPath('M305 9h51l10 37h-71Z','#294652','#84a1ae',.8);rhPath('M331 11v31M310 28h44',null,'#54b49d',2);rhText(334,70,'HYBRID',7,'#92cbbb');
+    rhText(0,-14,nxGear(),28,'#f3f1e3');rhText(0,8,nxSpeed(),16,'#c9e7ed');rhText(-99,-9,'OIL TEMP',5,'#809bab');rhText(-99,5,Math.round(state.oilTempC)+'°C',9);rhText(97,-9,'ENGINE',5,'#809bab');rhText(97,5,Math.round(state.rpm),11);rhText(97,18,'rpm',5,'#809bab');rhText(-111,46,'AMG',7,'#a7bbbf');
+    // Live vehicle page: these values come from the same state as the primary cluster.
+    rhScreen('M233-48L431-49 438 83 234 90Z');rhText(249,-28,'AMG · VEHICLE DATA',9,'#b9d9dc','left');
+    rhPath('M248-19H423',null,'#568985',.7);
+    rhText(250,-2,'SPEED',6,'#799fad','left');rhText(417,-2,nxSpeed()+' km/h',11,'#ecf4ed','right');
+    rhText(250,15,'BOOST',6,'#799fad','left');rhText(417,15,(state.boostBar||0).toFixed(1)+' bar',10,'#bddee0','right');
+    rhText(250,32,'WATER / OIL',6,'#799fad','left');rhText(417,32,Math.round(state.waterTempC)+' / '+Math.round(state.oilTempC)+'°C',9,'#bddee0','right');
+    rhText(250,50,'THROTTLE',6,'#799fad','left');rhPath('M316 44h103v5H316Z','#213945');rhPath('M316 44h'+(103*clamp(state.throttle,0,1))+'v5H316Z','#65c5b0');
+    rhText(250,64,'BRAKE',6,'#799fad','left');rhPath('M316 58h103v5H316Z','#213945');rhPath('M316 58h'+(103*clamp(state.brake,0,1))+'v5H316Z','#d97f69');
+    rhText(334,79,state.drs?'DRS OPEN':'DRS CLOSED',6,state.drs?'#95e6c4':'#91a9b1');
     nxVent(-341,49,99);nxVent(260,109,146);nxVent(518,49,94);
     rhCarbon('M224 139L295 133 370 324H230Z',[222,132,150,195],'#91a5ac');rhKnob(268,169,22,'START','#eab3ad');
     ['N','R','D'].forEach((v,i)=>{rhMetal(`M${240+i*24} 207h21v16h-21Z`,[240+i*24,207,21,16]);rhText(250+i*24,218,v,6,'#233844');});
     rhPath('M246 238h72M250 254h74',null,'#89999d',3);rhText(292,285,'AMG',14,'#b7cbce');ctx.restore();
   }
   function drawWheel(w,h){
-    const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,rhLayout(w,h).wheelY);ctx.scale(s,s);ctx.rotate(state.steer*.9);rhPaddles(-137,137);
+    const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,Math.max(h*.85,rhLayout(w,h).bottom+51*s));ctx.scale(s,s);ctx.rotate(state.steer*.9);rhPaddles(-137,137);
     rhRim('M-82-118H82Q122-116 128-68L126 45Q118 98 80 100H-80Q-118 98-126 45L-128-68Q-122-116-82-118Z','#343c3f','#60a59f');
     rhPath('M-70-119H70',null,rhTexture('carbon'),20);
     rhCarbon('M-117-51L-47-65H47L117-51 112 32 52 31 31 91H-31L-52 31-112 32Z',[-118,-66,236,159]);

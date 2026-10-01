@@ -1161,6 +1161,16 @@ For their driving view, preserve the SSC reference's low placement (dash at 70% 
 The same 1.0 approach now covers Venom F5, AMG ONE, Valkyrie and McLaren F1 (1993).
 See `docs/NEXT_HYPERCARS_ART.md`; regenerate with `tools/refresh-next-hypercars-art.mjs`
 and `tools/bodykit/apply.mjs`. Run `tests/next-hypercars-art-test.mjs`, the sightline
-test and standard suites. Valkyrie/F1 side cameras stay live without traffic;
+test and standard suites. Valkyrie camera views and period F1 reflective side mirrors stay live without traffic;
 their responsive placement is checked against actual DOM controls. Keep each
 car's own design, the Valkyrie's road/AMR Pro toggle and all existing performance/audio.
+
+
+The six-car touring/classic revision is documented in `docs/TOURING_CLASSICS_ART.md`:
+Speedtail, Huayra BC coupé, 2025 Corvette ZR1, 250 GTO, F40 and 917K. Regenerate their
+individual 1.0 artwork with `tools/refresh-touring-art.mjs` and `tools/bodykit/apply.mjs`.
+Only GTO/F40/917 audio changes; `tools/refresh-classics-audio.mjs` restores their
+commented-out harmonic connection and generates distinct voices. Run
+`tests/touring-art-test.mjs`, `tests/classics-audio-test.mjs`, the sightline test,
+embed, performance and browser suites. Keep all powertrain and steering input
+sections unchanged. Classic screen surrounds must not become modern carbon trim.

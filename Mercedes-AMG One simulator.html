@@ -2543,16 +2543,23 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,d+38*s);ctx.scale(s,s);
     rhMetal('M-146-61H146V58H-146Z',[-146,-61,292,119]);rhScreen('M-143-58H143V55H-143Z');nxRev(-130,-42,260,38);
     rhPath('M-119 34L-65-13H65L119 34',null,'#b26372',1.3);rhPath('M-110 34L-58-6H58L110 34',null,'#325981',1.2);
-    rhText(0,17,nxGear(),38,'#f3f1e3');rhText(0,41,nxSpeed(),18,'#c9e7ed');rhText(-99,-9,'OIL TEMP',5,'#809bab');rhText(-99,5,Math.round(state.oilTempC)+'°C',9);rhText(97,-9,'ENGINE',5,'#809bab');rhText(97,5,Math.round(state.rpm),11);rhText(97,18,'rpm',5,'#809bab');rhText(-111,46,'AMG',7,'#a7bbbf');
-    rhScreen('M233-48L431-49 438 83 234 90Z');rhText(334,-26,'AMG ONE',12,'#b9d9dc');rhText(334,-7,'ENERGY FLOW',7,'#799fad');
-    rhPath('M305 9h51l10 37h-71Z','#294652','#84a1ae',.8);rhPath('M331 11v31M310 28h44',null,'#54b49d',2);rhText(334,70,'HYBRID',7,'#92cbbb');
+    rhText(0,-14,nxGear(),28,'#f3f1e3');rhText(0,8,nxSpeed(),16,'#c9e7ed');rhText(-99,-9,'OIL TEMP',5,'#809bab');rhText(-99,5,Math.round(state.oilTempC)+'°C',9);rhText(97,-9,'ENGINE',5,'#809bab');rhText(97,5,Math.round(state.rpm),11);rhText(97,18,'rpm',5,'#809bab');rhText(-111,46,'AMG',7,'#a7bbbf');
+    // Live vehicle page: these values come from the same state as the primary cluster.
+    rhScreen('M233-48L431-49 438 83 234 90Z');rhText(249,-28,'AMG · VEHICLE DATA',9,'#b9d9dc','left');
+    rhPath('M248-19H423',null,'#568985',.7);
+    rhText(250,-2,'SPEED',6,'#799fad','left');rhText(417,-2,nxSpeed()+' km/h',11,'#ecf4ed','right');
+    rhText(250,15,'BOOST',6,'#799fad','left');rhText(417,15,(state.boostBar||0).toFixed(1)+' bar',10,'#bddee0','right');
+    rhText(250,32,'WATER / OIL',6,'#799fad','left');rhText(417,32,Math.round(state.waterTempC)+' / '+Math.round(state.oilTempC)+'°C',9,'#bddee0','right');
+    rhText(250,50,'THROTTLE',6,'#799fad','left');rhPath('M316 44h103v5H316Z','#213945');rhPath('M316 44h'+(103*clamp(state.throttle,0,1))+'v5H316Z','#65c5b0');
+    rhText(250,64,'BRAKE',6,'#799fad','left');rhPath('M316 58h103v5H316Z','#213945');rhPath('M316 58h'+(103*clamp(state.brake,0,1))+'v5H316Z','#d97f69');
+    rhText(334,79,state.drs?'DRS OPEN':'DRS CLOSED',6,state.drs?'#95e6c4':'#91a9b1');
     nxVent(-341,49,99);nxVent(260,109,146);nxVent(518,49,94);
     rhCarbon('M224 139L295 133 370 324H230Z',[222,132,150,195],'#91a5ac');rhKnob(268,169,22,'START','#eab3ad');
     ['N','R','D'].forEach((v,i)=>{rhMetal(`M${240+i*24} 207h21v16h-21Z`,[240+i*24,207,21,16]);rhText(250+i*24,218,v,6,'#233844');});
     rhPath('M246 238h72M250 254h74',null,'#89999d',3);rhText(292,285,'AMG',14,'#b7cbce');ctx.restore();
   }
   function drawWheel(w,h){
-    const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,rhLayout(w,h).wheelY);ctx.scale(s,s);ctx.rotate(state.steer*.9);rhPaddles(-137,137);
+    const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,Math.max(h*.85,rhLayout(w,h).bottom+51*s));ctx.scale(s,s);ctx.rotate(state.steer*.9);rhPaddles(-137,137);
     rhRim('M-82-118H82Q122-116 128-68L126 45Q118 98 80 100H-80Q-118 98-126 45L-128-68Q-122-116-82-118Z','#343c3f','#60a59f');
     rhPath('M-70-119H70',null,rhTexture('carbon'),20);
     rhCarbon('M-117-51L-47-65H47L117-51 112 32 52 31 31 91H-31L-52 31-112 32Z',[-118,-66,236,159]);
@@ -2763,9 +2770,11 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
  <text x="213" y="179" font-size="7" fill="#9cafb7" >OIL</text><text x="213" y="191" font-size="9" fill="#b6c4c9" id="rhOil">88°C</text><text x="389" y="179" font-size="7" fill="#9cafb7" text-anchor="end">RPM</text><text x="389" y="193" font-size="11" fill="#b6c4c9" id="cabRpmArt" text-anchor="end">0</text>
  <path d="M204 231h192" stroke="#448ecb"/><path d="M293 116h29" stroke="#78c8bf" stroke-width="3"/>
  <path d="M503 159L706 151 719 278 504 286Z" fill="url(#cabrhScreen)" stroke="url(#cabrhMetal)" stroke-width="3"/>
- <text x="611" y="181" font-size="13" fill="#cfdedb" text-anchor="middle">AMG ONE</text><text x="610" y="205" font-size="8" fill="#8499a3" text-anchor="middle">HYBRID SYSTEM</text>
- <path d="M577 217h26l8 17h38M600 217h26v-5h22" fill="none" stroke="#52bcb5" stroke-width="2"/>
- <g role="button" tabindex="0" data-control="dataBtn" aria-label="ENERGY" ><title>ENERGY</title><rect x="522" y="249" width="82" height="22" rx="4" fill="#13191e" stroke="#67747b"/><text x="563" y="262.45" font-size="7" fill="#8bd7cc" text-anchor="middle">ENERGY</text></g><g role="button" tabindex="0" data-control="coolBtn" aria-label="A/C" ><title>A/C</title><rect x="612" y="245" width="80" height="22" rx="4" fill="#13191e" stroke="#67747b"/><text x="652" y="258.8" font-size="8" fill="#cbdde0" text-anchor="middle">A/C</text></g>
+ <text x="611" y="181" font-size="13" fill="#cfdedb" text-anchor="middle">AMG ONE</text><text x="610" y="198" font-size="7" fill="#8499a3" text-anchor="middle">VEHICLE DATA</text>
+ <text x="520" y="216" font-size="10" fill="#d9efe9" id="rhAmgDrive">0 km/h · N · 0 rpm</text>
+ <text x="520" y="230" font-size="8" fill="#a2c3c7" id="rhAmgTemps">WATER 88°C · OIL 88°C</text>
+ <text x="520" y="241" font-size="7" fill="#80bfb5" id="rhAmgBoost">BOOST 0.0 bar · DRS CLOSED</text>
+ <g role="button" tabindex="0" data-control="dataBtn" aria-label="DATA" ><title>DATA</title><rect x="522" y="249" width="82" height="22" rx="4" fill="#13191e" stroke="#67747b"/><text x="563" y="262.45" font-size="7" fill="#8bd7cc" text-anchor="middle">DATA</text></g><g role="button" tabindex="0" data-control="coolBtn" aria-label="A/C" ><title>A/C</title><rect x="612" y="245" width="80" height="22" rx="4" fill="#13191e" stroke="#67747b"/><text x="652" y="258.8" font-size="8" fill="#cbdde0" text-anchor="middle">A/C</text></g>
  <rect x="86" y="208" width="67" height="19" rx="7" fill="#03090d" stroke="#737b7f"/><path d="M93 213h53" fill="none" stroke="#515d65" stroke-width="1.4"/><path d="M93 217h53" fill="none" stroke="#515d65" stroke-width="1.4"/><path d="M93 221h53" fill="none" stroke="#515d65" stroke-width="1.4"/><rect x="538" y="298" width="139" height="19" rx="7" fill="#03090d" stroke="#737b7f"/><path d="M545 303h125" fill="none" stroke="#515d65" stroke-width="1.4"/><path d="M545 307h125" fill="none" stroke="#515d65" stroke-width="1.4"/><path d="M545 311h125" fill="none" stroke="#515d65" stroke-width="1.4"/><rect x="865" y="214" width="69" height="19" rx="7" fill="#03090d" stroke="#737b7f"/><path d="M872 219h55" fill="none" stroke="#515d65" stroke-width="1.4"/><path d="M872 223h55" fill="none" stroke="#515d65" stroke-width="1.4"/><path d="M872 227h55" fill="none" stroke="#515d65" stroke-width="1.4"/>
  <path d="M484 324L576 317 678 520H492Z" fill="url(#cabrhCarbon)" stroke="url(#cabrhMetal)" stroke-width="3"/>
  <g role="button" tabindex="0" data-control="startSwitchBtn" aria-label="START" ><title>START</title><circle cx="535" cy="356" r="23" fill="url(#cabrhMetal)" stroke="#11181d" stroke-width="3"/><circle cx="535" cy="356" r="18" fill="#14191e"/><text x="535" y="359" font-size="8" fill="#e5ecef" text-anchor="middle">START</text><path d="M535 334v5" stroke="#f0e5d2" stroke-width="2"/></g>
@@ -3132,6 +3141,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       el.engineBay.classList.toggle('is-open',!!state.engineCoverOpen);
       el.engineBay.style.setProperty('--rh-fan',((state.coolingFans?state.time:0)*420%360)+'deg');
       document.getElementById('coverBtn').textContent=state.engineCoverOpen?'Close Cover':'Open Cover';
+      put('rhAmgDrive',Math.round(Math.abs(app.kmh(state.speedMps)))+' km/h · '+(state.gearMode==='G'?state.curGear:state.gearMode)+' · '+Math.round(state.rpm)+' rpm');
+      put('rhAmgTemps','WATER '+Math.round(state.waterTempC)+'°C · OIL '+Math.round(state.oilTempC)+'°C');
+      put('rhAmgBoost','BOOST '+(state.boostBar||0).toFixed(1)+' bar · DRS '+(state.drs?'OPEN':'CLOSED'));
       // ROAD_ART_LIVE:END
 
       num("cabDownforceArt", (state.downforceN || 0) / 9.81);

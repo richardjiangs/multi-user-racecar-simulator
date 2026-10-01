@@ -58,9 +58,11 @@ export function amgOneCabin(){return startCabin('Mercedes-AMG ONE • twin displ
  ${t(213,179,'OIL',7,'#9cafb7')}${t(213,191,'88°C',9,'#b6c4c9','id="rhOil"')}${t(389,179,'RPM',7,'#9cafb7','text-anchor="end"')}${t(389,193,'0',11,'#b6c4c9','id="cabRpmArt" text-anchor="end"')}
  <path d="M204 231h192" stroke="#448ecb"/><path d="M293 116h29" stroke="#78c8bf" stroke-width="3"/>
  <path d="M503 159L706 151 719 278 504 286Z" fill="url(#rhScreen)" stroke="url(#rhMetal)" stroke-width="3"/>
- ${t(611,181,'AMG ONE',13,'#cfdedb','text-anchor="middle"')}${t(610,205,'HYBRID SYSTEM',8,'#8499a3','text-anchor="middle"')}
- <path d="M577 217h26l8 17h38M600 217h26v-5h22" fill="none" stroke="#52bcb5" stroke-width="2"/>
- ${b(522,249,82,22,'ENERGY','dataBtn','#8bd7cc',7)}${b(612,245,80,22,'A/C','coolBtn','#cbdde0',8)}
+ ${t(611,181,'AMG ONE',13,'#cfdedb','text-anchor="middle"')}${t(610,198,'VEHICLE DATA',7,'#8499a3','text-anchor="middle"')}
+ ${t(520,216,'0 km/h · N · 0 rpm',10,'#d9efe9','id="rhAmgDrive"')}
+ ${t(520,230,'WATER 88°C · OIL 88°C',8,'#a2c3c7','id="rhAmgTemps"')}
+ ${t(520,241,'BOOST 0.0 bar · DRS CLOSED',7,'#80bfb5','id="rhAmgBoost"')}
+ ${b(522,249,82,22,'DATA','dataBtn','#8bd7cc',7)}${b(612,245,80,22,'A/C','coolBtn','#cbdde0',8)}
  ${ribVent(86,208,67)}${ribVent(538,298,139)}${ribVent(865,214,69)}
  <path d="M484 324L576 317 678 520H492Z" fill="url(#rhCarbon)" stroke="url(#rhMetal)" stroke-width="3"/>
  ${dial(535,356,23,'START','startSwitchBtn')}
@@ -126,6 +128,9 @@ export function valkyrieCabin(){return startCabin('Aston Martin Valkyrie • car
  </g>${t(706,487,'ASTON MARTIN',10,'#849a91','letter-spacing="2"')}
  `+endCabin;}
 
+// Period exterior mirror housings: the canvases render reflected scenery, not electronic monitors.
+export const glassMirror=(x,y,w,h,side)=>`<g class="rh-glass-mirror"><path d="M${x+(side==='Left'?w-10:10)} ${y+h-4}l${side==='Left'?14:-14} 18" stroke="url(#rhMetal)" stroke-width="8"/><rect x="${x-5}" y="${y-5}" width="${w+10}" height="${h+10}" rx="${h*.4}" fill="#89969d" stroke="#d2dade" stroke-width="2"/><foreignObject x="${x}" y="${y}" width="${w}" height="${h}"><canvas xmlns="http://www.w3.org/1999/xhtml" id="rhRear${side}" width="300" height="160" aria-label="${side} exterior mirror reflection" style="width:100%;height:100%;border-radius:20%;background:#142d39"></canvas></foreignObject><path d="M${x+10} ${y+4}l${w*.3} ${h-8}" stroke="#eef7fa" stroke-opacity=".16" stroke-width="6"/></g>`;
+
 export function mcf1Cabin(){return startCabin('McLaren F1 • central driving position, white analogue instruments and three-seat cabin')+`
  <path d="M32 166Q180 118 345 160Q500 67 655 160Q820 118 967 166L978 292 678 332 626 449H374L322 332 23 292Z" fill="url(#rhLeather)" stroke="#776f65"/>
  <path d="M39 230Q203 185 337 239L357 284Q185 229 41 277ZM663 239Q797 185 961 230L959 277Q815 229 643 284Z" fill="url(#rhTan)" stroke="#c4a383"/>
@@ -138,7 +143,7 @@ export function mcf1Cabin(){return startCabin('McLaren F1 • central driving po
  ${stitch('M369 148Q400 109 500 109Q600 109 631 148')}
  <circle cx="414" cy="201" r="40" fill="#deded3" stroke="#0c141a" stroke-width="4"/>
  ${[[-16,-3,'OIL'],[16,-3,'WATER'],[0,19,'FUEL']].map(([x,y,l])=>`<path d="M${414+x-12} ${201+y}a12 12 0 0 1 24 0" fill="none" stroke="#283d47" stroke-width=".8"/>${t(414+x,201+y+8,l,5,'#263841','text-anchor="middle"')}<path d="M${414+x} ${201+y}l-6-7" stroke="#c26b3e"/>`).join('')}
- <circle cx="500" cy="185" r="53" fill="#e3e3d9" stroke="#101a20" stroke-width="4"/>${ticks(500,185,47,8,32,-130,130,'#27343b')}${needle('cabRpmNeedle',500,185,39,8000)}${t(500,210,'rpm × 1000',6,'#293840','text-anchor="middle"')}${t(500,224,'F1',13,'#303d42','text-anchor="middle" font-style="italic"')}
+ <circle cx="500" cy="185" r="53" fill="#e3e3d9" stroke="#101a20" stroke-width="4"/>${ticks(500,185,47,8,32,-130,130,'#27343b')}${needle('cabRevNeedle',500,185,39,8000)}${t(500,210,'rpm × 1000',6,'#293840','text-anchor="middle"')}${t(500,224,'F1',13,'#303d42','text-anchor="middle" font-style="italic"')}
  <circle cx="586" cy="201" r="40" fill="#deded3" stroke="#0c141a" stroke-width="4"/>${ticks(586,201,34,400,32,-130,130,'#2b3b43')}${needle('cabSpeedNeedle',586,201,29,400)}${t(586,224,'km/h',6,'#263841','text-anchor="middle"')}
  <rect x="385" y="249" width="79" height="20" rx="2" fill="#a8b76d" stroke="#222e26"/><rect x="538" y="249" width="77" height="20" rx="2" fill="#a8b76d" stroke="#222e26"/>
  ${t(391,262,'0',10,'#23361b','id="cabSpeedArt"')}${t(444,263,'km/h',6,'#314429')}${t(543,263,'0',9,'#2c3e22','id="cabRpmArt"')}${t(601,263,'N',9,'#2c3e22','id="cabGearArt"')}
@@ -158,7 +163,7 @@ export function mcf1Cabin(){return startCabin('McLaren F1 • central driving po
  ${t(0,25,'V12',11,'#abbabe','text-anchor="middle"')}${bolt(-33,0)}${bolt(33,0)}${t(0,89,'NARDI',5,'#75848b','text-anchor="middle"')}
  ${c('hornBtn','Horn','<circle r="39" fill="transparent"/>')}
  </g>${b(449,480,101,23,'XP5 RECORD RUN','raceAeroBtn','#d7c48f',8)}
- ${camera(95,98,115,61,'Left')}${camera(790,98,115,61,'Right')}
+ ${glassMirror(94,112,108,52,'Left')}${glassMirror(798,112,108,52,'Right')}
  `+endCabin;}
 
 export const NEXT_CABINS={venom:venomCabin,amgone:amgOneCabin,aston:valkyrieCabin,mcf1:mcf1Cabin};

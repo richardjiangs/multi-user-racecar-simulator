@@ -1,8 +1,10 @@
   function drawCabinFrame(w,h,pal){
     nxPillars(w,h,.10);const d=rhLayout(w,h).dashY;
-    rhCarbon(`M0 ${d+17}Q${w*.23} ${d-1} ${w*.47} ${d+9}Q${w*.78} ${d-11} ${w} ${d+21}V${h}H0Z`,[0,d-11,w,h-d+11]);
-    rhLeather(`M${w*.12} ${d+17}Q${w*.32} ${d-6} ${w*.43} ${d+13}L${w*.43} ${d+36}Q${w*.31} ${d+18} ${w*.12} ${d+40}Z`,[w*.12,d-6,w*.32,48]);
-    rhStitch(`M${w*.12} ${d+22}Q${w*.32} ${d-1} ${w*.43} ${d+18}`,'#94957c');
+    // Sparse structural tub and separate cowl wings: no conventional dashboard slab or binnacle.
+    rhPath(`M0 ${d+75}Q${w*.31} ${d+138} ${w*.48} ${h}H0ZM${w} ${d+75}Q${w*.72} ${d+127} ${w*.6} ${h}H${w}Z`,'#040a10');
+    rhCarbon(`M0 ${d+29}Q${w*.18} ${d-7} ${w*.36} ${d+21}L${w*.39} ${d+71}Q${w*.19} ${d+21} 0 ${d+82}ZM${w*.61} ${d+39}Q${w*.82} ${d-12} ${w} ${d+30}V${d+93}Q${w*.80} ${d+43} ${w*.62} ${d+76}Z`,[0,d-12,w,115]);
+    rhPath(`M${w*.34} ${d+38}L${w*.43} ${h}M${w*.68} ${d+65}L${w*.62} ${h}`,null,'#253840',7);
+    rhStitch(`M0 ${d+38}Q${w*.17} ${d+7} ${w*.35} ${d+32}M${w*.65} ${d+44}Q${w*.84} ${d+5} ${w} ${d+39}`,'#879083');
     drawCluster(w,h,d);drawWheel(w,h);
   }
   function drawCluster(w,h,d){

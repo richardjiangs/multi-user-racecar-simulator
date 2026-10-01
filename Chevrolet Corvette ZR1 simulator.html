@@ -343,6 +343,36 @@
       .mode-panel { left:8px; right:8px; bottom:8px; }
       .bottombar { padding:0 8px 8px; }
     }
+    /* ROAD_ART_CSS:BEGIN */
+    #cabinArt {background:#091219;}
+    #cabinArt svg {isolation:isolate;}
+    #cabinArt .rhCabinGlow {opacity:0;transition:opacity .35s;pointer-events:none;}
+    #cabinArt.rh-cabin-lit .rhCabinGlow {opacity:.1;}
+    #engineBay {height:auto;aspect-ratio:900/520;background:#071019;}
+    #engineBay>svg {display:block;width:100%;height:100%;}
+    #engineBay .cover {inset:auto 7px 7px auto;width:auto;height:auto;padding:4px 7px;font:9px Arial;letter-spacing:1px;border:1px solid #465965;border-radius:3px;background:#08131c;transform:none;pointer-events:none;}
+    #cabinArt [role=button]:focus-visible {outline:2px solid #92d8ef;outline-offset:2px;}
+    body:not(.view-drive) .mobile-pad,body:not(.view-drive) .touch-wheel{display:none;}
+    @media(max-width:1040px){
+      .topbar{padding:6px;gap:5px;}
+      .brand{padding:7px 10px;min-height:0;}.brand p{display:none;}.brand .mark{height:28px;width:28px;margin-right:8px;}.brand h1{font-size:14px;line-height:28px;}
+      .tabs,.quick{padding:5px;gap:4px;flex-wrap:nowrap;overflow-x:auto;}.tabs button{flex:1 0 auto;min-width:52px;font-size:10px;padding:7px 6px;}.quick button{flex:1 0 auto;min-width:44px;font-size:10px;padding:7px 6px;}
+      .bottombar{gap:4px;padding:0 6px 6px;}.console,.gearbox,.telepad{padding:5px;gap:5px;}
+      .console{grid-template-columns:repeat(5,minmax(0,1fr));}.console button{padding:7px 3px;font-size:10px;min-height:30px;}
+      .gearbox .cluster{grid-template-columns:repeat(2,34px);gap:3px;}.gearbox .cluster button{min-height:26px;padding:3px;}
+      .pedal{min-height:45px;padding:4px 6px;gap:3px;}.gforce{height:34px;}.telepad .small{font-size:9px;}.tele-actions{grid-template-columns:repeat(3,36px);gap:3px;}.tele-actions button{padding:5px 2px;font-size:10px;}
+      .mobile-pad{bottom:calc(var(--rh-footer-height,215px) + 14px);left:7px;}.mobile-pad button{min-width:48px;min-height:44px;padding:8px;}
+      .touch-wheel{bottom:calc(var(--rh-footer-height,215px) + 14px);right:7px;width:94px;height:94px;}
+      .mode-panel{max-height:min(66vh,calc(100dvh - var(--rh-footer-height,215px) - var(--rh-header-height,150px) - 20px));padding:10px;}
+    }
+    @media(max-width:1040px) and (max-height:520px){
+      .topbar{grid-template-columns:1fr 1fr;}.brand{display:none;}.bottombar{grid-template-columns:1fr 1fr 1fr;}.console{grid-template-columns:repeat(3,1fr);}.pedals{grid-template-columns:1fr;}.pedal{min-height:24px;padding:2px;}.pedal i{display:none;}.touch-wheel{width:72px;height:72px;}
+    }
+    @media(max-width:1040px){
+      .hud{top:8px;left:8px;width:110px;padding:7px;}.hud .speed{font-size:30px;}.hud .unit{font-size:8px;margin:3px 0 0;}.hud .gear-tile{width:29px;height:29px;font-size:18px;}.hud .speed-row{gap:5px;}
+      .hud .meter-grid,.hud .aero-row,.hud .warning{display:none;}
+    }
+    /* ROAD_ART_CSS:END */
   </style>
 </head>
 <body class="view-drive">
@@ -486,15 +516,35 @@
           <span class="small" id="engineStatus">5.5L flat-plane twin-turbo V8 (LT7) · 1,064 hp @ 7,000, 1,123 Nm @ 6,000 · 8,000 rpm · 8-speed DCT · 0–100 in 2.4 s · 1,665 kg</span>
         </div>
         <div class="engine-bay" id="engineBay">
-          <div class="heat-haze"></div>
-          <div class="turbo left" id="turboL"></div>
-          <div class="turbo right" id="turboR"></div>
-          <div style="position:absolute;left:15%;right:15%;top:16%;height:150px;pointer-events:none"><svg viewBox="0 0 300 128" preserveAspectRatio="xMidYMid meet" style="width:100%;height:100%"><defs>
-  <linearGradient id="ebz" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4048"/><stop offset="0.5" stop-color="#1a1e24"/><stop offset="1" stop-color="#0c0f14"/></linearGradient>
-  <radialGradient id="ecz" cx="42%" cy="36%" r="62%"><stop offset="0" stop-color="#5a636c"/><stop offset="1" stop-color="#14171d"/></radialGradient></defs><rect x="56" y="6" width="74" height="112" rx="12" fill="url(#ebz)" stroke="#f2c200" stroke-opacity="0.45"/><rect x="170" y="6" width="74" height="112" rx="12" fill="url(#ebz)" stroke="#f2c200" stroke-opacity="0.45"/><rect x="130" y="12" width="40" height="100" rx="7" fill="url(#ebz)" stroke="rgba(150,160,170,0.4)"/><rect x="137" y="14" width="26" height="8" rx="2" fill="#0a0c10" stroke="#f2c200" stroke-opacity="0.35"/><rect x="137" y="46" width="26" height="8" rx="2" fill="#0a0c10" stroke="#f2c200" stroke-opacity="0.35"/><rect x="137" y="78" width="26" height="8" rx="2" fill="#0a0c10" stroke="#f2c200" stroke-opacity="0.35"/><rect x="137" y="110" width="26" height="8" rx="2" fill="#0a0c10" stroke="#f2c200" stroke-opacity="0.35"/><line x1="132" y1="20" x2="112" y2="20" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="92" cy="20" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="92" cy="20" r="4.5" fill="#f2c200" opacity="0.7"/><line x1="168" y1="20" x2="188" y2="20" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="208" cy="20" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="208" cy="20" r="4.5" fill="#f2c200" opacity="0.7"/><line x1="132" y1="48" x2="112" y2="48" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="92" cy="48" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="92" cy="48" r="4.5" fill="#f2c200" opacity="0.7"/><line x1="168" y1="48" x2="188" y2="48" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="208" cy="48" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="208" cy="48" r="4.5" fill="#f2c200" opacity="0.7"/><line x1="132" y1="76" x2="112" y2="76" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="92" cy="76" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="92" cy="76" r="4.5" fill="#f2c200" opacity="0.7"/><line x1="168" y1="76" x2="188" y2="76" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="208" cy="76" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="208" cy="76" r="4.5" fill="#f2c200" opacity="0.7"/><line x1="132" y1="104" x2="112" y2="104" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="92" cy="104" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="92" cy="104" r="4.5" fill="#f2c200" opacity="0.7"/><line x1="168" y1="104" x2="188" y2="104" stroke="#f2c200" stroke-width="2.4" opacity="0.7"/><circle cx="208" cy="104" r="10" fill="url(#ecz)" stroke="rgba(190,200,210,0.5)"/><circle cx="208" cy="104" r="4.5" fill="#f2c200" opacity="0.7"/><text x="150" y="124" text-anchor="middle" font-family="ui-sans-serif" font-size="10" font-weight="700" fill="#f2c200" letter-spacing="1">5.5 FLAT-PLANE V8</text></svg></div>
-          <div class="emotor" id="airTankArt">5.5L LT7 · FLAT-PLANE · TWIN-TURBO</div>
-          <div class="bay-exhaust"><i></i><i></i><i></i><i></i></div>
-          <div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
+<svg viewBox="0 0 900 520" role="img" aria-label="2025 Corvette ZR1 • Edge Blue LT7 intake, black charge ducts, carbon panels and split-window cover" xmlns="http://www.w3.org/2000/svg"><title>2025 Corvette ZR1 • Edge Blue LT7 intake, black charge ducts, carbon panels and split-window cover</title><defs>
+ <linearGradient id="engrhLeather" x2="0.15" y2="1"><stop stop-color="#424244"/><stop offset=".32" stop-color="#23262a"/><stop offset="1" stop-color="#0b0d10"/></linearGradient>
+ <linearGradient id="engrhTan" x2=".25" y2="1"><stop stop-color="#ba7950"/><stop offset=".5" stop-color="#8e4d2b"/><stop offset="1" stop-color="#4b281c"/></linearGradient>
+ <linearGradient id="engrhMetal" x2=".3" y2="1"><stop stop-color="#f0f0e9"/><stop offset=".25" stop-color="#899198"/><stop offset=".5" stop-color="#d6dce0"/><stop offset=".8" stop-color="#777e84"/><stop offset="1" stop-color="#c2c7ca"/></linearGradient>
+ <linearGradient id="engrhScreen" x2="0" y2="1"><stop stop-color="#14222a"/><stop offset="1" stop-color="#020507"/></linearGradient>
+ <linearGradient id="engrhGlass" x2=".3" y2="1"><stop stop-color="#79939a" stop-opacity=".6"/><stop offset=".5" stop-color="#233840" stop-opacity=".7"/><stop offset="1" stop-color="#0a1219"/></linearGradient>
+ <radialGradient id="engrhRim"><stop offset=".5" stop-color="#15181c"/><stop offset=".83" stop-color="#383a3c"/><stop offset="1" stop-color="#090b0e"/></radialGradient>
+ <pattern id="engrhCarbon" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="8" height="8" fill="#151b20"/><path d="M0 0h4v4H0zM4 4h4v4H4z" fill="#20272d"/><path d="M1 0v4M5 4v4" stroke="#30383e" stroke-width=".5"/></pattern>
+ <pattern id="engrhMesh" width="7" height="6" patternUnits="userSpaceOnUse"><rect width="7" height="6" fill="#05080a"/><path d="M0 2L3.5 0 7 2v2L3.5 6 0 4Z" stroke="#485057" stroke-width=".7" fill="none"/></pattern>
+ <pattern id="engrhPerforation" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#767e83"/><circle cx="4.5" cy="4.5" r="2.4" fill="#080b0e"/></pattern>
+ <pattern id="engrhFoil" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#9d9b8b"/><path d="M0 0l5 5M-2 3l4-4M3 7l4-4" stroke="#d8d6c3" stroke-width="1"/></pattern>
+</defs><style>text{font-family:Arial,sans-serif}.rhFan{transform:rotate(var(--rh-fan,0deg))}.rhHatch{transition:opacity .5s,transform .6s;transform-origin:450px 30px}.is-open .rhHatch{opacity:0;transform:translateY(-500px);pointer-events:none}</style><rect width="900" height="520" fill="#071019"/><path d="M132 24Q450-4 768 24L842 410 749 498H153L59 410Z" fill="#c4a82a" stroke="#79838a" stroke-width="2"/><path d="M177 54H723L785 390 720 464H180L115 390Z" fill="#050b10" stroke="#343e48" stroke-width="10"/><text x="450" y="33" font-size="10" fill="#bbc5cb" text-anchor="middle" letter-spacing="2">FRONT / CABIN ↑</text>
+ <path d="M197 59L325 82 290 188 186 235 139 359 168 447H238L296 348 301 243ZM703 59L575 82 610 188 714 235 761 359 732 447H662L604 348 599 243Z" fill="url(#engrhCarbon)" stroke="#70858d" stroke-width="2"/>
+ <circle cx="245" cy="105" r="17" fill="#14232c" stroke="#80999f" stroke-width="4"/><text x="245" y="108" font-size="6" fill="#d6c772" text-anchor="middle">COOL</text><circle cx="687" cy="370" r="17" fill="#14232c" stroke="#80999f" stroke-width="4"/><text x="687" y="373" font-size="6" fill="#d6c772" text-anchor="middle">OIL</text>
+ <path d="M315 168L365 155 377 340 303 361 277 279ZM535 155L585 168 623 279 597 361 523 340Z" fill="url(#engrhMetal)" stroke="#8b9e9f"/>
+ <path d="M293 234Q248 239 233 329" fill="none" stroke="#080c10" stroke-width="43" stroke-linecap="round"/><path d="M293 234Q248 239 233 329" fill="none" stroke="#25323a" stroke-width="38" stroke-linecap="round"/><path d="M293 234Q248 239 233 329" fill="none" stroke="#e0e3d9" stroke-opacity=".23" stroke-width="5.7"/><path d="M607 234Q652 239 667 329" fill="none" stroke="#080c10" stroke-width="43" stroke-linecap="round"/><path d="M607 234Q652 239 667 329" fill="none" stroke="#25323a" stroke-width="38" stroke-linecap="round"/><path d="M607 234Q652 239 667 329" fill="none" stroke="#e0e3d9" stroke-opacity=".23" stroke-width="5.7"/>
+ <path d="M250 270h35M250 275h35" fill="none" stroke="#becbd0" stroke-width="2"/><circle cx="275.55" cy="272" r="2" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M274.55 272h2" stroke="#293138"/><path d="M615 270h35M615 275h35" fill="none" stroke="#becbd0" stroke-width="2"/><circle cx="640.55" cy="272" r="2" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M639.55 272h2" stroke="#293138"/>
+ <path d="M365 115Q450 82 535 115L575 284 537 350H363L325 284Z" fill="#315a79" stroke="#668ca2" stroke-width="2"/>
+ <path d="M365 116L420 104 418 333 365 345 340 282ZM480 104L535 116 560 282 535 345 482 333Z" fill="#416a88" stroke="#5f8ca6"/>
+ <path d="M421 100H479L488 339H412Z" fill="url(#engrhCarbon)" stroke="url(#engrhMetal)" stroke-width="2"/>
+ <circle cx="432" cy="129" r="5" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M429.5 129h5" stroke="#293138"/><circle cx="466" cy="129" r="5" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M463.5 129h5" stroke="#293138"/><circle cx="432" cy="175" r="5" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M429.5 175h5" stroke="#293138"/><circle cx="466" cy="175" r="5" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M463.5 175h5" stroke="#293138"/><circle cx="432" cy="221" r="5" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M429.5 221h5" stroke="#293138"/><circle cx="466" cy="221" r="5" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M463.5 221h5" stroke="#293138"/>
+ <path d="M427 257l19 9 4 16 4-16 19-9-8 20-15 13-15-13Z" fill="#a74135" stroke="#c8d3ce"/>
+ <rect x="422" y="303" width="56" height="23" fill="#6f868f" stroke="#c8d2ca"/><text x="450" y="318" font-size="7" fill="#121f26" text-anchor="middle">LT7 · ZR1</text>
+ <path d="M320 381H580L616 433 540 458H360L284 433Z" fill="url(#engrhFoil)" stroke="#899c9d"/>
+ <path d="M303 340L340 414" fill="none" stroke="#080c10" stroke-width="31" stroke-linecap="round"/><path d="M303 340L340 414" fill="none" stroke="#908f7f" stroke-width="26" stroke-linecap="round"/><path d="M303 340L340 414" fill="none" stroke="#e0e3d9" stroke-opacity=".23" stroke-width="3.9"/><path d="M597 340L560 414" fill="none" stroke="#080c10" stroke-width="31" stroke-linecap="round"/><path d="M597 340L560 414" fill="none" stroke="#908f7f" stroke-width="26" stroke-linecap="round"/><path d="M597 340L560 414" fill="none" stroke="#e0e3d9" stroke-opacity=".23" stroke-width="3.9"/>
+ <path d="M223 141L677 141" fill="none" stroke="#080c10" stroke-width="13" stroke-linecap="round"/><path d="M223 141L677 141" fill="none" stroke="#283c47" stroke-width="8" stroke-linecap="round"/><path d="M223 141L677 141" fill="none" stroke="#e0e3d9" stroke-opacity=".23" stroke-width="1.2"/><path d="M214 369L355 409" fill="none" stroke="#080c10" stroke-width="14" stroke-linecap="round"/><path d="M214 369L355 409" fill="none" stroke="#2c444f" stroke-width="9" stroke-linecap="round"/><path d="M214 369L355 409" fill="none" stroke="#e0e3d9" stroke-opacity=".23" stroke-width="1.3499999999999999"/><path d="M686 369L545 409" fill="none" stroke="#080c10" stroke-width="14" stroke-linecap="round"/><path d="M686 369L545 409" fill="none" stroke="#2c444f" stroke-width="9" stroke-linecap="round"/><path d="M686 369L545 409" fill="none" stroke="#e0e3d9" stroke-opacity=".23" stroke-width="1.3499999999999999"/>
+ <circle cx="206" cy="73" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M204.5 73h3" stroke="#293138"/><circle cx="694" cy="73" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M692.5 73h3" stroke="#293138"/><circle cx="370" cy="127" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M368.5 127h3" stroke="#293138"/><circle cx="530" cy="127" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M528.5 127h3" stroke="#293138"/><circle cx="351" cy="272" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M349.5 272h3" stroke="#293138"/><circle cx="549" cy="272" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M547.5 272h3" stroke="#293138"/><circle cx="217" cy="369" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M215.5 369h3" stroke="#293138"/><circle cx="683" cy="369" r="3" fill="url(#engrhMetal)" stroke="#10151a"/><path d="M681.5 369h3" stroke="#293138"/>
+ <text x="450" y="493" font-size="10" fill="#b8ccd2" text-anchor="middle">5.5 LT7 TWIN-TURBO V8 · EDGE BLUE INTAKE</text>
+ <g class="rhHatch"><path d="M180 45L342 35H558L720 45 790 390 701 445H199L110 390Z" fill="#d7b32b" stroke="#f6dc83" stroke-width="2"/><path d="M294 69L428 48 420 389 300 405 254 347ZM472 48L606 69 646 347 600 405 480 389Z" fill="url(#engrhGlass)" stroke="#a4b9be" stroke-width="3"/><path d="M435 40H465L482 434H418Z" fill="url(#engrhCarbon)" stroke="#8197a2"/><path d="M429 178h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 189h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 200h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 211h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 222h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 233h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 244h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 255h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 266h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 277h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 288h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 299h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 310h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 321h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 332h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 343h41" fill="none" stroke="#59626a" stroke-width="2"/><path d="M429 354h41" fill="none" stroke="#59626a" stroke-width="2"/><text x="450" y="459" font-size="13" fill="#d9e2e5" text-anchor="middle" letter-spacing="1.5">ZR1 · CARBON SPLIT-WINDOW ENGINE HATCH</text><text x="450" y="480" font-size="10" fill="#a4b2ba" text-anchor="middle" letter-spacing="1.5">OPEN COVER TO INSPECT</text></g></svg><div class="cover" id="engineCover">ENGINE COVER CLOSED</div>
         </div>
         <div class="control-grid">
           <button id="coverBtn">Open Cover</button>
@@ -684,7 +734,7 @@
     <button data-pad="down">Brake</button>
   </div>
   <div class="touch-wheel" id="touchWheel" aria-label="Steering wheel — drag to turn">
-    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">KG</div>
+    <div class="tw-spoke"></div><div class="tw-spoke v"></div><div class="tw-hub">ZR1</div>
   </div>
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -2381,86 +2431,132 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     }
   }
 
-  function drawCabinFrame(w, h, pal) {
-    const sway = Number.isFinite(state.bodyRoll) ? state.bodyRoll * 1.4 : 0;
-    ctx.fillStyle = pal.night ? "#0a0c0f" : "#101216";
-    ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(w * 0.18, 0); ctx.lineTo(w * 0.08, h * 0.62); ctx.lineTo(0, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.beginPath(); ctx.moveTo(w, 0); ctx.lineTo(w * 0.82, 0); ctx.lineTo(w * 0.92, h * 0.62); ctx.lineTo(w, h * 0.66); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = pal.night ? "#08090c" : "#0d0f12"; ctx.fillRect(0, 0, w, h * 0.05);
-    // carbon dash cowl
-    const dashY = h * 0.66 + sway * 0.2;
-    const dg = ctx.createLinearGradient(0, dashY, 0, h);
-    dg.addColorStop(0, "#15181d"); dg.addColorStop(0.5, "#0c0e12"); dg.addColorStop(1, "#080a0d");
-    ctx.fillStyle = dg; ctx.beginPath(); ctx.moveTo(w * 0.02 + sway, dashY); ctx.lineTo(w * 0.98 + sway, dashY); ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath(); ctx.fill();
-    // carbon weave hint on the dash
-    ctx.save(); ctx.globalAlpha = 0.10; ctx.strokeStyle = "#9fb0bd"; ctx.lineWidth = 1;
-    for (let x = -20; x < w + 20; x += 10) { ctx.beginPath(); ctx.moveTo(x + sway, dashY); ctx.lineTo(x + 40 + sway, h); ctx.stroke(); }
-    ctx.restore();
-    // ---- Corvette ZR1 driver display: ONE round display mounted on the steering column, so it
-    // turns with the wheel (the Chevrolet signature); hp and boost pods beside it ----
-drawCluster(w, h, dashY, sway);
-        drawWheel(w, h);
+  // Drawing primitives only; each car below has its own fascia, instruments and wheel paths.
+  let rhLayoutCache=null;
+  function rhLayout(w,h){
+    if(rhLayoutCache?.w===w&&rhLayoutCache?.h===h)return rhLayoutCache;
+    const footer=document.querySelector('.bottombar').getBoundingClientRect(),top=document.querySelector('.topbar').getBoundingClientRect().bottom;
+    const bottom=Math.min(h-8,footer.top);
+    const scale=Math.min(w/1200,h/850);
+    // SSC's 1.0 driving composition: low fascia, wheel partly below the viewport.
+    // Do not lift the whole steering wheel above the footer: it hides the road.
+    const dashY=h*.70,wheelY=h*.97;
+    document.documentElement.style.setProperty('--rh-footer-height',(h-bottom)+'px');
+    document.documentElement.style.setProperty('--rh-header-height',top+'px');
+    return rhLayoutCache={w,h,scale,wheelY,dashY,bottom};
   }
-  // instantaneous output (hp) for the left-hand pod — reads to 1,600 on E85
-  function powerPS() {
-    const p = app.engineTorque(state.rpm) * (state.rpm * Math.PI * 2 / 60) * clamp(state.throttle, 0, 1);
-    return clamp(p / 735.5, 0, app.SPEC.peakPowerPS);
-  }
-  // the driver display: speed arc to 500 km/h (megacar graduation) with the E85 zone
-  // ---- Corvette ZR1 (C8) cluster: an asymmetric TFT — a shift-light dot row over a
-  // horizontal rev bar, a big left-aligned speed, and a boxed gear on the right ----
-  function drawCluster(w, h, dashY, sway) {
-    const R = Math.min(w, h) * 0.118;
-    const cx = w / 2 + sway, cy = dashY + R * 0.74;
-    const W = R * 4.4, H = R * 1.95, kmh = Math.abs(app.kmh(state.speedMps));
-    ctx.save(); ctx.translate(cx, cy);
-    roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.12); ctx.fillStyle = "rgba(8,8,6,0.97)"; ctx.fill();
-    ctx.strokeStyle = "rgba(242,194,0,0.5)"; ctx.lineWidth = 1.6; roundRect(ctx, -W / 2, -H / 2, W, H, R * 0.12); ctx.stroke();
-    const rpmf = clamp(state.rpm / 8000, 0, 1);
-    for (let i = 0; i < 8; i++) {
-      const f = (i + 1) / 8, on = f <= rpmf;
-      ctx.fillStyle = on ? (f > 0.85 ? "#ff4d4d" : f > 0.6 ? "#f2c200" : "#8fe07a") : "rgba(255,255,255,0.09)";
-      ctx.beginPath(); ctx.arc(-W * 0.4 + i * (W * 0.8 / 7), -H * 0.36, R * 0.07, 0, Math.PI * 2); ctx.fill();
+  const rhTextures=new Map();
+  function rhTexture(kind){
+    if(rhTextures.has(kind))return rhTextures.get(kind);
+    const tile=document.createElement('canvas');tile.width=64;tile.height=64;const g=tile.getContext('2d');
+    if(kind==='carbon'){
+      for(let y=0;y<64;y+=8)for(let x=0;x<64;x+=8){
+        g.fillStyle='#60747e';g.fillRect(x,y,4,4);g.fillRect(x+4,y+4,4,4);
+        g.fillStyle='#13232c';g.fillRect(x+4,y,4,4);g.fillRect(x,y+4,4,4);
+        g.strokeStyle='#9eb0b6';g.lineWidth=.45;g.beginPath();g.moveTo(x+1,y);g.lineTo(x+1,y+4);g.moveTo(x+5,y+4);g.lineTo(x+5,y+8);g.stroke();
+      }
+    }else if(kind==='metal'){
+      for(let y=0;y<64;y++){g.strokeStyle=y%3?'rgba(232,238,239,.16)':'rgba(12,23,31,.15)';g.beginPath();g.moveTo(0,y+.5);g.lineTo(64,y+.5);g.stroke();}
+    }else{
+      for(let i=0;i<1200;i++){const x=(i*37+i*i*3)%64,y=(i*13+Math.floor(i/64)*7)%64;g.fillStyle=i%3?'rgba(182,186,174,.18)':'rgba(0,0,0,.30)';g.fillRect(x,y,i%5?1:2,.6);}
     }
-    ctx.fillStyle = "rgba(255,255,255,0.08)"; roundRect(ctx, -W * 0.42, -H * 0.2, W * 0.84, H * 0.1, 2); ctx.fill();
-    ctx.fillStyle = "#f2c200"; roundRect(ctx, -W * 0.42, -H * 0.2, W * 0.84 * rpmf, H * 0.1, 2); ctx.fill();
-    ctx.textAlign = "left"; ctx.textBaseline = "middle";
-    ctx.fillStyle = "#fdf6e3"; ctx.font = "800 " + Math.round(R * 0.82) + "px ui-sans-serif"; ctx.fillText(String(Math.round(kmh)), -W * 0.32, H * 0.16);
-    ctx.fillStyle = "rgba(200,190,150,0.9)"; ctx.font = "600 " + Math.round(R * 0.12) + "px ui-sans-serif"; ctx.fillText("KM/H", -W * 0.3, H * 0.4);
-    ctx.strokeStyle = "rgba(242,194,0,0.7)"; ctx.lineWidth = 1.6; roundRect(ctx, W * 0.18, -H * 0.06, W * 0.24, H * 0.44, R * 0.06); ctx.stroke();
-    ctx.textAlign = "center"; ctx.fillStyle = "#f2c200"; ctx.font = "800 " + Math.round(R * 0.5) + "px ui-sans-serif"; ctx.fillText(state.gearMode === "G" ? String(state.curGear) : state.gearMode, W * 0.3, H * 0.16);
-    ctx.restore();
+    const pattern=ctx.createPattern(tile,'repeat');if(kind==='carbon')pattern.setTransform(new DOMMatrix().rotate(35).scale(.75));rhTextures.set(kind,pattern);return pattern;
   }
-  // Chevrolet wheel: squircle rim with touch pads on the two horizontal spokes
-  function drawWheel(w, h) {
-    const cx = w / 2 + state.shake.x * 0.3, cy = h * 1.2; const R = Math.min(w, h) * 0.33;
-    ctx.save(); ctx.translate(cx, cy); ctx.rotate(state.steer * 0.9);
-    // the C8 rim: squared at the top, squared at the bottom, thick through the sides
-    ctx.lineWidth = R * 0.15; ctx.strokeStyle = "#101216"; ctx.beginPath();
-    ctx.moveTo(-R * 0.4, -R * 0.9); ctx.lineTo(R * 0.4, -R * 0.9);
-    ctx.quadraticCurveTo(R * 0.99, -R * 0.62, R * 0.99, R * 0.06);
-    ctx.quadraticCurveTo(R * 0.99, R * 0.66, R * 0.4, R * 0.86);
-    ctx.lineTo(-R * 0.4, R * 0.86);
-    ctx.quadraticCurveTo(-R * 0.99, R * 0.66, -R * 0.99, R * 0.06);
-    ctx.quadraticCurveTo(-R * 0.99, -R * 0.62, -R * 0.4, -R * 0.9); ctx.stroke();
-    ctx.lineWidth = R * 0.028; ctx.strokeStyle = "rgba(242,194,0,0.55)"; ctx.stroke();
-    // yellow twelve-o'clock band
-    ctx.lineWidth = R * 0.07; ctx.strokeStyle = "#f2c200";
-    ctx.beginPath(); ctx.moveTo(-R * 0.1, -R * 0.9); ctx.lineTo(R * 0.1, -R * 0.9); ctx.stroke();
-    // two heavy spokes, squared where they meet the rim
-    ctx.fillStyle = "#171b21";
-    [-1, 1].forEach(s => { ctx.beginPath();
-      ctx.moveTo(s * R * 0.16, -R * 0.14); ctx.lineTo(s * R * 0.92, -R * 0.2);
-      ctx.lineTo(s * R * 0.92, R * 0.2); ctx.lineTo(s * R * 0.16, R * 0.16); ctx.closePath(); ctx.fill(); });
-    // and the crossed flags
-    ctx.beginPath(); ctx.arc(0, 0, R * 0.2, 0, Math.PI * 2); ctx.fillStyle = "#0c0f13"; ctx.fill();
-    ctx.strokeStyle = "rgba(242,194,0,0.7)"; ctx.lineWidth = R * 0.018; ctx.stroke();
-    ctx.fillStyle = "#c8102e"; ctx.beginPath();
-    ctx.moveTo(-R * 0.12, -R * 0.08); ctx.lineTo(-R * 0.01, -R * 0.06); ctx.lineTo(-R * 0.02, R * 0.08); ctx.lineTo(-R * 0.13, R * 0.06); ctx.closePath(); ctx.fill();
-    ctx.fillStyle = "#e8eef4"; ctx.beginPath();
-    ctx.moveTo(R * 0.01, -R * 0.06); ctx.lineTo(R * 0.12, -R * 0.08); ctx.lineTo(R * 0.13, R * 0.06); ctx.lineTo(R * 0.02, R * 0.08); ctx.closePath(); ctx.fill();
-    ctx.restore();
-  }  function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
+  function rhPath(d,fill,stroke,width=1){const p=new Path2D(d);if(fill){ctx.fillStyle=fill;ctx.fill(p);}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke(p);}}
+  function rhGradient(x,y,w,h,stops){const g=ctx.createLinearGradient(x,y,x+w,y+h);stops.forEach(([at,color])=>g.addColorStop(at,color));return g;}
+  function rhSurface(d,kind,bounds,colors,edge){
+    const [x,y,w,h]=bounds;
+    rhPath(d,rhGradient(x,y,w*.16,h,colors),edge,1);
+    ctx.save();ctx.clip(new Path2D(d));ctx.globalAlpha=kind==='carbon'?.14:kind==='metal'?.22:.13;ctx.fillStyle=rhTexture(kind);ctx.fillRect(x,y,w,h);ctx.restore();
+  }
+  function rhCarbon(d,bounds,edge='#46525a'){rhSurface(d,'carbon',bounds,[[0,'#343d41'],[.26,'#171e24'],[.67,'#0c1319'],[1,'#202a30']],edge);}
+  function rhMetal(d,bounds,edge='#939da2'){rhSurface(d,'metal',bounds,[[0,'#e5e9e6'],[.2,'#7e8b91'],[.42,'#c9d0d0'],[.68,'#52616b'],[1,'#a7b2b5']],edge);}
+  function rhLeather(d,bounds,edge='#343d41'){rhSurface(d,'leather',bounds,[[0,'#34373a'],[.24,'#20262a'],[.74,'#0c1115'],[1,'#171d22']],edge);}
+  function rhStitch(d,color='#8e7560',width=.8){ctx.save();ctx.setLineDash([2,3]);rhPath(d,null,color,width);ctx.restore();}
+  function rhText(x,y,value,size=12,color='#dae5e9',align='center'){ctx.fillStyle=color;ctx.font=size+'px Arial';ctx.textAlign=align;ctx.textBaseline='alphabetic';ctx.fillText(value,x,y);}
+  function rhCircle(x,y,r,fill,stroke,width=1){ctx.beginPath();ctx.arc(x,y,r,0,Math.PI*2);if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=width;ctx.stroke();}}
+  function rhArc(x,y,r,a,b,color,width=1){ctx.beginPath();ctx.arc(x,y,r,a,b);ctx.strokeStyle=color;ctx.lineWidth=width;ctx.stroke();}
+  function rhScrew(x,y){rhCircle(x,y,2.2,'#8b999f','#152027',.8);rhPath(`M${x-1} ${y}h2`,null,'#20303a',.7);}
+  function rhKnob(x,y,r,label,color='#d9e5e8'){
+    rhCircle(x,y,r+2,'#070d12');rhCircle(x,y,r,rhGradient(x-r,y-r,r*2,r*2,[[0,'#e0e7e7'],[.28,'#7a888d'],[.52,'#b8c4c8'],[1,'#45535c']]));
+    for(let i=0;i<48;i++){const a=i*Math.PI/24;rhPath(`M${x+Math.cos(a)*(r-1)} ${y+Math.sin(a)*(r-1)}l${Math.cos(a)*1.9} ${Math.sin(a)*1.9}`,null,i<24?'#a7b3b7':'#404f59',.6);}
+    rhCircle(x,y,r-4,'#111a22','#667b84',.7);rhCircle(x,y,r-6,null,'#263942',.5);rhText(x,y+3,label,r*.42,color);
+    rhPath(`M${x} ${y-r+1}v3`,null,'#faf5df',1.5);
+  }
+  function rhVent(x,y,r){
+    rhCircle(x,y,r+3,'#0b1116','#414e54',1);rhCircle(x,y,r,rhGradient(x-r,y-r,r*2,r*2,[[0,'#d1dadd'],[.35,'#606d74'],[.55,'#c4cfd1'],[1,'#4a5962']]));
+    rhCircle(x,y,r-3,'#050b0f','#78868c',.6);
+    for(let i=0;i<8;i++){ctx.save();ctx.translate(x,y);ctx.rotate(i*Math.PI/4);ctx.scale(r/27,r/27);rhPath('M5-2L20-8Q24-5 22-1L10 8Z','#34434b','#718088',.5);rhPath('M7 1L21-3',null,'#a0afb4',.5);ctx.restore();}
+    rhCircle(x,y,r*.2,'#84969f','#16232b',1);rhCircle(x,y,r*.09,'#263e49');
+  }
+  function rhTicks(x,y,r,max,step,fraction,face='#d9e1e5',numberColor=face){
+    const divisions=max===350?70:max<=10?Math.round(max)*10:100;
+    for(let i=0;i<=divisions;i++){const a=(-220+i*260/divisions)*Math.PI/180,major=i%10===0;rhPath(`M${x+Math.cos(a)*r} ${y+Math.sin(a)*r}L${x+Math.cos(a)*(r-(major?7:3))} ${y+Math.sin(a)*(r-(major?7:3))}`,null,face,major?1.25:.55);
+      if(major)rhText(x+Math.cos(a)*(r-17),y+Math.sin(a)*(r-17)+2.7,Math.round(max*i/divisions),7.5,numberColor);
+    }
+    const a=(-220+260*clamp(fraction,0,1))*Math.PI/180;
+    ctx.save();ctx.translate(x,y);ctx.rotate(a);rhPath('M-8-1.4L'+(r-7)+' 0 -8 1.4Z','#ef743c');ctx.restore();rhCircle(x,y,3,'#c5ccd0','#26353d',.6);
+  }
+  function rhRim(d,color='#2d3032',stitch='#787267'){
+    const leather=rhGradient(-110,-130,220,260,[[0,'#515758'],[.25,color],[.65,'#0d1419'],[1,'#3b4246']]);
+    ctx.save();ctx.shadowColor='#000';ctx.shadowBlur=10;ctx.shadowOffsetY=5;rhPath(d,null,'#05090b',29);ctx.restore();rhPath(d,null,leather,23);
+    ctx.save();ctx.globalAlpha=.35;rhPath(d,null,rhTexture('leather'),20);ctx.restore();rhStitch(d,stitch,.7);
+    ctx.save();ctx.translate(0,-1.2);ctx.globalAlpha=.3;rhPath(d,null,'#a2afb2',.6);ctx.restore();
+  }
+  function rhScreen(d){rhPath(d,rhGradient(0,-70,0,140,[[0,'#12252f'],[.15,'#040c13'],[1,'#071019']]),'#536773',1.1);}
+  function rhPaddles(left=-116,right=116){
+    rhMetal(`M${left-8}-83Q${left-21}-48 ${left-11} 0L${left+2}-4 ${left+1}-82Z`,[left-22,-85,26,90]);
+    rhMetal(`M${right+8}-83Q${right+21}-48 ${right+11} 0L${right-2}-4 ${right-1}-82Z`,[right-4,-85,26,90]);
+    rhText(left-5,-40,'−',12,'#17272e');rhText(right+5,-40,'+',10,'#17272e');
+  }
+  // Additional small hardware shared by this set; cabin silhouettes remain car-specific.
+  function nxPillars(w,h,width=.09){
+    rhCarbon(`M0 0H${w*width}L${w*.06} ${h*.65} 0 ${h*.71}Z`,[0,0,w*width,h*.72]);
+    rhCarbon(`M${w} 0H${w*(1-width)}L${w*.94} ${h*.65} ${w} ${h*.71}Z`,[w*(1-width),0,w*width,h*.72]);
+    ctx.fillStyle='#070d12';ctx.fillRect(0,0,w,h*.022);
+  }
+  function nxRev(x,y,w,n=25,color='#86b8df'){
+    const rev=clamp(state.rpm/SPEC.redlineRpm,0,1);
+    for(let i=0;i<n;i++){ctx.fillStyle=rev>i/n?(i>n*.86?'#f46851':color):'#26343a';ctx.fillRect(x+i*w/n,y,w/n-1.3,3.2);}
+  }
+  function nxVent(x,y,w){rhPath(`M${x} ${y}h${w}v15h-${w}Z`,'#050b10','#6b7c82',.8);for(let i=0;i<3;i++)rhPath(`M${x+4} ${y+4+i*3.5}h${w-8}`,null,'#4d616d',1);}
+  function nxButton(x,y,r,label,color='#637985'){rhCircle(x,y,r+2,'#0b1219',color,.9);rhCircle(x,y,r,'#22323b');rhText(x,y+2,label,4.5,'#dae6e6');}
+  function nxSpeed(){return Math.round(Math.abs(app.kmh(state.speedMps)));}
+  function nxGear(){return state.gearMode==='G'?state.curGear:state.gearMode;}
+  function nxStar(x,y,r){rhCircle(x,y,r,'#09121b','#abb8bb',1.3);rhPath(`M${x} ${y-r+2}l3 ${r-5} ${r-5} ${r/2+1}-${r-2}-${r/2-2}-${r-2} ${r/2-1} ${r-5}-${r/2+1}Z`,'#b6c4c7');}
+  // Instrument hardware only. Each model owns its fascia geometry and wheel construction.
+  function tcDial(x,y,r,label,max,value,bright='#d6dbd4'){
+    rhCircle(x,y,r+3,'#081015','#9ba7a9',1.6);rhCircle(x,y,r,'#10191d','#5a6c73',1);rhCircle(x,y,r-2,null,'#c4cfcc',.55);
+    rhTicks(x,y,r-5,max,1,value/max,bright);rhText(x,y+r*.44,label,r*.145,bright);
+    rhArc(x,y,r-1,-2.4,-.65,'rgba(238,244,240,.25)',1);
+  }
+  function tcWheelPosition(w,h){const l=rhLayout(w,h);return Math.max(h*.86,l.bottom+52*l.scale);}
+  function tcSwitch(x,y,label,on=false){rhCircle(x,y,5,'#131f26','#99aeb5',1);rhPath(`M${x} ${y+2}l2-8`,null,on?'#e4dac1':'#80919a',3);rhText(x,y+16,label,5.5,'#b2c4ca');}
+  function tcThinWheel(r,wood=false){rhCircle(0,0,r,null,'#070c10',wood?21:27);rhCircle(0,0,r,null,wood?rhGradient(-r,-r,r*2,r*2,[[0,'#c99555'],[.4,'#6e4223'],[.7,'#c48d4c'],[1,'#8e5e31']]):rhGradient(-r,-r,r*2,r*2,[[0,'#515a5c'],[.3,'#19242c'],[.75,'#0a131b'],[1,'#434e54']]),wood?14:19);rhCircle(0,0,r-5,null,wood?'#e7b66f':'#4b5f68',.7);}
+  function tcManual(x,y,wood=false){rhMetal(`M${x-27} ${y+75}h54l9 22h-72Z`,[x-36,y+75,72,22]);for(let i=-1;i<=1;i++)rhPath(`M${x+i*17} ${y+80}v11`,null,'#0b1821',3);rhPath(`M${x-18} ${y+85}h36M${x} ${y+85}V${y}`,null,'#a9bdc5',6);rhCircle(x,y,15,wood?'#b68b51':'#101e27','#8b9ca1',1);if(wood)for(let i=0;i<5;i++)rhPath(`M${x-11} ${y-8+i*4}q11 4 22 0`,null,'#765026',1);}
+
+  function tcClassicPillars(w,h,kind){
+    const metal=kind!=='f40',outer=kind==='p917'?.024:kind==='gto'?.035:.044;
+    const edge=kind==='p917'?.035:kind==='gto'?.045:.054;
+    for(const side of [0,1]){
+      ctx.save();if(side){ctx.translate(w,0);ctx.scale(-1,1);}
+      const d=`M0 0H${w*outer}L${w*edge} ${h*.66} 0 ${h*.71}Z`;
+      if(metal)rhMetal(d,[0,0,w*edge,h*.71]);else rhLeather(d,[0,0,w*edge,h*.71],'#555d5d');
+      rhPath(`M${w*(outer-.006)} 0L${w*(edge-.006)} ${h*.655}`,null,metal?'#161e22':'#747d78',2);
+      ctx.restore();
+    }
+    rhPath(`M0 0H${w}V${h*.011}Q${w/2} ${h*.008} 0 ${h*.011}Z`,'#171f21');
+  }
+  function drawCabinFrame(w,h,pal){nxPillars(w,h,.09);const d=rhLayout(w,h).dashY;
+    rhLeather(`M0 ${d+19}Q${w*.22} ${d-11} ${w*.43} ${d+4}L${w*.61} ${d+28}Q${w*.81} ${d+2} ${w} ${d+23}V${h}H0Z`,[0,d-11,w,h-d+11],'#5d6b6b');rhStitch(`M0 ${d+30}Q${w*.22} ${d+1} ${w*.43} ${d+16}M${w*.73} ${d+27}Q${w*.86} ${d+16} ${w} ${d+34}`,'#b6a465');drawCluster(w,h,d);drawWheel(w,h);}
+  function drawCluster(w,h,d){const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,d+45*s);ctx.scale(s,s);
+    rhLeather('M-164 56L-158-35Q0-112 157-34L171 56Z',[-165,-70,338,128],'#66777d');rhScreen('M-147 39L-143-29Q0-88 141-28L154 39Z');nxRev(-125,-28,245,35,'#e1c654');rhText(0,20,nxGear(),38);rhText(-95,22,nxSpeed(),23);rhText(90,10,Math.round(state.rpm),12);rhText(91,27,'RPM',5);rhText(-94,34,'km/h',5);
+    rhScreen('M183-43L345-22 323 111 176 84Z');rhText(256,-10,'CORVETTE',12,'#d6c786');rhText(253,18,'ZR1',24,'#b6cbd4');rhText(247,44,(state.boostBar||0).toFixed(1)+' bar',10);rhText(242,66,state.e85?'E85':'PUMP FUEL',7,'#a2bac7');
+    rhMetal('M351-31L372-29Q385 87 471 266L449 279Q375 139 351-31Z',[350,-31,121,310]);for(let i=0;i<12;i++){const x=356+i*2.8+i*i*.32,y=-8+i*22;rhPath(`M${x} ${y}h17v14h-17Z`,'#13222b','#526975',.8);rhText(x+8,y+10,['+','−','AUTO','A/C','FAN','HEAT','COOL','SYNC','CAB','LIFT','HUD','VOL'][i],3.7,'#b5cbd2');}
+    rhCarbon('M180 102L327 125 445 307H175Z',[175,102,270,205]);['R','N','D'].forEach((v,i)=>nxButton(222+i*34,141+i*8,12,v));rhKnob(275,214,23,'MODE');nxButton(213,206,14,'START','#d8b772');nxVent(-314,51,77);nxVent(430,65,173);ctx.restore();}
+  function drawWheel(w,h){const s=rhLayout(w,h).scale;ctx.save();ctx.translate(w/2,tcWheelPosition(w,h));ctx.scale(s,s);ctx.rotate(state.steer*.9);rhPaddles(-136,136);
+    rhRim('M-83-107H83Q124-104 132-54V50Q125 102 82 108H-82Q-125 102-132 50V-54Q-124-104-83-107Z','#282e30','#c4b85f');rhPath('M0-118v22',null,'#dfbd38',7);rhCarbon('M-121-36L-41-47H41L121-36 119 13 48 27 23 98H-23L-48 27-119 13Z',[-122,-48,244,148]);rhLeather('M-42-43Q0-55 42-43L51 3Q37 57 0 61Q-37 57-51 3Z',[-51,-52,102,114],'#7a8e95');rhPath('M-29-12L-4-1 0 19 4-1 29-12 19 12 0 26-19 12Z','#a94433','#b9cecb',1);rhPath('M-27-10l20 9-11 8M-21-8l3 15M-13-4l-4 10',null,'#e1e4d8',2.5);rhText(-82,-3,'− VOL +',6);rhText(82,-3,'DATA',6);rhKnob(-79,66,16,'Z');rhKnob(79,66,16,'MODE');rhText(0,87,'ZR1',12,'#d5c18b');ctx.restore();}
+  function drawHeadlights(w, h) { const g = ctx.createRadialGradient(w / 2, horizonY, 20, w / 2, h, h * 0.9); g.addColorStop(0, "rgba(220,235,255,0.14)"); g.addColorStop(0.4, "rgba(200,220,245,0.06)"); g.addColorStop(1, "rgba(0,0,0,0)"); ctx.save(); ctx.globalCompositeOperation = "screen"; ctx.fillStyle = g; ctx.fillRect(0, horizonY - 30, w, h); ctx.restore(); }
   function drawTelemetry(w, h) {
     ctx.save();
     ctx.fillStyle = "rgba(156,198,255,0.85)"; ctx.font = "11px ui-monospace, monospace"; ctx.textAlign = "left";
@@ -2563,156 +2659,34 @@ drawCluster(w, h, dashY, sway);
      shared with any other car. The source is tools/bodykit/drawn.mjs. */
   function injectExterior() {
     app.el.exteriorArt.innerHTML = `
-    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Chevrolet Corvette ZR1 side">
-      <defs>
-        <linearGradient id="hdzr1Paint" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffe063"/><stop offset="0.34" stop-color="#f5b312"/><stop offset="0.78" stop-color="#c07d00"/><stop offset="1" stop-color="#6d4a00"/>
-        </linearGradient>
-        <linearGradient id="hdzr1Glass" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#d6e8f7"/><stop offset="0.38" stop-color="#4a6478"/><stop offset="1" stop-color="#0a1017"/>
-        </linearGradient>
-        <linearGradient id="hdzr1Vent" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3138"/><stop offset="1" stop-color="#05070a"/></linearGradient>
-        <linearGradient id="hdzr1Low" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#23272d"/><stop offset="1" stop-color="#06080a"/></linearGradient>
-        <radialGradient id="hdzr1Hub" cx="42%" cy="38%" r="62%"><stop offset="0" stop-color="#eef2f6"/><stop offset="1" stop-color="#2b3138"/></radialGradient>
-        <linearGradient id="hdzr1Shine" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ffffff" stop-opacity="0.42"/><stop offset="0.5" stop-color="#ffffff" stop-opacity="0.06"/><stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-        </linearGradient>
-        <filter id="hdzr1Glow" x="-60%" y="-60%" width="220%" height="220%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-        <clipPath id="hdzr1Clip"><path d="M78,186
-    L78,248 Q79,268 97,273 L152,277 L196,300
-    A70,104 0 0 1 336,300
-    Q516,309 694,300
-    A67,106 0 0 1 828,300
-    L892,295 Q916,291 922,270 L922,250
-    C900,240 880,232 830,217
-    C800,208 782,201 762,194
-    C730,192 712,195 700,198
-    C672,184 640,160 610,142
-    C596,134 586,129 575,127
-    C550,123 535,122 520,123
-    C500,125 484,128 470,133
-    C450,142 434,148 420,153
-    C400,161 384,166 370,169
-    C340,172 312,172 300,172
-    C288,171 276,170 265,170
-    C220,172 140,178 78,186 Z"/></clipPath>
-        <style>
-          .wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg));}
-          #rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg) * -0.14));transition:transform .45s ease;}
-          #frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .35s ease;}
-          #doorArt{transform-box:fill-box;transform-origin:8% 96%;transition:transform .7s cubic-bezier(.2,.9,.2,1);}
-          #doorArt.open{transform:rotate(-11deg) translate(-10px,-5px);}
-          #quadExhaustArt *{fill:#a7aeb6;}
-          #quadExhaustArt.hot *{fill:#ff8a3c;filter:url(#hdzr1Glow);}
-        </style>
-      </defs>
-
-      <ellipse cx="500" cy="336" rx="386" ry="9" fill="rgba(0,0,0,0.5)"/>
-
-      <!-- the ZR1's high wing, on two end plates, behind the body so the plates read -->
-      <g id="rearWingArt">
-        <rect x="112" y="132" width="7" height="44" fill="#141920" stroke="#4a525b"/>
-        <rect x="226" y="130" width="7" height="44" fill="#141920" stroke="#4a525b"/>
-        <path d="M96,134 L250,126 L250,137 L96,145 Z" fill="#15191f" stroke="#5e6772" stroke-width="1.2"/>
-        <path d="M96,134 L250,126" stroke="#ffd23a" stroke-width="2" opacity="0.75"/>
-      </g>
-
-      <g id="bcBody">
-        <path d="M78,186
-    L78,248 Q79,268 97,273 L152,277 L196,300
-    A70,104 0 0 1 336,300
-    Q516,309 694,300
-    A67,106 0 0 1 828,300
-    L892,295 Q916,291 922,270 L922,250
-    C900,240 880,232 830,217
-    C800,208 782,201 762,194
-    C730,192 712,195 700,198
-    C672,184 640,160 610,142
-    C596,134 586,129 575,127
-    C550,123 535,122 520,123
-    C500,125 484,128 470,133
-    C450,142 434,148 420,153
-    C400,161 384,166 370,169
-    C340,172 312,172 300,172
-    C288,171 276,170 265,170
-    C220,172 140,178 78,186 Z" fill="url(#hdzr1Paint)" stroke="rgba(255,255,255,0.5)" stroke-width="1.2"/>
-
-        <g clip-path="url(#hdzr1Clip)">
-          <!-- paint, not a fill: a soft band under the shoulder and a darkened lower body -->
-          <path d="M78,196 C300,180 560,178 922,258 L922,276 C560,196 300,198 78,214 Z" fill="url(#hdzr1Shine)"/>
-          <rect x="0" y="252" width="1000" height="120" fill="rgba(0,0,0,0.16)"/>
-
-          <!-- the flying buttress: roof down onto the deck, with the engine glass let into it -->
-          <path d="M470,133 L455,158 L392,176 L420,153 Z" fill="#191e25" stroke="rgba(255,255,255,0.22)"/>
-          <path d="M300,174 L392,158 L448,166 L352,186 Z" fill="rgba(126,158,184,0.34)" stroke="rgba(214,232,246,0.45)"/>
-          <g stroke="rgba(0,0,0,0.5)" stroke-width="2.4" stroke-linecap="round">
-            <path d="M322,176 L392,163"/><path d="M334,180 L404,167"/><path d="M346,184 L416,171"/>
-          </g>
-
-          <!-- THE DAYLIGHT OPENING: a fast screen, a short side window, a hard C-pillar -->
-          <path d="M706,200 C670,182 630,155 596,138 L586,148
-                   C552,143 508,143 484,151 L458,162
-                   C520,170 620,186 706,200 Z"
-                fill="url(#hdzr1Glass)" stroke="#8fa3b3" stroke-width="1.4"/>
-          <path d="M700,198 C666,182 630,158 596,150" stroke="#0d1116" stroke-width="7" stroke-linecap="round"/>
-          <path d="M484,151 L458,162" stroke="#0d1116" stroke-width="8" stroke-linecap="round"/>
-          <path d="M690,196 C660,182 628,160 598,152" stroke="rgba(255,255,255,0.30)" stroke-width="3"/>
-
-          <!-- THE SIDE INTAKE. On a C8 this is the flank: a deep scoop ahead of the rear arch. -->
-          <path d="M492,186 C452,184 420,196 396,216 L402,246 C428,222 460,212 492,212 Z" fill="#05070a"/>
-          <path d="M492,186 C452,184 420,196 396,216" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.4"/>
-          <path d="M486,208 C456,208 432,216 410,234" fill="none" stroke="#ffd23a" stroke-width="1.6" opacity="0.6"/>
-
-          <!-- the door, its shut lines and the flush handle -->
-          <g id="doorArt">
-            <path d="M498,182 L700,206 L696,286 L500,272 Z" fill="rgba(255,255,255,0.03)" stroke="rgba(0,0,0,0.32)" stroke-width="1.4"/>
-            <rect x="596" y="222" width="28" height="7" rx="3.5" fill="#4d545c"/>
-          </g>
-          <path d="M498,180 L500,272" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-          <path d="M700,204 L696,286" stroke="rgba(0,0,0,0.34)" stroke-width="2"/>
-
-          <!-- the shoulder crease, and the gill behind the front arch -->
-          <path d="M180,196 C420,186 640,206 892,262" fill="none" stroke="rgba(255,255,255,0.26)" stroke-width="2.2" stroke-linecap="round"/>
-          <g stroke="rgba(0,0,0,0.55)" stroke-width="3" stroke-linecap="round">
-            <path d="M742,238 l-28,6"/><path d="M734,247 l-28,6"/><path d="M726,256 l-28,6"/>
-          </g>
-
-          <!-- the rocker skirt -->
-          <path d="M338,296 L690,300 L686,312 L342,308 Z" fill="url(#hdzr1Low)" stroke="rgba(120,132,146,0.32)"/>
-
-          <!-- lamps: the C8's thin wrapped headlamp, and the squared tail cluster -->
-          <path d="M896,252 L852,240 L850,253 L894,265 Z" fill="#e2edf6" stroke="#93a1ad" stroke-width="1.1"/>
-          <path d="M893,247 L856,236" stroke="#ffd23a" stroke-width="2.2" stroke-linecap="round"/>
-          <rect x="84" y="200" width="36" height="10" rx="2.5" fill="#e0223c"/>
-          <rect x="84" y="214" width="24" height="7" rx="2" fill="#8c1220"/>
-
-          <text x="600" y="258" text-anchor="middle" font-family="ui-sans-serif" font-size="11" fill="rgba(255,255,255,0.72)" letter-spacing="4">ZR1</text>
-        </g>
-      </g>
-
-      <!-- hardware bolted to the car, outside the paint: splitter, diffuser, quad centre pipes -->
-      <g id="frontFlapArt"><rect x="836" y="296" width="82" height="6" rx="3" fill="#101318" stroke="#ffd23a" stroke-opacity="0.5"/></g>
-      <path d="M84,272 L178,278 L174,300 L88,294 Z" fill="#0a0d12" stroke="rgba(255,255,255,0.14)"/>
-      <g stroke="rgba(170,186,200,0.38)" stroke-width="1.4"><path d="M110,294 L108,302"/><path d="M134,296 L132,303"/><path d="M158,297 L156,305"/></g>
-      <g id="quadExhaustArt"><circle cx="102" cy="286" r="5.5"/><circle cx="118" cy="287" r="5.5"/><circle cx="142" cy="288" r="5.5"/><circle cx="158" cy="289" r="5.5"/></g>
-
-      <g>
-      <circle cx="265" cy="266" r="64.0" fill="#0a0b0e"/>
-      <circle cx="265" cy="266" r="64.0" fill="none" stroke="#1b1f25" stroke-width="8.3"/>
-      <circle cx="265" cy="266" r="57.6" fill="none" stroke="#ffd23a" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="265" cy="266" r="39.7" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M276.5,266.0 L304.1,259.3 L304.5,262.0 L284.2,266.0 L304.5,270.0 L304.1,272.7 Z" fill="#2b3138"/><path d="M268.6,277.0 L283.5,301.1 L281.0,302.3 L270.9,284.3 L273.4,304.8 L270.7,305.3 Z" fill="#2b3138"/><path d="M255.7,272.8 L237.3,294.4 L235.4,292.4 L249.5,277.3 L230.7,286.0 L229.4,283.6 Z" fill="#2b3138"/><path d="M255.7,259.2 L229.4,248.4 L230.7,246.0 L249.5,254.7 L235.4,239.6 L237.3,237.6 Z" fill="#2b3138"/><path d="M268.6,255.0 L270.7,226.7 L273.4,227.2 L270.9,247.7 L281.0,229.7 L283.5,230.9 Z" fill="#2b3138"/></g>
-      <circle cx="265" cy="266" r="8.3" fill="url(#hdzr1Hub)"/>
-    </g>
-      <g>
-      <circle cx="762" cy="269" r="61.0" fill="#0a0b0e"/>
-      <circle cx="762" cy="269" r="61.0" fill="none" stroke="#1b1f25" stroke-width="7.9"/>
-      <circle cx="762" cy="269" r="54.9" fill="none" stroke="#ffd23a" stroke-width="1.4" opacity="0.5"/>
-      <circle cx="762" cy="269" r="37.8" fill="#14181d"/>
-      <g class="wSpin" style="transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))"><path d="M773.0,269.0 L799.3,262.6 L799.6,265.2 L780.3,269.0 L799.6,272.8 L799.3,275.4 Z" fill="#2b3138"/><path d="M765.4,279.4 L779.6,302.5 L777.2,303.6 L767.7,286.4 L770.0,306.0 L767.4,306.4 Z" fill="#2b3138"/><path d="M753.1,275.5 L735.6,296.1 L733.8,294.2 L747.2,279.8 L729.3,288.1 L728.1,285.7 Z" fill="#2b3138"/><path d="M753.1,262.5 L728.1,252.3 L729.3,249.9 L747.2,258.2 L733.8,243.8 L735.6,241.9 Z" fill="#2b3138"/><path d="M765.4,258.6 L767.4,231.6 L770.0,232.0 L767.7,251.6 L777.2,234.4 L779.6,235.5 Z" fill="#2b3138"/></g>
-      <circle cx="762" cy="269" r="7.9" fill="url(#hdzr1Hub)"/>
-    </g>
-    </svg>
+    <svg viewBox="0 0 1000 400" preserveAspectRatio="xMidYMid meet" role="img" aria-label="2025 Chevrolet Corvette ZR1 side elevation" xmlns="http://www.w3.org/2000/svg"><defs>
+ <linearGradient id="rhLeather" x2="0.15" y2="1"><stop stop-color="#424244"/><stop offset=".32" stop-color="#23262a"/><stop offset="1" stop-color="#0b0d10"/></linearGradient>
+ <linearGradient id="rhTan" x2=".25" y2="1"><stop stop-color="#ba7950"/><stop offset=".5" stop-color="#8e4d2b"/><stop offset="1" stop-color="#4b281c"/></linearGradient>
+ <linearGradient id="rhMetal" x2=".3" y2="1"><stop stop-color="#f0f0e9"/><stop offset=".25" stop-color="#899198"/><stop offset=".5" stop-color="#d6dce0"/><stop offset=".8" stop-color="#777e84"/><stop offset="1" stop-color="#c2c7ca"/></linearGradient>
+ <linearGradient id="rhScreen" x2="0" y2="1"><stop stop-color="#14222a"/><stop offset="1" stop-color="#020507"/></linearGradient>
+ <linearGradient id="rhGlass" x2=".3" y2="1"><stop stop-color="#79939a" stop-opacity=".6"/><stop offset=".5" stop-color="#233840" stop-opacity=".7"/><stop offset="1" stop-color="#0a1219"/></linearGradient>
+ <radialGradient id="rhRim"><stop offset=".5" stop-color="#15181c"/><stop offset=".83" stop-color="#383a3c"/><stop offset="1" stop-color="#090b0e"/></radialGradient>
+ <pattern id="rhCarbon" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="8" height="8" fill="#151b20"/><path d="M0 0h4v4H0zM4 4h4v4H4z" fill="#20272d"/><path d="M1 0v4M5 4v4" stroke="#30383e" stroke-width=".5"/></pattern>
+ <pattern id="rhMesh" width="7" height="6" patternUnits="userSpaceOnUse"><rect width="7" height="6" fill="#05080a"/><path d="M0 2L3.5 0 7 2v2L3.5 6 0 4Z" stroke="#485057" stroke-width=".7" fill="none"/></pattern>
+ <pattern id="rhPerforation" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#767e83"/><circle cx="4.5" cy="4.5" r="2.4" fill="#080b0e"/></pattern>
+ <pattern id="rhFoil" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#9d9b8b"/><path d="M0 0l5 5M-2 3l4-4M3 7l4-4" stroke="#d8d6c3" stroke-width="1"/></pattern>
+</defs><defs>
+ <linearGradient id="rhPaint" x2=".15" y2="1"><stop stop-color="#f3da66"/><stop offset=".26" stop-color="#d0ad2e"/><stop offset=".62" stop-color="#99761d"/><stop offset=".87" stop-color="#d0ad2e"/><stop offset="1" stop-color="#3f3c24"/></linearGradient>
+ <linearGradient id="rhShine" x2=".2" y2="1"><stop stop-color="#fff" stop-opacity=".5"/><stop offset=".4" stop-color="#c4d4de" stop-opacity=".06"/><stop offset="1" stop-color="#000" stop-opacity=".1"/></linearGradient>
+ <clipPath id="rhBodyClip"><path d="M77 188L285 169 390 165Q467 126 521 120H574L611 139 704 195Q783 186 837 215L925 253 932 281 890 304H832A70 109 0 0 0 692 304H338A73 112 0 0 0 192 304L96 284 76 251Z"/></clipPath>
+ </defs><style>.wSpin{transform-box:fill-box;transform-origin:center;transform:rotate(var(--wheel-rot,0deg))}#doorArt{transform-box:fill-box;transform-origin:100% 24%;transition:transform .8s cubic-bezier(.2,.8,.3,1)}#doorArt.open{transform:rotate(22deg) translate(-10px,-13px)}#rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,10deg)*-.28));transition:transform .4s}#frontFlapArt{transform-origin:center;transform:rotate(var(--flap-deg,0deg))}.rhLamp{opacity:.32}.rh-lights .rhLamp{opacity:1;filter:drop-shadow(0 0 3px #d8efff)}#quadExhaustArt.hot .outlet{stroke:#e7884b}.rh-seam{fill:none;stroke:#060d14;stroke-width:1.2}.rh-highlight{fill:none;stroke:#e3eef5;stroke-opacity:.42;stroke-width:1.1}</style>
+ <ellipse cx="500" cy="337" rx="405" ry="10" fill="#02070d" opacity=".8"/>
+ <g id="bcBody"><path d="M77 188L285 169 390 165Q467 126 521 120H574L611 139 704 195Q783 186 837 215L925 253 932 281 890 304H832A70 109 0 0 0 692 304H338A73 112 0 0 0 192 304L96 284 76 251Z" fill="url(#rhPaint)" stroke="#94a4ad" stroke-width="1.2"/>
+ <g clip-path="url(#rhBodyClip)">
+ <path d="M81 199L380 177 466 146 522 129 433 201 129 228Z" fill="url(#rhShine)" /><path d="M78 260L184 274 338 296H682L914 284 924 303H349L160 305 83 279Z" fill="url(#rhCarbon)" stroke="#52636d"/>
+ <path d="M337 170L417 146 479 131 426 192 377 205Z" fill="url(#rhGlass)" stroke="#83a0ac"/><path d="M590 145L696 199 666 207Z" fill="url(#rhGlass)" stroke="#b2c4c8"/>
+ <path d="M363 201L453 190 442 280 348 294 385 260Z" fill="url(#rhMesh)" stroke="#516b78"/><path d="M349 193L468 183 434 220 385 232Z" fill="url(#rhCarbon)" stroke="#52636d"/><path d="M358 195L458 187" fill="none" class="rh-highlight"/>
+ <path d="M819 219L892 241 916 256 885 251 811 225Z" fill="#0c1c25" stroke="#a2bac3"/><path d="M819 221L889 244 908 252 885 246Z" fill="#d4ecfa" class="rhLamp"/>
+ <path d="M807 264L917 261 925 278 853 286Z" fill="url(#rhCarbon)" stroke="#52636d"/><path d="M101 207l75-5 17 17-23 7-70-2Z" fill="#822330" stroke="#d37c76"/><path d="M103 211l65-4 14 11-77 0" fill="none" stroke="#e9615c" stroke-width="3"/>
+ <path d="M791 218L802 241 868 256M129 236L316 225M796 287L854 292" fill="none" class="rh-seam"/><path d="M866 279L925 278 921 283 865 286Z" fill="url(#rhCarbon)" stroke="#52636d"/>
+ </g></g><defs><clipPath id="tcDoorClip"><path d="M443 158L517 128 567 132 656 185 649 297 440 289Z"/></clipPath></defs><g clip-path="url(#tcDoorClip)"><path d="M443 158L517 128 567 132 656 185 649 297 440 289Z" fill="#06111a"/><path d="M422 182L457 173 478 192 469 242 486 267 554 272 546 296 458 285 432 260Z" fill="#6b6b59" stroke="#8c9c9e" stroke-width="1.2"/><path d="M440 188L455 251 482 277M463 185L453 252 474 277" fill="none" stroke="#0c151b" stroke-width="6"/><path d="M541 202L633 193 649 210 585 226 554 216Z" fill="url(#rhCarbon)" stroke="#728b95"/><path d="M568 211l-10 20" fill="none" stroke="#9baeb7" stroke-width="4"/><ellipse cx="556" cy="226" rx="8" ry="20" transform="rotate(22 556 226)" fill="none" stroke="#8498a4" stroke-width="3"/><path d="M604 242l10 2-7 24-10-2Zm-19 5 7 1-5 21-7-1Z" fill="#a1b2b8" /><path d="M410 301L651 291 663 310 423 319Z" fill="url(#rhCarbon)" stroke="#879ca3"/></g><g id="doorArt"><path d="M443 158L517 128 567 132 656 185 649 297 440 289Z" fill="url(#rhPaint)" stroke="#102530" stroke-width="1.3"/><path d="M453 164L520 137 565 141 635 184 452 199Z" fill="url(#rhGlass)" stroke="#96b0ba" stroke-width="1.3"/><path d="M450 201L640 191M449 280L630 260" fill="none" class="rh-seam"/><path d="M468 162L521 141 560 145" fill="none" class="rh-highlight"/><path d="M450 205h17v5h-17Z" fill="#14303e" /><text x="534" y="270" font-size="9" fill="#33444b" font-style="italic">ZR1</text></g>
+ <g id="rearWingArt" style="transform:none"><path d="M115 179L127 136H137L129 179ZM251 171L264 132H274L265 170Z" fill="url(#rhCarbon)" stroke="#52636d"/><path d="M92 137L290 128 297 139 94 149Z" fill="url(#rhCarbon)" stroke="#52636d"/><path d="M95 138L288 131" fill="none" stroke="#d6b23c" stroke-width="2"/></g>
+ <g id="frontFlapArt"><path d="M822 306L936 291 940 304 824 317Z" fill="url(#rhCarbon)" stroke="#52636d"/></g><path d="M629 189l30-13 27 6-4 9-47 5Z" fill="url(#rhCarbon)" stroke="#9cb3bb"/><g id="quadExhaustArt"><ellipse class="outlet" cx="81" cy="271" rx="7" ry="4" fill="#07151e" stroke="#a9b7b9" stroke-width="2"/><ellipse class="outlet" cx="91" cy="271" rx="7" ry="4" fill="#07151e" stroke="#a9b7b9" stroke-width="2"/></g><g transform="translate(265 263)"><circle r="67" fill="#060c12" stroke="#415360" stroke-width="2"/><circle r="60.300000000000004" fill="#0d1a23" stroke="#6a7e88"/><circle r="45.56" fill="#7e8989"/><circle cx="37.52" cy="0" r="1.1" fill="#344b57"/><circle cx="36.00017637001595" cy="10.570605532690442" r="1.1" fill="#344b57"/><circle cx="31.56383255182592" cy="20.284843470934025" r="1.1" fill="#344b57"/><circle cx="24.5703747376271" cy="28.355724029771775" r="1.1" fill="#344b57"/><circle cx="15.586371287830781" cy="34.12939246570153" r="1.1" fill="#344b57"/><circle cx="5.339652732013658" cy="37.1381004993726" r="1.1" fill="#344b57"/><circle cx="-5.339652732013654" cy="37.138100499372605" r="1.1" fill="#344b57"/><circle cx="-15.586371287830776" cy="34.129392465701535" r="1.1" fill="#344b57"/><circle cx="-24.570374737627095" cy="28.35572402977178" r="1.1" fill="#344b57"/><circle cx="-31.563832551825918" cy="20.28484347093403" r="1.1" fill="#344b57"/><circle cx="-36.00017637001595" cy="10.570605532690442" r="1.1" fill="#344b57"/><circle cx="-37.52" cy="2.1257101943975222e-14" r="1.1" fill="#344b57"/><circle cx="-36.00017637001595" cy="-10.570605532690433" r="1.1" fill="#344b57"/><circle cx="-31.56383255182592" cy="-20.284843470934025" r="1.1" fill="#344b57"/><circle cx="-24.570374737627102" cy="-28.35572402977177" r="1.1" fill="#344b57"/><circle cx="-15.586371287830808" cy="-34.12939246570152" r="1.1" fill="#344b57"/><circle cx="-5.339652732013662" cy="-37.1381004993726" r="1.1" fill="#344b57"/><circle cx="5.339652732013649" cy="-37.138100499372605" r="1.1" fill="#344b57"/><circle cx="15.586371287830765" cy="-34.12939246570154" r="1.1" fill="#344b57"/><circle cx="24.570374737627077" cy="-28.35572402977179" r="1.1" fill="#344b57"/><circle cx="31.56383255182592" cy="-20.284843470934018" r="1.1" fill="#344b57"/><circle cx="36.00017637001595" cy="-10.570605532690447" r="1.1" fill="#344b57"/><path d="M28.81-28.14h11v51.59h-11Z" fill="#c7a836"/><g class="wSpin"><circle r="54.94" fill="none" stroke="#c5d1cf" stroke-width="2"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(0)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(36)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(72)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(108)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(144)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(180)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(216)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(252)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(288)"/><path d="M-4-10L-11-49.58 -5-53.6 2-20 7-53.6 12-50.92 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(324)"/><circle r="12" fill="#17303f" stroke="#c5d0cd" stroke-width="2"/><circle r="5" fill="#889e9e"/><path d="M-2 -65h4v4h-4Z" fill="#b2bda8"/></g></g><g transform="translate(762 266)"><circle r="64" fill="#060c12" stroke="#415360" stroke-width="2"/><circle r="57.6" fill="#0d1a23" stroke="#6a7e88"/><circle r="43.52" fill="#7e8989"/><circle cx="35.84" cy="0" r="1.1" fill="#344b57"/><circle cx="34.38822817434359" cy="10.09729483719684" r="1.1" fill="#344b57"/><circle cx="30.150526616669538" cy="19.37656689760862" r="1.1" fill="#344b57"/><circle cx="23.47020870459902" cy="27.086064744856618" r="1.1" fill="#344b57"/><circle cx="14.88847406598761" cy="32.60121071350594" r="1.1" fill="#344b57"/><circle cx="5.100563803714539" cy="35.47520047701263" r="1.1" fill="#344b57"/><circle cx="-5.100563803714535" cy="35.475200477012635" r="1.1" fill="#344b57"/><circle cx="-14.888474065987607" cy="32.60121071350594" r="1.1" fill="#344b57"/><circle cx="-23.470208704599017" cy="27.08606474485662" r="1.1" fill="#344b57"/><circle cx="-30.150526616669534" cy="19.376566897608626" r="1.1" fill="#344b57"/><circle cx="-34.38822817434359" cy="10.09729483719684" r="1.1" fill="#344b57"/><circle cx="-35.84" cy="2.030529140917036e-14" r="1.1" fill="#344b57"/><circle cx="-34.388228174343595" cy="-10.09729483719683" r="1.1" fill="#344b57"/><circle cx="-30.150526616669538" cy="-19.37656689760862" r="1.1" fill="#344b57"/><circle cx="-23.470208704599024" cy="-27.086064744856614" r="1.1" fill="#344b57"/><circle cx="-14.888474065987637" cy="-32.60121071350593" r="1.1" fill="#344b57"/><circle cx="-5.100563803714543" cy="-35.47520047701263" r="1.1" fill="#344b57"/><circle cx="5.10056380371453" cy="-35.475200477012635" r="1.1" fill="#344b57"/><circle cx="14.888474065987598" cy="-32.60121071350595" r="1.1" fill="#344b57"/><circle cx="23.470208704599" cy="-27.086064744856635" r="1.1" fill="#344b57"/><circle cx="30.150526616669538" cy="-19.376566897608615" r="1.1" fill="#344b57"/><circle cx="34.38822817434359" cy="-10.097294837196845" r="1.1" fill="#344b57"/><path d="M27.52-26.88h11v49.28h-11Z" fill="#c7a836"/><g class="wSpin"><circle r="52.48" fill="none" stroke="#c5d1cf" stroke-width="2"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(0)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(36)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(72)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(108)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(144)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(180)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(216)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(252)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(288)"/><path d="M-4-10L-11-47.36 -5-51.2 2-20 7-51.2 12-48.64 6-7Z" fill="#4f6774" stroke="#b7c9cc" stroke-width=".8" transform="rotate(324)"/><circle r="12" fill="#17303f" stroke="#c5d0cd" stroke-width="2"/><circle r="5" fill="#889e9e"/><path d="M-2 -62h4v4h-4Z" fill="#b2bda8"/></g></g></svg>
     `;
     // the SVG replaced the original nodes — re-point the element refs at the new ones
     app.el.doorArt = document.getElementById("doorArt");
@@ -2725,23 +2699,49 @@ drawCluster(w, h, dashY, sway);
   function injectArt() {
     injectExterior();
     app.el.cabinArt.innerHTML = `
-    <svg viewBox="0 0 1000 360" role="img" aria-label="Chevrolet Corvette ZR1 cockpit">
-      <defs>
-        <linearGradient id="cabC" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1b1e24"/><stop offset="1" stop-color="#08090c"/></linearGradient>
-        <linearGradient id="cabA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#eef2f6"/><stop offset="0.5" stop-color="#aab2bb"/><stop offset="1" stop-color="#5c636c"/></linearGradient>
-        <linearGradient id="cabScr" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#12171e"/><stop offset="1" stop-color="#05080b"/></linearGradient>
-        <linearGradient id="cabSeat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#33301a"/><stop offset="1" stop-color="#131208"/></linearGradient>
-      </defs>
-      <rect width="1000" height="360" fill="url(#cabC)"/>
-      <rect x="108" y="44" width="784" height="20" rx="10" fill="#0c0f14" stroke="url(#cabA)" stroke-width="1.2"/>
-      <g transform="translate(250,270)"><rect x="-46" y="-34" width="92" height="122" rx="20" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/><path d="M-30,-18 L30,-18 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(255,255,255,0.16)"/></g>
-      <g transform="translate(750,270)"><rect x="-46" y="-34" width="92" height="122" rx="20" fill="url(#cabSeat)" stroke="rgba(0,0,0,0.35)"/><path d="M-30,-18 L30,-18 M-30,8 L30,8 M-30,32 L30,32" stroke="rgba(255,255,255,0.16)"/></g>
-      <g transform="translate(360,116)"><rect x="-100" y="-36" width="200" height="78" rx="6" fill="url(#cabScr)" stroke="#f2c200" stroke-width="2" id="tachArt"/><text x="0" y="-16" text-anchor="middle" font-size="9" fill="#ffe57a" letter-spacing="2">DRIVER DISPLAY</text><path d="M-88,-2 A70,70 0 0 1 88,-2" fill="none" stroke="#3a3410" stroke-width="5"/><path d="M-88,-2 A70,70 0 0 1 40,-40" fill="none" stroke="#f2c200" stroke-width="5"/><text x="0" y="8.4" text-anchor="middle" font-size="23.4" font-weight="700" fill="#fff3c0" id="tachGearArt">N</text><text x="0" y="37.8" text-anchor="middle" font-size="21.6" font-weight="800" fill="#fff3c0" id="cabSpeedArt">0</text><text x="0" y="51.6" text-anchor="middle" font-size="9.0" fill="#fff3c0" opacity="0.65">KM/H</text></g>
-      <rect x="470" y="118" width="150" height="66" rx="8" fill="url(#cabScr)" stroke="#f2c200" stroke-opacity="0.5"/><text x="545" y="156" text-anchor="middle" font-size="9" fill="#9aa2ab">INFOTAINMENT</text>
-      <g transform="translate(690,250)"><rect x="-14" y="-30" width="28" height="86" rx="8" fill="#0c0f14" stroke="url(#cabA)"/><circle cx="0" cy="-14" r="6" fill="url(#cabA)"/><line x1="0" y1="44" x2="0" y2="6" stroke="url(#cabA)" stroke-width="6" id="leverArt"/><circle cx="0" cy="48" r="9" fill="url(#cabA)"/></g>
-      <g id="cabinWheelG" transform="translate(360,300)"><path d="M-54,-16 A56,56 0 1 1 54,-16" fill="none" stroke="#101216" stroke-width="15"/><path d="M-54,-16 A56,56 0 1 1 54,-16" fill="none" stroke="#f2c200" stroke-width="3"/><line x1="-42" y1="44" x2="42" y2="44" stroke="#101216" stroke-width="13"/><line x1="0" y1="0" x2="-48" y2="2" stroke="#171a20" stroke-width="9"/><line x1="0" y1="0" x2="48" y2="2" stroke="#171a20" stroke-width="9"/><line x1="0" y1="0" x2="0" y2="42" stroke="#171a20" stroke-width="9"/><circle r="15" fill="#0e1116" stroke="#f2c200" stroke-width="2"/><text y="5" text-anchor="middle" font-size="10" font-weight="800" fill="#f2c200">ZR1</text></g>
-      <text x="500" y="352" text-anchor="middle" font-size="9" fill="#6b7480" letter-spacing="2">CORVETTE · LT7 · 1,064 HP</text>
-      </svg>`;
+<svg viewBox="0 0 1000 520" role="group" aria-label="2025 Chevrolet Corvette ZR1 • driver-oriented C8 cockpit, squared wheel and tall climate-control spine" xmlns="http://www.w3.org/2000/svg"><title>2025 Chevrolet Corvette ZR1 • driver-oriented C8 cockpit, squared wheel and tall climate-control spine</title><defs>
+ <linearGradient id="cabrhLeather" x2="0.15" y2="1"><stop stop-color="#424244"/><stop offset=".32" stop-color="#23262a"/><stop offset="1" stop-color="#0b0d10"/></linearGradient>
+ <linearGradient id="cabrhTan" x2=".25" y2="1"><stop stop-color="#ba7950"/><stop offset=".5" stop-color="#8e4d2b"/><stop offset="1" stop-color="#4b281c"/></linearGradient>
+ <linearGradient id="cabrhMetal" x2=".3" y2="1"><stop stop-color="#f0f0e9"/><stop offset=".25" stop-color="#899198"/><stop offset=".5" stop-color="#d6dce0"/><stop offset=".8" stop-color="#777e84"/><stop offset="1" stop-color="#c2c7ca"/></linearGradient>
+ <linearGradient id="cabrhScreen" x2="0" y2="1"><stop stop-color="#14222a"/><stop offset="1" stop-color="#020507"/></linearGradient>
+ <linearGradient id="cabrhGlass" x2=".3" y2="1"><stop stop-color="#79939a" stop-opacity=".6"/><stop offset=".5" stop-color="#233840" stop-opacity=".7"/><stop offset="1" stop-color="#0a1219"/></linearGradient>
+ <radialGradient id="cabrhRim"><stop offset=".5" stop-color="#15181c"/><stop offset=".83" stop-color="#383a3c"/><stop offset="1" stop-color="#090b0e"/></radialGradient>
+ <pattern id="cabrhCarbon" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(35)"><rect width="8" height="8" fill="#151b20"/><path d="M0 0h4v4H0zM4 4h4v4H4z" fill="#20272d"/><path d="M1 0v4M5 4v4" stroke="#30383e" stroke-width=".5"/></pattern>
+ <pattern id="cabrhMesh" width="7" height="6" patternUnits="userSpaceOnUse"><rect width="7" height="6" fill="#05080a"/><path d="M0 2L3.5 0 7 2v2L3.5 6 0 4Z" stroke="#485057" stroke-width=".7" fill="none"/></pattern>
+ <pattern id="cabrhPerforation" width="9" height="9" patternUnits="userSpaceOnUse"><rect width="9" height="9" fill="#767e83"/><circle cx="4.5" cy="4.5" r="2.4" fill="#080b0e"/></pattern>
+ <pattern id="cabrhFoil" width="5" height="5" patternUnits="userSpaceOnUse"><rect width="5" height="5" fill="#9d9b8b"/><path d="M0 0l5 5M-2 3l4-4M3 7l4-4" stroke="#d8d6c3" stroke-width="1"/></pattern>
+</defs><style>
+ text{font-family:Arial,sans-serif} [role=button]{cursor:pointer;outline:none} [role=button]:hover{filter:brightness(1.35)} [role=button]:focus-visible{filter:drop-shadow(0 0 5px #83dbff)} [aria-pressed=true]>rect:first-of-type,[aria-pressed=true]>circle:first-of-type{stroke:#9cd8ca;stroke-width:2.5}
+ .stitch{fill:none;stroke:#96775a;stroke-width:1;stroke-dasharray:3 3}.edge{fill:none;stroke:#747b80;stroke-width:1.5}.fine{fill:none;stroke:#41484e;stroke-width:1}
+ </style><rect width="1000" height="520" fill="#090e13"/>
+ <path d="M70 0H930L993 165Q504 121 8 165Z" fill="url(#cabrhGlass)"/>
+ <path d="M0 0H65L130 156 49 242 0 221ZM935 0H1000V226L953 230 873 156Z" fill="url(#cabrhCarbon)"/>
+ <path d="M0 0H1000V19Q510 3 0 19Z" fill="#090c0f"/>
+ <path d="M163 112Q491 72 830 112" fill="none" stroke="#92a7ac" opacity=".14"/>
+ <rect x="424" y="28" width="150" height="39" rx="10" fill="#070b0e" stroke="#515d65"/><path d="M434 34h132v25H434Z" fill="url(#cabrhGlass)"/>
+ <path d="M22 172Q218 123 432 155Q715 130 979 181V315L726 364 479 304 427 427 92 409 20 299Z" fill="url(#cabrhLeather)" stroke="#81888a"/>
+ <path d="M39 177Q215 137 432 166M660 170Q817 157 961 192" fill="none" class="stitch"/>
+ <path d="M184 149Q317 94 443 155L456 250 182 256Z" fill="url(#cabrhLeather)" stroke="#687680" stroke-width="4"/>
+ <path d="M206 158Q313 124 424 160L433 232H204Z" fill="url(#cabrhScreen)" stroke="#577480"/>
+ <g id="cabRevSegs" data-on="#ecb930" data-off="#26323b" data-redcol="#ff493b"><rect x="223" y="166" width="4.266666666666667" height="9" rx="1"/><rect x="229.26666666666668" y="165.78" width="4.266666666666667" height="9" rx="1"/><rect x="235.53333333333333" y="165.56" width="4.266666666666667" height="9" rx="1"/><rect x="241.8" y="165.34" width="4.266666666666667" height="9" rx="1"/><rect x="248.06666666666666" y="165.12" width="4.266666666666667" height="9" rx="1"/><rect x="254.33333333333334" y="164.9" width="4.266666666666667" height="9" rx="1"/><rect x="260.6" y="164.68" width="4.266666666666667" height="9" rx="1"/><rect x="266.8666666666667" y="164.46" width="4.266666666666667" height="9" rx="1"/><rect x="273.1333333333333" y="164.24" width="4.266666666666667" height="9" rx="1"/><rect x="279.4" y="164.02" width="4.266666666666667" height="9" rx="1"/><rect x="285.6666666666667" y="163.8" width="4.266666666666667" height="9" rx="1"/><rect x="291.93333333333334" y="163.58" width="4.266666666666667" height="9" rx="1"/><rect x="298.2" y="163.36" width="4.266666666666667" height="9" rx="1"/><rect x="304.4666666666667" y="163.14" width="4.266666666666667" height="9" rx="1"/><rect x="310.73333333333335" y="162.92" width="4.266666666666667" height="9" rx="1"/><rect x="317" y="162.7" width="4.266666666666667" height="9" rx="1"/><rect x="323.26666666666665" y="162.48" width="4.266666666666667" height="9" rx="1"/><rect x="329.5333333333333" y="162.26" width="4.266666666666667" height="9" rx="1"/><rect x="335.8" y="162.04" width="4.266666666666667" height="9" rx="1"/><rect x="342.06666666666666" y="161.82" width="4.266666666666667" height="9" rx="1"/><rect x="348.3333333333333" y="161.6" width="4.266666666666667" height="9" rx="1"/><rect x="354.6" y="161.38" width="4.266666666666667" height="9" rx="1"/><rect x="360.8666666666667" y="161.16" width="4.266666666666667" height="9" rx="1"/><rect x="367.1333333333333" y="160.94" width="4.266666666666667" height="9" rx="1"/><rect x="373.4" y="160.72" width="4.266666666666667" height="9" rx="1"/><rect x="379.66666666666663" y="160.5" width="4.266666666666667" height="9" rx="1"/><rect x="385.93333333333334" y="160.28" width="4.266666666666667" height="9" rx="1"/><rect x="392.2" y="160.06" width="4.266666666666667" height="9" rx="1"/><rect x="398.4666666666667" y="159.84" width="4.266666666666667" height="9" rx="1"/><rect x="404.73333333333335" y="159.62" width="4.266666666666667" height="9" rx="1"/></g><text x="313" y="207" font-size="36" fill="#e8e5d3" id="cabGearArt" text-anchor="middle">N</text><text x="244" y="219" font-size="21" fill="#e3edf0" id="cabSpeedArt">0</text><text x="402" y="214" font-size="13" fill="#b9cbd2" id="cabRpmArt" text-anchor="end">0</text>
+ <path d="M465 162L628 183 608 294 457 271Z" fill="url(#cabrhScreen)" stroke="#768b93" stroke-width="3"/>
+ <text x="540" y="202" font-size="11" fill="#e7d69d" text-anchor="middle">CORVETTE</text><g role="button" tabindex="0" data-control="dataBtn" aria-label="DATA" ><title>DATA</title><rect x="477" y="217" width="57" height="24" rx="4" fill="#13191e" stroke="#67747b"/><text x="505.5" y="231.8" font-size="8" fill="#c4d8dc" text-anchor="middle">DATA</text></g><g role="button" tabindex="0" data-control="audioBtn" aria-label="AUDIO" ><title>AUDIO</title><rect x="542" y="227" width="53" height="24" rx="4" fill="#13191e" stroke="#67747b"/><text x="568.5" y="241.8" font-size="8" fill="#c4d8dc" text-anchor="middle">AUDIO</text></g>
+ <path d="M619 184L650 181Q672 326 760 493L729 510Q644 338 619 184Z" fill="url(#cabrhMetal)" stroke="#d2d3c6"/>
+ <g role="button" tabindex="0" data-cabin-action="temperature" aria-label="+" ><title>+</title><rect x="626" y="209" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="637" y="219.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">+</text></g><g role="button" tabindex="0" data-cabin-action="temperatureDown" aria-label="−" ><title>−</title><rect x="631.23" y="232" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="642.23" y="242.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">−</text></g><g role="button" tabindex="0" data-cabin-action="climateAuto" aria-label="AUTO" ><title>AUTO</title><rect x="636.92" y="255" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="647.92" y="265.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">AUTO</text></g><g role="button" tabindex="0" data-control="coolBtn" aria-label="A/C" ><title>A/C</title><rect x="643.07" y="278" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="654.07" y="288.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">A/C</text></g><g role="button" tabindex="0" data-cabin-action="fan" aria-label="FAN" ><title>FAN</title><rect x="649.68" y="301" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="660.68" y="311.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">FAN</text></g><g role="button" tabindex="0" data-control="heatBtn" aria-label="HEAT" ><title>HEAT</title><rect x="656.75" y="324" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="667.75" y="334.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">HEAT</text></g><g role="button" tabindex="0" data-control="coolBtn" aria-label="COOL" ><title>COOL</title><rect x="664.28" y="347" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="675.28" y="357.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">COOL</text></g><g role="button" tabindex="0" data-cabin-action="climateAuto" aria-label="SYNC" ><title>SYNC</title><rect x="672.27" y="370" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="683.27" y="380.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">SYNC</text></g><g role="button" tabindex="0" data-control="ambientBtn" aria-label="CABIN" ><title>CABIN</title><rect x="680.72" y="393" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="691.72" y="403.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">CABIN</text></g><g role="button" tabindex="0" data-control="liftBtn" aria-label="LIFT" ><title>LIFT</title><rect x="689.63" y="416" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="700.63" y="426.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">LIFT</text></g><g role="button" tabindex="0" data-control="dataBtn" aria-label="DATA" ><title>DATA</title><rect x="699" y="439" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="710" y="449.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">DATA</text></g><g role="button" tabindex="0" data-control="audioBtn" aria-label="AUDIO" ><title>AUDIO</title><rect x="708.83" y="462" width="22" height="17" rx="4" fill="#13191e" stroke="#67747b"/><text x="719.83" y="472.075" font-size="4.5" fill="#c3d2d9" text-anchor="middle">AUDIO</text></g>
+ <path d="M478 294L604 316 722 520H460Z" fill="url(#cabrhCarbon)" stroke="#6d828b"/>
+ <g role="button" tabindex="0" data-cabin-action="reverse" aria-label="R" ><title>R</title><rect x="511" y="337" width="27" height="28" rx="4" fill="#13191e" stroke="#67747b"/><text x="524.5" y="354.15" font-size="9" fill="#aebbc4" text-anchor="middle">R</text></g><g role="button" tabindex="0" data-cabin-action="neutral" aria-label="N" ><title>N</title><rect x="546" y="344" width="27" height="28" rx="4" fill="#13191e" stroke="#67747b"/><text x="559.5" y="361.15" font-size="9" fill="#aebbc4" text-anchor="middle">N</text></g><g role="button" tabindex="0" data-control="upPaddle" aria-label="D" ><title>D</title><rect x="580" y="352" width="27" height="28" rx="4" fill="#13191e" stroke="#67747b"/><text x="593.5" y="369.15" font-size="9" fill="#aebbc4" text-anchor="middle">D</text></g><g role="button" tabindex="0" data-control="modeBtn" aria-label="MODE" ><title>MODE</title><circle cx="579" cy="414" r="24" fill="url(#cabrhMetal)" stroke="#11181d" stroke-width="3"/><circle cx="579" cy="414" r="19" fill="#14191e"/><text x="579" y="417" font-size="8" fill="#e5ecef" text-anchor="middle">MODE</text><path d="M579 391v5" stroke="#f0e5d2" stroke-width="2"/></g><g role="button" tabindex="0" data-control="startSwitchBtn" aria-label="START" ><title>START</title><circle cx="511" cy="407" r="14" fill="url(#cabrhMetal)" stroke="#11181d" stroke-width="3"/><circle cx="511" cy="407" r="9" fill="#14191e"/><text x="511" y="410" font-size="8" fill="#e5ecef" text-anchor="middle">START</text><path d="M511 394v5" stroke="#f0e5d2" stroke-width="2"/></g><g role="button" tabindex="0" data-control="fuelBtn" aria-label="E85 · Z" ><title>E85 · Z</title><rect x="580" y="456" width="77" height="23" rx="4" fill="#13191e" stroke="#67747b"/><text x="618.5" y="470.3" font-size="8" fill="#e2c269" text-anchor="middle">E85 · Z</text></g>
+ <path d="M83 224h65v16h-65Z" fill="#04090c" stroke="#596770"/><path d="M86 228h59" fill="none" stroke="#35454e"/><path d="M86 232h59" fill="none" stroke="#35454e"/><path d="M86 236h59" fill="none" stroke="#35454e"/><path d="M765 231h172v16h-172Z" fill="#04090c" stroke="#596770"/><path d="M768 235h166" fill="none" stroke="#35454e"/><path d="M768 239h166" fill="none" stroke="#35454e"/><path d="M768 243h166" fill="none" stroke="#35454e"/>
+ <path d="M22 311L97 273 136 373 113 520H0ZM785 367Q842 311 902 370L950 520H781Z" fill="url(#cabrhLeather)" stroke="#867e63"/>
+ <path d="M801 386Q843 351 889 385L924 507" fill="none" class="stitch"/><path d="M805 374l15 144M903 374l-15 144" fill="none" stroke="#202429" stroke-width="15"/><path d="M842 489h24v24h-24Z" fill="url(#cabrhMetal)" /><g role="button" tabindex="0" data-control="doorAllBtn" aria-label="Door release" ><title>Door release</title><path d="M38 326l45-20 7 13-46 21Z" fill="url(#cabrhMetal)" /></g>
+ <g role="button" tabindex="0" data-control="lightsBtn" aria-label="Headlamp stalk" ><title>Headlamp stalk</title><path d="M141 274L207 288 205 300 138 286Z" fill="#172832" stroke="#869da4"/><text x="159" y="284" font-size="6" fill="#ccdbdb" >LIGHT</text></g>
+ <g role="button" tabindex="0" data-control="downPaddle" aria-label="Downshift" ><title>Downshift</title><path d="M191 292q-15 25-6 81l13-3 1-83Z" fill="url(#cabrhMetal)" /><text x="191" y="329" font-size="15" fill="#111" text-anchor="middle">−</text></g><g role="button" tabindex="0" data-control="upPaddle" aria-label="Upshift" ><title>Upshift</title><path d="M441 292q15 25 6 81l-13-3-1-83Z" fill="url(#cabrhMetal)" /><text x="441" y="329" font-size="13" fill="#111" text-anchor="middle">+</text></g><g id="cabinWheelG" transform="translate(316 358)">
+ <path d="M-82-99H82Q121-93 125-54V48Q118 92 78 99H-78Q-118 92-125 48V-54Q-121-93-82-99Z" fill="none" stroke="#060b10" stroke-width="30"/><path d="M-82-99H82Q121-93 125-54V48Q118 92 78 99H-78Q-118 92-125 48V-54Q-121-93-82-99Z" fill="none" stroke="url(#cabrhLeather)" stroke-width="23"/><path d="M0-109v22" stroke="#e4bf34" stroke-width="7"/>
+ <path d="M-112-49v91Q-107 78-76 86M112-49v91Q107 78 76 86" fill="none" class="stitch"/>
+ <path d="M-113-36L-37-47H37L113-36 112 11 47 25 23 89H-23L-47 25-112 11Z" fill="url(#cabrhCarbon)" stroke="#7b9095"/>
+ <path d="M-40-39Q0-51 40-39L49 5Q36 55 0 57Q-36 55-49 5Z" fill="url(#cabrhLeather)" stroke="#697f89"/>
+ <path d="M-29-12L-4-1 0 19 4-1 29-12 19 12 0 26-19 12Z" fill="#a93731" stroke="#c6cdbf"/><path d="M-27-10l20 9-11 8M-21-8l3 15M-13-4l-4 10" stroke="#e1e8df" stroke-width="3"/>
+ <g role="button" tabindex="0" data-control="hornBtn" aria-label="Horn" ><title>Horn</title><ellipse rx="40" ry="43" fill="transparent"/></g><g role="button" tabindex="0" data-control="audioBtn" aria-label="VOL − +" ><title>VOL − +</title><rect x="-107" y="-17" width="54" height="22" rx="4" fill="#13191e" stroke="#67747b"/><text x="-80" y="-3.5500000000000003" font-size="7" fill="#cbd9d8" text-anchor="middle">VOL − +</text></g><g role="button" tabindex="0" data-control="dataBtn" aria-label="DATA" ><title>DATA</title><rect x="54" y="-17" width="54" height="22" rx="4" fill="#13191e" stroke="#67747b"/><text x="81" y="-3.5500000000000003" font-size="7" fill="#cbd9d8" text-anchor="middle">DATA</text></g><g role="button" tabindex="0" data-control="fuelBtn" aria-label="Z" ><title>Z</title><circle cx="-75" cy="65" r="15" fill="url(#cabrhMetal)" stroke="#11181d" stroke-width="3"/><circle cx="-75" cy="65" r="10" fill="#14191e"/><text x="-75" y="68" font-size="8" fill="#e5ecef" text-anchor="middle">Z</text><path d="M-75 51v5" stroke="#f0e5d2" stroke-width="2"/></g><g role="button" tabindex="0" data-control="modeBtn" aria-label="MODE" ><title>MODE</title><circle cx="75" cy="65" r="15" fill="url(#cabrhMetal)" stroke="#11181d" stroke-width="3"/><circle cx="75" cy="65" r="10" fill="#14191e"/><text x="75" y="68" font-size="8" fill="#e5ecef" text-anchor="middle">MODE</text><path d="M75 51v5" stroke="#f0e5d2" stroke-width="2"/></g><text x="0" y="78" font-size="12" fill="#d3c786" text-anchor="middle">ZR1</text>
+ </g><rect class="rhCabinGlow" width="1000" height="520" fill="#ffe0a5"/></svg>`;
   }
   function weave() { let s = ""; for (let x = -10; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x + 60}" y2="360"/>`; for (let x = 0; x < 1010; x += 14) s += `<line x1="${x}" y1="0" x2="${x - 60}" y2="360"/>`; return s; }
 
@@ -3065,6 +3065,37 @@ drawCluster(w, h, dashY, sway);
       };
       num("cabSpeedArt", spd);
       num("cabRpmArt", state.rpm);
+      // ROAD_ART_LIVE:BEGIN
+      put('rhWater',Math.round(state.waterTempC)+'°C');
+      put('rhBoost',(state.boostBar||0).toFixed(1));
+      put('rhTempSet',(state.cabinSetpoint??22)+'°');put('rhFanSet','FAN '+(state.cabinFanLevel??2));put('rhClimateAuto',(state.cabinClimateAuto??true)?'AUTO':'MAN');
+      if(document.getElementById('rhTempSet'))el.climateRead.textContent=(state.cabinSetpoint??22)+'°C';
+      const output=Math.round(app.engineTorque(state.rpm)*state.rpm*Math.PI/30*state.throttle/735.5);
+      put('rhPower',String(output));
+      put('rhMode',document.getElementById('pistaBtn')?(state.pista?'PISTA':'STRADA'):state.driveMode.toUpperCase());
+      if(document.getElementById('pistaBtn'))el.modeReadCab.textContent=state.pista?'Pista':'Strada';
+      const selfLevel=document.getElementById('jeskoLevelArt');
+      if(selfLevel)selfLevel.setAttribute('transform','rotate('+(-state.steer*52).toFixed(1)+')');
+      const jeskoRev=document.getElementById('rhJeskoRev');if(jeskoRev)jeskoRev.setAttribute('width',String(74*rev));
+      document.querySelectorAll('#rhShiftLights rect').forEach((n,i)=>n.setAttribute('fill',state.ignition&&rev>.6+i*.045?(i<6?'#efd978':'#ff4948'):'#34332a'));
+      for(const n of el.cabinArt.querySelectorAll('[data-control]')) {
+        const on={startSwitchBtn:state.ignition,coolBtn:state.cool,heatBtn:state.heat,audioBtn:state.audioCabin,ambientBtn:state.ambient,lightsBtn:state.lights,liftBtn:state.rideHeight===1,doorAllBtn:app.anyDoorOpen(),escBtn:state.esc,speedKeyBtn:state.speedKey,velocityBtn:state.velocity,fuelBtn:state.e85,corsaBtn:state.corsa,pistaBtn:state.pista,dataBtn:state.dataHud}[n.dataset.control];
+        if(on!==undefined)n.setAttribute('aria-pressed',String(on));
+      }
+      const hybridPage=document.getElementById('rhHybridPage');
+      if(hybridPage){hybridPage.setAttribute('visibility',state.cabinHybridPage?'visible':'hidden');put('rhHybridPower',String(output)+' PS');}
+      el.cabinArt.classList.toggle('rh-cabin-lit',!!state.ambient);
+      el.exteriorArt.classList.toggle('rh-lights',!!state.lights);
+      el.engineBay.classList.toggle('is-open',!!state.engineCoverOpen);
+      el.engineBay.style.setProperty('--rh-fan',((state.coolingFans?state.time:0)*420%360)+'deg');
+      document.getElementById('coverBtn').textContent=state.engineCoverOpen?'Close Cover':'Open Cover';
+      for(const n of el.cabinArt.querySelectorAll('[data-live-needle]')){
+        const fraction=clamp((state[n.dataset.liveNeedle]||0)/Number(n.dataset.max),0,1);
+        n.setAttribute('transform','rotate('+(-130+260*fraction).toFixed(1)+','+n.dataset.cx+','+n.dataset.cy+')');
+      }
+      el.engineBay.style.setProperty('--tc-crank-fan',((state.ignition?state.time*state.rpm*.7:0)%360)+'deg');
+      // ROAD_ART_LIVE:END
+
       num("cabDownforceArt", (state.downforceN || 0) / 9.81);
       put("cabGearArt", state.gearMode === "G" ? String(state.curGear) : state.gearMode);
       const bar = document.getElementById("cabRevBar");
@@ -3077,7 +3108,7 @@ drawCluster(w, h, dashY, sway);
         const a0 = parseFloat(g.dataset.a0 || 0), a1 = parseFloat(g.dataset.a1 || 270);
         g.setAttribute("transform", `rotate(${(a0 + (a1 - a0) * clamp(f, 0, 1)).toFixed(1)},${g.dataset.cx || 0},${g.dataset.cy || 0})`);
       };
-      sweep("cabRevNeedle", rev);
+      sweep("cabRevNeedle", state.rpm / (Number(document.getElementById("cabRevNeedle")?.dataset.max) || SPEC.redlineRpm));
       const sn = document.getElementById("cabSpeedNeedle");
       if (sn) sweep("cabSpeedNeedle", spd / (parseFloat(sn.dataset.max) || 300));
       const segs = document.getElementById("cabRevSegs");
@@ -3186,6 +3217,41 @@ drawCluster(w, h, dashY, sway);
   }
 
   function bindCockpit() {
+    // ROAD_ART_BINDINGS:BEGIN
+    // Drawn controls invoke existing actions; no powertrain or sound model lives here.
+    const activateCabin = e => {
+      const n=e.target.closest('[data-control],[data-cabin-action]'); if(!n)return;
+      if(e.type==='keydown'&&!['Enter',' '].includes(e.key))return;
+      e.preventDefault();e.stopPropagation();if(e.repeat)return;
+      if(n.dataset.control==='hornBtn') { app.hornOn();setTimeout(()=>app.hornOff(),180); }
+      else if(n.dataset.control)document.getElementById(n.dataset.control)?.click();
+      else if(n.dataset.cabinAction==='neutral')app.setGear('N');
+      else if(n.dataset.cabinAction==='reverse')app.setGear('R');
+      else if(['temperature','temperatureDown'].includes(n.dataset.cabinAction)) {
+        state.cabinSetpoint=(state.cabinSetpoint??22)+(n.dataset.cabinAction==='temperatureDown'||e.shiftKey?-1:1);
+        if(state.cabinSetpoint>26)state.cabinSetpoint=18;if(state.cabinSetpoint<18)state.cabinSetpoint=26;
+        app.showToast('Climate set to '+state.cabinSetpoint+'°C. Shift-click to turn the dial down.','Climate');
+      }
+      else if(n.dataset.cabinAction==='fan') {
+        state.cabinFanLevel=((state.cabinFanLevel??2)+1)%6;
+        if(!!state.cool!==(state.cabinFanLevel>0))app.setToggle('cool',state.cabinFanLevel>0);
+        app.showToast(state.cabinFanLevel?'Cabin fan · level '+state.cabinFanLevel:'Cabin fan off.','Climate');
+      }
+      else if(n.dataset.cabinAction==='climateAuto') {
+        state.cabinClimateAuto=!(state.cabinClimateAuto??true);
+        if(state.cabinClimateAuto&&!state.cool)app.setToggle('cool',true);
+        app.showToast(state.cabinClimateAuto?'Automatic climate selected.':'Manual climate selected.','Climate');
+      }
+      else if(n.dataset.cabinAction==='ipas') {
+        state.cabinHybridPage=!state.cabinHybridPage;
+        app.showToast(state.cabinHybridPage?'IPAS: hybrid output is included in the existing throttle model. Power readout selected.':'Instrument readout selected.','McLaren P1');
+      }
+      app.updateUi();
+    };
+    el.cabinArt.addEventListener('click',activateCabin);
+    el.cabinArt.addEventListener('keydown',activateCabin);
+    // ROAD_ART_BINDINGS:END
+
     const t = (id, key) => document.getElementById(id).addEventListener("click", () => app.setToggle(key));
     t("heatBtn", "heat"); t("coolBtn", "cool"); t("ambientBtn", "ambient"); t("audioBtn", "audioCabin"); t("shifterLightBtn", "shifterLight");
     t("fansBtn", "coolingFans"); t("antiLagBtn", "antiLag");

@@ -1,3 +1,4 @@
+import {TOURING_EXTERIORS} from '../road-hypercars/touring-exteriors.mjs';
 // drawn.mjs — bodies drawn BY HAND, car by car, from that car's own side elevation.
 //
 // The generator gave every body correct proportions and a family resemblance it could not shed:
@@ -164,11 +165,11 @@ export function drawZr1(spec) {
    to the generator for everything else, so a car that has been drawn but not yet approved stays
    out of the garage until it is named on this line. */
 export const DRAWN = {
-  zr1: drawZr1, nevera: drawNevera, gto: drawGto, f40: drawF40, evija: drawEvija,
+  zr1: TOURING_EXTERIORS.zr1, nevera: drawNevera, gto: TOURING_EXTERIORS.gto, f40: TOURING_EXTERIORS.f40, evija: drawEvija,
   tuatara: drawTuatara, bugatti: drawBugatti,
-  pagani: drawPagani, mclaren: drawMclaren, ferrari: drawFerrariF80,
+  pagani: TOURING_EXTERIORS.pagani, mclaren: TOURING_EXTERIORS.mclaren, ferrari: drawFerrariF80,
   koenigsegg: drawKoenigsegg, aston: drawNextAston,
-  venom: drawNextVenom, amgone: drawNextAmgOne, p1: drawP1, p917: drawP917, revuelto: drawRevuelto,
+  venom: drawNextVenom, amgone: drawNextAmgOne, p1: drawP1, p917: TOURING_EXTERIORS.p917, revuelto: drawRevuelto,
   tesla: drawTesla, taycan: drawTaycan, amg: drawAmgGt, porsche918: drawPorsche918, supra: drawSupra,
   t50s: drawT50s, alfa33: drawAlfa33, project8: drawProject8, s2000: drawS2000,
   mustanggtd: drawMustangGtd, rx7: drawRx7,
