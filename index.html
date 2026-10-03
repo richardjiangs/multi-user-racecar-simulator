@@ -4075,6 +4075,7 @@
       let raceLocal = { holding: false, gridIndex: 0, released: true, lightsRaf: 0 };
       let publicHosts = new Map();
       const embeddedCache = {};
+      const simLoading=document.createElement('div');simLoading.id='simLoading';simLoading.hidden=true;simLoading.setAttribute('role','status');simLoading.style.cssText='position:fixed;left:50%;top:46%;transform:translate(-50%,-50%);z-index:9999;background:#15222ef2;color:#effaff;border:1px solid #58bcb1;border-radius:12px;padding:22px 28px;max-width:85vw;font:15px/1.5 system-ui;pointer-events:none';document.body.appendChild(simLoading);
       const trackVersionSelect=document.getElementById('trackVersion'),controlModeSelect=document.getElementById('controlMode');
       let garageTrackVersion='2',garageControlMode=matchMedia('(pointer: coarse)').matches?'dpad':'pc',activeTrackVersion='1',simLoadId=0;
       try{garageTrackVersion=localStorage.getItem('mucs-track-version')||'2';garageControlMode=localStorage.getItem('mucs-controls')||garageControlMode;}catch(e){}
@@ -4254,10 +4255,10 @@ window.installGarageControls = function(win, mode) {
         return window.TRACK2_READY;
       }
       async function loadEmbeddedSim(car,onLoad,version=versionFor(car.key)) {
-        const id=++simLoadId;activeTrackVersion=version;
+        const id=++simLoadId;activeTrackVersion=version;simLoading.textContent=version==='2'?'Loading Track 2.0 circuits…':'Opening '+car.label+'…';simLoading.hidden=false;
         raceCarLabel.textContent=car.label+' · Track '+version+'.0';
-        if(version==='2'){try{await ensureTrackAssets();}catch(e){showToast(e.message);return;}if(id!==simLoadId)return;}
-        simFrame.onload=()=>{const started=Date.now();const ready=()=>{if(id!==simLoadId)return;const app=getSimApp();if(app?.drawWorld&&app?.updatePhysics){window.installGarageControls(simFrame.contentWindow,garageControlMode);attachFrameShortcuts();if(typeof onLoad==='function')onLoad();}else if(Date.now()-started<60000)setTimeout(ready,100);};ready();};
+        if(version==='2'){try{await ensureTrackAssets();}catch(e){showToast(e.message);simLoading.textContent=e.message;return;}if(id!==simLoadId)return;}
+        simFrame.onload=()=>{const started=Date.now();const ready=()=>{if(id!==simLoadId)return;const app=getSimApp();if(app?.drawWorld&&app?.updatePhysics){simLoading.hidden=true;window.installGarageControls(simFrame.contentWindow,garageControlMode);attachFrameShortcuts();if(typeof onLoad==='function')onLoad();}else if(Date.now()-started<60000)setTimeout(ready,100);};ready();};
         if(window.EMBEDDED_SIM_GZIP_BASE64){simFrame.removeAttribute('src');const html=await getEmbeddedSim(car.key,version);if(id===simLoadId)simFrame.srcdoc=html;}
         else{simFrame.removeAttribute('srcdoc');simFrame.src=simUrl(car.key,version);}
       }
@@ -5002,7 +5003,7 @@ window.installGarageControls = function(win, mode) {
           if (autoJoin) setTimeout(() => joinRoom(), 450);
         });
       }
-      function backToGarage() { ++simLoadId;
+      function backToGarage() { ++simLoadId;simLoading.hidden=true;
         leaveRoom(null, true);
         clearInterval(enforceTimer);
         simFrame.removeAttribute("src");
