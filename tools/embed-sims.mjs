@@ -3,13 +3,14 @@
      node tools/embed-sims.mjs
 
    Writes two things:
-     - sims-embedded.js  — every sim base64-encoded. index.html loads this ONLY
+     - sims-embedded.js  — every sim gzip/base64-encoded plus the shared track pack. index.html loads this ONLY
        over file:// (offline), where Chrome can't point an iframe at a sibling file.
      - index.html        — between the EMBED markers, just the tiny key -> filename
        SIM_FILES map. Over http(s) the garage lazy-loads each sim file on demand,
        so the initial page stays small (was ~12 MB with the base64 inlined).
 */
 import { readFileSync, writeFileSync } from "node:fs";
+import { gzipSync } from "node:zlib";
 import { createHash } from "node:crypto";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -82,10 +83,12 @@ const FILES = {
   hunter: "Prodrive Hunter Dakar simulator.html",
 };
 
+const FILES_2=JSON.parse(readFileSync(resolve(ROOT,"tools/tracks2/manifest.json")));
+const packJs=readFileSync(resolve(ROOT,"assets/tracks-2/pack.js"),"utf8");
 const enc = {};
-for (const [key, file] of Object.entries(FILES)) {
+for (const [key, file] of Object.entries({...FILES,...Object.fromEntries(Object.entries(FILES_2).map(([k,v])=>[k+"@2",v]))})) {
   const buf = readFileSync(resolve(ROOT, file));
-  enc[key] = buf.toString("base64");
+  enc[key] = gzipSync(buf,{level:9}).toString("base64");
   console.log(`${key.padEnd(11)} ${file}  ${(buf.length / 1024).toFixed(0)} KB`);
 }
 
@@ -95,12 +98,12 @@ for (const [key, file] of Object.entries(FILES)) {
 // index.html and still open last week's simulator out of disk cache. It only changes when
 // a sim actually changes, so it does not defeat caching, it just ends staleness.
 const SIM_BUILD = createHash("sha1")
-  .update(Object.keys(enc).sort().map((k) => k + ":" + enc[k]).join("|"))
+  .update(packJs).update(Object.keys(enc).sort().map((k) => k + ":" + enc[k]).join("|"))
   .digest("hex").slice(0, 10);
 
 // 1) base64 copies -> a separate file, loaded by index.html ONLY over file://.
 const embedPath = resolve(ROOT, "sims-embedded.js");
-const embedJs = `window.EMBEDDED_SIM_BASE64 = ${JSON.stringify(enc)};\n`;
+const embedJs = packJs+`window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};\n`;
 writeFileSync(embedPath, embedJs);
 
 // 2) index.html carries only the small key -> filename map for the lazy http(s) path.
@@ -109,7 +112,7 @@ const html = readFileSync(indexPath, "utf8");
 const START = "/*__EMBED_START__*/", END = "/*__EMBED_END__*/";
 const i = html.indexOf(START), j = html.indexOf(END);
 if (i < 0 || j < 0) { console.error("EMBED markers not found in index.html"); process.exit(1); }
-const line = `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_BUILD = ${JSON.stringify(SIM_BUILD)};${END}`;
+const line = `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_FILES_2 = ${JSON.stringify(FILES_2)};const SIM_BUILD = ${JSON.stringify(SIM_BUILD)};${END}`;
 const newIndex = html.slice(0, i) + line + html.slice(j + END.length);
 writeFileSync(indexPath, newIndex);
 
@@ -122,12 +125,12 @@ writeFileSync(indexPath, newIndex);
 writeFileSync(resolve(ROOT, "build.txt"), SIM_BUILD + "\n");
 
 // 3) index-offline.html — the original all-in-one page: one self-contained file
-//    with every sim embedded inline, always uses the embedded copy (no network,
-//    zero loading), works the same from disk or a server. Derived from index.html
+//    with every sim embedded inline, always uses the embedded copy (no simulator
+//    downloads), works the same from disk or a server. Derived from index.html
 //    so it never drifts.
 const offline = newIndex
   // inline the base64 next to the filename map (no external sims-embedded.js)
-  .replace(line, `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_BUILD = ${JSON.stringify(SIM_BUILD)};window.EMBEDDED_SIM_BASE64 = ${JSON.stringify(enc)};${END}`)
+  .replace(line, `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_FILES_2 = ${JSON.stringify(FILES_2)};const SIM_BUILD = ${JSON.stringify(SIM_BUILD)};${packJs}window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};${END}`)
   // the file:// guard that pulls in the external embed is unnecessary here
   .replace(`if (location.protocol === "file:") document.write('<script src="sims-embedded.js"><\\/script>');`,
            `/* index-offline.html: every sim is embedded inline above — no external file */`)

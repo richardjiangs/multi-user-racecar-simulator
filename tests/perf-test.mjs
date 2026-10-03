@@ -593,7 +593,7 @@ async function openSim(browser, car) {
   // Physics is stepped explicitly below; suppress the independent display-loop clock.
   await page.addInitScript(() => { window.requestAnimationFrame = () => 0; });
   await page.goto(pathToFileURL(resolve(ROOT, car.file)).href);
-  await page.waitForFunction((appName) => !!window[appName] && !!window[appName].updatePhysics, car.app, { timeout: 15000 });
+  await page.waitForFunction((appName) => !!window[appName] && !!window[appName].updatePhysics, car.app, { timeout: 60000, polling:100 });
   return page;
 }
 
@@ -682,7 +682,11 @@ async function calibrateCar(browser, key) {
 const args = process.argv.slice(2);
 const calibrate = args.includes("--calibrate");
 const keys = args.filter((a) => CARS[a]);
-const list = keys.length ? keys : Object.keys(CARS);
+let list = keys.length ? keys : Object.keys(CARS);
+if(process.env.TRACK_VERSION==='2'){
+ const{readFileSync}=await import('node:fs');const variants=JSON.parse(readFileSync(resolve(ROOT,'tools/tracks2/manifest.json')));
+ list=list.filter(k=>variants[k]);for(const key of list)CARS[key].file=variants[key];
+}
 
 const browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH || undefined });
 try {

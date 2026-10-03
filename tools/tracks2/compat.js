@@ -1,0 +1,15 @@
+(function(){const a=window.__Track2App,s=a.state;
+ a.track2Reset=()=>{a.resetContacts?.();Object.assign(s,{inPitLane:false,pitStage:'',pitMenuOpen:false,pitArmed:false,pitQ:0,pitStops:0,pitAutoStart:0,pitTargetOffset:0});};
+ a.track2Reset();
+ a.TEAM ||= {slot:1,name:'Service crew',pitCrew:3};
+ const title=document.querySelector('h1')?.textContent||document.title;
+ a.track2Vehicle={...TRACK2_CONFIG,wheelbase:a.STEERING.wheelbase,halfLength:TRACK2_CONFIG.f1?2.7:a.STEERING.wheelbase/2+.85,halfWidth:TRACK2_CONFIG.f1?.97:Math.max(.84,a.STEERING.frontTrack/2+.14),centerOffset:TRACK2_CONFIG.f1?.65:.3};
+ if(!a.pitConfirm){a.pitPlan=()=>{const items=s.realMode?Object.keys(s.sys).filter(k=>s.sys[k]>.005):[];const t=3+items.reduce((v,k)=>v+2+s.sys[k]*5,0);return {t,items,text:s.realMode?'Tyre change'+(items.length?' · repair '+items.join(', '):''):'Practice tyre change — no damage repairs'};};a.pitConfirm=()=>{if(s.pitStage!=='box')return;s.pitService=a.pitPlan().t;s.pitStage='service';s.pitMenuOpen=false;};a.pitInOut=()=>{if(!a.requestPit())s.pitArmed=!s.pitArmed;};}
+ s.tyreComp ||= 'medium';s.pitTireSel ||= s.tyreComp;s.pitFuelAdd ||= 0;s.tyreWear ||= 0;s.fuelKg ||= 0;s.sys ||= {};
+ const panel=document.createElement('aside');panel.id='track2-pit-status';panel.setAttribute('role','status');panel.style.cssText='display:none;position:fixed;left:50%;bottom:200px;transform:translateX(-50%);max-width:calc(100vw - 28px);padding:12px 16px;z-index:65;background:#0b1b22f5;border:1px solid #58cbbb;border-radius:9px;color:#e6f8f4;font:13px/1.4 system-ui;box-shadow:0 6px 24px #0007';panel.innerHTML='<strong>Service lane</strong><div data-pit-message></div><button data-pit-request style="margin-top:8px">Request service</button>';document.body.appendChild(panel);panel.querySelector('button').onclick=()=>s.pitStage==='box'?a.pitConfirm():a.pitInOut();
+ const update=()=>{const on=a.trackModel?.()&&s.inPitLane;panel.style.display=on&&!s.pitMenuOpen?'block':'none';if(!on)return;const d=Math.round(a.pitBox(a.TEAM.slot)-s.pitQ),mode=s.realMode?'Repair':'Practice service';panel.querySelector('[data-pit-message]').textContent=s.pitStage==='service'?mode+' · '+Math.max(0,s.pitService).toFixed(1)+' s':s.pitStage==='box'?a.pitPlan().text+' · starts in '+Math.ceil(s.pitAutoStart)+' s':s.pitStage==='exit'?'Service complete · follow the exit':d<-5?'Your bay is '+(-d)+' m behind; reverse carefully.':'Your bay '+Math.max(0,d)+' m ahead · stop in the marked bay or garage';const b=panel.querySelector('button');b.hidden=['service','exit'].includes(s.pitStage);b.textContent=s.pitStage==='box'?'Start service now':'Request service';if(!document.getElementById('pitMenu')){s.pitMenuOpen=false;panel.style.display='block';}else if(s.pitMenuOpen){document.getElementById('pmGo').textContent='Start now · automatic in '+Math.ceil(s.pitAutoStart)+' s';}};
+ a.track2UpdatePit=update;
+ // All former control actions remain; this status panel only makes the new service
+ // lane visible in cars whose original UI did not have a pit menu.
+ window.setInterval(update,150);
+})();

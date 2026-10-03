@@ -708,6 +708,9 @@
       letter-spacing: 2px;
       font-size: 13px;
     }
+    @media(max-width:640px){.garage-settings label{width:100%;min-width:0}.garage-settings select{width:100%;min-width:0}}
+    .garage-settings{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:22px;margin:0 0 26px;border:1px solid #364354;border-radius:16px;background:#151e2a}
+    .garage-settings p{margin:5px 0;color:#b4c1d1;font-size:13px}.garage-settings label{display:grid;gap:7px;font-size:13px}.garage-settings select{background:#0b121c;color:#eef4ff;border:1px solid #536078;border-radius:8px;padding:10px;font:inherit;max-width:100%}.garage-settings .settings-note{flex-basis:100%}.track-version-badge{font-size:11px;color:#80dccc;margin:8px 0}
   </style>
 </head>
 <body>
@@ -716,7 +719,7 @@
       <header class="garage-head">
         <section class="garage-title">
           <h1>Choose your hypercar.</h1>
-          <p>64 carefully researched simulators, one garage. Pick the car, then drive solo in the untouched simulator (AI rival grid and all) or host an online room — the host sets the track, five red lights start the race, and every car on track is a real person.</p>
+          <p>64 carefully researched simulators, one garage. Pick the car, then drive solo with the AI rival grid or host an online room — the host sets the track, five red lights start the race, and every car on track is a real person.</p>
         </section>
         <aside class="connection-note">
           <b>Online mode:</b> free browser-to-browser WebRTC, signalled over a mesh of public relays (with the PeerJS cloud as automatic fallback) — no server of ours, and no single broker to die mid-race. Works worldwide once the page is hosted (GitHub Pages).
@@ -725,6 +728,12 @@
         </aside>
       </header>
 
+      <section class="garage-settings" aria-label="Driving settings">
+        <div><b>Driving settings</b><p>Choose your tracks and controls before opening a car.</p></div>
+        <label>Track version<select id="trackVersion"><option value="2">Track 2.0 — upgraded shared circuits</option><option value="1">Track 1.0 — original tracks</option></select></label>
+        <label>Controls<select id="controlMode"><option value="pc">PC — keyboard</option><option value="dpad">D-pad — buttons + steering wheel</option></select></label>
+        <p class="settings-note">Track 2.0 keeps each car’s original brand circuit. DB5, F12tdf, both Rolls-Royces and the four Dakar cars retain Track 1.0. Online rooms use the host’s track version. <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">© OpenStreetMap contributors</a> · elevation and scenery are modeled approximations.</p>
+      </section>
       <section class="cars" aria-label="Car choices">
         <article class="car-card" data-car-card="pagani">
           <div class="photo">
@@ -3873,7 +3882,7 @@
         "Suzuka Circuit", "Silverstone Circuit", "Nardò Ring"
       ];
 
-      /*__EMBED_START__*/const SIM_FILES = {"pagani":"Pagani Huayra BC Simulator.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator.html","mclaren":"McLaren Speedtail simulator.html","ferrari":"Ferrari F80 simulator.html","koenigsegg":"Koenigsegg Jesko simulator.html","tesla":"Tesla Model S Plaid simulator.html","amg":"Mercedes-AMG GT Black Series simulator.html","aston":"Aston Martin Valkyrie simulator.html","gto":"Ferrari 250 GTO simulator.html","revuelto":"Lamborghini Revuelto simulator.html","porsche918":"Porsche 918 Spyder simulator.html","taycan":"Porsche Taycan Turbo GT simulator.html","supra":"Toyota Supra MK4 simulator.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator.html","gtr":"Nissan GT-R Nismo simulator.html","m5":"BMW M5 simulator.html","r8":"Audi R8 V10 Performance simulator.html","mcf1":"McLaren F1 1993 simulator.html","t33":"Gordon Murray T.33 simulator.html","f12tdf":"Ferrari F12tdf simulator.html","agera":"Koenigsegg Agera RS simulator.html","u9":"Yangwang U9 simulator.html","db5":"Aston Martin DB5 simulator.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator.html","czinger":"Czinger 21C simulator.html","alfa33":"Alfa Romeo 33 Stradale simulator.html","tuatara":"SSC Tuatara simulator.html","t50s":"Gordon Murray T50s Niki Lauda simulator.html","project8":"Jaguar XE SV Project 8 simulator.html","s2000":"Honda S2000 simulator.html","mustanggtd":"Ford Mustang GTD simulator.html","rx7":"Mazda RX-7 simulator.html","phantom":"Rolls-Royce Phantom simulator.html","spectre":"Rolls-Royce Spectre Black Badge simulator.html","venom":"Hennessey Venom F5 simulator.html","evija":"Lotus Evija simulator.html","amgone":"Mercedes-AMG One simulator.html","nevera":"Rimac Nevera simulator.html","zr1":"Chevrolet Corvette ZR1 simulator.html","p1":"McLaren P1 simulator.html","f40":"Ferrari F40 simulator.html","p917":"Porsche 917 simulator.html","viperacr":"Dodge Viper ACR Extreme Aero simulator.html","aurora":"Zenvo Aurora Agil simulator.html","mcxtrema":"Maserati MCXtrema simulator.html","peugeot9x8":"Peugeot 9X8 simulator.html","porsche919":"Porsche 919 Hybrid simulator.html","ferrari499p":"Ferrari 499P simulator.html","solusgt":"McLaren Solus GT simulator.html","f1mercedes":"Mercedes F1 2026 simulator.html","f1redbull":"Red Bull F1 2026 simulator.html","f1ferrari":"Ferrari F1 2026 simulator.html","f1mclaren":"McLaren F1 2026 simulator.html","f1aston":"Aston Martin F1 2026 simulator.html","f1alpine":"Alpine F1 2026 simulator.html","f1williams":"Williams F1 2026 simulator.html","f1racingbulls":"Racing Bulls F1 2026 simulator.html","f1haas":"Haas F1 2026 simulator.html","f1audi":"Audi F1 2026 simulator.html","f1cadillac":"Cadillac F1 2026 simulator.html","dacia":"Dacia Sandrider Dakar simulator.html","fordraptor":"Ford Raptor T1+ Dakar simulator.html","grhilux":"Toyota GR DKR Hilux simulator.html","hunter":"Prodrive Hunter Dakar simulator.html"};const SIM_BUILD = "8cd6076fcd";/*__EMBED_END__*/
+      /*__EMBED_START__*/const SIM_FILES = {"pagani":"Pagani Huayra BC Simulator.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator.html","mclaren":"McLaren Speedtail simulator.html","ferrari":"Ferrari F80 simulator.html","koenigsegg":"Koenigsegg Jesko simulator.html","tesla":"Tesla Model S Plaid simulator.html","amg":"Mercedes-AMG GT Black Series simulator.html","aston":"Aston Martin Valkyrie simulator.html","gto":"Ferrari 250 GTO simulator.html","revuelto":"Lamborghini Revuelto simulator.html","porsche918":"Porsche 918 Spyder simulator.html","taycan":"Porsche Taycan Turbo GT simulator.html","supra":"Toyota Supra MK4 simulator.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator.html","gtr":"Nissan GT-R Nismo simulator.html","m5":"BMW M5 simulator.html","r8":"Audi R8 V10 Performance simulator.html","mcf1":"McLaren F1 1993 simulator.html","t33":"Gordon Murray T.33 simulator.html","f12tdf":"Ferrari F12tdf simulator.html","agera":"Koenigsegg Agera RS simulator.html","u9":"Yangwang U9 simulator.html","db5":"Aston Martin DB5 simulator.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator.html","czinger":"Czinger 21C simulator.html","alfa33":"Alfa Romeo 33 Stradale simulator.html","tuatara":"SSC Tuatara simulator.html","t50s":"Gordon Murray T50s Niki Lauda simulator.html","project8":"Jaguar XE SV Project 8 simulator.html","s2000":"Honda S2000 simulator.html","mustanggtd":"Ford Mustang GTD simulator.html","rx7":"Mazda RX-7 simulator.html","phantom":"Rolls-Royce Phantom simulator.html","spectre":"Rolls-Royce Spectre Black Badge simulator.html","venom":"Hennessey Venom F5 simulator.html","evija":"Lotus Evija simulator.html","amgone":"Mercedes-AMG One simulator.html","nevera":"Rimac Nevera simulator.html","zr1":"Chevrolet Corvette ZR1 simulator.html","p1":"McLaren P1 simulator.html","f40":"Ferrari F40 simulator.html","p917":"Porsche 917 simulator.html","viperacr":"Dodge Viper ACR Extreme Aero simulator.html","aurora":"Zenvo Aurora Agil simulator.html","mcxtrema":"Maserati MCXtrema simulator.html","peugeot9x8":"Peugeot 9X8 simulator.html","porsche919":"Porsche 919 Hybrid simulator.html","ferrari499p":"Ferrari 499P simulator.html","solusgt":"McLaren Solus GT simulator.html","f1mercedes":"Mercedes F1 2026 simulator.html","f1redbull":"Red Bull F1 2026 simulator.html","f1ferrari":"Ferrari F1 2026 simulator.html","f1mclaren":"McLaren F1 2026 simulator.html","f1aston":"Aston Martin F1 2026 simulator.html","f1alpine":"Alpine F1 2026 simulator.html","f1williams":"Williams F1 2026 simulator.html","f1racingbulls":"Racing Bulls F1 2026 simulator.html","f1haas":"Haas F1 2026 simulator.html","f1audi":"Audi F1 2026 simulator.html","f1cadillac":"Cadillac F1 2026 simulator.html","dacia":"Dacia Sandrider Dakar simulator.html","fordraptor":"Ford Raptor T1+ Dakar simulator.html","grhilux":"Toyota GR DKR Hilux simulator.html","hunter":"Prodrive Hunter Dakar simulator.html"};const SIM_FILES_2 = {"pagani":"Pagani Huayra BC Simulator 2.0.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator 2.0.html","mclaren":"McLaren Speedtail simulator 2.0.html","ferrari":"Ferrari F80 simulator 2.0.html","koenigsegg":"Koenigsegg Jesko simulator 2.0.html","tesla":"Tesla Model S Plaid simulator 2.0.html","amg":"Mercedes-AMG GT Black Series simulator 2.0.html","aston":"Aston Martin Valkyrie simulator 2.0.html","gto":"Ferrari 250 GTO simulator 2.0.html","revuelto":"Lamborghini Revuelto simulator 2.0.html","porsche918":"Porsche 918 Spyder simulator 2.0.html","taycan":"Porsche Taycan Turbo GT simulator 2.0.html","supra":"Toyota Supra MK4 simulator 2.0.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator 2.0.html","gtr":"Nissan GT-R Nismo simulator 2.0.html","m5":"BMW M5 simulator 2.0.html","r8":"Audi R8 V10 Performance simulator 2.0.html","mcf1":"McLaren F1 1993 simulator 2.0.html","t33":"Gordon Murray T.33 simulator 2.0.html","agera":"Koenigsegg Agera RS simulator 2.0.html","u9":"Yangwang U9 simulator 2.0.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator 2.0.html","czinger":"Czinger 21C simulator 2.0.html","alfa33":"Alfa Romeo 33 Stradale simulator 2.0.html","tuatara":"SSC Tuatara simulator 2.0.html","t50s":"Gordon Murray T50s Niki Lauda simulator 2.0.html","project8":"Jaguar XE SV Project 8 simulator 2.0.html","s2000":"Honda S2000 simulator 2.0.html","mustanggtd":"Ford Mustang GTD simulator 2.0.html","rx7":"Mazda RX-7 simulator 2.0.html","venom":"Hennessey Venom F5 simulator 2.0.html","evija":"Lotus Evija simulator 2.0.html","amgone":"Mercedes-AMG One simulator 2.0.html","nevera":"Rimac Nevera simulator 2.0.html","zr1":"Chevrolet Corvette ZR1 simulator 2.0.html","p1":"McLaren P1 simulator 2.0.html","f40":"Ferrari F40 simulator 2.0.html","p917":"Porsche 917 simulator 2.0.html","viperacr":"Dodge Viper ACR Extreme Aero simulator 2.0.html","aurora":"Zenvo Aurora Agil simulator 2.0.html","mcxtrema":"Maserati MCXtrema simulator 2.0.html","peugeot9x8":"Peugeot 9X8 simulator 2.0.html","porsche919":"Porsche 919 Hybrid simulator 2.0.html","ferrari499p":"Ferrari 499P simulator 2.0.html","solusgt":"McLaren Solus GT simulator 2.0.html","f1mercedes":"Mercedes F1 2026 simulator 2.0.html","f1redbull":"Red Bull F1 2026 simulator 2.0.html","f1ferrari":"Ferrari F1 2026 simulator 2.0.html","f1mclaren":"McLaren F1 2026 simulator 2.0.html","f1aston":"Aston Martin F1 2026 simulator 2.0.html","f1alpine":"Alpine F1 2026 simulator 2.0.html","f1williams":"Williams F1 2026 simulator 2.0.html","f1racingbulls":"Racing Bulls F1 2026 simulator 2.0.html","f1haas":"Haas F1 2026 simulator 2.0.html","f1audi":"Audi F1 2026 simulator 2.0.html","f1cadillac":"Cadillac F1 2026 simulator 2.0.html"};const SIM_BUILD = "c2391d7a42";/*__EMBED_END__*/
 
       const cars = {
         pagani: { key: "pagani", label: "Pagani Huayra BC", short: "Huayra BC", mark: "BC",
@@ -4066,6 +4075,43 @@
       let raceLocal = { holding: false, gridIndex: 0, released: true, lightsRaf: 0 };
       let publicHosts = new Map();
       const embeddedCache = {};
+      const trackVersionSelect=document.getElementById('trackVersion'),controlModeSelect=document.getElementById('controlMode');
+      let garageTrackVersion='2',garageControlMode=matchMedia('(pointer: coarse)').matches?'dpad':'pc',activeTrackVersion='1',simLoadId=0;
+      try{garageTrackVersion=localStorage.getItem('mucs-track-version')||'2';garageControlMode=localStorage.getItem('mucs-controls')||garageControlMode;}catch(e){}
+      const linkVersion=new URLSearchParams(location.search).get('tracks');if(linkVersion==='1'||linkVersion==='2')garageTrackVersion=linkVersion;
+      trackVersionSelect.value=garageTrackVersion==='1'?'1':'2';controlModeSelect.value=garageControlMode==='dpad'?'dpad':'pc';
+      function refreshTrackBadges(){for(const card of document.querySelectorAll('[data-car-card]')){let badge=card.querySelector('.track-version-badge');if(!badge){badge=document.createElement('p');badge.className='track-version-badge';card.querySelector('.actions').before(badge);}badge.textContent=SIM_FILES_2[card.dataset.carCard]?'Track '+garageTrackVersion+'.0':'Track 1.0 · original tracks';}}
+      trackVersionSelect.addEventListener('change',()=>{garageTrackVersion=trackVersionSelect.value;try{localStorage.setItem('mucs-track-version',garageTrackVersion)}catch(e){}refreshTrackBadges();});
+      controlModeSelect.addEventListener('change',()=>{garageControlMode=controlModeSelect.value;try{localStorage.setItem('mucs-controls',garageControlMode)}catch(e){}});
+      refreshTrackBadges();
+/* Explicit input layout. Existing wheel and keyboard handlers remain in place. */
+window.installGarageControls = function(win, mode) {
+ const doc=win.document,app=Object.values(win).find(v=>v&&v.state&&v.updatePhysics&&v.setGear);if(!app)return false;
+ const state=app.state;let style=doc.getElementById('garage-control-layout');
+ if(!style){style=doc.createElement('style');style.id='garage-control-layout';style.textContent=`
+ html[data-controls="pc"] .mobile-pad,html[data-controls="pc"] .touch-wheel{display:none!important}
+ html[data-controls="dpad"] body.view-drive .mobile-pad{display:grid!important;grid-template-columns:repeat(2,56px)!important;grid-template-rows:repeat(2,48px)!important;gap:6px!important;left:10px!important;touch-action:none}
+ html[data-controls="dpad"] body.view-drive .touch-wheel{display:block!important;touch-action:none}
+ html[data-controls="dpad"] .mobile-pad button{min-width:44px;min-height:44px;user-select:none;touch-action:none}
+ html[data-controls="dpad"] .mobile-pad [data-pad="up"]{grid-column:1;grid-row:1}
+ html[data-controls="dpad"] .mobile-pad [data-pad="down"]{grid-column:2;grid-row:1}
+ html[data-controls="dpad"] .mobile-pad [data-pad="left"]{grid-column:1;grid-row:2}
+ html[data-controls="dpad"] .mobile-pad [data-pad="right"]{grid-column:2;grid-row:2}
+ html[data-controls="dpad"] .mobile-pad>span{display:none}
+ @media(max-height:550px){html[data-controls="dpad"] body.view-drive .mobile-pad{bottom:116px!important;grid-template-columns:repeat(2,48px)!important;grid-template-rows:repeat(2,44px)!important}html[data-controls="dpad"] body.view-drive .touch-wheel{bottom:116px!important;right:10px!important;width:84px!important;height:84px!important}}
+ `;doc.head.appendChild(style);}
+ let pad=doc.querySelector('.mobile-pad');if(!pad){pad=doc.createElement('div');pad.className='mobile-pad';pad.style.cssText='position:fixed;left:10px;bottom:200px;z-index:100';doc.body.appendChild(pad);}
+ const codes={up:'ArrowUp',down:'ArrowDown',left:'ArrowLeft',right:'ArrowRight'},labels={up:'Go',down:'Brake',left:'◀ Left',right:'Right ▶'};
+ for(const [direction,code]of Object.entries(codes)){let button=pad.querySelector(`[data-pad="${direction}"]`);if(!button){button=doc.createElement('button');button.dataset.pad=direction;button.textContent=labels[direction];button.setAttribute('aria-label',direction==='left'?'Turn left':direction==='right'?'Turn right':labels[direction]);pad.appendChild(button);}
+  if(button.dataset.garageBound)continue;button.dataset.garageBound='true';const pointers=new Set();
+  button.addEventListener('pointerdown',e=>{e.preventDefault();button.setPointerCapture(e.pointerId);pointers.add(e.pointerId);state.keys[code]=true;});const release=e=>{pointers.delete(e.pointerId);if(!pointers.size)state.keys[code]=false;};for(const type of ['pointerup','pointercancel','lostpointercapture'])button.addEventListener(type,release);button.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Enter'){e.preventDefault();state.keys[code]=true;}});button.addEventListener('keyup',()=>state.keys[code]=false);button.addEventListener('blur',()=>state.keys[code]=false);
+ }
+ for(const code of Object.values(codes))state.keys[code]=false;state.padThrottle=state.padBrake=0;
+ doc.documentElement.dataset.controls=mode==='dpad'?'dpad':'pc';
+ if(!win.__garageInputBlur){win.__garageInputBlur=true;win.addEventListener('blur',()=>{for(const code of Object.values(codes))state.keys[code]=false;state.padThrottle=state.padBrake=0;});}
+ return true;
+};
+
 
       const nowMs = () => Date.now();
       const online = () => document.body.classList.contains("online-active");
@@ -4124,7 +4170,7 @@
         url.searchParams.set("car", selectedCar.key);
         url.searchParams.set("mode", "online");
         url.searchParams.set("room", activeRoom);
-        url.searchParams.set("join", "1");
+        url.searchParams.set("join", "1");url.searchParams.set("tracks",activeTrackVersion);
         shareLink.value = url.href;
       }
       function isTypingTarget(t) {
@@ -4166,14 +4212,13 @@
         for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
         return new TextDecoder().decode(bytes);
       }
-      function getEmbeddedSim(carKey) {
-        if (!embeddedCache[carKey]) embeddedCache[carKey] = decodeBase64Utf8(EMBEDDED_SIM_BASE64[carKey]);
-        return embeddedCache[carKey];
+      async function getEmbeddedSim(carKey,version) {
+        const key=version==='2'?carKey+'@2':carKey;
+        if(!embeddedCache[key])embeddedCache[key]=(async()=>{const bytes=Uint8Array.from(atob(window.EMBEDDED_SIM_GZIP_BASE64[key]),c=>c.charCodeAt(0));return await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text();})();
+        return embeddedCache[key];
       }
-      /* Every sim URL carries the build stamp. The files sit on stable paths and
-         prefetchSims() warms all 64 into the browser cache, so without ?v= a visitor
-         could hold a fresh index.html and still open a stale simulator from disk. */
-      const simUrl = (key) => encodeURI(SIM_FILES[key]) + (typeof SIM_BUILD === "string" ? "?v=" + SIM_BUILD : "");
+      const versionFor=key=>garageTrackVersion==='2'&&SIM_FILES_2[key]?'2':'1';
+      const simUrl=(key,version=versionFor(key))=>encodeURI(version==='2'?SIM_FILES_2[key]:SIM_FILES[key])+'?v='+SIM_BUILD+'&controls='+garageControlMode;
       // a visible build stamp, so "has the site actually updated?" is answerable at a glance
       try {
         const bs = document.getElementById("buildStamp");
@@ -4190,7 +4235,7 @@
          If that differs from what this page was built with, reload once past the cache. The
          sessionStorage guard means a genuinely odd deploy can never put us in a reload loop. */
       (function checkStale() {
-        if (location.protocol === "file:" || typeof SIM_BUILD !== "string") return;
+        if (window.EMBEDDED_SIM_GZIP_BASE64 || location.protocol === "file:" || typeof SIM_BUILD !== "string") return;
         fetch("build.txt", { cache: "no-store" })
           .then((r) => (r.ok ? r.text() : null))
           .then((txt) => {
@@ -4204,18 +4249,17 @@
           })
           .catch(() => {});
       })();
-      function loadEmbeddedSim(car, onLoad) {
-        simFrame.onload = () => { attachFrameShortcuts(); if (typeof onLoad === "function") onLoad(); };
-        // Hosted (http/https): fetch just this one sim file on demand, so the initial
-        // page stays tiny. Offline (file://): Chrome can't load sibling iframes from
-        // disk, so fall back to the base64 copy embedded via sims-embedded.js.
-        if (location.protocol === "file:") {
-          simFrame.removeAttribute("src");
-          simFrame.srcdoc = getEmbeddedSim(car.key);
-        } else {
-          simFrame.removeAttribute("srcdoc");
-          simFrame.src = simUrl(car.key);
-        }
+      function ensureTrackAssets(){
+        if(!window.TRACK2_READY)window.TRACK2_READY=new Promise((resolve,reject)=>{const script=document.createElement('script');script.src='assets/tracks-2/pack.js?v='+SIM_BUILD;script.onload=()=>window.TRACK2_UNPACK.then(resolve,reject);script.onerror=()=>reject(new Error('Track 2.0 could not load. Please retry.'));document.head.appendChild(script);});
+        return window.TRACK2_READY;
+      }
+      async function loadEmbeddedSim(car,onLoad,version=versionFor(car.key)) {
+        const id=++simLoadId;activeTrackVersion=version;
+        raceCarLabel.textContent=car.label+' · Track '+version+'.0';
+        if(version==='2'){try{await ensureTrackAssets();}catch(e){showToast(e.message);return;}if(id!==simLoadId)return;}
+        simFrame.onload=()=>{const started=Date.now();const ready=()=>{if(id!==simLoadId)return;const app=getSimApp();if(app?.drawWorld&&app?.updatePhysics){window.installGarageControls(simFrame.contentWindow,garageControlMode);attachFrameShortcuts();if(typeof onLoad==='function')onLoad();}else if(Date.now()-started<60000)setTimeout(ready,100);};ready();};
+        if(window.EMBEDDED_SIM_GZIP_BASE64){simFrame.removeAttribute('src');const html=await getEmbeddedSim(car.key,version);if(id===simLoadId)simFrame.srcdoc=html;}
+        else{simFrame.removeAttribute('srcdoc');simFrame.src=simUrl(car.key,version);}
       }
       /* Zero-loading: warm every sim in the background so opening a car is instant.
          Strictly second-class to what the visitor is actually looking at — it waits
@@ -4224,7 +4268,7 @@
          Over file:// the sims are already embedded, so there is nothing to fetch. */
       let simsPrefetched = false;
       function prefetchSims() {
-        if (simsPrefetched || location.protocol === "file:" || typeof SIM_FILES === "undefined") return;
+        if (window.EMBEDDED_SIM_GZIP_BASE64 || simsPrefetched || location.protocol === "file:" || typeof SIM_FILES === "undefined") return;
         const net = navigator.connection || {};
         if (net.saveData || /(^|-)2g$/.test(net.effectiveType || "")) return;   // don't burn metered data
         simsPrefetched = true;
@@ -4484,7 +4528,7 @@
         const speedMps = Number(state.speedMps) || 0;
         const lap = state.lap || {};
         return {
-          id: localId || "local",
+          trackVersion:activeTrackVersion,id: localId || "local",
           name: safeName(),
           car: selectedCar ? selectedCar.key : "unknown",
           carLabel: selectedCar ? selectedCar.short : "Car",
@@ -4511,7 +4555,7 @@
         o.body = /^#[0-9a-f]{6}$/i.test(o.body || "") ? o.body : "#4d8dff";
         o.stripe = /^#[0-9a-f]{6}$/i.test(o.stripe || "") ? o.stripe : "#ff8a36";
         o.distanceM = Number(o.distanceM) || 0;
-        o.laneOffset = Math.max(-8, Math.min(8, Number(o.laneOffset) || 0));
+        o.laneOffset = Math.max(-200, Math.min(200, Number(o.laneOffset) || 0));o.trackVersion=String(o.trackVersion||'1');
         o.speedMps = Number(o.speedMps) || 0;
         o.speedKmh = Math.max(0, Math.min(600, Number(o.speedKmh) || 0));
         o.brake = Math.max(0, Math.min(1, Number(o.brake) || 0));
@@ -4531,7 +4575,7 @@
       function mapRemoteRivals() {
         const t = nowMs();
         return Array.from(players.values())
-          .filter((p) => p && p.id !== localId && t - (p.at || 0) < STALE_MS && !isBanned(p, p.id))
+          .filter((p) => p && p.id !== localId && t - (p.at || 0) < STALE_MS && !isBanned(p, p.id) && String(p.trackVersion||'1')===activeTrackVersion)
           .map((p, index) => ({
             name: p.name || "Racer",
             body: p.body || "#4d8dff",
@@ -4611,7 +4655,7 @@
         if (!isHost || !net) return;
         net.sendCtl({
           type: "cfg", hostId: localId, hostName: safeName(), room: activeRoom,
-          track: raceCfg.track, phase: raceCfg.phase, goAt: raceCfg.goAt, grid: raceCfg.grid,
+          trackVersion:activeTrackVersion,track: raceCfg.track, phase: raceCfg.phase, goAt: raceCfg.goAt, grid: raceCfg.grid,
           bans: { ids: Array.from(bannedIds), names: Array.from(bannedNames) }, at: nowMs()
         });
       }
@@ -4632,6 +4676,11 @@
             showToast("The host banned you from this room.");
             return;
           }
+        }
+        const incomingVersion=String(msg.trackVersion||'1');
+        if(incomingVersion!==activeTrackVersion){
+          if(incomingVersion==='2'&&!SIM_FILES_2[selectedCar?.key]){leaveRoom('<b>This room uses Track 2.0.</b> Choose a car with upgraded tracks, or join a Track 1.0 room.');showToast('This car retains Track 1.0. Choose a Track 1.0 room.');return;}
+          loadEmbeddedSim(selectedCar,()=>{applyOnlineRules();applyCfg(msg,fromId)},incomingVersion==='2'?'2':'1');return;
         }
         if (msg.track && COMMON_TRACKS.includes(msg.track)) {
           const changed = msg.track !== raceCfg.track;
@@ -4953,7 +5002,7 @@
           if (autoJoin) setTimeout(() => joinRoom(), 450);
         });
       }
-      function backToGarage() {
+      function backToGarage() { ++simLoadId;
         leaveRoom(null, true);
         clearInterval(enforceTimer);
         simFrame.removeAttribute("src");
@@ -5136,7 +5185,7 @@
       bootFromUrl();
       // debug/testing handle (used by tests/browser-test.mjs; harmless in production)
       window.__mucs = {
-        applyCfg, startRace, getSimApp, injectRemoteRacers, mapRemoteRivals,
+        openPractice,backToGarage,loadEmbeddedSim,simUrl,get activeTrackVersion(){return activeTrackVersion},applyCfg, startRace, getSimApp, injectRemoteRacers, mapRemoteRivals,
         get players() { return players; }, set testPlayers(m) { players = m; },
         get raceCfg() { return raceCfg; }, get raceLocal() { return raceLocal; },
         get isHost() { return isHost; }, set isHost(v) { isHost = v; },

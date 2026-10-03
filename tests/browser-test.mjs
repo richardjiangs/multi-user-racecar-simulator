@@ -1009,6 +1009,7 @@ const browser = await chromium.launch({
 const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
 const pageErrors = [];
 page.on("pageerror", (e) => pageErrors.push(String(e.message || e)));
+await page.addInitScript(()=>localStorage.setItem('mucs-track-version','1'));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");

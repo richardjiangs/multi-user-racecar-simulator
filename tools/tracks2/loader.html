@@ -1,0 +1,13 @@
+<script>
+// Share immutable mesh buffers between garage frames. All geometry is unpacked
+// before the simulator starts; driving never generates or streams road sections.
+try { if(parent!==window && parent.TRACK2_READY) window.TRACK2_READY=parent.TRACK2_READY; } catch(e) {}
+if(!window.TRACK2_READY) {
+ window.TRACK2_READY=new Promise((resolve,reject)=>{
+  const script=document.createElement('script');script.src='assets/tracks-2/pack.js';
+  script.onload=()=>window.TRACK2_UNPACK.then(resolve,reject);script.onerror=()=>reject(new Error('Track 2.0 assets could not load. Open the garage or keep the assets folder beside this file.'));document.head.appendChild(script);
+ });
+ try{if(parent!==window)parent.TRACK2_READY=window.TRACK2_READY;}catch(e){}
+}
+window.TRACK2_READY.catch(error=>{const p=document.createElement('p');p.textContent=error.message;p.style.cssText='position:fixed;inset:20px;z-index:9999;background:#131b24;color:white;padding:24px';document.body.appendChild(p);});
+</script>
