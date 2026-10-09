@@ -1,6 +1,6 @@
 <script>
-// Share immutable mesh buffers between garage frames. All geometry is unpacked
-// before the simulator starts; driving never generates or streams road sections.
+// Share immutable route assets between garage frames. A selected route is fully
+// unpacked before its first physics step; driving never streams road sections.
 try { if(parent!==window && parent.TRACK2_READY) window.TRACK2_READY=parent.TRACK2_READY; } catch(e) {}
 if(!window.TRACK2_READY) {
  window.TRACK2_READY=new Promise((resolve,reject)=>{

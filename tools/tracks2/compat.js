@@ -1,5 +1,5 @@
 (function(){const a=window.__Track2App,s=a.state;
- a.track2Reset=()=>{a.resetContacts?.();Object.assign(s,{inPitLane:false,pitStage:'',pitMenuOpen:false,pitArmed:false,pitQ:0,pitStops:0,pitAutoStart:0,pitTargetOffset:0});};
+ a.track2Reset=()=>{a.resetContacts?.();Object.assign(s,{rallyService:0,rallyServiceRequested:false,rallyAirHeight:0,airborne:false,_rallyY:0,_rallyVy:0,rallyNeutralized:false,inPitLane:false,pitStage:'',pitMenuOpen:false,pitArmed:false,pitQ:0,pitStops:0,pitAutoStart:0,pitTargetOffset:0});};
  a.track2Reset();
  a.TEAM ||= {slot:1,name:'Service crew',pitCrew:3};
  const title=document.querySelector('h1')?.textContent||document.title;

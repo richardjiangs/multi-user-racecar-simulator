@@ -702,8 +702,8 @@
   </div>
 
   <script>
-// Share immutable mesh buffers between garage frames. All geometry is unpacked
-// before the simulator starts; driving never generates or streams road sections.
+// Share immutable route assets between garage frames. A selected route is fully
+// unpacked before its first physics step; driving never streams road sections.
 try { if(parent!==window && parent.TRACK2_READY) window.TRACK2_READY=parent.TRACK2_READY; } catch(e) {}
 if(!window.TRACK2_READY) {
  window.TRACK2_READY=new Promise((resolve,reject)=>{
@@ -1459,9 +1459,9 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   // ---- Dakar terrain model: surface grip, dune elevation/gradients, suspension travel & airborne.
   // Deterministic (functions of distance/speed only) and only active on a real stage; Free run
   // returns neutral (grip 1, no dunes), which is what the launch/brake/top-speed certification runs on.
-  function terrainOf() { const r = state.route; return (r.active && CIRCUITS[r.name] && CIRCUITS[r.name].terrain) ? CIRCUITS[r.name].terrain : null; }
+  function terrainOf() { if(app.trackModel?.()?.terrain==="rally")return app.rallySector(state.distanceM); const r = state.route; return (r.active && CIRCUITS[r.name] && CIRCUITS[r.name].terrain) ? CIRCUITS[r.name].terrain : null; }
   function terrainGrip() { return state.gripMul == null ? 1 : state.gripMul; }
-  function terrainStep(dt) {
+  function terrainStep(dt) { if(app.rallyStep?.(dt))return;
     const terr = terrainOf();
     if (!terr) { state.gripMul = 1; state.airborne = false; state.duneGrade = 0; state._gradeAccel = 0; state.bogging = false; state.susComp = approach(state.susComp || 0, 0, 0.02, dt); return; }
     const d = state.distanceM, spd = Math.abs(state.speedMps);
@@ -1701,7 +1701,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
 
   /* --- main integration --- */
-  function updatePhysics(dt) { app.contactBegin?.(dt);app.driverBegin?.(dt);
+  function updatePhysics(dt) { if(app.trackModel?.()&&!app.trackMeshReady?.())return;app.contactBegin?.(dt);app.driverBegin?.(dt);
     updateInputs(dt);if(app.pitHeld?.()){state.throttle=0;state.brake=1;state.speedMps=0;}
     updateTransmission(dt);
     updateAero(dt);
@@ -1837,7 +1837,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (state.toastTimer > 0) { state.toastTimer -= dt; if (state.toastTimer <= 0) el.toast.classList.remove("show"); }
   }
 
-  function updateLap(dsdt, dt) {
+  function updateLap(dsdt, dt) { if(app.trackModel?.()?.closed===false){app.updateOpenRoute(dt);return;}
     if (!state.route.active) { if (Math.abs(state.speedMps) > 1) state.lap.curMs += dt * 1000; return; }
     state.route.remainingM = Math.max(0, state.route.remainingM - dsdt * dt);
     state.lap.curMs += dt * 1000;
@@ -1870,7 +1870,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
 window.__Track2App=window.U9App;
 (function(){const a=window.__Track2App,s=a.state;
- a.track2Reset=()=>{a.resetContacts?.();Object.assign(s,{inPitLane:false,pitStage:'',pitMenuOpen:false,pitArmed:false,pitQ:0,pitStops:0,pitAutoStart:0,pitTargetOffset:0});};
+ a.track2Reset=()=>{a.resetContacts?.();Object.assign(s,{rallyService:0,rallyServiceRequested:false,rallyAirHeight:0,airborne:false,_rallyY:0,_rallyVy:0,rallyNeutralized:false,inPitLane:false,pitStage:'',pitMenuOpen:false,pitArmed:false,pitQ:0,pitStops:0,pitAutoStart:0,pitTargetOffset:0});};
  a.track2Reset();
  a.TEAM ||= {slot:1,name:'Service crew',pitCrew:3};
  const title=document.querySelector('h1')?.textContent||document.title;
@@ -1885,32 +1885,37 @@ window.__Track2App=window.U9App;
  window.setInterval(update,150);
 })();
 
-/* Mercedes offline circuit model. One arc-length centerline serves physics, map and road.
+/* Track 2 circuit model. One arc-length centerline serves physics, map and road.
    XY: TUM racetrack database / OpenStreetMap contributors. Altitude profiles are
    interpolated landmark approximations, not a laser scan. Width profiles are in metres, without the legacy arcade multiplier. */
 (function(){
  const app=window.__Track2App,{state,clamp}=app;
  const TAU=Math.PI*2,wrap=(d,L)=>(d%L+L)%L,angle=a=>Math.atan2(Math.sin(a),Math.cos(a));
  const data=TRACK_DATA;
- function profile(keys,s){
-  const L=keys[keys.length-1][0];s=wrap(s,L);let i=0;while(i<keys.length-2&&keys[i+1][0]<s)i++;
+ const phase=(t,d)=>t.closed===false?clamp(d,0,t.L):wrap(d,t.L);
+ function profile(keys,s,closed=true){
+  const L=keys[keys.length-1][0];s=closed?wrap(s,L):clamp(s,0,L);let i=0,hi=keys.length-1;while(hi-i>1){const m=(i+hi)>>1;if(keys[m][0]<s)i=m;else hi=m;}
   const a=keys[i],b=keys[i+1],h=b[0]-a[0],u=(s-a[0])/h;
   // Monotone Hermite: continuous grade without overshoot below a valley/above a crest.
-  const slope=j=>{let A,B,C;if(j===0){A=[keys[keys.length-2][0]-L,keys[keys.length-2][1]];B=keys[0];C=keys[1];}else if(j===keys.length-1){A=keys[j-1];B=keys[j];C=[keys[1][0]+L,keys[1][1]];}else{A=keys[j-1];B=keys[j];C=keys[j+1];}const m=(B[1]-A[1])/(B[0]-A[0]),n=(C[1]-B[1])/(C[0]-B[0]);return m*n<=0?0:2*m*n/(m+n);};
+  const slope=j=>{if(!closed&&j===0)return (keys[1][1]-keys[0][1])/(keys[1][0]-keys[0][0]);if(!closed&&j===keys.length-1)return (keys[j][1]-keys[j-1][1])/(keys[j][0]-keys[j-1][0]);let A,B,C;if(j===0){A=[keys[keys.length-2][0]-L,keys[keys.length-2][1]];B=keys[0];C=keys[1];}else if(j===keys.length-1){A=keys[j-1];B=keys[j];C=[keys[1][0]+L,keys[1][1]];}else{A=keys[j-1];B=keys[j];C=keys[j+1];}const m=(B[1]-A[1])/(B[0]-A[0]),n=(C[1]-B[1])/(C[0]-B[0]);return m*n<=0?0:2*m*n/(m+n);};
   return (2*u**3-3*u*u+1)*a[1]+(u**3-2*u*u+u)*h*slope(i)+(-2*u**3+3*u*u)*b[1]+(u**3-u*u)*h*slope(i+1);
  }
- function rawAt(t,d){const f=wrap(d,t.L)/t.L*t.points.length,i=Math.floor(f),u=f-i,a=t.points[i],b=t.points[(i+1)%t.points.length];return {x:a[0]+(b[0]-a[0])*u,z:a[1]+(b[1]-a[1])*u,y:profile(t.elev,d)};}
- function precise(t,d){const p=rawAt(t,d),a=rawAt(t,d-3),b=rawAt(t,d+3),aa=rawAt(t,d-8),bb=rawAt(t,d+8);p.psi=Math.atan2(b.x-a.x,b.z-a.z);p.k=angle(Math.atan2(bb.x-p.x,bb.z-p.z)-Math.atan2(p.x-aa.x,p.z-aa.z))/8;p.grade=(b.y-a.y)/6;return p;}
- // Cache differential geometry once, rather than evaluating five splines per mesh vertex.
- function sample(t,d){if(!t.samples)t.samples=t.points.map((_,i)=>precise(t,i/t.points.length*t.L));const f=wrap(d,t.L)/t.L*t.samples.length,i=Math.floor(f),u=f-i,a=t.samples[i],b=t.samples[(i+1)%t.samples.length],p={d};for(const k of ['x','z','y','k','grade'])p[k]=a[k]+(b[k]-a[k])*u;p.psi=a.psi+angle(b.psi-a.psi)*u;return p;}
+ function rawAt(t,d){const n=t.points.length,end=t.closed===false,f=phase(t,d)/t.L*(end?n-1:n),i=Math.min(n-2,Math.floor(f)),ii=end?i:Math.floor(f),u=f-ii,a=t.points[ii],b=t.points[(ii+1)%n];return{x:a[0]+(b[0]-a[0])*u,z:a[1]+(b[1]-a[1])*u,y:profile(t.elev,d,!end)};}
+ function precise(t,d){const p=rawAt(t,d),lo=t.closed===false?Math.max(0,d-3):d-3,hi=t.closed===false?Math.min(t.L,d+3):d+3,a=rawAt(t,lo),b=rawAt(t,hi),heading=x=>{const a=rawAt(t,x-3),b=rawAt(t,x+3);return Math.atan2(b.x-a.x,b.z-a.z);},left=t.closed===false?Math.max(0,d-4):d-4,right=t.closed===false?Math.min(t.L,d+4):d+4;
+  p.psi=Math.atan2(b.x-a.x,b.z-a.z);if(t.closed===false)p.k=angle(heading(right)-heading(left))/Math.max(.01,right-left);else{const aa=rawAt(t,d-8),bb=rawAt(t,d+8);p.k=angle(Math.atan2(bb.x-p.x,bb.z-p.z)-Math.atan2(p.x-aa.x,p.z-aa.z))/8;}p.grade=(b.y-a.y)/Math.max(.01,hi-lo);return p;}
+ // Cache geometry once. Open route endpoints clamp instead of joining a false return leg.
+ function sample(t,d){const n=t.points.length,end=t.closed===false,den=end?n-1:n;if(!t.samples)t.samples=t.points.map((_,i)=>precise(t,i/den*t.L));const f=phase(t,d)/t.L*den,i=end?Math.min(n-2,Math.floor(f)):Math.floor(f),u=f-i,a=t.samples[i],b=t.samples[(i+1)%n],p={d};for(const k of ['x','z','y','k','grade'])p[k]=a[k]+(b[k]-a[k])*u;p.psi=a.psi+angle(b.psi-a.psi)*u;return p;}
  const current=()=>state.route.active?data[state.route.name]:null;
- function widthAt(d){const t=current();if(!t?.widths)return null;const w=t.widths,ph=wrap(d,t.L);let lo=0,hi=w.length-1;while(hi-lo>1){const m=(hi+lo)>>1;if(w[m][0]<=ph)lo=m;else hi=m;}const u=(ph-w[lo][0])/Math.max(.001,w[hi][0]-w[lo][0]);return 1.2*(w[lo][1]+(w[hi][1]-w[lo][1])*u);}
+ function widthAt(d){const t=current();if(!t?.widths)return null;const w=t.widths,ph=phase(t,d);let lo=0,hi=w.length-1;while(hi-lo>1){const m=(hi+lo)>>1;if(w[m][0]<=ph)lo=m;else hi=m;}const u=(ph-w[lo][0])/Math.max(.001,w[hi][0]-w[lo][0]);return (t.widthScale||1.2)*(w[lo][1]+(w[hi][1]-w[lo][1])*u);}
  function at(d){const t=current();return t?sample(t,d):null;}
  function lateral(p,n){return {...p,x:p.x+Math.cos(p.psi)*n,z:p.z-Math.sin(p.psi)*n};}
   function surfacePoint(d,n=0,lift=0){const p=app.trackAt(d);let bank=0;const t=app.trackModel();
     if(state.route.name==='Nardò Ring'){
       // Parabolic crossfall, 25% maximum outer slope. Use the requested road width.
       const H=app.halfWidthAt(d),u=app.clamp((n+H)/(2*H),0,1);p.y+=.125*(2*H)*(1-u)*(1-u);bank=-.25*(1-u);
+    }else if(t.banking){
+      const shape=(d,n)=>{const p=sample(t,d),k=(sample(t,d-35).k+2*p.k+sample(t,d+35).k)/4,H=app.halfWidthAt(d),sign=Math.sign(k),u=clamp((H-sign*n)/(2*H),0,1),r=t.banking.range,ph=phase(t,d),fade=r?clamp(Math.min(ph-r[0],r[1]-ph)/55,0,1):1,slope=t.banking.maxSlope*clamp(Math.abs(k)/t.banking.curvatureScale,0,1)*fade*fade*(3-2*fade);return {h:H*slope*u*u,bank:-sign*slope*u};};
+      const v=shape(d,n);p.y+=v.h;bank=v.bank;p.grade+=(shape(d+1,n).h-shape(d-1,n).h)/2;
     }else if(/Nord|24h/.test(state.route.name)){
       const ph=app.trackWrap(d,t.L),kar=t.labels.find(([s,nm])=>/Karussell/.test(nm)&&Math.abs(ph-s)<95);
       if(kar){const f=Math.cos((ph-kar[0])/95*Math.PI/2),slope=.42*f*f;bank=n>=-5&&n<=4?slope:0;p.y+=app.clamp(n,-5,4)*slope;}
@@ -1918,17 +1923,18 @@ window.__Track2App=window.U9App;
     const v=app.trackLateral(p,n);v.y+=lift;v.bank=bank;return v;
   }
 
- function surface(d,n=0){const t=current();if(!t)return .1;const s=wrap(d,t.L),name=state.route.name;let r=name==='Nardò Ring'?.022:name==='Circuit de Monaco'?.12:/Nord|24h/.test(name)?.11:.045;
+ function surface(d,n=0){const t=current();if(!t)return .1;if(t.terrain==='rally')return app.rallySector(d).rough;const s=phase(t,d),name=state.route.name;let r=name==='Nardò Ring'?.022:name==='Circuit de Monaco'?.12:/Nord|24h/.test(name)?.11:.045;
   if(name==='Circuit de Monaco'&&s>1500&&s<2040)r=.035;
   if(/Nord|24h/.test(name)){for(const [pos,label] of t.labels){if(/Karussell/.test(label)&&Math.abs(s-pos)<100)r=.31;else if(/Pflanzgarten|Sprunghügel|Flugplatz/.test(label)&&Math.abs(s-pos)<130)r=Math.max(r,.16);}}
   if(Math.abs(n)>app.halfWidthAt(d)-.7)r=Math.max(r,.35);return r;
  }
  // Pit roads have tangent-matched entry/exit connectors and a dense service straight.
  // This same path supplies the pavement, support height, markers, garages and fences.
- function prepPit(t){if(t.pitGeometry)return t.pitGeometry;
+ function prepPit(t){if(!t||t.pit===null)return null;if(t.pitGeometry)return t.pitGeometry;
+  if(t.mappedPit){const m=t.mappedPit,points=[];for(let i=0;i<m.points.length;i++){const [mx,mz,my]=m.points[i],end=i===0?sample(t,m.entry):i===m.points.length-1?sample(t,m.exit):null,x=end?.x??mx,z=end?.z??mz,y=end?.y??my,prev=points.at(-1);points.push({x,z,y,q:prev?prev.q+Math.hypot(x-prev.x,z-prev.z):0});}return t.pitGeometry={...m,points,length:points.at(-1).q};}
   const [entry,exit,side,limit]=t.pit,L=t.L,span=L-entry+exit,name=state.route.name;
   const ranges={'Circuit de Monaco':[-90,165],'Nürburgring GP':[-280,230],'Nordschleife':[-100,160],'Nürburgring 24h':[-260,200],'Suzuka Circuit':[-70,330],'Silverstone Circuit':[-65,220],'Circuit de Spa-Francorchamps':[-70,220],'Nardò Ring':[-260,70]};
-  const [start,end]=ranges[name],half=4.2*1.2,offset=d=>side*(app.halfWidthAt(d)+half+2.6);
+  const [start,end]=t.serviceRange||ranges[name]||[-80,180],half=4.2*1.2,offset=d=>side*(app.halfWidthAt(d)+half+2.6);
   const pitRoad=(d,n)=>{const p=lateral(sample(t,d),n);if(name==='Nardò Ring'){const H=app.halfWidthAt(d),u=clamp((n+H)/(2*H),0,1);p.y+=.25*H*(1-u)**2;}return p;},service=d=>{if(name!=='Nordschleife')return pitRoad(d,offset(d));const a=pitRoad(L+start,offset(L+start)),b=pitRoad(L+end,offset(L+end)),u=(d-L-start)/(end-start),len=Math.hypot(b.x-a.x,b.z-a.z);return{x:a.x+(b.x-a.x)*u,z:a.z+(b.z-a.z)*u,y:a.y+(b.y-a.y)*u,psi:Math.atan2(b.x-a.x,b.z-a.z),grade:(b.y-a.y)/len};};
   const points=[],append=p=>{const prev=points.at(-1);if(prev&&Math.hypot(p.x-prev.x,p.z-prev.z)<.01)return;p.q=prev?prev.q+Math.hypot(p.x-prev.x,p.z-prev.z):0;points.push(p);};
   function connector(a,b){const len=Math.hypot(b.x-a.x,b.z-a.z),handle=Math.min(len*.34,100),aa={x:a.x+Math.sin(a.psi)*handle,z:a.z+Math.cos(a.psi)*handle,y:a.y+a.grade*handle},bb={x:b.x-Math.sin(b.psi)*handle,z:b.z-Math.cos(b.psi)*handle,y:b.y-b.grade*handle};
@@ -1940,25 +1946,25 @@ window.__Track2App=window.U9App;
   if(name==='Circuit de Monaco'||name==='Nordschleife')connector(service(L+end),pitRoad(L+exit,0));else for(let d=L+end+1.5;d<L+exit;d+=1.5){const u=(d-L-end)/(exit-end),n=offset(d)*(1-u*u*(3-2*u))**2;append(pitRoad(d,n));}append(pitRoad(L+exit,0));const len=points.at(-1).q;
   return t.pitGeometry={points,length:len,entry,exit,span,side,limit,boxStart:serviceStart+22,boxEnd:serviceEnd-22,limitIn:Math.min(serviceStart,55),limitOut:len-45,half,name:name==='Nardò Ring'?'Test service area':name==='Nordschleife'?'T13 paddock':'Grand Prix pits'};
  }
- function pitNearest(p,min=0,max=Infinity){const pit=prepPit(current());let best={distance:Infinity,q:0};
+ function pitNearest(p,min=0,max=Infinity){const pit=prepPit(current());if(!pit)return {distance:Infinity,q:0};let best={distance:Infinity,q:0};
   // Spatial bins avoid scanning the whole pit on each physics step or mesh vertex.
   if(!pit.grid){pit.grid=new Map();for(let i=0;i<pit.points.length-1;i++){const a=pit.points[i],b=pit.points[i+1];const key=Math.floor((a.x+b.x)/40)+','+Math.floor((a.z+b.z)/40);if(!pit.grid.has(key))pit.grid.set(key,[]);pit.grid.get(key).push(i);}}
   const gx=Math.floor(p.x/20),gz=Math.floor(p.z/20);
   for(let x=gx-1;x<=gx+1;x++)for(let z=gz-1;z<=gz+1;z++)for(const i of pit.grid.get(x+','+z)||[]){const a=pit.points[i],b=pit.points[i+1];if(b.q<min||a.q>max)continue;const dx=b.x-a.x,dz=b.z-a.z,u=clamp(((p.x-a.x)*dx+(p.z-a.z)*dz)/(dx*dx+dz*dz),0,1),v={x:a.x+u*dx,z:a.z+u*dz,y:a.y+(b.y-a.y)*u},dist=Math.hypot(p.x-v.x,p.z-v.z);if(dist<best.distance)best={distance:dist,q:a.q+u*(b.q-a.q),...v};}return best;
  }
- function pitCovers(p,margin=0){const near=pitNearest(p),pit=prepPit(current()),apron=near.q>pit.boxStart-15&&near.q<pit.boxEnd+15;
+ function pitCovers(p,margin=0){if(!prepPit(current()))return false;const near=pitNearest(p),pit=prepPit(current()),apron=near.q>pit.boxStart-15&&near.q<pit.boxEnd+15;
   if(near.distance>Math.max(pit.half,apron?14:0)+margin||Math.abs(near.y-p.y)>3)return false;
-  const at=pitAt(near.q),n=(p.x-at.x)*Math.cos(at.psi)-(p.z-at.z)*Math.sin(at.psi);return n>=-pit.half-margin&&n<=(apron?14:pit.half)+margin;
+  const at=pitAt(near.q),n=(p.x-at.x)*Math.cos(at.psi)-(p.z-at.z)*Math.sin(at.psi);const towardGarage=n*(pit.garageSide||1);return towardGarage>=-pit.half-margin&&towardGarage<=(apron?14:pit.half)+margin;
  }
- function fenceSegments(){const t=current();if(!t)return[];if(t.fences)return t.fences;const name=state.route.name,L=t.L,street=name==='Circuit de Monaco',nords=/Nord|24h/.test(name),ring=name==='Nardò Ring',count=Math.ceil(L/2.5),ds=L/count,out=[];
-  for(let i=0;i<count;i++)for(const side of [-1,1]){const d=i*ds,e=(i+1)*ds,wall=street?.9:nords?2.7:ring?1.8:name==='Suzuka Circuit'&&d>4870&&d<4985?.35:12;
+ function fenceSegments(){const t=current();if(!t)return[];if(t.fences)return t.fences;if(t.fence===false)return [];const name=state.route.name,L=t.L,street=name==='Circuit de Monaco'||t.scene==='street',nords=/Nord|24h/.test(name),ring=name==='Nardò Ring',count=Math.ceil(L/2.5),ds=L/count,out=[];
+  for(let i=0;i<count;i++)for(const side of [-1,1]){const d=i*ds,e=(i+1)*ds;if(t.barrierRanges&&!t.barrierRanges.some(v=>d>=v[0]&&d<=v[1]&&(!v[2]||v[2]===side)))continue;const wall=street?.9:nords?2.7:ring?1.8:name==='Suzuka Circuit'&&d>4870&&d<4985?.35:12;
    const a=surfacePoint(d,side*(app.halfWidthAt(d)+wall)),b=surfacePoint(e,side*(app.halfWidthAt(e)+wall)),mid={x:(a.x+b.x)/2,z:(a.z+b.z)/2,y:(a.y+b.y)/2};
    if(pitCovers(mid,1.6)||pitCovers(a,1.6)||pitCovers(b,1.6))continue;
    out.push({a,b,top:street?.95:.7,mesh:street,d,side,index:i});
   }
   return t.fences=out;
  }
- function pitAt(q,t=current()) {if(!t)return null;const p=prepPit(t),a=p.points;q=clamp(q,0,p.length);let lo=0,hi=a.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(a[m].q<q)lo=m;else hi=m;}const u=(q-a[lo].q)/Math.max(.001,a[hi].q-a[lo].q),r={};for(const k of ['x','z','y'])r[k]=a[lo][k]+(a[hi][k]-a[lo][k])*u;const aa=a[Math.max(0,lo-2)],bb=a[Math.min(a.length-1,hi+2)];r.psi=Math.atan2(bb.x-aa.x,bb.z-aa.z);r.grade=(bb.y-aa.y)/Math.max(.1,bb.q-aa.q);r.q=q;return r;}
+ function pitAt(q,t=current()) {if(!t)return null;const p=prepPit(t);if(!p)return null;const a=p.points;q=clamp(q,0,p.length);let lo=0,hi=a.length-1;while(hi-lo>1){const m=(lo+hi)>>1;if(a[m].q<q)lo=m;else hi=m;}const u=(q-a[lo].q)/Math.max(.001,a[hi].q-a[lo].q),r={};for(const k of ['x','z','y'])r[k]=a[lo][k]+(a[hi][k]-a[lo][k])*u;const aa=a[Math.max(0,lo-2)],bb=a[Math.min(a.length-1,hi+2)];r.psi=Math.atan2(bb.x-aa.x,bb.z-aa.z);r.grade=(bb.y-aa.y)/Math.max(.1,bb.q-aa.q);r.q=q;return r;}
  // The road and pit share a supported floor at merge areas. Crossfall is sampled
  // across the whole lane, so a tyre cannot sink through Nardò's banked entrance.
  function roadNearest(p,heightTolerance=3){const t=current();if(!t.roadGrid){t.roadGrid=new Map();const count=Math.ceil(t.L/3),ds=t.L/count;for(let i=0;i<count;i++){const a=sample(t,i*ds),b=sample(t,(i+1)*ds),key=Math.floor((a.x+b.x)/40)+','+Math.floor((a.z+b.z)/40);if(!t.roadGrid.has(key))t.roadGrid.set(key,[]);t.roadGrid.get(key).push({a,b,d:i*ds,ds});}}
@@ -1969,15 +1975,15 @@ window.__Track2App=window.U9App;
   v.y+=lift;return v;
  }
  function pitCurvature(q){const a=pitAt(q-5),b=pitAt(q+5);return a&&b?angle(b.psi-a.psi)/10:0;}
- function pitBox(slot=1){const p=prepPit(current());return p.boxStart+(p.boxEnd-p.boxStart)*(slot+.5)/11;}
- function pitEntry(d,n){const t=current();if(!t)return false;const p=prepPit(t),phase=wrap(d-p.entry,t.L);
+ function pitBox(slot=1){const p=prepPit(current());if(!p)return null;return p.boxStart+(p.boxEnd-p.boxStart)*((slot%(p.slots||11))+.5)/(p.slots||11);}
+ function pitEntry(d,n){const t=current();if(!t)return false;const p=prepPit(t);if(!p)return false;const phase=wrap(d-p.entry,t.L);
   if(phase>p.span*.85||Math.abs(n)<app.halfWidthAt(d)*.60)return false;
   const near=pitNearest(lateral(at(d),n),2,p.boxStart);return near.distance<p.half-.2&&near.q>3;
  }
  function worldPose(){if(state.inPitLane)return pitSurface(state.pitQ||0,state.laneOffset);const p=at(state.distanceM);return p?lateral(p,state.laneOffset):null;}
  function pitMotion(dt,dsdt){if(!state.inPitLane)return dsdt;if(pitHeld())return 0;const t=current(),p=prepPit(t),old=state.pitQ||0;state.pitQ=clamp(old+dsdt*dt,0,p.length);const delta=(state.pitQ-old)/p.length*p.span;return delta/dt;}
  function pitHeld(){return state.inPitLane&&(state.pitStage==='box'||state.pitStage==='service');}
- function serviceZone(q,n){const box=pitBox(app.TEAM.slot),p=prepPit(current());return (Math.abs(q-box)<=3&&n>=1.3&&n<=4.5)||(Math.abs(q-box)<=5.5&&n>=p.half-.1&&n<=p.half+8.2);}
+ function serviceZone(q,n){const box=pitBox(app.TEAM.slot),p=prepPit(current());n*=p.garageSide||1;return (Math.abs(q-box)<=3&&n>=1.3&&n<=4.5)||(Math.abs(q-box)<=5.5&&n>=p.half-.1&&n<=p.half+8.2);}
  function openService(){state.pitAutoStart=3;state.pitStage='box';state.pitArmed=true;state.pitMenuOpen=true;state.speedMps=0;state.pitFuelAdd=0;state.pitTireSel=state.tyreComp==='soft'?'medium':'soft';app.holdContactPlayer?.();app.showToast('Pit crew ready. Choose tyres; service starts automatically in 3 seconds.','Pit crew');}
  function requestPit(){const p=app.pitModel();if(!p)return false;
   if(state.inPitLane){
@@ -1992,7 +1998,7 @@ window.__Track2App=window.U9App;
   const t=current(),lap=Math.round((state.distanceM-near.d)/t.L);state.distanceM=lap*t.L+near.d;state.laneOffset=near.n;state.headingRel=angle(oldHeading-near.p.psi);state.inPitLane=false;state.pitStage='';state.pitArmed=false;state.pitMenuOpen=false;
   if(message)app.showToast(message,'Pit Wall');return true;
  }
- function pitStep(dt,TEAM){const t=current();if(!t)return;const p=prepPit(t);state.pitLimitKmh=p.limit;
+ function pitStep(dt,TEAM){const t=current();if(!t)return;const p=prepPit(t);if(!p)return;state.pitLimitKmh=p.limit;
   if(!state.inPitLane&&pitEntry(state.distanceM,state.laneOffset)){
    const before=lateral(at(state.distanceM),state.laneOffset),nearest=pitNearest(before,0,p.boxStart),near=nearest.q;
    if(nearest.distance>p.half+.2)return;
@@ -2007,12 +2013,12 @@ window.__Track2App=window.U9App;
   const q=state.pitQ,box=pitBox(TEAM.slot),err=box-q,pl=p.limit/3.6;
   // Driving out across a grass verge leaves the pit route; it is not an invisible
   // lane constraint or a speed limiter following the car around the circuit.
-  if(!pitHeld()&&(state.laneOffset < -p.half-2||state.laneOffset > (q>p.boxStart-15&&q<p.boxEnd+15?16:p.half+2))){if(leavePit('Left the pit lane.'))return;}
+  if(!pitHeld()&&(state.laneOffset*(p.garageSide||1) < -p.half-2||state.laneOffset*(p.garageSide||1) > (q>p.boxStart-15&&q<p.boxEnd+15?16:p.half+2))){if(leavePit('Left the pit lane.'))return;}
   const limit=v=>{state.speedMps=Math.min(state.speedMps,v);app.limitContactSpeed?.(v);};
   // Existing assisted pit service is retained; no teleport to a fixed side of the circuit.
   const boxOffset=state.pitStage==='enter'?3.1*clamp((50-err)/35,0,1):state.pitStage==='box'||state.pitStage==='service'?3.1:3.1*clamp((box+35-q)/35,0,1);
   // The tyres steer through the actual entry and exit. No lateral/heading teleport.
-  state.pitTargetOffset=state.pitStage==='transit'?0:boxOffset;
+  state.pitTargetOffset=state.pitStage==='transit'?0:boxOffset*(p.garageSide||1);
   if(q>=p.limitIn&&q<=p.limitOut)limit(pl);
   if((state.pitStage==='enter'||state.pitStage==='transit')&&serviceZone(q,state.laneOffset)&&Math.abs(state.speedMps)<1.5)openService();
   if(state.pitStage==='enter'){
@@ -2024,17 +2030,56 @@ window.__Track2App=window.U9App;
    const pit=pitAt(p.length),road=at(state.distanceM),before=lateral(pit,state.laneOffset),old=pit.psi+state.headingRel;state.laneOffset=(before.x-road.x)*Math.cos(road.psi)-(before.z-road.z)*Math.sin(road.psi);state.headingRel=angle(old-road.psi);state.inPitLane=false;state.pitStage='';state.pitArmed=false;state.pitMenuOpen=false;app.showToast('Pit exit — follow the blend line and check the mirrors.','Pit Wall');
   }
  }
- function rivalPit(r,dt){const t=current();if(!t)return false;const p=prepPit(t),phase=wrap(r.distM,t.L);
+ function rivalPit(r,dt){const t=current();if(!t)return false;const p=prepPit(t);if(!p)return false;const phase=wrap(r.distM,t.L);
   if(!r.pitState&&(r.wantPit||r.limp)&&wrap(phase-p.entry,t.L)<95){r.pitState='in';r.pitQ=0;r.pitBase=Math.floor((r.distM-p.entry)/t.L)*t.L+p.entry;}
   if(!r.pitState)return false;const box=pitBox(r.slot||0),remain=box-(r.pitQ||0),lim=p.limit/3.6;
   if(r.pitState==='in'){r.speedMps=Math.min(lim,Math.sqrt(Math.max(0,24*Math.max(0,remain-.25))));if(remain<1&&remain>=-3){r.speedMps=0;if(r.limp){r.gone=true;r.out=true;return true;}r.pitState='box';r.pitT=(r.pitS||2.6)+(r.needsFix?5.5*(r.fixS||1):0);}}
   else if(r.pitState==='box'){r.speedMps=0;r.pitT-=dt;if(r.pitT<=0){r.wear=0;r.needsFix=false;r.wantPit=false;r.pitState='exit';}}
   else r.speedMps=Math.min(lim,r.speedMps+9*dt);
-  r.pitQ=clamp((r.pitQ||0)+r.speedMps*dt,0,p.length);r.distM=r.pitBase+r.pitQ/p.length*p.span;r.lane=r.pitState==='in'?3.1*clamp((50-remain)/35,0,1):r.pitState==='box'?3.1:3.1*clamp((box+35-r.pitQ)/35,0,1);r.brake=r.pitState==='box'?1:0;
+  r.pitQ=clamp((r.pitQ||0)+r.speedMps*dt,0,p.length);r.distM=r.pitBase+r.pitQ/p.length*p.span;r.lane=r.pitState==='in'?3.1*clamp((50-remain)/35,0,1):r.pitState==='box'?3.1:3.1*clamp((box+35-r.pitQ)/35,0,1);r.lane*=p.garageSide||1;r.brake=r.pitState==='box'?1:0;
   if(r.pitQ>=p.length){r.pitState='';r.pitQ=null;}return true;
  }
- Object.assign(app,{serviceZone,pitHeld,requestPit,pitSurface,roadNearest,pitNearest,pitCovers,fenceSegments,surfacePoint,trackData:data,trackModel:current,trackWidthAt:widthAt,trackAt:at,trackSample:sample,trackSurface:surface,trackLateral:lateral,trackProfile:profile,trackWrap:wrap,trackAngle:angle,pitModel:()=>current()?prepPit(current()):null,pitAt,pitBox,pitEntry,pitMotion,pitStep,pitCurvature,rivalPit,worldPose});
- for(const [name,t] of Object.entries(data)){const c=app.CIRCUITS[name];if(!c)continue;c.dist=t.L;c.corners=t.count||c.corners;c.blurb=`${(t.L/1000).toFixed(3)} km ${name}`;c.track=t.labels.map(([at,name])=>({at,dir:Math.sign(sample(t,at).k)||1,deg:60,len:60,name}));}
+ Object.assign(app,{serviceZone,pitHeld,requestPit,pitSurface,roadNearest,pitNearest,pitCovers,fenceSegments,surfacePoint,trackData:data,trackPhase:phase,trackModel:current,trackWidthAt:widthAt,trackAt:at,trackSample:sample,trackSurface:surface,trackLateral:lateral,trackProfile:profile,trackWrap:wrap,trackAngle:angle,pitModel:()=>current()?prepPit(current()):null,pitAt,pitBox,pitEntry,pitMotion,pitStep,pitCurvature,rivalPit,worldPose});
+ for(const [name,t] of Object.entries(data)){const c=app.CIRCUITS[name];if(!c)continue;c.dist=t.L;c.loop=t.closed!==false;c.corners=t.count||c.corners;c.blurb=`${(t.L/1000).toFixed(3)} km ${name} · ${t.terrain==='rally'?'2026 stage reconstruction':t.scene==='cinematic'?'Film-inspired mission':'Track 2.0'}`;c.track=t.labels.map(([at,name])=>({at,dir:Math.sign(sample(t,at).k)||1,deg:60,len:60,name}));}
+})();
+
+/* Shared surface samples for the prebuilt rally mesh and vehicle. No terrain
+   is generated during driving; every height comes from the loaded route. */
+(function(){
+ const a=window.__Track2App,s=a.state,C=a.clamp;
+ const types={
+  piste:{surf:'Hard sandy piste',grip:.82,rough:.20,color:'#b29a74',dune:0},
+  gravel:{surf:'Gravel piste',grip:.78,rough:.32,color:'#978c77',dune:0},
+  wadi:{surf:'Dry wadi · stones',grip:.74,rough:.49,color:'#96856e',dune:0},
+  rock:{surf:'Rocky ground',grip:.72,rough:.59,color:'#8e8070',dune:0},
+  canyon:{surf:'Rock canyon',grip:.75,rough:.43,color:'#ab8462',dune:0},
+  sand:{surf:'Sandy piste',grip:.67,rough:.23,color:'#c4a675',dune:.35},
+  dunes:{surf:'Dune field',grip:.61,rough:.16,color:'#d5b47c',dune:1},
+  fesh:{surf:'Fesh-fesh · buried rocks',grip:.63,rough:.54,color:'#baa38a',dune:0},
+  salt:{surf:'Chott · salt flat',grip:.76,rough:.10,color:'#cecab6',dune:0},
+  grove:{surf:'Acacia grove · winding piste',grip:.76,rough:.30,color:'#a49576',dune:0},
+  coast:{surf:'Coastal gravel',grip:.78,rough:.22,color:'#b8ab8c',dune:0},
+  transfer:{surf:'Neutralised paved transfer',grip:1,rough:.035,color:'#54595a',dune:0}
+ };
+ function sector(d,t=a.trackModel()) {if(t?.terrain!=='rally')return null;const v=t.sectors;let lo=0,hi=v.length;while(lo+1<hi){const m=(lo+hi)>>1;if(v[m][0]<=d)lo=m;else hi=m;}return {kind:v[lo][1],...types[v[lo][1]]};}
+ function step(dt){const t=a.trackModel();if(t?.terrain!=='rally')return false;const d=s.distanceM,v=Math.abs(s.speedMps),terr=sector(d),p=a.trackAt(d),slope=p.grade;
+  s.duneGrade=slope;s._gradeAccel=-9.81*slope/Math.sqrt(1+slope*slope);
+  const texture=Math.sin(d*.9)*.6+Math.sin(d*2.7+1.3)*.3+Math.sin(d*6.1)*.1,excite=terr.rough*C(v/26,0,1.6)*texture;
+  s._susVel=(s._susVel||0)+(excite*10-(s.susComp||0)*46-(s._susVel||0)*7.5)*dt;s.susComp=C((s.susComp||0)+s._susVel*dt,-1,1);
+  // Ballistic separation occurs only when a mapped crest falls away faster than
+  // gravity. Land on the same loaded surface, rather than an arbitrary air timer.
+  const normalAccel=v*v*(a.trackAt(d+4).grade-a.trackAt(Math.max(0,d-4)).grade)/8;
+  if(!s.airborne&&normalAccel< -9.81&&v>8){s.airborne=true;s._rallyY=p.y;s._rallyVy=v*slope;}
+  if(s.airborne){s._rallyVy-=9.81*dt;s._rallyY+=s._rallyVy*dt;if(s._rallyY<=p.y){s.airborne=false;s.susComp=C(s.susComp+Math.abs(s._rallyVy-v*slope)/12,0,1);s._rallyY=p.y;}}
+  s.rallyAirHeight=s.airborne?Math.max(0,s._rallyY-p.y):0;
+  let grip=terr.grip*(1-C(-s.susComp,0,1)*.22);s.bogging=terr.grip<.7&&v<7&&s.throttle>.65&&!s.xMode;if(s.bogging)grip*=.8;if(s.airborne)grip*=.05;s.gripMul=C(grip,.03,1.2);return true;
+ }
+ const oldRequest=a.requestPit,oldHeld=a.pitHeld,oldStep=a.pitStep;
+ function serviceNear(){const t=a.trackModel();if(t?.terrain!=='rally')return false;return (t.serviceZones||[]).some(([lo,hi])=>Math.abs(s.distanceM-(lo+hi)/2)<38&&Math.abs(s.laneOffset-(a.halfWidthAt(s.distanceM)+11))<9);}
+ a.requestPit=()=>{if(a.trackModel()?.terrain!=='rally')return oldRequest();if(!serviceNear()){a.showToast('Assistance is available only at the marked service truck. Stop beside it and request service.','Rally assistance');return true;}if(Math.abs(s.speedMps)>1.5){a.showToast('Stop beside the service truck first.','Rally assistance');return true;}if(!s.rallyService){s.rallyService=s.realMode?12:5;s.rallyServiceRequested=true;a.holdContactPlayer?.();a.showToast(s.realMode?'Crew servicing tyres and repairing damage…':'Practice service in progress…','Rally assistance');}return true;};
+ a.pitHeld=()=>oldHeld()||s.rallyService>0;
+ a.pitStep=(dt,team)=>{if(a.trackModel()?.terrain!=='rally')return oldStep(dt,team);if(!s.rallyService)return;s.speedMps=0;s.rallyService=Math.max(0,s.rallyService-dt);if(!s.rallyService&&s.rallyServiceRequested){s.rallyServiceRequested=false;if(s.realMode){s.damage=0;s.tyreWear=0;s.retired=false;s.failRisk=0;for(const k of Object.keys(s.sys))s.sys[k]=0;}s.pitStops++;a.showToast('Service complete — check the route before rejoining.','Rally assistance');}};
+ Object.assign(a,{rallyTypes:types,rallySector:sector,rallyStep:step});
 })();
 
 /* Contact-only planar rigid bodies. Free driving still uses the original powertrain,
@@ -2110,7 +2155,7 @@ window.__Track2App=window.U9App;
  function project(b){const r=b.actor,p=origin(b),pit=r?r.pitState:s.inPitLane,old=b.beforeD??(r?r.distM:s.distanceM);let q,p0;
   if(pit){const oldQ=b.beforeQ??(r?r.pitQ||0:s.pitQ||0),near=app.pitNearest(p,oldQ-35,oldQ+35);if(Number.isFinite(near.distance)){q=near.q;p0=app.pitAt(q);}else {q=oldQ;p0=app.pitAt(q);}}
   else{let best=Infinity,guess=old;for(let d=old-35;d<=old+35;d+=3){const v=app.trackAt(d),cost=(v.x-p.x)**2+(v.z-p.z)**2+4*(v.y-b.y)**2;if(cost<best){best=cost;guess=d;}}
-   q=guess;for(let i=0;i<3;i++){const v=app.trackAt(q);q+=C((p.x-v.x)*Math.sin(v.psi)+(p.z-v.z)*Math.cos(v.psi),-4,4);}p0=app.trackAt(q);
+   q=guess;for(let i=0;i<3;i++){const v=app.trackAt(q);q+=C((p.x-v.x)*Math.sin(v.psi)+(p.z-v.z)*Math.cos(v.psi),-4,4);}if(app.trackModel().closed===false)q=C(q,0,app.trackModel().L);p0=app.trackAt(q);
   }
   const n=(p.x-p0.x)*Math.cos(p0.psi)-(p.z-p0.z)*Math.sin(p0.psi),rel=A(b.yaw-p0.psi),v=b.vx*Math.sin(b.yaw)+b.vz*Math.cos(b.yaw);
   if(r){if(pit){r.pitQ=q;r.distM=r.pitBase+q/app.pitModel().length*app.pitModel().span;}else r.distM=q;r.lane=n;r.speedMps=v;r.contactHeading=rel;}
@@ -2148,7 +2193,7 @@ window.__Track2App=window.U9App;
     if(b.player){dv=s.speedMps-b.beforeSpeed;}
     else {const r=b.actor,cap=r.out?0:Math.min(r.topMps||85,Math.sqrt(1.5*9.81/Math.max(.0001,Math.abs(app.trackAt(r.distM+22).k)))),target=Math.abs(A(b.yaw-(b.pathPsi??b.yaw)))>.65?Math.min(cap,10):cap;dv=C(target-forward,-(r.out?12:18)*dt,(r.accel||8)*dt);}
     b.vx+=Math.sin(b.yaw)*dv;b.vz+=Math.cos(b.yaw)*dv;
-    const lat=b.vx*Math.cos(b.yaw)-b.vz*Math.sin(b.yaw),grip=1.3*9.81,remove=C(lat,-grip*dt,grip*dt);b.vx-=Math.cos(b.yaw)*remove;b.vz+=Math.sin(b.yaw)*remove;
+    const lat=b.vx*Math.cos(b.yaw)-b.vz*Math.sin(b.yaw),grip=1.3*9.81*(app.rallySector?.(s.distanceM)?.grip||1),remove=C(lat,-grip*dt,grip*dt);b.vx-=Math.cos(b.yaw)*remove;b.vz+=Math.sin(b.yaw)*remove;
     let desiredYaw;if(b.player){const steer=s.steer*app.STEERING.maxAngle*C(1.15-Math.abs(b.beforeSpeed)*.013,.44,1);desiredYaw=s.speedMps/app.STEERING.wheelbase*Math.tan(steer);}
     else {const r=b.actor,p=origin(b),look=C(Math.abs(forward)*.4+4,7,28),q=r.pitState?app.pitAt((r.pitQ||0)+look):app.trackAt(r.distM+look),dx=q.x-p.x,dz=q.z-p.z,k=2*(dx*Math.cos(b.yaw)-dz*Math.sin(b.yaw))/Math.max(9,dx*dx+dz*dz);desiredYaw=forward*C(k,-Math.tan(.58)/3.6,Math.tan(.58)/3.6);}
     const impactSpin=b.omega-(b.steerYaw||0);
@@ -2186,7 +2231,7 @@ window.__Track2App=window.U9App;
   }
   s.impactJolt=(s.impactJolt||0)*Math.exp(-dt*10);frame=null;
  }
- function trackLimitsStep(dt){if(!app.trackModel())return;const over=Math.abs(s.laneOffset)-app.halfWidthAt(s.distanceM),off=over>.3&&!s.inPitLane&&!app.pitEntry(s.distanceM,s.laneOffset);s.offTrack=off?1:Math.max(0,s.offTrack-dt*3);
+ function trackLimitsStep(dt){if(!app.trackModel())return;if(app.trackModel().terrain==='rally'||['cinematic','museum'].includes(app.trackModel().scene)){s.offTrack=0;return;}const over=Math.abs(s.laneOffset)-app.halfWidthAt(s.distanceM),off=over>.3&&!s.inPitLane&&!app.pitEntry(s.distanceM,s.laneOffset);s.offTrack=off?1:Math.max(0,s.offTrack-dt*3);
   // Preserve the existing sporting penalties. Grass is not a collision surface.
   if(s.realMode&&off&&over>.9&&s.tlCool<=0){s.tlCool=2.5;s.lapInvalid=true;if(s.route.env!=='street'){s.tlWarnings++;if(s.tlWarnings>=4){s.penaltyS+=5;app.showToast('+5 s penalty — repeated track limits.','Race Control');}else if(s.tlWarnings===3)app.showToast('Black-and-white flag — final track-limits warning.','Race Control');else app.showToast("Track limits — this lap won't count (warning "+s.tlWarnings+'/3).','Race Control');}}
  }
@@ -2202,35 +2247,42 @@ window.__Track2App=window.U9App;
  let plan=null,serial=0;
  const smooth=u=>(u=C(u,0,1),u*u*(3-2*u));
  function line(){const t=a.trackModel();if(!t)return null;if(t.drivingLine)return t.drivingLine;
-  const N=t.points.length,ds=t.L/N,at=i=>a.trackSample(t,i*ds),ks=Array.from({length:N},(_,i)=>at(i).k),signs=ks.map(k=>Math.abs(k)>.0018?Math.sign(k):0);
+  const N=t.points.length,open=t.closed===false,I=i=>open?C(i,0,N-1):(i%N+N)%N,ds=t.L/(open?N-1:N),at=i=>a.trackSample(t,i*ds),ks=Array.from({length:N},(_,i)=>at(i).k),signs=ks.map(k=>Math.abs(k)>.0018?Math.sign(k):0);
   // Join brief straight patches inside a compound bend, retaining opposite turns.
-  for(let i=0;i<N;i++)if(signs[i]===0){let j=1;while(j<6&&!signs[(i+j)%N])j++;const prev=signs[(i-1+N)%N];if(j<6&&prev&&signs[(i+j)%N]===prev)for(let n=0;n<j;n++)signs[(i+n)%N]=prev;}
-  const corners=[];let origin=signs.findIndex((v,i)=>v!==signs[(i-1+N)%N]);if(origin<0)origin=0;
-  for(let step=0;step<N;){const start=origin+step,sign=signs[start%N];let count=1;while(step+count<N&&signs[(start+count)%N]===sign)count++;step+=count;if(!sign)continue;
-   const turn=Array.from({length:count},(_,j)=>Math.abs(ks[(start+j)%N])*ds).reduce((x,y)=>x+y,0);if(turn<.10||count*ds>t.L*.8)continue;
-   const fraction=turn>1.9?.64:.54;let swept=0,apex=start;for(let j=0;j<count;j++){swept+=Math.abs(ks[(start+j)%N])*ds;if(swept>=turn*fraction){apex=start+j;break;}}
+  for(let i=0;i<N;i++)if(signs[i]===0){let j=1;while(j<6&&!signs[I(i+j)])j++;const prev=signs[I(i-1)];if(j<6&&prev&&signs[I(i+j)]===prev)for(let n=0;n<j;n++)signs[I(i+n)]=prev;}
+  const corners=[];let origin=signs.findIndex((v,i)=>v!==signs[I(i-1)]);if(origin<0||open)origin=0;
+  for(let step=0;step<N;){const start=origin+step,sign=signs[I(start)];let count=1;while(step+count<N&&signs[I(start+count)]===sign)count++;step+=count;if(!sign)continue;
+   const turn=Array.from({length:count},(_,j)=>Math.abs(ks[I(start+j)])*ds).reduce((x,y)=>x+y,0);if(turn<.10||count*ds>t.L*.8)continue;
+   const fraction=turn>1.9?.64:.54;let swept=0,apex=start;for(let j=0;j<count;j++){swept+=Math.abs(ks[I(start+j)])*ds;if(swept>=turn*fraction){apex=start+j;break;}}
    corners.push({start:start*ds,end:(start+count)*ds,apex:apex*ds,sign,turn,fraction,lead:C(count*ds*.4,18,65),tail:C(count*ds*.3,18,60)});
   }
-  let offsets=Array.from({length:N},(_,i)=>{const d=i*ds;let sum=0,weight=0;for(const c of corners)for(const lap of [-1,0,1]){const x=d+lap*t.L,start=c.start-c.lead,end=c.end+c.tail;if(x<start||x>end)continue;const amplitude=Math.max(0,a.halfWidthAt(d)-2.4)*.78,inside=Math.min(amplitude,.25/Math.max(.001,Math.abs(ks[i])));let n,w;
-    if(x<c.start){n=-amplitude;w=smooth((x-start)/c.lead);}else if(x<c.apex){n=-amplitude+(amplitude+inside)*smooth((x-c.start)/(c.apex-c.start));w=1;}else if(x<c.end){n=inside-(amplitude+inside)*smooth((x-c.apex)/(c.end-c.apex));w=1;}else{n=-amplitude;w=1-smooth((x-c.end)/c.tail);}sum+=n*c.sign*w;weight+=w;}
-   return weight?sum/Math.max(1,weight):0;});
+  // Visit only the stations influenced by each corner. Long rally routes must
+  // not multiply every route station by every bend during their initial load.
+  const sums=new Float64Array(N),weights=new Float64Array(N);
+  for(const c of corners){const start=c.start-c.lead,end=c.end+c.tail;
+   for(let j=Math.ceil(start/ds);j<=Math.floor(end/ds);j++){if(open&&(j<0||j>=N))continue;const i=I(j),d=i*ds,x=j*ds,amplitude=Math.max(0,a.halfWidthAt(d)-2.4)*.78,inside=Math.min(amplitude,.25/Math.max(.001,Math.abs(ks[i])));let n,w;
+    if(x<c.start){n=-amplitude;w=smooth((x-start)/c.lead);}else if(x<c.apex){n=-amplitude+(amplitude+inside)*smooth((x-c.start)/(c.apex-c.start));w=1;}else if(x<c.end){n=inside-(amplitude+inside)*smooth((x-c.apex)/(c.end-c.apex));w=1;}else{n=-amplitude;w=1-smooth((x-c.end)/c.tail);}sums[i]+=n*c.sign*w;weights[i]+=w;
+   }
+  }
+  let offsets=Array.from(sums,(v,i)=>weights[i]?v/Math.max(1,weights[i]):0);
   // Smooth steering transitions between linked corners without touching the road.
-  for(let pass=0;pass<6;pass++)offsets=offsets.map((v,i)=>(offsets[(i-2+N)%N]+4*offsets[(i-1+N)%N]+6*v+4*offsets[(i+1)%N]+offsets[(i+2)%N])/16);
+  for(let pass=0;pass<6;pass++)offsets=offsets.map((v,i)=>(offsets[I(i-2)]+4*offsets[I(i-1)]+6*v+4*offsets[I(i+1)]+offsets[I(i+2)])/16);
   const points=offsets.map((n,i)=>a.trackLateral(at(i),n));
-  const curvature=points.map((p,i)=>{const x=points[(i-2+N)%N],z=points[(i+2)%N],len=(Math.hypot(p.x-x.x,p.z-x.z)+Math.hypot(z.x-p.x,z.z-p.z))/2;return ang(Math.atan2(z.x-p.x,z.z-p.z)-Math.atan2(p.x-x.x,p.z-x.z))/Math.max(.5,len);});
-  const vmax=a.SPEC.topSpeedRecordMps||a.SPEC.topSpeedMps||354/3.6,lat=a.track2Vehicle.f1?21:C(a.SPEC.tractionCoeff*9.81,7.5,21);const speeds=curvature.map(k=>Math.min(vmax,Math.sqrt(lat/Math.max(.00001,Math.abs(k)))));
-  for(let pass=0;pass<3;pass++)for(let i=N-1;i>=0;i--)speeds[i]=Math.min(speeds[i],Math.sqrt(speeds[(i+1)%N]**2+2*9*ds));
+  const curvature=points.map((p,i)=>{const x=points[I(i-2)],z=points[I(i+2)],len=(Math.hypot(p.x-x.x,p.z-x.z)+Math.hypot(z.x-p.x,z.z-p.z))/2;return ang(Math.atan2(z.x-p.x,z.z-p.z)-Math.atan2(p.x-x.x,p.z-x.z))/Math.max(.5,len);});
+  const vmax=a.SPEC.topSpeedRecordMps||a.SPEC.topSpeedMps||354/3.6,lat=a.track2Vehicle.f1?21:C(a.SPEC.tractionCoeff*9.81,7.5,21);const speeds=curvature.map((k,i)=>{const terrain=a.rallySector?.(i*ds);return Math.min(vmax,terrain?Math.max(18,52-terrain.rough*36):vmax,Math.sqrt(lat*(terrain?.grip||1)/Math.max(.00001,Math.abs(k))))});
+  if(open)speeds[N-1]=0;
+  for(let pass=0;pass<3;pass++)for(let i=N-1;i>=0;i--)speeds[i]=Math.min(speeds[i],Math.sqrt(speeds[I(i+1)]**2+2*9*ds));
   return t.drivingLine={offsets,speeds,curvature,corners,N,ds};
  }
- function interpolate(arr,d){const t=a.trackModel(),f=wrap(d,t.L)/t.L*arr.length,i=Math.floor(f);return arr[i]+(arr[(i+1)%arr.length]-arr[i])*(f-i);}
+ function interpolate(arr,d){const t=a.trackModel(),open=t.closed===false,f=a.trackPhase(t,d)/t.L*(open?arr.length-1:arr.length),i=open?Math.min(arr.length-2,Math.floor(f)):Math.floor(f);return arr[i]+(arr[(i+1)%arr.length]-arr[i])*(f-i);}
  function offset(d){return interpolate(line().offsets,d);}
  function laneSpeed(d){return interpolate(line().speeds,d);}
  function descriptor(r){const player=!r,pit=player?s.inPitLane:!!r.pitState,d=player?s.distanceM:r.distM,n=player?s.laneOffset:r.lane,v=player?s.speedMps:r.speedMps,q=player?s.pitQ:r.pitQ;
   const p=a.contactPose?.(r)|| (pit?a.trackLateral(a.pitAt(q||0),n):a.surfacePoint(d,n));return {r,player,pit,d,n,v:Math.max(0,v),q:q||0,p};}
  function neighbours(self){const actors=[...(s.raceGrid?s.rivals:[]).filter(r=>!r.gone&&!r.dns&&r!==self.r)];if(!self.player)actors.push(null);const L=a.trackModel().L,out=[];
   for(const r of actors){const o=descriptor(r);let gap,n;
-   if(o.pit===self.pit){gap=self.pit?o.q-self.q:wrap(o.d-self.d+L/2,L)-L/2;n=o.n;}
-   else {const near=self.pit?a.pitNearest(o.p):a.roadNearest(o.p);if(!Number.isFinite(near.distance)||near.distance>22)continue;const p=self.pit?a.pitAt(near.q):a.trackAt(near.d);n=(o.p.x-p.x)*Math.cos(p.psi)-(o.p.z-p.z)*Math.sin(p.psi);gap=self.pit?near.q-self.q:wrap(near.d-self.d+L/2,L)-L/2;}
+   if(o.pit===self.pit){gap=self.pit?o.q-self.q:(a.trackModel().closed===false?o.d-self.d:wrap(o.d-self.d+L/2,L)-L/2);n=o.n;}
+   else {const near=self.pit?a.pitNearest(o.p):a.roadNearest(o.p);if(!Number.isFinite(near.distance)||near.distance>22)continue;const p=self.pit?a.pitAt(near.q):a.trackAt(near.d);n=(o.p.x-p.x)*Math.cos(p.psi)-(o.p.z-p.z)*Math.sin(p.psi);gap=self.pit?near.q-self.q:(a.trackModel().closed===false?near.d-self.d:wrap(near.d-self.d+L/2,L)-L/2);}
    if(gap> -35&&gap<500)out.push({...o,gap,n});
   }return out;
  }
@@ -2245,8 +2297,8 @@ window.__Track2App=window.U9App;
  }
  function begin(dt){serial++;plan=null;if(!a.trackModel())return;const self=descriptor(null),v=self.v;let target,cap;
   if(self.pit){target=s.pitTargetOffset||0;cap=a.pitModel().limit/3.6;for(let d=3;d<80;d+=4)cap=Math.min(cap,Math.sqrt(16/Math.max(.001,Math.abs(a.pitCurvature(self.q+d)))+2*8*d));if(s.pitStage==='enter')cap=Math.min(cap,Math.sqrt(2*7*Math.max(0,a.pitBox(a.TEAM.slot)-self.q-.5)));if(a.pitHeld())cap=0;}
-  else {target=offset(self.d+C(v*.33+2,6,24));cap=laneSpeed(self.d+v*.55+4);if(s.adaptiveCruise&&!s.testDriver)cap=Math.min(cap,s.cruiseSetKmh/3.6);if(s.pitLimiter)cap=Math.min(cap,60/3.6);if(s.safetyCar)cap=Math.min(cap,130/3.6);
-   if(s.pitArmed){const p=a.pitModel(),gap=wrap(p.entry-self.d,a.trackModel().L);if(gap<150||wrap(self.d-p.entry,a.trackModel().L)<p.span*.5)cap=Math.min(cap,Math.sqrt((p.limit/3.6)**2+16*Math.max(0,gap-30)));}
+  else {target=offset(self.d+C(v*.33+2,6,24));const t=a.trackModel();cap=laneSpeed(t.closed===false?Math.min(self.d+v*.55+4,t.L-2):self.d+v*.55+4);if(t.closed===false)cap=self.d>=t.L-.3||s.route.arrived?0:Math.min(cap,Math.max(.7,Math.sqrt(10*Math.max(0,t.L-self.d))));if(s.adaptiveCruise&&!s.testDriver)cap=Math.min(cap,s.cruiseSetKmh/3.6);if(s.pitLimiter)cap=Math.min(cap,60/3.6);if(s.safetyCar)cap=Math.min(cap,130/3.6);
+   if(s.pitArmed&&a.pitModel()){const p=a.pitModel(),gap=wrap(p.entry-self.d,a.trackModel().L);if(gap<150||wrap(self.d-p.entry,a.trackModel().L)<p.span*.5)cap=Math.min(cap,Math.sqrt((p.limit/3.6)**2+16*Math.max(0,gap-30)));}
   }
   plan={...traffic(self,target,cap),serial,dt,self};
  }
@@ -2254,13 +2306,39 @@ window.__Track2App=window.U9App;
  function steer(){const p=get(),v=s.speedMps,look=C(Math.abs(v)*.30+2,5,25),self=p.self;let q;
   if(self.pit)q=a.trackLateral(a.pitAt(self.q+look),p.n);
   else {const target=offset(self.d+look),n=p.blocked||Math.abs(p.n-offset(self.d+C(Math.abs(v)*.33+2,6,24)))>.1?p.n:target;q=a.trackLateral(a.trackAt(self.d+look),n);
-   if(s.pitArmed){const pit=a.pitModel(),past=wrap(self.d-pit.entry+a.trackModel().L/2,a.trackModel().L)-a.trackModel().L/2;if(past> -look&&past<pit.span*.5)q=a.pitAt(Math.max(0,past+look));}}
+   if(s.pitArmed&&a.pitModel()){const pit=a.pitModel(),past=wrap(self.d-pit.entry+a.trackModel().L/2,a.trackModel().L)-a.trackModel().L/2;if(past> -look&&past<pit.span*.5)q=a.pitAt(Math.max(0,past+look));}}
   const yaw=(a.contactPose?.()?.psi)??((self.pit?a.pitAt(self.q):a.trackAt(self.d)).psi+s.headingRel),dx=q.x-self.p.x,dz=q.z-self.p.z,right=dx*Math.cos(yaw)-dz*Math.sin(yaw),k=2*right/Math.max(9,dx*dx+dz*dz),factor=C(1.15-Math.abs(v)*.013,.44,1);
   return C(Math.atan(k*a.STEERING.wheelbase)/(a.STEERING.maxAngle*factor),-1,1);
  }
  function controls(){const p=get(),err=p.cap-s.speedMps;return {throttle:C(err*.65,0,1),brake:C(-err*.42,0,1),steerTarget:steer()};}
  function rival(r,dt,oldV){if(!a.trackModel())return;const self=descriptor(r),base=offset(r.distM+12),p=traffic(self,base,Math.min(r.speedMps,laneSpeed(r.distM+self.v*.55+4)));r.speedMps=Math.min(r.speedMps,Math.max(p.cap,oldV-12*dt));r.lane+=C(p.n-r.lane,-1.0*dt,1.0*dt);}
  Object.assign(a,{racingOffset:offset,drivingLine:line,driverBegin:begin,driverTarget:()=>get().cap,driverControls:controls,driverSteer:steer,rivalDriver:rival,driverInfo:()=>{const p=get();return {target:p.cap,offset:p.n,blocked:p.blocked,nearby:p.nearby.map(o=>({name:o.r?.name||'Mercedes',gap:o.gap,n:o.n,v:o.v}))};}});
+})();
+
+/* Load the complete immutable route before allowing any physics steps. No road
+   sections are generated or fetched in response to the car's position. */
+(function(){
+ const app=window.__Track2App,s=app.state;
+ let request=0;
+ const veil=document.createElement('div');veil.id='track2-route-loading';veil.setAttribute('role','status');veil.style.cssText='display:none;position:fixed;inset:0;z-index:10000;place-content:center;background:#10212ce8;color:#effbf8;text-align:center;font:16px/1.7 system-ui;padding:24px';document.body.appendChild(veil);
+ const info=document.createElement('details');info.id='track2-source-note';info.style.cssText='margin:12px 0;padding:9px;border:1px solid #62716e;border-radius:8px;font:12px/1.5 system-ui';const summary=document.createElement('summary');summary.textContent='Track 2.0 · route sources and accuracy';const note=document.createElement('p');info.append(summary,note);const first=document.querySelector('[data-circuit]');first?.parentElement?.appendChild(info);
+ const reset=app.track2Reset;app.track2Reset=()=>{request++;veil.style.display='none';reset?.();};
+ app.trackMeshReady=()=>!app.trackModel()||!!TRACK_MESHES[s.route.name]?.bytes;
+ app.prepareTrack=async name=>{
+  const ticket=++request;if(!app.trackData[name]){veil.style.display='none';return;}note.textContent=app.trackData[name].notes||'Measured centreline with modelled track details.';if(app.trackData[name].src?.startsWith('https://')){const link=document.createElement('a');link.href=app.trackData[name].src;link.target='_blank';link.rel='noopener noreferrer';link.textContent=' Source';note.append(link);}
+  if(TRACK_MESHES[name]?.bytes){veil.style.display='none';return;}
+  veil.textContent='Loading the complete '+name+' route…';veil.style.display='grid';
+  try{await trackBundle.ensure(name);if(ticket===request)veil.style.display='none';}
+  catch(error){if(ticket!==request)return;veil.replaceChildren();const p=document.createElement('p');p.textContent='This route could not load. '+error.message;const retry=document.createElement('button');retry.textContent='Retry route';retry.onclick=()=>app.prepareTrack(name);veil.append(p,retry);}
+ };
+ app.updateOpenRoute=dt=>{
+  const t=app.trackModel();if(!t||t.closed!==false)return;
+  s.distanceM=app.clamp(s.distanceM,0,t.L);s.route.remainingM=t.L-s.distanceM;
+  const neutral=t.neutralized?.some(([a,b])=>s.distanceM>=a&&s.distanceM<b);s.rallyNeutralized=!!neutral;if(!s.route.arrived&&!neutral)s.lap.curMs+=dt*1000;
+  if(s.distanceM>=t.L-.3){s.speedMps=0;app.holdContactPlayer?.();if(!s.route.arrived){s.route.arrived=true;s.adaptiveCruise=false;s.testDriver=false;s.lap.lastMs=s.lap.curMs;app.showToast('Finish — '+(s.lap.curMs/1000).toFixed(1)+' seconds. Select a route to restart.','Route complete');}}
+  // Keep the same world visible at the finish; never switch to the generic road.
+ };
+ if(app.trackModel())app.prepareTrack(s.route.name);
 })();
 
 /* ===== render: the driving world ===== */
@@ -2275,7 +2353,7 @@ window.__Track2App=window.U9App;
   let trackCamera=null,trackPitch=0,trackGL=null;
   const EYE_HEIGHT=app.track2Vehicle.f1?.97:app.track2Vehicle.prototype?1.0:1.15;
   function trackPoint(d,n=0,lift=0){return app.surfacePoint(d,n,lift);}
-  function trackFrame(){const impact=app.contactPose?.(),p=impact||app.worldPose();if(!p){trackCamera=null;return;}const q=impact||(!state.inPitLane?trackPoint(state.distanceM,state.laneOffset):p);p.y=q.y;trackPitch=Math.atan(p.grade);trackCamera={...p,psi:impact?p.psi:p.psi+state.headingRel,roll:Math.atan(q.bank||0)+(state.impactJolt||0)*Math.sin(state.time*35)};}
+  function trackFrame(){const impact=app.contactPose?.(),p=impact||app.worldPose();if(!p){trackCamera=null;return;}const q=impact||(!state.inPitLane?trackPoint(state.distanceM,state.laneOffset):p);p.y=q.y+(state.rallyAirHeight||0);trackPitch=Math.atan(p.grade);trackCamera={...p,psi:impact?p.psi:p.psi+state.headingRel,roll:Math.atan(q.bank||0)+(state.impactJolt||0)*Math.sin(state.time*35)};}
   function cameraPoint(p){const c=trackCamera,dx=p.x-c.x,dz=p.z-c.z,f=dx*Math.sin(c.psi)+dz*Math.cos(c.psi),u=p.y-c.y-EYE_HEIGHT,r=dx*Math.cos(c.psi)-dz*Math.sin(c.psi),up=u*Math.cos(trackPitch)-f*Math.sin(trackPitch);return{rgt:r*Math.cos(c.roll)+up*Math.sin(c.roll),fwd:f*Math.cos(trackPitch)+u*Math.sin(trackPitch),up:up*Math.cos(c.roll)-r*Math.sin(c.roll)};}
   function projectTrack(p){if(!trackCamera)return {x:0,y:0,scale:-1,fwd:-1};const a=cameraPoint(p);if(a.fwd<.2)return{x:0,y:0,scale:-1,fwd:a.fwd};const scale=FOCAL/a.fwd;return{x:innerWidth/2+a.rgt*scale,y:horizonY-a.up*scale,scale,fwd:a.fwd};}
   function createTrackGL(){
@@ -2294,12 +2372,14 @@ window.__Track2App=window.U9App;
     const tex=gl.createTexture(),pixels=new Uint8Array(128*128*4);let seed=73991;for(let i=0;i<pixels.length;i+=4){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const n=83+(seed>>>25);pixels[i]=pixels[i+1]=pixels[i+2]=n;pixels[i+3]=255;}gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,128,128,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);gl.generateMipmap(gl.TEXTURE_2D);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);const aniso=gl.getExtension('EXT_texture_filter_anisotropic');if(aniso)gl.texParameterf(gl.TEXTURE_2D,aniso.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(8,gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));gl.useProgram(program);gl.uniform1i(gl.getUniformLocation(program,'uAsphalt'),0);
     const buffers=new Map(),dynamic=gl.createBuffer();
     function bind(buffer){gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.vertexAttribPointer(attrs[0],3,gl.FLOAT,false,16,0);gl.vertexAttribPointer(attrs[1],3,gl.UNSIGNED_BYTE,true,16,12);gl.vertexAttribPointer(attrs[2],1,gl.UNSIGNED_BYTE,false,16,15);}
-    function upload(name){if(buffers.has(name))return buffers.get(name);const src=TRACK_MESHES[name],bytes=src.bytes;const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,bytes,gl.STATIC_DRAW);const o={buffer,count:src.vertices,bytes:bytes.length,uploads:1};buffers.set(name,o);return o;}
+    function upload(name){if(buffers.has(name))return buffers.get(name);for(const item of buffers.values())gl.deleteBuffer(item.buffer);buffers.clear();const src=TRACK_MESHES[name],bytes=src.bytes;const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,bytes,gl.STATIC_DRAW);const o={buffer,count:src.vertices,bytes:bytes.length,uploads:1,batches:src.batches};buffers.set(name,o);return o;}
     const draw=(w,h,night,mirror=null)=>{
       const dpr=mirror?1:Math.min(devicePixelRatio||1,1.5),W=Math.round(w*dpr),H=Math.round(h*dpr);if(!mirror&&(surface.width!==W||surface.height!==H)){surface.width=W;surface.height=H;}gl.viewport(0,0,W,H);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
       const c=mirror?{...app.trackLateral(trackCamera,mirror.eye),psi:trackCamera.psi+Math.PI+mirror.yaw,roll:-trackCamera.roll}:trackCamera,pitch=mirror?-trackPitch:trackPitch,sp=Math.sin(c.psi),cp=Math.cos(c.psi),st=Math.sin(pitch),ct=Math.cos(pitch),sr=Math.sin(c.roll),cr=Math.cos(c.roll);
       gl.uniform3f(uniforms.Eye,c.x,c.y+EYE_HEIGHT,c.z);gl.uniform3f(uniforms.Right,cp*cr-sp*st*sr,ct*sr,-sp*cr-cp*st*sr);gl.uniform3f(uniforms.Up,-sp*st*cr-cp*sr,ct*cr,-cp*st*cr+sp*sr);gl.uniform3f(uniforms.Forward,sp*ct,st,cp*ct);const focal=mirror?w*.55:FOCAL;gl.uniform4f(uniforms.Projection,2*focal/w,2*focal/h,mirror?.12:1-2*horizonY/h,0);gl.uniform1f(uniforms.Night,night?1:0);
-      const mesh=upload(state.route.name);bind(mesh.buffer);gl.drawArrays(gl.TRIANGLES,0,mesh.count);
+      const mesh=upload(state.route.name);bind(mesh.buffer);
+      if(mesh.batches){for(const b of mesh.batches){const dx=(b.min[0]+b.max[0])/2-c.x,dz=(b.min[2]+b.max[2])/2-c.z,rad=Math.hypot(b.max[0]-b.min[0],b.max[1]-b.min[1],b.max[2]-b.min[2])/2,forward=dx*sp+dz*cp;if(Math.hypot(dx,dz)-rad>14000||forward+rad<-.5)continue;gl.drawArrays(gl.TRIANGLES,b.first,b.count);}}
+      else gl.drawArrays(gl.TRIANGLES,0,mesh.count);
       const cars=buildVisibleCars(!!mirror);bind(dynamic);gl.bufferData(gl.ARRAY_BUFFER,cars,gl.DYNAMIC_DRAW);gl.drawArrays(gl.TRIANGLES,0,cars.byteLength/16);
       if(!mirror)ctx.drawImage(surface,0,0,w,h);
     };
@@ -2332,7 +2412,7 @@ window.__Track2App=window.U9App;
       for(const z of [2.92,3.07,3.22])box(0,.10,z,1.84,.035,.16,dark);for(const side of [-1,1])box(side*.92,.07,3.05,.035,.19,.52,silver);
       if(!player){box(0,.05,-.30,1.65,.1,3.2,dark);box(0,.14,-.25,.83,.53,2.3,silver);box(0,.30,-1.05,.56,.57,1.0,dark);box(0,.52,0,.4,.1,.75,[4,12,16]);box(0,.64,-.1,.29,.27,.31,[189,216,56]);box(0,.67,-1.82,1.65,.16,.38,dark);for(const side of [-1,1])box(side*.82,.42,-1.82,.03,.53,.52,silver);}
     }
-    {const q=app.pitBox(app.TEAM.slot),p=(d,n)=>app.pitSurface(d,n,.064);quad(p(q-3,1.5),p(q-3,4.1),p(q+3,4.1),p(q+3,1.5),[8,124,112],2);}
+    if(app.pitModel()){const q=app.pitBox(app.TEAM.slot),p=(d,n)=>app.pitSurface(d,n*(app.pitModel().garageSide||1),.064);quad(p(q-3,1.5),p(q-3,4.1),p(q+3,4.1),p(q+3,1.5),[8,124,112],2);}
     const player=app.contactPose?.()||app.worldPose();player.y=trackCamera.y;if(!mirror&&app.track2Vehicle.f1)car(player,trackCamera.psi,getComputedStyle(document.documentElement).getPropertyValue('--f1body').trim()||'#94a8aa',true,state.steer);
     for(const r of (state.raceGrid?state.rivals:[])||[]){if(r.gone||r.dns)continue;const p=app.contactPose?.(r)||(r.pitState?app.pitSurface(r.pitQ||0,r.lane||0):trackPoint(r.distM,r.lane||0));if(Math.hypot(p.x-trackCamera.x,p.z-trackCamera.z)>1600)continue;car(p,p.psi,r.body,false,0);}
     if(state.learnMode&&!mirror){for(let d=Math.ceil((state.distanceM+4)/3)*3;d<state.distanceM+190;d+=3){const n=q=>app.clamp(app.raceLineOffAt(q),-app.halfWidthAt(q)+1.5,app.halfWidthAt(q)-1.5),a=trackPoint(d,n(d)-.16,.058),b=trackPoint(d,n(d)+.16,.058),c=trackPoint(d+2.6,n(d+2.6)+.16,.058),e=trackPoint(d+2.6,n(d+2.6)-.16,.058),cap=Math.sqrt(1.5*9.81/Math.max(.0001,Math.abs(app.curvatureAt(d))));quad(a,b,c,e,state.speedMps>cap*1.08?[215,105,57]:[70,207,151]);}}
@@ -2345,7 +2425,7 @@ window.__Track2App=window.U9App;
     }
     const buf=new ArrayBuffer(out.length/7*16),v=new DataView(buf);for(let i=0,j=0;i<out.length;i+=7,j+=16){for(let k=0;k<3;k++)v.setFloat32(j+k*4,out[i+k],true);for(let k=0;k<4;k++)v.setUint8(j+12+k,out[i+3+k]);}return new Uint8Array(buf);
   }
-  function drawTrackRoad(w,h,pal){trackFrame();if(!trackCamera)return false;if(!trackGL)trackGL=createTrackGL();trackGL.draw(w,h,pal.night);return true;}
+  function drawTrackRoad(w,h,pal){if(!app.trackMeshReady()){trackCamera=null;return false;}trackFrame();if(!trackCamera)return false;if(!trackGL)trackGL=createTrackGL();trackGL.draw(w,h,pal.night);return true;}
 
   function drawTrackMirror(mx,my,mw,mh,p,pal){
     trackGL.draw(Math.max(96,Math.round(mw*1.5)),Math.max(36,Math.round(mh*1.5)),pal.night,p);
@@ -2357,10 +2437,10 @@ window.__Track2App=window.U9App;
     if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);}g.setTransform(dpr,0,0,dpr,0,0);g.fillStyle='#0b151a';g.fillRect(0,0,w,h);
     const pit=app.pitModel(),learn=state.learnMode;
     let pts;if(learn){pts=[];for(let d=-100;d<560;d+=3)pts.push(app.trackAt(state.distanceM+d));}else pts=t.points.map(([x,z])=>({x,z}));
-    const xs=pts.map(p=>p.x),zs=pts.map(p=>p.z);let xmin=Math.min(...xs),xmax=Math.max(...xs),zmin=Math.min(...zs),zmax=Math.max(...zs);const scale=Math.min((w-52)/Math.max(40,xmax-xmin),(h-120)/Math.max(40,zmax-zmin));const ox=(w-(xmax-xmin)*scale)/2-xmin*scale,oy=52+(h-120-(zmax-zmin)*scale)/2+zmax*scale;
+    const xs=pts.map(p=>p.x),zs=pts.map(p=>p.z);let xmin=xs.reduce((a,b)=>Math.min(a,b),Infinity),xmax=xs.reduce((a,b)=>Math.max(a,b),-Infinity),zmin=zs.reduce((a,b)=>Math.min(a,b),Infinity),zmax=zs.reduce((a,b)=>Math.max(a,b),-Infinity);const scale=Math.min((w-52)/Math.max(40,xmax-xmin),(h-120)/Math.max(40,zmax-zmin));const ox=(w-(xmax-xmin)*scale)/2-xmin*scale,oy=52+(h-120-(zmax-zmin)*scale)/2+zmax*scale;
     const X=p=>ox+p.x*scale,Y=p=>oy-p.z*scale,stroke=(p,col,width,closed)=>{g.strokeStyle=col;g.lineWidth=width;g.lineJoin='round';g.lineCap='round';g.beginPath();p.forEach((p,i)=>i?g.lineTo(X(p),Y(p)):g.moveTo(X(p),Y(p)));if(closed)g.closePath();g.stroke();};
     g.strokeStyle='#21323a';g.lineWidth=.5;for(let x=0;x<w;x+=24){g.beginPath();g.moveTo(x,38);g.lineTo(x,h-66);g.stroke();}
-    stroke(pts,'#758681',Math.max(6,app.halfWidthAt(0)*2*scale+2),!learn);stroke(pts,'#354248',Math.max(3.5,app.halfWidthAt(0)*2*scale),!learn);
+    stroke(pts,'#758681',Math.max(6,app.halfWidthAt(0)*2*scale+2),!learn&&t.closed!==false);stroke(pts,'#354248',Math.max(3.5,app.halfWidthAt(0)*2*scale),!learn&&t.closed!==false);
     if(!learn){for(let sec=0;sec<3;sec++){const p=[];for(let i=sec*t.points.length/3;i<=(sec+1)*t.points.length/3;i+=2)p.push(app.trackAt(i/t.points.length*t.L));stroke(p,['#68d6bf','#d3b574','#739ddd'][sec],1.5);}}
     if(pit)stroke(pit.points,'#e9c075',Math.max(1.7,pit.half*2*scale));
     if(learn){const line=pts.map((p,i)=>app.trackLateral(p,app.raceLineOffAt(state.distanceM-100+i*3)));stroke(line,'#65ddbf',2);}
@@ -2370,7 +2450,7 @@ window.__Track2App=window.U9App;
     const p=app.worldPose();g.save();g.translate(X(p),Y(p));g.rotate(p.psi+state.headingRel);g.fillStyle='#8ffff0';g.strokeStyle='#052522';g.lineWidth=1.5;g.beginPath();g.moveTo(0,-7);g.lineTo(4.5,4);g.lineTo(0,2);g.lineTo(-4.5,4);g.closePath();g.fill();g.stroke();g.restore();
     g.fillStyle='#e5eeeb';g.textAlign='left';g.font='bold 12px sans-serif';g.fillText(learn?'LINE AHEAD':state.route.name,12,22);g.textAlign='right';g.fillStyle='#80cdbd';g.font='11px monospace';g.fillText((t.L/1000).toFixed(3)+' km',w-12,22);
     // Height profile shares the road's interpolation, including the exact current position.
-    const yy=h-32,hh=27,alts=t.elev.map(v=>v[1]),lo=Math.min(...alts),hi=Math.max(...alts),range=Math.max(1,hi-lo);g.strokeStyle='#49685f';g.lineWidth=1;g.beginPath();for(let i=0;i<=160;i++){const x=12+(w-24)*i/160,y=yy-(app.trackProfile(t.elev,i/160*t.L)-lo)/range*hh;i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();const ph=app.trackWrap(state.distanceM,t.L),xx=12+(w-24)*ph/t.L;g.fillStyle='#86e7cf';g.fillRect(xx-1,yy-hh,2,hh+3);g.fillStyle='#9cb5b0';g.textAlign='left';g.font='9px monospace';g.fillText(`ALT ${Math.round(p.y)} m  ·  GRADE ${(p.grade*100).toFixed(1)}%`,12,h-10);
+    const yy=h-32,hh=27,alts=t.elev.map(v=>v[1]),lo=Math.min(...alts),hi=Math.max(...alts),range=Math.max(1,hi-lo);g.strokeStyle='#49685f';g.lineWidth=1;g.beginPath();for(let i=0;i<=160;i++){const x=12+(w-24)*i/160,y=yy-(app.trackProfile(t.elev,i/160*t.L,t.closed!==false)-lo)/range*hh;i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();const ph=app.trackPhase(t,state.distanceM),xx=12+(w-24)*ph/t.L;g.fillStyle='#86e7cf';g.fillRect(xx-1,yy-hh,2,hh+3);g.fillStyle='#9cb5b0';g.textAlign='left';g.font='9px monospace';g.fillText(`ALT ${Math.round(p.y)} m  ·  GRADE ${(p.grade*100).toFixed(1)}%`,12,h-10);
     return true;
   }
 
@@ -2434,7 +2514,7 @@ window.__Track2App=window.U9App;
     const w = innerWidth, h = innerHeight; horizonY=h*(app.trackModel?.()?.42:.46);FOCAL=app.trackModel?.()?Math.min(w*.57,h*.78):360;const pal=envColors();rebuildRoadTable();
     ctx.save();
     if(!app.trackModel?.()){ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);}
-    drawSky(w,h,pal);if(app.trackModel?.()){drawTrackRoad(w,h,pal);}else{trackCamera=null;drawScenery(w,h,pal);drawRoad(w,h,pal);drawRoadside(w,h,pal);drawTraffic(w,h,pal);drawRivals(w,h,pal);}
+    drawSky(w,h,pal);if(app.trackModel?.()){drawTrackRoad(w,h,pal);}else{trackCamera=null; drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);}
     drawCabinFrame(w, h, pal); /* cabin glow: this car's own cockpit controls — a real visual */ { const _cg = state.ambient ? "rgba(43,179,192,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (pal.night) drawHeadlights(w, h);
     drawMirrors(w, h, pal);
@@ -3466,7 +3546,7 @@ window.__Track2App=window.U9App;
   function selectCircuit(name) { app.track2Reset?.();
     const circ = CIRCUITS[name]; if (!circ) { showToast(`No ${name} on file.`, "Co-Pilot"); return; }
     state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist, arrived: false };
-    if(app.trackModel?.())Object.assign(state,{distanceM:0,laneOffset:0,headingRel:0,speedMps:0,_lc:null,dayPhase:.3});
+    if(app.trackModel?.()){Object.assign(state,{distanceM:0,laneOffset:0,headingRel:0,speedMps:0,_lc:null,dayPhase:.3});state.route.endDist=circ.dist;app.prepareTrack(name);}
     state.lap = { running: true, startDist: state.distanceM, lastMs: 0, bestMs: 0, curMs: 0 };
     app.buildCornersForRoute(); app.seedWorld(); app.seedRivals();
     const loop = app.isLoop();

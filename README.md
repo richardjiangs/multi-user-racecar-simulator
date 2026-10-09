@@ -45,10 +45,14 @@ The guide covers racing line, braking references, apex choice, overtaking, defen
 - `index.html` - the hosted garage, loading the selected simulator on demand.
 - `index-offline.html` - both simulator versions and the complete Track 2.0 world data embedded in one file.
 - `* simulator.html` - the 64 original Track 1.0 files, preserved unchanged.
-- `* simulator 2.0.html` - 56 separate upgraded versions; keep `assets/tracks-2/pack.js` alongside them when copying the folder.
-- `assets/tracks-2/pack.js` - all eight prebuilt shared circuit meshes, compressed once and fully unpacked before driving. Track geometry uses OpenStreetMap/TUM data; elevations and scenery remain modeled approximations.
+- `* simulator 2.0.html` - 63 separate upgraded versions; keep the complete `assets/tracks-2/` directory alongside them when copying the folder.
+- `assets/tracks-2/pack.js` - the route catalog and loader. Hashed mesh files contain 83 complete routes; the selected route is unpacked before driving, never generated section by section.
 
-Track 2.0 retains each car’s original brand circuit. DB5, F12tdf, Phantom, Spectre and all four Dakar cars stay on Track 1.0. The host sets the online room’s track version; cars without Track 2.0 join Track 1.0 rooms.
+Track 2.0 now includes shared and brand circuits, the DB5 missions, the F12tdf museum and all four Dakar cars. Spectre uses upgraded shared circuits while its city journeys remain original; Phantom stays original. All 64 Track 1.0 HTML files are retained. The host sets the online room’s track version.
+
+The other ten F1 cars have separate hand-authored wheel, cockpit, exterior and power-unit illustrations, with working controls and live displays. Their existing performance, sounds and keyboard controls are preserved.
+
+See [route sources and accuracy](docs/TRACK2_SOURCES.md). Geographic centerlines are mapped; elevation, scenery and proprietary details remain approximations. Dakar stages retain published distances and terrain sequences, but are authored reconstructions without a GPS roadbook. DB5 film sets and the museum are fictional drives.
 
 To regenerate Track 2.0 after editing its source:
 
@@ -56,14 +60,14 @@ To regenerate Track 2.0 after editing its source:
 node tools/build-track2-world.mjs
 node tools/pack-tracks2.mjs /tmp/track2-world
 python3 tools/build-track2.py
-node tools/embed-sims.mjs
+node --max-old-space-size=8192 tools/embed-sims.mjs
 node tests/perf-test.mjs
 TRACK_VERSION=2 node tests/perf-test.mjs
 node tests/track2/geometry.mjs
 python3 tests/track2/preservation.py
 ```
 
-The browser tests in `tests/track2/` use a local server on port 8765. `CODEX_NODE_MODULES` and `CHROMIUM_PATH` can point to an installed Playwright runtime and Chromium executable.
+The browser tests in `tests/track2/` use a local server on port 8000. `CODEX_NODE_MODULES` and `CHROMIUM_PATH` can point to an installed Playwright runtime and Chromium executable.
 - `race-car-101.html` - the driving guide page.
 - `vendor/` - local fallback libraries used by the online mode.
 - `tests/` - browser and performance smoke tests.
@@ -79,3 +83,7 @@ No Buy Me a Coffee account is needed. You can support the simulator directly wit
 ![Bitcoin QR code](assets/bitcoin-qr.png)
 
 Please double-check the address before sending. Bitcoin transactions cannot be reversed.
+
+### Publishing the large offline edition
+
+GitHub Actions builds and publishes `index-offline.html` from the committed source. `sims-embedded.js` remains the generated local-folder fallback; the hosted site omits this duplicate of the entire offline data to stay within the Pages size limit. These generated files exceed GitHub’s individual Git-file limit, so they are not tracked. Run `node tools/build-pages.mjs` after embedding to check the complete deployment size. Publishing still requires pushing the intended release to `main`; `.github/workflows/pages.yml` deploys through GitHub Pages.

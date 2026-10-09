@@ -1,0 +1,16 @@
+
+/* Individually drawn F1 artwork, original 1.0 console and control layout. */
+#rearWingArt{transform-box:fill-box;transform-origin:50% 100%;transform:rotate(calc(var(--wing-deg,12deg) * -.5 + 6deg));transition:transform .15s}
+#frontFlapArt{transform-box:fill-box;transform-origin:100% 50%;transform:rotate(var(--flap-deg,0deg));transition:transform .15s}
+#cabinArt svg,#exteriorArt svg{width:100%;height:auto;display:block}
+.panel-cockpit,.panel-exterior,.panel-engine{width:min(780px,calc(100vw - 24px));max-height:75vh}
+#cabinArt{height:auto;aspect-ratio:1000/560;min-height:240px}
+#exteriorArt{height:auto;min-height:240px;aspect-ratio:1100/440}
+#f1EngineDrawing{position:absolute;inset:0}#f1EngineDrawing svg{width:100%;height:100%;display:block}
+.engine-bay{height:auto;aspect-ratio:1000/560;min-height:280px;background:#071116}
+.engine-bay .emotor,.engine-bay .bay-exhaust{display:none}
+.engine-bay .cover{transform:translateY(var(--cover,0%));background:#071116;display:block;z-index:3}
+.engine-bay .cover svg{width:100%;height:100%}.engine-bay .cover span{position:absolute;bottom:12px;left:20px;letter-spacing:2px;font-size:10px;color:#8aa6a1}
+[data-wheel-action]{cursor:pointer;outline:none}[data-wheel-action]:hover{filter:brightness(1.3)}[data-wheel-action]:focus-visible{filter:drop-shadow(0 0 4px #8effdc)}
+@media(max-width:900px){.topbar{display:flex;flex-wrap:wrap;padding:6px;gap:5px}.brand{display:none}.tabs{flex:1;padding:5px;gap:4px}.tabs button{flex:1 1 60px;min-height:27px;padding:4px;font-size:10px}.quick{padding:4px;gap:4px}.quick button{min-height:27px;padding:4px;font-size:10px}.hud{top:5px;width:210px;padding:8px}.speed{font-size:36px}.meter-grid{display:none}.gear-tile{height:38px;width:38px;font-size:24px}.bottombar{grid-template-columns:1fr 1fr;padding:0 6px 6px;gap:5px}.bottombar .telepad{display:none}.console{grid-template-columns:repeat(5,1fr);gap:3px;padding:5px}.console button{font-size:9px;min-height:29px;padding:3px}.gearbox{padding:5px;gap:4px}.pedal{padding:3px;font-size:9px;min-height:55px}.gearbox .cluster{grid-template-columns:repeat(2,30px);gap:3px}.gearbox .cluster button{min-height:27px;padding:3px;font-size:10px}.mode-panel{bottom:5px;max-height:70vh}.drive-help{display:none}}
+@media(max-width:520px){.quick{width:100%;justify-content:center}.quick button{min-width:34px}.hud{width:155px}.hud .aero-row,.hud .warning{display:none}.bottombar{grid-template-columns:1fr}.gearbox{grid-template-columns:72px 1fr}.console{grid-template-columns:repeat(10,1fr)}.console button{font-size:8px;min-height:29px;padding:2px 0;letter-spacing:0}.panel-title{align-items:flex-start}.panel-title .small{font-size:9px;max-width:55%}}

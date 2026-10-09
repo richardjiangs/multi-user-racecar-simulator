@@ -1,10 +1,19 @@
-// Builds the shared asset from precomputed meshes; never used at driving time.
-import fs from 'node:fs';import path from 'node:path';import{gzipSync}from'node:zlib';
-const root=path.resolve(import.meta.dirname,'..'),source=path.resolve(process.argv[2]||'/tmp/track2-world');
-const data=JSON.parse(fs.readFileSync(path.join(source,'track-data.json'))),meshes=JSON.parse(fs.readFileSync(path.join(source,'world-meshes.json'))),packed={};
-for(const[n,m]of Object.entries(meshes)){
- const b=Buffer.from(m.data,'base64');for(let i=0;i<b.length;i+=16)for(let k=0;k<3;k++)if(!Number.isFinite(b.readFloatLE(i+k*4)))throw new Error(n+' has non-finite mesh vertices');
- packed[n]={vertices:m.vertices,gzip:gzipSync(b,{level:9}).toString('base64')};
+// Pack build-time meshes separately. A whole route loads before driving starts.
+import fs from'node:fs';import path from'node:path';import{gzipSync}from'node:zlib';import{createHash}from'node:crypto';
+const root=path.resolve(import.meta.dirname,'..'),source=path.resolve(process.argv[2]||'/tmp/track2-world'),out=path.join(root,'assets/tracks-2');
+const data=JSON.parse(fs.readFileSync(path.join(source,'track-data.json'))),catalog={},files=[];
+const indexPath=path.join(source,'mesh-index.json'),index=fs.existsSync(indexPath)?JSON.parse(fs.readFileSync(indexPath)):null,legacy=index?null:JSON.parse(fs.readFileSync(path.join(source,'world-meshes.json')));
+fs.mkdirSync(out,{recursive:true});
+for(const name of Object.keys(data)){
+ const m=index?index[name]:legacy[name],b=index?fs.readFileSync(path.join(source,m.file)):Buffer.from(m.data,'base64');
+ for(let i=0;i<b.length;i+=16)for(let k=0;k<3;k++)if(!Number.isFinite(b.readFloatLE(i+k*4)))throw Error(name+' has non-finite vertices');
+ const id=createHash('sha256').update(b).digest('hex').slice(0,16),filename='mesh-'+id+'.js';
+ if(!files.includes(filename)){fs.writeFileSync(path.join(out,filename),'(window.TRACK2_ASSETS ||= {})['+JSON.stringify(id)+']='+JSON.stringify({vertices:m.vertices,gzip:gzipSync(b,{level:9}).toString('base64'),batches:m.batches||null})+';\n');files.push(filename);}
+ catalog[name]={id,file:filename};
 }
-const script=`/* Prebuilt shared circuits. Sources and approximation notes: sources.json. */\nwindow.TRACK2_UNPACK=(async()=>{const data=${JSON.stringify(data)},packed=${JSON.stringify(packed)},meshes={};for(const[name,m]of Object.entries(packed)){const bytes=Uint8Array.from(atob(m.gzip),c=>c.charCodeAt(0));const unpacked=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();meshes[name]={vertices:m.vertices,bytes:new Uint8Array(unpacked)};}return{data,meshes};})();\nwindow.TRACK2_READY=window.TRACK2_READY||window.TRACK2_UNPACK;\n`;
-fs.mkdirSync(path.join(root,'assets/tracks-2'),{recursive:true});fs.writeFileSync(path.join(root,'assets/tracks-2/pack.js'),script);fs.writeFileSync(path.join(root,'tools/tracks2/track-data.json'),JSON.stringify(data));console.log('Track asset',(script.length/1024/1024).toFixed(2),'MiB');
+const runtime=fs.readFileSync(path.join(root,'tools/tracks2/asset-runtime.js'),'utf8');
+fs.writeFileSync(path.join(out,'pack.js'),'/* Fixed route geometry; see docs/TRACK2_SOURCES.md for mapped/modelled distinctions. */\nwindow.TRACK2_CATALOG='+JSON.stringify({data,catalog})+';\n'+runtime);
+fs.writeFileSync(path.join(out,'files.json'),JSON.stringify(files));
+// Remove only obsolete generated mesh files, never user assets.
+for(const f of fs.readdirSync(out))if(/^mesh-[a-f0-9]{16}\.js$/.test(f)&&!files.includes(f))fs.unlinkSync(path.join(out,f));
+console.log('Packed',Object.keys(catalog).length,'routes in',files.length,'immutable assets.');

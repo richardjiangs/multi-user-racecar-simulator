@@ -3,7 +3,7 @@
   let trackCamera=null,trackPitch=0,trackGL=null;
   const EYE_HEIGHT=app.track2Vehicle.f1?.97:app.track2Vehicle.prototype?1.0:1.15;
   function trackPoint(d,n=0,lift=0){return app.surfacePoint(d,n,lift);}
-  function trackFrame(){const impact=app.contactPose?.(),p=impact||app.worldPose();if(!p){trackCamera=null;return;}const q=impact||(!state.inPitLane?trackPoint(state.distanceM,state.laneOffset):p);p.y=q.y;trackPitch=Math.atan(p.grade);trackCamera={...p,psi:impact?p.psi:p.psi+state.headingRel,roll:Math.atan(q.bank||0)+(state.impactJolt||0)*Math.sin(state.time*35)};}
+  function trackFrame(){const impact=app.contactPose?.(),p=impact||app.worldPose();if(!p){trackCamera=null;return;}const q=impact||(!state.inPitLane?trackPoint(state.distanceM,state.laneOffset):p);p.y=q.y+(state.rallyAirHeight||0);trackPitch=Math.atan(p.grade);trackCamera={...p,psi:impact?p.psi:p.psi+state.headingRel,roll:Math.atan(q.bank||0)+(state.impactJolt||0)*Math.sin(state.time*35)};}
   function cameraPoint(p){const c=trackCamera,dx=p.x-c.x,dz=p.z-c.z,f=dx*Math.sin(c.psi)+dz*Math.cos(c.psi),u=p.y-c.y-EYE_HEIGHT,r=dx*Math.cos(c.psi)-dz*Math.sin(c.psi),up=u*Math.cos(trackPitch)-f*Math.sin(trackPitch);return{rgt:r*Math.cos(c.roll)+up*Math.sin(c.roll),fwd:f*Math.cos(trackPitch)+u*Math.sin(trackPitch),up:up*Math.cos(c.roll)-r*Math.sin(c.roll)};}
   function projectTrack(p){if(!trackCamera)return {x:0,y:0,scale:-1,fwd:-1};const a=cameraPoint(p);if(a.fwd<.2)return{x:0,y:0,scale:-1,fwd:a.fwd};const scale=FOCAL/a.fwd;return{x:innerWidth/2+a.rgt*scale,y:horizonY-a.up*scale,scale,fwd:a.fwd};}
   function createTrackGL(){
@@ -22,12 +22,14 @@
     const tex=gl.createTexture(),pixels=new Uint8Array(128*128*4);let seed=73991;for(let i=0;i<pixels.length;i+=4){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const n=83+(seed>>>25);pixels[i]=pixels[i+1]=pixels[i+2]=n;pixels[i+3]=255;}gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,128,128,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);gl.generateMipmap(gl.TEXTURE_2D);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);const aniso=gl.getExtension('EXT_texture_filter_anisotropic');if(aniso)gl.texParameterf(gl.TEXTURE_2D,aniso.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(8,gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));gl.useProgram(program);gl.uniform1i(gl.getUniformLocation(program,'uAsphalt'),0);
     const buffers=new Map(),dynamic=gl.createBuffer();
     function bind(buffer){gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.vertexAttribPointer(attrs[0],3,gl.FLOAT,false,16,0);gl.vertexAttribPointer(attrs[1],3,gl.UNSIGNED_BYTE,true,16,12);gl.vertexAttribPointer(attrs[2],1,gl.UNSIGNED_BYTE,false,16,15);}
-    function upload(name){if(buffers.has(name))return buffers.get(name);const src=TRACK_MESHES[name],bytes=src.bytes;const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,bytes,gl.STATIC_DRAW);const o={buffer,count:src.vertices,bytes:bytes.length,uploads:1};buffers.set(name,o);return o;}
+    function upload(name){if(buffers.has(name))return buffers.get(name);for(const item of buffers.values())gl.deleteBuffer(item.buffer);buffers.clear();const src=TRACK_MESHES[name],bytes=src.bytes;const buffer=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buffer);gl.bufferData(gl.ARRAY_BUFFER,bytes,gl.STATIC_DRAW);const o={buffer,count:src.vertices,bytes:bytes.length,uploads:1,batches:src.batches};buffers.set(name,o);return o;}
     const draw=(w,h,night,mirror=null)=>{
       const dpr=mirror?1:Math.min(devicePixelRatio||1,1.5),W=Math.round(w*dpr),H=Math.round(h*dpr);if(!mirror&&(surface.width!==W||surface.height!==H)){surface.width=W;surface.height=H;}gl.viewport(0,0,W,H);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
       const c=mirror?{...app.trackLateral(trackCamera,mirror.eye),psi:trackCamera.psi+Math.PI+mirror.yaw,roll:-trackCamera.roll}:trackCamera,pitch=mirror?-trackPitch:trackPitch,sp=Math.sin(c.psi),cp=Math.cos(c.psi),st=Math.sin(pitch),ct=Math.cos(pitch),sr=Math.sin(c.roll),cr=Math.cos(c.roll);
       gl.uniform3f(uniforms.Eye,c.x,c.y+EYE_HEIGHT,c.z);gl.uniform3f(uniforms.Right,cp*cr-sp*st*sr,ct*sr,-sp*cr-cp*st*sr);gl.uniform3f(uniforms.Up,-sp*st*cr-cp*sr,ct*cr,-cp*st*cr+sp*sr);gl.uniform3f(uniforms.Forward,sp*ct,st,cp*ct);const focal=mirror?w*.55:FOCAL;gl.uniform4f(uniforms.Projection,2*focal/w,2*focal/h,mirror?.12:1-2*horizonY/h,0);gl.uniform1f(uniforms.Night,night?1:0);
-      const mesh=upload(state.route.name);bind(mesh.buffer);gl.drawArrays(gl.TRIANGLES,0,mesh.count);
+      const mesh=upload(state.route.name);bind(mesh.buffer);
+      if(mesh.batches){for(const b of mesh.batches){const dx=(b.min[0]+b.max[0])/2-c.x,dz=(b.min[2]+b.max[2])/2-c.z,rad=Math.hypot(b.max[0]-b.min[0],b.max[1]-b.min[1],b.max[2]-b.min[2])/2,forward=dx*sp+dz*cp;if(Math.hypot(dx,dz)-rad>14000||forward+rad<-.5)continue;gl.drawArrays(gl.TRIANGLES,b.first,b.count);}}
+      else gl.drawArrays(gl.TRIANGLES,0,mesh.count);
       const cars=buildVisibleCars(!!mirror);bind(dynamic);gl.bufferData(gl.ARRAY_BUFFER,cars,gl.DYNAMIC_DRAW);gl.drawArrays(gl.TRIANGLES,0,cars.byteLength/16);
       if(!mirror)ctx.drawImage(surface,0,0,w,h);
     };
@@ -60,7 +62,7 @@
       for(const z of [2.92,3.07,3.22])box(0,.10,z,1.84,.035,.16,dark);for(const side of [-1,1])box(side*.92,.07,3.05,.035,.19,.52,silver);
       if(!player){box(0,.05,-.30,1.65,.1,3.2,dark);box(0,.14,-.25,.83,.53,2.3,silver);box(0,.30,-1.05,.56,.57,1.0,dark);box(0,.52,0,.4,.1,.75,[4,12,16]);box(0,.64,-.1,.29,.27,.31,[189,216,56]);box(0,.67,-1.82,1.65,.16,.38,dark);for(const side of [-1,1])box(side*.82,.42,-1.82,.03,.53,.52,silver);}
     }
-    {const q=app.pitBox(app.TEAM.slot),p=(d,n)=>app.pitSurface(d,n,.064);quad(p(q-3,1.5),p(q-3,4.1),p(q+3,4.1),p(q+3,1.5),[8,124,112],2);}
+    if(app.pitModel()){const q=app.pitBox(app.TEAM.slot),p=(d,n)=>app.pitSurface(d,n*(app.pitModel().garageSide||1),.064);quad(p(q-3,1.5),p(q-3,4.1),p(q+3,4.1),p(q+3,1.5),[8,124,112],2);}
     const player=app.contactPose?.()||app.worldPose();player.y=trackCamera.y;if(!mirror&&app.track2Vehicle.f1)car(player,trackCamera.psi,getComputedStyle(document.documentElement).getPropertyValue('--f1body').trim()||'#94a8aa',true,state.steer);
     for(const r of (state.raceGrid?state.rivals:[])||[]){if(r.gone||r.dns)continue;const p=app.contactPose?.(r)||(r.pitState?app.pitSurface(r.pitQ||0,r.lane||0):trackPoint(r.distM,r.lane||0));if(Math.hypot(p.x-trackCamera.x,p.z-trackCamera.z)>1600)continue;car(p,p.psi,r.body,false,0);}
     if(state.learnMode&&!mirror){for(let d=Math.ceil((state.distanceM+4)/3)*3;d<state.distanceM+190;d+=3){const n=q=>app.clamp(app.raceLineOffAt(q),-app.halfWidthAt(q)+1.5,app.halfWidthAt(q)-1.5),a=trackPoint(d,n(d)-.16,.058),b=trackPoint(d,n(d)+.16,.058),c=trackPoint(d+2.6,n(d+2.6)+.16,.058),e=trackPoint(d+2.6,n(d+2.6)-.16,.058),cap=Math.sqrt(1.5*9.81/Math.max(.0001,Math.abs(app.curvatureAt(d))));quad(a,b,c,e,state.speedMps>cap*1.08?[215,105,57]:[70,207,151]);}}
@@ -73,7 +75,7 @@
     }
     const buf=new ArrayBuffer(out.length/7*16),v=new DataView(buf);for(let i=0,j=0;i<out.length;i+=7,j+=16){for(let k=0;k<3;k++)v.setFloat32(j+k*4,out[i+k],true);for(let k=0;k<4;k++)v.setUint8(j+12+k,out[i+3+k]);}return new Uint8Array(buf);
   }
-  function drawTrackRoad(w,h,pal){trackFrame();if(!trackCamera)return false;if(!trackGL)trackGL=createTrackGL();trackGL.draw(w,h,pal.night);return true;}
+  function drawTrackRoad(w,h,pal){if(!app.trackMeshReady()){trackCamera=null;return false;}trackFrame();if(!trackCamera)return false;if(!trackGL)trackGL=createTrackGL();trackGL.draw(w,h,pal.night);return true;}
 
   function drawTrackMirror(mx,my,mw,mh,p,pal){
     trackGL.draw(Math.max(96,Math.round(mw*1.5)),Math.max(36,Math.round(mh*1.5)),pal.night,p);
@@ -85,10 +87,10 @@
     if(c.width!==Math.round(w*dpr)||c.height!==Math.round(h*dpr)){c.width=Math.round(w*dpr);c.height=Math.round(h*dpr);}g.setTransform(dpr,0,0,dpr,0,0);g.fillStyle='#0b151a';g.fillRect(0,0,w,h);
     const pit=app.pitModel(),learn=state.learnMode;
     let pts;if(learn){pts=[];for(let d=-100;d<560;d+=3)pts.push(app.trackAt(state.distanceM+d));}else pts=t.points.map(([x,z])=>({x,z}));
-    const xs=pts.map(p=>p.x),zs=pts.map(p=>p.z);let xmin=Math.min(...xs),xmax=Math.max(...xs),zmin=Math.min(...zs),zmax=Math.max(...zs);const scale=Math.min((w-52)/Math.max(40,xmax-xmin),(h-120)/Math.max(40,zmax-zmin));const ox=(w-(xmax-xmin)*scale)/2-xmin*scale,oy=52+(h-120-(zmax-zmin)*scale)/2+zmax*scale;
+    const xs=pts.map(p=>p.x),zs=pts.map(p=>p.z);let xmin=xs.reduce((a,b)=>Math.min(a,b),Infinity),xmax=xs.reduce((a,b)=>Math.max(a,b),-Infinity),zmin=zs.reduce((a,b)=>Math.min(a,b),Infinity),zmax=zs.reduce((a,b)=>Math.max(a,b),-Infinity);const scale=Math.min((w-52)/Math.max(40,xmax-xmin),(h-120)/Math.max(40,zmax-zmin));const ox=(w-(xmax-xmin)*scale)/2-xmin*scale,oy=52+(h-120-(zmax-zmin)*scale)/2+zmax*scale;
     const X=p=>ox+p.x*scale,Y=p=>oy-p.z*scale,stroke=(p,col,width,closed)=>{g.strokeStyle=col;g.lineWidth=width;g.lineJoin='round';g.lineCap='round';g.beginPath();p.forEach((p,i)=>i?g.lineTo(X(p),Y(p)):g.moveTo(X(p),Y(p)));if(closed)g.closePath();g.stroke();};
     g.strokeStyle='#21323a';g.lineWidth=.5;for(let x=0;x<w;x+=24){g.beginPath();g.moveTo(x,38);g.lineTo(x,h-66);g.stroke();}
-    stroke(pts,'#758681',Math.max(6,app.halfWidthAt(0)*2*scale+2),!learn);stroke(pts,'#354248',Math.max(3.5,app.halfWidthAt(0)*2*scale),!learn);
+    stroke(pts,'#758681',Math.max(6,app.halfWidthAt(0)*2*scale+2),!learn&&t.closed!==false);stroke(pts,'#354248',Math.max(3.5,app.halfWidthAt(0)*2*scale),!learn&&t.closed!==false);
     if(!learn){for(let sec=0;sec<3;sec++){const p=[];for(let i=sec*t.points.length/3;i<=(sec+1)*t.points.length/3;i+=2)p.push(app.trackAt(i/t.points.length*t.L));stroke(p,['#68d6bf','#d3b574','#739ddd'][sec],1.5);}}
     if(pit)stroke(pit.points,'#e9c075',Math.max(1.7,pit.half*2*scale));
     if(learn){const line=pts.map((p,i)=>app.trackLateral(p,app.raceLineOffAt(state.distanceM-100+i*3)));stroke(line,'#65ddbf',2);}
@@ -98,6 +100,6 @@
     const p=app.worldPose();g.save();g.translate(X(p),Y(p));g.rotate(p.psi+state.headingRel);g.fillStyle='#8ffff0';g.strokeStyle='#052522';g.lineWidth=1.5;g.beginPath();g.moveTo(0,-7);g.lineTo(4.5,4);g.lineTo(0,2);g.lineTo(-4.5,4);g.closePath();g.fill();g.stroke();g.restore();
     g.fillStyle='#e5eeeb';g.textAlign='left';g.font='bold 12px sans-serif';g.fillText(learn?'LINE AHEAD':state.route.name,12,22);g.textAlign='right';g.fillStyle='#80cdbd';g.font='11px monospace';g.fillText((t.L/1000).toFixed(3)+' km',w-12,22);
     // Height profile shares the road's interpolation, including the exact current position.
-    const yy=h-32,hh=27,alts=t.elev.map(v=>v[1]),lo=Math.min(...alts),hi=Math.max(...alts),range=Math.max(1,hi-lo);g.strokeStyle='#49685f';g.lineWidth=1;g.beginPath();for(let i=0;i<=160;i++){const x=12+(w-24)*i/160,y=yy-(app.trackProfile(t.elev,i/160*t.L)-lo)/range*hh;i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();const ph=app.trackWrap(state.distanceM,t.L),xx=12+(w-24)*ph/t.L;g.fillStyle='#86e7cf';g.fillRect(xx-1,yy-hh,2,hh+3);g.fillStyle='#9cb5b0';g.textAlign='left';g.font='9px monospace';g.fillText(`ALT ${Math.round(p.y)} m  ·  GRADE ${(p.grade*100).toFixed(1)}%`,12,h-10);
+    const yy=h-32,hh=27,alts=t.elev.map(v=>v[1]),lo=Math.min(...alts),hi=Math.max(...alts),range=Math.max(1,hi-lo);g.strokeStyle='#49685f';g.lineWidth=1;g.beginPath();for(let i=0;i<=160;i++){const x=12+(w-24)*i/160,y=yy-(app.trackProfile(t.elev,i/160*t.L,t.closed!==false)-lo)/range*hh;i?g.lineTo(x,y):g.moveTo(x,y);}g.stroke();const ph=app.trackPhase(t,state.distanceM),xx=12+(w-24)*ph/t.L;g.fillStyle='#86e7cf';g.fillRect(xx-1,yy-hh,2,hh+3);g.fillStyle='#9cb5b0';g.textAlign='left';g.font='9px monospace';g.fillText(`ALT ${Math.round(p.y)} m  ·  GRADE ${(p.grade*100).toFixed(1)}%`,12,h-10);
     return true;
   }

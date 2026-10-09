@@ -84,7 +84,8 @@ const FILES = {
 };
 
 const FILES_2=JSON.parse(readFileSync(resolve(ROOT,"tools/tracks2/manifest.json")));
-const packJs=readFileSync(resolve(ROOT,"assets/tracks-2/pack.js"),"utf8");
+const meshFiles=JSON.parse(readFileSync(resolve(ROOT,"assets/tracks-2/files.json")));
+const packJs=meshFiles.map(file=>readFileSync(resolve(ROOT,"assets/tracks-2",file),"utf8")).join("\n")+readFileSync(resolve(ROOT,"assets/tracks-2/pack.js"),"utf8");
 const enc = {};
 for (const [key, file] of Object.entries({...FILES,...Object.fromEntries(Object.entries(FILES_2).map(([k,v])=>[k+"@2",v]))})) {
   const buf = readFileSync(resolve(ROOT, file));

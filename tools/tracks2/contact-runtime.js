@@ -71,7 +71,7 @@
  function project(b){const r=b.actor,p=origin(b),pit=r?r.pitState:s.inPitLane,old=b.beforeD??(r?r.distM:s.distanceM);let q,p0;
   if(pit){const oldQ=b.beforeQ??(r?r.pitQ||0:s.pitQ||0),near=app.pitNearest(p,oldQ-35,oldQ+35);if(Number.isFinite(near.distance)){q=near.q;p0=app.pitAt(q);}else {q=oldQ;p0=app.pitAt(q);}}
   else{let best=Infinity,guess=old;for(let d=old-35;d<=old+35;d+=3){const v=app.trackAt(d),cost=(v.x-p.x)**2+(v.z-p.z)**2+4*(v.y-b.y)**2;if(cost<best){best=cost;guess=d;}}
-   q=guess;for(let i=0;i<3;i++){const v=app.trackAt(q);q+=C((p.x-v.x)*Math.sin(v.psi)+(p.z-v.z)*Math.cos(v.psi),-4,4);}p0=app.trackAt(q);
+   q=guess;for(let i=0;i<3;i++){const v=app.trackAt(q);q+=C((p.x-v.x)*Math.sin(v.psi)+(p.z-v.z)*Math.cos(v.psi),-4,4);}if(app.trackModel().closed===false)q=C(q,0,app.trackModel().L);p0=app.trackAt(q);
   }
   const n=(p.x-p0.x)*Math.cos(p0.psi)-(p.z-p0.z)*Math.sin(p0.psi),rel=A(b.yaw-p0.psi),v=b.vx*Math.sin(b.yaw)+b.vz*Math.cos(b.yaw);
   if(r){if(pit){r.pitQ=q;r.distM=r.pitBase+q/app.pitModel().length*app.pitModel().span;}else r.distM=q;r.lane=n;r.speedMps=v;r.contactHeading=rel;}
@@ -109,7 +109,7 @@
     if(b.player){dv=s.speedMps-b.beforeSpeed;}
     else {const r=b.actor,cap=r.out?0:Math.min(r.topMps||85,Math.sqrt(1.5*9.81/Math.max(.0001,Math.abs(app.trackAt(r.distM+22).k)))),target=Math.abs(A(b.yaw-(b.pathPsi??b.yaw)))>.65?Math.min(cap,10):cap;dv=C(target-forward,-(r.out?12:18)*dt,(r.accel||8)*dt);}
     b.vx+=Math.sin(b.yaw)*dv;b.vz+=Math.cos(b.yaw)*dv;
-    const lat=b.vx*Math.cos(b.yaw)-b.vz*Math.sin(b.yaw),grip=1.3*9.81,remove=C(lat,-grip*dt,grip*dt);b.vx-=Math.cos(b.yaw)*remove;b.vz+=Math.sin(b.yaw)*remove;
+    const lat=b.vx*Math.cos(b.yaw)-b.vz*Math.sin(b.yaw),grip=1.3*9.81*(app.rallySector?.(s.distanceM)?.grip||1),remove=C(lat,-grip*dt,grip*dt);b.vx-=Math.cos(b.yaw)*remove;b.vz+=Math.sin(b.yaw)*remove;
     let desiredYaw;if(b.player){const steer=s.steer*app.STEERING.maxAngle*C(1.15-Math.abs(b.beforeSpeed)*.013,.44,1);desiredYaw=s.speedMps/app.STEERING.wheelbase*Math.tan(steer);}
     else {const r=b.actor,p=origin(b),look=C(Math.abs(forward)*.4+4,7,28),q=r.pitState?app.pitAt((r.pitQ||0)+look):app.trackAt(r.distM+look),dx=q.x-p.x,dz=q.z-p.z,k=2*(dx*Math.cos(b.yaw)-dz*Math.sin(b.yaw))/Math.max(9,dx*dx+dz*dz);desiredYaw=forward*C(k,-Math.tan(.58)/3.6,Math.tan(.58)/3.6);}
     const impactSpin=b.omega-(b.steerYaw||0);
@@ -147,7 +147,7 @@
   }
   s.impactJolt=(s.impactJolt||0)*Math.exp(-dt*10);frame=null;
  }
- function trackLimitsStep(dt){if(!app.trackModel())return;const over=Math.abs(s.laneOffset)-app.halfWidthAt(s.distanceM),off=over>.3&&!s.inPitLane&&!app.pitEntry(s.distanceM,s.laneOffset);s.offTrack=off?1:Math.max(0,s.offTrack-dt*3);
+ function trackLimitsStep(dt){if(!app.trackModel())return;if(app.trackModel().terrain==='rally'||['cinematic','museum'].includes(app.trackModel().scene)){s.offTrack=0;return;}const over=Math.abs(s.laneOffset)-app.halfWidthAt(s.distanceM),off=over>.3&&!s.inPitLane&&!app.pitEntry(s.distanceM,s.laneOffset);s.offTrack=off?1:Math.max(0,s.offTrack-dt*3);
   // Preserve the existing sporting penalties. Grass is not a collision surface.
   if(s.realMode&&off&&over>.9&&s.tlCool<=0){s.tlCool=2.5;s.lapInvalid=true;if(s.route.env!=='street'){s.tlWarnings++;if(s.tlWarnings>=4){s.penaltyS+=5;app.showToast('+5 s penalty — repeated track limits.','Race Control');}else if(s.tlWarnings===3)app.showToast('Black-and-white flag — final track-limits warning.','Race Control');else app.showToast("Track limits — this lap won't count (warning "+s.tlWarnings+'/3).','Race Control');}}
  }

@@ -1146,11 +1146,14 @@ online-mode rules, and the full race-control (grid/lights/release) flow.
 
 ## Publishing
 
-GitHub Pages is already enabled on this repo in classic branch mode (source:
-`main`, repo root) — every merge/push to `main` republishes automatically at
-`https://richardjiangs.github.io/multi-user-racecar-simulator/`.
-No Actions workflow needed (the auto-created `github-pages` environment
-rejects deploys from non-main branches anyway).
+GitHub Pages uses `.github/workflows/pages.yml` on pushes to `main`.
+The workflow runs `tools/embed-sims.mjs`, then `tools/build-pages.mjs`, and deploys
+at `https://richardjiangs.github.io/multi-user-racecar-simulator/`.
+`index-offline.html` and `sims-embedded.js` are generated locally and in Actions;
+do not commit them (each exceeds GitHub's 100 MB file limit). Keep all 64 original
+simulator HTML files. Track 2.0 uses 63 separate HTML variants and the complete
+`assets/tracks-2/` directory. See `docs/TRACK2_SOURCES.md` for route provenance,
+model limitations, build steps and the verification suite.
 
 September 2026 track-special revision: see `docs/TRACK_SPECIALS_ART.md` for drawing references, sound-model assumptions and the road/AMR Pro state contract. Run `node tests/track-specials-test.mjs` alongside the standard suites when changing these five cars.
 

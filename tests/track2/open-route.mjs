@@ -1,0 +1,8 @@
+import fs from'node:fs';import vm from'node:vm';import assert from'node:assert/strict';
+const L=1200,N=401,points=Array.from({length:N},(_,i)=>[i*.9,i*2.86]);
+const data={Journey:{closed:false,L,points,elev:[[0,500],[600,650],[1200,610]],widths:[[0,4],[1200,4]],labels:[],pit:null,fence:false}},s={route:{active:true,name:'Journey'},distanceM:1100,laneOffset:0,speedMps:15,headingRel:0,rivals:[],raceGrid:false},a={state:s,clamp:(v,l,h)=>Math.max(l,Math.min(h,v)),CIRCUITS:{Journey:{}},SPEC:{topSpeedMps:80,tractionCoeff:1.3},STEERING:{wheelbase:2.8,maxAngle:.6},track2Vehicle:{f1:false}};
+a.halfWidthAt=d=>a.trackWidthAt(d);const env={window:{__Track2App:a},TRACK_DATA:data};vm.createContext(env);for(const file of ['track-runtime.js','driver-runtime.js'])vm.runInContext(fs.readFileSync('tools/tracks2/'+file,'utf8'),env);
+assert.equal(a.pitModel(),null);assert.equal(a.pitEntry(100,7),false);assert.equal(a.pitCovers({x:0,z:0,y:0}),false);assert.equal(a.fenceSegments().length,0);
+const start=a.trackAt(0),end=a.trackAt(L),beyond=a.trackAt(L+500);assert.equal(beyond.x,end.x);assert.equal(beyond.z,end.z);assert(Math.hypot(start.x-end.x,start.z-end.z)>1100);assert.equal(end.y,610);
+for(const d of [-20,0,1,600,1199,1200,1300]){s.distanceM=d;const q=a.trackAt(d);for(const k of['x','z','y','psi','k','grade'])assert(Number.isFinite(q[k]),k+' '+d);a.driverBegin(1/120);const controls=a.driverControls();for(const k of['throttle','brake','steerTarget'])assert(Number.isFinite(controls[k]),k+' '+d);}
+s.distanceM=L;a.driverBegin(1/120);assert.equal(a.driverTarget(),0);assert.equal(a.CIRCUITS.Journey.loop,false);console.log('PASS open endpoints, terrain height, no false pit/fence, driver braking at finish');
