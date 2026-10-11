@@ -1,0 +1,15 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import{createRequire}from'node:module';import{pathToFileURL}from'node:url';
+const require=createRequire((process.env.CODEX_NODE_MODULES||'/Users/daisy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules')+'/package.json'),{chromium}=require('playwright');
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/Users/daisy/Library/Caches/ms-playwright/chromium-1228/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'}),page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[],network=[],checks=[];page.setDefaultTimeout(20000);page.on('pageerror',e=>errors.push(e.message));
+await page.route('**/*',r=>{if(/^https?:/.test(r.request().url())){network.push(r.request().url());return r.abort();}return r.continue();});
+try{
+ await page.goto(pathToFileURL(process.cwd()+'/index-offline.html').href,{waitUntil:'domcontentloaded',timeout:120000});await page.waitForFunction(()=>window.__mucs&&window.MUCS_GPS_CONTEXT);
+ for(const [key,version,route]of[['bugatti','2','Circuit de Monaco'],['dacia','2',null],['bugatti','1','Suzuka Circuit'],['phantom','1',null]]){
+  await page.selectOption('#trackVersion',version);await page.evaluate(k=>__mucs.openPractice(k),key);await page.waitForFunction(()=>__mucs.getSimApp()?.gps,null,{timeout:60000});const f=page.frames().find(f=>f!==page.mainFrame());await f.locator('#startBtn').click();
+  await page.evaluate(async route=>{const a=__mucs.getSimApp();if(route){a.selectCircuit(route);await a.prepareTrack?.(route);}a.setView('drive');a.state.assist=false;a.state.testDriver=false;a.state.speedMps=0;a.gps.setMode('dashboard');a.gps.setPreset(1);},route);
+  for(const mode of ['dashboard','mirror','ar']){await f.selectOption('#gpsMode',mode);await page.waitForTimeout(180);const info=await page.evaluate(()=>__mucs.getSimApp().gps.inspect());assert.equal(info.mode,mode);assert.ok(Number.isFinite(info.player.worldX+info.player.worldZ));checks.push({key,version,mode,route:info.route,features:info.mapFeatures});if(key==='bugatti'&&version==='2')await page.screenshot({path:'/tmp/gps-offline-'+mode+'.png'});}
+  await page.evaluate(()=>__mucs.backToGarage());
+ }
+ assert.ok(!network.some(url=>/gps\/context|tracks-2\/|simulator(?:%20| )/.test(url)),network.join('\n'));assert.equal(errors.length,0,errors.join('\n'));
+ fs.writeFileSync('tests/gps/offline-results.json',JSON.stringify({checks,requiredMapNetworkRequests:0,errors},null,2));console.log('PASS offline navigation:',checks.length,'mode/car checks, zero required network');
+}finally{await browser.close();}

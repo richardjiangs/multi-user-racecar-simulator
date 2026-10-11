@@ -98,18 +98,22 @@ for (const [key, file] of Object.entries({...FILES,...Object.fromEntries(Object.
 // all 64 into the browser cache on every visit — so a visitor could take a fresh
 // index.html and still open last week's simulator out of disk cache. It only changes when
 // a sim actually changes, so it does not defeat caching, it just ends staleness.
+const gpsContext = readFileSync(resolve(ROOT,"assets/gps/context.json"),"utf8").replace(/</g,"\\u003c");
+const gpsContextJs = "window.MUCS_GPS_CONTEXT="+gpsContext+";\n";
+const gpsSource = readFileSync(resolve(ROOT,"tools/gps/navigation.js"),"utf8");
 const SIM_BUILD = createHash("sha1")
+  .update(gpsSource).update(gpsContext)
   .update(packJs).update(Object.keys(enc).sort().map((k) => k + ":" + enc[k]).join("|"))
   .digest("hex").slice(0, 10);
 
 // 1) base64 copies -> a separate file, loaded by index.html ONLY over file://.
 const embedPath = resolve(ROOT, "sims-embedded.js");
-const embedJs = packJs+`window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};\n`;
+const embedJs = gpsContextJs+packJs+`window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};\n`;
 writeFileSync(embedPath, embedJs);
 
 // 2) index.html carries only the small key -> filename map for the lazy http(s) path.
 const indexPath = resolve(ROOT, "index.html");
-const html = readFileSync(indexPath, "utf8");
+const html = readFileSync(indexPath, "utf8").replace(/\/\*__GPS_START__\*\/[\s\S]*?\/\*__GPS_END__\*\//, () => "/*__GPS_START__*/\n"+gpsSource+"\n/*__GPS_END__*/");
 const START = "/*__EMBED_START__*/", END = "/*__EMBED_END__*/";
 const i = html.indexOf(START), j = html.indexOf(END);
 if (i < 0 || j < 0) { console.error("EMBED markers not found in index.html"); process.exit(1); }
@@ -131,7 +135,7 @@ writeFileSync(resolve(ROOT, "build.txt"), SIM_BUILD + "\n");
 //    so it never drifts.
 const offline = newIndex
   // inline the base64 next to the filename map (no external sims-embedded.js)
-  .replace(line, `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_FILES_2 = ${JSON.stringify(FILES_2)};const SIM_BUILD = ${JSON.stringify(SIM_BUILD)};${packJs}window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};${END}`)
+  .replace(line, `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_FILES_2 = ${JSON.stringify(FILES_2)};const SIM_BUILD = ${JSON.stringify(SIM_BUILD)};${gpsContextJs}${packJs}window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};${END}`)
   // the file:// guard that pulls in the external embed is unnecessary here
   .replace(`if (location.protocol === "file:") document.write('<script src="sims-embedded.js"><\\/script>');`,
            `/* index-offline.html: every sim is embedded inline above — no external file */`)
