@@ -3,6 +3,10 @@ from pathlib import Path
 import json,re,hashlib,importlib.util
 f1_art_spec=importlib.util.spec_from_file_location("f1_art",Path(__file__).parent/"f1-2026/integrate.py");f1_art=importlib.util.module_from_spec(f1_art_spec);f1_art_spec.loader.exec_module(f1_art)
 R=Path(__file__).resolve().parent.parent;S=R/'tools/tracks2';files=json.loads((S/'sim-files.json').read_text());excluded={'phantom'}
+weather=json.loads((S/'research/weather/january-climatology.json').read_text())['stations']
+weather_source=(S/'rally-weather.js').read_text()
+weather_source=re.sub(r'(?<=/\*__WEATHER_STATIONS__\*/).*?(?=;\n function region)',lambda _:json.dumps(weather,separators=(',',':')),weather_source,flags=re.S)
+(S/'rally-weather.js').write_text(weather_source)
 outputs={};audit={}
 for key,file in files.items():
  if key in excluded:continue
@@ -20,13 +24,13 @@ for key,file in files.items():
  rep('function halfWidthAt(d) {','function halfWidthAt(d) { if(app.trackModel?.())return app.trackWidthAt(d);')
  rep('function curvatureAt(d) {','function curvatureAt(d) { if(app.trackModel?.())return app.trackAt(d).k;')
  rep('function terrainOf() {','function terrainOf() { if(app.trackModel?.()?.terrain==="rally")return app.rallySector(state.distanceM);',False)
- rep('function terrainStep(dt) {','function terrainStep(dt) { if(app.rallyStep?.(dt))return;',False)
+ rep('function terrainStep(dt) {','function terrainStep(dt) { if(app.trackModel?.()?.terrain==="rally")return;',False)
  rep('function roughnessAt(d) {','function roughnessAt(d) { if(app.trackModel?.())return state.inPitLane?.025:app.trackSurface(d,state.laneOffset);')
  rep('function raceLineOffAt(d) {','function raceLineOffAt(d) { if(app.trackModel?.())return app.racingOffset(d);')
  rep('function pathSteer(gain, targetOffset) {','function pathSteer(gain, targetOffset) { if(app.trackModel?.())return app.driverSteer();')
  rep('function targetSpeedMps() {','function targetSpeedMps() { if(app.trackModel?.())return app.driverTarget();')
  rep('function autopilotControls() {','function autopilotControls() { if(app.trackModel?.())return app.driverControls();')
- rep('function updatePhysics(dt) {','function updatePhysics(dt) { if(app.trackModel?.()&&!app.trackMeshReady?.())return;app.contactBegin?.(dt);app.driverBegin?.(dt);')
+ rep('function updatePhysics(dt) {','function updatePhysics(dt) { if(app.trackModel?.()&&!app.trackMeshReady?.())return;app.rallyBegin?.(dt);app.contactBegin?.(dt);app.driverBegin?.(dt);')
  rep('    updateInputs(dt);','    updateInputs(dt);if(app.pitHeld?.()){state.throttle=0;state.brake=1;state.speedMps=0;}')
  rep('    if (state.launchActive) {           // launch control commands full throttle instantly','    if(app.trackModel?.()&&(state.assist||state.testDriver||cruiseActive)&&state.gearMode!=="R"){const safe=app.driverControls();throttleTarget=Math.min(throttleTarget,safe.throttle);brakeTarget=Math.max(brakeTarget,safe.brake);if(safe.brake>.05)state.launchActive=false;}\n    if (state.launchActive) {           // launch control commands full throttle instantly')
  rep('state.curvature = curvatureAt(state.distanceM);','state.curvature = app.trackModel?.()&&state.inPitLane?app.pitCurvature(state.pitQ):curvatureAt(state.distanceM);')
@@ -35,7 +39,7 @@ for key,file in files.items():
  rep('if (overrun > 0.3', 'if (!app.trackModel?.() && overrun > 0.3')
  rep('state.laneOffset = clamp(state.laneOffset + dndt * dt, -60, 60);','state.laneOffset = app.trackModel?.()?state.laneOffset+dndt*dt:clamp(state.laneOffset+dndt*dt,-60,60);')
  rep('if (state.gearMode !== "R" && state.speedMps < 0) state.speedMps = 0;','if (state.gearMode !== "R" && state.speedMps < 0 && !app.contactActive?.()) state.speedMps = 0;')
- rep('if (state.dayPhase !== 0.9) state.dayPhase = (state.dayPhase + dt * 0.004) % 1;','if(app.trackModel?.())state.dayPhase=.30;else if (state.dayPhase !== 0.9) state.dayPhase = (state.dayPhase + dt * 0.004) % 1;')
+ rep('if (state.dayPhase !== 0.9) state.dayPhase = (state.dayPhase + dt * 0.004) % 1;','if(app.trackModel?.()?.terrain!=="rally")state.dayPhase=.30;')
  real_call='    realStep(dt, dsdt);' if '    realStep(dt, dsdt);' in s else '    realStep(dt);'
  rep(real_call,real_call+'\n    if(app.trackModel?.()){app.contactStep(dt);app.pitStep(dt,app.TEAM);app.trackLimitsStep(dt);}')
  rep('function resetCar() {','function resetCar() { app.track2Reset?.();')
@@ -61,7 +65,7 @@ for key,file in files.items():
   s=s.replace('if (!r.pitState && phr > Lr - 262','if (!app.trackModel?.() && !r.pitState && phr > Lr - 262',1)
  rep('function drawMap() {','function drawMap() { if(drawTrackMap())return;')
  rep('const FOCAL = 360, CAM_H = 1.55;','let FOCAL=360;const CAM_H=1.55;')
- rep('  function resizeCanvas() {',(S/'render-track.js').read_text()+'\n  function resizeCanvas() {')
+ rep('  function resizeCanvas() {',((S/'car-models.js').read_text()+'\n'+(S/'render-track.js').read_text())+'\n  function resizeCanvas() {')
  rep('horizonY = h * 0.46; const pal = envColors(); rebuildRoadTable();','horizonY=h*(app.trackModel?.()?.42:.46);FOCAL=app.trackModel?.()?Math.min(w*.57,h*.78):360;const pal=envColors();rebuildRoadTable();')
  old='ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);'
  rep(old,'if(!app.trackModel?.()){'+old+'}')
@@ -72,7 +76,7 @@ for key,file in files.items():
  original_world=old.replace('drawSky(w, h, pal);','',1)
  rep(old,'drawSky(w,h,pal);if(app.trackModel?.()){drawTrackRoad(w,h,pal);'+('if(state.stage)drawHookLine(w,h);' if key=='db5' else '')+'}else{trackCamera=null;'+original_world+'}')
  if key=='f12tdf':
-  rep('      drawMuseum(w, h, pal);','      if(app.trackModel?.())drawTrackRoad(w,h,pal);drawMuseum(w,h,pal);')
+  rep('      drawMuseum(w, h, pal);','      if(app.trackModel?.())drawTrackRoad(w,h,pal);else drawMuseum(w,h,pal);')
   rep('for (let i = bays.length - 1; i > 0; i--) {','for (let i = app.trackModel?.()?0:bays.length - 1; i > 0; i--) {')
  if key=='slr300':
   s=re.sub(r'(data-circuit="AVUS Berlin"[^>]*>)[^<]+',r'\1AVUS Berlin · historic',s)
@@ -80,7 +84,7 @@ for key,file in files.items():
  rep('function projectAhead(distAhead, lateralM) {','function projectAhead(distAhead, lateralM) { if(trackCamera)return projectTrack(trackPoint(state.distanceM+distAhead,lateralM||0));')
  rep('function drawRearView(mx, my, mw, mh, p, pal) {','function drawRearView(mx, my, mw, mh, p, pal) { if(trackCamera&&trackGL){drawTrackMirror(mx,my,mw,mh,p,pal);return;}',False)
  rep('Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect });','Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect,trackFrame,trackPoint,projectTrack });')
- modules='window.__Track2App=window.'+appname+';\n'+'\n'.join((S/name).read_text()for name in ['compat.js','track-runtime.js','rally-runtime.js','contact-runtime.js','driver-runtime.js','route-assets.js'])
+ modules='window.__Track2App=window.'+appname+';\n'+'\n'.join((S/name).read_text()for name in ['compat.js','track-runtime.js','rally-runtime.js','rally-weather.js','contact-runtime.js','driver-runtime.js','route-assets.js'])
  rep('/* ===== render: the driving world ===== */',modules+'\n/* ===== render: the driving world ===== */')
  if f1 and key!='f1mercedes':s=f1_art.integrate(s)
  # Record byte-identical audio and keyboard source before/after.
@@ -93,11 +97,18 @@ for key,file in files.items():
   s=s.replace('const TRACK_DATA=','const TRACK_DATA=',1)
   rep('const trackBundle=await window.TRACK2_READY;','const TRACK2_CONFIG={key:"f1mercedes",f1:true,prototype:false};\nconst trackBundle=await window.TRACK2_READY;')
   block('/* Mercedes offline circuit model.','/* Hand-authored W17 artwork.',modules+'\n')
-  block('  // Complete prebuilt world +','  function resizeCanvas() {',(S/'render-track.js').read_text()+'\n')
+  block('  // Complete prebuilt world +','  function resizeCanvas() {',((S/'car-models.js').read_text()+'\n'+(S/'render-track.js').read_text())+'\n')
   rep('function updatePhysics(dt) {','function updatePhysics(dt) { if(app.trackModel?.()&&!app.trackMeshReady?.())return;')
   rep('function updateLap(dsdt, dt) {','function updateLap(dsdt, dt) { if(app.trackModel?.()?.closed===false){app.updateOpenRoute(dt);return;}')
   rep(route,route+'\n    if(app.trackModel?.())app.prepareTrack(name);')
+ rep('function drawWorld() {','function drawWorld() { if(app.trackModel?.()?.terrain!==\"rally\")state.dayPhase=.30;')
+ # DB5's sea missions historically force night independently of the clock.
+ # Track 2.0 weather/night is restricted to Dakar; the complete palette must agree.
+ rep('return { env, night, ...(palettes[env] || palettes.track) };','return { env, night:app.trackModel?.()?.terrain!=="rally"?false:night, ...(palettes[env] || palettes.track) };',False)
  s=s.replace('</body>','<script>'+ (S/'touch-controls.js').read_text()+'''
 {const controls=new URLSearchParams(location.search).get('controls');if(controls){const t=setInterval(()=>{if(window.installGarageControls(window,controls))clearInterval(t)},100);setTimeout(()=>clearInterval(t),30000);}}</script></body>''')
  name=Path(file).stem+' 2.0.html';(R/name).write_text(s);outputs[key]=name;audit[key]={'file':name,'app':appname,'preserved':preserved,'bytes':len(s.encode())}
 (S/'manifest.json').write_text(json.dumps(outputs,indent=2));(R/'tests/track2/build-audit.json').write_text(json.dumps(audit,indent=2));print('Generated',len(outputs),'2.0 simulators; kept',len(excluded),'cars unchanged')
+
+import subprocess
+subprocess.run(["node","tools/driving/update.mjs"],cwd=R,check=True)

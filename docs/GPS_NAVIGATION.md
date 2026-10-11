@@ -53,7 +53,9 @@ Validation: `tests/gps/navigation.mjs`, `tests/gps/offline.mjs`, the normal gara
 browser tests, and `tests/track2/preservation.py`. Screenshots are reviewed at desktop,
 short landscape and portrait sizes. No performance model changes are part of GPS.
 
-## Requested follow-up stage (not included in the GPS release)
+## Follow-up driving and scenery release
+
+Implemented after the GPS release; see [DRIVING_SCENERY_UPDATE.md](DRIVING_SCENERY_UPDATE.md) for sources, model limits and validation.
 
 - Dakar surface response, detailed scenery, and researched sandstorm/rain/night
   occurrence and appearance; night restricted to Dakar.

@@ -1571,6 +1571,16 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   const STEERING = { wheelbase: 2.720, frontTrack: 1.658, maxAngle: 0.58 };
   function steerFactorOf(speedAbs) { return clamp(1.15 - speedAbs * 0.013, 0.44, 1); }
   function steerForYaw(desiredYaw, v) { const vAbs = Math.max(2.2, Math.abs(v)); const ang = Math.atan((desiredYaw * STEERING.wheelbase) / vAbs); return clamp(ang / (STEERING.maxAngle * steerFactorOf(Math.abs(v))), -1, 1); }
+  let assistPass=null;
+  function steeringAssistOffset(){
+    const speed=Math.abs(state.speedMps),look=clamp(speed*.65,10,35),edge=Math.max(0,halfWidthAt(state.distanceM)-1.6),line=clamp(raceLineOffAt(state.distanceM+look),-edge,edge),L=state.route.totalM||1e9;
+    const actors=(state.raceGrid?state.rivals:[]).filter(r=>!r.gone&&!r.dns).map(r=>({id:r,gap:state.route.loop?((r.distM-state.distanceM+L/2)%L+L)%L-L/2:r.distM-state.distanceM,n:r.lane||0,v:r.speedMps||0}));
+    for(const r of state.traffic||[])actors.push({id:r,gap:r.z,n:r.lat??r.lane*3,v:r.oncoming?-r.speed:r.speed});
+    const held=assistPass&&actors.find(r=>r.id===assistPass.id&&r.gap> -14&&r.gap<170),lead=held||actors.filter(r=>r.gap>0&&r.gap<Math.max(45,(speed-r.v)*3.3+20)&&Math.abs(r.n-state.laneOffset)<3.2).sort((a,b)=>a.gap-b.gap)[0];
+    if(!lead){assistPass=null;return line;}
+    const candidates=[lead.n-3.25,lead.n+3.25].filter(n=>Math.abs(n)<=edge&&actors.every(r=>r===lead||Math.abs(r.n-n)>3.1||Math.abs(r.gap+(r.v-speed)*2)>16));
+    if(!candidates.length)return line;const target=held?assistPass.n:state.laneOffset,n=candidates.reduce((a,b)=>Math.abs(a-target)<Math.abs(b-target)?a:b);assistPass={id:lead.id,n};return n;
+  }
   function pathSteer(gain, targetOffset) { if(app.trackModel?.())return app.driverSteer(); const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
   function autopilotControls() { if(app.trackModel?.())return app.driverControls(); const target = targetSpeedMps(); const err = target - state.speedMps; let demand = clamp(err * 0.5, -1, 1); if (Math.abs(err) < 0.5) demand *= 0.7; let throttle = demand > 0 ? clamp(demand, 0, 1) : 0; let brake = demand < 0 ? clamp(-demand * 0.85, 0, 0.9) : 0; if (brake < 0.05) brake = 0; const learnTgt = () => { const la = clamp(Math.abs(state.speedMps) * 0.85, 12, 38); return clamp(raceLineOffAt(state.distanceM + la), -26, 26); };
     return { throttle, brake, steerTarget: pathSteer(1, state.learnMode ? learnTgt() : chooseLaneOffset()) }; }
@@ -1605,7 +1615,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (state.assist) {
         // Driving assist: the car follows the road's line and your A/D adds correction on
         // top, so tight circuits are drivable and you can't spin off just by flooring it.
-        const follow = pathSteer(1.0, 0);
+        const follow = pathSteer(1.0, steeringAssistOffset());
         steerTarget = clamp(steerInput * 0.9 + follow * (steerInput !== 0 ? 0.5 : 1), -1, 1);
       } else {
         steerTarget = steerInput;
@@ -1623,7 +1633,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       if (Math.abs(state.speedMps) > 33 || ownerThrottle < 0.2) { state.launchActive = false; state.launchArmed = false; app.setActiveSafe("launchBtn", false); }
     }
 
-    if(app.trackModel?.()&&(state.assist||state.testDriver||cruiseActive)&&state.gearMode!=="R"){const safe=app.driverControls();throttleTarget=Math.min(throttleTarget,safe.throttle);brakeTarget=Math.max(brakeTarget,safe.brake);if(safe.brake>.05)state.launchActive=false;}
+    if(app.trackModel?.()&&(state.testDriver || cruiseActive)&&state.gearMode!=="R"){const safe=app.driverControls();throttleTarget=Math.min(throttleTarget,safe.throttle);brakeTarget=Math.max(brakeTarget,safe.brake);if(safe.brake>.05)state.launchActive=false;}
     if (state.launchActive) {           // launch control commands full throttle instantly
       state.throttle = 1; state.brake = 0;
     } else {
@@ -1635,7 +1645,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
   }
 
   /* --- main integration --- */
-  function updatePhysics(dt) { if(app.trackModel?.()&&!app.trackMeshReady?.())return;app.contactBegin?.(dt);app.driverBegin?.(dt);
+  function updatePhysics(dt) { if(app.trackModel?.()&&!app.trackMeshReady?.())return;app.rallyBegin?.(dt);app.contactBegin?.(dt);app.driverBegin?.(dt);
     updateInputs(dt);if(app.pitHeld?.()){state.throttle=0;state.brake=1;state.speedMps=0;}
     updateTransmission(dt);
     updateAero(dt);
@@ -1768,7 +1778,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
     if (state.blinker !== 0 || state.hazards) { state.blinkPhase += dt; if (state.blinkPhase > 0.42) { state.blinkPhase = 0; state.blinkOn = !state.blinkOn; if (state.blinkOn) audio.click(1500); } }
     else { state.blinkOn = false; state.blinkPhase = 0; }
-    if(app.trackModel?.())state.dayPhase=.30;else if (state.dayPhase !== 0.9) state.dayPhase = (state.dayPhase + dt * 0.004) % 1;
+    if(app.trackModel?.()?.terrain!=="rally")state.dayPhase=.30;
     if (state.toastTimer > 0) { state.toastTimer -= dt; if (state.toastTimer <= 0) el.toast.classList.remove("show"); }
   }
 
@@ -1805,7 +1815,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
 
 window.__Track2App=window.McLarenApp;
 (function(){const a=window.__Track2App,s=a.state;
- a.track2Reset=()=>{a.resetContacts?.();Object.assign(s,{rallyService:0,rallyServiceRequested:false,rallyAirHeight:0,airborne:false,_rallyY:0,_rallyVy:0,rallyNeutralized:false,inPitLane:false,pitStage:'',pitMenuOpen:false,pitArmed:false,pitQ:0,pitStops:0,pitAutoStart:0,pitTargetOffset:0});};
+ a.track2Reset=()=>{a.resetContacts?.();Object.assign(s,{rallyBody:null,rallyWeather:null,rallyHeave:0,rallyPitch:0,rallyRoll:0,rallyService:0,rallyServiceRequested:false,rallyAirHeight:0,airborne:false,_rallyY:0,_rallyVy:0,rallyNeutralized:false,inPitLane:false,pitStage:'',pitMenuOpen:false,pitArmed:false,pitQ:0,pitStops:0,pitAutoStart:0,pitTargetOffset:0});};
  a.track2Reset();
  a.TEAM ||= {slot:1,name:'Service crew',pitCrew:3};
  const title=document.querySelector('h1')?.textContent||document.title;
@@ -1855,7 +1865,7 @@ window.__Track2App=window.McLarenApp;
       const ph=app.trackWrap(d,t.L),kar=t.labels.find(([s,nm])=>/Karussell/.test(nm)&&Math.abs(ph-s)<95);
       if(kar){const f=Math.cos((ph-kar[0])/95*Math.PI/2),slope=.42*f*f;bank=n>=-5&&n<=4?slope:0;p.y+=app.clamp(n,-5,4)*slope;}
     }
-    const v=app.trackLateral(p,n);v.y+=lift;v.bank=bank;return v;
+    const v=app.trackLateral(p,n);v.y+=lift+(t.terrain==='rally'?(app.rallyRelief?.(d,n)||0):0);v.bank=bank;return v;
   }
 
  function surface(d,n=0){const t=current();if(!t)return .1;if(t.terrain==='rally')return app.rallySector(d).rough;const s=phase(t,d),name=state.route.name;let r=name==='Nardò Ring'?.022:name==='Circuit de Monaco'?.12:/Nord|24h/.test(name)?.11:.045;
@@ -1997,24 +2007,65 @@ window.__Track2App=window.McLarenApp;
   transfer:{surf:'Neutralised paved transfer',grip:1,rough:.035,color:'#54595a',dune:0}
  };
  function sector(d,t=a.trackModel()) {if(t?.terrain!=='rally')return null;const v=t.sectors;let lo=0,hi=v.length;while(lo+1<hi){const m=(lo+hi)>>1;if(v[m][0]<=d)lo=m;else hi=m;}return {kind:v[lo][1],...types[v[lo][1]]};}
+ // Fixed, band-limited road relief. The renderer exports the same 3 m stations.
+ function relief(d,n=0,t=a.trackModel()){
+  if(t?.terrain!=='rally')return 0;
+  const step=t.L/Math.ceil(t.L/3),q=C(d,0,t.L)/step,i=Math.min(Math.floor(q),Math.ceil(t.L/3)-1),u=q-i;
+  const knot=D=>{const A=sector(Math.max(0,D-12),t).rough,B=sector(Math.min(t.L,D+12),t).rough,r=(A+B)*.5;
+   const broad=.17*Math.sin(D*.097+.7*Math.sin(D*.013))+.095*Math.sin(D*.251+.4)+.038*Math.sin(D*.51+1.8),cross=.013*Math.sin(D*.17+.9)+.007*Math.sin(D*.39);
+   return r*(broad+n*cross);};
+  return knot(i*step)*(1-u)+knot((i+1)*step)*u;
+ }
  function step(dt){const t=a.trackModel();if(t?.terrain!=='rally')return false;const d=s.distanceM,v=Math.abs(s.speedMps),terr=sector(d),p=a.trackAt(d),slope=p.grade;
+  a.rallyWeatherStep?.(dt);
+  const wb=a.track2Vehicle?.wheelbase||3,tw=(a.track2Vehicle?.halfWidth||1)*1.8,n=s.laneOffset||0;
+  const wheel=[relief(d+wb/2,n-tw/2),relief(d+wb/2,n+tw/2),relief(d-wb/2,n-tw/2),relief(d-wb/2,n+tw/2)],mean=wheel.reduce((x,y)=>x+y,0)/4;
+  let body=s.rallyBody;
+  if(!body||Math.abs(d-body.d)>30){body=s.rallyBody={heave:mean,pitch:(wheel[0]+wheel[1]-wheel[2]-wheel[3])/(2*wb),roll:(wheel[1]+wheel[3]-wheel[0]-wheel[2])/(2*tw),vh:0,vp:0,vr:0,d};}
+  const spring=(pos,vel,target,omega)=>{const acceleration=omega*omega*(target-body[pos])-1.3*omega*body[vel];body[vel]+=acceleration*dt;body[pos]+=body[vel]*dt;return acceleration;};
+  const verticalAccel=spring('heave','vh',mean,10.5);spring('pitch','vp',(wheel[0]+wheel[1]-wheel[2]-wheel[3])/(2*wb),9);spring('roll','vr',(wheel[1]+wheel[3]-wheel[0]-wheel[2])/(2*tw),8.5);body.d=d;
+  s.susComp=C((mean-body.heave)/.175,-1,1);s.rallyHeave=C(body.heave-relief(d,n),-.22,.22);s.rallyPitch=C(body.pitch,-.10,.10);s.rallyRoll=C(body.roll,-.09,.09);
   s.duneGrade=slope;s._gradeAccel=-9.81*slope/Math.sqrt(1+slope*slope);
-  const texture=Math.sin(d*.9)*.6+Math.sin(d*2.7+1.3)*.3+Math.sin(d*6.1)*.1,excite=terr.rough*C(v/26,0,1.6)*texture;
-  s._susVel=(s._susVel||0)+(excite*10-(s.susComp||0)*46-(s._susVel||0)*7.5)*dt;s.susComp=C((s.susComp||0)+s._susVel*dt,-1,1);
-  // Ballistic separation occurs only when a mapped crest falls away faster than
-  // gravity. Land on the same loaded surface, rather than an arbitrary air timer.
   const normalAccel=v*v*(a.trackAt(d+4).grade-a.trackAt(Math.max(0,d-4)).grade)/8;
   if(!s.airborne&&normalAccel< -9.81&&v>8){s.airborne=true;s._rallyY=p.y;s._rallyVy=v*slope;}
-  if(s.airborne){s._rallyVy-=9.81*dt;s._rallyY+=s._rallyVy*dt;if(s._rallyY<=p.y){s.airborne=false;s.susComp=C(s.susComp+Math.abs(s._rallyVy-v*slope)/12,0,1);s._rallyY=p.y;}}
+  if(s.airborne){s._rallyVy-=9.81*dt;s._rallyY+=s._rallyVy*dt;if(s._rallyY<=p.y){s.airborne=false;body.vh-=C(Math.abs(s._rallyVy-v*slope)*.18,0,1.6);s._rallyY=p.y;}}
   s.rallyAirHeight=s.airborne?Math.max(0,s._rallyY-p.y):0;
-  let grip=terr.grip*(1-C(-s.susComp,0,1)*.22);s.bogging=terr.grip<.7&&v<7&&s.throttle>.65&&!s.xMode;if(s.bogging)grip*=.8;if(s.airborne)grip*=.05;s.gripMul=C(grip,.03,1.2);return true;
+  const load=C(1+verticalAccel/9.81,.35,1.35);let grip=terr.grip*Math.sqrt(load)*(s.rallyWeather?.wetGrip||1);
+  s.bogging=terr.grip<.7&&v<7&&s.throttle>.65&&!s.xMode;if(s.bogging)grip*=.8;if(s.airborne)grip*=.05;s.gripMul=C(grip,.03,1.2);return true;
  }
+ function begin(dt){if(a.trackModel()?.terrain==='rally')step(dt);else{Object.assign(s,{rallyHeave:0,rallyPitch:0,rallyRoll:0,rallyAirHeight:0,rallyBody:null,rallyWeather:null});}}
  const oldRequest=a.requestPit,oldHeld=a.pitHeld,oldStep=a.pitStep;
  function serviceNear(){const t=a.trackModel();if(t?.terrain!=='rally')return false;return (t.serviceZones||[]).some(([lo,hi])=>Math.abs(s.distanceM-(lo+hi)/2)<38&&Math.abs(s.laneOffset-(a.halfWidthAt(s.distanceM)+11))<9);}
  a.requestPit=()=>{if(a.trackModel()?.terrain!=='rally')return oldRequest();if(!serviceNear()){a.showToast('Assistance is available only at the marked service truck. Stop beside it and request service.','Rally assistance');return true;}if(Math.abs(s.speedMps)>1.5){a.showToast('Stop beside the service truck first.','Rally assistance');return true;}if(!s.rallyService){s.rallyService=s.realMode?12:5;s.rallyServiceRequested=true;a.holdContactPlayer?.();a.showToast(s.realMode?'Crew servicing tyres and repairing damage…':'Practice service in progress…','Rally assistance');}return true;};
  a.pitHeld=()=>oldHeld()||s.rallyService>0;
  a.pitStep=(dt,team)=>{if(a.trackModel()?.terrain!=='rally')return oldStep(dt,team);if(!s.rallyService)return;s.speedMps=0;s.rallyService=Math.max(0,s.rallyService-dt);if(!s.rallyService&&s.rallyServiceRequested){s.rallyServiceRequested=false;if(s.realMode){s.damage=0;s.tyreWear=0;s.retired=false;s.failRisk=0;for(const k of Object.keys(s.sys))s.sys[k]=0;}s.pitStops++;a.showToast('Service complete — check the route before rejoining.','Rally assistance');}};
- Object.assign(a,{rallyTypes:types,rallySector:sector,rallyStep:step});
+ Object.assign(a,{rallyTypes:types,rallySector:sector,rallyStep:step,rallyRelief:relief,rallyBegin:begin});
+})();
+
+/* Weather frequencies are January station-hour observations, not arbitrary
+   per-frame dice. Airports are regional proxies; durations are modelled. */
+(function(){
+ const a=window.__Track2App,s=a.state,C=a.clamp,stations=/*__WEATHER_STATIONS__*/{"OEYN":{"name":"Yanbu","lat":24.144,"lon":38.063,"hours":7412,"observed":{"clear":{"windMps":2.57222,"visibilityM":10000.0,"samples":7369},"rain":{"windMps":3.8583300000000005,"visibilityM":9000.0,"samples":12},"dust":{"windMps":9.259992,"visibilityM":4000,"samples":31},"storm":{"windMps":null,"visibilityM":null,"samples":0}},"counts":{"clear":7369,"rain":12,"dust":31,"storm":0},"probability":{"clear":0.9941985968699406,"rain":0.0016189962223421479,"dust":0.004182406907717215,"storm":0.0},"durationHours":{"clear":131.58928571428572,"rain":1.0909090909090908,"dust":2.2142857142857144,"storm":1}},"OEAO":{"name":"AlUla","lat":26.483,"lon":38.119,"hours":6595,"observed":{"clear":{"windMps":2.057776,"visibilityM":10000.0,"samples":6524},"rain":{"windMps":5.14444,"visibilityM":9000.0,"samples":18},"dust":{"windMps":2.057776,"visibilityM":5000,"samples":53},"storm":{"windMps":null,"visibilityM":null,"samples":0}},"counts":{"clear":6524,"rain":18,"dust":53,"storm":0},"probability":{"clear":0.9892342683851403,"rain":0.0027293404094010615,"dust":0.008036391205458682,"storm":0.0},"durationHours":{"clear":48.6865671641791,"rain":1.5,"dust":7.571428571428571,"storm":1}},"OEHL":{"name":"Hail","lat":27.438,"lon":41.686,"hours":7401,"observed":{"clear":{"windMps":2.057776,"visibilityM":10000,"samples":7249},"rain":{"windMps":3.086664,"visibilityM":9000,"samples":101},"dust":{"windMps":5.14444,"visibilityM":5000,"samples":51},"storm":{"windMps":null,"visibilityM":null,"samples":0}},"counts":{"clear":7249,"rain":101,"dust":51,"storm":0},"probability":{"clear":0.9794622348331307,"rain":0.013646804485880286,"dust":0.006890960680989056,"storm":0.0},"durationHours":{"clear":77.94623655913979,"rain":2.4047619047619047,"dust":4.636363636363637,"storm":1}},"OERK":{"name":"Riyadh","lat":24.957,"lon":46.699,"hours":7406,"observed":{"clear":{"windMps":2.057776,"visibilityM":10000.0,"samples":6836},"rain":{"windMps":2.057776,"visibilityM":6000.0,"samples":190},"dust":{"windMps":3.601108,"visibilityM":4000,"samples":375},"storm":{"windMps":8.231104,"visibilityM":1500,"samples":5}},"counts":{"clear":6836,"rain":190,"dust":375,"storm":5},"probability":{"clear":0.9230353767215771,"rain":0.025654874426140967,"dust":0.0506346205779098,"storm":0.0006751282743721307},"durationHours":{"clear":40.93413173652694,"rain":2.5675675675675675,"dust":5.681818181818182,"storm":5.0}},"OEWD":{"name":"Wadi Ad Dawasir","lat":20.504,"lon":45.199,"hours":7260,"observed":{"clear":{"windMps":4.115552,"visibilityM":10000,"samples":6881},"rain":{"windMps":5.14444,"visibilityM":10000,"samples":27},"dust":{"windMps":6.173328,"visibilityM":4350.0,"samples":352},"storm":{"windMps":null,"visibilityM":null,"samples":0}},"counts":{"clear":6881,"rain":27,"dust":352,"storm":0},"probability":{"clear":0.9477961432506887,"rain":0.00371900826446281,"dust":0.048484848484848485,"storm":0.0},"durationHours":{"clear":46.80952380952381,"rain":2.7,"dust":6.901960784313726,"storm":1}},"OEBH":{"name":"Bisha","lat":19.984,"lon":42.621,"hours":7358,"observed":{"clear":{"windMps":2.057776,"visibilityM":10000,"samples":6909},"rain":{"windMps":4.372774,"visibilityM":9500.0,"samples":6},"dust":{"windMps":2.57222,"visibilityM":3800,"samples":443},"storm":{"windMps":null,"visibilityM":null,"samples":0}},"counts":{"clear":6909,"rain":6,"dust":443,"storm":0},"probability":{"clear":0.9389779831475945,"rain":0.0008154389779831476,"dust":0.0602065778744224,"storm":0.0},"durationHours":{"clear":63.38532110091743,"rain":1.0,"dust":10.068181818181818,"storm":1}}};
+ function region(name){if(/Prologue|Stage 13/.test(name))return ['OEYN','OEYN'];if(/Stage 2\b/.test(name))return ['OEYN','OEAO'];if(/Stage [34]\b/.test(name))return ['OEAO','OEAO'];if(/Stage 5\b/.test(name))return ['OEAO','OEHL'];if(/Stage 6\b/.test(name))return ['OEHL','OERK'];if(/Stage 7\b/.test(name))return ['OERK','OEWD'];if(/Stage 8\b/.test(name))return ['OEWD','OEWD'];if(/Stage 9\b/.test(name))return ['OEWD','OEBH'];return ['OEBH','OEHL'];}
+ function climate(t,d){const [u,v]=region(s.route.name),x=stations[u],y=stations[v],f=C(d/t.L,0,1),mix=(a,b)=>a+(b-a)*f;return{lat:mix(x.lat,y.lat),lon:mix(x.lon,y.lon),p:Object.fromEntries(Object.keys(x.probability).map(k=>[k,mix(x.probability[k],y.probability[k])])),hours:Object.fromEntries(Object.keys(x.durationHours).map(k=>[k,mix(x.durationHours[k],y.durationHours[k])])),observed:Object.fromEntries(Object.keys(x.observed).map(k=>[k,{windMps:mix(x.observed[k].windMps??y.observed[k].windMps??5,y.observed[k].windMps??x.observed[k].windMps??5),visibilityM:mix(x.observed[k].visibilityM??y.observed[k].visibilityM??10000,y.observed[k].visibilityM??x.observed[k].visibilityM??10000)}])),stations:[u,v]};}
+ const random=w=>{w.seed=(Math.imul(w.seed,1664525)+1013904223)>>>0;return (w.seed+.5)/4294967296;};
+ function eventRates(c){return ['rain','dust','storm'].map(k=>[k,c.p[k]/Math.max(.0001,c.p.clear)/Math.max(1,c.hours[k])/3600]);}
+ function rate(w,c,rates){return Math.max(1e-12,w.kind==='clear'?rates.reduce((n,v)=>n+v[1],0):1/(c.hours[w.kind]*3600));}
+ function schedule(w,c){w.rates=eventRates(c);w.rate=rate(w,c,w.rates);w.wait=-Math.log(random(w))/w.rate;}
+ function sun(localHour,lat,lon,day){const g=2*Math.PI/365*(day-1+(localHour-12)/24),eq=229.18*(.000075+.001868*Math.cos(g)-.032077*Math.sin(g)-.014615*Math.cos(2*g)-.040849*Math.sin(2*g)),decl=.006918-.399912*Math.cos(g)+.070257*Math.sin(g)-.006758*Math.cos(2*g)+.000907*Math.sin(2*g)-.002697*Math.cos(3*g)+.00148*Math.sin(3*g),ha=((localHour*60+eq+4*lon-180)/4-180)*Math.PI/180,L=lat*Math.PI/180;return Math.asin(Math.sin(L)*Math.sin(decl)+Math.cos(L)*Math.cos(decl)*Math.cos(ha))*180/Math.PI;}
+ function step(dt){const t=a.trackModel();if(t?.terrain!=='rally')return;const c=climate(t,s.distanceM);let w=s.rallyWeather;
+  if(!w){w=s.rallyWeather={seed:(s.weatherSeed??Math.floor(Math.random()*4294967296))>>>0,elapsed:0,kind:'clear',strength:0,wetness:0};const r=random(w);let sum=0;for(const k of ['rain','dust','storm','clear']){sum+=c.p[k];if(r<sum){w.kind=k;break;}}schedule(w,c);}
+  // Preserve the remaining sampled hazard as the car crosses climate regions.
+  // An event picked in Hail must use the Riyadh frequencies upon arrival.
+  const rates=eventRates(c),nextRate=rate(w,c,rates);w.wait*= (w.rate??nextRate)/nextRate;w.rate=nextRate;w.rates=rates;
+  w.elapsed+=dt;w.wait-=dt;
+  if(w.wait<=0){if(w.kind==='clear'){const total=w.rates.reduce((n,v)=>n+v[1],0),r=random(w)*total;let sum=0;for(const[k,rate]of w.rates){sum+=rate;if(r<=sum){w.kind=k;break;}}}else w.kind='clear';schedule(w,c);}
+  if(w.kind!=='clear')w.visualKind=w.kind;
+  w.strength+=(Number(w.kind!=='clear')-w.strength)*(1-Math.exp(-dt/45));w.wetness+=(Number(w.kind==='rain')-w.wetness)*(1-Math.exp(-dt/(w.kind==='rain'?100:1800)));
+  w.localHour=(s.rallyStartHour??8)+w.elapsed/3600;w.sunAltitude=sun(w.localHour,c.lat,c.lon,3+(Number(s.route.name.match(/Stage (\d+)/)?.[1])||0));w.night=C((-w.sunAltitude+1)/7,0,1);w.visibility=w.visualKind?c.observed[w.visualKind].visibilityM:14000;w.windMps=c.observed[w.visualKind||'clear'].windMps;w.wetGrip=1-w.wetness*.14;w.climate=c;
+  s.dayPhase=w.sunAltitude< -3?.9:w.sunAltitude<6?.72:.30;
+ }
+ Object.assign(a,{rallyWeatherStep:step,rallyClimate:()=>climate(a.trackModel(),s.distanceM),rallySunAltitude:sun});
 })();
 
 /* Contact-only planar rigid bodies. Free driving still uses the original powertrain,
@@ -2179,7 +2230,7 @@ window.__Track2App=window.McLarenApp;
    Planning changes pedals/steering only; the original drivetrain and contacts integrate motion. */
 (function(){
  const a=window.__Track2App,s=a.state,C=a.clamp,wrap=a.trackWrap,ang=a.trackAngle;
- let plan=null,serial=0;
+ let plan=null,serial=0,avoidance=null;
  const smooth=u=>(u=C(u,0,1),u*u*(3-2*u));
  function line(){const t=a.trackModel();if(!t)return null;if(t.drivingLine)return t.drivingLine;
   const N=t.points.length,open=t.closed===false,I=i=>open?C(i,0,N-1):(i%N+N)%N,ds=t.L/(open?N-1:N),at=i=>a.trackSample(t,i*ds),ks=Array.from({length:N},(_,i)=>at(i).k),signs=ks.map(k=>Math.abs(k)>.0018?Math.sign(k):0);
@@ -2222,6 +2273,16 @@ window.__Track2App=window.McLarenApp;
   }return out;
  }
  function traffic(self,wanted,cap){const nearby=neighbours(self),half=self.pit?a.pitModel().half:a.halfWidthAt(self.d),edge=half-1.7;let n=C(wanted,-edge,edge),blocked=false;
+  // Steering-only assist must plan a pass before reaching the slower car;
+  // it cannot rely on the Test Driver's longitudinal braking envelope.
+  if(self.player&&s.assist&&!s.testDriver&&!s.adaptiveCruise&&!self.pit){
+   const held=avoidance&&avoidance.route===s.route.name&&nearby.find(o=>o.r===avoidance.car&&o.gap> -14&&o.gap<170);
+   const lead=held||nearby.filter(o=>o.gap>0&&o.gap<Math.max(40,(self.v-o.v)*3.3+20)&&Math.abs(o.n-self.n)<3.2).sort((x,y)=>x.gap-y.gap)[0];
+   if(lead){const time=C((lead.gap-8)/Math.max(1,self.v-lead.v),.4,3),margin=3.25;
+    const options=[lead.n-margin,lead.n+margin].filter(x=>Math.abs(x)<=edge&&nearby.every(o=>o===lead||Math.abs(o.n-x)>margin||Math.abs(o.gap+(o.v-self.v)*time)>15));
+    if(options.length){n=options.reduce((best,x)=>Math.abs(x-(held?avoidance.n:self.n))<Math.abs(best-(held?avoidance.n:self.n))?x:best,options[0]);avoidance={route:s.route.name,car:lead.r,n};}
+   }else avoidance=null;
+  }else if(self.player)avoidance=null;
   // Yield lateral space to cars alongside, including one coming up from behind.
   for(const o of nearby){const span=10+Math.max(0,o.v-self.v)*.6;if(Math.abs(o.gap)<span){const separation=2.9;if(self.n<o.n)n=Math.min(n,o.n-separation);else n=Math.max(n,o.n+separation);}}
   n=C(n,-edge,edge);
@@ -2283,12 +2344,121 @@ window.__Track2App=window.McLarenApp;
   let ctx = app.ctx;   // re-pointed for a moment while the cockpit pack is drawn
   const curvatureAt = (...a) => app.curvatureAt(...a);
 
+/* Hand-authored world-space coachwork. The F1 rival renderer does not call this.
+   Stations run rear to nose; each family has its own silhouette and glazing. */
+function drawDetailedRoadCar(mesh,info={}){
+ const {point:P,quad:Q,triangle:T,box:B}=mesh,name=info.name||'',paint=info.paint||[170,25,24],accent=info.accent||[213,215,207],dark=[19,25,28],glass=[39,61,72],metal=[133,147,151];
+ const family=/Dacia|Sandrider/.test(name)?'dacia':/· Ford|Raptor/.test(name)?'ford':/· Toyota|Hilux/.test(name)?'hilux':/Prodrive|Hunter/.test(name)?'hunter':/X-raid|Century/.test(name)?'raid':/Bugatti|Veyron/.test(name)?'bugatti':/Porsche|911/.test(name)?'porsche':/McLaren/.test(name)?'mclaren':/Lamborghini/.test(name)?'lambo':/Koenigsegg/.test(name)?'koenigsegg':/Valkyrie|AMG ONE/.test(name)?'prototype':/Aston/.test(name)?'aston':/Rimac/.test(name)?'rimac':/Maserati/.test(name)?'maserati':/BMW|Audi|Mercedes|Tesla|Nissan|Supra|Lancer|Jaguar/.test(name)?'saloon':'ferrari';
+ const raid=['dacia','ford','hilux','hunter','raid'].includes(family),open=info.open||info.kind==='barchetta';
+ const specs={ // length, width, height, rear axle, front axle, wheel radius
+  bugatti:[4.46,2.0,1.20,-1.31,1.40,.36],porsche:[4.53,1.88,1.30,-1.22,1.27,.35],mclaren:[4.60,1.95,1.18,-1.37,1.33,.35],lambo:[4.56,1.96,1.16,-1.33,1.36,.35],koenigsegg:[4.73,2.03,1.21,-1.39,1.40,.36],prototype:[4.65,2.00,1.07,-1.43,1.35,.35],aston:[4.72,1.96,1.21,-1.37,1.37,.35],rimac:[4.75,1.99,1.20,-1.42,1.33,.36],maserati:[4.67,1.97,1.22,-1.38,1.30,.35],saloon:[4.9,1.93,1.42,-1.43,1.45,.36],ferrari:[4.58,1.94,1.18,-1.37,1.32,.35],dacia:[4.14,2.20,1.81,-1.5,1.5,.47],ford:[4.68,2.30,1.98,-1.5,1.5,.47],hilux:[4.81,2.30,1.89,-1.57,1.57,.47],hunter:[4.60,2.30,1.85,-1.5,1.5,.47],raid:[4.5,2.2,1.9,-1.50,1.50,.47]};
+ let [L,W,H,rear,front,R]=specs[family];if(info.L){L=info.L;H=info.H;W=info.kind==='openwheel'?1.8:1.78;rear=-info.wb/2;front=info.wb/2;R=(info.wheel||.65)/2;}
+ const stations={
+  bugatti:[[0,.83,.69],[.12,1,.80],[.3,1,.81],[.5,.91,.72],[.68,.96,.67],[.85,1,.58],[1,.77,.43]],
+  porsche:[[0,.81,.65],[.15,1,.76],[.36,.95,.80],[.55,.85,.70],[.73,.98,.58],[.88,.92,.52],[1,.73,.38]],
+  mclaren:[[0,.9,.65],[.16,1,.78],[.34,.97,.66],[.52,.83,.55],[.72,.96,.53],[.87,1,.56],[1,.79,.30]],
+  lambo:[[0,.92,.73],[.18,1,.73],[.34,.98,.62],[.55,.84,.55],[.77,.99,.52],[.9,.91,.42],[1,.68,.28]],
+  koenigsegg:[[0,.87,.73],[.15,1,.83],[.32,.95,.69],[.51,.84,.59],[.72,1,.56],[.9,.98,.45],[1,.72,.33]],
+  prototype:[[0,.9,.55],[.17,1,.65],[.35,.72,.40],[.55,.68,.38],[.72,.89,.48],[.88,.96,.54],[1,.54,.21]],
+  aston:[[0,.82,.66],[.15,1,.77],[.34,.92,.69],[.54,.86,.60],[.74,.95,.61],[.9,.93,.48],[1,.71,.35]],
+  rimac:[[0,.82,.69],[.15,1,.76],[.34,.91,.67],[.54,.86,.58],[.76,.97,.59],[.9,.96,.49],[1,.77,.36]],
+  maserati:[[0,.82,.65],[.15,1,.74],[.35,.91,.63],[.53,.88,.60],[.75,.97,.55],[.9,.9,.43],[1,.69,.33]],
+  saloon:[[0,.85,.75],[.15,.96,.78],[.35,1,.81],[.53,.98,.78],[.73,.96,.73],[.90,.94,.67],[1,.85,.51]],
+  ferrari:[[0,.85,.69],[.15,1,.76],[.35,.94,.61],[.53,.85,.59],[.73,.96,.60],[.91,.94,.46],[1,.75,.29]],
+  dacia:[[0,.69,.90],[.12,.88,1.05],[.3,1,1.06],[.5,.81,1.08],[.68,.9,.95],[.88,1,.88],[1,.72,.62]],
+  ford:[[0,.82,1.07],[.12,1,1.13],[.30,.98,1.20],[.5,.93,1.26],[.70,.93,1.31],[.89,1,1.26],[1,.87,1.02]],
+  hilux:[[0,.86,1.12],[.13,1,1.12],[.32,.96,1.16],[.52,.88,1.24],[.70,.94,1.19],[.88,1,1.14],[1,.86,.99]],
+  hunter:[[0,.75,.89],[.15,1,1.04],[.33,.96,1.09],[.53,.79,1.13],[.73,.94,1.12],[.90,1,1.04],[1,.69,.77]],
+  raid:[[0,.72,.96],[.15,1,1.12],[.33,.95,1.14],[.53,.83,1.14],[.73,.99,1.04],[.90,.98,.90],[1,.71,.71]]
+ };
+ const shade=(c,f)=>c.map(v=>Math.min(255,v*f)),quad=(a,b,c,d,color)=>Q(P(...a),P(...b),P(...c),P(...d),color);
+ let profile=stations[family];
+ if(info.p){const clean=info.p.filter((p,i,arr)=>!i||p[0]!==arr[i-1][0]);profile=clean.map(([u,y])=>[1-u,.72+.26*Math.sin(Math.PI*u),Math.min(y,H*.65)]).reverse();}
+ const cross=[[-1,.48],[-1,.82],[-.91,.99],[-.66,1.035],[0,1.045],[.66,1.035],[.91,.99],[1,.82],[1,.48]];
+ for(let i=0;i<profile.length-1;i++){const a=profile[i],b=profile[i+1];for(let j=0;j<cross.length-1;j++){const c=cross[j],d=cross[j+1],V=(v,c)=>[c[0]*W*.5*v[1],Math.max(raid?.48:.18,v[2]*c[1]),(v[0]-.5)*L];quad(V(a,c),V(a,d),V(b,d),V(b,c),shade(paint,.7+.3*Math.max(0,1-Math.abs(c[0]))+.09*c[0]));}}
+ for(const k of [0,profile.length-1]){const v=profile[k],z=(v[0]-.5)*L;for(let j=0;j<cross.length-1;j++)T(P(0,raid?.49:.19,z),P(cross[j][0]*W*.5*v[1],Math.max(raid?.48:.18,v[2]*cross[j][1]),z),P(cross[j+1][0]*W*.5*v[1],Math.max(raid?.48:.18,v[2]*cross[j+1][1]),z),shade(paint,k?.86:.65));}
+ let cabin=family==='porsche'?[-.92,-.37,.63,1.16]:family==='saloon'?[-1.25,-.60,.61,1.25]:family==='dacia'?[-.85,-.56,.30,.98]:family==='ford'?[-.95,-.68,.44,1.13]:family==='hilux'?[-1.16,-.73,.38,.98]:family==='hunter'?[-.98,-.55,.43,1.05]:[-.9,-.44,.38,1.12],belt=raid?1.12:family==='saloon'?.78:.66;
+ if(info.glass)cabin=[info.glass.at(-1)[0],info.glass[2][0],info.glass[1][0],info.glass[0][0]].map(u=>(.5-u)*L);
+ if(!open&&!raid&&!info.L){
+  // Compound roof curvature and separate framed quarter lights. A curved
+  // greenhouse reads very differently from a single rectangular glass box.
+  const [back,rback,rfront,fwd]=cabin,wb=W*.38,rb=family==='prototype'?.43:.60;
+  const rings=[[back,wb,belt],[rback-.10,rb*.98,H*.94],[rback+.12,rb,H],[rfront-.10,rb,H*.99],[rfront+.08,rb*.96,H*.94],[fwd,wb,belt]];
+  const section=[[-1,0],[-.90,.055],[-.65,.098],[0,.12],[.65,.098],[.90,.055],[1,0]];
+  for(let i=0;i<rings.length-1;i++)for(let j=0;j<section.length-1;j++){
+   const V=(r,c)=>[r[1]*c[0],r[2]+c[1]*(i===0||i===4?.6:1),r[0]],a=rings[i],b=rings[i+1];
+   quad(V(a,section[j]),V(a,section[j+1]),V(b,section[j+1]),V(b,section[j]),i===0?shade(glass,.76):i===4?shade(glass,1.2):shade(paint,1.04+.10*(1-Math.abs(section[j][0]))));
+  }
+  for(const side of[-1,1]){
+   const vertices=[[side*wb,belt,back],[side*rb,H*.94,rback-.1],[side*rb,H*.99,rfront],[side*wb,belt,fwd]];
+   quad(...vertices,shade(glass,side>0?.96:.70));
+   // A/B/C pillars, lower brightwork, quarter-window divider and door seams.
+   for(const [z,r]of[[back,rback-.1],[fwd,rfront]])quad([side*wb,belt,z],[side*rb,H*.98,r],[side*(rb+.045),H*.98,r+.045],[side*(wb+.025),belt,z+.045],shade(paint,.9));
+   quad([side*(wb+.012),belt+.025,-.28],[side*(rb+.012),H*.99,-.28],[side*(rb+.013),H*.99,-.24],[side*(wb+.014),belt+.025,-.24],dark);
+   B(side*(wb+.015),belt-.016,(back+fwd)/2,.024,.022,fwd-back,metal);
+   B(side*(wb+.025),belt-.060,-.17,.030,.028,.19,metal);
+   B(side*(wb+.12),belt+.13,fwd-.19,.20,.075,.25,paint);B(side*(wb+.13),belt+.145,fwd-.30,.16,.036,.021,metal);
+  }
+ }else if(!open){const [back,rback,rfront,fwd]=cabin,roof=H,rb=raid?.65:family==='prototype'?.44:.61,wb=raid?.86:W*.38;
+  quad([-wb,belt,back],[wb,belt,back],[rb,roof,rback],[-rb,roof,rback],raid?dark:glass);quad([-rb,roof,rback],[rb,roof,rback],[rb,roof,rfront],[-rb,roof,rfront],shade(paint,1.08));quad([-rb,roof,rfront],[rb,roof,rfront],[wb,belt,fwd],[-wb,belt,fwd],shade(glass,1.35));
+  for(const side of [-1,1]){quad([side*wb,belt,back],[side*rb,roof,rback],[side*rb,roof,rfront],[side*wb,belt,fwd],shade(glass,side>0?1:.6));for(const z of [back,fwd]){const r=z===back?rback:rfront;quad([side*wb,belt,z],[side*rb,roof,r],[side*(rb+.055),roof,r+.03],[side*(wb+.035),belt,z+.055],paint);}B(side*.90,belt+.17,fwd-.27,.20,.095,.27,paint);B(side*.96,belt+.13,fwd-.3,.18,.07,.04,metal);B(side*(wb+.015),belt+.015,-.05,.025,.025,.21,metal);if(raid)for(let z=back+.1;z<fwd;z+=.15)quad([side*(wb+.007),belt+.07,z],[side*rb,roof-.09,rfront],[side*(rb+.018),roof-.09,rfront],[side*(wb+.024),belt+.07,z+.025],dark);}
+ }else{B(0,belt-.10,-.12,W*.6,.04,.92,dark);for(const side of [-1,1]){B(side*.31,belt-.07,-.18,.34,.23,.40,[91,45,31]);B(side*.31,belt+.11,-.36,.34,.30,.09,[110,51,34]);}quad([-W*.32,belt,.35],[W*.32,belt,.35],[W*.31,belt+.26,.2],[-W*.31,belt+.26,.2],glass);}
+ // Wheels have toroidal shoulders, recessed rims, brake rotors and moving spokes.
+ const wheel=(side,z,spare=false)=>{const x=side*(W*.5-.06),width=raid?.32:.27,spin=(info.distance||0)/R,N=info.far?16:32;
+  const wheelP=(xx,r,t)=>P(x+xx,R+r*Math.cos(t),z+r*Math.sin(t));
+  for(let i=0;i<N;i++){const a=i/N*Math.PI*2,b=(i+1)/N*Math.PI*2;for(const [u,v,r0,r1]of[[-width/2,width/2,R,R],[side*width/2,side*(width/2+.015),R,R*.85],[side*(width/2+.016),side*(width/2+.018),R*.85,R*.62]])Q(wheelP(u,r0,a),wheelP(v,r1,a),wheelP(v,r1,b),wheelP(u,r0,b),[25,29,31]);T(wheelP(side*(width/2+.02),0,a),wheelP(side*(width/2+.02),R*.61,a),wheelP(side*(width/2+.02),R*.61,b),[65,70,71]);if(raid&&i%2===0)Q(wheelP(-width*.44,R*1.018,a),wheelP(width*.44,R*1.018,a+.025),wheelP(width*.44,R*1.018,b),wheelP(-width*.44,R*1.018,b-.025),[39,42,39]);}
+  for(let j=0;j<(raid?6:10);j++){const angle=spin+j/(raid?6:10)*Math.PI*2,xx=side*(width/2+.03);Q(wheelP(xx,R*.13,angle),wheelP(xx,R*.59,angle),wheelP(xx,R*.59,angle+.095),wheelP(xx,R*.13,angle+.23),metal);}
+  B(x+side*(width/2+.035),R,z,.024,.10,.10,metal);
+ };
+ for(const side of[-1,1])for(const z of[rear,front]){wheel(side,z);const archR=R*1.10;for(let j=0;j<18;j++){const u=-Math.PI/2+j/18*Math.PI,v=-Math.PI/2+(j+1)/18*Math.PI;quad([side*W*.501,R+Math.cos(u)*archR,z+Math.sin(u)*archR],[side*W*.501,R+Math.cos(u)*(archR+.065),z+Math.sin(u)*(archR+.065)],[side*W*.501,R+Math.cos(v)*(archR+.065),z+Math.sin(v)*(archR+.065)],[side*W*.501,R+Math.cos(v)*archR,z+Math.sin(v)*archR],raid?dark:paint);}}
+ // Splitters, sill blades, diffuser vanes, separate lamp clusters and exhausts.
+ B(0,raid?.39:.12,L*.49,W*.90,.045,.28,dark);B(0,raid?.38:.14,-L*.49,W*.88,.10,.26,dark);
+ for(let x=-W*.36;x<=W*.36;x+=W*.18)B(x,raid?.39:.13,-L*.48,.025,.12,.40,dark);
+ for(const side of[-1,1]){B(side*W*.47,raid?.46:.17,0,.075,.07,L*.56,dark);B(side*W*.33,raid?1.04:.45,L*.495,raid?.38:.30,raid?.10:.038,.05,[231,237,217]);B(side*W*.32,raid?.9:.57,-L*.502,raid?.18:.33,.07,.025,[198,22,21]);B(side*.34,raid?.52:.29,-L*.509,.13,.10,.05,metal);B(side*.34,raid?.52:.30,-L*.515,.09,.07,.02,[9,13,15]);}
+ if(family==='bugatti'){B(0,.36,L*.505,.28,.26,.035,metal);B(0,.38,L*.515,.22,.18,.035,dark);for(const side of[-1,1])for(let i=0;i<4;i++)B(side*(.55+i*.07),.52,L*.502,.04,.04,.03,[219,229,231]);}
+ if(!raid&&!info.L){
+  // Rear engine vent, individual lamp lenses and a recessed registration panel.
+  B(0,.34,-L*.506,W*.64,.19,.025,dark);for(let x=-W*.30;x<W*.31;x+=.055)B(x,.35,-L*.514,.014,.14,.012,[54,62,65]);
+  B(0,.43,-L*.518,.29,.065,.012,[189,192,181]);
+  if(family==='bugatti'||family==='ferrari'||family==='mclaren')for(const side of[-1,1]){
+   const centers=family==='bugatti'?[.58,.77]:family==='ferrari'?[.68]:[.64,.83];
+   for(const x of centers)for(let j=0;j<24;j++){const a=j/24*Math.PI*2,b=(j+1)/24*Math.PI*2,r=family==='mclaren'?.047:.065;
+    const V=(q,t)=>[side*x+Math.cos(t)*q,.62+Math.sin(t)*q,-L*.517];quad(V(r,a),V(r,b),V(r*.65,b),V(r*.65,a),[233,38,30]);}
+  }
+  if(family==='bugatti'){for(const side of[-1,1]){B(side*.47,.795,-1.20,.38,.065,.74,dark);for(let j=0;j<7;j++)B(side*.47,.855,-1.5+j*.095,.35,.012,.024,metal);}B(0,.84,-1.87,1.52,.055,.24,paint);}
+ }
+ if(family==='lambo'){for(const side of[-1,1]){quad([side*.6,.5,L*.48],[side*.9,.45,L*.47],[side*.92,.46,L*.47],[side*.6,.53,L*.48],[238,240,223]);quad([side*.6,.51,L*.48],[side*.64,.42,L*.48],[side*.66,.42,L*.48],[side*.62,.51,L*.48],[238,240,223]);}}
+ if(family==='porsche'){for(const side of[-1,1])for(let j=0;j<16;j++){const a=j/16*Math.PI*2,b=(j+1)/16*Math.PI*2;T(P(side*.68,.60,L*.435),P(side*.68+Math.cos(a)*.11,.60+Math.sin(a)*.10,L*.435),P(side*.68+Math.cos(b)*.11,.60+Math.sin(b)*.10,L*.435),[226,234,230]);}B(0,.64,-L*.506,W*.78,.03,.025,[187,29,26]);}
+ if(raid){B(0,.63,L*.505,W*.56,.28,.045,dark);for(let x=-.55;x<=.55;x+=.12)B(x,.66,L*.532,.055,.20,.025,metal);B(0,H+.02,-.15,.75,.11,.57,dark);for(let x=-.32;x<.33;x+=.10)B(x,H+.08,.145,.06,.04,.03,[238,239,222]);for(const side of[-1,1]){B(side*.94,.58,0,.10,.08,2.0,metal);B(side*.98,.82,-.15,.028,.26,.42,accent);B(side*.98,1.10,-.3,.03,.17,.26,[240,240,232]);}
+  if(family==='dacia'){for(const side of[-1,1])for(const dy of[-.06,.06])quad([side*.53,1.02,L*.503],[side*.83,1.02+dy,L*.5],[side*.84,1.045+dy,L*.5],[side*.53,1.045,L*.503],[232,238,204]);}
+  if(family==='hilux'||family==='ford'){B(0,1.13,-1.5,1.57,.10,1.05,dark);for(const x of[-.36,.36])B(x,1.24,-1.5,.48,.28,.72,[32,35,34]);}
+  // Exposed rear cradle, diagonal cage tubes, radiators and two full-size
+  // spare tyres, rather than a sedan's rear windscreen on a rally prototype.
+  const tube=(a,b,r,color)=>{const dx=b[0]-a[0],dy=b[1]-a[1],dz=b[2]-a[2],l=Math.hypot(dx,dy,dz),n=Math.hypot(dx,dz)||1,u=[dz/n,0,-dx/n],v=[-dy*dx/(l*n),n/l,-dy*dz/(l*n)];for(let j=0;j<8;j++){const a0=j*Math.PI/4,a1=(j+1)*Math.PI/4,V=(p,t)=>p.map((x,k)=>x+r*(u[k]*Math.cos(t)+v[k]*Math.sin(t)));quad(V(a,a0),V(a,a1),V(b,a1),V(b,a0),shade(color,.78+.20*Math.cos(a0)));}};
+  if(family==='dacia'||family==='hunter'||family==='raid'){
+   B(0,.88,-L*.38,1.18,.12,.64,dark);for(const side of[-1,1]){
+    tube([side*.65,.69,-L*.49],[side*.53,1.60,-.72],.036,metal);tube([side*.69,.70,-L*.48],[-side*.58,1.19,-L*.39],.027,[84,95,96]);
+    const cx=side*.39,cy=1.03,cz=-L*.35,r=.37;for(let j=0;j<24;j++){const a=j/12*Math.PI,b=(j+1)/12*Math.PI,V=(rr,t,z)=>[cx+rr*Math.cos(t),cy+rr*Math.sin(t),z];quad(V(r,a,cz-.10),V(r,b,cz-.10),V(r,b,cz+.11),V(r,a,cz+.11),[31,34,33]);quad(V(r,a,cz-.11),V(r*.50,a,cz-.11),V(r*.50,b,cz-.11),V(r,b,cz-.11),[22,25,25]);quad(V(r*.49,a,cz-.10),[cx,cy,cz-.10],[cx,cy,cz-.10],V(r*.49,b,cz-.10),metal);}
+    B(side*.73,.81,-L*.50,.12,.20,.045,[186,25,22]);B(side*.78,.24,-1.91,.23,.28,.045,dark);
+   }
+  }
+  // Roof intake slats and spare-wheel straps also identify pickups from behind.
+  for(let x=-.27;x<=.28;x+=.09)B(x,H+.04,-.44,.024,.065,.018,metal);
+  for(const side of[-1,1]){B(side*.56,1.21,-1.4,.027,.022,.70,accent);tube([side*.80,.68,-1.40],[side*.58,1.07,-1.12],.048,[198,173,43]);}
+  B(.4,H+.04,-.42,.018,.56,.018,dark);
+ }else{
+  for(const side of[-1,1]){quad([side*W*.49,.33,-.5],[side*W*.48,.57,-.65],[side*W*.46,.60,-1.0],[side*W*.49,.30,-.85],dark);for(let j=0;j<5;j++)B(side*.56,.76,-L*.26-j*.10,.38,.018,.035,dark);}
+  if(/STO|Jesko|AMG ONE|765LT|P1|F40|F50|FXX|Valkyrie/.test(name)||info.wing){const y=raid?H:H*.80;for(const side of[-1,1])B(side*.49,.57,-L*.38,.045,y-.57,.14,dark);B(0,y,-L*.40,W*.91,.065,.30,paint);for(const side of[-1,1])B(side*W*.45,y-.08,-L*.40,.035,.20,.40,dark);}
+ }
+ return family;
+}
+
   // Complete prebuilt world + a genuine depth buffer. Track buffers never change
   // while driving. Projection is shared by road, competitors and the player's tyres.
   let trackCamera=null,trackPitch=0,trackGL=null;
   const EYE_HEIGHT=app.track2Vehicle.f1?.97:app.track2Vehicle.prototype?1.0:1.15;
   function trackPoint(d,n=0,lift=0){return app.surfacePoint(d,n,lift);}
-  function trackFrame(){const impact=app.contactPose?.(),p=impact||app.worldPose();if(!p){trackCamera=null;return;}const q=impact||(!state.inPitLane?trackPoint(state.distanceM,state.laneOffset):p);p.y=q.y+(state.rallyAirHeight||0);trackPitch=Math.atan(p.grade);trackCamera={...p,psi:impact?p.psi:p.psi+state.headingRel,roll:Math.atan(q.bank||0)+(state.impactJolt||0)*Math.sin(state.time*35)};}
+  function trackFrame(){const impact=app.contactPose?.(),p=impact||app.worldPose();if(!p){trackCamera=null;return;}const q=impact||(!state.inPitLane?trackPoint(state.distanceM,state.laneOffset):p);p.y=q.y+(state.rallyAirHeight||0)+(state.rallyHeave||0);trackPitch=Math.atan(p.grade)+(state.rallyPitch||0);trackCamera={...p,psi:impact?p.psi:p.psi+state.headingRel,roll:Math.atan(q.bank||0)+(state.rallyRoll||0)+(state.impactJolt||0)*Math.sin(state.time*35)};}
   function cameraPoint(p){const c=trackCamera,dx=p.x-c.x,dz=p.z-c.z,f=dx*Math.sin(c.psi)+dz*Math.cos(c.psi),u=p.y-c.y-EYE_HEIGHT,r=dx*Math.cos(c.psi)-dz*Math.sin(c.psi),up=u*Math.cos(trackPitch)-f*Math.sin(trackPitch);return{rgt:r*Math.cos(c.roll)+up*Math.sin(c.roll),fwd:f*Math.cos(trackPitch)+u*Math.sin(trackPitch),up:up*Math.cos(c.roll)-r*Math.sin(c.roll)};}
   function projectTrack(p){if(!trackCamera)return {x:0,y:0,scale:-1,fwd:-1};const a=cameraPoint(p);if(a.fwd<.2)return{x:0,y:0,scale:-1,fwd:a.fwd};const scale=FOCAL/a.fwd;return{x:innerWidth/2+a.rgt*scale,y:horizonY-a.up*scale,scale,fwd:a.fwd};}
   function createTrackGL(){
@@ -2297,11 +2467,11 @@ window.__Track2App=window.McLarenApp;
     const vs=`attribute vec3 aPosition;attribute vec3 aColor;attribute float aMaterial;
       uniform vec3 uEye,uRight,uUp,uForward;uniform vec4 uProjection;varying vec3 vColor,vWorld;varying float vDistance,vMaterial;
       void main(){vec3 d=aPosition-uEye;float z=dot(d,uForward);gl_Position=vec4(dot(d,uRight)*uProjection.x,dot(d,uUp)*uProjection.y+uProjection.z*z,1.000042858*z-.600012857,z);vColor=aColor;vWorld=aPosition;vDistance=length(d);vMaterial=aMaterial;}`;
-    const fs=`precision highp float;varying vec3 vColor,vWorld;varying float vDistance,vMaterial;uniform float uNight;uniform sampler2D uAsphalt;
+    const fs=`precision highp float;varying vec3 vColor,vWorld;varying float vDistance,vMaterial;uniform float uNight;uniform vec4 uWeather;uniform vec3 uEye,uForward,uRight;uniform sampler2D uAsphalt;
       void main(){vec3 c=vColor;float detail=(1.-smoothstep(12.,65.,vDistance));if(vMaterial>.5&&vMaterial<1.5){float grain=texture2D(uAsphalt,vWorld.xz*1.2).r;c+=(grain-.5)*.065;}
-      float light=mix(1.,.22,uNight);if(vMaterial>3.5)light=1.;c*=light;vec3 fog=mix(vec3(.70,.79,.81),vec3(.04,.07,.11),uNight);float haze=smoothstep(1600.,12500.,vDistance)*.7;gl_FragColor=vec4(mix(c,fog,haze),1.);}`;
+      if(vMaterial>4.5){float grain=texture2D(uAsphalt,vWorld.xz*.78).r,patch=texture2D(uAsphalt,vWorld.xz*.013).r;float ripple=sin(vWorld.x*.65+vWorld.z*.24+sin(vWorld.z*.038)*1.8);c+=(grain-.55)*.095*detail+(patch-.5)*.08+ripple*.007*detail;}float light=mix(1.,.15,uNight);vec3 delta=vWorld-uEye;float forward=dot(delta,uForward),side=abs(dot(delta,uRight));float beam=(1.-smoothstep(12.,145.,forward))*(1.-smoothstep(.09,.34,side/max(1.,forward)))*step(0.,forward)*uWeather.w;light+=beam*uNight*.88;if(vMaterial>3.5&&vMaterial<4.5)light=1.;if(vMaterial>.5&&vMaterial<1.5)c*=1.-uWeather.y*.24;c*=light;vec3 fog=mix(mix(vec3(.70,.79,.81),vec3(.63,.52,.37),uWeather.z),vec3(.04,.07,.11),uNight);float haze=max(smoothstep(1600.,12500.,vDistance)*.7,1.-exp(-3.912*vDistance/max(100.,uWeather.x)));gl_FragColor=vec4(mix(c,fog,haze),1.);}`;
     const shader=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;},program=gl.createProgram();gl.attachShader(program,shader(gl.VERTEX_SHADER,vs));gl.attachShader(program,shader(gl.FRAGMENT_SHADER,fs));gl.linkProgram(program);if(!gl.getProgramParameter(program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(program));
-    const uniforms={};for(const n of ['Eye','Right','Up','Forward','Projection','Night'])uniforms[n]=gl.getUniformLocation(program,'u'+n);
+    const uniforms={};for(const n of ['Eye','Right','Up','Forward','Projection','Night','Weather'])uniforms[n]=gl.getUniformLocation(program,'u'+n);
     const attrs=['aPosition','aColor','aMaterial'].map(n=>gl.getAttribLocation(program,n));for(const a of attrs)gl.enableVertexAttribArray(a);
     gl.enable(gl.DEPTH_TEST);gl.depthFunc(gl.LEQUAL);gl.disable(gl.CULL_FACE);gl.clearColor(0,0,0,0);
     const tex=gl.createTexture(),pixels=new Uint8Array(128*128*4);let seed=73991;for(let i=0;i<pixels.length;i+=4){seed=(Math.imul(seed,1664525)+1013904223)>>>0;const n=83+(seed>>>25);pixels[i]=pixels[i+1]=pixels[i+2]=n;pixels[i+3]=255;}gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,tex);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,128,128,0,gl.RGBA,gl.UNSIGNED_BYTE,pixels);gl.generateMipmap(gl.TEXTURE_2D);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);const aniso=gl.getExtension('EXT_texture_filter_anisotropic');if(aniso)gl.texParameterf(gl.TEXTURE_2D,aniso.TEXTURE_MAX_ANISOTROPY_EXT,Math.min(8,gl.getParameter(aniso.MAX_TEXTURE_MAX_ANISOTROPY_EXT)));gl.useProgram(program);gl.uniform1i(gl.getUniformLocation(program,'uAsphalt'),0);
@@ -2311,7 +2481,7 @@ window.__Track2App=window.McLarenApp;
     const draw=(w,h,night,mirror=null)=>{
       const dpr=mirror?1:Math.min(devicePixelRatio||1,1.5),W=Math.round(w*dpr),H=Math.round(h*dpr);if(!mirror&&(surface.width!==W||surface.height!==H)){surface.width=W;surface.height=H;}gl.viewport(0,0,W,H);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(program);
       const c=mirror?{...app.trackLateral(trackCamera,mirror.eye),psi:trackCamera.psi+Math.PI+mirror.yaw,roll:-trackCamera.roll}:trackCamera,pitch=mirror?-trackPitch:trackPitch,sp=Math.sin(c.psi),cp=Math.cos(c.psi),st=Math.sin(pitch),ct=Math.cos(pitch),sr=Math.sin(c.roll),cr=Math.cos(c.roll);
-      gl.uniform3f(uniforms.Eye,c.x,c.y+EYE_HEIGHT,c.z);gl.uniform3f(uniforms.Right,cp*cr-sp*st*sr,ct*sr,-sp*cr-cp*st*sr);gl.uniform3f(uniforms.Up,-sp*st*cr-cp*sr,ct*cr,-cp*st*cr+sp*sr);gl.uniform3f(uniforms.Forward,sp*ct,st,cp*ct);const focal=mirror?w*.55:FOCAL;gl.uniform4f(uniforms.Projection,2*focal/w,2*focal/h,mirror?.12:1-2*horizonY/h,0);gl.uniform1f(uniforms.Night,night?1:0);
+      gl.uniform3f(uniforms.Eye,c.x,c.y+EYE_HEIGHT,c.z);gl.uniform3f(uniforms.Right,cp*cr-sp*st*sr,ct*sr,-sp*cr-cp*st*sr);gl.uniform3f(uniforms.Up,-sp*st*cr-cp*sr,ct*cr,-cp*st*cr+sp*sr);gl.uniform3f(uniforms.Forward,sp*ct,st,cp*ct);const focal=mirror?w*.55:FOCAL;gl.uniform4f(uniforms.Projection,2*focal/w,2*focal/h,mirror?.12:1-2*horizonY/h,0);const weather=app.trackModel()?.terrain==='rally'?state.rallyWeather:null;gl.uniform1f(uniforms.Night,weather?weather.night:(night?1:0));gl.uniform4f(uniforms.Weather,weather?140000+(weather.visibility-140000)*weather.strength:1000000,weather?.wetness||0,weather&&/dust|storm/.test(weather.visualKind||weather.kind)?weather.strength:0,weather?1:0);
       const mesh=upload(state.route.name);bind(mesh.buffer);
       if(mesh.batches){for(const b of mesh.batches){const dx=(b.min[0]+b.max[0])/2-c.x,dz=(b.min[2]+b.max[2])/2-c.z,rad=Math.hypot(b.max[0]-b.min[0],b.max[1]-b.min[1],b.max[2]-b.min[2])/2,forward=dx*sp+dz*cp;if(Math.hypot(dx,dz)-rad>14000||forward+rad<-.5)continue;gl.drawArrays(gl.TRIANGLES,b.first,b.count);}}
       else gl.drawArrays(gl.TRIANGLES,0,mesh.count);
@@ -2326,10 +2496,10 @@ window.__Track2App=window.McLarenApp;
   function buildVisibleCars(mirror=false){
     const out=[],col=h=>[parseInt(h.slice(1,3),16)||30,parseInt(h.slice(3,5),16)||35,parseInt(h.slice(5,7),16)||40];
     const triangle=(a,b,c,C,material=0)=>{for(const p of [a,b,c])out.push(p.x,p.y,p.z,...C,material);},quad=(a,b,c,d,C,material=0)=>{triangle(a,b,c,C,material);triangle(a,c,d,C,material);};
-    function car(p,heading,body,player=false,steer=0){const sy=Math.sin(heading),cy=Math.cos(heading),grade=player?trackPitch:Math.atan(p.grade||0),bank=player?trackCamera.roll:Math.atan(p.bank||0);
+    function car(p,heading,body,player=false,steer=0,identity=null){const sy=Math.sin(heading),cy=Math.cos(heading),grade=player?trackPitch:Math.atan(p.grade||0),bank=player?trackCamera.roll:Math.atan(p.bank||0);
       const point=(x,y,z)=>{const yy=y+z*Math.tan(grade)+x*Math.tan(bank);return{x:p.x+x*cy+z*sy,y:p.y+yy,z:p.z-x*sy+z*cy};};
       const box=(x,y,z,w,h,l,C)=>{const a=point(x-w/2,y,z-l/2),b=point(x+w/2,y,z-l/2),c=point(x+w/2,y,z+l/2),d=point(x-w/2,y,z+l/2),up=q=>({...q,y:q.y+h});quad(a,b,up(b),up(a),C.map(v=>v*.7));quad(b,c,up(c),up(b),C.map(v=>v*.8));quad(c,d,up(d),up(c),C);quad(d,a,up(a),up(d),C.map(v=>v*.9));quad(up(a),up(b),up(c),up(d),C);};
-      if(!app.track2Vehicle.f1){const paint=col(body||'#80929e'),glass=[33,48,59],rubber=[18,23,27];box(0,.20,0,1.86,.45,4.55,paint);box(0,.65,-.1,1.50,.49,2.02,glass);box(0,1.12,-.1,1.53,.045,1.9,paint);for(const side of [-1,1])for(const z of [-1.45,1.45]){const x=side*.91;for(let i=0;i<20;i++){const u=i*Math.PI/10,v=(i+1)*Math.PI/10;quad(point(x-.12,.34+Math.cos(u)*.34,z+Math.sin(u)*.34),point(x+.12,.34+Math.cos(u)*.34,z+Math.sin(u)*.34),point(x+.12,.34+Math.cos(v)*.34,z+Math.sin(v)*.34),point(x-.12,.34+Math.cos(v)*.34,z+Math.sin(v)*.34),rubber);}}box(0,.44,-2.28,1.5,.085,.02,[157,27,28]);box(0,.46,2.28,1.45,.08,.02,[210,219,205]);return;}
+      if(!app.track2Vehicle.f1){drawDetailedRoadCar({point,quad,triangle,box},{name:identity?.name,paint:col(body||'#80929e'),accent:col(identity?.stripe||'#ddd6bf'),distance:identity?.distM||0,far:Math.hypot(p.x-trackCamera.x,p.z-trackCamera.z)>100});return;}
       const tire=(side,z,angle)=>{const X=side*.80,Y=.345,W=.29,R=.345,ca=Math.cos(angle),sa=Math.sin(angle),P=(x,y,zz)=>point(X+x*ca+zz*sa,Y+y,z-x*sa+zz*ca);for(let i=0;i<40;i++){const a=i/40*Math.PI*2,b=(i+1)/40*Math.PI*2;quad(P(-W/2,Math.cos(a)*R,Math.sin(a)*R),P(W/2,Math.cos(a)*R,Math.sin(a)*R),P(W/2,Math.cos(b)*R,Math.sin(b)*R),P(-W/2,Math.cos(b)*R,Math.sin(b)*R),[25+Math.round(7*Math.cos(a)),30+Math.round(7*Math.cos(a)),34+Math.round(7*Math.cos(a))]);for(const side of [-1,1])triangle(P(side*W/2,0,0),P(side*W/2,Math.cos(a)*R,Math.sin(a)*R),P(side*W/2,Math.cos(b)*R,Math.sin(b)*R),[15,19,23]);}
         const inner=-side*(W/2+.002),spin=(player?state.wheelRotation:p.d||0)*Math.PI/180;
         for(let j=0;j<32;j++){const a=j/32*Math.PI*2,b=(j+1)/32*Math.PI*2,ring=(r,t)=>P(inner,Math.cos(t)*r,Math.sin(t)*r);quad(ring(.18,a),ring(.205,a),ring(.205,b),ring(.18,b),[60,69,70]);}
@@ -2349,7 +2519,7 @@ window.__Track2App=window.McLarenApp;
     }
     if(app.pitModel()){const q=app.pitBox(app.TEAM.slot),p=(d,n)=>app.pitSurface(d,n*(app.pitModel().garageSide||1),.064);quad(p(q-3,1.5),p(q-3,4.1),p(q+3,4.1),p(q+3,1.5),[8,124,112],2);}
     const player=app.contactPose?.()||app.worldPose();player.y=trackCamera.y;if(!mirror&&app.track2Vehicle.f1)car(player,trackCamera.psi,getComputedStyle(document.documentElement).getPropertyValue('--f1body').trim()||'#94a8aa',true,state.steer);
-    for(const r of (state.raceGrid?state.rivals:[])||[]){if(r.gone||r.dns)continue;const p=app.contactPose?.(r)||(r.pitState?app.pitSurface(r.pitQ||0,r.lane||0):trackPoint(r.distM,r.lane||0));if(Math.hypot(p.x-trackCamera.x,p.z-trackCamera.z)>1600)continue;car(p,p.psi,r.body,false,0);}
+    for(const r of (state.raceGrid?state.rivals:[])||[]){if(r.gone||r.dns)continue;const p=app.contactPose?.(r)||(r.pitState?app.pitSurface(r.pitQ||0,r.lane||0):trackPoint(r.distM,r.lane||0));if(Math.hypot(p.x-trackCamera.x,p.z-trackCamera.z)>1600)continue;car(p,p.psi,r.body,false,0,r);}
     if(state.learnMode&&!mirror){for(let d=Math.ceil((state.distanceM+4)/3)*3;d<state.distanceM+190;d+=3){const n=q=>app.clamp(app.raceLineOffAt(q),-app.halfWidthAt(q)+1.5,app.halfWidthAt(q)-1.5),a=trackPoint(d,n(d)-.16,.058),b=trackPoint(d,n(d)+.16,.058),c=trackPoint(d+2.6,n(d+2.6)+.16,.058),e=trackPoint(d+2.6,n(d+2.6)-.16,.058),cap=Math.sqrt(1.5*9.81/Math.max(.0001,Math.abs(app.curvatureAt(d))));quad(a,b,c,e,state.speedMps>cap*1.08?[215,105,57]:[70,207,151]);}}
     // Short, depth-tested metallic trails. Physics supplies their position and
     // count from the dissipated contact energy; no sparks are generated on grass.
@@ -2360,7 +2530,19 @@ window.__Track2App=window.McLarenApp;
     }
     const buf=new ArrayBuffer(out.length/7*16),v=new DataView(buf);for(let i=0,j=0;i<out.length;i+=7,j+=16){for(let k=0;k<3;k++)v.setFloat32(j+k*4,out[i+k],true);for(let k=0;k<4;k++)v.setUint8(j+12+k,out[i+3+k]);}return new Uint8Array(buf);
   }
-  function drawTrackRoad(w,h,pal){if(!app.trackMeshReady()){trackCamera=null;return false;}trackFrame();if(!trackCamera)return false;if(!trackGL)trackGL=createTrackGL();trackGL.draw(w,h,pal.night);return true;}
+  function drawTrackRoad(w,h,pal){if(!app.trackMeshReady()){trackCamera=null;return false;}trackFrame();if(!trackCamera)return false;if(!trackGL)trackGL=createTrackGL();drawRallySky(w,h);trackGL.draw(w,h,pal.night);drawRallyWeather(w,h);return true;}
+
+  function drawRallySky(w,h){const weather=state.rallyWeather;if(app.trackModel()?.terrain!=='rally'||!weather)return;const night=weather.night,dust=/dust|storm/.test(weather.visualKind||weather.kind)?weather.strength:0,rain=(weather.visualKind||weather.kind)==='rain'?weather.strength:0;
+    const blend=(a,b,t)=>a.map((v,i)=>Math.round(v+(b[i]-v)*t)),rgb=c=>'rgb('+c.join(',')+')';let top=blend([98,159,192],[128,112,87],dust),bottom=blend([203,213,209],[167,142,104],dust);top=blend(top,[102,115,124],rain);bottom=blend(bottom,[152,163,168],rain);top=blend(top,[5,12,25],night);bottom=blend(bottom,[18,27,43],night);
+    const sky=ctx.createLinearGradient(0,0,0,h*.62);sky.addColorStop(0,rgb(top));sky.addColorStop(1,rgb(bottom));ctx.fillStyle=sky;ctx.fillRect(0,0,w,h);
+    const cloud=rain*.45+dust*.16;for(let i=0;i<9;i++){const x=((i*.173*w+state.time*1.2)%(w*1.3))-w*.15,y=h*(.08+.028*(i%4)),g=ctx.createRadialGradient(x,y,5,x,y,w*.28);g.addColorStop(0,'rgba(195,199,198,'+cloud+')');g.addColorStop(1,'rgba(195,199,198,0)');ctx.fillStyle=g;ctx.fillRect(x-w*.3,y-w*.3,w*.6,w*.6);}
+    if(night>.5){ctx.fillStyle='rgba(223,232,246,'+(.55*night*(1-rain)*(1-dust))+')';for(let i=0;i<90;i++){const x=((i*73.71)%997)/997*w,y=((i*43.27)%409)/409*h*.35;ctx.fillRect(x,y,i%9===0?2:1,1);}}
+  }
+  function drawRallyWeather(w,h){const weather=state.rallyWeather;if(app.trackModel()?.terrain!=='rally'||!weather)return;ctx.save();const T=state.time;
+    if((weather.visualKind||weather.kind)==='rain'){ctx.strokeStyle='rgba(205,220,225,'+(.31*weather.strength)+')';ctx.lineWidth=1;ctx.beginPath();for(let i=0;i<190*weather.strength;i++){const z=.3+(i%19)/19,x=((i*197.27+T*(weather.windMps||3)*12*z)%(w+80))-40,y=((i*91.39+T*650*z)%(h+100))-50;ctx.moveTo(x,y);ctx.lineTo(x+(weather.windMps||3)*.8*z,y+18*z);}ctx.stroke();}
+    if(/dust|storm/.test(weather.visualKind||weather.kind)){ctx.fillStyle='rgba(192,159,108,'+(.16*weather.strength)+')';for(let i=0;i<95*weather.strength;i++){const z=.4+(i%11)/11,x=((i*121.81+T*(weather.windMps||3)*24*z)%(w+40))-20,y=((i*63.71+T*19*z)%h);ctx.fillRect(x,y,1+z*3,z);}}
+    ctx.restore();
+  }
 
   function drawTrackMirror(mx,my,mw,mh,p,pal){
     trackGL.draw(Math.max(96,Math.round(mw*1.5)),Math.max(36,Math.round(mh*1.5)),pal.night,p);
@@ -2410,7 +2592,7 @@ window.__Track2App=window.McLarenApp;
       highway:  { road: "#1f2227", grass: "#222a1c", far: "#2a3640", kerb: false, barrier: false },
       coast:    { road: "#212630", grass: "#1c3a3a", far: "#244a55", kerb: false, barrier: false }
     };
-    return { env, night, ...(palettes[env] || palettes.track) };
+    return { env, night:app.trackModel?.()?.terrain!=="rally"?false:night, ...(palettes[env] || palettes.track) };
   }
 
   const ROAD = { AHEAD: 240, BEHIND: 240, STEP: 4, samples: [] };   // as far behind as ahead: a U-turn must show the road you came down
@@ -2442,7 +2624,7 @@ window.__Track2App=window.McLarenApp;
   function roadCorner(Xr, Zr) { const phi = state.headingRel, n0 = state.laneOffset; const dX = Xr - n0, dZ = Zr; return { rgt: dX * Math.cos(phi) - dZ * Math.sin(phi), fwd: dX * Math.sin(phi) + dZ * Math.cos(phi) }; }
   function projPoint(p) { const s = FOCAL / p.fwd; return { x: innerWidth / 2 + p.rgt * s, y: horizonY + CAM_H * s }; }
 
-  function drawWorld() {
+  function drawWorld() { if(app.trackModel?.()?.terrain!=="rally")state.dayPhase=.30;
     const w = innerWidth, h = innerHeight; horizonY=h*(app.trackModel?.()?.42:.46);FOCAL=app.trackModel?.()?Math.min(w*.57,h*.78):360;const pal=envColors();rebuildRoadTable();
     ctx.save();
     if(!app.trackModel?.()){ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);}
@@ -3804,7 +3986,7 @@ window.__Track2App=window.McLarenApp;
     document.querySelectorAll("[data-view]").forEach(b => b.addEventListener("click", () => app.setView(b.dataset.view)));
     document.querySelectorAll("[data-gear]").forEach(b => b.addEventListener("click", () => app.setGear(b.dataset.gear)));
     document.querySelectorAll("[data-door]").forEach(b => b.addEventListener("click", () => app.toggleDoor(b.dataset.door)));
-    document.querySelectorAll("[data-circuit]").forEach(b => b.addEventListener("click", () => { app.selectCircuit(b.dataset.circuit); const driving = state.keys.KeyW || state.keys.ArrowUp || state.padThrottle > 0; if (state.assist && !driving) app.toggleTestDriver(true); }));
+    document.querySelectorAll("[data-circuit]").forEach(b => b.addEventListener("click", () => { app.selectCircuit(b.dataset.circuit); const driving = state.keys.KeyW || state.keys.ArrowUp || state.padThrottle > 0; /* Assist never engages the separate Test Driver. */ }));
     document.querySelectorAll("[data-nords]").forEach(b => b.addEventListener("click", () => app.selectCircuit(b.dataset.nords)));
     document.getElementById("gridBtn").addEventListener("click", () => { state.raceGrid = !state.raceGrid; app.seedRivals(); document.getElementById("gridBtn").textContent = state.raceGrid ? "Rival Grid: On" : "Rival Grid: Off"; app.setActive("gridBtn", state.raceGrid); showToast(state.raceGrid ? "Rival grid on the road — go racing." : "Rival grid cleared — empty road."); });
 
@@ -3991,119 +4173,34 @@ window.__Track2App=window.McLarenApp;
     wheel.addEventListener("pointercancel", release);
   }
   function bindTrackpadSteering() {
-    const canvas = document.getElementById("worldCanvas");
-    if (!canvas) return;
-    let holdX = 0, holdY = 0, holdStart = 0, holdArmed = false, chordTimer = null, chordArmed = false, ownFullscreen = false, fullscreenWanted = false;
-    const resetTrackpadWheel = () => {
-      state.touchSteer = 0;
-      state.trackpadLastInput = -99;
-      document.documentElement.style.setProperty("--tw-rot", "0deg");
-    };
-    const enterFullscreen = () => {
-      fullscreenWanted = true;
-      if (document.fullscreenElement || !document.documentElement.requestFullscreen) return;
-      ownFullscreen = true;
-      document.documentElement.requestFullscreen({ navigationUI: "hide" })
-        .then(() => {
-          ownFullscreen = true;
-          if (!fullscreenWanted && document.fullscreenElement === document.documentElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
-        })
-        .catch(() => { ownFullscreen = false; fullscreenWanted = false; showToast("Fullscreen was blocked by the browser.", "Speedtail"); });
-    };
-    const leaveFullscreen = () => {
-      fullscreenWanted = false;
-      if (ownFullscreen && document.fullscreenElement && document.exitFullscreen) document.exitFullscreen().catch(() => {});
-      ownFullscreen = false;
-    };
-    const setTrackpad = (on, fromUserGesture) => {
-      if (!!on === state.trackpadSteering) return;
-      state.trackpadSteering = !!on;
-      state.touchActive = false;
-      if (state.trackpadSteering) {
-        state.trackpadLastInput = state.time;
-        document.documentElement.classList.add("trackpad-steer");
-        if (fromUserGesture) enterFullscreen();
-      } else {
-        resetTrackpadWheel();
-        document.documentElement.classList.remove("trackpad-steer");
-        leaveFullscreen();
-      }
-      showToast(state.trackpadSteering ? "Trackpad steering on — fullscreen capture. Two-finger horizontal swipe steers." : "Trackpad steering off.", "Speedtail");
-    };
-    const clearHold = () => { holdArmed = false; };
-    const isTypingTarget = (e) => {
-      const t = e.target;
-      return !!(t && (t.isContentEditable || (t.closest && t.closest("input,textarea,select,[contenteditable='true']"))));
-    };
-    const clearChord = (exitFullscreen) => {
-      if (chordTimer) clearTimeout(chordTimer);
-      chordTimer = null; chordArmed = false;
-      if (exitFullscreen && !state.trackpadSteering) leaveFullscreen();
-    };
-    const maybeStartChord = (e) => {
-      if (state.trackpadSteering || chordTimer || e.repeat || isTypingTarget(e)) return;
-      const chordDown = (e.code === "Space" && state.keys.KeyT) || (e.code === "KeyT" && state.keys.Space);
-      if (!chordDown) return;
-      e.preventDefault();
-      chordArmed = true;
-      enterFullscreen();
-      showToast("Hold Space + T for 3 seconds to enable trackpad steering.", "Speedtail");
-      chordTimer = setTimeout(() => {
-        chordTimer = null; chordArmed = false;
-        if (state.keys.Space && state.keys.KeyT) setTrackpad(true, false);
-        else leaveFullscreen();
-      }, 3000);
-    };
-    canvas.addEventListener("pointerdown", e => {
-      if (e.button !== 0 || (e.pointerType && e.pointerType !== "mouse")) return;
-      holdX = e.clientX; holdY = e.clientY;
-      holdStart = performance.now(); holdArmed = true;
-      try { canvas.setPointerCapture(e.pointerId); } catch (err) {}
+    const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown'),number=document.getElementById('trackpadCountdownNum');
+    let timer=null,ownFullscreen=false;
+    const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit');
+    const cancel=()=>{clearTimeout(timer);timer=null;if(countdown)countdown.hidden=true;};
+    const disable=()=>{cancel();state.trackpadSteering=false;state.touchSteer=0;state.trackpadLastInput=-99;document.documentElement.classList.remove('trackpad-steer');document.documentElement.style.setProperty('--tw-rot','0deg');if(capture)capture.hidden=true;if(ownFullscreen&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});ownFullscreen=false;};
+    window.addEventListener('keydown',e=>{
+      if(e.code==='Escape'){disable();return;}
+      if(e.repeat||typing(e)||timer||state.trackpadSteering)return;
+      if(!((e.code==='KeyT'&&state.keys.Space)||(e.code==='Space'&&state.keys.KeyT)))return;
+      e.preventDefault();if(number)number.textContent='1';if(countdown)countdown.hidden=false;
+      showToast('Hold T + Space for 1 second for fullscreen trackpad steering.','Controls');
+      timer=setTimeout(()=>{
+        cancel();if(!state.keys.KeyT||!state.keys.Space)return;
+        state.trackpadSteering=true;state.touchActive=false;state.touchSteer=0;state.trackpadLastInput=state.time;
+        document.documentElement.classList.add('trackpad-steer');if(capture)capture.hidden=false;
+        if(!document.fullscreenElement&&document.documentElement.requestFullscreen){ownFullscreen=true;document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{ownFullscreen=false;showToast('Trackpad steering is on; the browser blocked fullscreen.','Controls');});}
+        showToast('Trackpad steering on — horizontal two-finger swipe steers. Escape exits.','Controls');
+      },1000);
     });
-    canvas.addEventListener("pointermove", e => {
-      if (!holdArmed) return;
-      if (Math.hypot(e.clientX - holdX, e.clientY - holdY) > 8) clearHold();
-    });
-    canvas.addEventListener("pointerup", e => {
-      if (!holdArmed) return;
-      const wasLongPress = performance.now() - holdStart >= 560;
-      clearHold();
-      if (wasLongPress) {
-        e.preventDefault();
-        setTrackpad(!state.trackpadSteering, true);
-      }
-    });
-    ["pointercancel", "pointerleave"].forEach(type => canvas.addEventListener(type, clearHold));
-    canvas.addEventListener("contextmenu", e => { if (state.trackpadSteering) e.preventDefault(); });
-    window.addEventListener("wheel", e => {
-      if (!state.trackpadSteering || e.ctrlKey) return;
-      const unit = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? innerWidth : 1;
-      let steerDelta = e.deltaX * unit;
-      if (Math.abs(steerDelta) < 0.6 && e.shiftKey) steerDelta = e.deltaY * unit;
-      e.preventDefault();
-      if (Math.abs(steerDelta) < 0.35) return;
-      state.trackpadLastInput = state.time;
-      state.touchSteer = clamp(state.touchSteer + steerDelta * 0.002, -1, 1);
-      document.documentElement.style.setProperty("--tw-rot", (state.touchSteer * 120) + "deg");
-    }, { capture: true, passive: false });
-    window.addEventListener("keydown", e => { if (e.code === "Escape" && state.trackpadSteering) setTrackpad(false, true); maybeStartChord(e); });
-    window.addEventListener("keyup", e => {
-      if (chordArmed && (e.code === "Space" || e.code === "KeyT")) {
-        clearChord(true);
-        showToast("Trackpad steering hold cancelled.", "Speedtail");
-      }
-    });
-    document.addEventListener("fullscreenchange", () => {
-      if (!document.fullscreenElement) {
-        ownFullscreen = false;
-        if (state.trackpadSteering) {
-          state.trackpadSteering = false;
-          resetTrackpadWheel();
-          document.documentElement.classList.remove("trackpad-steer");
-          showToast("Trackpad steering off.", "Speedtail");
-        }
-      }
-    });
+    window.addEventListener('keyup',e=>{if(e.code==='Space'||e.code==='KeyT')cancel();});
+    window.addEventListener('blur',()=>{cancel();state.keys.KeyT=false;state.keys.Space=false;});
+    window.addEventListener('wheel',e=>{
+      if(!state.trackpadSteering||e.ctrlKey||typing(e))return;
+      const unit=e.deltaMode===1?16:e.deltaMode===2?innerWidth:1;
+      let delta=e.deltaX*unit;if(Math.abs(delta)<.6&&e.shiftKey)delta=e.deltaY*unit;
+      e.preventDefault();if(Math.abs(delta)<.35)return;state.trackpadLastInput=state.time;state.touchSteer=clamp(state.touchSteer+delta*.002,-1,1);document.documentElement.style.setProperty('--tw-rot',(state.touchSteer*120)+'deg');
+    },{capture:true,passive:false});
+    document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&ownFullscreen)disable();});
   }
   function bindStart() {
     const wake = () => { audio.init(); audio.resume(); };
@@ -4172,5 +4269,5 @@ window.installGarageControls = function(win, mode) {
  return true;
 };
 
-{const controls=new URLSearchParams(location.search).get('controls');if(controls){const t=setInterval(()=>{if(window.installGarageControls(window,controls))clearInterval(t)},100);setTimeout(()=>clearInterval(t),30000);}}</script></body>
+{const controls=new URLSearchParams(location.search).get('controls');if(controls){const t=setInterval(()=>{if(window.installGarageControls(window,controls))clearInterval(t)},100);setTimeout(()=>clearInterval(t),30000);}}</script><!-- /* MUCS controls 2026-10 */ --></body>
 </html>

@@ -200,8 +200,10 @@ second one reaches `cdA`. `perf-test` drives in a straight line, so nothing it c
 
 ### Steering — do not touch the input paths
 
-Keyboard A/D, the mobile touch wheel, and trackpad steering (hold Space+T or
-long-press) are identical in every car. Only `STEERING = { wheelbase,
+Keyboard A/D and the mobile touch wheel retain their input paths. The current
+garage and Track 2.0 use T+Space held for one second for trackpad steering, and
+assist supplies steering only. See `docs/DRIVING_SCENERY_UPDATE.md` and
+`tools/driving/controls.js`; the archived Track 1.0 HTML retains its old bindings. Only `STEERING = { wheelbase,
 frontTrack, maxAngle }` carries real per-car geometry.
 
 ### Per-car deltas (what you change when cloning a sim)

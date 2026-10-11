@@ -3,7 +3,7 @@
    Planning changes pedals/steering only; the original drivetrain and contacts integrate motion. */
 (function(){
  const a=window.__Track2App,s=a.state,C=a.clamp,wrap=a.trackWrap,ang=a.trackAngle;
- let plan=null,serial=0;
+ let plan=null,serial=0,avoidance=null;
  const smooth=u=>(u=C(u,0,1),u*u*(3-2*u));
  function line(){const t=a.trackModel();if(!t)return null;if(t.drivingLine)return t.drivingLine;
   const N=t.points.length,open=t.closed===false,I=i=>open?C(i,0,N-1):(i%N+N)%N,ds=t.L/(open?N-1:N),at=i=>a.trackSample(t,i*ds),ks=Array.from({length:N},(_,i)=>at(i).k),signs=ks.map(k=>Math.abs(k)>.0018?Math.sign(k):0);
@@ -46,6 +46,16 @@
   }return out;
  }
  function traffic(self,wanted,cap){const nearby=neighbours(self),half=self.pit?a.pitModel().half:a.halfWidthAt(self.d),edge=half-1.7;let n=C(wanted,-edge,edge),blocked=false;
+  // Steering-only assist must plan a pass before reaching the slower car;
+  // it cannot rely on the Test Driver's longitudinal braking envelope.
+  if(self.player&&s.assist&&!s.testDriver&&!s.adaptiveCruise&&!self.pit){
+   const held=avoidance&&avoidance.route===s.route.name&&nearby.find(o=>o.r===avoidance.car&&o.gap> -14&&o.gap<170);
+   const lead=held||nearby.filter(o=>o.gap>0&&o.gap<Math.max(40,(self.v-o.v)*3.3+20)&&Math.abs(o.n-self.n)<3.2).sort((x,y)=>x.gap-y.gap)[0];
+   if(lead){const time=C((lead.gap-8)/Math.max(1,self.v-lead.v),.4,3),margin=3.25;
+    const options=[lead.n-margin,lead.n+margin].filter(x=>Math.abs(x)<=edge&&nearby.every(o=>o===lead||Math.abs(o.n-x)>margin||Math.abs(o.gap+(o.v-self.v)*time)>15));
+    if(options.length){n=options.reduce((best,x)=>Math.abs(x-(held?avoidance.n:self.n))<Math.abs(best-(held?avoidance.n:self.n))?x:best,options[0]);avoidance={route:s.route.name,car:lead.r,n};}
+   }else avoidance=null;
+  }else if(self.player)avoidance=null;
   // Yield lateral space to cars alongside, including one coming up from behind.
   for(const o of nearby){const span=10+Math.max(0,o.v-self.v)*.6;if(Math.abs(o.gap)<span){const separation=2.9;if(self.n<o.n)n=Math.min(n,o.n-separation);else n=Math.max(n,o.n+separation);}}
   n=C(n,-edge,edge);

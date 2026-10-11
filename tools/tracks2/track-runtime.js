@@ -33,7 +33,7 @@
       const ph=app.trackWrap(d,t.L),kar=t.labels.find(([s,nm])=>/Karussell/.test(nm)&&Math.abs(ph-s)<95);
       if(kar){const f=Math.cos((ph-kar[0])/95*Math.PI/2),slope=.42*f*f;bank=n>=-5&&n<=4?slope:0;p.y+=app.clamp(n,-5,4)*slope;}
     }
-    const v=app.trackLateral(p,n);v.y+=lift;v.bank=bank;return v;
+    const v=app.trackLateral(p,n);v.y+=lift+(t.terrain==='rally'?(app.rallyRelief?.(d,n)||0):0);v.bank=bank;return v;
   }
 
  function surface(d,n=0){const t=current();if(!t)return .1;if(t.terrain==='rally')return app.rallySector(d).rough;const s=phase(t,d),name=state.route.name;let r=name==='Nardò Ring'?.022:name==='Circuit de Monaco'?.12:/Nord|24h/.test(name)?.11:.045;

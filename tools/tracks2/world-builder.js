@@ -2,9 +2,9 @@
    The resulting immutable vertex buffers are embedded in the standalone HTML. */
 function buildCircuitWorld(app){
  const t=app.trackModel(),name=app.state.route.name,L=t.L,street=name==='Circuit de Monaco'||t.scene==='street',ring=name==='Nardò Ring',nords=/Nord|24h/.test(name),suzuka=name==='Suzuka Circuit',rally=t.terrain==='rally',museum=t.scene==='museum',cinematic=t.scene==='cinematic',estate=t.scene==='estate',arid=rally||['arid','quarry','runway'].includes(t.scene);
- const tiles=new Map(),C=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)],hash=n=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
+ const tiles=new Map(),C=h=>Array.isArray(h)?h:[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)],hash=n=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
  let vertexCount=0;
- const tri=(a,b,c,col,mat=0)=>{const cc=typeof col==='string'?C(col):col,key=Math.floor((a.x+b.x+c.x)/1536)+','+Math.floor((a.z+b.z+c.z)/1536);let tile=tiles.get(key);if(!tile){tile={chunks:[],count:0,min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};tiles.set(key,tile);}
+ const tri=(a,b,c,col,mat=0)=>{if(rally){if(mat===0)mat=6;else if(mat===1)mat=5;}const cc=typeof col==='string'?C(col):col,key=Math.floor((a.x+b.x+c.x)/1536)+','+Math.floor((a.z+b.z+c.z)/1536);let tile=tiles.get(key);if(!tile){tile={chunks:[],count:0,min:[Infinity,Infinity,Infinity],max:[-Infinity,-Infinity,-Infinity]};tiles.set(key,tile);}
   for(const p of [a,b,c]){const i=tile.count%4096;if(i===0)tile.chunks.push(new DataView(new ArrayBuffer(4096*16)));const view=tile.chunks.at(-1),v=[p.x,p.y,p.z];for(let k=0;k<3;k++){view.setFloat32(i*16+k*4,v[k],true);tile.min[k]=Math.min(tile.min[k],v[k]);tile.max[k]=Math.max(tile.max[k],v[k]);}for(let k=0;k<4;k++)view.setUint8(i*16+12+k,Math.max(0,Math.min(255,k===3?mat:cc[k])));tile.count++;vertexCount++;}
  },quad=(a,b,c,d,col,mat=0)=>{tri(a,b,c,col,mat);tri(a,c,d,col,mat);};
  const litTri=(a,b,c,col)=>{const ux=b.x-a.x,uy=b.y-a.y,uz=b.z-a.z,vx=c.x-a.x,vy=c.y-a.y,vz=c.z-a.z;let nx=uy*vz-uz*vy,ny=uz*vx-ux*vz,nz=ux*vy-uy*vx;if(ny<0){nx=-nx;ny=-ny;nz=-nz;}const length=Math.hypot(nx,ny,nz)||1,light=.56+.48*Math.max(0,(nx*.44+ny*.79+nz*.43)/length);tri(a,b,c,(typeof col==='string'?C(col):col).map(v=>v*light));};
@@ -16,6 +16,9 @@ function buildCircuitWorld(app){
  const grid=new Map(),nodes=[];for(let d=0;d<L;d+=6){const p=app.trackAt(d);p.d=d;p.H=H(d);nodes.push(p);const key=Math.floor(p.x/60)+','+Math.floor(p.z/60);if(!grid.has(key))grid.set(key,[]);grid.get(key).push(p);}
  const near=(x,z,r=2)=>{const gx=Math.floor(x/60),gz=Math.floor(z/60);let best=null,dist=Infinity;for(let ix=gx-r;ix<=gx+r;ix++)for(let iz=gz-r;iz<=gz+r;iz++)for(const p of grid.get(ix+','+iz)||[]){const dd=(p.x-x)**2+(p.z-z)**2;if(dd<dist){dist=dd;best=p;}}return {p:best,dist:Math.sqrt(dist)};};
  const clear=(p,margin)=>{const q=near(p.x,p.z);return !q.p||q.dist>q.p.H+margin||Math.abs(q.p.y-p.y)>12;};
+ // Tall scenery must clear every nearby road level, including distant bends.
+ // The small-object lookup above is not sufficient for a 200 m mountain base.
+ const sceneryClear=(p,radius)=>{const gx=Math.floor(p.x/60),gz=Math.floor(p.z/60),r=Math.ceil((radius+25)/60);for(let x=gx-r;x<=gx+r;x++)for(let z=gz-r;z<=gz+r;z++)for(const q of grid.get(x+','+z)||[])if(Math.hypot(q.x-p.x,q.z-p.z)<radius+q.H+6)return false;return true;};
  // Continuous ground beneath the complete circuit. At crossings use the lower deck's
  // terrain; bridge decks are independent structural geometry, never a painted mask.
  const bounds=nodes.reduce((b,p)=>({xmin:Math.min(b.xmin,p.x),xmax:Math.max(b.xmax,p.x),zmin:Math.min(b.zmin,p.z),zmax:Math.max(b.zmax,p.z),low:Math.min(b.low,p.y)}),{xmin:Infinity,xmax:-Infinity,zmin:Infinity,zmax:-Infinity,low:Infinity}),low=bounds.low,xmin=bounds.xmin-420,xmax=bounds.xmax+420,zmin=bounds.zmin-420,zmax=bounds.zmax+420,step=t.terrain==='rally'?80:street?18:45;
@@ -27,7 +30,7 @@ function buildCircuitWorld(app){
  const groundTiles=new Set();if(t.closed===false||L>50000){for(const p of nodes.filter((_,i)=>i%10===0))for(let dx=-6;dx<=6;dx++)for(let dz=-6;dz<=6;dz++)groundTiles.add((Math.floor((p.x-xmin)/step)+dx)+','+(Math.floor((p.z-zmin)/step)+dz));}else for(let x=0;x<(xmax-xmin)/step;x++)for(let z=0;z<(zmax-zmin)/step;z++)groundTiles.add(x+','+z);
  for(const key of groundTiles){const [ix,iz]=key.split(',').map(Number),x=xmin+ix*step,z=zmin+iz*step,q=rally||cinematic?near(x,z,3):null,c=cinematic?(['alpine','forest','mirrorwall'].includes(stageAt(q.p?.d||0)?.surf)?'#687757':'#989482'):rally?(q.p?app.rallySector(q.p.d).color:'#b6a17c'):arid?'#a4997a':street?'#7d8076':ring?'#78805a':nords?'#49683c':'#688455';litQuad(ground(x,z),ground(x+step,z),ground(x+step,z+step),ground(x,z+step),c);}
  // Fixed 2.5 m stations, including one shared seam. No stations follow the camera.
- const count=Math.ceil(L/(rally?10:2.5)),ds=L/count;
+ const count=Math.ceil(L/(rally?3:2.5)),ds=L/count;
  for(let i=0;i<count;i++){
   const a=i*ds,b=(i+1)*ds,k=app.trackAt((a+b)/2).k,ha=H(a),hb=H(b),kerb=!ring&&!street&&!estate&&!cinematic&&Math.abs(k)>.0015;
   if(rally){const terrain=app.rallySector((a+b)/2),c=C(terrain.color);for(let j=0;j<2;j++)quad(P(a,ha*(-1+j),.018),P(a,ha*j,.018),P(b,hb*j,.018),P(b,hb*(-1+j),.018),c,1);
@@ -111,11 +114,6 @@ for(let j=0;j<8;j++){const n0=-pit.half+j*pit.half/4,n1=n0+pit.half/4;quad(pp(q,
   for(let j=1;j<p.length-1;j++)tri({...p[0],y:y+height},{...p[j],y:y+height},{...p[j+1],y:y+height},'#899492');
  }
  for(const [start,end,height]of t.bridges||[]){for(let d=start;d<end;d+=3){const b=Math.min(end,d+3),h=H(d);quad(P(d,-h,-.65),P(d,h,-.65),P(b,H(b),-.65),P(b,-H(b),-.65),'#788482');for(const side of [-1,1])quad(P(d,side*h,-.65),P(b,side*H(b),-.65),P(b,side*H(b),0),P(d,side*h,0),'#a1aaa5');}for(const d of [start+5,end-5])for(const side of [-1,1]){const p=P(d,side*(H(d)-.8),-height);p.psi=app.trackAt(d).psi;box(p,0,0,0,1.2,height-.6,1.4,'#8b9691');}}
- if(rally)for(let d=0;d<L;d+=95){const kind=app.rallySector(d).kind;for(const side of [-1,1]){const seed=hash(d+side),n=side*(H(d)+8+seed*125),p=P(d,n);p.y=groundY(p.x,p.z);p.psi=app.trackAt(d).psi;
-  if(['rock','wadi','canyon','gravel'].includes(kind)){const radius=kind==='canyon'?7+seed*18:.4+seed*2.5,height=radius*(kind==='canyon'?2.2:.8);for(let i=0;i<7;i++){const a=i/7*Math.PI*2,b=(i+1)/7*Math.PI*2;tri(local(p,Math.cos(a)*radius,0,Math.sin(a)*radius),local(p,Math.cos(b)*radius,0,Math.sin(b)*radius),local(p,radius*.15,height,-radius*.1),i%2?'#927c68':'#ad9072');}}
-  if(kind==='grove'||kind==='wadi'&&seed>.8){box(p,0,0,0,.28,3.2,.3,'#6c6450');const radius=2+seed*2.6;for(let i=0;i<9;i++){const a=i/9*Math.PI*2,b=(i+1)/9*Math.PI*2;tri(local(p,Math.cos(a)*radius,2.7,Math.sin(a)*radius),local(p,Math.cos(b)*radius,2.7,Math.sin(b)*radius),local(p,0,4.4,0),'#697150');}}
-  if(kind==='coast'&&side===-1){const a=P(d,-90,-3),b=P(Math.min(L,d+95),-90,-3);quad(a,b,{...b,x:b.x-2200},{...a,x:a.x-2200},'#43888f');}
- }}
  if(rally){for(const d of [0,L]){const p=P(d);p.psi=app.trackAt(d).psi;for(const side of [-1,1])box(p,side*(H(d)+1),0,0,.45,4,.45,'#e9c229');box(p,0,3.5,0,H(d)*2+2.5,.65,.5,'#e7bf2c');}for(const zone of t.serviceZones||[]){const d=(zone[0]+zone[1])/2,p=P(d,H(d)+11);p.psi=app.trackAt(d).psi;box(p,0,0,0,4,2.7,9,'#d5d9d5');box(p,-4,2.5,0,6,.16,10,'#ece7d8');}}
  // Architectural primitives for the film sets and the estate hill. Dimensions
  // are authored interpretations; the source note never calls these surveys.
@@ -144,7 +142,7 @@ for(let j=0;j<8;j++){const n0=-pit.half+j*pit.half/4,n1=n0+pit.half/4;quad(pp(q,
  function missionSets(){for(const stage of t.stages||[]){const {from,to,surf}=stage,sea=['wood','steel','leg','under','grate','bridge','pad','water','sub'].includes(surf),alpine=['alpine','forest','mirrorwall'].includes(surf),urban=['stone','steps','piazza','city','mall','boulevard','neon','alley','riviera','marina','market','stalls'].includes(surf);
    if(urban)for(let d=from+8;d<to;d+=surf==='piazza'?38:23)for(const side of[-1,1]){const seed=hash(d+side),p=P(d,side*(H(d)+(surf==='piazza'?20:10)));p.psi=app.trackAt(d).psi+side*Math.PI/2;if(!clear(p,5))continue;const modern=['neon','alley'].includes(surf);facade(p,13+seed*6,modern?14+seed*19:7+seed*7,10,modern?'#546169':surf==='stone'||surf==='piazza'?'#bbac91':['#c1b195','#c3baa3','#b9b8ad'][Math.floor(seed*3)],modern?'neon':'stone');}
    if(['market','stalls','marina'].includes(surf))for(let d=from+10;d<to;d+=16)for(const side of[-1,1]){const p=P(d,side*(H(d)+3));p.psi=app.trackAt(d).psi;box(p,0,0,0,2.4,.8,4,'#8a7050');box(p,0,2.4,0,3,.15,5,'#8d4340');for(const x of[-1,1])for(const z of[-1.8,1.8])box(p,x,0,z,.07,2.5,.07,'#9f9786');for(const z of[-1,0,1])cylinder(p,0,.85,z,.35,.35,'#6a7977');}
-   if(alpine)for(let d=from;d<to;d+=26)for(const side of[-1,1]){const p=P(d,side*(H(d)+14+hash(d)*18));p.psi=app.trackAt(d).psi;if(!clear(p,4))continue;if(surf!=='alpine'||side===1)leafTree(p,7+hash(d+3)*7,3);else{const r=14+hash(d)*18;for(let j=0;j<8;j++){const a=j/8*Math.PI*2,b=(j+1)/8*Math.PI*2;litTri(local(p,Math.cos(a)*r,-4,Math.sin(a)*r),local(p,Math.cos(b)*r,-4,Math.sin(b)*r),local(p,0,15+hash(d)*25,0),'#9e9b8b');}}}
+   if(alpine)for(let d=from;d<to;d+=26)for(const side of[-1,1]){const p=P(d,side*(H(d)+14+hash(d)*18));p.psi=app.trackAt(d).psi;if(!clear(p,4))continue;if(surf!=='alpine'||side===1)leafTree(p,7+hash(d+3)*7,3);else{const r=14+hash(d)*18;if(!sceneryClear(p,r+3))continue;for(let j=0;j<8;j++){const a=j/8*Math.PI*2,b=(j+1)/8*Math.PI*2;litTri(local(p,Math.cos(a)*r,-4,Math.sin(a)*r),local(p,Math.cos(b)*r,-4,Math.sin(b)*r),local(p,0,15+hash(d)*25,0),'#9e9b8b');}}}
    if(['refinery','grate','steel','pad','under'].includes(surf))for(let d=from+20;d<to;d+=65){const p=P(d,H(d)+12);p.psi=app.trackAt(d).psi;cylinder(p,0,0,0,5,12,'#a5aaa3');for(const y of[1,6,10])cylinder(p,0,y,0,5.1,.25,'#677978');for(const side of[-1,1]){box(p,side*6,0,0,.3,17,.3,'#9ea699');box(p,side*6,16,0,.35,.3,24,'#b0ae96');}box(p,0,16,0,12,.3,.3,'#c0b8a5');}
    if(['bridge','suspension','viaduct'].includes(surf))for(let d=from+10;d<to;d+=34){const p=P(d);p.psi=app.trackAt(d).psi;for(const side of[-1,1]){box(p,side*(H(d)+1),-18,0,1.4,29,1.6,'#899690');quad(local(p,side*(H(d)+1),11,0),local(p,side*(H(d)+1),1,28),local(p,side*(H(d)+1),1.3,28),local(p,side*(H(d)+1),11.3,0),'#aab3aa');}box(p,0,10.5,0,H(d)*2+3,.5,.8,'#a1aaa4');}
    if(sea)for(let d=from;d<to;d+=30)for(const side of[-1,1])quad(P(d,side*(H(d)+4),-12),P(Math.min(d+30,to),side*(H(d)+4),-12),P(Math.min(d+30,to),side*450,-12),P(d,side*450,-12),'#284c60',3);
@@ -152,6 +150,8 @@ for(let j=0;j<8;j++){const n0=-pit.half+j*pit.half/4,n1=n0+pit.half/4;quad(pp(q,
    if(surf==='piazza'){const d=from+(to-from)*.55,p=P(d,H(d)+30);p.psi=app.trackAt(d).psi+Math.PI/2;facade(p,24,16,13,'#c5b798');box(p,9,0,0,5,25,6,'#c2b28f');for(const x of[-9,9])arch(p,x,2,-6.56,2,4,'#44473d');cylinder({...p,psi:p.psi+Math.PI/2},0,18,0,.9,.1,'#978266');}
   }}
  if(cinematic)missionSets();
+ if(rally||cinematic||name==='Furka Pass')buildDetailedScenery({app,t,name,L,P,H,local,box,quad,tri,litQuad,litTri,cylinder,leafTree,facade,arch,groundY,clear,sceneryClear,hash,C});
+ if(museum)buildMuseumWorld({P,local,box,quad,tri,cylinder,C,app});
  if(estate){for(let d=15;d<L;d+=2.8)for(const side of[-1,1]){const p=P(d,side*(H(d)+.7));p.psi=app.trackAt(d).psi;box(p,0,0,0,.8,.85,2.6,'#bca575');box(p,0,.37,0,.81,.04,2.6,'#8b7b59');}
   // Flint Wall: patterned stone outside the climbing estate road.
   for(let d=1160;d<1380;d+=2){const p=P(d,H(d)+1.5);p.psi=app.trackAt(d).psi;box(p,0,0,0,.48,2.15,2,'#888b80');box(p,0,2.15,0,.6,.12,2,'#b6b6a4');for(let y=.25;y<2;y+=.38)for(let z=-.8;z<1;z+=.45)box(p,-.251,y,z,.035,.23,.28,hash(d+y+z)>.5?'#626e6d':'#a0a493');}

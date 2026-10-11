@@ -100,9 +100,10 @@ for (const [key, file] of Object.entries({...FILES,...Object.fromEntries(Object.
 // a sim actually changes, so it does not defeat caching, it just ends staleness.
 const gpsContext = readFileSync(resolve(ROOT,"assets/gps/context.json"),"utf8").replace(/</g,"\\u003c");
 const gpsContextJs = "window.MUCS_GPS_CONTEXT="+gpsContext+";\n";
+const drivingSource = readFileSync(resolve(ROOT,"tools/driving/controls.js"),"utf8");
 const gpsSource = readFileSync(resolve(ROOT,"tools/gps/navigation.js"),"utf8");
 const SIM_BUILD = createHash("sha1")
-  .update(gpsSource).update(gpsContext)
+  .update(drivingSource).update(gpsSource).update(gpsContext)
   .update(packJs).update(Object.keys(enc).sort().map((k) => k + ":" + enc[k]).join("|"))
   .digest("hex").slice(0, 10);
 
@@ -113,7 +114,7 @@ writeFileSync(embedPath, embedJs);
 
 // 2) index.html carries only the small key -> filename map for the lazy http(s) path.
 const indexPath = resolve(ROOT, "index.html");
-const html = readFileSync(indexPath, "utf8").replace(/\/\*__GPS_START__\*\/[\s\S]*?\/\*__GPS_END__\*\//, () => "/*__GPS_START__*/\n"+gpsSource+"\n/*__GPS_END__*/");
+const html = readFileSync(indexPath, "utf8").replace(/\/\*__DRIVING_START__\*\/[\s\S]*?\/\*__DRIVING_END__\*\//, () => "/*__DRIVING_START__*/\n"+drivingSource+"\n/*__DRIVING_END__*/").replace(/\/\*__GPS_START__\*\/[\s\S]*?\/\*__GPS_END__\*\//, () => "/*__GPS_START__*/\n"+gpsSource+"\n/*__GPS_END__*/");
 const START = "/*__EMBED_START__*/", END = "/*__EMBED_END__*/";
 const i = html.indexOf(START), j = html.indexOf(END);
 if (i < 0 || j < 0) { console.error("EMBED markers not found in index.html"); process.exit(1); }

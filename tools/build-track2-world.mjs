@@ -2,7 +2,7 @@
 import fs from'node:fs';import vm from'node:vm';import path from'node:path';
 const source=path.join(import.meta.dirname,'tracks2'),out=process.argv[2]||'/tmp/track2-world',data=JSON.parse(fs.readFileSync(path.join(source,'track-data.json')));
 const app={state:{route:{}},CIRCUITS:Object.fromEntries(Object.keys(data).map(n=>[n,{}])),clamp:(v,a,b)=>Math.max(a,Math.min(b,v))};app.halfWidthAt=d=>app.trackWidthAt(d);
-const env={window:{__Track2App:app},TRACK_DATA:data,console,Math,ArrayBuffer,DataView,Uint8Array};vm.createContext(env);for(const f of['track-runtime.js','rally-runtime.js','world-builder.js'])vm.runInContext(fs.readFileSync(path.join(source,f),'utf8'),env);
+const env={window:{__Track2App:app},TRACK_DATA:data,console,MUSEUM_CARS:JSON.parse(fs.readFileSync(path.join(source,'museum-cars.json'))),Math,ArrayBuffer,DataView,Uint8Array};vm.createContext(env);for(const f of['track-runtime.js','rally-runtime.js','car-models.js','world-lettering.js','museum-world.js','scenery-detail.js','world-builder.js'])vm.runInContext(fs.readFileSync(path.join(source,f),'utf8'),env);
 fs.mkdirSync(out,{recursive:true});const only=process.env.TRACK2_ONLY?new Set(process.env.TRACK2_ONLY.split('|')):null;const meshes=only?JSON.parse(fs.readFileSync(path.join(out,'mesh-index.json'))):{};let index=0;
 for(const[name,t]of Object.entries(data)){if(only&&!only.has(name)){index++;continue;}
  app.state.route={active:true,name,totalM:t.L};const original=app.pitSurface,cache=new Map();app.pitSurface=(q,n=0,h=0)=>{const key=q+','+n;if(!cache.has(key))cache.set(key,original(q,n,0));return{...cache.get(key),y:cache.get(key).y+h}};
