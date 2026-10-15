@@ -134,10 +134,12 @@
     }else{const u=i/steps;b.x=b.prev.x+(b.goal.x-b.prev.x)*u;b.z=b.prev.z+(b.goal.z-b.prev.z)*u;b.y=b.prev.y+(b.goal.y-b.prev.y)*u;b.yaw=b.prev.yaw+A(b.goal.yaw-b.prev.yaw)*u;}}
    for(let pass=0;pass<5;pass++){
     for(let j=0;j<moving.length;j++)for(let k=j+1;k<moving.length;k++){const a=moving[j],b=moving[k],m=manifold(a,b);if(m)contact(a,b,m);}
-    for(const b of moving)for(const wall of wallsNear(b)){const m=fenceManifold(b,wall);if(m)contact(b,wall,m);}
+    for(const b of moving)if(!(b.player&&app.track2Vehicle.key==='db5'))for(const wall of wallsNear(b)){const m=fenceManifold(b,wall);if(m)contact(b,wall,m);}
    }
   }
-  for(const b of moving)if(b.active){project(b);const lat=b.vx*Math.cos(b.yaw)-b.vz*Math.sin(b.yaw),r=b.actor,rel=A(b.yaw-b.pathPsi);
+  for(const b of moving)if(b.active){project(b);if(b.player&&app.constrainRoute?.()){
+    const p=basePose(null);b.x=p.x+Math.sin(p.psi)*centerOffset;b.z=p.z+Math.cos(p.psi)*centerOffset;b.y=p.y;b.yaw=p.psi;b.vx=Math.sin(p.psi)*s.speedMps;b.vz=Math.cos(p.psi)*s.speedMps;b.omega=b.steerYaw=0;b.pathN=s.laneOffset;
+   }const lat=b.vx*Math.cos(b.yaw)-b.vz*Math.sin(b.yaw),r=b.actor,rel=A(b.yaw-b.pathPsi);
    const settled=b.age>.35&&Math.abs(lat)<.08&&Math.abs(b.omega-(b.steerYaw||0))<.035;
    // Regain ordinary steering after an impact. Staying off road must not keep
    // the car in a perpetual skid, or reintroduce the old ±60 m position clamp.

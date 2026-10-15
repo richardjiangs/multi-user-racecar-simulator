@@ -32,6 +32,7 @@
     document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&ownFullscreen)disable();});
   }
   function prepare(html,key){
+    html=root.MUCSVehicleRefinements.prepare(html,key);
     if(html.includes('/* MUCS controls 2026-10 */'))return html;
     const start=html.indexOf('function bindTrackpadSteering()');
     if(start<0)throw Error('Trackpad binding missing: '+key);

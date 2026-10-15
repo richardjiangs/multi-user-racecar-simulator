@@ -84,8 +84,8 @@
     if(night>.5){ctx.fillStyle='rgba(223,232,246,'+(.55*night*(1-rain)*(1-dust))+')';for(let i=0;i<90;i++){const x=((i*73.71)%997)/997*w,y=((i*43.27)%409)/409*h*.35;ctx.fillRect(x,y,i%9===0?2:1,1);}}
   }
   function drawRallyWeather(w,h){const weather=state.rallyWeather;if(app.trackModel()?.terrain!=='rally'||!weather)return;ctx.save();const T=state.time;
-    if((weather.visualKind||weather.kind)==='rain'){ctx.strokeStyle='rgba(205,220,225,'+(.31*weather.strength)+')';ctx.lineWidth=1;ctx.beginPath();for(let i=0;i<190*weather.strength;i++){const z=.3+(i%19)/19,x=((i*197.27+T*(weather.windMps||3)*12*z)%(w+80))-40,y=((i*91.39+T*650*z)%(h+100))-50;ctx.moveTo(x,y);ctx.lineTo(x+(weather.windMps||3)*.8*z,y+18*z);}ctx.stroke();}
-    if(/dust|storm/.test(weather.visualKind||weather.kind)){ctx.fillStyle='rgba(192,159,108,'+(.16*weather.strength)+')';for(let i=0;i<95*weather.strength;i++){const z=.4+(i%11)/11,x=((i*121.81+T*(weather.windMps||3)*24*z)%(w+40))-20,y=((i*63.71+T*19*z)%h);ctx.fillRect(x,y,1+z*3,z);}}
+    if((weather.visualKind||weather.kind)==='rain'){ctx.strokeStyle='rgba(205,220,225,'+(.31*weather.strength)+')';ctx.lineWidth=1;ctx.beginPath();for(let i=0;i<190*weather.strength;i++){const z=.3+(i%19)/19,x=((i*197.27+(weather.windTravel||0)*12*z)%(w+80)+(w+80))%(w+80)-40,y=((i*91.39+T*650*z)%(h+100))-50;ctx.moveTo(x,y);ctx.lineTo(x+(weather.crosswindMps||0)*.8*z,y+18*z);}ctx.stroke();}
+    if(/dust|storm/.test(weather.visualKind||weather.kind)){ctx.fillStyle='rgba(192,159,108,'+(.16*weather.strength)+')';for(let i=0;i<95*weather.strength;i++){const z=.4+(i%11)/11,x=((i*121.81+(weather.windTravel||0)*24*z)%(w+40)+(w+40))%(w+40)-20,y=((i*63.71+T*19*z)%h);ctx.fillRect(x,y,1+z*3,z);}}
     ctx.restore();
   }
 

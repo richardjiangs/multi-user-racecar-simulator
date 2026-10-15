@@ -1148,6 +1148,12 @@ online-mode rules, and the full race-control (grid/lights/release) flow.
 
 ## Publishing
 
+October outline-map, Dakar weather/roster, city traffic and DB5 corrections are
+maintained in `tools/vehicle-refinements/` and documented in
+`docs/OCTOBER_REFINEMENTS.md`. Apply through the garage and generated Track 2.0
+variants; preserve the archived 64 originals. The outline map is available on
+every garage car, including historical cars and F1.
+
 GitHub Pages uses `.github/workflows/pages.yml` on pushes to `main`.
 The workflow runs `tools/embed-sims.mjs`, then `tools/build-pages.mjs`, and deploys
 at `https://richardjiangs.github.io/multi-user-racecar-simulator/`.

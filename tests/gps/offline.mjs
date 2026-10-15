@@ -4,10 +4,10 @@ const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'
 await page.route('**/*',r=>{if(/^https?:/.test(r.request().url())){network.push(r.request().url());return r.abort();}return r.continue();});
 try{
  await page.goto(pathToFileURL(process.cwd()+'/index-offline.html').href,{waitUntil:'domcontentloaded',timeout:120000});await page.waitForFunction(()=>window.__mucs&&window.MUCS_GPS_CONTEXT);
- for(const [key,version,route]of[['bugatti','2','Circuit de Monaco'],['dacia','2',null],['bugatti','1','Suzuka Circuit'],['phantom','1',null]]){
+ for(const [key,version,route]of[['bugatti','2','Circuit de Monaco'],['dacia','2',null],['bugatti','1','Suzuka Circuit'],['phantom','1',null],['db5','2',null],['f1mercedes','2','Circuit de Monaco']]){
   await page.selectOption('#trackVersion',version);await page.evaluate(k=>__mucs.openPractice(k),key);await page.waitForFunction(()=>__mucs.getSimApp()?.gps,null,{timeout:60000});const f=page.frames().find(f=>f!==page.mainFrame());await f.locator('#startBtn').click();
-  await page.evaluate(async route=>{const a=__mucs.getSimApp();if(route){a.selectCircuit(route);await a.prepareTrack?.(route);}a.setView('drive');a.state.assist=false;a.state.testDriver=false;a.state.speedMps=0;a.gps.setMode('dashboard');a.gps.setPreset(1);},route);
-  for(const mode of ['dashboard','mirror','ar']){await f.selectOption('#gpsMode',mode);await page.waitForTimeout(180);const info=await page.evaluate(()=>__mucs.getSimApp().gps.inspect());assert.equal(info.mode,mode);assert.ok(Number.isFinite(info.player.worldX+info.player.worldZ));checks.push({key,version,mode,route:info.route,features:info.mapFeatures});if(key==='bugatti'&&version==='2')await page.screenshot({path:'/tmp/gps-offline-'+mode+'.png'});}
+  await page.evaluate(async route=>{const a=__mucs.getSimApp();if(route){a.selectCircuit(route);await a.prepareTrack?.(route);}a.setView('drive');a.state.assist=false;a.state.testDriver=false;a.state.speedMps=0;a.gps.setMode('line');a.gps.setPreset(1);},route);
+  for(const mode of (['db5','f1mercedes'].includes(key)?['line']:['dashboard','mirror','ar','line'])){await f.selectOption('#gpsMode',mode);await page.waitForTimeout(180);const info=await page.evaluate(()=>__mucs.getSimApp().gps.inspect());assert.equal(info.mode,mode);assert.ok(Number.isFinite(info.player.worldX+info.player.worldZ));checks.push({key,version,mode,route:info.route,features:info.mapFeatures});if(key==='bugatti'&&version==='2')await page.screenshot({path:'/tmp/gps-offline-'+mode+'.png'});}
   await page.evaluate(()=>__mucs.backToGarage());
  }
  assert.ok(!network.some(url=>/gps\/context|tracks-2\/|simulator(?:%20| )/.test(url)),network.join('\n'));assert.equal(errors.length,0,errors.join('\n'));

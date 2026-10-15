@@ -30,12 +30,13 @@
     return html.replace('function drawRearView(mx, my, mw, mh, p, pal) {', 'function drawRearView(mx, my, mw, mh, p, pal) { if(app.gps?.mode === "mirror" && p.eye === 0 && !app.gps.renderingRear) return;');
   }
   function install(win, app, key) {
-    if (!eligible(key) || app.gps) return;
+    if (app.gps) return;
+    const fullGPS=eligible(key),modes=fullGPS?["off","mirror","ar","dashboard","line"]:["off","line"],modePref=fullGPS?"mucs-gps-mode":"mucs-outline-mode";
     const doc=win.document, state=app.state, clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), wrap=(d,L)=>(d%L+L)%L;
     const TAU=Math.PI*2, angle=a=>Math.atan2(Math.sin(a),Math.cos(a));
     const getPref=(k,f)=>{try{return win.localStorage.getItem(k)||f;}catch{return f;}};
     const save=(k,v)=>{try{win.localStorage.setItem(k,v);}catch{}};
-    let mode=getPref('mucs-gps-mode','dashboard');if(!['off','mirror','ar','dashboard'].includes(mode))mode='dashboard';
+    let mode=getPref(modePref,fullGPS?'dashboard':'line');if(!modes.includes(mode))mode=fullGPS?'dashboard':'line';
     let preset=Number(getPref('mucs-gps-preset','1'))===2?2:1;
     const zooms={1:1,2:1};let model=null, signature='', lastMap=-Infinity, lastLayout='', snapshot={}, transform=null;
     const make=(tag,props,parent)=>{const e=doc.createElement(tag);Object.assign(e,props);parent?.appendChild(e);return e;};
@@ -57,14 +58,17 @@
       #gpsUnit[data-mode=mirror]{background:linear-gradient(90deg,#0c1d26 78%,transparent 78%);border-color:#35444c;border-radius:9px}
       #gpsUnit[data-mode=mirror] #gpsTitle,#gpsUnit[data-mode=mirror] #gpsViewport,#gpsUnit[data-mode=mirror] #gpsFooter{width:78%;box-sizing:border-box}
       #gpsUnit[data-mode=ar]{border-color:#66cfffa0;box-shadow:0 0 14px #65ccff29}
+      #gpsUnit[data-mode=line]{border:0;border-radius:0;background:transparent;box-shadow:none;overflow:visible}
+      #gpsUnit[data-mode=line] #gpsTitle,#gpsUnit[data-mode=line] #gpsFooter,#gpsUnit[data-mode=line] #gpsCredits{display:none}
+      #gpsUnit[data-mode=line] #gpsViewport{height:100%;width:100%;cursor:grab;filter:drop-shadow(0 1px 2px #000a)}
       #gpsAR{position:fixed;inset:0;pointer-events:none;z-index:5}
       @media(max-width:600px){#gpsMode{max-width:130px;padding:4px}#gpsControls{font-size:10px}}
     `},doc.head);
-    const controls=make('label',{id:'gpsControls',textContent:'GPS '},doc.querySelector('.tabs')||doc.querySelector('.topbar')||doc.body);
+    const controls=make('label',{id:'gpsControls',textContent:fullGPS?'GPS ':'Map '},doc.querySelector('.tabs')||doc.querySelector('.topbar')||doc.body);
     const select=make('select',{id:'gpsMode',title:'Navigation display'},controls);select.setAttribute('aria-label','GPS display mode');
-    for(const [value,label] of [['off','Off'],['mirror','Rear-view mirror'],['ar','AR · on the road'],['dashboard','Dashboard']])make('option',{value,textContent:label},select);
+    for(const [value,label] of [['off','Off'],['mirror','Rear-view mirror'],['ar','AR · on the road'],['dashboard','Dashboard'],['line','Track outline']])if(modes.includes(value))make('option',{value,textContent:label},select);
     const unit=make('section',{id:'gpsUnit'},doc.body);unit.setAttribute('aria-label','Live GPS navigation');
-    const title=make('div',{id:'gpsTitle'},unit),canvas=make('canvas',{id:'gpsViewport',tabIndex:0},unit);canvas.setAttribute('role','button');canvas.setAttribute('aria-label','GPS map: click to switch whole route and close road views; use plus and minus to zoom');
+    const title=make('div',{id:'gpsTitle'},unit),canvas=make('canvas',{id:'gpsViewport',tabIndex:0},unit);canvas.setAttribute('role','button');canvas.setAttribute('aria-label','Track map: tap to switch whole route and road views; scroll or pinch to zoom');
     const footer=make('div',{id:'gpsFooter'},unit),toggle=make('button',{id:'gpsPreset',type:'button'},footer),scaleLabel=make('span',{id:'gpsScale'},footer);
     const minus=make('button',{id:'gpsZoomOut',type:'button',textContent:'−',title:'Zoom out'},footer),plus=make('button',{id:'gpsZoomIn',type:'button',textContent:'+',title:'Zoom in'},footer);
     minus.setAttribute('aria-label','GPS zoom out');plus.setAttribute('aria-label','GPS zoom in');
@@ -72,7 +76,7 @@
     const rear=make('div',{id:'gpsRear'},unit);make('span',{textContent:'LIVE REAR'},rear);
     const ar=make('canvas',{id:'gpsAR'},doc.body),g=canvas.getContext('2d'),ag=ar.getContext('2d');
     const gps=app.gps={mode,preset,renderingRear:false,setMode,setPreset,zoom:zoomBy,render:renderNow,inspect:()=>snapshot};
-    function setMode(value){if(!['off','mirror','ar','dashboard'].includes(value))return;mode=value;gps.mode=value;snapshot.mode=value;select.value=value;save('mucs-gps-mode',value);lastLayout='';lastMap=-Infinity;unit.dataset.mode=value;unit.hidden=value==='off';rear.hidden=value!=='mirror';ar.hidden=value!=='ar';if(value!=='ar')ag.clearRect(0,0,ar.width,ar.height);}
+    function setMode(value){if(!modes.includes(value))return;mode=value;gps.mode=value;snapshot.mode=value;select.value=value;save(modePref,value);lastLayout='';lastMap=-Infinity;unit.dataset.mode=value;unit.hidden=value==='off';rear.hidden=value!=='mirror';ar.hidden=value!=='ar';if(value!=='ar')ag.clearRect(0,0,ar.width,ar.height);}
     function setPreset(value){preset=value===2?2:1;gps.preset=preset;zooms[preset]=1;save('mucs-gps-preset',String(preset));lastMap=-Infinity;}
     function zoomBy(factor){zooms[preset]=clamp(zooms[preset]*factor,1/32,4096);lastMap=-Infinity;}
     select.addEventListener('change',()=>setMode(select.value));toggle.onclick=()=>setPreset(preset===1?2:1);minus.onclick=()=>zoomBy(1/1.5);plus.onclick=()=>zoomBy(1.5);
@@ -80,7 +84,7 @@
     canvas.addEventListener('keydown',e=>{if(e.code==='Space'||e.code==='Enter'){e.preventDefault();setPreset(preset===1?2:1);}else if(e.key==='+'||e.key==='='){e.preventDefault();zoomBy(1.5);}else if(e.key==='-'){e.preventDefault();zoomBy(1/1.5);}});
     canvas.addEventListener('wheel',e=>{e.preventDefault();e.stopPropagation();zoomBy(Math.exp(clamp(-e.deltaY*.002,-.5,.5)));},{passive:false});
     const pointers=new Map();let gesture=null,pinch=0;
-    canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1)gesture={x:e.clientX,y:e.clientY,moved:false};else{gesture.moved=true;const [a,b]=[...pointers.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y);}});
+    canvas.addEventListener('pointerdown',e=>{e.preventDefault();canvas.focus({preventScroll:true});canvas.setPointerCapture(e.pointerId);pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pointers.size===1)gesture={x:e.clientX,y:e.clientY,moved:false};else{gesture.moved=true;const [a,b]=[...pointers.values()];pinch=Math.hypot(a.x-b.x,a.y-b.y);}});
     canvas.addEventListener('pointermove',e=>{if(!pointers.has(e.pointerId))return;pointers.set(e.pointerId,{x:e.clientX,y:e.clientY});if(gesture&&Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y)>5)gesture.moved=true;if(pointers.size===2){const [a,b]=[...pointers.values()],d=Math.hypot(a.x-b.x,a.y-b.y);if(pinch>2)zoomBy(d/pinch);pinch=d;}});
     canvas.addEventListener('pointerup',e=>{if(pointers.size===1&&gesture&&!gesture.moved)setPreset(preset===1?2:1);pointers.delete(e.pointerId);});for(const type of ['pointercancel','lostpointercapture'])canvas.addEventListener(type,e=>{pointers.delete(e.pointerId);if(gesture)gesture.moved=true;});
     const finite=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.z);
@@ -122,13 +126,15 @@
         if(!finite(p))p=model.t&&r.pitState?app.pitSurface(r.pitQ||0,r.lane||0):lateral(model.at(r.distM||0),r.lane||0);
         if(finite(p))all.push({...p,name:r.name||'Rival',color:r.body||'#ef8854',kind:'rival',d:r.distM});}
       for(const r of state.traffic||[]){if(r.hidden)continue;const d=state.ldn?(state.edgeD||0)+r.z:(Number.isFinite(r.routeD)&&state.city?r.routeD:state.distanceM+r.z),p=lateral(model.at(d),r.lat??((r.lane||0)*3+(r.oncoming?-3.6:0)));if(finite(p))all.push({...p,psi:p.psi+(r.oncoming?Math.PI:0),name:r.kind||'Traffic',color:'#d06d35',kind:'traffic',d});}
+      for(const r of state.pursuit||[]){const p=lateral(model.at(r.distM),r.lane||0);if(finite(p))all.push({...p,name:r.name,color:'#448cd6',kind:'police',d:r.distM});}
       return all;
     }
     function layout(){
       const w=win.innerWidth,h=win.innerHeight,bar=doc.querySelector('.topbar')?.getBoundingClientRect(),bottom=doc.querySelector('.bottombar')?.getBoundingClientRect();
       const top=Math.max(8,bar?.bottom||8),floor=Math.min(h-6,bottom?.top||h-6),key=[w,h,mode,top,floor].join('|');if(key===lastLayout)return;lastLayout=key;
       let W,H,x,y;
-      if(mode==='mirror'){W=Math.min(450,w*.63);H=clamp(h*.20,130,176);x=(w-W)/2;y=top+8;}
+      if(mode==='line'){W=Math.min(270,w*.30);H=Math.min(215,h*.26);x=w-W-14;y=Math.max(top+12,Math.min(h*.39,floor-H-8));}
+      else if(mode==='mirror'){W=Math.min(450,w*.63);H=clamp(h*.20,130,176);x=(w-W)/2;y=top+8;}
       else if(mode==='ar'){W=Math.min(275,w*.43);H=Math.min(180,h*.25);x=w-W-12;y=top+12;}
       else{W=Math.min(322,w*.30);H=Math.min(210,Math.max(145,h*.245));x=w*.64;H=Math.min(H,185);y=Math.max(h*.61,floor-H-4);if(y+H>floor)H=Math.max(108,floor-y);}
       if(w<600){W=mode==='mirror'?Math.min(w-20,355):Math.min(w*.49,260);H=mode==='mirror'?140:160;x=mode==='mirror'?(w-W)/2:w-W-8;y=mode==='mirror'?top+5:Math.max(h*.65,floor-H-5);}
@@ -146,7 +152,16 @@
       const scale=clamp((preset===1?fit:Math.min(w,h)/85)*zooms[preset],fit/3,12),follow=preset===2||zooms[preset]>1.05,cx=follow?player.x:(m.minX+m.maxX)/2,cz=follow?player.z:(m.minZ+m.maxZ)/2;
       // North-up is stable through hairpins; positions use the same metres as physics.
       const X=x=>(x-cx)*scale+w/2,Y=z=>h/2-(z-cz)*scale,P=p=>({x:X(p.x),y:Y(p.z)});
-      transform={scale,cx,cz,w,h};g.fillStyle=m.rally?'#e6d9b7':m.net.length?'#e9e7df':'#dce7ce';g.fillRect(0,0,w,h);
+      transform={scale,cx,cz,w,h};
+      if(mode==='line'){
+        g.clearRect(0,0,w,h);g.lineCap='round';g.lineJoin='round';
+        const line=(pts,color,width)=>{g.beginPath();pts.forEach((p,i)=>i?g.lineTo(X(p.x),Y(p.z)):g.moveTo(X(p.x),Y(p.z)));g.strokeStyle=color;g.lineWidth=width;g.stroke();};
+        if(m.net.length)for(const rd of m.net)line(rd.points,'#777e85',2.5);
+        line(m.points,'#22272ca0',6);line(m.points,'#a9afb4',3.5);if(m.pit)line(m.pit.points,'#777f85',1.5);
+        const marker=(p,own=false)=>{const x=X(p.x),y=Y(p.z),px=clamp(x,5,w-5),py=clamp(y,5,h-5);g.save();g.translate(px,py);g.rotate(p.psi||0);g.beginPath();if(own){g.moveTo(0,-6);g.lineTo(4.8,4.5);g.lineTo(0,2);g.lineTo(-4.8,4.5);g.closePath();}else g.arc(0,0,3.2,0,TAU);g.fillStyle=own?'#fff':'#bbc1c5';g.strokeStyle='#333a40';g.lineWidth=1.4;g.fill();g.stroke();g.restore();return{x,y,edge:x!==px||y!==py,worldX:p.x,worldZ:p.z,name:p.name};};
+        const markers=all.map(p=>marker(p)),own=marker(player,true);snapshot={mode,preset,zoom:zooms[preset],route:m.name,lengthM:m.L,track2:!!m.t,scalePixelsPerM:scale,player:own,markers,carCount:all.length+1,pit:!!m.pit,roadHalfWidth:app.halfWidthAt?.(state.distanceM)||7,mapFeatures:0,buttons:false};return;
+      }
+      g.fillStyle=m.rally?'#e6d9b7':m.net.length?'#e9e7df':'#dce7ce';g.fillRect(0,0,w,h);
       const visible=p=>Math.abs(p.x-cx)<w/scale*.7+100&&Math.abs(p.z-cz)<h/scale*.7+100;
       const path=(pts,close=false)=>{g.beginPath();pts.forEach((p,i)=>i?g.lineTo(X(p.x),Y(p.z)):g.moveTo(X(p.x),Y(p.z)));if(close)g.closePath();};
       const features=m.features.filter(f=>f.x1>=cx-w/scale/2&&f.x0<=cx+w/scale/2&&f.z1>=cz-h/scale/2&&f.z0<=cz+h/scale/2);

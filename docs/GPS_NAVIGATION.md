@@ -2,7 +2,13 @@
 
 The garage adds a read-only GPS to modern cars, in both Track 1.0 and Track 2.0.
 Use the **GPS** selector next to the Driving/Exterior/Circuit tabs. The default is
-Dashboard. Options are Off, Rear-view mirror, AR on the road, and Dashboard.
+Dashboard. Options are Off, Rear-view mirror, AR on the road, Dashboard, and Track outline.
+
+**Track outline is available on every garage car**, including historical cars and all
+eleven F1 teams, with either track version. It draws a grey route and live car markers
+on a transparent background. It has no title, scale bar, preset buttons or zoom buttons.
+Scroll/pinch to zoom and click/tap to switch whole-route and road-position presets.
+Historical/F1 cars offer Off and Track outline; their default is Track outline.
 
 Click/tap the map or its preset button to reset between **1 Whole route** and
 **2 Road position**. Plus/minus, mouse wheel and two-finger pinch zoom within either
@@ -38,14 +44,15 @@ approximation; GPS does not turn them into a surveyed real-world roadbook.
 
 ## Scope and implementation
 
-The eleven 2026 F1s are excluded. Historical exclusions: 250 GTO, F40, 917K, DB5,
+The eleven 2026 F1s are excluded from the three full GPS displays, but have Track outline.
+The same applies to these historical cars: 250 GTO, F40, 917K, DB5,
 300 SLR, McLaren F1 (1993), Supra Mk4, RX-7, S2000 and Lancer Evo X. The final four
 are the conservative historical grouping pending the user's optional clarification.
 The modern Alfa Romeo 33 Stradale and Ferrari F12tdf are eligible.
 
 `tools/gps/navigation.js` is the maintained source. `tools/embed-sims.mjs` embeds it
 in both garages and stamps the GPS source and map context into the build hash.
-The online garage fetches the selected eligible simulator and exposes its renderer
+The online garage fetches the selected simulator and exposes its renderer
 helpers in the loaded copy; the original 64 files and 63 Track 2.0 files stay intact.
 The offline garage embeds the complete map context, so GPS requires no network.
 
