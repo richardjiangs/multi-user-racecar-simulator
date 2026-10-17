@@ -2054,7 +2054,7 @@ window.__Track2App=window.Ferrari499PApp;
    // Coordinate projection is only telemetry off road. It must never discard a
    // physical position just because no nearby centreline represents it exactly.
    const b=active||current;
-   if(!r&&!active&&!app.pitHeld?.()&&!s.inPitLane&&(Math.abs(s.laneOffset)>app.halfWidthAt(s.distanceM)+.25||Math.abs(s.laneOffset*app.trackAt(s.distanceM).k)>.32)){
+   if(!r&&!active&&!app.routeBoundaryActive?.()&&!app.pitHeld?.()&&!s.inPitLane&&(Math.abs(s.laneOffset)>app.halfWidthAt(s.distanceM)+.25||Math.abs(s.laneOffset*app.trackAt(s.distanceM).k)>.32)){
     activate(b);b.age=2;b.freeMotion=true;
    }
    b.beforeSpeed=r?r.speedMps:s.speedMps;b.beforeD=r?r.distM:s.distanceM;b.beforeQ=r?r.pitQ:s.pitQ;b.beforeN=r?r.lane:s.laneOffset;b.beforeRel=r?r.contactHeading:s.headingRel;b.prev={x:b.x,z:b.z,y:b.y,yaw:b.yaw};frame.push(b);
@@ -3900,7 +3900,7 @@ function drawDetailedRoadCar(mesh,info={}){
   function bindTrackpadSteering() {
     const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown'),number=document.getElementById('trackpadCountdownNum');
     let timer=null,ownFullscreen=false;
-    const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit');
+    const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit,#mapCanvas');
     const cancel=()=>{clearTimeout(timer);timer=null;if(countdown)countdown.hidden=true;};
     const disable=()=>{cancel();state.trackpadSteering=false;state.touchSteer=0;state.trackpadLastInput=-99;document.documentElement.classList.remove('trackpad-steer');document.documentElement.style.setProperty('--tw-rot','0deg');if(capture)capture.hidden=true;if(ownFullscreen&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});ownFullscreen=false;};
     window.addEventListener('keydown',e=>{
@@ -4038,13 +4038,13 @@ const app=window.Ferrari499PApp;
   if(rally())app.seedRivals?.();
   if(key==='db5'){
    // A route constraint, deliberately not a collision. Keep forward speed and
-   // remove only the attempted outward travel. No impulse, damage or sparks.
+   // remove only the attempted outward travel. Never snap the viewing heading.
+   app.routeBoundaryActive=()=>s.route.active&&!s.stage?.sea&&!/Pacific|Oil Rig|Sea Chase/i.test(s.route.name)&&!s.inPitLane;
    app.constrainRoute=function(){
-    if(!s.route.active||s.stage?.sea||/Pacific|Oil Rig|Sea Chase/i.test(s.route.name)||s.inPitLane)return false;
-    const hw=app.halfWidthAt(s.distanceM),edge=Math.max(.2,hw-(app.track2Vehicle?.halfWidth||.86)-.08);
+    if(!app.routeBoundaryActive())return false;
+    const hw=app.halfWidthAt(s.distanceM),edge=Math.max(.2,hw-(app.track2Vehicle?.halfWidth||.86)-.25);
     if(Math.abs(s.laneOffset)<=edge)return false;const side=Math.sign(s.laneOffset);
     s.laneOffset=side*edge;
-    if(Math.sin(s.headingRel)*Math.sign(s.speedMps||1)*side>0)s.headingRel=Math.cos(s.headingRel)>=0?0:Math.PI;
     s.bodyRoll*=.8;s.offTrack=0;return true;
    };
    const physics=app.updatePhysics;app.updatePhysics=function(dt){app.constrainRoute();physics(dt);app.constrainRoute();};

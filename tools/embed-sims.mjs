@@ -100,7 +100,7 @@ for (const [key, file] of Object.entries({...FILES,...Object.fromEntries(Object.
 // a sim actually changes, so it does not defeat caching, it just ends staleness.
 const gpsContext = readFileSync(resolve(ROOT,"assets/gps/context.json"),"utf8").replace(/</g,"\\u003c");
 const gpsContextJs = "window.MUCS_GPS_CONTEXT="+gpsContext+";\n";
-const drivingSource = ["tools/vehicle-refinements/runtime.js","tools/vehicle-refinements/traffic-art.js","tools/vehicle-refinements/db5-art.js","tools/vehicle-refinements/prepare.js","tools/driving/controls.js"].map(f=>readFileSync(resolve(ROOT,f),"utf8")).join("\n");
+const drivingSource = ["tools/vehicle-refinements/runtime.js","tools/vehicle-refinements/traffic-art.js","tools/vehicle-refinements/db5-art.js","tools/vehicle-refinements/city-network.js","tools/vehicle-refinements/prepare.js","tools/driving/controls.js"].map(f=>readFileSync(resolve(ROOT,f),"utf8")).join("\n");
 const gpsSource = readFileSync(resolve(ROOT,"tools/gps/navigation.js"),"utf8");
 const SIM_BUILD = createHash("sha1")
   .update(drivingSource).update(gpsSource).update(gpsContext)

@@ -4,7 +4,7 @@
   function bindTrackpadSteering() {
     const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown'),number=document.getElementById('trackpadCountdownNum');
     let timer=null,ownFullscreen=false;
-    const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit');
+    const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit,#mapCanvas');
     const cancel=()=>{clearTimeout(timer);timer=null;if(countdown)countdown.hidden=true;};
     const disable=()=>{cancel();state.trackpadSteering=false;state.touchSteer=0;state.trackpadLastInput=-99;document.documentElement.classList.remove('trackpad-steer');document.documentElement.style.setProperty('--tw-rot','0deg');if(capture)capture.hidden=true;if(ownFullscreen&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});ownFullscreen=false;};
     window.addEventListener('keydown',e=>{

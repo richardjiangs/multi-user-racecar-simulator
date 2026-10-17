@@ -9,13 +9,13 @@
   if(rally())app.seedRivals?.();
   if(key==='db5'){
    // A route constraint, deliberately not a collision. Keep forward speed and
-   // remove only the attempted outward travel. No impulse, damage or sparks.
+   // remove only the attempted outward travel. Never snap the viewing heading.
+   app.routeBoundaryActive=()=>s.route.active&&!s.stage?.sea&&!/Pacific|Oil Rig|Sea Chase/i.test(s.route.name)&&!s.inPitLane;
    app.constrainRoute=function(){
-    if(!s.route.active||s.stage?.sea||/Pacific|Oil Rig|Sea Chase/i.test(s.route.name)||s.inPitLane)return false;
-    const hw=app.halfWidthAt(s.distanceM),edge=Math.max(.2,hw-(app.track2Vehicle?.halfWidth||.86)-.08);
+    if(!app.routeBoundaryActive())return false;
+    const hw=app.halfWidthAt(s.distanceM),edge=Math.max(.2,hw-(app.track2Vehicle?.halfWidth||.86)-.25);
     if(Math.abs(s.laneOffset)<=edge)return false;const side=Math.sign(s.laneOffset);
     s.laneOffset=side*edge;
-    if(Math.sin(s.headingRel)*Math.sign(s.speedMps||1)*side>0)s.headingRel=Math.cos(s.headingRel)>=0?0:Math.PI;
     s.bodyRoll*=.8;s.offTrack=0;return true;
    };
    const physics=app.updatePhysics;app.updatePhysics=function(dt){app.constrainRoute();physics(dt);app.constrainRoute();};

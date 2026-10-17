@@ -7,9 +7,9 @@
   function insertBeforeFunction(name,text){const mark='function '+name+'(';if(!html.includes(mark))throw Error('Missing '+key+' '+name);html=html.replace(mark,text+'\n  '+mark);}
   if(city){
    insertBeforeFunction('drawCityTraffic',helper+'\n'+`function drawCityTraffic(w,h,pal){
-    const list=state.traffic.slice().filter(c=>!c.hidden&&c.z>1.5).sort((a,b)=>b.z-a.z);
-    for(const car of list){const v=VEHICLES[car.kind]||VEHICLES.saloon,lateral=car.lat??car.lane*3,p=projectAhead(car.z,lateral);if(p.scale<.04)continue;
-     drawTrafficVehicle(ctx,p.x,p.y,p.scale,{...car,body:car.body||v.body},!!car.oncoming,pal.night,state.time,Math.atan2(lateral-state.laneOffset,Math.max(8,car.z)));
+    const list=state.traffic.filter(c=>!c.hidden).map(car=>{const lateral=car.lat??car.lane*3,p=projectAhead(car.z,lateral),road=centerlineAt(car.z),yaw=road.psi+(car.oncoming?Math.PI:0)-Math.atan2(road.X-state.laneOffset,road.Z);return{car,p,yaw};}).filter(v=>v.p.fwd>1.5).sort((a,b)=>b.p.fwd-a.p.fwd);
+    for(const {car,p,yaw} of list){const v=VEHICLES[car.kind]||VEHICLES.saloon;if(p.scale<.04)continue;
+     drawTrafficVehicle(ctx,p.x,p.y,p.scale,{...car,viewYaw:yaw,body:car.body||v.body},Math.cos(yaw)<0,pal.night,state.time);
     }
    }`);
    // Keep the old drawing in the source archive for provenance, but do not execute it.
@@ -29,6 +29,30 @@
    }else{
     html=html.replace('function drawPolice(w, h, pal) {',`function drawPolice(w,h,pal){const r=state.police;if(!r)return;const p=projectAhead(r.z,app.homeLaneOffAt?.(state.distanceM)||0);if(p.scale>.06)drawTrafficVehicle(ctx,p.x,p.y,p.scale,{kind:'police'},true,pal.night,state.time);}\n function drawLegacyPolice(w, h, pal) {`);
    }
+   html=html.replace('enterLondon, londonActive, currentRoad, junctionChoices, LDN,','enterLondon, londonActive, currentRoad, junctionChoices, LDN, londonMarks:LDN_MARKS, londonOpen:LDN_OPEN, londonLook:LDN_LOOK,');
+   html=html.replace('function drawLandmark(p, rel, half, kit, night) {','app.drawCityLandmark=drawLandmark;\n  function drawLandmark(p, rel, half, kit, night) {');
+   const landStart=html.indexOf('function drawLandmark(p, rel, half, kit, night) {');
+   html=html.slice(0,landStart)+html.slice(landStart).replace('const b = projectAhead(Math.max(2.5, rel), lat);','const b = p.worldProjection || projectAhead(Math.max(2.5, rel), lat);');
+   html=html.replace('function drawBlock(p, rel, lat, kit, night) {','app.drawCityBlock=drawBlock;\n  function drawBlock(p, rel, lat, kit, night) {');
+   html=html.replace('const q = wallQuad(rel, lat, p.wM, hM); if (!q) return;','const q = p.worldQuad || wallQuad(rel, lat, p.wM, hM); if (!q) return;');
+   const cityApp=key==='spectre'?'LAPP()':'app';
+   html=html.replace('picked: preferredChoice(outs)',`picked: outs.find(c=>c.link===${cityApp}.state.ldn?.netExit?.link)||preferredChoice(outs)`);
+   html=html.replace('Math.min(limit, cornerCap, trafficCap, arriveCap)','Math.min(limit, cornerCap, trafficCap, arriveCap, app.cityNetwork?.arrivalSpeedLimit()??Infinity)');
+   html=html.replace('function londonStep(dt) {',`function londonStep(dt) { if(${cityApp}.cityNetwork)return ${cityApp}.cityNetwork.step(dt);`);
+   html=html.replace('function londonCurvatureAt(d) {',`function londonCurvatureAt(d) { if(${cityApp}.cityNetwork)return ${cityApp}.cityNetwork.curvature(d);`);
+   html=html.replace('function cityTrafficStep(dt) {','function cityTrafficStep(dt) { if(state.ldn&&app.cityNetwork)return app.cityNetwork.trafficStep(dt);');
+   html=html.replace('state.distanceM + (c.oncoming ? -c.z : c.z)','state.distanceM + c.z');
+   if(key==='phantom')html=html.replace('    if (street) {','    if(state.ldn&&app.cityNetwork){app.cityNetwork.draw(w,h,pal);}else if (street) {');
+   else{
+    const start=html.indexOf('    if (state.city) { ctx.fillStyle = pal.grass;',html.indexOf('function drawWorld()'));
+    let end=html.indexOf('drawCabinFrame(w, h, pal);',start);
+    // Track 2.0 wraps the old world block; leave its closing brace outside ours.
+    if(html.slice(end-1,end)==='}')end--;
+
+    if(start<0||end<0)throw Error('London world renderer boundary');
+    html=html.slice(0,start)+'    if(state.ldn&&app.cityNetwork){app.cityNetwork.draw(w,h,pal);}else{\n'+html.slice(start,end)+'    }\n'+html.slice(end);
+    html=html.replace('function drawRearView(mx, my, mw, mh, p, pal) {','function drawRearView(mx, my, mw, mh, p, pal) { if(state.ldn&&app.cityNetwork){app.cityNetwork.drawRear(mx,my,mw,mh,pal,p);return;}');
+   }
   }else if(rallyFiles&&!/^f1(?!2)/.test(key)){
    // Some rally cars reseed directly when Real Mode changes. Keep that path
    // behind the same route-aware roster used by the garage and grid controls.
@@ -44,7 +68,7 @@
    }\n function drawLegacyCabinFrame(w, h, pal) {`);
   }
   const runtime=root.MUCSVehicleRuntime.install.toString();
-  let extra='';
+  let extra=city?`(${root.MUCSCityNetwork.install.toString()})(app,${helper});`:'';
   if(classic)extra=`
     ${root.MUCSDB5Art.drawDB5Dashboard.toString()}
     const cabin=app.el.cabinArt,old=cabin.querySelector('svg');if(old)old.style.display='none';

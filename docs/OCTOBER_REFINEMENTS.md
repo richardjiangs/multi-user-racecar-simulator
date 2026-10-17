@@ -112,3 +112,73 @@ produces byte-identical output, including all six-decimal measurements and failu
 This release does not recalibrate performance. The comparison is recorded in
 `tests/refinements/performance-comparison.json`; the earlier blanket performance
 pass recorded in DRIVING_SCENERY_UPDATE.md was not reproducible in this check.
+
+## October 17: London navigation, persistent junctions and movable outline
+
+`tools/vehicle-refinements/city-network.js` now supplies the two Rolls-Royces
+with one persistent London coordinate system for roads, pavement, frontages,
+landmarks, signals, traffic and the rear camera. It retains the existing road
+network and its 1.55 width factor. The network is an authored approximation of
+London, not a surveyed street model. Junctions no longer get regenerated around
+the current edge when the driver turns. Transition curves share their position
+and tangent across edges, and reversing retraces the previous edge.
+
+Ambient vehicles keep their identities and road coordinates, choose connected
+roads, slow for corners and signals, and follow the vehicle ahead. Their drawing
+uses the trajectory tangent relative to the viewer, including side and front
+views. Lane-centre curves avoid the folded offsets that can reverse a car's
+apparent facing on tight turns. Other city journeys also use the road heading
+for their traffic drawings; oncoming actors now sample the road at the correct
+signed distance. F1 rival artwork is unchanged.
+
+Both the driving GPS and Navigation tab offer a London destination selector.
+Map pins select destinations; the Navigation map also supports wheel zoom and
+pan. Routing follows the existing connected road graph. With steering assist or
+the chauffeur enabled, junction selection follows that route. Only the full
+automatic driver receives a destination braking target; manual driving and
+steering-only assist retain the user's pedals.
+
+221B Baker Street is included, based on the
+[Sherlock Holmes Museum's address](https://www.sherlock-holmes.co.uk/contact-us/).
+Its pin is placed along the simulator's existing Baker Street edge; it is not a
+claim of address-level geospatial accuracy. Existing London landmarks and park/
+river corridors remain represented in the fixed world. Tower Bridge's displayed
+bascules use the existing lift schedule.
+
+Every garage car's grey outline can be dragged with a mouse or one finger. Its
+viewport-relative placement is remembered across cars and window sizes. Tap
+still switches presets; wheel and pinch still zoom, with no buttons on the
+outline. Zoomed outlines show corner numbers. Monaco and Suzuka account for the
+unnamed corners omitted from the previous label lists, using
+[Formula 1's Monaco corner guide](https://www.formula1.com/en/latest/article/explained-how-every-monaco-corner-got-its-name.5ClYqWmfpeUpsRJA6mDNaX)
+and the [FIA's Suzuka layout](https://www.fia.com/sites/default/files/english_3.pdf).
+On routes whose data contains generic sampled bends, same-direction samples of
+one continuous bend are grouped and numbered in driving order; these are
+simulator apex identifiers, not independently verified official corner numbers.
+The map remains a thin line at every zoom.
+
+The DB5's silent route boundary no longer snaps its heading. On Track 2.0 it also
+avoids switching into off-road body projection merely because a tight bend is
+reached at the edge. Vehicle-to-vehicle impacts remain supported. The boundary
+still clamps outward position without fence sparks or barrier damage, and sea
+missions retain their existing behavior.
+
+Additional checks:
+
+- `tests/refinements/london-navigation.mjs`: both Rolls and both garage track
+  settings, destination controls, forward/reverse junction continuity, stable
+  road geometry and traffic identities, traffic velocity versus drawn heading,
+  rear views and destination arrival behavior.
+- `tests/refinements/map-boundary.mjs`: DB5 frame-to-frame heading/position at
+  both boundaries, both Real Mode settings and both track versions; outline
+  dragging and zoom on F1, historical and modern cars; Fairmont labelled 6.
+
+The persistent frontages retain the original district styles and storey profiles.
+Near shopfronts reuse the authored façade drawing. Rendering rejects off-screen
+geometry before projection and caches small distant car views; the world data
+and traffic identities remain loaded. Both full physics drivers were also checked
+through a routed junction for 30 simulated seconds without a discontinuity.
+Mouse-wheel, touch pinch, one-finger dragging, and tap-to-switch checks cover
+modern, historical and F1 cars. The repeated factory suite still matches the
+baseline report byte-for-byte (SHA-256 recorded above); its 59 existing target
+failures remain unchanged.

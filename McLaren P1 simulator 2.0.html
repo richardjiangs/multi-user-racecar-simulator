@@ -2165,7 +2165,7 @@ window.__Track2App=window.P1App;
    // Coordinate projection is only telemetry off road. It must never discard a
    // physical position just because no nearby centreline represents it exactly.
    const b=active||current;
-   if(!r&&!active&&!app.pitHeld?.()&&!s.inPitLane&&(Math.abs(s.laneOffset)>app.halfWidthAt(s.distanceM)+.25||Math.abs(s.laneOffset*app.trackAt(s.distanceM).k)>.32)){
+   if(!r&&!active&&!app.routeBoundaryActive?.()&&!app.pitHeld?.()&&!s.inPitLane&&(Math.abs(s.laneOffset)>app.halfWidthAt(s.distanceM)+.25||Math.abs(s.laneOffset*app.trackAt(s.distanceM).k)>.32)){
     activate(b);b.age=2;b.freeMotion=true;
    }
    b.beforeSpeed=r?r.speedMps:s.speedMps;b.beforeD=r?r.distM:s.distanceM;b.beforeQ=r?r.pitQ:s.pitQ;b.beforeN=r?r.lane:s.laneOffset;b.beforeRel=r?r.contactHeading:s.headingRel;b.prev={x:b.x,z:b.z,y:b.y,yaw:b.yaw};frame.push(b);
@@ -2856,6 +2856,7 @@ function drawDetailedRoadCar(mesh,info={}){
     }
   }
   function drawTrafficVehicle(ctx,x,y,scale,car,front,night,time,view=.22){
+  if(!(scale>0)||!Number.isFinite(x+y+scale))return;
   let kind=car.kind||'',name=car.name||'';
   if(!kind){kind=/Cullinan/.test(name)?'cullinan':/Phantom/.test(name)?'phantom':/Ghost/.test(name)?'ghost':/Bentley/.test(name)?'bentley':/Maybach/.test(name)?'maybach':/Range Rover/.test(name)?'range':/taxi/i.test(name)?'cab':/bus/i.test(name)?'ddbus':/van/i.test(name)?'van':/police/i.test(name)?'police':car.dakar?/Ford/.test(name)?'raptor':/Toyota/.test(name)?'hilux':/Dacia/.test(name)?'sandrider':'hunter':'saloon';}
   const models={
@@ -2868,8 +2869,8 @@ function drawDetailedRoadCar(mesh,info={}){
   };
   const rider=['cycle','ebike','scooter'].includes(kind),m=models[kind]||models.saloon,[W,H,L,shoulder,roof]=m;
   const body=car.body||m[6]||`hsl(${car.hue||205},20%,${car.tone||40}%)`,bus=['ddbus','bus','toeibus'].includes(kind),van=['van','hiace','truck','keitruck'].includes(kind),rally=['raptor','hilux','sandrider','hunter'].includes(kind),lux=['ghost','phantom','cullinan'].includes(kind),box=bus||kind==='truck';
-  const v=Math.max(-.48,Math.min(.48,view)),cs=Math.cos(v),sn=Math.sin(v),direction=front?1:-1;
-  const P=(a,b,c)=>[(a*cs+c*direction*sn)*scale,(-b-(c*direction*cs-a*sn)*.10)*scale];
+  const worldYaw=Number.isFinite(car.viewYaw),v=worldYaw?car.viewYaw:Math.max(-.48,Math.min(.48,view)),cs=Math.cos(v),sn=Math.sin(v),direction=front?1:-1,nearSide=sn>=0?1:-1;
+  const P=(a,b,c)=>worldYaw?[(a*cs-c*sn)*scale,(-b+(a*sn+c*cs)*.10)*scale]:[(a*cs+c*direction*sn)*scale,(-b-(c*direction*cs-a*sn)*.10)*scale];
   ctx.save();ctx.translate(x,y);
   const poly=(points,fill,stroke,width=.012)=>{ctx.beginPath();for(let i=0;i<points.length;i++){const q=P(...points[i]);i?ctx.lineTo(...q):ctx.moveTo(...q);}ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(fill===body){const gloss=ctx.createLinearGradient(0,-H*scale,0,0);gloss.addColorStop(0,'#ffffff30');gloss.addColorStop(.6,'#ffffff00');gloss.addColorStop(1,'#00000045');ctx.fillStyle=gloss;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=Math.max(.4,width*scale);ctx.stroke();}};
   const line=(points,color,width=.016)=>{ctx.beginPath();points.forEach((p,i)=>{const q=P(...p);i?ctx.lineTo(...q):ctx.moveTo(...q);});ctx.strokeStyle=color;ctx.lineWidth=Math.max(.45,width*scale);ctx.stroke();};
@@ -2896,13 +2897,13 @@ function drawDetailedRoadCar(mesh,info={}){
   const low=R*.68,belt=box?H*.46:van?H*.48:kind==='cab'?H*.53:rally?H*.60:H*.64,hood=box?belt:van?H*.53:kind==='cab'?H*.57:rally?H*.64:H*.66,roofStart=box?-L*.49:van?-L*.42:-L*.16,roofEnd=box?L*.49:kind==='keitruck'?-L*.02:rally?L*.22:L*.27;
   const rings=[[-L*.5,W*.43,hood*.85],[-L*.37,W*.50,hood],[roofStart,W*.50,belt],[roofEnd,W*.50,belt],[L*.4,W*.48,hood*.94],[L*.5,W*.43,hood*.88]];
   // Far flank, nose/tail, near flank, bonnet and boot receive separate lighting.
-  for(const side of [sn>=0?1:-1]){poly(rings.map(([z,w,h])=>[side*w,h,z]).concat([[side*W*.43,low,L*.5],[side*W*.43,low,-L*.5]]),body,'#172027');poly(rings.map(([z,w,h])=>[side*w,h,z]).concat([[side*W*.43,low,L*.5],[side*W*.43,low,-L*.5]]),side===-1?'#0003':'#ffffff0c');}
+  for(const side of [nearSide]){poly(rings.map(([z,w,h])=>[side*w,h,z]).concat([[side*W*.43,low,L*.5],[side*W*.43,low,-L*.5]]),body,'#172027');poly(rings.map(([z,w,h])=>[side*w,h,z]).concat([[side*W*.43,low,L*.5],[side*W*.43,low,-L*.5]]),side===-1?'#0003':'#ffffff0c');}
   if(front)poly([[-W*.43,low,faceZ],[W*.43,low,faceZ],[W*.43,hood*.85,faceZ],[-W*.43,hood*.85,faceZ]],body,'#1b2329');
   poly([[-W*.43,hood*.85,faceZ],[W*.43,hood*.85,faceZ],[W*.5,hood,-L*.37],[W*.5,belt,roofStart],[-W*.5,belt,roofStart],[-W*.5,hood,-L*.37]],body,'#ffffff24');
   poly([[-W*.5,belt,roofEnd],[W*.5,belt,roofEnd],[W*.43,hood*.88,backZ],[-W*.43,hood*.88,backZ]],body,'#ffffff24');
   const roofW=W*(bus||van?roof:shoulder)*.5,baseW=W*.46;
   const upright=bus||van||kind==='cab',ra=upright?.22:['suv','cullinan','range'].includes(kind)?.43:.62,rb=upright?.16:rally?.32:.52;
-  for(const side of [sn>=0?1:-1]){
+  for(const side of [nearSide]){
    poly([[side*baseW,belt,roofStart],[side*roofW,H,roofStart+ra],[side*roofW,H,roofEnd-rb],[side*baseW,belt,roofEnd]],body,'#bac3c55c');
    const glazedEnd=['van','truck'].includes(kind)?roofStart+L*.22:roofEnd;
    poly([[side*(baseW-.035),belt+.09,roofStart+.16],[side*(roofW+.007),H-.08,roofStart+ra+.07],[side*(roofW+.007),H-.08,glazedEnd-rb-.08],[side*(baseW-.035),belt+.09,glazedEnd-.16]],'#243e4b','#a6bcc450');
@@ -2915,7 +2916,7 @@ function drawDetailedRoadCar(mesh,info={}){
   const glass=ctx.createLinearGradient(0,-H*scale,0,-belt*scale);glass.addColorStop(0,'#12232e');glass.addColorStop(.48,'#537383');glass.addColorStop(.53,'#304958');glass.addColorStop(1,'#192f3b');
   for(const end of [front?-1:1]){const z=end<0?roofStart:roofEnd,rz=z+(end<0?ra:-rb);poly([[-baseW,belt,z],[baseW,belt,z],[roofW,H,rz],[-roofW,H,rz]],body,'#a4b1b35c');if(!(van&&!front&&kind!=='keitruck'&&kind!=='hiace'))poly([[-baseW*.90,belt+.07,z],[baseW*.90,belt+.07,z],[roofW*.91,H-.075,rz],[-roofW*.91,H-.075,rz]],glass,'#d0dad65f');line([[-baseW*.65,belt+.09,z],[baseW*.12,belt+.34,z+.02]],'#141e26',.019);}
   // Near-side wheel openings, rolled arches and recessed rotating alloy hubs.
-  for(const z0 of axles){const side=sn>=0?1:-1,p=P(side*W*.505,R,z0),rx=Math.max(.055,Math.abs(sn)*R)*scale;
+  for(const z0 of axles){const side=nearSide,p=P(side*W*.505,R,z0),rx=Math.max(.055,Math.abs(sn)*R)*scale;
    ctx.fillStyle='#0b1116';ctx.beginPath();ctx.ellipse(p[0],p[1],rx+.055*scale,R*1.04*scale,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=body;ctx.lineWidth=.025*scale;ctx.stroke();
    ctx.fillStyle='#1a2126';ctx.beginPath();ctx.ellipse(p[0],p[1],rx,R*.94*scale,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#515b60';ctx.lineWidth=.018*scale;ctx.stroke();
    ctx.fillStyle='#4b565d';ctx.beginPath();ctx.ellipse(p[0],p[1],rx*.70,R*.62*scale,0,0,Math.PI*2);ctx.fill();
@@ -2933,7 +2934,7 @@ function drawDetailedRoadCar(mesh,info={}){
    const coat=ctx.createLinearGradient(0,-fy*scale,0,-low*scale);coat.addColorStop(0,'#ffffff24');coat.addColorStop(.38,'#ffffff05');coat.addColorStop(.8,'#00000012');coat.addColorStop(1,'#0000005c');ctx.fillStyle=coat;ctx.fill();ctx.strokeStyle='#17263090';ctx.lineWidth=.012*scale;ctx.stroke();
    const q1=q(-W*.34,fy*.54),q2=q(W*.34,fy*.54);ctx.strokeStyle='#aabfc33a';ctx.lineWidth=.018*scale;ctx.beginPath();ctx.moveTo(...q1);ctx.quadraticCurveTo(...q(0,fy*.49),...q2);ctx.stroke();
    for(const side of [-1,1]){line([[side*W*.23,hood*.96,-L*.36],[side*W*.33,belt,roofStart]],'#cedbdd3b',.012);}
-   if(lux||kind==='maybach')for(const side of [sn>=0?1:-1])line([[side*W*.505,belt-.03,roofStart],[side*W*.505,belt-.03,roofEnd]],'#d5c9a77a',.012);
+   if(lux||kind==='maybach')for(const side of [nearSide])line([[side*W*.505,belt-.03,roofStart],[side*W*.505,belt-.03,roofEnd]],'#d5c9a77a',.012);
   }
   // Direction selects the actual nose or tail: never red lamps on an approaching car.
   if(front){
@@ -2971,7 +2972,7 @@ function drawDetailedRoadCar(mesh,info={}){
   if(bus){
    // Separate upper/lower glazing and destination blinds for the double-decker.
    if(kind==='ddbus'){
-    const side=sn>=0?1:-1;
+    const side=nearSide;
     for(let j=0;j<6;j++){const za=roofStart+.35+j*(roofEnd-roofStart-.7)/6,zb=za+(roofEnd-roofStart-.7)/6-.10;
      poly([[side*W*.503,H*.29,za],[side*W*.503,H*.29,zb],[side*W*.503,H*.46,zb],[side*W*.503,H*.46,za]],glass,'#bcc7c84a');
     }
@@ -4365,7 +4366,7 @@ function drawDetailedRoadCar(mesh,info={}){
   function bindTrackpadSteering() {
     const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown'),number=document.getElementById('trackpadCountdownNum');
     let timer=null,ownFullscreen=false;
-    const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit');
+    const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit,#mapCanvas');
     const cancel=()=>{clearTimeout(timer);timer=null;if(countdown)countdown.hidden=true;};
     const disable=()=>{cancel();state.trackpadSteering=false;state.touchSteer=0;state.trackpadLastInput=-99;document.documentElement.classList.remove('trackpad-steer');document.documentElement.style.setProperty('--tw-rot','0deg');if(capture)capture.hidden=true;if(ownFullscreen&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});ownFullscreen=false;};
     window.addEventListener('keydown',e=>{
@@ -4472,13 +4473,13 @@ const app=window.P1App;
   if(rally())app.seedRivals?.();
   if(key==='db5'){
    // A route constraint, deliberately not a collision. Keep forward speed and
-   // remove only the attempted outward travel. No impulse, damage or sparks.
+   // remove only the attempted outward travel. Never snap the viewing heading.
+   app.routeBoundaryActive=()=>s.route.active&&!s.stage?.sea&&!/Pacific|Oil Rig|Sea Chase/i.test(s.route.name)&&!s.inPitLane;
    app.constrainRoute=function(){
-    if(!s.route.active||s.stage?.sea||/Pacific|Oil Rig|Sea Chase/i.test(s.route.name)||s.inPitLane)return false;
-    const hw=app.halfWidthAt(s.distanceM),edge=Math.max(.2,hw-(app.track2Vehicle?.halfWidth||.86)-.08);
+    if(!app.routeBoundaryActive())return false;
+    const hw=app.halfWidthAt(s.distanceM),edge=Math.max(.2,hw-(app.track2Vehicle?.halfWidth||.86)-.25);
     if(Math.abs(s.laneOffset)<=edge)return false;const side=Math.sign(s.laneOffset);
     s.laneOffset=side*edge;
-    if(Math.sin(s.headingRel)*Math.sign(s.speedMps||1)*side>0)s.headingRel=Math.cos(s.headingRel)>=0?0:Math.PI;
     s.bodyRoll*=.8;s.offTrack=0;return true;
    };
    const physics=app.updatePhysics;app.updatePhysics=function(dt){app.constrainRoute();physics(dt);app.constrainRoute();};

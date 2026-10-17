@@ -19,7 +19,12 @@ try{
   const pinch=await page.evaluate(()=>__mucs.getSimApp().gps.inspect());assert.ok(pinch.zoom>wheel*1.7);assert.equal(pinch.preset,1);
   assert.equal(await f.locator('#gpsUnit button:visible').count(),0);
   await canvas.click();await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>__mucs.getSimApp().gps.inspect().preset),2);
-  checks.push({key,wheelZoom:wheel,pinchZoom:pinch.zoom,visibleButtons:0});await page.evaluate(()=>__mucs.backToGarage());
+  const before=await canvas.boundingBox(),tx=before.x+before.width/2,ty=before.y+before.height/2;
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchStart',touchPoints:[{id:1,x:tx,y:ty}]});
+  for(let i=1;i<=10;i++)await cdp.send('Input.dispatchTouchEvent',{type:'touchMove',touchPoints:[{id:1,x:tx-i*20,y:ty-i*12}]});
+  await cdp.send('Input.dispatchTouchEvent',{type:'touchEnd',touchPoints:[]});await page.waitForTimeout(200);
+  const after=await canvas.boundingBox();assert.ok(after.x<before.x-150);assert.ok(after.y<before.y-80);assert.equal(await page.evaluate(()=>__mucs.getSimApp().gps.inspect().preset),2,'Drag must not switch preset');
+  checks.push({key,wheelZoom:wheel,pinchZoom:pinch.zoom,touchDrag:{x:after.x-before.x,y:after.y-before.y},visibleButtons:0});await page.evaluate(()=>__mucs.backToGarage());
  }
  assert.deepEqual(errors,[]);fs.writeFileSync('tests/refinements/map-gesture-results.json',JSON.stringify({checks,errors},null,2));console.log('PASS outline mouse-wheel, touch pinch, click preset and no buttons:',checks.length,'cars');
 }finally{await browser.close();}

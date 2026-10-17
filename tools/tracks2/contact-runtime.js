@@ -62,7 +62,7 @@
    // Coordinate projection is only telemetry off road. It must never discard a
    // physical position just because no nearby centreline represents it exactly.
    const b=active||current;
-   if(!r&&!active&&!app.pitHeld?.()&&!s.inPitLane&&(Math.abs(s.laneOffset)>app.halfWidthAt(s.distanceM)+.25||Math.abs(s.laneOffset*app.trackAt(s.distanceM).k)>.32)){
+   if(!r&&!active&&!app.routeBoundaryActive?.()&&!app.pitHeld?.()&&!s.inPitLane&&(Math.abs(s.laneOffset)>app.halfWidthAt(s.distanceM)+.25||Math.abs(s.laneOffset*app.trackAt(s.distanceM).k)>.32)){
     activate(b);b.age=2;b.freeMotion=true;
    }
    b.beforeSpeed=r?r.speedMps:s.speedMps;b.beforeD=r?r.distM:s.distanceM;b.beforeQ=r?r.pitQ:s.pitQ;b.beforeN=r?r.lane:s.laneOffset;b.beforeRel=r?r.contactHeading:s.headingRel;b.prev={x:b.x,z:b.z,y:b.y,yaw:b.yaw};frame.push(b);
