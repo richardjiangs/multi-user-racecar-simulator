@@ -4141,7 +4141,7 @@
 /* Persistent London coordinates shared by roads, navigation, traffic and camera.
    The existing authored road graph is retained; no street moves when a turn is chosen. */
 (function(root){
- function installCityNetwork(app,drawVehicle){
+ function installCityNetwork(app,drawVehicle,drawLondonMap){
   if(!app.LDN||app.cityNetwork)return;
   const s=app.state,G=app.LDN,C=(v,a,b)=>Math.max(a,Math.min(b,v)),A=v=>Math.atan2(Math.sin(v),Math.cos(v));
   const pos=n=>({x:n.e*1000,z:n.n*1000}),bearing=(r,dir)=>r.brg+(dir<0?Math.PI:0),end=(r,dir)=>dir>0?r.B:r.A;
@@ -4157,37 +4157,96 @@
   }
   function curve(c,u){if(Math.abs(c.turn)>Math.PI-.02){const f=Math.sin(Math.PI*u),dx=.3*c.R*f*f*Math.sin(2*Math.PI*u),dz=c.R*f,ddx=.3*c.R*(2*f*Math.PI*Math.cos(Math.PI*u)*Math.sin(2*Math.PI*u)+f*f*2*Math.PI*Math.cos(2*Math.PI*u)),ddz=c.R*Math.PI*Math.cos(Math.PI*u);return{x:c.P.x+dx*Math.cos(c.a)+dz*Math.sin(c.a),z:c.P.z-dx*Math.sin(c.a)+dz*Math.cos(c.a),psi:c.a+Math.atan2(ddx,ddz),y:0};}const v=1-u,x=v*v*c.P.x+2*v*u*c.p.x+u*u*c.Q.x,z=v*v*c.P.z+2*v*u*c.p.z+u*u*c.Q.z,dx=2*v*(c.p.x-c.P.x)+2*u*(c.Q.x-c.p.x),dz=2*v*(c.p.z-c.P.z)+2*u*(c.Q.z-c.p.z);return{x,z,psi:Math.atan2(dx,dz),y:0};}
   function path(r,dir,d,entry,exit){if(entry&&d<entry.R)return curve(entry,.5+.5*C(d/entry.R,0,1));if(exit&&d>r.len-exit.R)return curve(exit,.5*C((d-r.len+exit.R)/exit.R,0,1));return roadPoint(r,dir,d);}
-  let nav=null,lastPlan='',routeLinks=[],routePoints=[];
+  let nav=null,lastPlan='',routeLinks=[],routePoints=[],routeTurns=[],routeEnd=0,revision=0,recalculations=0,travelled=0,lastDistance=null;
   const signal=(node)=>{const cycle=52+node.roads.length*8,u=((s.routeTime+node.e*31+node.n*17)%cycle+cycle)%cycle;return u<cycle*.52?'green':u<cycle*.52+3.4?'amber':'red';};
   function shortest(start,target){const dist=new Map([[start,0]]),prev=new Map(),todo=new Set(G.nodes);while(todo.size){let node=null,best=Infinity;for(const n of todo){const d=dist.get(n)??Infinity;if(d<best){best=d;node=n;}}if(!node||node===target)break;todo.delete(node);for(const l of node.roads){if((l.out>0?l.road.fwd:l.road.back)<=0)continue;const next=end(l.road,l.out),d=best+l.road.len;if(d<(dist.get(next)??Infinity)){dist.set(next,d);prev.set(next,{node,link:l});}}}if(!dist.has(target))return null;const links=[];for(let n=target;n!==start;){const p=prev.get(n);if(!p)return null;links.unshift(p.link);n=p.node;}return{links,distance:dist.get(target)};}
   const locations=G.nodes.map(n=>({id:n.id,name:n.name,node:n,...pos(n)}));
   const baker=roads.find(r=>r.name==='Baker Street (A41)');
   if(baker){const p=roadPoint(baker,1,baker.len*.66);locations.push({id:'221b-baker',name:'221B Baker Street · Sherlock Holmes Museum',node:baker.B,road:baker,d:baker.len*.66,...p});}
-  function plan(){const L=s.ldn;if(!L||!nav)return;const id=L.road.networkId+':'+L.dir+':'+nav.id;if(id===lastPlan){if(routePoints.length)routePoints[0]=playerPoint();return;}lastPlan=id;
-   if(nav.road===L.road){const d=L.dir>0?nav.d:L.road.len-nav.d;if(d>=s.distanceM){routeLinks=[];routePoints=[playerPoint(),{x:nav.x,z:nav.z}];return;}}
-   let candidates=[];if(nav.road){for(const n of [nav.road.A,nav.road.B]){const q=shortest(L.next,n);if(q)candidates.push({...q,node:n,tail:n===nav.road.A?nav.d:nav.road.len-nav.d});}}
-   else{const q=shortest(L.next,nav.node);if(q)candidates=[{...q,node:nav.node,tail:0}];}
-   const best=candidates.sort((a,b)=>(a.distance+a.tail)-(b.distance+b.tail))[0];routeLinks=best?.links||[];
-   if(nav.road&&best&&best.tail>1)routeLinks.push({road:nav.road,out:best.node===nav.road.A?1:-1});
-   routePoints=[playerPoint(),pos(L.next),...routeLinks.map(l=>pos(end(l.road,l.out)))];routePoints[routePoints.length-1]={x:nav.x,z:nav.z};
+  function plan(){
+   const L=s.ldn;if(!L||!nav)return;
+   const addressD=nav.road===L.road?(L.dir>0?nav.d:L.road.len-nav.d):null;
+   const id=L.road.networkId+':'+L.dir+':'+nav.id+':'+(addressD!==null&&s.distanceM>addressD+12);
+   if(id===lastPlan)return;lastPlan=id;revision++;
+   if(addressD!==null&&addressD>=s.distanceM-12){routeLinks=[];}
+   else {
+    const candidates=[];
+    if(nav.road){for(const node of [nav.road.A,nav.road.B]){const q=shortest(L.next,node);if(q)candidates.push({...q,node,tail:node===nav.road.A?nav.d:nav.road.len-nav.d});}}
+    else {const q=shortest(L.next,nav.node);if(q)candidates.push({...q,node:nav.node,tail:0});}
+    const best=candidates.sort((a,b)=>(a.distance+a.tail)-(b.distance+b.tail))[0];routeLinks=best?.links.slice()||[];
+    if(nav.road&&best&&best.tail>1)routeLinks.push({road:nav.road,out:best.node===nav.road.A?1:-1});
+   }
+   const legs=[{road:L.road,out:L.dir},...routeLinks];routePoints=[];routeTurns=[];let q0=0,entry=L.netEntry;
+   for(let i=0;i<legs.length;i++){
+    const leg=legs[i],r=leg.road,next=legs[i+1],exit=next?bend(r,leg.out,next):null;
+    const finish=i===legs.length-1&&nav.road===r?(leg.out>0?nav.d:r.len-nav.d):r.len;
+    for(let j=0,N=Math.max(1,Math.ceil(finish/8));j<=N;j++){const d=finish*j/N,p=path(r,leg.out,d,entry,exit);routePoints.push({...p,q:q0+d,lane:laneOffset(r),road:r.networkId});}
+    if(next){const turn=A(bearing(next.road,next.out)-bearing(r,leg.out)),abs=Math.abs(turn);routeTurns.push({q:q0+r.len,angle:turn,road:next.road.name,node:end(r,leg.out).id,action:abs>2.6?'Make a U-turn':abs>.55?(turn>0?'Turn right':'Turn left'):abs>.20?(turn>0?'Keep right':'Keep left'):'Continue',kind:abs>2.6?'uturn':abs>.20?(turn>0?'right':'left'):'straight'});}
+    q0+=finish;entry=exit;
+   }
+   routeEnd=q0;
   }
-  function destination(id){const p=typeof id==='object'?id:locations.find(p=>p.id===id);if(!p)return false;if(!s.ldn)app.enterLondon();nav={...p,arrived:false};for(const id of ['gpsDestination','cityDestination']){const el=app.canvas.ownerDocument.getElementById(id);if(el)el.value=p.id;}lastPlan='';plan();app.showToast?.('Destination: '+p.name,'Navigation');return true;}
+  function guideAt(q){
+   plan();if(!routePoints.length)return null;let lo=0,hi=routePoints.length-1;
+   if(q<=routePoints[0].q)return routePoints[0];if(q>=routePoints[hi].q)return routePoints[hi];
+   while(hi-lo>1){const m=(lo+hi)>>1;if(routePoints[m].q<=q)lo=m;else hi=m;}
+   const a=routePoints[lo],b=routePoints[hi],u=(q-a.q)/Math.max(.001,b.q-a.q);return {...a,x:a.x+(b.x-a.x)*u,z:a.z+(b.z-a.z)*u,psi:a.psi+A(b.psi-a.psi)*u,q,lane:a.lane+(b.lane-a.lane)*u};
+  }
+  function navigation(){
+   if(!s.ldn||!nav)return null;plan();const remaining=Math.max(0,routeEnd-s.distanceM),turns=routeTurns.filter(t=>t.q>=s.distanceM-2).map(t=>({...t,distance:Math.max(0,t.q-s.distanceM)}));
+   turns.push({action:'Arrive',kind:'arrive',road:nav.name,distance:remaining});
+   return {destination:nav.name,arrived:nav.arrived,remaining,etaSeconds:Math.round(remaining/8.5),progress:nav.arrived?1:travelled/Math.max(1,travelled+remaining),turns:turns.slice(0,3),revision,recalculations};
+  }
+  function plannedPoints(max=Infinity){if(!nav||!s.ldn)return[];plan();const p=guideAt(s.distanceM);return[p,...routePoints.filter(p=>p.q>s.distanceM&&p.q<=s.distanceM+max)].filter(Boolean);}
+  function destination(id){
+   if(!id){nav=null;routeLinks=[];routePoints=[];routeTurns=[];lastPlan='';travelled=0;for(const id of ['gpsDestination','cityDestination']){const el=app.canvas.ownerDocument.getElementById(id);if(el)el.value='';}app.showToast?.('Destination cleared — explore London freely.','Navigation');return true;}
+   const p=typeof id==='object'?id:locations.find(p=>p.id===id);if(!p)return false;if(!s.ldn)app.enterLondon();nav={...p,arrived:false};travelled=0;lastDistance=s.distanceM;
+   for(const id of ['gpsDestination','cityDestination']){const el=app.canvas.ownerDocument.getElementById(id);if(el)el.value=p.id;}
+   lastPlan='';plan();app.showToast?.('Destination: '+p.name,'Navigation');return true;
+  }
   function arrivalSpeedLimit(){if(!s.ldn||!nav||!(s.chauffeur||s.testDriver))return Infinity;if(nav.arrived)return 0;const L=s.ldn;let remaining=Infinity;if(nav.road===L.road)remaining=(L.dir>0?nav.d:L.road.len-nav.d)-s.distanceM;else if(!nav.road&&nav.node===L.next)remaining=L.road.len-s.distanceM;return remaining>=-20?Math.sqrt(2.8*Math.max(0,remaining-4)):Infinity;}
-  function choose(L){plan();const auto=s.chauffeur||s.testDriver||s.assist||s.laneAssist;const planned=routeLinks[0];if(nav&&auto&&planned&&L.next.roads.includes(planned))return planned;
+  function driverIntent(){const k=s.keys||{},key=(k.KeyD||k.ArrowRight?1:0)-(k.KeyA||k.ArrowLeft?1:0);if(key)return key;return (s.touchActive||s.trackpadSteering&&s.time-s.trackpadLastInput<.5)?(s.touchSteer||0):0;}
+  function choose(L){
+   plan();const choices=linkChoices(L.road,L.dir),manual=driverIntent(),base=bearing(L.road,L.dir),facing=A(playerPoint().psi-base);
+   if(Math.abs(manual)>.12){const want=manual*1.7+facing*.6,all=Math.abs(facing)>2?[...choices,L.next.roads.find(l=>l.road===L.road)].filter(Boolean):choices;
+    const selected=all.slice().sort((a,b)=>Math.abs(A(bearing(a.road,a.out)-base-want))-Math.abs(A(bearing(b.road,b.out)-base-want)))[0];
+    if(selected&&L.road.len-s.distanceM<100)L.manualChoice=selected;return selected||straightChoice(L.road,L.dir);
+   }
+   if(L.manualChoice)return L.manualChoice;
+   const planned=routeLinks[0],auto=s.chauffeur||s.testDriver||s.assist||s.laneAssist;
    if(nav&&auto&&planned){const match=L.next.roads.find(l=>l.road===planned.road&&l.out===planned.out);if(match)return match;}
-   const choices=linkChoices(L.road,L.dir),want=(s.headingRel||0)*.7+(s.steer||0)*1.55,straight=straightChoice(L.road,L.dir);if(Math.abs(want)<.30)return straight;return choices.sort((a,b)=>Math.abs(A(bearing(a.road,a.out)-bearing(L.road,L.dir))-want)-Math.abs(A(bearing(b.road,b.out)-bearing(L.road,L.dir))-want))[0]||straight;
+   return straightChoice(L.road,L.dir);
   }
-  function prepare(){const L=s.ldn;if(!L)return;const remaining=L.road.len-s.distanceM;if(!L.netExit||remaining>26){const link=choose(L);if(link)L.netExit={link,curve:bend(L.road,L.dir,link)};}s.ldnTurn=L.netExit?{link:L.netExit.link,turn:L.netExit.curve.turn}:null;}
+  function rebase(L,p){
+   // A late steering override can select a different exit. Preserve the car's
+   // world position and heading when changing the underlying junction curve.
+   const lower=Math.max(0,s.distanceM-80),upper=L.road.len+L.netExit.curve.R+40;
+   const error=q=>{const c=at(q);return(c.x-p.x)**2+(c.z-p.z)**2;};
+   // Include the outgoing half of the junction: a late override may already
+   // lie beyond its midpoint. A bounded minimizer cannot overshoot on tight
+   // bends or oscillate between the two sides of a hairpin.
+   const step=(upper-lower)/120;let best=Infinity,d=s.distanceM;
+   for(let i=0;i<=120;i++){const q=lower+step*i,e=error(q);if(e<best){best=e;d=q;}}
+   let lo=Math.max(lower,d-step),hi=Math.min(upper,d+step);const ratio=(Math.sqrt(5)-1)/2;
+   let x=hi-ratio*(hi-lo),y=lo+ratio*(hi-lo),ex=error(x),ey=error(y);
+   for(let i=0;i<42;i++){if(ex<ey){hi=y;y=x;ey=ex;x=hi-ratio*(hi-lo);ex=error(x);}else{lo=x;x=y;ex=ey;y=lo+ratio*(hi-lo);ey=error(y);}}
+   d=(lo+hi)/2;const c=at(d);s.distanceM=d;s.laneOffset=(p.x-c.x)*Math.cos(c.psi)-(p.z-c.z)*Math.sin(c.psi);s.headingRel=A(p.psi-c.psi);lastDistance=d;
+  }
+  function prepare(){
+   const L=s.ldn;if(!L)return;const remaining=L.road.len-s.distanceM,manual=Math.abs(driverIntent())>.12;
+   if(!L.netExit||remaining>26||manual){const link=choose(L);if(link&&(L.netExit?.link.road!==link.road||L.netExit?.link.out!==link.out)){const before=L.netExit&&remaining<L.netExit.curve.R?playerPoint():null;L.netExit={link,curve:bend(L.road,L.dir,link)};if(before)rebase(L,before);}}
+   s.ldnTurn=L.netExit?{link:L.netExit.link,turn:L.netExit.curve.turn}:null;
+  }
   function at(d){let L=s.ldn;for(let i=0;i<20;i++){if(d<0&&L.previous){L=L.previous;d+=L.road.len;continue;}if(d>L.road.len){const exit=L.netExit||(()=>{const link=straightChoice(L.road,L.dir);return link?{link,curve:bend(L.road,L.dir,link)}:null;})();if(exit){d-=L.road.len;L={road:exit.link.road,dir:exit.link.out,netEntry:exit.curve};continue;}}return path(L.road,L.dir,d,L.netEntry,L.netExit?.curve);}return roadPoint(L.road,L.dir,d);}
   function actorPose(r){const p=right(at(r.distM),r.lane||0);return{...p,psi:p.psi+(r.contactHeading||0)};}
   function curvature(d){return s.ldn?A(at(d+.05).psi-at(d-.05).psi)/.1:null;}
   function playerPoint(){if(!s.ldn)return null;const p=right(at(s.distanceM),s.laneOffset||0);return{...p,psi:p.psi+(s.headingRel||0)};}
-  function step(){let L=s.ldn;if(!L)return;prepare();
-   if(s.distanceM>=L.road.len&&L.netExit){const excess=s.distanceM-L.road.len,link=L.netExit.link;for(const r of s.rivals||[])r.distM-=L.road.len;s.ldn={road:link.road,dir:link.out,node:L.next,next:end(link.road,link.out),origin:(L.origin||0)+L.road.len,netEntry:L.netExit.curve,inTurn:L.netExit.curve.turn,previous:L};s.distanceM=excess;L=s.ldn;lastPlan='';prepare();}
-   if(s.distanceM<0){if(L.previous){const old=L.previous;s.distanceM+=old.road.len;for(const r of s.rivals||[])r.distM+=old.road.len;s.ldn=old;L=old;lastPlan='';}else s.distanceM=0;}
+  function step(){let L=s.ldn;if(!L)return;if(lastDistance!==null)travelled+=Math.max(0,Math.min(10,s.distanceM-lastDistance));lastDistance=s.distanceM;prepare();
+   if(s.distanceM>=L.road.len&&L.netExit){const excess=s.distanceM-L.road.len,link=L.netExit.link;if(nav&&routeLinks[0]&&(routeLinks[0].road!==link.road||routeLinks[0].out!==link.out))recalculations++;for(const r of s.rivals||[])r.distM-=L.road.len;s.ldn={road:link.road,dir:link.out,node:L.next,next:end(link.road,link.out),origin:(L.origin||0)+L.road.len,netEntry:L.netExit.curve,inTurn:L.netExit.curve.turn,previous:L};s.distanceM=excess;lastDistance=excess;L=s.ldn;lastPlan='';prepare();}
+   if(s.distanceM<0){if(L.previous){const old=L.previous;s.distanceM+=old.road.len;for(const r of s.rivals||[])r.distM+=old.road.len;s.ldn=old;L=old;lastDistance=s.distanceM;lastPlan='';}else s.distanceM=0;}
 
    s.edgeD=s.distanceM;s.route.totalM=L.road.len;s.route.remainingM=L.road.len-s.distanceM;s.route.label=L.road.name;s.route.arrived=false;
-   if(nav){const p=playerPoint(),near=Math.hypot(p.x-nav.x,p.z-nav.z);if(near<22&&Math.abs(s.speedMps)<1.5&&!nav.arrived){nav={...nav,arrived:true};app.showToast?.('Arrived at '+nav.name,'Navigation');}}
+   if(nav){const p=playerPoint(),near=Math.hypot(p.x-nav.x,p.z-nav.z);if(near>35&&nav.arrived){nav.arrived=false;lastPlan='';}if(near<22&&Math.abs(s.speedMps)<1.5&&!nav.arrived){nav={...nav,arrived:true};app.showToast?.('Arrived at '+nav.name,'Navigation');}}
   }
   function addRoad(r){const half=width(r)/2,N=Math.ceil(r.len/20);for(let i=0;i<N;i++){const d0=i*r.len/N,d1=(i+1)*r.len/N;for(const[H,y,col]of[[half+3,-.03,'#a9a59b'],[half,0,'#3a3f43']]){const a=roadPoint(r,1,d0),b=roadPoint(r,1,d1);primitives.push({points:[right(a,-H),right(a,H),right(b,H),right(b,-H)].map(p=>({...p,y})),color:col,road:r.networkId});}if(i%2===0){const a=roadPoint(r,1,d0+2),b=roadPoint(r,1,Math.min(d1,d0+6));primitives.push({points:[right(a,-.065),right(a,.065),right(b,.065),right(b,-.065)].map(p=>({...p,y:.012})),color:'#d9d8cd',road:r.networkId});}}
    for(let d=40;d<r.len-38;d+=24+random()*15)for(const side of [-1,1]){const open=app.londonOpen?.find(o=>o.re.test(r.name)&&(o.both||o.side===side));if(open){if(open.kind==='park')trees.push(right(roadPoint(r,1,d),side*(half+8)));continue;}const p=right(roadPoint(r,1,d),side*(half+8+random()*3));if(roads.some(o=>o!==r&&distanceRoad(p,o)<width(o)/2+7))continue;const look=app.londonLook?.[(d<r.len/2?r.A:r.B).district]||{kind:'victorian',storeys:5};buildings.push({...p,psi:r.brg,w:11+random()*10,depth:9+random()*10,height:Math.max(2,look.storeys-1+Math.floor(random()*3))*3.4,side,seed:random(),kind:look.kind,brick:random()<.48,color:['#a69581','#918578','#b5aea0','#8d7469'][Math.floor(random()*4)],road:r.networkId});}
@@ -4254,8 +4313,7 @@
    if(towerBridge){const r=towerBridge,mid=r.len/2,half=width(r)/2,lift=app.bridgeLift?.(s.routeTime)?.open||0,ang=lift*43*Math.PI/180,P=(d,n,y=0)=>({...right(roadPoint(r,1,d),n),y});if(lift>.001){polygon([P(mid-30.5,-half),P(mid+30.5,-half),P(mid+30.5,half),P(mid-30.5,half)],'#42697a');for(const side of [-1,1]){const d=mid+side*30.5,tip=d-side*30.5*Math.cos(ang),H=30.5*Math.sin(ang);polygon([P(d,-half),P(d,half),P(tip,half,H),P(tip,-half,H)],'#555d64');}}for(const side of [-1,1]){const n=side*(half+3);polygon([P(mid-30.5,n-1,34),P(mid+30.5,n-1,34),P(mid+30.5,n+1,36),P(mid-30.5,n+1,36)],'#81a9ad');}}
    const objects=[];for(const p of landmarks){const q=camera(p);if(q.z>2&&q.z<1200)objects.push({type:'landmark',depth:q.z,p,q});}for(const p of trees){const q=camera(p);if(q.z>1&&q.z<650)objects.push({type:'tree',depth:q.z,p,q});}for(const b of buildings){if(visible(b)){const p=camera(b);objects.push({depth:p.z,type:'building',b});}}
    const actors=traffic.map(c=>({c,p:trafficPose(c)}));if(s.raceGrid)for(const c of s.rivals||[]){if(!c.gone&&!c.out)actors.push({c,p:actorPose(c)});}
-   for(const c of s.pursuit||[]){const p=right(at(s.distanceM-c.gap),c.lane);actors.push({c,p});}
-   if(s.police&&Number.isFinite(s.police.z))actors.push({c:{kind:'police',speed:s.speedMps},p:right(at(s.distanceM+s.police.z),s.laneOffset)});
+   for(const p of policePoses())actors.push({c:{kind:'police',name:p.name,speed:s.speedMps},p});
    for(const {c,p} of actors){const q=camera(p);if(q.z>1&&q.z<1100&&Math.abs(q.x)<q.z*slope+10)objects.push({depth:q.z,type:'car',c,p,q});}
    for(const node of G.nodes){const p=pos(node),q=camera(p);if(q.z>1&&q.z<500&&Math.abs(q.x)<q.z*2)objects.push({depth:q.z,type:'junction',node,p,q});}
    objects.sort((a,b)=>b.depth-a.depth);
@@ -4278,25 +4336,486 @@
    }ctx.globalAlpha=1;
    if(nav){const q=camera(nav);if(q.z>1&&q.z<600){const p=project(q);ctx.fillStyle='#f0c661';ctx.beginPath();ctx.arc(p.x,p.y-25,7,0,Math.PI*2);ctx.fill();ctx.font='12px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.strokeStyle='#17222c';ctx.lineWidth=3;ctx.strokeText(nav.name,p.x,p.y-40);ctx.fillText(nav.name,p.x,p.y-40);}}
   }
+  function policePoses(){
+   const result=[];if(!s.ldn)return result;
+   for(const c of s.pursuit||[]){const d=Number.isFinite(c.gap)?s.distanceM-c.gap:c.distM;if(Number.isFinite(d))result.push({...right(at(d),c.lane??s.laneOffset),name:c.name||'Police',kind:'police'});}
+   if(s.police&&Number.isFinite(s.police.z))result.push({...right(at(s.distanceM+s.police.z),s.laneOffset),name:'Police',kind:'police'});return result;
+  }
+  function projectWorld(p,w=app.canvas.ownerDocument.defaultView.innerWidth,h=app.canvas.ownerDocument.defaultView.innerHeight){const eye=playerPoint(),dx=p.x-eye.x,dz=p.z-eye.z,cs=Math.cos(eye.psi),sn=Math.sin(eye.psi),z=dx*sn+dz*cs,x=dx*cs-dz*sn,focal=app.WIDTH_SCALE?380:360,scale=focal/(z||.00001);return{x:w/2+x*scale,y:h*.46+((app.WIDTH_SCALE?1.6:1.55)-(p.y||0))*scale,scale,fwd:z};}
+  function projectRelative(d,n=0){return projectWorld(right(at(s.distanceM+d),n));}
+  function driverSteer(gain=1){const look=C(Math.abs(s.speedMps)*.8,10,30),k=curvature(s.distanceM+look),err=laneOffset(s.ldn.road)-s.laneOffset,phi=C(err*.05,-.5,.5),yaw=k*s.speedMps+(phi-s.headingRel)*2.4*gain,st=app.STEERING;return C(Math.atan(yaw*st.wheelbase/Math.max(2.2,Math.abs(s.speedMps)))/(st.maxAngle*C(1.15-Math.abs(s.speedMps)*.013,.44,1)),-1,1);}
+  function driverTarget(){let target=13.41;const L=s.ldn,k=Math.max(Math.abs(curvature(s.distanceM+12)),Math.abs(curvature(s.distanceM+30)));if(k>.001)target=Math.min(target,Math.sqrt(2/k));if(L.next.roads.length>=3&&signal(L.next)!=='green')target=Math.min(target,Math.sqrt(4*Math.max(0,L.road.len-s.distanceM-6)));for(const c of traffic){if(c.road!==L.road||c.dir!==L.dir)continue;const gap=c.d-s.distanceM;if(gap>0&&gap<Math.max(25,s.speedMps*2))target=Math.min(target,Math.max(0,c.speed+(gap-12)*.4));}return Math.min(target,arrivalSpeedLimit());}
   function drawRear(x,y,w,h,pal,mirror={}){if(w<1||h<1)return;const ctx=app.ctx,eye=right(playerPoint(),mirror.eye||0);ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.translate(x+w,y);ctx.scale(-1,1);ctx.fillStyle='#adc7d3';ctx.fillRect(0,0,w,h);draw(w,h,pal,{eye:{...eye,psi:eye.psi+Math.PI+(mirror.yaw||0)},focal:w*.85});ctx.restore();}
   const mapCanvas=app.el.mapCanvas,originalMap=app.drawMap;let mapHits=[],mapZoom=1,mapCentre=null,mapTransform=null,mapDrag=null;
-  if(mapCanvas){const doc=mapCanvas.ownerDocument,choice=doc.createElement('select');choice.id='cityDestination';choice.setAttribute('aria-label','Map destination');choice.style.cssText='width:100%;padding:8px;background:#16232d;color:white;border:1px solid #576b74;border-radius:6px';choice.add(new Option('Choose a London destination…',''));for(const p of locations.slice().sort((a,b)=>a.name.localeCompare(b.name)))choice.add(new Option(p.name,p.id));(mapCanvas.closest('.smart-screen')||mapCanvas.parentElement).before(choice);choice.style.marginBottom='8px';choice.onchange=()=>destination(choice.value);
+  if(mapCanvas){const doc=mapCanvas.ownerDocument,choice=doc.createElement('select');choice.id='cityDestination';choice.setAttribute('aria-label','Map destination');choice.style.cssText='width:100%;padding:8px;background:#16232d;color:white;border:1px solid #576b74;border-radius:6px';choice.add(new Option('No destination · explore London',''));for(const p of locations.slice().sort((a,b)=>a.name.localeCompare(b.name)))choice.add(new Option(p.name,p.id));(mapCanvas.closest('.smart-screen')||mapCanvas.parentElement).before(choice);choice.style.marginBottom='8px';choice.onchange=()=>destination(choice.value);
    mapCanvas.addEventListener('click',e=>{if(!s.ldn||mapDrag?.moved)return;const rect=mapCanvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,hit=mapHits.map(p=>({...p,gap:Math.hypot(p.sx-x,p.sy-y)})).sort((a,b)=>a.gap-b.gap)[0];if(hit?.gap<12){destination(hit.id);choice.value=hit.id;}});
-   mapCanvas.style.touchAction='none';mapCanvas.addEventListener('wheel',e=>{if(!s.ldn||!mapTransform)return;e.preventDefault();e.stopPropagation();const t=mapTransform,r=mapCanvas.getBoundingClientRect(),dx=e.clientX-r.left-t.w/2,dz=-(e.clientY-r.top-t.h/2),worldX=t.cx+dx/t.scale,worldZ=t.cz+dz/t.scale;mapZoom=C(mapZoom*Math.exp(C(-e.deltaY*.003,-.5,.5)),1,60);const scale=t.fit*mapZoom;mapCentre={x:worldX-dx/scale,z:worldZ-dz/scale};app.drawMap();},{passive:false});
+   mapCanvas.style.touchAction='none';mapCanvas.addEventListener('wheel',e=>{if(!s.ldn||!mapTransform)return;e.preventDefault();e.stopPropagation();const t=mapTransform,r=mapCanvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,world=t.unproject(x,y),dx=x-t.ox,dz=t.oy-y,cs=Math.cos(t.bearing),sn=Math.sin(t.bearing);mapZoom=C(mapZoom*Math.exp(C(-e.deltaY*.003,-.5,.5)),1,60);const scale=t.fit*mapZoom;mapCentre={x:world.x-(dx*cs+dz*sn)/scale,z:world.z-(-dx*sn+dz*cs)/scale};app.drawMap();},{passive:false});
    mapCanvas.addEventListener('pointerdown',e=>{if(!s.ldn||!mapTransform)return;mapDrag={x:e.clientX,y:e.clientY,cx:mapTransform.cx,cz:mapTransform.cz,moved:false};mapCanvas.setPointerCapture(e.pointerId);});
-   mapCanvas.addEventListener('pointermove',e=>{if(!mapDrag||!mapCanvas.hasPointerCapture(e.pointerId))return;const dx=e.clientX-mapDrag.x,dy=e.clientY-mapDrag.y;if(Math.hypot(dx,dy)>4)mapDrag.moved=true;if(mapDrag.moved){mapCentre={x:mapDrag.cx-dx/mapTransform.scale,z:mapDrag.cz+dy/mapTransform.scale};app.drawMap();}});
-   app.drawMap=function(){if(!s.ldn)return originalMap?.();const w=mapCanvas.clientWidth||300,h=mapCanvas.clientHeight||380,dpr=Math.min(2,devicePixelRatio);if(mapCanvas.width!==w*dpr||mapCanvas.height!==h*dpr){mapCanvas.width=w*dpr;mapCanvas.height=h*dpr;}const g=mapCanvas.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);const xs=G.nodes.map(n=>n.e*1000),zs=G.nodes.map(n=>n.n*1000),minX=Math.min(...xs),maxX=Math.max(...xs),minZ=Math.min(...zs),maxZ=Math.max(...zs),fit=Math.min((w-24)/(maxX-minX),(h-30)/(maxZ-minZ)),scale=fit*mapZoom,cx=mapCentre?.x??(minX+maxX)/2,cz=mapCentre?.z??(minZ+maxZ)/2,X=x=>w/2+(x-cx)*scale,Y=z=>h/2-(z-cz)*scale;mapTransform={w,h,fit,scale,cx,cz};g.fillStyle='#15222c';g.fillRect(0,0,w,h);const line=(points,color,width)=>{g.beginPath();points.forEach((p,i)=>i?g.lineTo(X(p.x),Y(p.z)):g.moveTo(X(p.x),Y(p.z)));g.strokeStyle=color;g.lineWidth=width;g.stroke();};for(const r of roads)line([pos(r.A),pos(r.B)],'#8a979e',1.5);plan();if(nav)line(routePoints,'#59b6ff',3);mapHits=locations.map(p=>({...p,sx:X(p.x),sy:Y(p.z)}));for(const p of mapHits){g.fillStyle=p.id===nav?.id?'#f4be54':'#c7a5e0';g.beginPath();g.arc(p.sx,p.sy,p.id===nav?.id?5:2.5,0,Math.PI*2);g.fill();}const p=playerPoint();g.fillStyle='#fff';g.beginPath();g.arc(X(p.x),Y(p.z),4,0,Math.PI*2);g.fill();g.font='11px system-ui';g.fillStyle='#f2f7fb';g.fillText(nav?'To '+nav.name:'Tap a location or choose a destination',8,16,w-16);};
+   mapCanvas.addEventListener('pointermove',e=>{if(!mapDrag||!mapCanvas.hasPointerCapture(e.pointerId))return;const dx=e.clientX-mapDrag.x,dy=e.clientY-mapDrag.y;if(Math.hypot(dx,dy)>4)mapDrag.moved=true;if(mapDrag.moved){const cs=Math.cos(mapTransform.bearing),sn=Math.sin(mapTransform.bearing);mapCentre={x:mapDrag.cx-(dx*cs-dy*sn)/mapTransform.scale,z:mapDrag.cz+(dx*sn+dy*cs)/mapTransform.scale};app.drawMap();}});
+   app.drawMap=function(){if(!s.ldn)return originalMap?.();const w=mapCanvas.clientWidth||300,h=mapCanvas.clientHeight||380,dpr=Math.min(2,devicePixelRatio);if(mapCanvas.width!==w*dpr||mapCanvas.height!==h*dpr){mapCanvas.width=w*dpr;mapCanvas.height=h*dpr;}const g=mapCanvas.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);mapTransform=app.renderCityMap(g,w,h,{preset:1,zoom:mapZoom,centre:mapCentre});mapHits=mapTransform.pins.map(p=>({...p,sx:p.x,sy:p.y}));};
   }
-  app.cityNetwork={prepare,step,at,curvature,playerPoint,drawRear,trafficStep,draw,locations,destination,trafficPose,actorPose,arrivalSpeedLimit,traffic,roads,buildings,primitives,inspect:()=>({mapView:mapTransform?{...mapTransform,zoom:mapZoom}:null,destination:nav?.name,arrived:!!nav?.arrived,routePoints,routeLinks:routeLinks.map(l=>l.road.name),roads:roads.length,buildings:buildings.length,traffic:traffic.length}),get destinationPoint(){return nav;},get routePoints(){plan();return routePoints;}};
+  app.cityNetwork={prepare,step,at,curvature,playerPoint,guideAt,navigation,plannedPoints,width,grounds,trees,landmarks,policePoses,projectWorld,projectRelative,driverSteer,driverTarget,signalState:signal,drawRear,trafficStep,draw,locations,destination,trafficPose,actorPose,arrivalSpeedLimit,traffic,roads,buildings,primitives,inspect:()=>({mapView:mapTransform?Object.fromEntries(['w','h','fit','scale','cx','cz','bearing','ox','oy'].map(k=>[k,mapTransform[k]]).concat([['zoom',mapZoom]])):null,destination:nav?.name,arrived:!!nav?.arrived,routePoints,routeLinks:routeLinks.map(l=>l.road.name),roads:roads.length,buildings:buildings.length,traffic:traffic.length}),mapProject:p=>mapTransform?.project(p),get destinationPoint(){return nav;},get routePoints(){return plannedPoints();}};
+  app.renderCityMap=(g,width,height,options={})=>drawLondonMap(g,{network:app.cityNetwork,state:s,width,height,...options});
   const physics=app.updatePhysics;app.updatePhysics=function(dt){if(s.ldn)prepare();return physics.call(app,dt);};
  }
  root.MUCSCityNetwork={install:installCityNetwork};
+})(typeof window==='undefined'?globalThis:window);
+
+/* London graph and district profiles from the archived Spectre simulator.
+   Generated by build-london-data.mjs. Coordinates remain unchanged. */
+(function(root){function create(){
+const n = (id, e, no, name, district) => ({ id, e, n: no, name, district: district || "inner" });
+const LDN_NODES = [
+  /* ---------------- CHARING CROSS AND THE WEST END ------------------------ */
+  n("charingx",   0.00,  0.00, "Charing Cross",                "west-end"),
+  n("trafalgar", -0.02,  0.08, "Trafalgar Square",             "west-end"),
+  n("admiralty", -0.13,  0.10, "Admiralty Arch",               "west-end"),
+  n("pallmalle", -0.24,  0.12, "Pall Mall East",               "west-end"),
+  n("picccirc",  -0.36,  0.20, "Piccadilly Circus",            "west-end"),
+  n("oxfordcirc",-0.44,  0.62, "Oxford Circus",                "west-end"),
+  n("tottcrd",   -0.14,  0.70, "Tottenham Court Road",         "west-end"),
+  n("cambcirc",  -0.24,  0.36, "Cambridge Circus",             "west-end"),
+  n("leicester", -0.20,  0.18, "Leicester Square",             "west-end"),
+  n("hydeparkc", -1.35,  0.29, "Hyde Park Corner",             "west-end"),
+  n("marblearch",-1.42,  0.86, "Marble Arch",                  "west-end"),
+  n("victoriast",-1.06, -0.28, "Victoria Station",             "west-end"),
+  n("buckingham",-0.86,  0.06, "Buckingham Palace",            "west-end"),
+  n("parlsq",    -0.42, -0.44, "Parliament Square",            "west-end"),
+  n("whitehall", -0.20, -0.20, "Whitehall",                    "west-end"),
+  n("sloanesq",  -1.72, -0.42, "Sloane Square",                "west-end"),
+  n("knightsb",  -1.90,  0.22, "Knightsbridge",                "west-end"),
+  n("southken",  -2.52,  0.02, "South Kensington",             "west-end"),
+  n("earlsct",   -3.30,  0.02, "Earl's Court",                 "west-end"),
+  n("hammersm",  -5.10,  0.44, "Hammersmith Broadway",         "outer"),
+  n("chiswick",  -7.00,  0.60, "Chiswick Roundabout",          "outer"),
+  n("nottinghil",-2.90,  1.10, "Notting Hill Gate",            "outer"),
+  n("paddington",-1.90,  1.10, "Paddington",                   "inner"),
+  n("edgware",   -1.45,  1.20, "Edgware Road",                 "inner"),
+  n("baker",     -1.10,  1.15, "Baker Street",                 "inner"),
+  n("regentspk", -0.86,  1.42, "Regent's Park",                "inner"),
+  n("euston",    -0.24,  1.30, "Euston",                       "inner"),
+  n("kingscross", 0.06,  1.44, "King's Cross",                 "inner"),
+  n("angel",      0.42,  1.72, "Angel, Islington",             "inner"),
+  n("oldst",      0.72,  1.44, "Old Street",                   "inner"),
+  n("moorgate",   0.72,  1.06, "Moorgate",                     "city"),
+  n("bank",       0.86,  0.86, "Bank",                         "city"),
+  n("stpauls",    0.52,  0.86, "St Paul's",                    "city"),
+  n("ludgate",    0.40,  0.80, "Ludgate Circus",               "city"),
+  n("holborn",    0.16,  0.90, "Holborn Circus",               "city"),
+  n("chancery",  -0.02,  0.86, "Chancery Lane",                "city"),
+  n("aldgate",    1.32,  0.86, "Aldgate",                      "city"),
+  n("towerhill",  1.24,  0.60, "Tower Hill",                   "city"),
+  n("monument",   0.90,  0.70, "Monument",                     "city"),
+  n("blackfr",    0.34,  0.60, "Blackfriars",                  "city"),
+  n("temple",     0.10,  0.58, "Temple",                       "city"),
+  n("aldwych",   -0.02,  0.62, "Aldwych",                      "city"),
+
+  /* ---------------- THE RIVER AND THE SOUTH BANK -------------------------- */
+  n("waterloo",   0.00,  0.26, "Waterloo",                     "southbank"),
+  n("southwark",  0.44,  0.34, "Southwark",                    "southbank"),
+  n("boroughhs",  0.86,  0.30, "Borough High Street",          "southbank"),
+  n("elephant",   0.62, -0.06, "Elephant and Castle",          "southbank"),
+  n("towerbr",    1.30,  0.34, "Tower Bridge, south",          "southbank"),
+  n("bermondsey", 1.86,  0.28, "Bermondsey",                   "outer"),
+  n("rotherhithe",2.36,  0.62, "Rotherhithe",                  "outer"),
+  n("canadawater",2.30,  0.30, "Canada Water",                 "outer"),
+  n("newcross",   3.10, -0.42, "New Cross",                    "outer"),
+  n("vauxhall",  -0.66, -0.66, "Vauxhall Cross",               "southbank"),
+  n("stockwell", -0.62, -1.66, "Stockwell",                    "outer"),
+  n("brixton",   -0.62, -2.42, "Brixton",                      "outer"),
+  n("clapham",   -1.36, -2.10, "Clapham Common",               "outer"),
+  n("wandsworth",-2.30, -1.82, "Wandsworth",                   "outer"),
+  n("battersea", -1.56, -0.90, "Battersea",                    "outer"),
+  n("putney",    -3.40, -1.60, "Putney Bridge",                "outer"),
+  n("richmond",  -6.60, -2.10, "Richmond",                     "outer"),
+  n("kingston",  -9.30, -4.30, "Kingston upon Thames",         "outer"),
+  n("wimbledon", -2.90, -4.20, "Wimbledon",                    "outer"),
+  n("tooting",   -1.66, -3.60, "Tooting Broadway",             "outer"),
+  n("streatham", -0.90, -3.90, "Streatham",                    "outer"),
+  n("croydon",    0.30, -8.10, "Croydon",                      "outer"),
+  n("lewisham",   3.10, -1.60, "Lewisham",                     "outer"),
+  n("catford",    2.90, -2.60, "Catford",                      "outer"),
+  n("bromley",    5.10, -5.40, "Bromley",                      "outer"),
+  n("greenwich",  3.60,  0.10, "Greenwich",                    "outer"),
+  n("blackheath", 4.10, -0.90, "Blackheath",                   "outer"),
+  n("eltham",     6.30, -1.90, "Eltham",                       "outer"),
+  n("sidcup",     8.60, -2.30, "Sidcup",                       "outer"),
+  n("dartford",  14.90, -0.20, "Dartford Crossing",            "outer"),
+  n("woolwich",   6.10,  0.60, "Woolwich Ferry",               "outer"),
+  n("thamesmead", 7.90,  1.10, "Thamesmead",                   "outer"),
+
+  /* ---------------- THE EAST ---------------------------------------------- */
+  n("shoreditch", 1.00,  1.56, "Shoreditch High Street",       "inner"),
+  n("bethnal",    1.90,  1.66, "Bethnal Green",                "outer"),
+  n("whitechapel",1.72,  0.98, "Whitechapel",                  "inner"),
+  n("limehouse",  2.56,  0.86, "Limehouse",                    "outer"),
+  n("canarywharf",2.90,  0.52, "Canary Wharf",                 "outer"),
+  n("poplar",     3.06,  0.90, "Poplar",                       "outer"),
+  n("blackwall",  3.36,  0.76, "Blackwall Tunnel",             "outer"),
+  n("stratford",  4.10,  1.90, "Stratford",                    "outer"),
+  n("bow",        3.10,  1.60, "Bow Roundabout",               "outer"),
+  n("hackney",    1.90,  2.44, "Hackney Central",              "outer"),
+  n("leyton",     4.30,  2.90, "Leyton",                       "outer"),
+  n("walthamstow",4.00,  3.90, "Walthamstow",                  "outer"),
+  n("ilford",     7.10,  2.40, "Ilford",                       "outer"),
+  n("romford",   11.60,  3.20, "Romford",                      "outer"),
+  n("barking",    7.20,  1.60, "Barking",                      "outer"),
+
+  /* ---------------- THE NORTH --------------------------------------------- */
+  n("camden",    -0.62,  2.06, "Camden Town",                  "inner"),
+  n("chalkfarm", -0.72,  2.40, "Chalk Farm",                   "outer"),
+  n("hampstead", -1.10,  3.40, "Hampstead",                    "outer"),
+  n("archway",   -0.30,  3.30, "Archway",                      "outer"),
+  n("highbury",   0.42,  2.50, "Highbury Corner",              "inner"),
+  n("finsburypk", 0.40,  3.36, "Finsbury Park",                "outer"),
+  n("hollowayrd", 0.16,  2.94, "Holloway Road",                "outer"),
+  n("woodgreen",  0.66,  4.60, "Wood Green",                   "outer"),
+  n("tottenham",  1.50,  4.70, "Tottenham",                    "outer"),
+  n("edmonton",   1.60,  6.10, "Edmonton",                     "outer"),
+  n("enfield",    1.20,  8.60, "Enfield",                      "outer"),
+  n("golders",   -1.70,  4.60, "Golders Green",                "outer"),
+  n("hendon",    -1.90,  5.60, "Hendon",                       "outer"),
+  n("brentcross",-1.94,  5.20, "Brent Cross",                  "outer"),
+  n("finchley",  -1.20,  5.60, "North Finchley",               "outer"),
+  n("barnet",    -1.10,  7.70, "Barnet",                       "outer"),
+  n("kilburn",   -1.90,  2.30, "Kilburn",                      "outer"),
+  n("swisscott", -1.30,  2.50, "Swiss Cottage",                "outer"),
+  n("wembley",   -3.90,  3.50, "Wembley",                      "outer"),
+  n("harrow",    -5.90,  5.20, "Harrow",                       "outer"),
+  n("shepherdsb",-3.40,  0.90, "Shepherd's Bush",              "outer"),
+  n("actonw",    -4.70,  1.30, "Acton",                        "outer"),
+  n("ealing",    -6.40,  1.30, "Ealing",                       "outer"),
+  n("southall",  -8.90,  1.30, "Southall",                     "outer"),
+  n("hounslow",  -9.90, -0.40, "Hounslow",                     "outer"),
+  n("heathrow", -13.60, -0.60, "Heathrow",                     "outer"),
+  n("hangerlane",-5.30,  2.10, "Hanger Lane",                  "outer"),
+  n("neasden",   -3.30,  3.40, "Neasden",                      "outer"),
+  n("staples",   -1.10,  3.90, "Staples Corner",               "outer"),
+];
+const r = (a, b, name, w, fwd, back) => ({ a, b, name, w, fwd, back });
+const LDN_ROADS = [
+  /* ---- the West End, street by street ---------------------------------- */
+  r("charingx", "trafalgar",  "Charing Cross",                     16, 2, 2),
+  r("trafalgar","admiralty",  "Trafalgar Square",                  16, 4, 0),   // one-way round the square
+  r("admiralty","buckingham", "The Mall",                          19, 3, 3),
+  r("buckingham","hydeparkc", "Constitution Hill",                  9, 1, 1),
+  r("hydeparkc","marblearch", "Park Lane (A4202)",                 11, 3, 0),   // one carriageway of a dual
+  r("marblearch","oxfordcirc","Oxford Street (A40)",               14, 2, 2),
+  r("oxfordcirc","tottcrd",   "Oxford Street east",                14, 2, 2),
+  r("oxfordcirc","picccirc",  "Regent Street (A4201)",             16, 2, 2),
+  r("picccirc","hydeparkc",   "Piccadilly (A4)",                   18, 3, 3),
+  r("picccirc","leicester",   "Coventry Street",                   12, 2, 0),
+  r("leicester","cambcirc",   "Charing Cross Road (A400)",         13, 2, 2),
+  r("cambcirc","tottcrd",     "Charing Cross Road north",          13, 2, 2),
+  r("picccirc","pallmalle",   "Regent Street St James's",          14, 2, 0),
+  r("pallmalle","trafalgar",  "Pall Mall East",                    13, 2, 0),
+  r("trafalgar","whitehall",  "Whitehall (A3212)",                 19, 3, 3),
+  r("whitehall","parlsq",     "Whitehall, Parliament Street",      19, 3, 3),
+  r("parlsq","victoriast",    "Victoria Street (A302)",            20, 3, 3),
+  r("victoriast","sloanesq",  "Buckingham Palace Road",            15, 2, 2),
+  r("hydeparkc","victoriast", "Grosvenor Place",                   14, 3, 0),
+  r("sloanesq","knightsb",    "Sloane Street",                     13, 2, 2),
+  r("knightsb","hydeparkc",   "Knightsbridge (A4)",                20, 3, 3),
+  r("knightsb","southken",    "Brompton Road (A4)",                15, 2, 2),
+  r("southken","earlsct",     "Cromwell Road (A4)",                20, 3, 3),
+  r("earlsct","hammersm",     "Talgarth Road (A4)",                22, 3, 3),
+  r("hammersm","chiswick",    "Great West Road (A4)",              24, 3, 3),
+  r("chiswick","hounslow",    "Great West Road (A4)",              24, 3, 3),
+  r("hounslow","heathrow",    "Great South West Road (A30)",       22, 3, 3),
+  r("nottinghil","marblearch","Bayswater Road (A402)",             16, 2, 2),
+  r("nottinghil","shepherdsb","Holland Park Avenue (A402)",        18, 2, 2),
+  r("shepherdsb","hammersm",  "Shepherd's Bush Road (A219)",       13, 2, 2),
+  r("shepherdsb","actonw",    "Uxbridge Road (A4020)",             14, 2, 2),
+  r("actonw","ealing",        "Uxbridge Road (A4020)",             14, 2, 2),
+  r("ealing","southall",      "Uxbridge Road (A4020)",             14, 2, 2),
+  r("paddington","edgware",   "Praed Street",                      12, 2, 2),
+  r("paddington","nottinghil","Westbourne Grove",                  11, 1, 1),
+  r("edgware","marblearch",   "Edgware Road (A5)",                 16, 2, 2),
+  r("edgware","baker",        "Marylebone Road (A501)",            22, 3, 3),
+  r("baker","regentspk",      "Baker Street (A41)",                14, 2, 2),
+  r("baker","euston",         "Euston Road (A501)",                22, 3, 3),
+  r("oxfordcirc","regentspk", "Portland Place (A4201)",            20, 2, 2),
+  r("euston","kingscross",    "Euston Road (A501)",                21, 3, 3),
+  r("euston","tottcrd",       "Gower Street (A400)",               12, 3, 0),   // one-way southbound
+  r("kingscross","angel",     "Pentonville Road (A501)",           18, 3, 3),
+  r("angel","oldst",          "City Road (A501)",                  17, 2, 2),
+  r("oldst","moorgate",       "City Road, Finsbury Square",        16, 2, 2),
+
+  /* ---- the City ---------------------------------------------------------- */
+  r("moorgate","bank",        "Moorgate",                          13, 2, 2),
+  r("bank","stpauls",         "Poultry and Cheapside",             14, 2, 2),
+  r("stpauls","ludgate",      "Ludgate Hill",                      12, 2, 2),
+  r("ludgate","blackfr",      "New Bridge Street",                 15, 2, 2),
+  r("ludgate","holborn",      "Farringdon Street",                 16, 2, 2),
+  r("holborn","chancery",     "High Holborn",                      14, 2, 2),
+  r("chancery","temple",      "Chancery Lane and Fleet Street",    12, 2, 2),
+  r("temple","aldwych",       "Fleet Street and the Strand",       15, 2, 2),
+  r("aldwych","trafalgar",    "The Strand (A4)",                   17, 2, 2),
+  r("temple","blackfr",       "Victoria Embankment (A3211)",       20, 3, 3),
+  r("blackfr","waterloo",     "Blackfriars Bridge (A201)",         18, 2, 2),
+  r("bank","aldgate",         "Cornhill and Leadenhall Street",    14, 2, 2),
+  r("aldgate","towerhill",    "Minories",                          13, 2, 2),
+  r("towerhill","monument",   "Lower Thames Street (A3211)",       19, 3, 3),
+  r("monument","bank",        "King William Street",               15, 2, 2),
+  r("holborn","moorgate",     "London Wall",                       16, 2, 2),
+
+  /* ---- the river crossings ---------------------------------------------- */
+  r("towerhill","towerbr",    "Tower Bridge (A100)",              8.2, 1, 1),
+  r("parlsq","waterloo",      "Westminster Bridge (A302)",         19, 2, 2),
+  r("aldwych","waterloo",     "Waterloo Bridge (A301)",            19, 3, 3),
+  r("vauxhall","victoriast",  "Vauxhall Bridge (A202)",            18, 3, 3),
+  r("vauxhall","parlsq",      "Millbank and Lambeth Bridge",       17, 2, 2),
+  r("battersea","sloanesq",   "Chelsea Bridge (A3216)",            15, 2, 2),
+  r("putney","wandsworth",    "Putney Bridge and the A205",        16, 2, 2),
+  r("blackwall","greenwich",  "Blackwall Tunnel (A102)",           12, 2, 2),
+  r("rotherhithe","limehouse","Rotherhithe Tunnel (A101)",        7.6, 1, 1),
+  r("dartford","thamesmead",  "the Dartford Crossing (A282)",      22, 4, 0),
+
+  /* ---- the South Bank and the south ------------------------------------- */
+  r("waterloo","southwark",   "Stamford Street",                   14, 2, 2),
+  r("southwark","boroughhs",  "Southwark Street",                  15, 2, 2),
+  r("boroughhs","towerbr",    "Tooley Street (A200)",              14, 2, 2),
+  r("boroughhs","elephant",   "Newington Causeway (A3)",           16, 2, 2),
+  r("waterloo","elephant",    "London Road (A301)",                15, 2, 2),
+  r("elephant","vauxhall",    "Kennington Lane (A3204)",           13, 2, 2),
+  r("vauxhall","stockwell",   "South Lambeth Road (A203)",         14, 2, 2),
+  r("stockwell","brixton",    "Clapham Road and Brixton Road (A23)",16, 2, 2),
+  r("brixton","streatham",    "Brixton Hill (A23)",                15, 2, 2),
+  r("streatham","croydon",    "London Road (A23)",                 18, 3, 3),
+  r("stockwell","clapham",    "Clapham Road (A3)",                 16, 2, 2),
+  r("clapham","tooting",      "Balham High Road (A24)",            15, 2, 2),
+  r("tooting","streatham",    "Tooting Bec Road",                  12, 1, 1),
+  r("tooting","wimbledon",    "Merton Road (A218)",                13, 2, 2),
+  r("clapham","wandsworth",   "Battersea Rise and the A3",         14, 2, 2),
+  r("wandsworth","putney",    "Upper Richmond Road (A205)",        14, 2, 2),
+  r("putney","richmond",      "Upper Richmond Road West (A205)",   14, 2, 2),
+  r("richmond","kingston",    "Kingston Road (A307)",              13, 2, 2),
+  r("wimbledon","kingston",   "Coombe Lane (A238)",                12, 2, 2),
+  r("battersea","vauxhall",   "Nine Elms Lane (A3205)",            17, 2, 2),
+  r("battersea","clapham",    "Queenstown Road",                   13, 2, 2),
+  r("bermondsey","towerbr",   "Jamaica Road (A200)",               17, 2, 2),
+  r("bermondsey","canadawater","Lower Road",                       13, 2, 2),
+  r("canadawater","rotherhithe","Salter Road",                     12, 2, 2),
+  r("bermondsey","newcross",  "Old Kent Road (A2)",                20, 3, 3),
+  r("elephant","newcross",    "New Kent Road (A2)",                18, 3, 3),
+  r("newcross","lewisham",    "Lewisham Way (A20)",                14, 2, 2),
+  r("lewisham","catford",     "Lewisham High Street (A21)",        15, 2, 2),
+  r("catford","bromley",      "Bromley Road (A21)",                16, 2, 2),
+  r("lewisham","blackheath",  "Blackheath Hill (A20)",             13, 2, 2),
+  r("blackheath","greenwich", "Shooters Hill Road (A2)",           17, 2, 2),
+  r("blackheath","eltham",    "Shooters Hill Road (A2)",           18, 2, 2),
+  r("eltham","sidcup",        "Sidcup Road (A20)",                 20, 3, 3),
+  r("sidcup","dartford",      "the A20 and the A2",                22, 3, 3),
+  r("greenwich","woolwich",   "Woolwich Road (A206)",              16, 2, 2),
+  r("woolwich","thamesmead",  "Western Way (A2016)",               18, 2, 2),
+  r("catford","clapham",      "the South Circular (A205)",         14, 2, 2),
+  r("catford","eltham",       "the South Circular (A205)",         14, 2, 2),
+  r("eltham","woolwich",      "the South Circular (A205)",         14, 2, 2),
+  r("richmond","chiswick",    "the South Circular (A205)",         14, 2, 2),
+  r("croydon","bromley",      "Croydon Road (A232)",               14, 2, 2),
+
+  /* ---- the East ---------------------------------------------------------- */
+  r("aldgate","whitechapel",  "Whitechapel High Street (A11)",     17, 2, 2),
+  r("whitechapel","limehouse","Commercial Road (A13)",             18, 2, 2),
+  r("limehouse","poplar",     "East India Dock Road (A13)",        20, 3, 3),
+  r("limehouse","canarywharf","Westferry Road",                    12, 2, 2),
+  r("canarywharf","poplar",   "Aspen Way (A1261)",                 18, 3, 3),
+  r("poplar","blackwall",     "Blackwall Northern Approach (A12)", 20, 3, 3),
+  r("poplar","barking",       "Newham Way (A13)",                  24, 3, 3),
+  r("barking","romford",      "Ripple Road and the A118",          16, 2, 2),
+  r("shoreditch","oldst",     "Great Eastern Street",              15, 2, 2),
+  r("shoreditch","whitechapel","Commercial Street",                14, 2, 2),
+  r("shoreditch","bethnal",   "Bethnal Green Road",                13, 2, 2),
+  r("bethnal","bow",          "Roman Road and Bow Road (A11)",     16, 2, 2),
+  r("bow","stratford",        "Bow Road (A11)",                    20, 3, 3),
+  r("bow","blackwall",        "the A12",                           20, 3, 3),
+  r("stratford","leyton",     "Leyton Road",                       13, 2, 2),
+  r("leyton","walthamstow",   "Lea Bridge Road (A104)",            14, 2, 2),
+  r("stratford","ilford",     "Romford Road (A118)",               15, 2, 2),
+  r("ilford","romford",       "the A118",                          16, 2, 2),
+  r("ilford","barking",       "Barking Road (A124)",               14, 2, 2),
+  r("hackney","bethnal",      "Cambridge Heath Road (A107)",       13, 2, 2),
+  r("hackney","highbury",     "Balls Pond Road (A104)",            13, 2, 2),
+  r("hackney","walthamstow",  "Lea Bridge Road (A104)",            14, 2, 2),
+
+  /* ---- the North --------------------------------------------------------- */
+  r("angel","highbury",       "Upper Street (A1)",                 15, 2, 2),
+  r("highbury","hollowayrd",  "Holloway Road (A1)",                16, 2, 2),
+  r("hollowayrd","archway",   "Holloway Road (A1)",                16, 2, 2),
+  r("archway","finchley",     "Archway Road (A1)",                 20, 3, 3),
+  r("finchley","barnet",      "Great North Road (A1000)",          14, 2, 2),
+  r("hollowayrd","finsburypk","Seven Sisters Road (A503)",         16, 2, 2),
+  r("finsburypk","woodgreen", "Green Lanes (A105)",                14, 2, 2),
+  r("woodgreen","tottenham",  "Lordship Lane (A109)",              13, 2, 2),
+  r("tottenham","edmonton",   "Fore Street (A1010)",               14, 2, 2),
+  r("edmonton","enfield",     "Hertford Road (A1010)",             13, 2, 2),
+  r("kingscross","camden",    "Camden Road (A503)",                14, 2, 2),
+  r("camden","chalkfarm",     "Chalk Farm Road",                   12, 2, 2),
+  r("chalkfarm","hampstead",  "Haverstock Hill (A502)",            13, 2, 2),
+  r("hampstead","golders",    "North End Road (A502)",             12, 2, 2),
+  r("golders","brentcross",   "Finchley Road (A41)",               18, 3, 3),
+  r("brentcross","hendon",    "Hendon Way (A41)",                  20, 3, 3),
+  r("hendon","barnet",        "Watford Way (A41)",                 20, 3, 3),
+  r("camden","regentspk",     "Parkway and Albany Street",         13, 2, 2),
+  r("camden","swisscott",     "Adelaide Road",                     12, 1, 1),
+  r("swisscott","kilburn",    "Finchley Road (A41)",               17, 2, 2),
+  r("swisscott","golders",    "Finchley Road (A41)",               17, 2, 2),
+  r("kilburn","neasden",      "Kilburn High Road (A5)",            16, 2, 2),
+  r("kilburn","paddington",   "Maida Vale (A5)",                   16, 2, 2),
+  r("archway","camden",       "Kentish Town Road (A400)",          13, 2, 2),
+  r("camden","euston",        "Eversholt Street",                  12, 2, 2),
+  r("archway","hampstead",    "Highgate West Hill",                10, 1, 1),
+
+  /* ---- the North Circular (A406), which really does go all the way round -- */
+  r("chiswick","hangerlane",  "the North Circular (A406)",         22, 3, 3),
+  r("hangerlane","neasden",   "the North Circular (A406)",         22, 3, 3),
+  r("neasden","staples",      "the North Circular (A406)",         22, 3, 3),
+  r("staples","brentcross",   "the North Circular (A406)",         22, 3, 3),
+  r("brentcross","finchley",  "the North Circular (A406)",         22, 3, 3),
+  r("finchley","woodgreen",   "the North Circular (A406)",         22, 3, 3),
+  r("woodgreen","edmonton",   "the North Circular (A406)",         22, 3, 3),
+  r("edmonton","walthamstow", "the North Circular (A406)",         22, 3, 3),
+  r("walthamstow","ilford",   "the North Circular (A406)",         22, 3, 3),
+  r("ilford","barking",       "the North Circular (A406)",         22, 3, 3),
+  r("neasden","wembley",      "Neasden Lane (A4088)",              14, 2, 2),
+  r("wembley","harrow",       "Harrow Road (A404)",                14, 2, 2),
+  r("hangerlane","ealing",    "Hanger Lane (A406)",                20, 3, 3),
+  r("hangerlane","actonw",    "Gunnersbury Avenue (A406)",         20, 3, 3),
+];
+const LDN_LOOK = {
+  "west-end":  { kind: "mayfair",    storeys: 6 },
+  "city":      { kind: "citylondon", storeys: 13 },
+  "southbank": { kind: "citylondon", storeys: 9 },
+  "inner":     { kind: "victorian",  storeys: 5 },
+  "outer":     { kind: "victorian",  storeys: 3 },
+};
+const LDN_OPEN = [
+  { re: /^Park Lane/,             side: -1, kind: "park"  },   // Hyde Park down the west side
+  { re: /^Bayswater Road/,        side:  1, kind: "park"  },   // Hyde Park on the south
+  { re: /^Constitution Hill/,     both: 1,  kind: "park"  },   // Green Park both sides
+  { re: /^The Mall/,              both: 1,  kind: "park"  },   // St James's and Green Park
+  { re: /^Knightsbridge/,         side: -1, kind: "park"  },   // Hyde Park again
+  { re: /^Victoria Embankment/,   side:  1, kind: "river" },
+  { re: /^Lower Thames Street/,   side:  1, kind: "river" },
+  { re: /^Millbank/,              side:  1, kind: "river" },
+  // a CROSSING is not an embankment. `river` is a parapet with water beyond it, which is
+  // what you see from the Embankment; on a bridge the water is nine metres BELOW you and
+  // on both sides, and the bridge draws it itself.
+  { re: /Bridge \(A/,             both: 1,  kind: "water" },   // every Thames crossing
+  { re: /^Tower Bridge/,          both: 1,  kind: "water" },
+  { re: /^Putney Bridge/,         both: 1,  kind: "water" },
+  { re: /Dartford Crossing/,      both: 1,  kind: "water" },
+  { re: /^Marylebone Road|^Euston Road/, side: -1, kind: "park" },
+];
+const LDN_MARKS = {
+  trafalgar:  [{ kind: "nelson",       side:  0, in: 14 }],
+  admiralty:  [{ kind: "admiralty",    side:  0, in: 12 }],
+  buckingham: [{ kind: "palace",       side:  0, in: 30 }, { kind: "memorial", side: 0, in: 12 }],
+  parlsq:     [{ kind: "bigben",       side: -1, in: 22 }, { kind: "abbey",    side: 1, in: 30 }],
+  hydeparkc:  [{ kind: "arch",         side: -1, in: 18 }, { kind: "apsley",   side: 1, in: 34 }],
+  ludgate:    [{ kind: "stpauls",      side: -1, in: 26 }],
+  towerhill:  [{ kind: "toweroflondon",side: -1, in: 24 }],
+  towerbr:    [{ kind: "towerbridge",  side:  0, in: 10 }],
+  marblearch: [{ kind: "gate",         side: -1, in: 16 }],
+};
+const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.id,n]})),roads=LDN_ROADS.map(r=>{const A=byId[r.a],B=byId[r.b],dx=(B.e-A.e)*1000,dz=(B.n-A.n)*1000,road={...r,A,B,len:Math.hypot(dx,dz),brg:Math.atan2(dx,dz)};A.roads.push({road,out:1});B.roads.push({road,out:-1});return road;});return {LDN:{nodes,byId,roads},londonLook:LDN_LOOK,londonOpen:LDN_OPEN,londonMarks:LDN_MARKS,WIDTH_SCALE:1.55};
+}root.MUCSLondonData={create};})(typeof window==='undefined'?globalThis:window);
+
+/* Offline street navigation drawn from the same fixed world as the driver sees. */
+(function(root){
+ function drawLondonMap(g,{network:n,state:s,width:w,height:h,preset=2,zoom=1,centre=null,bearing:forcedBearing}){
+  const C=(x,a,b)=>Math.max(a,Math.min(b,x)),TAU=Math.PI*2,angle=x=>Math.atan2(Math.sin(x),Math.cos(x)),player=n.playerPoint(),nav=n.navigation(),points=n.plannedPoints(),next=nav?.turns[0];
+  const top=nav?(h<160?36:52):0,bottom=nav?(h<180?22:34):20,rail=nav?20:0,W=w-rail,H=Math.max(30,h-top-bottom),bearing=forcedBearing??((nav||preset===2)?player.psi:0),cs=Math.cos(bearing),sn=Math.sin(bearing);
+  const coords=p=>({x:p.x*cs-p.z*sn,z:p.x*sn+p.z*cs});let cx,cz,fit;
+  if(preset===1){const list=(nav&&points.length?points:n.roads.flatMap(r=>[{x:r.A.e*1000,z:r.A.n*1000},{x:r.B.e*1000,z:r.B.n*1000}])).map(coords),xs=list.map(p=>p.x),zs=list.map(p=>p.z),x=(Math.min(...xs)+Math.max(...xs))/2,z=(Math.min(...zs)+Math.max(...zs))/2;cx=x*cs+z*sn;cz=-x*sn+z*cs;fit=Math.min((W-35)/Math.max(100,Math.max(...xs)-Math.min(...xs)),(H-25)/Math.max(100,Math.max(...zs)-Math.min(...zs)));}
+  else {fit=Math.min(W,H)/(nav&&next?.distance<150?210:300);cx=player.x;cz=player.z;}
+  const scale=C(fit*zoom,.001,16),ox=W/2,oy=top+H*(preset===2?.73:.5);if(centre){cx=centre.x;cz=centre.z;}
+  const P=p=>{const dx=p.x-cx,dz=p.z-cz;return{x:ox+(dx*cs-dz*sn)*scale,y:oy-(dx*sn+dz*cs)*scale};};
+  const U=(x,y)=>{const dx=(x-ox)/scale,dz=(oy-y)/scale;return{x:cx+dx*cs+dz*sn,z:cz-dx*sn+dz*cs};};
+  const visible=(p,r=0)=>{const q=P(p);return q.x>-r&&q.x<W+r&&q.y>top-r&&q.y<top+H+r;};
+  const path=(list,close=false)=>{g.beginPath();list.forEach((p,i)=>{const a=P(p);i?g.lineTo(a.x,a.y):g.moveTo(a.x,a.y);});if(close)g.closePath();};
+  g.clearRect(0,0,w,h);g.fillStyle='#f1eee7';g.fillRect(0,0,w,h);g.save();g.beginPath();g.rect(0,top,W,H);g.clip();
+  let buildingCount=0,parkCount=0;
+  for(const ground of n.grounds){path(ground.points,true);g.fillStyle=ground.color==='#6e8658'?'#c9dfbd':'#a6d4e6';g.fill();parkCount++;}
+  if(scale>.035)for(const b of n.buildings){if(!visible(b,(b.radius+20)*scale))continue;const B=(x,z)=>({x:b.x+b.cs*x+b.sn*z,z:b.z-b.sn*x+b.cs*z}),poly=[B(-b.w/2,-b.depth/2),B(b.w/2,-b.depth/2),B(b.w/2,b.depth/2),B(-b.w/2,b.depth/2)];g.save();g.translate(1,1.4);path(poly,true);g.fillStyle='#b9b4aa65';g.fill();g.restore();path(poly,true);g.fillStyle=b.kind==='citylondon'?'#d8dde0':b.tower?'#d1c2a8':'#ded9d0';g.fill();g.strokeStyle='#c5beb2';g.lineWidth=.65;g.stroke();buildingCount++;}
+  g.lineCap='round';g.lineJoin='round';
+  const roads=n.roads.filter(r=>{const a=P({x:r.A.e*1000,z:r.A.n*1000}),b=P({x:r.B.e*1000,z:r.B.n*1000});return Math.max(a.x,b.x)>-20&&Math.min(a.x,b.x)<W+20&&Math.max(a.y,b.y)>top-20&&Math.min(a.y,b.y)<top+H+20;});
+  for(const border of [true,false])for(const r of roads){path([{x:r.A.e*1000,z:r.A.n*1000},{x:r.B.e*1000,z:r.B.n*1000}]);g.lineWidth=Math.max(border?3:1.5,n.width(r)*scale+(border?2:0));g.strokeStyle=border?'#c5c0b5':r.w>=14?'#fff3c2':'#fffefa';g.stroke();}
+  if(nav&&points.length){path(points);g.strokeStyle='#fff';g.lineWidth=8;g.stroke();g.strokeStyle='#438fe0';g.lineWidth=5;g.stroke();g.strokeStyle='#116cd4';g.lineWidth=1.3;g.stroke();}
+  const occupied=[];
+  function label(text,p,color='#62696a',size=10,rotate=0){const a=P(p),width=Math.min(150,g.measureText(text).width+8),height=size+5;if(a.x<20||a.x>W-20||a.y<top+10||a.y>top+H-12||occupied.some(b=>Math.abs(b.x-a.x)<(b.w+width)*.48&&Math.abs(b.y-a.y)<height))return;occupied.push({x:a.x,y:a.y,w:width});g.save();g.translate(a.x,a.y);g.rotate(rotate);g.font=`500 ${size}px system-ui`;g.textAlign='center';g.textBaseline='middle';g.strokeStyle='#f8f6ef';g.lineWidth=3;g.strokeText(text,0,0,150);g.fillStyle=color;g.fillText(text,0,0,150);g.restore();}
+  if(scale>.055)for(const r of roads){const ax=r.A.e*1000,az=r.A.n*1000,dx=(r.B.e-r.A.e)*1000,dz=(r.B.n-r.A.n)*1000,u=C(((cx-ax)*dx+(cz-az)*dz)/(r.len*r.len),.12,.88),turn=angle(Math.PI/2-r.brg+bearing),rotation=Math.abs(turn)>Math.PI/2?angle(turn+Math.PI):turn;label(r.name.replace(/ \(.*\)$/,''),{x:ax+dx*u,z:az+dz*u},'#6b6f6a',w<450?9:11,rotation);}
+  const pins=[];for(const p of n.locations){const a=P(p);pins.push({id:p.id,x:a.x,y:a.y});if(!visible(p,8))continue;const selected=p.id===n.destinationPoint?.id;g.fillStyle=selected?'#da554d':/Park|Gardens|Common/.test(p.name)?'#5b8b55':'#8d7b9d';g.strokeStyle='#fff';g.lineWidth=1.5;g.beginPath();g.arc(a.x,a.y,selected?5:2.5,0,TAU);g.fill();g.stroke();if(scale>.025||selected)label(p.name.replace(' · Sherlock Holmes Museum',''),{x:p.x,z:p.z+12/scale},selected?'#a73f37':'#66645e',selected?11:10);}
+  const markers=[];for(const car of n.policePoses()){const p=P(car);if(!visible(car,10))continue;g.fillStyle='#1764ba';g.strokeStyle='#fff';g.lineWidth=1.4;g.beginPath();g.roundRect(p.x-6,p.y-6,12,12,3);g.fill();g.stroke();g.fillStyle='#fff';g.font='bold 9px system-ui';g.textAlign='center';g.fillText('P',p.x,p.y+3);markers.push({...p,name:car.name||'Police',kind:'police',worldX:car.x,worldZ:car.z});}
+  const own=P(player);g.save();g.translate(own.x,own.y);g.rotate(player.psi-bearing);g.fillStyle='#2c8ef02d';g.beginPath();g.arc(0,0,16,0,TAU);g.fill();g.beginPath();g.moveTo(0,-10);g.lineTo(7,7);g.lineTo(0,3);g.lineTo(-7,7);g.closePath();g.fillStyle='#197ce0';g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke();g.restore();
+  // A compass remains useful while the map follows the car's heading.
+  g.save();g.translate(W-16,top+16);g.fillStyle='#fffef8';g.beginPath();g.arc(0,0,11,0,TAU);g.fill();g.rotate(-bearing);g.fillStyle='#bc5749';g.beginPath();g.moveTo(0,-8);g.lineTo(3,4);g.lineTo(0,1);g.lineTo(-3,4);g.fill();g.restore();g.restore();
+  const metres=d=>d>=1000?(d/1000).toFixed(d<10000?1:0)+' km':Math.round(Math.max(0,d)/5)*5+' m';
+  if(nav){
+   g.fillStyle='#163d40';g.fillRect(0,0,w,top);g.fillStyle='#fff';g.textAlign='left';g.textBaseline='alphabetic';g.font='bold '+(h<160?11:13)+'px system-ui';g.fillText(nav.arrived?'Arrived at your destination':metres(next.distance)+' · '+next.action,12,top<40?15:20,w-83);g.fillStyle='#cfe2db';g.font='10px system-ui';g.fillText(nav.arrived?nav.destination:next.road,12,top<40?29:37,w-83);
+   // Junction preview uses the actual turn angle and points into the next road.
+   const x=w-42,y=top-8,turn=next?.angle||0,dx=Math.sin(turn)*19,dy=-Math.cos(turn)*19;g.lineCap='round';g.lineJoin='round';g.strokeStyle='#73958d';g.lineWidth=4;g.beginPath();g.moveTo(x-25,y-16);g.lineTo(x+25,y-16);g.moveTo(x,y);g.lineTo(x,y-32);g.stroke();g.strokeStyle='#83d4ff';g.lineWidth=4;g.beginPath();g.moveTo(x,y);g.lineTo(x,y-15);g.lineTo(x+dx,y-15+dy);g.stroke();const aa=Math.atan2(dy,dx);g.beginPath();g.moveTo(x+dx-7*Math.cos(aa-.55),y-15+dy-7*Math.sin(aa-.55));g.lineTo(x+dx,y-15+dy);g.lineTo(x+dx-7*Math.cos(aa+.55),y-15+dy-7*Math.sin(aa+.55));g.stroke();
+   g.fillStyle='#f9faf6';g.fillRect(W,top,rail,H);g.strokeStyle='#d4dedb';g.lineWidth=4;g.beginPath();g.moveTo(W+rail/2,top+12);g.lineTo(W+rail/2,top+H-12);g.stroke();g.strokeStyle='#2384d9';g.beginPath();g.moveTo(W+rail/2,top+12);g.lineTo(W+rail/2,top+12+(H-24)*nav.progress);g.stroke();g.fillStyle='#1873bf';g.beginPath();g.arc(W+rail/2,top+12+(H-24)*nav.progress,4,0,TAU);g.fill();g.fillStyle='#576968';g.font='8px system-ui';g.textAlign='center';g.fillText('●',W+rail/2,top+H-2);
+   g.fillStyle='#fffef9';g.fillRect(0,h-bottom,w,bottom);g.textAlign='left';g.font='bold 11px system-ui';g.fillStyle='#246d50';g.fillText(nav.arrived?'Destination reached':metres(nav.remaining)+' remaining · '+Math.max(1,Math.round(nav.etaSeconds/60))+' min',9,h-bottom+14,w-18);
+   if(bottom>25&&nav.turns[1]){g.font='9px system-ui';g.fillStyle='#697477';g.fillText('Then '+metres(nav.turns[1].distance)+' · '+nav.turns[1].action+' · '+nav.turns[1].road,9,h-5,w-18);}
+  }else {g.fillStyle='#fffef7e8';g.fillRect(0,h-bottom,w,bottom);g.fillStyle='#607271';g.font='10px system-ui';g.textAlign='left';g.fillText('London · free exploration',8,h-6);}
+  const scaleM=10**Math.floor(Math.log10(45/scale)),bar=scaleM*scale;g.strokeStyle='#50666d';g.lineWidth=1.5;g.beginPath();g.moveTo(8,top+H-9);g.lineTo(8+bar,top+H-9);g.stroke();g.font='8px system-ui';g.fillStyle='#3b535a';g.textAlign='left';g.fillText(scaleM>=1000?(scaleM/1000)+' km':scaleM+' m',8,top+H-13);
+  return {project:P,unproject:U,pins,fit,scale,cx,cz,w,h,bearing,ox,oy,buildingCount,parkCount,navigation:nav,markers,player:{...own,worldX:player.x,worldZ:player.z},policeCount:markers.length};
+ }
+ root.MUCSLondonMap={draw:drawLondonMap};
+})(typeof window==='undefined'?globalThis:window);
+
+/* London is a selectable driving environment. Powertrains and non-city routes
+   continue through each car's original functions. */
+(function(root){
+ const keys=new Set(['tesla','taycan','m5','evo','project8']);
+ function prepare(html,key){
+  if(!keys.has(key))return html;
+  const hook=(name,code)=>{const re=new RegExp('function '+name+'\\(([^)]*)\\) \\{');if(!re.test(html))throw Error(key+' missing '+name);html=html.replace(re,(m)=>m+' '+code);};
+  hook('curvatureAt','if(state.ldn&&app.cityNetwork)return app.cityNetwork.curvature(d);');
+  hook('halfWidthAt','if(state.ldn)return state.ldn.road.w*1.55/2;');
+  hook('pathSteer','if(state.ldn&&app.cityNetwork)return app.cityNetwork.driverSteer(gain);');
+  hook('targetSpeedMps','if(state.ldn&&app.cityNetwork)return app.cityNetwork.driverTarget();');
+  hook('updateLap','if(state.ldn)return;');
+  hook('updateRivals','if(state.ldn)return;');
+  hook('selectCircuit',"if(name==='London'){app.enterLondon();return;}if(state.ldn)app.leaveLondon();");
+  hook('resetCar','if(state.ldn)app.leaveLondon();');
+  hook('drawRearView','if(state.ldn&&app.cityNetwork){app.cityNetwork.drawRear(mx,my,mw,mh,pal,p);return;}');
+  hook('projectAhead','if(state.ldn&&app.cityNetwork)return app.cityNetwork.projectRelative(distAhead,lateralM);');
+  const start=html.indexOf('function drawWorld()'),sky=html.indexOf('drawSky(',start),end=html.indexOf('drawCabinFrame(w, h, pal);',sky),skyEnd=html.indexOf(';',sky)+1;
+  if(start<0||sky<0||end<0)throw Error(key+' city renderer insertion');
+  html=html.slice(0,skyEnd)+'if(state.ldn&&app.cityNetwork){app.cityNetwork.draw(w,h,pal);}else{'+html.slice(skyEnd,end)+'}'+html.slice(end);
+  return html;
+ }
+ function install(app,data){
+  Object.assign(app,data);const s=app.state,doc=app.canvas.ownerDocument;let gridBefore=true;
+  app.CIRCUITS.London={dist:1,env:'city',loop:false,blurb:'London road network'};
+  app.enterLondon=(nodeId,roadName)=>{
+   app.track2Reset?.();if(!s.ldn)gridBefore=s.raceGrid;const node=app.LDN.byId[nodeId]||app.LDN.byId.charingx,link=node.roads.find(l=>(!roadName||l.road.name===roadName)&&(l.out>0?l.road.fwd:l.road.back)>0)||node.roads[0];
+   s.ldn={road:link.road,dir:link.out,node,next:link.out>0?link.road.B:link.road.A,origin:0};
+   Object.assign(s,{distanceM:0,routeTime:0,edgeD:0,headingRel:0,speedMps:0,laneOffset:-link.road.w*1.55/2+link.road.w*1.55/(link.road.fwd+link.road.back)*.5,rivals:[],traffic:[],raceGrid:false,pursuit:[],dayPhase:.3});
+   s.route={active:true,name:'London',env:'city',totalM:link.road.len,remainingM:link.road.len,loop:false,arrived:false,label:link.road.name};s.lap.running=false;
+   app.cityNetwork?.prepare();doc.querySelectorAll('[data-circuit]').forEach(b=>b.classList.toggle('active',b.dataset.circuit==='London'));app.setView('drive');app.showToast?.('London · explore freely or choose a destination.','Navigation');
+  };
+  app.leaveLondon=()=>{s.ldn=null;s.city=null;s.pursuit=[];s.traffic=[];s.raceGrid=gridBefore;app.cityNetwork?.destination('');};
+  const seed=app.seedRivals;app.seedRivals=function(){if(s.ldn){s.rivals=[];return;}return seed.apply(this,arguments);};
+  const original=app.updatePhysics;app.updatePhysics=function(dt){
+   const L=s.ldn,d=s.distanceM;const result=original.call(app,dt);if(!s.ldn)return result;
+   const net=app.cityNetwork;s.dayPhase=.3;s.routeTime+=dt;
+   if(L===s.ldn&&d<L.road.len-4&&s.distanceM>=L.road.len-4&&L.next.roads.length>=3&&net.signalState(L.next)==='red'&&!s.pursuit.length){s.pursuit=[{kind:'police',name:'Metropolitan Police',gap:38,speedMps:Math.abs(s.speedMps)+2}];app.showToast?.('Red light — police are following.','London');}
+   for(const car of s.pursuit){car.speedMps+=(Math.abs(s.speedMps)+2-car.speedMps)*Math.min(1,dt*2);car.gap=Math.max(10,car.gap+(Math.abs(s.speedMps)-car.speedMps)*dt);}
+   net.step();net.trafficStep(dt);return result;
+  };
+  const first=doc.querySelector('[data-circuit]');if(first){const b=doc.createElement('button');b.type='button';b.dataset.circuit='London';b.textContent='London · free city driving';b.onclick=()=>app.enterLondon();first.parentElement.appendChild(b);}
+ }
+ root.MUCSLondonSedans={eligible:key=>keys.has(key),prepare,install};
 })(typeof window==='undefined'?globalThis:window);
 
 (function(root){
  function prepare(html,key){
   if(html.includes('/* MUCS vehicle refinements v1 */'))return html;
   const appName=key==='phantom'?'PhantomApp':html.match(/window\.(\w+App)\s*=\s*\{/)[1];
+  const sedan=root.MUCSLondonSedans.eligible(key);if(sedan)html=root.MUCSLondonSedans.prepare(html,key);
   const city=key==='spectre'||key==='phantom',classic=key==='db5',rallyFiles=/Dakar/.test(html);
   const helper=root.MUCSVehicleArt.drawTrafficVehicle.toString();
   function insertBeforeFunction(name,text){const mark='function '+name+'(';if(!html.includes(mark))throw Error('Missing '+key+' '+name);html=html.replace(mark,text+'\n  '+mark);}
@@ -4363,7 +4882,8 @@
    }\n function drawLegacyCabinFrame(w, h, pal) {`);
   }
   const runtime=root.MUCSVehicleRuntime.install.toString();
-  let extra=city?`(${root.MUCSCityNetwork.install.toString()})(app,${helper});`:'';
+  let extra=sedan?`(${root.MUCSLondonSedans.install.toString()})(app,(${root.MUCSLondonData.create.toString()})());`:'';
+  if(city||sedan)extra+=`(${root.MUCSCityNetwork.install.toString()})(app,${helper},${root.MUCSLondonMap.draw.toString()});`;
   if(classic)extra=`
     ${root.MUCSDB5Art.drawDB5Dashboard.toString()}
     const cabin=app.el.cabinArt,old=cabin.querySelector('svg');if(old)old.style.display='none';
@@ -4450,7 +4970,7 @@
   const eligible = key => !(key.startsWith('f1') && key !== 'f12tdf') && !historical.has(key);
   // Expose renderer geometry in the loaded copy only. Original downloads stay intact.
   function prepare(html, key) {
-    if (!eligible(key)) return html;
+    if (!eligible(key) && key !== 'evo') return html;
     // A map gesture must not steer the car while trackpad steering is active.
     html=html.replace('if (!state.trackpadSteering || e.ctrlKey) return;', 'if (e.target?.closest?.("#gpsUnit") || !state.trackpadSteering || e.ctrlKey) return;');
     html=html.replace('if (!state.trackpadSteering || event.ctrlKey || isTypingTarget(event)) return;', 'if (event.target?.closest?.("#gpsUnit") || !state.trackpadSteering || event.ctrlKey || isTypingTarget(event)) return;');
@@ -4461,7 +4981,7 @@
     if(html.includes('function buildVisibleCars(mirror=false)')) {
       const marker='    if(state.learnMode&&!mirror){';
       if(!html.includes(marker))throw Error('GPS depth renderer bridge missing for '+key);
-      html=html.replace(marker,`    if(app.gps?.mode==='ar'&&!mirror){
+      html=html.replace(marker,`    if(app.gps?.mode==='ar'&&!mirror&&!state.ldn){
         const t=app.trackModel(),max=t.closed===false?Math.min(95,t.L-state.distanceM):95;let count=0;
         for(let off=5;off<max;off+=7){const d=state.distanceM+off,n=state.inPitLane?0:app.clamp(app.racingOffset(d),-app.halfWidthAt(d)+1.4,app.halfWidthAt(d)-1.4);
           const P=(ahead,lat)=>state.inPitLane?app.pitSurface((state.pitQ||0)+off+ahead,lat,.06):trackPoint(d+ahead,lat,.06),C=[90,216,250];
@@ -4475,7 +4995,8 @@
   }
   function install(win, app, key) {
     if (app.gps) return;
-    const fullGPS=eligible(key),modes=fullGPS?["off","mirror","ar","dashboard","line"]:["off","line"],modePref=fullGPS?"mucs-gps-mode":"mucs-outline-mode";
+    const fullGPS=eligible(key),baseModes=fullGPS?["off","mirror","ar","dashboard","line"]:["off","line"],modePref=fullGPS?"mucs-gps-mode":"mucs-outline-mode";
+    let modes=baseModes,cityMode=false,previousMode=null,previousPreset=1;
     const doc=win.document, state=app.state, clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), wrap=(d,L)=>(d%L+L)%L;
     const TAU=Math.PI*2, angle=a=>Math.atan2(Math.sin(a),Math.cos(a));
     const getPref=(k,f)=>{try{return win.localStorage.getItem(k)||f;}catch{return f;}};
@@ -4513,8 +5034,8 @@
     const select=make('select',{id:'gpsMode',title:'Navigation display'},controls);select.setAttribute('aria-label','GPS display mode');
     for(const [value,label] of [['off','Off'],['mirror','Rear-view mirror'],['ar','AR · on the road'],['dashboard','Dashboard'],['line','Track outline']])if(modes.includes(value))make('option',{value,textContent:label},select);
     let destinationSelect=null;
-    if(app.cityNetwork){destinationSelect=make('select',{id:'gpsDestination',title:'Choose a London destination'},controls);destinationSelect.setAttribute('aria-label','London destination');make('option',{value:'',textContent:'London destination…'},destinationSelect);for(const p of app.cityNetwork.locations.slice().sort((a,b)=>a.name.localeCompare(b.name)))make('option',{value:p.id,textContent:p.name},destinationSelect);destinationSelect.onchange=()=>chooseDestination(destinationSelect.value);}
-    function chooseDestination(id){if(!app.cityNetwork?.destination(id))return;destinationSelect.value=id;signature='';lastMap=-Infinity;return true;}
+    if(app.cityNetwork){destinationSelect=make('select',{id:'gpsDestination',title:'Choose a London destination'},controls);destinationSelect.setAttribute('aria-label','London destination');make('option',{value:'',textContent:'No destination · explore London'},destinationSelect);for(const p of app.cityNetwork.locations.slice().sort((a,b)=>a.name.localeCompare(b.name)))make('option',{value:p.id,textContent:p.name},destinationSelect);destinationSelect.onchange=()=>chooseDestination(destinationSelect.value);}
+    function chooseDestination(id){if(!app.cityNetwork?.destination(id))return;destinationSelect.value=id;syncCity();if(id)setPreset(2);signature='';lastMap=-Infinity;return true;}
     const unit=make('section',{id:'gpsUnit'},doc.body);unit.setAttribute('aria-label','Live GPS navigation');
     const title=make('div',{id:'gpsTitle'},unit),canvas=make('canvas',{id:'gpsViewport',tabIndex:0},unit);canvas.setAttribute('role','button');canvas.setAttribute('aria-label','Track map: tap to switch whole route and road views; scroll or pinch to zoom');
     const footer=make('div',{id:'gpsFooter'},unit),toggle=make('button',{id:'gpsPreset',type:'button'},footer),scaleLabel=make('span',{id:'gpsScale'},footer);
@@ -4524,7 +5045,16 @@
     const rear=make('div',{id:'gpsRear'},unit);make('span',{textContent:'LIVE REAR'},rear);
     const ar=make('canvas',{id:'gpsAR'},doc.body),g=canvas.getContext('2d'),ag=ar.getContext('2d');
     const gps=app.gps={mode,preset,renderingRear:false,setMode,setPreset,chooseDestination,zoom:zoomBy,render:renderNow,inspect:()=>snapshot};
-    function setMode(value){if(!modes.includes(value))return;mode=value;gps.mode=value;snapshot.mode=value;select.value=value;save(modePref,value);lastLayout='';lastMap=-Infinity;unit.dataset.mode=value;unit.hidden=value==='off';rear.hidden=value!=='mirror';ar.hidden=value!=='ar';if(value!=='ar')ag.clearRect(0,0,ar.width,ar.height);}
+    function setMode(value){if(!modes.includes(value))return;mode=value;gps.mode=value;snapshot.mode=value;select.value=value;save(cityMode?'mucs-london-gps-mode':modePref,value);lastLayout='';lastMap=-Infinity;unit.dataset.mode=value;unit.hidden=value==='off';rear.hidden=value!=='mirror';ar.hidden=value!=='ar';if(value!=='ar')ag.clearRect(0,0,ar.width,ar.height);}
+    function syncCity(){
+      const active=!!state.ldn;if(destinationSelect)destinationSelect.hidden=!active;
+      if(active===cityMode)return;
+      cityMode=active;modes=active?["off","mirror","ar","dashboard","line"]:baseModes;
+      select.replaceChildren();for(const [value,label] of [['off','Off'],['mirror','Rear-view mirror'],['ar','AR · on the road'],['dashboard','Dashboard'],['line','Track outline']])if(modes.includes(value))make('option',{value,textContent:label},select);
+      if(active){previousMode=mode;previousPreset=preset;setMode('dashboard');setPreset(2);}
+      else{setMode(modes.includes(previousMode)?previousMode:baseModes[1]);setPreset(previousPreset);}
+      signature='';lastLayout='';lastMap=-Infinity;
+    }
     function setPreset(value){preset=value===2?2:1;gps.preset=preset;zooms[preset]=1;save('mucs-gps-preset',String(preset));lastMap=-Infinity;}
     function zoomBy(factor){zooms[preset]=clamp(zooms[preset]*factor,1/32,4096);lastMap=-Infinity;}
     select.addEventListener('change',()=>setMode(select.value));toggle.onclick=()=>setPreset(preset===1?2:1);minus.onclick=()=>zoomBy(1/1.5);plus.onclick=()=>zoomBy(1.5);
@@ -4538,7 +5068,7 @@
     function pickDestination(e){
       if(mode==='line'||!state.ldn||!app.cityNetwork||!transform)return false;
       const rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,{scale,cx,cz,w,h}=transform;
-      const targets=app.cityNetwork.locations.map(p=>({p,d:Math.hypot((p.x-cx)*scale+w/2-x,h/2-(p.z-cz)*scale-y)})).sort((a,b)=>a.d-b.d);
+      const targets=(transform.pins||[]).map(pin=>({p:app.cityNetwork.locations.find(p=>p.id===pin.id),d:Math.hypot(pin.x-x,pin.y-y)})).sort((a,b)=>a.d-b.d);
       return targets[0]?.d<11?!!chooseDestination(targets[0].p.id):false;
     }
     const finite=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.z);
@@ -4577,7 +5107,7 @@
     }
     function cars(){
       const all=[];
-      if(state.ldn&&app.cityNetwork){for(const c of app.cityNetwork.traffic){const p=app.cityNetwork.trafficPose(c);all.push({...p,name:c.kind,color:'#d06d35',kind:'traffic'});}if(state.raceGrid)for(const r of state.rivals||[]){if(!r.gone&&!r.out)all.push({...app.cityNetwork.actorPose(r),name:r.name,color:r.body||'#b68c64',kind:'rival'});}return all;}
+      if(state.ldn&&app.cityNetwork)return app.cityNetwork.policePoses().map(p=>({...p,name:p.name||'Police',color:'#448cd6',kind:'police'}));
       if(state.raceGrid!==false)for(const r of state.rivals||[]){if(r.gone||r.out)continue;let p=model.t?app.contactPose?.(r):null;
         if(!finite(p))p=model.t&&r.pitState?app.pitSurface(r.pitQ||0,r.lane||0):lateral(model.at(r.distM||0),r.lane||0);
         if(finite(p))all.push({...p,name:r.name||'Rival',color:r.body||'#ef8854',kind:'rival',d:r.distM});}
@@ -4587,13 +5117,14 @@
     }
     function layout(){
       const w=win.innerWidth,h=win.innerHeight,bar=doc.querySelector('.topbar')?.getBoundingClientRect(),bottom=doc.querySelector('.bottombar')?.getBoundingClientRect();
-      const top=Math.max(8,bar?.bottom||8),floor=Math.min(h-6,bottom?.top||h-6),key=[w,h,mode,top,floor].join('|');if(key===lastLayout)return;lastLayout=key;
+      const top=Math.max(8,bar?.bottom||8),floor=Math.min(h-6,bottom?.top||h-6),key=[w,h,mode,cityMode,top,floor].join('|');if(key===lastLayout)return;lastLayout=key;
       let W,H,x,y;
       if(mode==='line'){W=Math.min(270,w*.30);H=Math.min(215,h*.26);x=w-W-14;y=Math.max(top+12,Math.min(h*.39,floor-H-8));}
       else if(mode==='mirror'){W=Math.min(450,w*.63);H=clamp(h*.20,130,176);x=(w-W)/2;y=top+8;}
       else if(mode==='ar'){W=Math.min(275,w*.43);H=Math.min(180,h*.25);x=w-W-12;y=top+12;}
       else{W=Math.min(322,w*.30);H=Math.min(210,Math.max(145,h*.245));x=w*.64;H=Math.min(H,185);y=Math.max(h*.61,floor-H-4);if(y+H>floor)H=Math.max(108,floor-y);}
       if(w<600){W=mode==='mirror'?Math.min(w-20,355):Math.min(w*.49,260);H=mode==='mirror'?140:160;x=mode==='mirror'?(w-W)/2:w-W-8;y=mode==='mirror'?top+5:Math.max(h*.65,floor-H-5);}
+      if(cityMode&&mode!=='line'){if(mode==='dashboard'){W=Math.min(370,w*.36);H=Math.min(290,h*.34);x=w-W-12;y=floor-H-5;}else if(mode==='ar'){W=Math.min(330,w*.36);H=Math.min(250,h*.31);}else H=Math.min(230,h*.28);if(w<600){W=mode==='mirror'?w-20:Math.min(w*.54,300);H=Math.min(235,h*.32);x=mode==='mirror'?(w-W)/2:w-W-6;y=mode==='mirror'?top+5:floor-H-5;}}
       H=Math.max(105,Math.min(H,h-top-14));y=clamp(y,top+4,h-H-6);x=clamp(x,4,w-W-4);
       if(mode==='line'&&placement){x=clamp(placement.x*(w-W),4,w-W-4);y=clamp(placement.y*(h-H),4,h-H-4);}
       Object.assign(unit.style,{width:W+'px',height:H+'px',left:x+'px',top:y+'px'});
@@ -4617,6 +5148,11 @@
       if(now-lastMap<60)return;lastMap=now;modelForRoute();
       const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(win.devicePixelRatio||1,2);if(w<10||h<10)return;
       if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}g.setTransform(dpr,0,0,dpr,0,0);
+      if(cityMode&&mode!=='line'){
+        transform=app.renderCityMap(g,w,h,{preset,zoom:zooms[preset]});const v=transform,n=v.navigation;
+        credits.hidden=true;title.textContent=n?'To '+n.destination:'London · explore freely';toggle.textContent=(preset===1?'1 · Route overview':'2 · Follow heading')+' ⇄';scaleLabel.textContent=zooms[preset]===1?'':zooms[preset].toFixed(1)+'×';
+        snapshot={mode,preset,zoom:zooms[preset],route:'London road network',lengthM:state.ldn.road.len,track2:false,scalePixelsPerM:v.scale,bearing:v.bearing,player:v.player,markers:v.markers,carCount:1+v.policeCount,policeCount:v.policeCount,buildings:v.buildingCount,mapFeatures:v.buildingCount+v.parkCount,destination:n?.destination||null,navigation:n,roadHalfWidth:app.halfWidthAt(state.distanceM),pit:false};return;
+      }
       const player=playerPoint(),all=cars(),m=model;
       const fit=Math.min((w-42)/Math.max(50,m.maxX-m.minX),(h-36)/Math.max(50,m.maxZ-m.minZ));
       const scale=clamp((preset===1?fit:Math.min(w,h)/85)*zooms[preset],fit/3,12),follow=preset===2||zooms[preset]>1.05,cx=follow?player.x:(m.minX+m.maxX)/2,cz=follow?player.z:(m.minZ+m.maxZ)/2;
@@ -4701,8 +5237,18 @@
       for(const p of cars()){const q=view(p);if(q){c.fillStyle=p.color;c.fillRect(q.x-q.s,q.y-q.s*1.4,q.s*2,q.s*1.4);}}
       c.restore();
     }
+    function renderCityAR(){
+      const n=app.cityNetwork,nav=n.navigation();let count=0;const samples=[];
+      if(nav&&!nav.arrived){
+        ag.save();ag.beginPath();ag.rect(win.innerWidth*.06,win.innerHeight*.20,win.innerWidth*.88,win.innerHeight*.49);ag.clip();
+        const project=(off,lat=0)=>{const p=n.guideAt(state.distanceM+off);return n.projectWorld({...lateral(p,p.lane+lat),y:.045});};
+        for(let off=Math.min(110,nav.remaining-2);off>6;off-=7){const a=project(off,-.65),b=project(off+2),c=project(off,.65);if([a,b,c].some(p=>p.fwd<.6||!Number.isFinite(p.x+p.y)))continue;
+          ag.strokeStyle='#75e7ff';ag.lineWidth=clamp(a.scale*.1,1.8,5);ag.shadowColor='#006a99';ag.shadowBlur=3;ag.beginPath();ag.moveTo(a.x,a.y);ag.lineTo(b.x,b.y);ag.lineTo(c.x,c.y);ag.stroke();count++;samples.push(n.guideAt(state.distanceM+off));
+        }ag.restore();
+      }snapshot.arChevrons=count;snapshot.arRouteRevision=nav?.revision;snapshot.arRouteSamples=samples;
+    }
     function renderAR(){
-      ag.clearRect(0,0,win.innerWidth,win.innerHeight);if(model.t&&app.gpsBridge?.arDepth){snapshot.arChevrons=gps.arRendered||0;snapshot.arDepthTested=true;return;}const bridge=app.gpsBridge||app,project=bridge.projectAhead;if(!project)return;
+      ag.clearRect(0,0,win.innerWidth,win.innerHeight);if(cityMode){renderCityAR();return;}if(model.t&&app.gpsBridge?.arDepth){snapshot.arChevrons=gps.arRendered||0;snapshot.arDepthTested=true;return;}const bridge=app.gpsBridge||app,project=bridge.projectAhead;if(!project)return;
       const m=model,limit=m.closed||m.free?95:Math.min(95,m.L-state.distanceM),guide=d=>state.inPitLane?0:clamp((m.t?app.racingOffset?.(d):null)??app.raceLineOffAt?.(d)??0,-(app.halfWidthAt?.(d)||7)+1.4,(app.halfWidthAt?.(d)||7)-1.4);
       const projectAt=(off,n)=>m.t?app.projectTrack(state.inPitLane?app.pitSurface((state.pitQ||0)+off,n,.045):app.surfacePoint(state.distanceM+off,n,.045)):project(off,n);
       ag.save();ag.beginPath();ag.rect(win.innerWidth*.10,win.innerHeight*.20,win.innerWidth*.80,win.innerHeight*.47);ag.clip();
@@ -4711,6 +5257,7 @@
       ag.restore();snapshot.arChevrons=count;
     }
     function renderNow(now=win.performance.now()){
+      syncCity();
       if(mode==='off'||!doc.body.classList.contains('view-drive'))return;
       layout();renderMap(now);if(mode==='mirror')renderRear();if(mode==='ar')renderAR();
     }
@@ -4723,7 +5270,7 @@
 })();
 
 /*__GPS_END__*/
-      /*__EMBED_START__*/const SIM_FILES = {"pagani":"Pagani Huayra BC Simulator.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator.html","mclaren":"McLaren Speedtail simulator.html","ferrari":"Ferrari F80 simulator.html","koenigsegg":"Koenigsegg Jesko simulator.html","tesla":"Tesla Model S Plaid simulator.html","amg":"Mercedes-AMG GT Black Series simulator.html","aston":"Aston Martin Valkyrie simulator.html","gto":"Ferrari 250 GTO simulator.html","revuelto":"Lamborghini Revuelto simulator.html","porsche918":"Porsche 918 Spyder simulator.html","taycan":"Porsche Taycan Turbo GT simulator.html","supra":"Toyota Supra MK4 simulator.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator.html","gtr":"Nissan GT-R Nismo simulator.html","m5":"BMW M5 simulator.html","r8":"Audi R8 V10 Performance simulator.html","mcf1":"McLaren F1 1993 simulator.html","t33":"Gordon Murray T.33 simulator.html","f12tdf":"Ferrari F12tdf simulator.html","agera":"Koenigsegg Agera RS simulator.html","u9":"Yangwang U9 simulator.html","db5":"Aston Martin DB5 simulator.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator.html","czinger":"Czinger 21C simulator.html","alfa33":"Alfa Romeo 33 Stradale simulator.html","tuatara":"SSC Tuatara simulator.html","t50s":"Gordon Murray T50s Niki Lauda simulator.html","project8":"Jaguar XE SV Project 8 simulator.html","s2000":"Honda S2000 simulator.html","mustanggtd":"Ford Mustang GTD simulator.html","rx7":"Mazda RX-7 simulator.html","phantom":"Rolls-Royce Phantom simulator.html","spectre":"Rolls-Royce Spectre Black Badge simulator.html","venom":"Hennessey Venom F5 simulator.html","evija":"Lotus Evija simulator.html","amgone":"Mercedes-AMG One simulator.html","nevera":"Rimac Nevera simulator.html","zr1":"Chevrolet Corvette ZR1 simulator.html","p1":"McLaren P1 simulator.html","f40":"Ferrari F40 simulator.html","p917":"Porsche 917 simulator.html","viperacr":"Dodge Viper ACR Extreme Aero simulator.html","aurora":"Zenvo Aurora Agil simulator.html","mcxtrema":"Maserati MCXtrema simulator.html","peugeot9x8":"Peugeot 9X8 simulator.html","porsche919":"Porsche 919 Hybrid simulator.html","ferrari499p":"Ferrari 499P simulator.html","solusgt":"McLaren Solus GT simulator.html","f1mercedes":"Mercedes F1 2026 simulator.html","f1redbull":"Red Bull F1 2026 simulator.html","f1ferrari":"Ferrari F1 2026 simulator.html","f1mclaren":"McLaren F1 2026 simulator.html","f1aston":"Aston Martin F1 2026 simulator.html","f1alpine":"Alpine F1 2026 simulator.html","f1williams":"Williams F1 2026 simulator.html","f1racingbulls":"Racing Bulls F1 2026 simulator.html","f1haas":"Haas F1 2026 simulator.html","f1audi":"Audi F1 2026 simulator.html","f1cadillac":"Cadillac F1 2026 simulator.html","dacia":"Dacia Sandrider Dakar simulator.html","fordraptor":"Ford Raptor T1+ Dakar simulator.html","grhilux":"Toyota GR DKR Hilux simulator.html","hunter":"Prodrive Hunter Dakar simulator.html"};const SIM_FILES_2 = {"pagani":"Pagani Huayra BC Simulator 2.0.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator 2.0.html","mclaren":"McLaren Speedtail simulator 2.0.html","ferrari":"Ferrari F80 simulator 2.0.html","koenigsegg":"Koenigsegg Jesko simulator 2.0.html","tesla":"Tesla Model S Plaid simulator 2.0.html","amg":"Mercedes-AMG GT Black Series simulator 2.0.html","aston":"Aston Martin Valkyrie simulator 2.0.html","gto":"Ferrari 250 GTO simulator 2.0.html","revuelto":"Lamborghini Revuelto simulator 2.0.html","porsche918":"Porsche 918 Spyder simulator 2.0.html","taycan":"Porsche Taycan Turbo GT simulator 2.0.html","supra":"Toyota Supra MK4 simulator 2.0.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator 2.0.html","gtr":"Nissan GT-R Nismo simulator 2.0.html","m5":"BMW M5 simulator 2.0.html","r8":"Audi R8 V10 Performance simulator 2.0.html","mcf1":"McLaren F1 1993 simulator 2.0.html","t33":"Gordon Murray T.33 simulator 2.0.html","f12tdf":"Ferrari F12tdf simulator 2.0.html","agera":"Koenigsegg Agera RS simulator 2.0.html","u9":"Yangwang U9 simulator 2.0.html","db5":"Aston Martin DB5 simulator 2.0.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator 2.0.html","czinger":"Czinger 21C simulator 2.0.html","alfa33":"Alfa Romeo 33 Stradale simulator 2.0.html","tuatara":"SSC Tuatara simulator 2.0.html","t50s":"Gordon Murray T50s Niki Lauda simulator 2.0.html","project8":"Jaguar XE SV Project 8 simulator 2.0.html","s2000":"Honda S2000 simulator 2.0.html","mustanggtd":"Ford Mustang GTD simulator 2.0.html","rx7":"Mazda RX-7 simulator 2.0.html","spectre":"Rolls-Royce Spectre Black Badge simulator 2.0.html","venom":"Hennessey Venom F5 simulator 2.0.html","evija":"Lotus Evija simulator 2.0.html","amgone":"Mercedes-AMG One simulator 2.0.html","nevera":"Rimac Nevera simulator 2.0.html","zr1":"Chevrolet Corvette ZR1 simulator 2.0.html","p1":"McLaren P1 simulator 2.0.html","f40":"Ferrari F40 simulator 2.0.html","p917":"Porsche 917 simulator 2.0.html","viperacr":"Dodge Viper ACR Extreme Aero simulator 2.0.html","aurora":"Zenvo Aurora Agil simulator 2.0.html","mcxtrema":"Maserati MCXtrema simulator 2.0.html","peugeot9x8":"Peugeot 9X8 simulator 2.0.html","porsche919":"Porsche 919 Hybrid simulator 2.0.html","ferrari499p":"Ferrari 499P simulator 2.0.html","solusgt":"McLaren Solus GT simulator 2.0.html","f1mercedes":"Mercedes F1 2026 simulator 2.0.html","f1redbull":"Red Bull F1 2026 simulator 2.0.html","f1ferrari":"Ferrari F1 2026 simulator 2.0.html","f1mclaren":"McLaren F1 2026 simulator 2.0.html","f1aston":"Aston Martin F1 2026 simulator 2.0.html","f1alpine":"Alpine F1 2026 simulator 2.0.html","f1williams":"Williams F1 2026 simulator 2.0.html","f1racingbulls":"Racing Bulls F1 2026 simulator 2.0.html","f1haas":"Haas F1 2026 simulator 2.0.html","f1audi":"Audi F1 2026 simulator 2.0.html","f1cadillac":"Cadillac F1 2026 simulator 2.0.html","dacia":"Dacia Sandrider Dakar simulator 2.0.html","fordraptor":"Ford Raptor T1+ Dakar simulator 2.0.html","grhilux":"Toyota GR DKR Hilux simulator 2.0.html","hunter":"Prodrive Hunter Dakar simulator 2.0.html"};const SIM_BUILD = "c797562072";/*__EMBED_END__*/
+      /*__EMBED_START__*/const SIM_FILES = {"pagani":"Pagani Huayra BC Simulator.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator.html","mclaren":"McLaren Speedtail simulator.html","ferrari":"Ferrari F80 simulator.html","koenigsegg":"Koenigsegg Jesko simulator.html","tesla":"Tesla Model S Plaid simulator.html","amg":"Mercedes-AMG GT Black Series simulator.html","aston":"Aston Martin Valkyrie simulator.html","gto":"Ferrari 250 GTO simulator.html","revuelto":"Lamborghini Revuelto simulator.html","porsche918":"Porsche 918 Spyder simulator.html","taycan":"Porsche Taycan Turbo GT simulator.html","supra":"Toyota Supra MK4 simulator.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator.html","gtr":"Nissan GT-R Nismo simulator.html","m5":"BMW M5 simulator.html","r8":"Audi R8 V10 Performance simulator.html","mcf1":"McLaren F1 1993 simulator.html","t33":"Gordon Murray T.33 simulator.html","f12tdf":"Ferrari F12tdf simulator.html","agera":"Koenigsegg Agera RS simulator.html","u9":"Yangwang U9 simulator.html","db5":"Aston Martin DB5 simulator.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator.html","czinger":"Czinger 21C simulator.html","alfa33":"Alfa Romeo 33 Stradale simulator.html","tuatara":"SSC Tuatara simulator.html","t50s":"Gordon Murray T50s Niki Lauda simulator.html","project8":"Jaguar XE SV Project 8 simulator.html","s2000":"Honda S2000 simulator.html","mustanggtd":"Ford Mustang GTD simulator.html","rx7":"Mazda RX-7 simulator.html","phantom":"Rolls-Royce Phantom simulator.html","spectre":"Rolls-Royce Spectre Black Badge simulator.html","venom":"Hennessey Venom F5 simulator.html","evija":"Lotus Evija simulator.html","amgone":"Mercedes-AMG One simulator.html","nevera":"Rimac Nevera simulator.html","zr1":"Chevrolet Corvette ZR1 simulator.html","p1":"McLaren P1 simulator.html","f40":"Ferrari F40 simulator.html","p917":"Porsche 917 simulator.html","viperacr":"Dodge Viper ACR Extreme Aero simulator.html","aurora":"Zenvo Aurora Agil simulator.html","mcxtrema":"Maserati MCXtrema simulator.html","peugeot9x8":"Peugeot 9X8 simulator.html","porsche919":"Porsche 919 Hybrid simulator.html","ferrari499p":"Ferrari 499P simulator.html","solusgt":"McLaren Solus GT simulator.html","f1mercedes":"Mercedes F1 2026 simulator.html","f1redbull":"Red Bull F1 2026 simulator.html","f1ferrari":"Ferrari F1 2026 simulator.html","f1mclaren":"McLaren F1 2026 simulator.html","f1aston":"Aston Martin F1 2026 simulator.html","f1alpine":"Alpine F1 2026 simulator.html","f1williams":"Williams F1 2026 simulator.html","f1racingbulls":"Racing Bulls F1 2026 simulator.html","f1haas":"Haas F1 2026 simulator.html","f1audi":"Audi F1 2026 simulator.html","f1cadillac":"Cadillac F1 2026 simulator.html","dacia":"Dacia Sandrider Dakar simulator.html","fordraptor":"Ford Raptor T1+ Dakar simulator.html","grhilux":"Toyota GR DKR Hilux simulator.html","hunter":"Prodrive Hunter Dakar simulator.html"};const SIM_FILES_2 = {"pagani":"Pagani Huayra BC Simulator 2.0.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator 2.0.html","mclaren":"McLaren Speedtail simulator 2.0.html","ferrari":"Ferrari F80 simulator 2.0.html","koenigsegg":"Koenigsegg Jesko simulator 2.0.html","tesla":"Tesla Model S Plaid simulator 2.0.html","amg":"Mercedes-AMG GT Black Series simulator 2.0.html","aston":"Aston Martin Valkyrie simulator 2.0.html","gto":"Ferrari 250 GTO simulator 2.0.html","revuelto":"Lamborghini Revuelto simulator 2.0.html","porsche918":"Porsche 918 Spyder simulator 2.0.html","taycan":"Porsche Taycan Turbo GT simulator 2.0.html","supra":"Toyota Supra MK4 simulator 2.0.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator 2.0.html","gtr":"Nissan GT-R Nismo simulator 2.0.html","m5":"BMW M5 simulator 2.0.html","r8":"Audi R8 V10 Performance simulator 2.0.html","mcf1":"McLaren F1 1993 simulator 2.0.html","t33":"Gordon Murray T.33 simulator 2.0.html","f12tdf":"Ferrari F12tdf simulator 2.0.html","agera":"Koenigsegg Agera RS simulator 2.0.html","u9":"Yangwang U9 simulator 2.0.html","db5":"Aston Martin DB5 simulator 2.0.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator 2.0.html","czinger":"Czinger 21C simulator 2.0.html","alfa33":"Alfa Romeo 33 Stradale simulator 2.0.html","tuatara":"SSC Tuatara simulator 2.0.html","t50s":"Gordon Murray T50s Niki Lauda simulator 2.0.html","project8":"Jaguar XE SV Project 8 simulator 2.0.html","s2000":"Honda S2000 simulator 2.0.html","mustanggtd":"Ford Mustang GTD simulator 2.0.html","rx7":"Mazda RX-7 simulator 2.0.html","spectre":"Rolls-Royce Spectre Black Badge simulator 2.0.html","venom":"Hennessey Venom F5 simulator 2.0.html","evija":"Lotus Evija simulator 2.0.html","amgone":"Mercedes-AMG One simulator 2.0.html","nevera":"Rimac Nevera simulator 2.0.html","zr1":"Chevrolet Corvette ZR1 simulator 2.0.html","p1":"McLaren P1 simulator 2.0.html","f40":"Ferrari F40 simulator 2.0.html","p917":"Porsche 917 simulator 2.0.html","viperacr":"Dodge Viper ACR Extreme Aero simulator 2.0.html","aurora":"Zenvo Aurora Agil simulator 2.0.html","mcxtrema":"Maserati MCXtrema simulator 2.0.html","peugeot9x8":"Peugeot 9X8 simulator 2.0.html","porsche919":"Porsche 919 Hybrid simulator 2.0.html","ferrari499p":"Ferrari 499P simulator 2.0.html","solusgt":"McLaren Solus GT simulator 2.0.html","f1mercedes":"Mercedes F1 2026 simulator 2.0.html","f1redbull":"Red Bull F1 2026 simulator 2.0.html","f1ferrari":"Ferrari F1 2026 simulator 2.0.html","f1mclaren":"McLaren F1 2026 simulator 2.0.html","f1aston":"Aston Martin F1 2026 simulator 2.0.html","f1alpine":"Alpine F1 2026 simulator 2.0.html","f1williams":"Williams F1 2026 simulator 2.0.html","f1racingbulls":"Racing Bulls F1 2026 simulator 2.0.html","f1haas":"Haas F1 2026 simulator 2.0.html","f1audi":"Audi F1 2026 simulator 2.0.html","f1cadillac":"Cadillac F1 2026 simulator 2.0.html","dacia":"Dacia Sandrider Dakar simulator 2.0.html","fordraptor":"Ford Raptor T1+ Dakar simulator 2.0.html","grhilux":"Toyota GR DKR Hilux simulator 2.0.html","hunter":"Prodrive Hunter Dakar simulator 2.0.html"};const SIM_BUILD = "ec831dc10a";/*__EMBED_END__*/
 
       const cars = {
         pagani: { key: "pagani", label: "Pagani Huayra BC", short: "Huayra BC", mark: "BC",

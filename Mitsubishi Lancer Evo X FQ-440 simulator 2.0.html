@@ -1437,7 +1437,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     state.corners = r.trackCorners || [];
   }
   // signed road curvature (1/m) at distance d. On a circuit the corners repeat every lap.
-  function curvatureAt(d) { if(app.trackModel?.())return app.trackAt(d).k;
+  function curvatureAt(d) { if(state.ldn&&app.cityNetwork)return app.cityNetwork.curvature(d); if(app.trackModel?.())return app.trackAt(d).k;
     const r = state.route;
     if (r.active && r.trackCorners && r.totalM > 0) {
       const L = r.totalM, phase = ((d % L) + L) % L;
@@ -1455,7 +1455,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     return 0.0006 * Math.sin(d / 320) + 0.0004 * Math.sin(d / 120 + 1.3);  // free-run wander
   }
   // half track-width (m) at d — Monaco pinches at the hairpin and pool, the GP loop is wide
-  function halfWidthAt(d) { if(app.trackModel?.())return app.trackWidthAt(d);
+  function halfWidthAt(d) { if(state.ldn)return state.ldn.road.w*1.55/2; if(app.trackModel?.())return app.trackWidthAt(d);
     const r = state.route;
     let full = (r.active && r.baseWidth) ? r.baseWidth : 13;
     if (r.active && r.widthZones && r.totalM) { const L = r.totalM, phase = ((d % L) + L) % L; for (const z of r.widthZones) if (phase >= z.from && phase <= z.to) full = z.w; }
@@ -1560,7 +1560,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       lane: (i % 2 ? 1 : -1) * 2.4, speedMps: 45, brake: 0                 // two-column grid formation
     }));
   }
-  function updateRivals(dt) {
+  function updateRivals(dt) { if(state.ldn)return;
     if (!state.raceGrid || !state.rivals.length) return;
     for (const r of state.rivals) {
       if(app.contactActive?.(r))continue;
@@ -1618,7 +1618,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (!wsum) return 0;
     return Math.max(-(hw - 2), Math.min(hw - 2, off / wsum));
   }
-  function targetSpeedMps() { if(app.trackModel?.())return app.driverTarget();
+  function targetSpeedMps() { if(state.ldn&&app.cityNetwork)return app.cityNetwork.driverTarget(); if(app.trackModel?.())return app.driverTarget();
     let limit;
     if (state.pitLimiter) return 60 * KMH;
     if (state.adaptiveCruise && !state.testDriver) limit = clamp(state.cruiseSetKmh, 10, 350) * KMH;
@@ -1655,7 +1655,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const candidates=[lead.n-3.25,lead.n+3.25].filter(n=>Math.abs(n)<=edge&&actors.every(r=>r===lead||Math.abs(r.n-n)>3.1||Math.abs(r.gap+(r.v-speed)*2)>16));
     if(!candidates.length)return line;const target=held?assistPass.n:state.laneOffset,n=candidates.reduce((a,b)=>Math.abs(a-target)<Math.abs(b-target)?a:b);assistPass={id:lead.id,n};return n;
   }
-  function pathSteer(gain, targetOffset) { if(app.trackModel?.())return app.driverSteer(); const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
+  function pathSteer(gain, targetOffset) { if(state.ldn&&app.cityNetwork)return app.cityNetwork.driverSteer(gain); if(app.trackModel?.())return app.driverSteer(); const look = clamp(Math.abs(state.speedMps) * 0.8, 10, 30); const kAhead = curvatureAt(state.distanceM + look); const tgt = (targetOffset == null) ? 0 : targetOffset; const lateralErr = tgt - state.laneOffset; const phiWanted = clamp(lateralErr * 0.05, -0.5, 0.5); const ffYaw = kAhead * state.speedMps; const corrYaw = (phiWanted - state.headingRel) * 2.4 * (gain || 1); state.blinker = Math.abs(lateralErr) > 0.7 ? Math.sign(lateralErr) : (Math.abs(kAhead) > 0.02 ? Math.sign(kAhead) : 0); return steerForYaw(ffYaw + corrYaw, state.speedMps); }
   function autopilotControls() { if(app.trackModel?.())return app.driverControls(); const target = targetSpeedMps(); const err = target - state.speedMps; let demand = clamp(err * 0.5, -1, 1); if (Math.abs(err) < 0.5) demand *= 0.7; let throttle = demand > 0 ? clamp(demand, 0, 1) : 0; let brake = demand < 0 ? clamp(-demand * 0.85, 0, 0.9) : 0; if (brake < 0.05) brake = 0; const learnTgt = () => { const la = clamp(Math.abs(state.speedMps) * 0.85, 12, 38); return clamp(raceLineOffAt(state.distanceM + la), -26, 26); };
     return { throttle, brake, steerTarget: pathSteer(1, state.learnMode ? learnTgt() : chooseLaneOffset()) }; }
 
@@ -1859,7 +1859,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     if (state.toastTimer > 0) { state.toastTimer -= dt; if (state.toastTimer <= 0) el.toast.classList.remove("show"); }
   }
 
-  function updateLap(dsdt, dt) { if(app.trackModel?.()?.closed===false){app.updateOpenRoute(dt);return;}
+  function updateLap(dsdt, dt) { if(state.ldn)return; if(app.trackModel?.()?.closed===false){app.updateOpenRoute(dt);return;}
     if (!state.route.active) { if (Math.abs(state.speedMps) > 1) state.lap.curMs += dt * 1000; return; }
     state.route.remainingM = Math.max(0, state.route.remainingM - dsdt * dt);
     state.lap.curMs += dt * 1000;
@@ -2722,7 +2722,7 @@ function drawDetailedRoadCar(mesh,info={}){
     const i1 = Math.min(t.length - 1, i0 + 1), f = Math.max(0, Math.min(1, idx - i0)); const a = t[i0], b = t[i1];
     return { X: lerp(a.X, b.X, f), Z: lerp(a.Z, b.Z, f), psi: lerp(a.psi, b.psi, f) };
   }
-  function projectAhead(distAhead, lateralM) { if(trackCamera)return projectTrack(trackPoint(state.distanceM+distAhead,lateralM||0)); const c = centerlineAt(distAhead); const nx = Math.cos(c.psi), nz = -Math.sin(c.psi); return projectRoad(c.X + (lateralM || 0) * nx, c.Z + (lateralM || 0) * nz); }
+  function projectAhead(distAhead, lateralM) { if(state.ldn&&app.cityNetwork)return app.cityNetwork.projectRelative(distAhead,lateralM); if(trackCamera)return projectTrack(trackPoint(state.distanceM+distAhead,lateralM||0)); const c = centerlineAt(distAhead); const nx = Math.cos(c.psi), nz = -Math.sin(c.psi); return projectRoad(c.X + (lateralM || 0) * nx, c.Z + (lateralM || 0) * nz); }
   function projectRoad(Xr, Zr) { const phi = state.headingRel, n0 = state.laneOffset; const dX = Xr - n0, dZ = Zr; const fwd = dX * Math.sin(phi) + dZ * Math.cos(phi); const rgt = dX * Math.cos(phi) - dZ * Math.sin(phi); if (fwd <= 0.12) return { x: innerWidth / 2, y: horizonY, scale: -1, fwd }; const scale = FOCAL / fwd; return { x: innerWidth / 2 + rgt * scale, y: horizonY + CAM_H * scale, scale, fwd }; }
 
   const halfAt = (off) => (app.halfWidthAt ? app.halfWidthAt(state.distanceM + off) : 6.5);
@@ -2735,8 +2735,8 @@ function drawDetailedRoadCar(mesh,info={}){
     const w = innerWidth, h = innerHeight; horizonY=h*(app.trackModel?.()?.42:.46);FOCAL=app.trackModel?.()?Math.min(w*.57,h*.78):360;const pal=envColors();rebuildRoadTable();
     ctx.save();
     if(!app.trackModel?.()){ctx.translate(w / 2 + state.shake.x, h / 2 + state.shake.y); ctx.rotate(state.shake.rot); ctx.translate(-w / 2, -h / 2);}
-    drawSky(w,h,pal);if(app.trackModel?.()){drawTrackRoad(w,h,pal);}else{trackCamera=null; drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);}
-    drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,90,80,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
+    drawSky(w,h,pal);if(state.ldn&&app.cityNetwork){app.cityNetwork.draw(w,h,pal);}else{if(app.trackModel?.()){drawTrackRoad(w,h,pal);}else{trackCamera=null; drawScenery(w, h, pal); drawRoad(w, h, pal); drawRoadside(w, h, pal); drawTraffic(w, h, pal); drawRivals(w, h, pal);}
+    }drawCabinFrame(w, h, pal); /* cabin glow: ambient lighting + warm/cool climate — a real visual */ { const _cg = state.ambient ? "rgba(255,90,80,0.16)" : state.heat ? null : state.cool ? "rgba(90,170,255,0.14)" : null; if (_cg) { ctx.save(); ctx.globalCompositeOperation = "screen"; const _ag = ctx.createLinearGradient(0, h, 0, h * 0.45); _ag.addColorStop(0, _cg); _ag.addColorStop(1, "rgba(0,0,0,0)"); ctx.fillStyle = _ag; ctx.fillRect(0, h * 0.45, w, h * 0.55); ctx.restore(); } }
     if (state.lights || pal.night) drawHeadlights(w, h);
     drawMirrors(w, h, pal);
     if (state.dataHud) drawTelemetry(w, h);
@@ -3271,7 +3271,7 @@ function drawDetailedRoadCar(mesh,info={}){
   };
   const mirrorCol = (c, fb) => (c === "var-teal" ? cssVar("--teal", fb) : c === "var-body" ? cssVar("--f1body", fb) : c) || fb;
 
-  function drawRearView(mx, my, mw, mh, p, pal) { if(trackCamera&&trackGL){drawTrackMirror(mx,my,mw,mh,p,pal);return;}
+  function drawRearView(mx, my, mw, mh, p, pal) { if(state.ldn&&app.cityNetwork){app.cityNetwork.drawRear(mx,my,mw,mh,pal,p);return;} if(trackCamera&&trackGL){drawTrackMirror(mx,my,mw,mh,p,pal);return;}
     const cam = { cx: mx + mw / 2, cy: my + mh * 0.26, sc: mh * 0.0062, eye: p.eye, yaw: p.yaw };
     ctx.save();
     ctx.beginPath(); ctx.roundRect(mx, my, mw, mh, MIRROR.frame === "chrome" ? mh * 0.4 : 6); ctx.clip();
@@ -3954,7 +3954,7 @@ function drawDetailedRoadCar(mesh,info={}){
   function togglePit() { state.pitLimiter = !state.pitLimiter; setActive("pitBtn", state.pitLimiter); showToast(state.pitLimiter ? "Pit limiter — held to 60 km/h." : "Pit limiter off."); }
 
   function isNords(n) { return n === "Nürburgring 24h" || n === "Nordschleife" || n === "Nürburgring GP"; }
-  function selectCircuit(name) { app.track2Reset?.();
+  function selectCircuit(name) { if(name==='London'){app.enterLondon();return;}if(state.ldn)app.leaveLondon(); app.track2Reset?.();
     const circ = CIRCUITS[name]; if (!circ) { showToast(`No ${name} on file.`, "Co-Pilot"); return; }
     state.route = { active: true, name, env: circ.env, totalM: circ.dist, remainingM: circ.dist, arrived: false };
     if(app.trackModel?.()){Object.assign(state,{distanceM:0,laneOffset:0,headingRel:0,speedMps:0,_lc:null,dayPhase:.3});state.route.endDist=circ.dist;app.prepareTrack(name);}
@@ -3976,7 +3976,7 @@ function drawDetailedRoadCar(mesh,info={}){
   function setCruiseSpeed(kmhVal, announce) { state.cruiseSetKmh = clamp(Math.round(kmhVal), 30, 350); if (announce) showToast(`Cruise set to ${state.cruiseSetKmh} km/h.`, "Co-Pilot"); }
   function toggleCruise() { state.adaptiveCruise = !state.adaptiveCruise; if (state.adaptiveCruise) { if (state.gearMode !== "G") setGear("G", 1); const now = Math.round(Math.abs(kmh(state.speedMps))); if (now >= 30) state.cruiseSetKmh = Math.min(350, now); showToast(`Cruise holding ${state.cruiseSetKmh} km/h.`, "Evo"); } else showToast("Cruise off."); }
 
-  function resetCar() { app.track2Reset?.();
+  function resetCar() { if(state.ldn)app.leaveLondon(); app.track2Reset?.();
     Object.assign(state, { speedMps: 0, distanceM: 0, laneOffset: 0, headingRel: 0, steer: 0, touchSteer: 0, touchActive: false, trackpadSteering: false, trackpadLastInput: -99, throttle: 0, brake: 0, padThrottle: 0, padBrake: 0, rpm: SPEC.idleRpm, boostBar: 0, curGear: 1, gearMode: "N", testDriver: false, adaptiveCruise: false, launchArmed: false, launchActive: false, pitLimiter: false, rideHeight: 0 });
     if (state.raceAero) { state.raceAero = false; SPEC.aeroClA = AERO0.aeroClA; SPEC.dragCd = AERO0.dragCd; SPEC.massKg = AERO0.massKg; }
     setActive("raceAeroBtn", false);
@@ -4533,7 +4533,776 @@ const app=window.EvoApp;
    app.selectCircuit=function(...args){s.pursuit=[];return select.apply(app,args);};app.resetCar=function(...args){s.pursuit=[];return reset.apply(app,args);};
   }
  })(app,"evo");
+(function install(app,data){
+  Object.assign(app,data);const s=app.state,doc=app.canvas.ownerDocument;let gridBefore=true;
+  app.CIRCUITS.London={dist:1,env:'city',loop:false,blurb:'London road network'};
+  app.enterLondon=(nodeId,roadName)=>{
+   app.track2Reset?.();if(!s.ldn)gridBefore=s.raceGrid;const node=app.LDN.byId[nodeId]||app.LDN.byId.charingx,link=node.roads.find(l=>(!roadName||l.road.name===roadName)&&(l.out>0?l.road.fwd:l.road.back)>0)||node.roads[0];
+   s.ldn={road:link.road,dir:link.out,node,next:link.out>0?link.road.B:link.road.A,origin:0};
+   Object.assign(s,{distanceM:0,routeTime:0,edgeD:0,headingRel:0,speedMps:0,laneOffset:-link.road.w*1.55/2+link.road.w*1.55/(link.road.fwd+link.road.back)*.5,rivals:[],traffic:[],raceGrid:false,pursuit:[],dayPhase:.3});
+   s.route={active:true,name:'London',env:'city',totalM:link.road.len,remainingM:link.road.len,loop:false,arrived:false,label:link.road.name};s.lap.running=false;
+   app.cityNetwork?.prepare();doc.querySelectorAll('[data-circuit]').forEach(b=>b.classList.toggle('active',b.dataset.circuit==='London'));app.setView('drive');app.showToast?.('London · explore freely or choose a destination.','Navigation');
+  };
+  app.leaveLondon=()=>{s.ldn=null;s.city=null;s.pursuit=[];s.traffic=[];s.raceGrid=gridBefore;app.cityNetwork?.destination('');};
+  const seed=app.seedRivals;app.seedRivals=function(){if(s.ldn){s.rivals=[];return;}return seed.apply(this,arguments);};
+  const original=app.updatePhysics;app.updatePhysics=function(dt){
+   const L=s.ldn,d=s.distanceM;const result=original.call(app,dt);if(!s.ldn)return result;
+   const net=app.cityNetwork;s.dayPhase=.3;s.routeTime+=dt;
+   if(L===s.ldn&&d<L.road.len-4&&s.distanceM>=L.road.len-4&&L.next.roads.length>=3&&net.signalState(L.next)==='red'&&!s.pursuit.length){s.pursuit=[{kind:'police',name:'Metropolitan Police',gap:38,speedMps:Math.abs(s.speedMps)+2}];app.showToast?.('Red light — police are following.','London');}
+   for(const car of s.pursuit){car.speedMps+=(Math.abs(s.speedMps)+2-car.speedMps)*Math.min(1,dt*2);car.gap=Math.max(10,car.gap+(Math.abs(s.speedMps)-car.speedMps)*dt);}
+   net.step();net.trafficStep(dt);return result;
+  };
+  const first=doc.querySelector('[data-circuit]');if(first){const b=doc.createElement('button');b.type='button';b.dataset.circuit='London';b.textContent='London · free city driving';b.onclick=()=>app.enterLondon();first.parentElement.appendChild(b);}
+ })(app,(function create(){
+const n = (id, e, no, name, district) => ({ id, e, n: no, name, district: district || "inner" });
+const LDN_NODES = [
+  /* ---------------- CHARING CROSS AND THE WEST END ------------------------ */
+  n("charingx",   0.00,  0.00, "Charing Cross",                "west-end"),
+  n("trafalgar", -0.02,  0.08, "Trafalgar Square",             "west-end"),
+  n("admiralty", -0.13,  0.10, "Admiralty Arch",               "west-end"),
+  n("pallmalle", -0.24,  0.12, "Pall Mall East",               "west-end"),
+  n("picccirc",  -0.36,  0.20, "Piccadilly Circus",            "west-end"),
+  n("oxfordcirc",-0.44,  0.62, "Oxford Circus",                "west-end"),
+  n("tottcrd",   -0.14,  0.70, "Tottenham Court Road",         "west-end"),
+  n("cambcirc",  -0.24,  0.36, "Cambridge Circus",             "west-end"),
+  n("leicester", -0.20,  0.18, "Leicester Square",             "west-end"),
+  n("hydeparkc", -1.35,  0.29, "Hyde Park Corner",             "west-end"),
+  n("marblearch",-1.42,  0.86, "Marble Arch",                  "west-end"),
+  n("victoriast",-1.06, -0.28, "Victoria Station",             "west-end"),
+  n("buckingham",-0.86,  0.06, "Buckingham Palace",            "west-end"),
+  n("parlsq",    -0.42, -0.44, "Parliament Square",            "west-end"),
+  n("whitehall", -0.20, -0.20, "Whitehall",                    "west-end"),
+  n("sloanesq",  -1.72, -0.42, "Sloane Square",                "west-end"),
+  n("knightsb",  -1.90,  0.22, "Knightsbridge",                "west-end"),
+  n("southken",  -2.52,  0.02, "South Kensington",             "west-end"),
+  n("earlsct",   -3.30,  0.02, "Earl's Court",                 "west-end"),
+  n("hammersm",  -5.10,  0.44, "Hammersmith Broadway",         "outer"),
+  n("chiswick",  -7.00,  0.60, "Chiswick Roundabout",          "outer"),
+  n("nottinghil",-2.90,  1.10, "Notting Hill Gate",            "outer"),
+  n("paddington",-1.90,  1.10, "Paddington",                   "inner"),
+  n("edgware",   -1.45,  1.20, "Edgware Road",                 "inner"),
+  n("baker",     -1.10,  1.15, "Baker Street",                 "inner"),
+  n("regentspk", -0.86,  1.42, "Regent's Park",                "inner"),
+  n("euston",    -0.24,  1.30, "Euston",                       "inner"),
+  n("kingscross", 0.06,  1.44, "King's Cross",                 "inner"),
+  n("angel",      0.42,  1.72, "Angel, Islington",             "inner"),
+  n("oldst",      0.72,  1.44, "Old Street",                   "inner"),
+  n("moorgate",   0.72,  1.06, "Moorgate",                     "city"),
+  n("bank",       0.86,  0.86, "Bank",                         "city"),
+  n("stpauls",    0.52,  0.86, "St Paul's",                    "city"),
+  n("ludgate",    0.40,  0.80, "Ludgate Circus",               "city"),
+  n("holborn",    0.16,  0.90, "Holborn Circus",               "city"),
+  n("chancery",  -0.02,  0.86, "Chancery Lane",                "city"),
+  n("aldgate",    1.32,  0.86, "Aldgate",                      "city"),
+  n("towerhill",  1.24,  0.60, "Tower Hill",                   "city"),
+  n("monument",   0.90,  0.70, "Monument",                     "city"),
+  n("blackfr",    0.34,  0.60, "Blackfriars",                  "city"),
+  n("temple",     0.10,  0.58, "Temple",                       "city"),
+  n("aldwych",   -0.02,  0.62, "Aldwych",                      "city"),
 
+  /* ---------------- THE RIVER AND THE SOUTH BANK -------------------------- */
+  n("waterloo",   0.00,  0.26, "Waterloo",                     "southbank"),
+  n("southwark",  0.44,  0.34, "Southwark",                    "southbank"),
+  n("boroughhs",  0.86,  0.30, "Borough High Street",          "southbank"),
+  n("elephant",   0.62, -0.06, "Elephant and Castle",          "southbank"),
+  n("towerbr",    1.30,  0.34, "Tower Bridge, south",          "southbank"),
+  n("bermondsey", 1.86,  0.28, "Bermondsey",                   "outer"),
+  n("rotherhithe",2.36,  0.62, "Rotherhithe",                  "outer"),
+  n("canadawater",2.30,  0.30, "Canada Water",                 "outer"),
+  n("newcross",   3.10, -0.42, "New Cross",                    "outer"),
+  n("vauxhall",  -0.66, -0.66, "Vauxhall Cross",               "southbank"),
+  n("stockwell", -0.62, -1.66, "Stockwell",                    "outer"),
+  n("brixton",   -0.62, -2.42, "Brixton",                      "outer"),
+  n("clapham",   -1.36, -2.10, "Clapham Common",               "outer"),
+  n("wandsworth",-2.30, -1.82, "Wandsworth",                   "outer"),
+  n("battersea", -1.56, -0.90, "Battersea",                    "outer"),
+  n("putney",    -3.40, -1.60, "Putney Bridge",                "outer"),
+  n("richmond",  -6.60, -2.10, "Richmond",                     "outer"),
+  n("kingston",  -9.30, -4.30, "Kingston upon Thames",         "outer"),
+  n("wimbledon", -2.90, -4.20, "Wimbledon",                    "outer"),
+  n("tooting",   -1.66, -3.60, "Tooting Broadway",             "outer"),
+  n("streatham", -0.90, -3.90, "Streatham",                    "outer"),
+  n("croydon",    0.30, -8.10, "Croydon",                      "outer"),
+  n("lewisham",   3.10, -1.60, "Lewisham",                     "outer"),
+  n("catford",    2.90, -2.60, "Catford",                      "outer"),
+  n("bromley",    5.10, -5.40, "Bromley",                      "outer"),
+  n("greenwich",  3.60,  0.10, "Greenwich",                    "outer"),
+  n("blackheath", 4.10, -0.90, "Blackheath",                   "outer"),
+  n("eltham",     6.30, -1.90, "Eltham",                       "outer"),
+  n("sidcup",     8.60, -2.30, "Sidcup",                       "outer"),
+  n("dartford",  14.90, -0.20, "Dartford Crossing",            "outer"),
+  n("woolwich",   6.10,  0.60, "Woolwich Ferry",               "outer"),
+  n("thamesmead", 7.90,  1.10, "Thamesmead",                   "outer"),
+
+  /* ---------------- THE EAST ---------------------------------------------- */
+  n("shoreditch", 1.00,  1.56, "Shoreditch High Street",       "inner"),
+  n("bethnal",    1.90,  1.66, "Bethnal Green",                "outer"),
+  n("whitechapel",1.72,  0.98, "Whitechapel",                  "inner"),
+  n("limehouse",  2.56,  0.86, "Limehouse",                    "outer"),
+  n("canarywharf",2.90,  0.52, "Canary Wharf",                 "outer"),
+  n("poplar",     3.06,  0.90, "Poplar",                       "outer"),
+  n("blackwall",  3.36,  0.76, "Blackwall Tunnel",             "outer"),
+  n("stratford",  4.10,  1.90, "Stratford",                    "outer"),
+  n("bow",        3.10,  1.60, "Bow Roundabout",               "outer"),
+  n("hackney",    1.90,  2.44, "Hackney Central",              "outer"),
+  n("leyton",     4.30,  2.90, "Leyton",                       "outer"),
+  n("walthamstow",4.00,  3.90, "Walthamstow",                  "outer"),
+  n("ilford",     7.10,  2.40, "Ilford",                       "outer"),
+  n("romford",   11.60,  3.20, "Romford",                      "outer"),
+  n("barking",    7.20,  1.60, "Barking",                      "outer"),
+
+  /* ---------------- THE NORTH --------------------------------------------- */
+  n("camden",    -0.62,  2.06, "Camden Town",                  "inner"),
+  n("chalkfarm", -0.72,  2.40, "Chalk Farm",                   "outer"),
+  n("hampstead", -1.10,  3.40, "Hampstead",                    "outer"),
+  n("archway",   -0.30,  3.30, "Archway",                      "outer"),
+  n("highbury",   0.42,  2.50, "Highbury Corner",              "inner"),
+  n("finsburypk", 0.40,  3.36, "Finsbury Park",                "outer"),
+  n("hollowayrd", 0.16,  2.94, "Holloway Road",                "outer"),
+  n("woodgreen",  0.66,  4.60, "Wood Green",                   "outer"),
+  n("tottenham",  1.50,  4.70, "Tottenham",                    "outer"),
+  n("edmonton",   1.60,  6.10, "Edmonton",                     "outer"),
+  n("enfield",    1.20,  8.60, "Enfield",                      "outer"),
+  n("golders",   -1.70,  4.60, "Golders Green",                "outer"),
+  n("hendon",    -1.90,  5.60, "Hendon",                       "outer"),
+  n("brentcross",-1.94,  5.20, "Brent Cross",                  "outer"),
+  n("finchley",  -1.20,  5.60, "North Finchley",               "outer"),
+  n("barnet",    -1.10,  7.70, "Barnet",                       "outer"),
+  n("kilburn",   -1.90,  2.30, "Kilburn",                      "outer"),
+  n("swisscott", -1.30,  2.50, "Swiss Cottage",                "outer"),
+  n("wembley",   -3.90,  3.50, "Wembley",                      "outer"),
+  n("harrow",    -5.90,  5.20, "Harrow",                       "outer"),
+  n("shepherdsb",-3.40,  0.90, "Shepherd's Bush",              "outer"),
+  n("actonw",    -4.70,  1.30, "Acton",                        "outer"),
+  n("ealing",    -6.40,  1.30, "Ealing",                       "outer"),
+  n("southall",  -8.90,  1.30, "Southall",                     "outer"),
+  n("hounslow",  -9.90, -0.40, "Hounslow",                     "outer"),
+  n("heathrow", -13.60, -0.60, "Heathrow",                     "outer"),
+  n("hangerlane",-5.30,  2.10, "Hanger Lane",                  "outer"),
+  n("neasden",   -3.30,  3.40, "Neasden",                      "outer"),
+  n("staples",   -1.10,  3.90, "Staples Corner",               "outer"),
+];
+const r = (a, b, name, w, fwd, back) => ({ a, b, name, w, fwd, back });
+const LDN_ROADS = [
+  /* ---- the West End, street by street ---------------------------------- */
+  r("charingx", "trafalgar",  "Charing Cross",                     16, 2, 2),
+  r("trafalgar","admiralty",  "Trafalgar Square",                  16, 4, 0),   // one-way round the square
+  r("admiralty","buckingham", "The Mall",                          19, 3, 3),
+  r("buckingham","hydeparkc", "Constitution Hill",                  9, 1, 1),
+  r("hydeparkc","marblearch", "Park Lane (A4202)",                 11, 3, 0),   // one carriageway of a dual
+  r("marblearch","oxfordcirc","Oxford Street (A40)",               14, 2, 2),
+  r("oxfordcirc","tottcrd",   "Oxford Street east",                14, 2, 2),
+  r("oxfordcirc","picccirc",  "Regent Street (A4201)",             16, 2, 2),
+  r("picccirc","hydeparkc",   "Piccadilly (A4)",                   18, 3, 3),
+  r("picccirc","leicester",   "Coventry Street",                   12, 2, 0),
+  r("leicester","cambcirc",   "Charing Cross Road (A400)",         13, 2, 2),
+  r("cambcirc","tottcrd",     "Charing Cross Road north",          13, 2, 2),
+  r("picccirc","pallmalle",   "Regent Street St James's",          14, 2, 0),
+  r("pallmalle","trafalgar",  "Pall Mall East",                    13, 2, 0),
+  r("trafalgar","whitehall",  "Whitehall (A3212)",                 19, 3, 3),
+  r("whitehall","parlsq",     "Whitehall, Parliament Street",      19, 3, 3),
+  r("parlsq","victoriast",    "Victoria Street (A302)",            20, 3, 3),
+  r("victoriast","sloanesq",  "Buckingham Palace Road",            15, 2, 2),
+  r("hydeparkc","victoriast", "Grosvenor Place",                   14, 3, 0),
+  r("sloanesq","knightsb",    "Sloane Street",                     13, 2, 2),
+  r("knightsb","hydeparkc",   "Knightsbridge (A4)",                20, 3, 3),
+  r("knightsb","southken",    "Brompton Road (A4)",                15, 2, 2),
+  r("southken","earlsct",     "Cromwell Road (A4)",                20, 3, 3),
+  r("earlsct","hammersm",     "Talgarth Road (A4)",                22, 3, 3),
+  r("hammersm","chiswick",    "Great West Road (A4)",              24, 3, 3),
+  r("chiswick","hounslow",    "Great West Road (A4)",              24, 3, 3),
+  r("hounslow","heathrow",    "Great South West Road (A30)",       22, 3, 3),
+  r("nottinghil","marblearch","Bayswater Road (A402)",             16, 2, 2),
+  r("nottinghil","shepherdsb","Holland Park Avenue (A402)",        18, 2, 2),
+  r("shepherdsb","hammersm",  "Shepherd's Bush Road (A219)",       13, 2, 2),
+  r("shepherdsb","actonw",    "Uxbridge Road (A4020)",             14, 2, 2),
+  r("actonw","ealing",        "Uxbridge Road (A4020)",             14, 2, 2),
+  r("ealing","southall",      "Uxbridge Road (A4020)",             14, 2, 2),
+  r("paddington","edgware",   "Praed Street",                      12, 2, 2),
+  r("paddington","nottinghil","Westbourne Grove",                  11, 1, 1),
+  r("edgware","marblearch",   "Edgware Road (A5)",                 16, 2, 2),
+  r("edgware","baker",        "Marylebone Road (A501)",            22, 3, 3),
+  r("baker","regentspk",      "Baker Street (A41)",                14, 2, 2),
+  r("baker","euston",         "Euston Road (A501)",                22, 3, 3),
+  r("oxfordcirc","regentspk", "Portland Place (A4201)",            20, 2, 2),
+  r("euston","kingscross",    "Euston Road (A501)",                21, 3, 3),
+  r("euston","tottcrd",       "Gower Street (A400)",               12, 3, 0),   // one-way southbound
+  r("kingscross","angel",     "Pentonville Road (A501)",           18, 3, 3),
+  r("angel","oldst",          "City Road (A501)",                  17, 2, 2),
+  r("oldst","moorgate",       "City Road, Finsbury Square",        16, 2, 2),
+
+  /* ---- the City ---------------------------------------------------------- */
+  r("moorgate","bank",        "Moorgate",                          13, 2, 2),
+  r("bank","stpauls",         "Poultry and Cheapside",             14, 2, 2),
+  r("stpauls","ludgate",      "Ludgate Hill",                      12, 2, 2),
+  r("ludgate","blackfr",      "New Bridge Street",                 15, 2, 2),
+  r("ludgate","holborn",      "Farringdon Street",                 16, 2, 2),
+  r("holborn","chancery",     "High Holborn",                      14, 2, 2),
+  r("chancery","temple",      "Chancery Lane and Fleet Street",    12, 2, 2),
+  r("temple","aldwych",       "Fleet Street and the Strand",       15, 2, 2),
+  r("aldwych","trafalgar",    "The Strand (A4)",                   17, 2, 2),
+  r("temple","blackfr",       "Victoria Embankment (A3211)",       20, 3, 3),
+  r("blackfr","waterloo",     "Blackfriars Bridge (A201)",         18, 2, 2),
+  r("bank","aldgate",         "Cornhill and Leadenhall Street",    14, 2, 2),
+  r("aldgate","towerhill",    "Minories",                          13, 2, 2),
+  r("towerhill","monument",   "Lower Thames Street (A3211)",       19, 3, 3),
+  r("monument","bank",        "King William Street",               15, 2, 2),
+  r("holborn","moorgate",     "London Wall",                       16, 2, 2),
+
+  /* ---- the river crossings ---------------------------------------------- */
+  r("towerhill","towerbr",    "Tower Bridge (A100)",              8.2, 1, 1),
+  r("parlsq","waterloo",      "Westminster Bridge (A302)",         19, 2, 2),
+  r("aldwych","waterloo",     "Waterloo Bridge (A301)",            19, 3, 3),
+  r("vauxhall","victoriast",  "Vauxhall Bridge (A202)",            18, 3, 3),
+  r("vauxhall","parlsq",      "Millbank and Lambeth Bridge",       17, 2, 2),
+  r("battersea","sloanesq",   "Chelsea Bridge (A3216)",            15, 2, 2),
+  r("putney","wandsworth",    "Putney Bridge and the A205",        16, 2, 2),
+  r("blackwall","greenwich",  "Blackwall Tunnel (A102)",           12, 2, 2),
+  r("rotherhithe","limehouse","Rotherhithe Tunnel (A101)",        7.6, 1, 1),
+  r("dartford","thamesmead",  "the Dartford Crossing (A282)",      22, 4, 0),
+
+  /* ---- the South Bank and the south ------------------------------------- */
+  r("waterloo","southwark",   "Stamford Street",                   14, 2, 2),
+  r("southwark","boroughhs",  "Southwark Street",                  15, 2, 2),
+  r("boroughhs","towerbr",    "Tooley Street (A200)",              14, 2, 2),
+  r("boroughhs","elephant",   "Newington Causeway (A3)",           16, 2, 2),
+  r("waterloo","elephant",    "London Road (A301)",                15, 2, 2),
+  r("elephant","vauxhall",    "Kennington Lane (A3204)",           13, 2, 2),
+  r("vauxhall","stockwell",   "South Lambeth Road (A203)",         14, 2, 2),
+  r("stockwell","brixton",    "Clapham Road and Brixton Road (A23)",16, 2, 2),
+  r("brixton","streatham",    "Brixton Hill (A23)",                15, 2, 2),
+  r("streatham","croydon",    "London Road (A23)",                 18, 3, 3),
+  r("stockwell","clapham",    "Clapham Road (A3)",                 16, 2, 2),
+  r("clapham","tooting",      "Balham High Road (A24)",            15, 2, 2),
+  r("tooting","streatham",    "Tooting Bec Road",                  12, 1, 1),
+  r("tooting","wimbledon",    "Merton Road (A218)",                13, 2, 2),
+  r("clapham","wandsworth",   "Battersea Rise and the A3",         14, 2, 2),
+  r("wandsworth","putney",    "Upper Richmond Road (A205)",        14, 2, 2),
+  r("putney","richmond",      "Upper Richmond Road West (A205)",   14, 2, 2),
+  r("richmond","kingston",    "Kingston Road (A307)",              13, 2, 2),
+  r("wimbledon","kingston",   "Coombe Lane (A238)",                12, 2, 2),
+  r("battersea","vauxhall",   "Nine Elms Lane (A3205)",            17, 2, 2),
+  r("battersea","clapham",    "Queenstown Road",                   13, 2, 2),
+  r("bermondsey","towerbr",   "Jamaica Road (A200)",               17, 2, 2),
+  r("bermondsey","canadawater","Lower Road",                       13, 2, 2),
+  r("canadawater","rotherhithe","Salter Road",                     12, 2, 2),
+  r("bermondsey","newcross",  "Old Kent Road (A2)",                20, 3, 3),
+  r("elephant","newcross",    "New Kent Road (A2)",                18, 3, 3),
+  r("newcross","lewisham",    "Lewisham Way (A20)",                14, 2, 2),
+  r("lewisham","catford",     "Lewisham High Street (A21)",        15, 2, 2),
+  r("catford","bromley",      "Bromley Road (A21)",                16, 2, 2),
+  r("lewisham","blackheath",  "Blackheath Hill (A20)",             13, 2, 2),
+  r("blackheath","greenwich", "Shooters Hill Road (A2)",           17, 2, 2),
+  r("blackheath","eltham",    "Shooters Hill Road (A2)",           18, 2, 2),
+  r("eltham","sidcup",        "Sidcup Road (A20)",                 20, 3, 3),
+  r("sidcup","dartford",      "the A20 and the A2",                22, 3, 3),
+  r("greenwich","woolwich",   "Woolwich Road (A206)",              16, 2, 2),
+  r("woolwich","thamesmead",  "Western Way (A2016)",               18, 2, 2),
+  r("catford","clapham",      "the South Circular (A205)",         14, 2, 2),
+  r("catford","eltham",       "the South Circular (A205)",         14, 2, 2),
+  r("eltham","woolwich",      "the South Circular (A205)",         14, 2, 2),
+  r("richmond","chiswick",    "the South Circular (A205)",         14, 2, 2),
+  r("croydon","bromley",      "Croydon Road (A232)",               14, 2, 2),
+
+  /* ---- the East ---------------------------------------------------------- */
+  r("aldgate","whitechapel",  "Whitechapel High Street (A11)",     17, 2, 2),
+  r("whitechapel","limehouse","Commercial Road (A13)",             18, 2, 2),
+  r("limehouse","poplar",     "East India Dock Road (A13)",        20, 3, 3),
+  r("limehouse","canarywharf","Westferry Road",                    12, 2, 2),
+  r("canarywharf","poplar",   "Aspen Way (A1261)",                 18, 3, 3),
+  r("poplar","blackwall",     "Blackwall Northern Approach (A12)", 20, 3, 3),
+  r("poplar","barking",       "Newham Way (A13)",                  24, 3, 3),
+  r("barking","romford",      "Ripple Road and the A118",          16, 2, 2),
+  r("shoreditch","oldst",     "Great Eastern Street",              15, 2, 2),
+  r("shoreditch","whitechapel","Commercial Street",                14, 2, 2),
+  r("shoreditch","bethnal",   "Bethnal Green Road",                13, 2, 2),
+  r("bethnal","bow",          "Roman Road and Bow Road (A11)",     16, 2, 2),
+  r("bow","stratford",        "Bow Road (A11)",                    20, 3, 3),
+  r("bow","blackwall",        "the A12",                           20, 3, 3),
+  r("stratford","leyton",     "Leyton Road",                       13, 2, 2),
+  r("leyton","walthamstow",   "Lea Bridge Road (A104)",            14, 2, 2),
+  r("stratford","ilford",     "Romford Road (A118)",               15, 2, 2),
+  r("ilford","romford",       "the A118",                          16, 2, 2),
+  r("ilford","barking",       "Barking Road (A124)",               14, 2, 2),
+  r("hackney","bethnal",      "Cambridge Heath Road (A107)",       13, 2, 2),
+  r("hackney","highbury",     "Balls Pond Road (A104)",            13, 2, 2),
+  r("hackney","walthamstow",  "Lea Bridge Road (A104)",            14, 2, 2),
+
+  /* ---- the North --------------------------------------------------------- */
+  r("angel","highbury",       "Upper Street (A1)",                 15, 2, 2),
+  r("highbury","hollowayrd",  "Holloway Road (A1)",                16, 2, 2),
+  r("hollowayrd","archway",   "Holloway Road (A1)",                16, 2, 2),
+  r("archway","finchley",     "Archway Road (A1)",                 20, 3, 3),
+  r("finchley","barnet",      "Great North Road (A1000)",          14, 2, 2),
+  r("hollowayrd","finsburypk","Seven Sisters Road (A503)",         16, 2, 2),
+  r("finsburypk","woodgreen", "Green Lanes (A105)",                14, 2, 2),
+  r("woodgreen","tottenham",  "Lordship Lane (A109)",              13, 2, 2),
+  r("tottenham","edmonton",   "Fore Street (A1010)",               14, 2, 2),
+  r("edmonton","enfield",     "Hertford Road (A1010)",             13, 2, 2),
+  r("kingscross","camden",    "Camden Road (A503)",                14, 2, 2),
+  r("camden","chalkfarm",     "Chalk Farm Road",                   12, 2, 2),
+  r("chalkfarm","hampstead",  "Haverstock Hill (A502)",            13, 2, 2),
+  r("hampstead","golders",    "North End Road (A502)",             12, 2, 2),
+  r("golders","brentcross",   "Finchley Road (A41)",               18, 3, 3),
+  r("brentcross","hendon",    "Hendon Way (A41)",                  20, 3, 3),
+  r("hendon","barnet",        "Watford Way (A41)",                 20, 3, 3),
+  r("camden","regentspk",     "Parkway and Albany Street",         13, 2, 2),
+  r("camden","swisscott",     "Adelaide Road",                     12, 1, 1),
+  r("swisscott","kilburn",    "Finchley Road (A41)",               17, 2, 2),
+  r("swisscott","golders",    "Finchley Road (A41)",               17, 2, 2),
+  r("kilburn","neasden",      "Kilburn High Road (A5)",            16, 2, 2),
+  r("kilburn","paddington",   "Maida Vale (A5)",                   16, 2, 2),
+  r("archway","camden",       "Kentish Town Road (A400)",          13, 2, 2),
+  r("camden","euston",        "Eversholt Street",                  12, 2, 2),
+  r("archway","hampstead",    "Highgate West Hill",                10, 1, 1),
+
+  /* ---- the North Circular (A406), which really does go all the way round -- */
+  r("chiswick","hangerlane",  "the North Circular (A406)",         22, 3, 3),
+  r("hangerlane","neasden",   "the North Circular (A406)",         22, 3, 3),
+  r("neasden","staples",      "the North Circular (A406)",         22, 3, 3),
+  r("staples","brentcross",   "the North Circular (A406)",         22, 3, 3),
+  r("brentcross","finchley",  "the North Circular (A406)",         22, 3, 3),
+  r("finchley","woodgreen",   "the North Circular (A406)",         22, 3, 3),
+  r("woodgreen","edmonton",   "the North Circular (A406)",         22, 3, 3),
+  r("edmonton","walthamstow", "the North Circular (A406)",         22, 3, 3),
+  r("walthamstow","ilford",   "the North Circular (A406)",         22, 3, 3),
+  r("ilford","barking",       "the North Circular (A406)",         22, 3, 3),
+  r("neasden","wembley",      "Neasden Lane (A4088)",              14, 2, 2),
+  r("wembley","harrow",       "Harrow Road (A404)",                14, 2, 2),
+  r("hangerlane","ealing",    "Hanger Lane (A406)",                20, 3, 3),
+  r("hangerlane","actonw",    "Gunnersbury Avenue (A406)",         20, 3, 3),
+];
+const LDN_LOOK = {
+  "west-end":  { kind: "mayfair",    storeys: 6 },
+  "city":      { kind: "citylondon", storeys: 13 },
+  "southbank": { kind: "citylondon", storeys: 9 },
+  "inner":     { kind: "victorian",  storeys: 5 },
+  "outer":     { kind: "victorian",  storeys: 3 },
+};
+const LDN_OPEN = [
+  { re: /^Park Lane/,             side: -1, kind: "park"  },   // Hyde Park down the west side
+  { re: /^Bayswater Road/,        side:  1, kind: "park"  },   // Hyde Park on the south
+  { re: /^Constitution Hill/,     both: 1,  kind: "park"  },   // Green Park both sides
+  { re: /^The Mall/,              both: 1,  kind: "park"  },   // St James's and Green Park
+  { re: /^Knightsbridge/,         side: -1, kind: "park"  },   // Hyde Park again
+  { re: /^Victoria Embankment/,   side:  1, kind: "river" },
+  { re: /^Lower Thames Street/,   side:  1, kind: "river" },
+  { re: /^Millbank/,              side:  1, kind: "river" },
+  // a CROSSING is not an embankment. `river` is a parapet with water beyond it, which is
+  // what you see from the Embankment; on a bridge the water is nine metres BELOW you and
+  // on both sides, and the bridge draws it itself.
+  { re: /Bridge \(A/,             both: 1,  kind: "water" },   // every Thames crossing
+  { re: /^Tower Bridge/,          both: 1,  kind: "water" },
+  { re: /^Putney Bridge/,         both: 1,  kind: "water" },
+  { re: /Dartford Crossing/,      both: 1,  kind: "water" },
+  { re: /^Marylebone Road|^Euston Road/, side: -1, kind: "park" },
+];
+const LDN_MARKS = {
+  trafalgar:  [{ kind: "nelson",       side:  0, in: 14 }],
+  admiralty:  [{ kind: "admiralty",    side:  0, in: 12 }],
+  buckingham: [{ kind: "palace",       side:  0, in: 30 }, { kind: "memorial", side: 0, in: 12 }],
+  parlsq:     [{ kind: "bigben",       side: -1, in: 22 }, { kind: "abbey",    side: 1, in: 30 }],
+  hydeparkc:  [{ kind: "arch",         side: -1, in: 18 }, { kind: "apsley",   side: 1, in: 34 }],
+  ludgate:    [{ kind: "stpauls",      side: -1, in: 26 }],
+  towerhill:  [{ kind: "toweroflondon",side: -1, in: 24 }],
+  towerbr:    [{ kind: "towerbridge",  side:  0, in: 10 }],
+  marblearch: [{ kind: "gate",         side: -1, in: 16 }],
+};
+const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.id,n]})),roads=LDN_ROADS.map(r=>{const A=byId[r.a],B=byId[r.b],dx=(B.e-A.e)*1000,dz=(B.n-A.n)*1000,road={...r,A,B,len:Math.hypot(dx,dz),brg:Math.atan2(dx,dz)};A.roads.push({road,out:1});B.roads.push({road,out:-1});return road;});return {LDN:{nodes,byId,roads},londonLook:LDN_LOOK,londonOpen:LDN_OPEN,londonMarks:LDN_MARKS,WIDTH_SCALE:1.55};
+})());(function installCityNetwork(app,drawVehicle,drawLondonMap){
+  if(!app.LDN||app.cityNetwork)return;
+  const s=app.state,G=app.LDN,C=(v,a,b)=>Math.max(a,Math.min(b,v)),A=v=>Math.atan2(Math.sin(v),Math.cos(v));
+  const pos=n=>({x:n.e*1000,z:n.n*1000}),bearing=(r,dir)=>r.brg+(dir<0?Math.PI:0),end=(r,dir)=>dir>0?r.B:r.A;
+  const width=r=>r.w*(app.WIDTH_SCALE||1.55),right=(p,n)=>({...p,x:p.x+Math.cos(p.psi)*n,z:p.z-Math.sin(p.psi)*n});
+  const roads=G.roads,buildings=[],traffic=[],primitives=[],landmarks=[],grounds=[],trees=[];roads.forEach((r,i)=>r.networkId=i);
+  let rng=8821;const random=()=>((rng=(Math.imul(rng,1664525)+1013904223)>>>0)+.5)/4294967296;
+  const kinds=['cab','saloon','hatch','bus','ddbus','van','ghost','cullinan','bentley','maybach','cycle'];
+  function roadPoint(r,dir,d){const q=pos(dir>0?r.A:r.B),psi=bearing(r,dir);return{x:q.x+Math.sin(psi)*d,z:q.z+Math.cos(psi)*d,psi,y:0};}
+  function linkChoices(r,dir){return end(r,dir).roads.filter(l=>l.road!==r&&(l.out>0?l.road.fwd:l.road.back)>0);}
+  function straightChoice(r,dir){const list=linkChoices(r,dir);return list.sort((a,b)=>Math.abs(A(bearing(a.road,a.out)-bearing(r,dir)))-Math.abs(A(bearing(b.road,b.out)-bearing(r,dir))))[0]||end(r,dir).roads.find(l=>l.road===r);}
+  function bend(r,dir,next){const node=end(r,dir),p=pos(node),a=bearing(r,dir),b=bearing(next.road,next.out),R=Math.min(24,r.len*.22,next.road.len*.22),turn=A(b-a);
+   return {p,a,b,R,turn,rIn:r,rOut:next.road,P:{x:p.x-Math.sin(a)*R,z:p.z-Math.cos(a)*R},Q:{x:p.x+Math.sin(b)*R,z:p.z+Math.cos(b)*R}};
+  }
+  function curve(c,u){if(Math.abs(c.turn)>Math.PI-.02){const f=Math.sin(Math.PI*u),dx=.3*c.R*f*f*Math.sin(2*Math.PI*u),dz=c.R*f,ddx=.3*c.R*(2*f*Math.PI*Math.cos(Math.PI*u)*Math.sin(2*Math.PI*u)+f*f*2*Math.PI*Math.cos(2*Math.PI*u)),ddz=c.R*Math.PI*Math.cos(Math.PI*u);return{x:c.P.x+dx*Math.cos(c.a)+dz*Math.sin(c.a),z:c.P.z-dx*Math.sin(c.a)+dz*Math.cos(c.a),psi:c.a+Math.atan2(ddx,ddz),y:0};}const v=1-u,x=v*v*c.P.x+2*v*u*c.p.x+u*u*c.Q.x,z=v*v*c.P.z+2*v*u*c.p.z+u*u*c.Q.z,dx=2*v*(c.p.x-c.P.x)+2*u*(c.Q.x-c.p.x),dz=2*v*(c.p.z-c.P.z)+2*u*(c.Q.z-c.p.z);return{x,z,psi:Math.atan2(dx,dz),y:0};}
+  function path(r,dir,d,entry,exit){if(entry&&d<entry.R)return curve(entry,.5+.5*C(d/entry.R,0,1));if(exit&&d>r.len-exit.R)return curve(exit,.5*C((d-r.len+exit.R)/exit.R,0,1));return roadPoint(r,dir,d);}
+  let nav=null,lastPlan='',routeLinks=[],routePoints=[],routeTurns=[],routeEnd=0,revision=0,recalculations=0,travelled=0,lastDistance=null;
+  const signal=(node)=>{const cycle=52+node.roads.length*8,u=((s.routeTime+node.e*31+node.n*17)%cycle+cycle)%cycle;return u<cycle*.52?'green':u<cycle*.52+3.4?'amber':'red';};
+  function shortest(start,target){const dist=new Map([[start,0]]),prev=new Map(),todo=new Set(G.nodes);while(todo.size){let node=null,best=Infinity;for(const n of todo){const d=dist.get(n)??Infinity;if(d<best){best=d;node=n;}}if(!node||node===target)break;todo.delete(node);for(const l of node.roads){if((l.out>0?l.road.fwd:l.road.back)<=0)continue;const next=end(l.road,l.out),d=best+l.road.len;if(d<(dist.get(next)??Infinity)){dist.set(next,d);prev.set(next,{node,link:l});}}}if(!dist.has(target))return null;const links=[];for(let n=target;n!==start;){const p=prev.get(n);if(!p)return null;links.unshift(p.link);n=p.node;}return{links,distance:dist.get(target)};}
+  const locations=G.nodes.map(n=>({id:n.id,name:n.name,node:n,...pos(n)}));
+  const baker=roads.find(r=>r.name==='Baker Street (A41)');
+  if(baker){const p=roadPoint(baker,1,baker.len*.66);locations.push({id:'221b-baker',name:'221B Baker Street · Sherlock Holmes Museum',node:baker.B,road:baker,d:baker.len*.66,...p});}
+  function plan(){
+   const L=s.ldn;if(!L||!nav)return;
+   const addressD=nav.road===L.road?(L.dir>0?nav.d:L.road.len-nav.d):null;
+   const id=L.road.networkId+':'+L.dir+':'+nav.id+':'+(addressD!==null&&s.distanceM>addressD+12);
+   if(id===lastPlan)return;lastPlan=id;revision++;
+   if(addressD!==null&&addressD>=s.distanceM-12){routeLinks=[];}
+   else {
+    const candidates=[];
+    if(nav.road){for(const node of [nav.road.A,nav.road.B]){const q=shortest(L.next,node);if(q)candidates.push({...q,node,tail:node===nav.road.A?nav.d:nav.road.len-nav.d});}}
+    else {const q=shortest(L.next,nav.node);if(q)candidates.push({...q,node:nav.node,tail:0});}
+    const best=candidates.sort((a,b)=>(a.distance+a.tail)-(b.distance+b.tail))[0];routeLinks=best?.links.slice()||[];
+    if(nav.road&&best&&best.tail>1)routeLinks.push({road:nav.road,out:best.node===nav.road.A?1:-1});
+   }
+   const legs=[{road:L.road,out:L.dir},...routeLinks];routePoints=[];routeTurns=[];let q0=0,entry=L.netEntry;
+   for(let i=0;i<legs.length;i++){
+    const leg=legs[i],r=leg.road,next=legs[i+1],exit=next?bend(r,leg.out,next):null;
+    const finish=i===legs.length-1&&nav.road===r?(leg.out>0?nav.d:r.len-nav.d):r.len;
+    for(let j=0,N=Math.max(1,Math.ceil(finish/8));j<=N;j++){const d=finish*j/N,p=path(r,leg.out,d,entry,exit);routePoints.push({...p,q:q0+d,lane:laneOffset(r),road:r.networkId});}
+    if(next){const turn=A(bearing(next.road,next.out)-bearing(r,leg.out)),abs=Math.abs(turn);routeTurns.push({q:q0+r.len,angle:turn,road:next.road.name,node:end(r,leg.out).id,action:abs>2.6?'Make a U-turn':abs>.55?(turn>0?'Turn right':'Turn left'):abs>.20?(turn>0?'Keep right':'Keep left'):'Continue',kind:abs>2.6?'uturn':abs>.20?(turn>0?'right':'left'):'straight'});}
+    q0+=finish;entry=exit;
+   }
+   routeEnd=q0;
+  }
+  function guideAt(q){
+   plan();if(!routePoints.length)return null;let lo=0,hi=routePoints.length-1;
+   if(q<=routePoints[0].q)return routePoints[0];if(q>=routePoints[hi].q)return routePoints[hi];
+   while(hi-lo>1){const m=(lo+hi)>>1;if(routePoints[m].q<=q)lo=m;else hi=m;}
+   const a=routePoints[lo],b=routePoints[hi],u=(q-a.q)/Math.max(.001,b.q-a.q);return {...a,x:a.x+(b.x-a.x)*u,z:a.z+(b.z-a.z)*u,psi:a.psi+A(b.psi-a.psi)*u,q,lane:a.lane+(b.lane-a.lane)*u};
+  }
+  function navigation(){
+   if(!s.ldn||!nav)return null;plan();const remaining=Math.max(0,routeEnd-s.distanceM),turns=routeTurns.filter(t=>t.q>=s.distanceM-2).map(t=>({...t,distance:Math.max(0,t.q-s.distanceM)}));
+   turns.push({action:'Arrive',kind:'arrive',road:nav.name,distance:remaining});
+   return {destination:nav.name,arrived:nav.arrived,remaining,etaSeconds:Math.round(remaining/8.5),progress:nav.arrived?1:travelled/Math.max(1,travelled+remaining),turns:turns.slice(0,3),revision,recalculations};
+  }
+  function plannedPoints(max=Infinity){if(!nav||!s.ldn)return[];plan();const p=guideAt(s.distanceM);return[p,...routePoints.filter(p=>p.q>s.distanceM&&p.q<=s.distanceM+max)].filter(Boolean);}
+  function destination(id){
+   if(!id){nav=null;routeLinks=[];routePoints=[];routeTurns=[];lastPlan='';travelled=0;for(const id of ['gpsDestination','cityDestination']){const el=app.canvas.ownerDocument.getElementById(id);if(el)el.value='';}app.showToast?.('Destination cleared — explore London freely.','Navigation');return true;}
+   const p=typeof id==='object'?id:locations.find(p=>p.id===id);if(!p)return false;if(!s.ldn)app.enterLondon();nav={...p,arrived:false};travelled=0;lastDistance=s.distanceM;
+   for(const id of ['gpsDestination','cityDestination']){const el=app.canvas.ownerDocument.getElementById(id);if(el)el.value=p.id;}
+   lastPlan='';plan();app.showToast?.('Destination: '+p.name,'Navigation');return true;
+  }
+  function arrivalSpeedLimit(){if(!s.ldn||!nav||!(s.chauffeur||s.testDriver))return Infinity;if(nav.arrived)return 0;const L=s.ldn;let remaining=Infinity;if(nav.road===L.road)remaining=(L.dir>0?nav.d:L.road.len-nav.d)-s.distanceM;else if(!nav.road&&nav.node===L.next)remaining=L.road.len-s.distanceM;return remaining>=-20?Math.sqrt(2.8*Math.max(0,remaining-4)):Infinity;}
+  function driverIntent(){const k=s.keys||{},key=(k.KeyD||k.ArrowRight?1:0)-(k.KeyA||k.ArrowLeft?1:0);if(key)return key;return (s.touchActive||s.trackpadSteering&&s.time-s.trackpadLastInput<.5)?(s.touchSteer||0):0;}
+  function choose(L){
+   plan();const choices=linkChoices(L.road,L.dir),manual=driverIntent(),base=bearing(L.road,L.dir),facing=A(playerPoint().psi-base);
+   if(Math.abs(manual)>.12){const want=manual*1.7+facing*.6,all=Math.abs(facing)>2?[...choices,L.next.roads.find(l=>l.road===L.road)].filter(Boolean):choices;
+    const selected=all.slice().sort((a,b)=>Math.abs(A(bearing(a.road,a.out)-base-want))-Math.abs(A(bearing(b.road,b.out)-base-want)))[0];
+    if(selected&&L.road.len-s.distanceM<100)L.manualChoice=selected;return selected||straightChoice(L.road,L.dir);
+   }
+   if(L.manualChoice)return L.manualChoice;
+   const planned=routeLinks[0],auto=s.chauffeur||s.testDriver||s.assist||s.laneAssist;
+   if(nav&&auto&&planned){const match=L.next.roads.find(l=>l.road===planned.road&&l.out===planned.out);if(match)return match;}
+   return straightChoice(L.road,L.dir);
+  }
+  function rebase(L,p){
+   // A late steering override can select a different exit. Preserve the car's
+   // world position and heading when changing the underlying junction curve.
+   const lower=Math.max(0,s.distanceM-80),upper=L.road.len+L.netExit.curve.R+40;
+   const error=q=>{const c=at(q);return(c.x-p.x)**2+(c.z-p.z)**2;};
+   // Include the outgoing half of the junction: a late override may already
+   // lie beyond its midpoint. A bounded minimizer cannot overshoot on tight
+   // bends or oscillate between the two sides of a hairpin.
+   const step=(upper-lower)/120;let best=Infinity,d=s.distanceM;
+   for(let i=0;i<=120;i++){const q=lower+step*i,e=error(q);if(e<best){best=e;d=q;}}
+   let lo=Math.max(lower,d-step),hi=Math.min(upper,d+step);const ratio=(Math.sqrt(5)-1)/2;
+   let x=hi-ratio*(hi-lo),y=lo+ratio*(hi-lo),ex=error(x),ey=error(y);
+   for(let i=0;i<42;i++){if(ex<ey){hi=y;y=x;ey=ex;x=hi-ratio*(hi-lo);ex=error(x);}else{lo=x;x=y;ex=ey;y=lo+ratio*(hi-lo);ey=error(y);}}
+   d=(lo+hi)/2;const c=at(d);s.distanceM=d;s.laneOffset=(p.x-c.x)*Math.cos(c.psi)-(p.z-c.z)*Math.sin(c.psi);s.headingRel=A(p.psi-c.psi);lastDistance=d;
+  }
+  function prepare(){
+   const L=s.ldn;if(!L)return;const remaining=L.road.len-s.distanceM,manual=Math.abs(driverIntent())>.12;
+   if(!L.netExit||remaining>26||manual){const link=choose(L);if(link&&(L.netExit?.link.road!==link.road||L.netExit?.link.out!==link.out)){const before=L.netExit&&remaining<L.netExit.curve.R?playerPoint():null;L.netExit={link,curve:bend(L.road,L.dir,link)};if(before)rebase(L,before);}}
+   s.ldnTurn=L.netExit?{link:L.netExit.link,turn:L.netExit.curve.turn}:null;
+  }
+  function at(d){let L=s.ldn;for(let i=0;i<20;i++){if(d<0&&L.previous){L=L.previous;d+=L.road.len;continue;}if(d>L.road.len){const exit=L.netExit||(()=>{const link=straightChoice(L.road,L.dir);return link?{link,curve:bend(L.road,L.dir,link)}:null;})();if(exit){d-=L.road.len;L={road:exit.link.road,dir:exit.link.out,netEntry:exit.curve};continue;}}return path(L.road,L.dir,d,L.netEntry,L.netExit?.curve);}return roadPoint(L.road,L.dir,d);}
+  function actorPose(r){const p=right(at(r.distM),r.lane||0);return{...p,psi:p.psi+(r.contactHeading||0)};}
+  function curvature(d){return s.ldn?A(at(d+.05).psi-at(d-.05).psi)/.1:null;}
+  function playerPoint(){if(!s.ldn)return null;const p=right(at(s.distanceM),s.laneOffset||0);return{...p,psi:p.psi+(s.headingRel||0)};}
+  function step(){let L=s.ldn;if(!L)return;if(lastDistance!==null)travelled+=Math.max(0,Math.min(10,s.distanceM-lastDistance));lastDistance=s.distanceM;prepare();
+   if(s.distanceM>=L.road.len&&L.netExit){const excess=s.distanceM-L.road.len,link=L.netExit.link;if(nav&&routeLinks[0]&&(routeLinks[0].road!==link.road||routeLinks[0].out!==link.out))recalculations++;for(const r of s.rivals||[])r.distM-=L.road.len;s.ldn={road:link.road,dir:link.out,node:L.next,next:end(link.road,link.out),origin:(L.origin||0)+L.road.len,netEntry:L.netExit.curve,inTurn:L.netExit.curve.turn,previous:L};s.distanceM=excess;lastDistance=excess;L=s.ldn;lastPlan='';prepare();}
+   if(s.distanceM<0){if(L.previous){const old=L.previous;s.distanceM+=old.road.len;for(const r of s.rivals||[])r.distM+=old.road.len;s.ldn=old;L=old;lastDistance=s.distanceM;lastPlan='';}else s.distanceM=0;}
+
+   s.edgeD=s.distanceM;s.route.totalM=L.road.len;s.route.remainingM=L.road.len-s.distanceM;s.route.label=L.road.name;s.route.arrived=false;
+   if(nav){const p=playerPoint(),near=Math.hypot(p.x-nav.x,p.z-nav.z);if(near>35&&nav.arrived){nav.arrived=false;lastPlan='';}if(near<22&&Math.abs(s.speedMps)<1.5&&!nav.arrived){nav={...nav,arrived:true};app.showToast?.('Arrived at '+nav.name,'Navigation');}}
+  }
+  function addRoad(r){const half=width(r)/2,N=Math.ceil(r.len/20);for(let i=0;i<N;i++){const d0=i*r.len/N,d1=(i+1)*r.len/N;for(const[H,y,col]of[[half+3,-.03,'#a9a59b'],[half,0,'#3a3f43']]){const a=roadPoint(r,1,d0),b=roadPoint(r,1,d1);primitives.push({points:[right(a,-H),right(a,H),right(b,H),right(b,-H)].map(p=>({...p,y})),color:col,road:r.networkId});}if(i%2===0){const a=roadPoint(r,1,d0+2),b=roadPoint(r,1,Math.min(d1,d0+6));primitives.push({points:[right(a,-.065),right(a,.065),right(b,.065),right(b,-.065)].map(p=>({...p,y:.012})),color:'#d9d8cd',road:r.networkId});}}
+   for(let d=40;d<r.len-38;d+=24+random()*15)for(const side of [-1,1]){const open=app.londonOpen?.find(o=>o.re.test(r.name)&&(o.both||o.side===side));if(open){if(open.kind==='park')trees.push(right(roadPoint(r,1,d),side*(half+8)));continue;}const p=right(roadPoint(r,1,d),side*(half+8+random()*3));if(roads.some(o=>o!==r&&distanceRoad(p,o)<width(o)/2+7))continue;const look=app.londonLook?.[(d<r.len/2?r.A:r.B).district]||{kind:'victorian',storeys:5};buildings.push({...p,psi:r.brg,w:11+random()*10,depth:9+random()*10,height:Math.max(2,look.storeys-1+Math.floor(random()*3))*3.4,side,seed:random(),kind:look.kind,brick:random()<.48,color:['#a69581','#918578','#b5aea0','#8d7469'][Math.floor(random()*4)],road:r.networkId});}
+   for(const dir of [-1,1])if((dir>0?r.fwd:r.back)>0)for(let d=30+random()*60;d<r.len-15;d+=85+random()*100){traffic.push({id:traffic.length,road:r,dir,d,kind:kinds[Math.floor(random()*kinds.length)],speed:0,target:7+random()*6,lane:0,entry:null,exit:null});}
+  }
+  function distanceRoad(p,r){const a=pos(r.A),b=pos(r.B),u=C(((p.x-a.x)*(b.x-a.x)+(p.z-a.z)*(b.z-a.z))/(r.len*r.len),0,1);return Math.hypot(p.x-a.x-(b.x-a.x)*u,p.z-a.z-(b.z-a.z)*u);}
+  for(const r of roads){addRoad(r);for(const side of [-1,1]){const o=app.londonOpen?.find(o=>o.re.test(r.name)&&(o.both||o.side===side));if(!o)continue;const a=roadPoint(r,1,0),b=roadPoint(r,1,r.len),near=side*(width(r)/2+3),far=near+side*(o.kind==='park'?100:180),y=o.kind==='park'?-.05:-9;grounds.push({points:[right(a,near),right(a,far),right(b,far),right(b,near)].map(p=>({...p,y})),color:o.kind==='park'?'#6e8658':'#476e7f'});}}
+  for(const [id,marks]of Object.entries(app.londonMarks||{})){const n=G.byId[id];if(!n)continue;const rd=n.roads[0],r=rd.road,dir=-rd.out,base=roadPoint(r,dir,r.len-24);for(const m of marks){if(m.kind==='towerbridge')continue;landmarks.push({...right(base,(m.side||1)*(width(r)/2+18)),kind:m.kind});}}
+  const towerBridge=roads.find(r=>/^Tower Bridge/.test(r.name));
+  if(towerBridge)for(const d of [towerBridge.len/2-30.5,towerBridge.len/2+30.5])for(const side of [-1,1]){buildings.push({...right(roadPoint(towerBridge,1,d),side*(width(towerBridge)/2+4)),psi:towerBridge.brg,w:7,depth:11,height:42,color:'#c1b39b',tower:true});}
+  // Geometry is stored once. Bounds reject invisible pieces before projection,
+  // without regenerating a street or moving its buildings at a junction.
+  const layers=['#a9a59b','#3a3f43','#d9d8cd'].map(color=>primitives.filter(p=>p.color===color));
+  for(const mesh of [...primitives,...grounds]){mesh.x=mesh.points.reduce((n,p)=>n+p.x,0)/mesh.points.length;mesh.z=mesh.points.reduce((n,p)=>n+p.z,0)/mesh.points.length;mesh.radius=Math.max(...mesh.points.map(p=>Math.hypot(p.x-mesh.x,p.z-mesh.z)));}
+  for(const b of buildings){b.cs=Math.cos(b.psi);b.sn=Math.sin(b.psi);b.radius=Math.hypot(b.w,b.depth)/2;}
+  // Distant cars retain the same authored geometry. Small cached raster views
+  // avoid hundreds of sub-pixel panel and spoke strokes for each distant car.
+  const carViews=new Map();
+  function drawCar(ctx,x,y,scale,car,yaw,night){if(scale>=4||car.kind==='police'){drawVehicle(ctx,x,y,scale,{...car,speedMps:car.speed,viewYaw:yaw},Math.cos(yaw)<0,night,s.time,0);return;}
+   const angle=Math.round(yaw*64/Math.PI)*Math.PI/64,key=[car.kind,car.name,car.body,car.hue,car.tone,!!car.brake,angle,night].join(':');let canvas=carViews.get(key);
+   if(!canvas){canvas=app.canvas.ownerDocument.createElement('canvas');canvas.width=320;canvas.height=192;drawVehicle(canvas.getContext('2d'),160,170,20,{...car,speed:0,speedMps:0,viewYaw:angle},Math.cos(angle)<0,night,0,0);carViews.set(key,canvas);if(carViews.size>256)carViews.delete(carViews.keys().next().value);}
+   const k=scale/20;ctx.drawImage(canvas,x-160*k,y-170*k,320*k,192*k);
+  }
+  function trafficExit(c){const options=linkChoices(c.road,c.dir),link=options[c.id%Math.max(1,options.length)]||straightChoice(c.road,c.dir);return link?{link,curve:bend(c.road,c.dir,link)}:null;}
+  for(const c of traffic)c.exit=trafficExit(c);
+  const laneOffset=r=>-width(r)/2+width(r)/Math.max(1,r.fwd+r.back)*.5;
+  function trafficPose(c){let bend0,u;const d=c.d;
+   if(c.entry&&d<c.entry.R){bend0=c.entry;u=.5+.5*C(d/c.entry.R,0,1);}
+   else if(c.exit&&d>c.road.len-c.exit.curve.R){bend0=c.exit.curve;u=.5*C((d-c.road.len+bend0.R)/bend0.R,0,1);}
+   if(!bend0)return right(roadPoint(c.road,c.dir,d),laneOffset(c.road));
+   // Interpolate lane centres themselves. Rotating an offset around a tight
+   // centreline can fold the lane backwards or create a cusp in a U-turn.
+   return trafficCurve(bend0,u);
+  }
+  function trafficCurve(b,u){const P=right({...b.P,psi:b.a},laneOffset(b.rIn)),Q=right({...b.Q,psi:b.b},laneOffset(b.rOut)),R=Math.min(b.R*2/3,Math.hypot(Q.x-P.x,Q.z-P.z)*.42),
+    U={x:P.x+Math.sin(b.a)*R,z:P.z+Math.cos(b.a)*R},V={x:Q.x-Math.sin(b.b)*R,z:Q.z-Math.cos(b.b)*R},v=1-u,
+    x=v*v*v*P.x+3*v*v*u*U.x+3*v*u*u*V.x+u*u*u*Q.x,z=v*v*v*P.z+3*v*v*u*U.z+3*v*u*u*V.z+u*u*u*Q.z,
+    dx=3*v*v*(U.x-P.x)+6*v*u*(V.x-U.x)+3*u*u*(Q.x-V.x),dz=3*v*v*(U.z-P.z)+6*v*u*(V.z-U.z)+3*u*u*(Q.z-V.z);
+   return{x,z,y:0,psi:Math.atan2(dx,dz)};
+  }
+  function cornerLimit(b){if(b.speedLimit)return b.speedLimit;let maxK=0,old=trafficCurve(b,0);for(let i=1;i<=64;i++){const p=trafficCurve(b,i/64),ds=Math.hypot(p.x-old.x,p.z-old.z);maxK=Math.max(maxK,Math.abs(A(p.psi-old.psi))/Math.max(.001,ds));old=p;}return b.speedLimit=Math.min(14,Math.sqrt(2.0/Math.max(.0001,maxK)));}
+  function trafficStep(dt){if(!s.ldn)return;const lanes=new Map();for(const c of traffic){const id=c.road.networkId+':'+c.dir;if(!lanes.has(id))lanes.set(id,[]);lanes.get(id).push(c);}
+   for(const list of lanes.values()){list.sort((a,b)=>b.d-a.d);for(let i=0;i<list.length;i++){const c=list[i],gap=c.road.len-c.d,node=end(c.road,c.dir);let target=c.target;
+     if(c.exit){const limit=cornerLimit(c.exit.curve);target=Math.min(target,Math.sqrt(limit*limit+4.6*Math.max(0,gap-c.exit.curve.R)));}if(c.entry&&c.d<c.entry.R)target=Math.min(target,cornerLimit(c.entry));
+     if(c.road===s.ldn.road&&c.dir===s.ldn.dir){const gap=s.distanceM-c.d;if(gap>0)target=Math.min(target,Math.max(0,s.speedMps+(gap-9)*.5));}
+     if(node.roads.length>=3){const green=signal(node)==='green';if(!green)target=Math.min(target,Math.sqrt(4.8*Math.max(0,gap-5)));}
+     if(i){const lead=list[i-1],free=lead.d-c.d-(lead.kind.includes('bus')?10:5)-3;target=Math.min(target,Math.max(0,lead.speed+(free-4)*.55));}
+     c.speed+=C(target-c.speed,-3.2*dt,1.8*dt);c.d+=c.speed*dt;
+     if(!c.exit)c.exit=trafficExit(c);
+     if(c.d>=c.road.len&&c.exit){c.d-=c.road.len;c.entry=c.exit.curve;c.dir=c.exit.link.out;c.road=c.exit.link.road;c.exit=trafficExit(c);}
+
+   }}
+   // Legacy driver sensors receive relative positions only; world actors never respawn.
+   const L=s.ldn;s.traffic=traffic.filter(c=>c.road===L.road).map(c=>{const same=c.dir===L.dir,d=same?c.d:L.road.len-c.d,p=trafficPose(c);return{...c,world:p,z:d-s.distanceM,routeD:d,oncoming:!same,lat:(same?-1:1)*(width(L.road)/2-width(L.road)/(L.road.fwd+L.road.back)*.5),speed:c.speed,hold:1,hidden:false,lane:same?0:1};});
+  }
+  function draw(w,h,pal,options={}){const ctx=app.ctx,eye=options.eye||playerPoint(),focal=options.focal||(app.WIDTH_SCALE?380:360),eyeHeight=app.WIDTH_SCALE?1.6:1.55,horizon=h*.46;ctx.fillStyle=pal.grass||'#a4a098';ctx.fillRect(0,horizon,w,h-horizon);
+   const cs=Math.cos(eye.psi),sn=Math.sin(eye.psi),slope=w/(2*focal);
+   const camera=p=>{const dx=p.x-eye.x,dz=p.z-eye.z;return{x:dx*cs-dz*sn,z:dx*sn+dz*cs,y:p.y||0};};
+   const visible=(p,range=1400)=>{const dx=p.x-eye.x,dz=p.z-eye.z,z=dx*sn+dz*cs,r=p.radius||0;return z+r>.5&&z-r<range&&Math.abs(dx*cs-dz*sn)<Math.max(0,z)*slope+r*(1+slope);};
+   const project=p=>({x:w/2+p.x*focal/p.z,y:horizon+(eyeHeight-p.y)*focal/p.z,scale:focal/p.z});
+   function polygon(points,color){let a=points.map(camera),out=[];for(let i=0;i<a.length;i++){const p=a[i],q=a[(i+1)%a.length],ip=p.z>=.5,iq=q.z>=.5;if(ip)out.push(p);if(ip!==iq){const u=(.5-p.z)/(q.z-p.z);out.push({x:p.x+(q.x-p.x)*u,y:p.y+(q.y-p.y)*u,z:.5});}}if(out.length<3)return;const pts=out.map(project);if(pts.every(p=>p.x<0)||pts.every(p=>p.x>w)||pts.every(p=>p.y>h)||pts.every(p=>p.y<0))return;ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.closePath();ctx.fillStyle=color;ctx.fill();}
+   for(const ground of grounds)if(visible(ground,1800))polygon(ground.points,ground.color);
+   for(const layer of layers)for(const mesh of layer)if(visible(mesh,1600))polygon(mesh.points,mesh.color);
+   if(towerBridge){const r=towerBridge,mid=r.len/2,half=width(r)/2,lift=app.bridgeLift?.(s.routeTime)?.open||0,ang=lift*43*Math.PI/180,P=(d,n,y=0)=>({...right(roadPoint(r,1,d),n),y});if(lift>.001){polygon([P(mid-30.5,-half),P(mid+30.5,-half),P(mid+30.5,half),P(mid-30.5,half)],'#42697a');for(const side of [-1,1]){const d=mid+side*30.5,tip=d-side*30.5*Math.cos(ang),H=30.5*Math.sin(ang);polygon([P(d,-half),P(d,half),P(tip,half,H),P(tip,-half,H)],'#555d64');}}for(const side of [-1,1]){const n=side*(half+3);polygon([P(mid-30.5,n-1,34),P(mid+30.5,n-1,34),P(mid+30.5,n+1,36),P(mid-30.5,n+1,36)],'#81a9ad');}}
+   const objects=[];for(const p of landmarks){const q=camera(p);if(q.z>2&&q.z<1200)objects.push({type:'landmark',depth:q.z,p,q});}for(const p of trees){const q=camera(p);if(q.z>1&&q.z<650)objects.push({type:'tree',depth:q.z,p,q});}for(const b of buildings){if(visible(b)){const p=camera(b);objects.push({depth:p.z,type:'building',b});}}
+   const actors=traffic.map(c=>({c,p:trafficPose(c)}));if(s.raceGrid)for(const c of s.rivals||[]){if(!c.gone&&!c.out)actors.push({c,p:actorPose(c)});}
+   for(const p of policePoses())actors.push({c:{kind:'police',name:p.name,speed:s.speedMps},p});
+   for(const {c,p} of actors){const q=camera(p);if(q.z>1&&q.z<1100&&Math.abs(q.x)<q.z*slope+10)objects.push({depth:q.z,type:'car',c,p,q});}
+   for(const node of G.nodes){const p=pos(node),q=camera(p);if(q.z>1&&q.z<500&&Math.abs(q.x)<q.z*2)objects.push({depth:q.z,type:'junction',node,p,q});}
+   objects.sort((a,b)=>b.depth-a.depth);
+   for(const o of objects){ctx.globalAlpha=C((1400-o.depth)/400,0,1);if(o.type==='tree'){const p=project(o.q);ctx.fillStyle='#71614c';ctx.fillRect(p.x-.13*p.scale,p.y-5*p.scale,.26*p.scale,5*p.scale);ctx.fillStyle='#476744';ctx.beginPath();ctx.ellipse(p.x,p.y-5.6*p.scale,2.2*p.scale,2.7*p.scale,0,0,Math.PI*2);ctx.fill();continue;}if(o.type==='landmark'){const p=project(o.q);app.drawCityLandmark?.({...o.p,side:0,worldProjection:{...p,fwd:o.q.z}},o.q.z,0,{},!!pal.night);continue;}if(o.type==='junction'){const {node}=o;for(const l of node.roads){const r=l.road,dir=-l.out,atEnd=roadPoint(r,dir,r.len-5),side=right(atEnd,-width(r)/2-1);const q=camera(side);if(q.z<=1)continue;const p=project(q),H=3.7*p.scale;ctx.fillStyle='#4d5558';ctx.fillRect(p.x-1*p.scale/10,p.y-H,.12*p.scale,H);ctx.fillStyle='#f0ece0';ctx.fillRect(p.x-1.8*p.scale,p.y-H,3.6*p.scale,.65*p.scale);if(p.scale>1.1){ctx.fillStyle='#253139';ctx.font=Math.min(14,Math.max(5,.24*p.scale))+'px system-ui';ctx.textAlign='center';ctx.fillText(r.name,p.x,p.y-H+.43*p.scale,3.3*p.scale);}if(node.roads.length>=3){ctx.fillStyle='#152025';ctx.fillRect(p.x-.23*p.scale,p.y-3*p.scale,.46*p.scale,1.02*p.scale);for(const [i,col]of ['red','amber','green'].entries()){ctx.fillStyle=signal(node)===col?{red:'#fc3433',amber:'#ffc541',green:'#53ea86'}[col]:'#303735';ctx.beginPath();ctx.arc(p.x,p.y-(2.82-i*.3)*p.scale,.1*p.scale,0,Math.PI*2);ctx.fill();}}}continue;}if(o.type==='car'){const q=project(o.q),yaw=A(o.p.psi-eye.psi-Math.atan2(o.q.x,o.q.z));drawCar(ctx,q.x,q.y,q.scale,o.c,yaw,!!pal.night);continue;}
+    const b=o.b,P=(x,y,z)=>({x:b.x+b.cs*x+b.sn*z,z:b.z-b.sn*x+b.cs*z,y}),W=b.w/2,D=b.depth/2,H=b.height,
+     ex=(eye.x-b.x)*b.cs-(eye.z-b.z)*b.sn,ez=(eye.x-b.x)*b.sn+(eye.z-b.z)*b.cs;
+    // Draw only the faces visible to this camera. Near street fronts reuse the
+    // original stonework, sash windows, cornices, shop glazing and awnings.
+    for(const side of [-1,1]){
+     const x=side*W,z=side*D;
+     if(ex*side>W){
+      const face=[P(x,0,-D),P(x,0,D),P(x,H,D),P(x,H,-D)],a=camera(face[0]),q=camera(face[1]);
+      if(!b.tower&&side===-b.side&&o.depth<260&&a.z>.5&&q.z>.5&&app.drawCityBlock){const A=project(a),B=project(q);app.drawCityBlock({...b,storeys:H/3.4,wM:2*D,shop:true,awn:b.seed>.55,hue:b.seed,shopName:Math.abs(B.x-A.x)>50?['BOOKSELLER','BAKERY','CAFÉ','TAILOR','GALLERY','PHARMACY'][Math.floor(b.seed*6)]:'',worldQuad:{a:A,b:B,ah:H*A.scale,bh:H*B.scale}},o.depth,0,{script:'latin'},!!pal.night);}
+      else {polygon(face,b.color);if(o.depth<350)for(let y=3;y<H-1;y+=3.4)for(let d=-D+1.5;d<D-1;d+=3)polygon([P(x,y,d-.5),P(x,y,d+.5),P(x,y+1.5,d+.5),P(x,y+1.5,d-.5)],'#344650');}
+     }
+     if(ez*side>D){polygon([P(-W,0,z),P(W,0,z),P(W,H,z),P(-W,H,z)],side<0?'#746e66':'#8a8276');if(o.depth<240)for(let y=3;y<H-1;y+=3.4)for(let x=-W+1.6;x<W-1;x+=3)polygon([P(x-.55,y,z),P(x+.55,y,z),P(x+.55,y+1.5,z),P(x-.55,y+1.5,z)],'#344650');}
+    }
+    if(eyeHeight>H)polygon([P(-W,H,-D),P(W,H,-D),P(W,H,D),P(-W,H,D)],'#5b6061');
+    if(b.tower){polygon([P(-W-.3,H,-D-.3),P(W+.3,H,-D-.3),P(0,H+10,0)],'#487978');polygon([P(W+.3,H,-D-.3),P(W+.3,H,D+.3),P(0,H+10,0)],'#365b60');}
+   }ctx.globalAlpha=1;
+   if(nav){const q=camera(nav);if(q.z>1&&q.z<600){const p=project(q);ctx.fillStyle='#f0c661';ctx.beginPath();ctx.arc(p.x,p.y-25,7,0,Math.PI*2);ctx.fill();ctx.font='12px system-ui';ctx.textAlign='center';ctx.fillStyle='#fff';ctx.strokeStyle='#17222c';ctx.lineWidth=3;ctx.strokeText(nav.name,p.x,p.y-40);ctx.fillText(nav.name,p.x,p.y-40);}}
+  }
+  function policePoses(){
+   const result=[];if(!s.ldn)return result;
+   for(const c of s.pursuit||[]){const d=Number.isFinite(c.gap)?s.distanceM-c.gap:c.distM;if(Number.isFinite(d))result.push({...right(at(d),c.lane??s.laneOffset),name:c.name||'Police',kind:'police'});}
+   if(s.police&&Number.isFinite(s.police.z))result.push({...right(at(s.distanceM+s.police.z),s.laneOffset),name:'Police',kind:'police'});return result;
+  }
+  function projectWorld(p,w=app.canvas.ownerDocument.defaultView.innerWidth,h=app.canvas.ownerDocument.defaultView.innerHeight){const eye=playerPoint(),dx=p.x-eye.x,dz=p.z-eye.z,cs=Math.cos(eye.psi),sn=Math.sin(eye.psi),z=dx*sn+dz*cs,x=dx*cs-dz*sn,focal=app.WIDTH_SCALE?380:360,scale=focal/(z||.00001);return{x:w/2+x*scale,y:h*.46+((app.WIDTH_SCALE?1.6:1.55)-(p.y||0))*scale,scale,fwd:z};}
+  function projectRelative(d,n=0){return projectWorld(right(at(s.distanceM+d),n));}
+  function driverSteer(gain=1){const look=C(Math.abs(s.speedMps)*.8,10,30),k=curvature(s.distanceM+look),err=laneOffset(s.ldn.road)-s.laneOffset,phi=C(err*.05,-.5,.5),yaw=k*s.speedMps+(phi-s.headingRel)*2.4*gain,st=app.STEERING;return C(Math.atan(yaw*st.wheelbase/Math.max(2.2,Math.abs(s.speedMps)))/(st.maxAngle*C(1.15-Math.abs(s.speedMps)*.013,.44,1)),-1,1);}
+  function driverTarget(){let target=13.41;const L=s.ldn,k=Math.max(Math.abs(curvature(s.distanceM+12)),Math.abs(curvature(s.distanceM+30)));if(k>.001)target=Math.min(target,Math.sqrt(2/k));if(L.next.roads.length>=3&&signal(L.next)!=='green')target=Math.min(target,Math.sqrt(4*Math.max(0,L.road.len-s.distanceM-6)));for(const c of traffic){if(c.road!==L.road||c.dir!==L.dir)continue;const gap=c.d-s.distanceM;if(gap>0&&gap<Math.max(25,s.speedMps*2))target=Math.min(target,Math.max(0,c.speed+(gap-12)*.4));}return Math.min(target,arrivalSpeedLimit());}
+  function drawRear(x,y,w,h,pal,mirror={}){if(w<1||h<1)return;const ctx=app.ctx,eye=right(playerPoint(),mirror.eye||0);ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.translate(x+w,y);ctx.scale(-1,1);ctx.fillStyle='#adc7d3';ctx.fillRect(0,0,w,h);draw(w,h,pal,{eye:{...eye,psi:eye.psi+Math.PI+(mirror.yaw||0)},focal:w*.85});ctx.restore();}
+  const mapCanvas=app.el.mapCanvas,originalMap=app.drawMap;let mapHits=[],mapZoom=1,mapCentre=null,mapTransform=null,mapDrag=null;
+  if(mapCanvas){const doc=mapCanvas.ownerDocument,choice=doc.createElement('select');choice.id='cityDestination';choice.setAttribute('aria-label','Map destination');choice.style.cssText='width:100%;padding:8px;background:#16232d;color:white;border:1px solid #576b74;border-radius:6px';choice.add(new Option('No destination · explore London',''));for(const p of locations.slice().sort((a,b)=>a.name.localeCompare(b.name)))choice.add(new Option(p.name,p.id));(mapCanvas.closest('.smart-screen')||mapCanvas.parentElement).before(choice);choice.style.marginBottom='8px';choice.onchange=()=>destination(choice.value);
+   mapCanvas.addEventListener('click',e=>{if(!s.ldn||mapDrag?.moved)return;const rect=mapCanvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,hit=mapHits.map(p=>({...p,gap:Math.hypot(p.sx-x,p.sy-y)})).sort((a,b)=>a.gap-b.gap)[0];if(hit?.gap<12){destination(hit.id);choice.value=hit.id;}});
+   mapCanvas.style.touchAction='none';mapCanvas.addEventListener('wheel',e=>{if(!s.ldn||!mapTransform)return;e.preventDefault();e.stopPropagation();const t=mapTransform,r=mapCanvas.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top,world=t.unproject(x,y),dx=x-t.ox,dz=t.oy-y,cs=Math.cos(t.bearing),sn=Math.sin(t.bearing);mapZoom=C(mapZoom*Math.exp(C(-e.deltaY*.003,-.5,.5)),1,60);const scale=t.fit*mapZoom;mapCentre={x:world.x-(dx*cs+dz*sn)/scale,z:world.z-(-dx*sn+dz*cs)/scale};app.drawMap();},{passive:false});
+   mapCanvas.addEventListener('pointerdown',e=>{if(!s.ldn||!mapTransform)return;mapDrag={x:e.clientX,y:e.clientY,cx:mapTransform.cx,cz:mapTransform.cz,moved:false};mapCanvas.setPointerCapture(e.pointerId);});
+   mapCanvas.addEventListener('pointermove',e=>{if(!mapDrag||!mapCanvas.hasPointerCapture(e.pointerId))return;const dx=e.clientX-mapDrag.x,dy=e.clientY-mapDrag.y;if(Math.hypot(dx,dy)>4)mapDrag.moved=true;if(mapDrag.moved){const cs=Math.cos(mapTransform.bearing),sn=Math.sin(mapTransform.bearing);mapCentre={x:mapDrag.cx-(dx*cs-dy*sn)/mapTransform.scale,z:mapDrag.cz+(dx*sn+dy*cs)/mapTransform.scale};app.drawMap();}});
+   app.drawMap=function(){if(!s.ldn)return originalMap?.();const w=mapCanvas.clientWidth||300,h=mapCanvas.clientHeight||380,dpr=Math.min(2,devicePixelRatio);if(mapCanvas.width!==w*dpr||mapCanvas.height!==h*dpr){mapCanvas.width=w*dpr;mapCanvas.height=h*dpr;}const g=mapCanvas.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);mapTransform=app.renderCityMap(g,w,h,{preset:1,zoom:mapZoom,centre:mapCentre});mapHits=mapTransform.pins.map(p=>({...p,sx:p.x,sy:p.y}));};
+  }
+  app.cityNetwork={prepare,step,at,curvature,playerPoint,guideAt,navigation,plannedPoints,width,grounds,trees,landmarks,policePoses,projectWorld,projectRelative,driverSteer,driverTarget,signalState:signal,drawRear,trafficStep,draw,locations,destination,trafficPose,actorPose,arrivalSpeedLimit,traffic,roads,buildings,primitives,inspect:()=>({mapView:mapTransform?Object.fromEntries(['w','h','fit','scale','cx','cz','bearing','ox','oy'].map(k=>[k,mapTransform[k]]).concat([['zoom',mapZoom]])):null,destination:nav?.name,arrived:!!nav?.arrived,routePoints,routeLinks:routeLinks.map(l=>l.road.name),roads:roads.length,buildings:buildings.length,traffic:traffic.length}),mapProject:p=>mapTransform?.project(p),get destinationPoint(){return nav;},get routePoints(){return plannedPoints();}};
+  app.renderCityMap=(g,width,height,options={})=>drawLondonMap(g,{network:app.cityNetwork,state:s,width,height,...options});
+  const physics=app.updatePhysics;app.updatePhysics=function(dt){if(s.ldn)prepare();return physics.call(app,dt);};
+ })(app,function drawTrafficVehicle(ctx,x,y,scale,car,front,night,time,view=.22){
+  if(!(scale>0)||!Number.isFinite(x+y+scale))return;
+  let kind=car.kind||'',name=car.name||'';
+  if(!kind){kind=/Cullinan/.test(name)?'cullinan':/Phantom/.test(name)?'phantom':/Ghost/.test(name)?'ghost':/Bentley/.test(name)?'bentley':/Maybach/.test(name)?'maybach':/Range Rover/.test(name)?'range':/taxi/i.test(name)?'cab':/bus/i.test(name)?'ddbus':/van/i.test(name)?'van':/police/i.test(name)?'police':car.dakar?/Ford/.test(name)?'raptor':/Toyota/.test(name)?'hilux':/Dacia/.test(name)?'sandrider':'hunter':'saloon';}
+  const models={
+   cab:[1.91,1.89,4.86,.9,.72,.90,'#11161a'],yellowcab:[1.99,1.48,5.38,.77,.53,.76,'#eac324'],crown:[1.70,1.52,4.69,.79,.56,.72,'#161b21'],santana:[1.70,1.43,4.55,.79,.55,.70,'#285a86'],
+   ddbus:[2.55,4.40,11.23,.98,.94,.97,'#b82531'],bus:[2.55,3.15,12,.98,.91,.96,'#276c50'],toeibus:[2.49,3.05,10.75,.97,.94,.97,'#e4dfcb'],
+   van:[2.02,2.65,5.93,.92,.91,.91,'#dde1e5'],hiace:[1.88,2.05,4.84,.94,.88,.95,'#e5e7e3'],keitruck:[1.48,1.83,3.40,.94,.92,.91,'#e5e6df'],truck:[2.45,3.45,8.5,.99,.98,.98,'#839095'],
+   saloon:[1.86,1.46,4.80,.79,.53,.76,null],hatch:[1.79,1.50,4.25,.86,.61,.81,null],suv:[1.98,1.78,4.88,.90,.65,.87,null],
+   ghost:[1.98,1.57,5.55,.85,.57,.82,'#232d34'],phantom:[2.02,1.65,5.98,.88,.59,.85,'#e4dfd2'],cullinan:[2.16,1.84,5.34,.93,.64,.90,'#303f43'],bentley:[1.99,1.49,5.32,.83,.54,.77,'#194839'],maybach:[1.92,1.51,5.47,.80,.53,.77,'#232830'],range:[2.05,1.87,5.25,.95,.71,.91,'#4e5a50'],police:[1.88,1.52,4.95,.82,.55,.78,'#e6e8e6'],
+   raptor:[2.30,2.10,5.05,.94,.71,.76,'#1b458e'],hilux:[2.30,1.89,4.81,.93,.67,.80,'#e5e5e3'],sandrider:[2.29,1.81,4.14,.88,.52,.66,'#bcae8b'],hunter:[2.30,1.95,4.60,.92,.57,.76,'#c92b32']
+  };
+  const rider=['cycle','ebike','scooter'].includes(kind),m=models[kind]||models.saloon,[W,H,L,shoulder,roof]=m;
+  const body=car.body||m[6]||`hsl(${car.hue||205},20%,${car.tone||40}%)`,bus=['ddbus','bus','toeibus'].includes(kind),van=['van','hiace','truck','keitruck'].includes(kind),rally=['raptor','hilux','sandrider','hunter'].includes(kind),lux=['ghost','phantom','cullinan'].includes(kind),box=bus||kind==='truck';
+  const worldYaw=Number.isFinite(car.viewYaw),v=worldYaw?car.viewYaw:Math.max(-.48,Math.min(.48,view)),cs=Math.cos(v),sn=Math.sin(v),direction=front?1:-1,nearSide=sn>=0?1:-1;
+  const P=(a,b,c)=>worldYaw?[(a*cs-c*sn)*scale,(-b+(a*sn+c*cs)*.10)*scale]:[(a*cs+c*direction*sn)*scale,(-b-(c*direction*cs-a*sn)*.10)*scale];
+  ctx.save();ctx.translate(x,y);
+  const poly=(points,fill,stroke,width=.012)=>{ctx.beginPath();for(let i=0;i<points.length;i++){const q=P(...points[i]);i?ctx.lineTo(...q):ctx.moveTo(...q);}ctx.closePath();ctx.fillStyle=fill;ctx.fill();if(fill===body){const gloss=ctx.createLinearGradient(0,-H*scale,0,0);gloss.addColorStop(0,'#ffffff30');gloss.addColorStop(.6,'#ffffff00');gloss.addColorStop(1,'#00000045');ctx.fillStyle=gloss;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=Math.max(.4,width*scale);ctx.stroke();}};
+  const line=(points,color,width=.016)=>{ctx.beginPath();points.forEach((p,i)=>{const q=P(...p);i?ctx.lineTo(...q):ctx.moveTo(...q);});ctx.strokeStyle=color;ctx.lineWidth=Math.max(.45,width*scale);ctx.stroke();};
+  const panel=(a,b,c,d,e,f,color)=>poly([[a,b,c],[d,b,c],[d,e,f],[a,e,f]],color);
+  const faceZ=-L/2,backZ=L/2;
+  const shadow=ctx.createRadialGradient(0,0,0,0,0,W*scale);shadow.addColorStop(0,'#0009');shadow.addColorStop(1,'#0000');ctx.fillStyle=shadow;ctx.beginPath();ctx.ellipse(0,0,(W*.65+Math.abs(sn)*L*.4)*scale,.17*scale,0,0,Math.PI*2);ctx.fill();
+  if(rider){
+   const pedal=kind==='cycle',R=pedal?.34:.23;
+   for(const z of [-.58,.58]){const p=P(0,R,z);ctx.strokeStyle='#11161a';ctx.lineWidth=scale*(pedal?.04:.10);ctx.beginPath();ctx.ellipse(p[0],p[1],Math.max(1,.085*scale),R*scale,0,0,Math.PI*2);ctx.stroke();for(let i=0;i<10;i++){const a=i*Math.PI/5+time*3;line([[0,R,z],[.02,R+R*Math.sin(a),z+R*Math.cos(a)]],'#909a9c',.009);}}
+   line([[0,.34,-.58],[0,.62,.02],[0,.34,.58],[0,.34,-.58],[0,.9,-.36],[0,.85,.05]],kind==='ebike'?'#7eafbb':'#42635a',.06);
+   line([[-.24,1,-.4],[.24,1,-.4]],'#33393c',.055);
+   poly([[-.20,.82,.04],[.19,.82,.04],[.23,1.27,.10],[-.23,1.27,.10]],'#2d425a');
+   for(const s of [-1,1]){line([[s*.18,1.17,.08],[s*.29,1.01,-.16],[s*.24,1,-.40]],'#bda58c',.075);line([[s*.12,.84,.04],[s*.19,.55,-.15],[s*.12,.28,.02]],'#24313e',.1);}
+   const p=P(0,1.49,.11);ctx.fillStyle='#d5d8d5';ctx.beginPath();ctx.ellipse(p[0],p[1],.16*scale,.18*scale,0,0,Math.PI*2);ctx.fill();line([[-.12,1.45,-.04],[.12,1.45,-.04]],'#20343e',.09);ctx.restore();return;
+  }
+  // Wheels are independent volumes, with sidewalls, hubs and rotating spokes.
+  const R=rally?.47:bus||kind==='truck'?.48:kind==='keitruck'?.27:.34,axles=[-L*.31,L*.32],tire=.21;
+  for(const z of axles)for(const side of [-1,1]){
+   const p=P(side*(W*.45),R,z),rx=Math.max(.035,Math.abs(sn)*R)*scale;
+   ctx.fillStyle='#111416';ctx.beginPath();ctx.ellipse(p[0],p[1],rx+tire*scale*.35,R*scale,0,0,Math.PI*2);ctx.fill();
+   ctx.strokeStyle='#303639';ctx.lineWidth=.045*scale;ctx.stroke();ctx.fillStyle='#a0a5a6';ctx.beginPath();ctx.ellipse(p[0],p[1],rx*.57,R*.57*scale,0,0,Math.PI*2);ctx.fill();
+   for(let i=0;i<10;i++){const a=i*Math.PI/5+time*(car.speedMps||car.speed||0)/R;ctx.strokeStyle='#2b3034';ctx.lineWidth=Math.max(.4,.025*scale);ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(p[0]+Math.cos(a)*rx*.56,p[1]+Math.sin(a)*R*.56*scale);ctx.stroke();}
+  }
+  const low=R*.68,belt=box?H*.46:van?H*.48:kind==='cab'?H*.53:rally?H*.60:H*.64,hood=box?belt:van?H*.53:kind==='cab'?H*.57:rally?H*.64:H*.66,roofStart=box?-L*.49:van?-L*.42:-L*.16,roofEnd=box?L*.49:kind==='keitruck'?-L*.02:rally?L*.22:L*.27;
+  const rings=[[-L*.5,W*.43,hood*.85],[-L*.37,W*.50,hood],[roofStart,W*.50,belt],[roofEnd,W*.50,belt],[L*.4,W*.48,hood*.94],[L*.5,W*.43,hood*.88]];
+  // Far flank, nose/tail, near flank, bonnet and boot receive separate lighting.
+  for(const side of [nearSide]){poly(rings.map(([z,w,h])=>[side*w,h,z]).concat([[side*W*.43,low,L*.5],[side*W*.43,low,-L*.5]]),body,'#172027');poly(rings.map(([z,w,h])=>[side*w,h,z]).concat([[side*W*.43,low,L*.5],[side*W*.43,low,-L*.5]]),side===-1?'#0003':'#ffffff0c');}
+  if(front)poly([[-W*.43,low,faceZ],[W*.43,low,faceZ],[W*.43,hood*.85,faceZ],[-W*.43,hood*.85,faceZ]],body,'#1b2329');
+  poly([[-W*.43,hood*.85,faceZ],[W*.43,hood*.85,faceZ],[W*.5,hood,-L*.37],[W*.5,belt,roofStart],[-W*.5,belt,roofStart],[-W*.5,hood,-L*.37]],body,'#ffffff24');
+  poly([[-W*.5,belt,roofEnd],[W*.5,belt,roofEnd],[W*.43,hood*.88,backZ],[-W*.43,hood*.88,backZ]],body,'#ffffff24');
+  const roofW=W*(bus||van?roof:shoulder)*.5,baseW=W*.46;
+  const upright=bus||van||kind==='cab',ra=upright?.22:['suv','cullinan','range'].includes(kind)?.43:.62,rb=upright?.16:rally?.32:.52;
+  for(const side of [nearSide]){
+   poly([[side*baseW,belt,roofStart],[side*roofW,H,roofStart+ra],[side*roofW,H,roofEnd-rb],[side*baseW,belt,roofEnd]],body,'#bac3c55c');
+   const glazedEnd=['van','truck'].includes(kind)?roofStart+L*.22:roofEnd;
+   poly([[side*(baseW-.035),belt+.09,roofStart+.16],[side*(roofW+.007),H-.08,roofStart+ra+.07],[side*(roofW+.007),H-.08,glazedEnd-rb-.08],[side*(baseW-.035),belt+.09,glazedEnd-.16]],'#243e4b','#a6bcc450');
+   const count=bus?6:box?0:2;
+   for(let i=1;i<count;i++){const z=roofStart+(roofEnd-roofStart)*i/count;line([[side*baseW,belt,z],[side*roofW,H,z]],body,bus?.09:.065);}
+   for(const z of [roofStart+.45,roofEnd-.38]){line([[side*(W*.498),belt-.025,z],[side*(W*.492),low+.06,z]],'#101a2455');line([[side*(W*.504),belt-.095,z+.06],[side*(W*.504),belt-.095,z+.22]],'#c8cece',.025);}
+  }
+  poly([[-roofW,H,roofStart+ra],[roofW,H,roofStart+ra],[roofW,H,roofEnd-rb],[-roofW,H,roofEnd-rb]],body,'#ffffff38');
+  if(!front)poly([[-W*.43,low,backZ],[W*.43,low,backZ],[W*.43,hood*.88,backZ],[-W*.43,hood*.88,backZ]],body,'#1b2329');
+  const glass=ctx.createLinearGradient(0,-H*scale,0,-belt*scale);glass.addColorStop(0,'#12232e');glass.addColorStop(.48,'#537383');glass.addColorStop(.53,'#304958');glass.addColorStop(1,'#192f3b');
+  for(const end of [front?-1:1]){const z=end<0?roofStart:roofEnd,rz=z+(end<0?ra:-rb);poly([[-baseW,belt,z],[baseW,belt,z],[roofW,H,rz],[-roofW,H,rz]],body,'#a4b1b35c');if(!(van&&!front&&kind!=='keitruck'&&kind!=='hiace'))poly([[-baseW*.90,belt+.07,z],[baseW*.90,belt+.07,z],[roofW*.91,H-.075,rz],[-roofW*.91,H-.075,rz]],glass,'#d0dad65f');line([[-baseW*.65,belt+.09,z],[baseW*.12,belt+.34,z+.02]],'#141e26',.019);}
+  // Near-side wheel openings, rolled arches and recessed rotating alloy hubs.
+  for(const z0 of axles){const side=nearSide,p=P(side*W*.505,R,z0),rx=Math.max(.055,Math.abs(sn)*R)*scale;
+   ctx.fillStyle='#0b1116';ctx.beginPath();ctx.ellipse(p[0],p[1],rx+.055*scale,R*1.04*scale,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=body;ctx.lineWidth=.025*scale;ctx.stroke();
+   ctx.fillStyle='#1a2126';ctx.beginPath();ctx.ellipse(p[0],p[1],rx,R*.94*scale,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#515b60';ctx.lineWidth=.018*scale;ctx.stroke();
+   ctx.fillStyle='#4b565d';ctx.beginPath();ctx.ellipse(p[0],p[1],rx*.70,R*.62*scale,0,0,Math.PI*2);ctx.fill();
+   for(let i=0;i<10;i++){const a=i*Math.PI/5+time*(car.speedMps||car.speed||0)/R;ctx.strokeStyle='#c5ccca';ctx.lineWidth=Math.max(.45,.024*scale);ctx.beginPath();ctx.moveTo(p[0],p[1]);ctx.lineTo(p[0]+Math.cos(a)*rx*.67,p[1]+Math.sin(a)*R*.59*scale);ctx.stroke();}
+  }
+  const z=(front?faceZ-.016:backZ+.016),fy=hood*.85,chrome='#c4cbca',black='#131b21';
+  // Rolled bumper corners and a crowned bonnet give the coachwork its own
+  // continuous silhouette instead of an exposed rectangular front panel.
+  if(!bus&&!van){
+   const q=(xx,yy)=>P(xx,yy,z-.01),corner=lux?.065:kind==='cab'?.07:.12;
+   ctx.beginPath();ctx.moveTo(...q(-W*.39,low));ctx.quadraticCurveTo(...q(-W*.48,low),...q(-W*.48,low+corner));
+   ctx.lineTo(...q(-W*.47,fy*.78));ctx.quadraticCurveTo(...q(-W*.46,fy*1.02),...q(-W*.32,fy*1.025));
+   ctx.quadraticCurveTo(...q(0,fy*1.08),...q(W*.32,fy*1.025));ctx.quadraticCurveTo(...q(W*.46,fy*1.02),...q(W*.47,fy*.78));
+   ctx.lineTo(...q(W*.48,low+corner));ctx.quadraticCurveTo(...q(W*.48,low),...q(W*.39,low));ctx.closePath();ctx.fillStyle=body;ctx.fill();
+   const coat=ctx.createLinearGradient(0,-fy*scale,0,-low*scale);coat.addColorStop(0,'#ffffff24');coat.addColorStop(.38,'#ffffff05');coat.addColorStop(.8,'#00000012');coat.addColorStop(1,'#0000005c');ctx.fillStyle=coat;ctx.fill();ctx.strokeStyle='#17263090';ctx.lineWidth=.012*scale;ctx.stroke();
+   const q1=q(-W*.34,fy*.54),q2=q(W*.34,fy*.54);ctx.strokeStyle='#aabfc33a';ctx.lineWidth=.018*scale;ctx.beginPath();ctx.moveTo(...q1);ctx.quadraticCurveTo(...q(0,fy*.49),...q2);ctx.stroke();
+   for(const side of [-1,1]){line([[side*W*.23,hood*.96,-L*.36],[side*W*.33,belt,roofStart]],'#cedbdd3b',.012);}
+   if(lux||kind==='maybach')for(const side of [nearSide])line([[side*W*.505,belt-.03,roofStart],[side*W*.505,belt-.03,roofEnd]],'#d5c9a77a',.012);
+  }
+  // Direction selects the actual nose or tail: never red lamps on an approaching car.
+  if(front){
+   panel(-W*.23,low+.04,z,W*.23,fy*.78,z,black);
+   if(lux||kind==='bentley'||kind==='maybach'||kind==='crown'||kind==='cab'){
+    const tall=lux||kind==='cab',gw=lux?.42:kind==='bentley'?.57:.58,gh=tall?fy*.7:fy*.39,gy=fy-gh;
+    panel(-W*gw/2,gy,z-.01,W*gw/2,fy,z-.01,black);line([[-W*gw/2,gy,z-.02],[-W*gw/2,fy,z-.02],[W*gw/2,fy,z-.02],[W*gw/2,gy,z-.02]],chrome,.035);
+    for(let i=-7;i<=7;i++){const xx=i*W*gw/15;line([[xx,gy+.02,z-.02],[xx,fy-.03,z-.02]],chrome,lux?.017:.010);}
+    if(lux){line([[0,fy+.02,z],[0,fy+.11,z+.04]],chrome,.018);line([[-.05,fy+.09,z+.02],[0,fy+.12,z+.04],[.05,fy+.09,z+.02]],chrome,.016);}
+   }else if(!bus){for(let i=0;i<4;i++)line([[-W*.23,low+.08+i*.04,z-.02],[W*.23,low+.08+i*.04,z-.02]],'#58676c',.015);}
+   for(const side of [-1,1]){
+    if(kind==='bentley'||kind==='cab'){for(const off of (kind==='cab'?[0]:[0,.17])){const p=P(side*(W*.37-off),fy*.77,z-.04);ctx.fillStyle=night?'#fffbd3':'#dce9e9';ctx.beginPath();ctx.ellipse(p[0],p[1],.075*scale,.075*scale,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle=chrome;ctx.lineWidth=.014*scale;ctx.stroke();}}
+    else {
+     const swept=['maybach','saloon','hatch','suv','police','yellowcab'].includes(kind),inner=W*.28,outer=W*.43,yy=fy*.78;
+     poly([[side*inner,yy-.055,z-.035],[side*outer,yy-.045,z-.035],[side*(outer+.012),yy+.075,z-.035],[side*(inner+(swept?.07:0)),yy+.075,z-.035]],'#141f27','#879b9c',.012);
+     const count=lux||kind==='santana'?2:1;
+     for(let j=0;j<count;j++){const xx=side*(inner+.07+j*.10),p=P(xx,yy+.015,z-.045);ctx.fillStyle=night?'#fff8d1':'#d1e4e8';ctx.beginPath();ctx.ellipse(p[0],p[1],.038*scale,.041*scale,0,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#8fa2aa';ctx.lineWidth=.009*scale;ctx.stroke();}
+     line([[side*(inner+.025),yy+.075,z-.04],[side*outer,yy+.075,z-.04],[side*(outer+.01),yy+.015,z-.04]],'#f1f3d7',.018);
+     if(kind==='cullinan')line([[side*outer,yy+.075,z-.05],[side*outer,yy-.13,z-.05]],'#f7f4d7',.022);
+     if(['crown','santana','yellowcab'].includes(kind))panel(side*(outer-.025),yy-.04,z-.045,side*(outer+.008),yy+.065,z-.045,'#c89433');
+    }
+   }
+  }else{
+   for(const side of [-1,1]){const vertical=['cab','cullinan','van','hiace','range','raptor','hilux'].includes(kind);panel(side*W*.33,vertical?fy*.31:fy*.72,z-.035,side*W*.43,fy*.9,z-.035,car.brake?'#ff492e':'#a31b20');if(!vertical)line([[side*W*.29,fy*.83,z-.04],[side*W*.43,fy*.83,z-.04]],'#f46d61',.026);}
+   line([[-W*.35,fy*.55,z-.02],[W*.35,fy*.55,z-.02]],chrome,.018);
+   if(kind==='range')panel(-W*.44,fy*.91,z-.02,W*.44,fy*1.02,z-.02,'#10171a');
+   for(const side of [-1,1])panel(side*W*.26,low+.025,z-.03,side*W*.33,low+.08,z-.03,'#111518');
+  }
+  // Bumpers, registration plate, seams, mirrors, visible tyre clearance.
+  line([[-W*.43,low+.025,z],[W*.43,low+.025,z]],van||rally?'#30383c':chrome,rally?.085:.025);
+  panel(-.19,low+.08,z-.05,.19,low+.17,z-.05,front?'#eeefe6':'#e4c85b');
+  for(let i=0;i<6;i++)line([[-.145+i*.054,low+.095,z-.06],[-.145+i*.054,low+.15,z-.06]],'#263136',.012);
+  for(const side of [-1,1]){poly([[side*W*.47,belt+.20,roofStart+.16],[side*W*.61,belt+.20,roofStart+.16],[side*W*.62,belt+.30,roofStart+.20],[side*W*.48,belt+.32,roofStart+.21]],body,'#18262b');}
+  if(['cab','yellowcab','crown'].includes(kind)){panel(-.19,H+.025,roofStart+.60,.19,H+.13,roofStart+.60,kind==='yellowcab'?'#151c23':'#eccc62');const p=P(0,H+.08,roofStart+.59);ctx.font=`bold ${Math.max(3,.07*scale)}px sans-serif`;ctx.fillStyle=kind==='yellowcab'?'#eecb39':'#101718';ctx.textAlign='center';ctx.fillText('TAXI',p[0],p[1]);}
+  if(bus){
+   // Separate upper/lower glazing and destination blinds for the double-decker.
+   if(kind==='ddbus'){
+    const side=nearSide;
+    for(let j=0;j<6;j++){const za=roofStart+.35+j*(roofEnd-roofStart-.7)/6,zb=za+(roofEnd-roofStart-.7)/6-.10;
+     poly([[side*W*.503,H*.29,za],[side*W*.503,H*.29,zb],[side*W*.503,H*.46,zb],[side*W*.503,H*.46,za]],glass,'#bcc7c84a');
+    }
+    const atY=(y,z0)=>[side*(baseW+(roofW-baseW)*(y-belt)/(H-belt)+.006),y,z0];
+    poly([atY(H*.48,roofStart+.1),atY(H*.48,roofEnd-.1),atY(H*.60,roofEnd-.1),atY(H*.60,roofStart+.1)],body);
+    panel(-W*.43,H*.59,z-.03,W*.43,H*.87,z-.03,glass);panel(-W*.43,H*.29,z-.03,W*.43,H*.51,z-.03,glass);line([[0,H*.59,z-.04],[0,H*.87,z-.04]],body,.06);}
+   else panel(-W*.43,H*.50,z-.03,W*.43,H*.85,z-.03,glass);
+   panel(-W*.38,H*.89,z-.03,W*.38,H*.96,z-.03,'#152123');const p=P(0,H*.905,z-.04);ctx.fillStyle='#e9d98d';ctx.font=`${Math.max(3,.13*scale)}px monospace`;ctx.textAlign='center';ctx.fillText(kind==='ddbus'?'11  VICTORIA':kind==='toeibus'?'都営バス':'CITY',p[0],p[1]);
+   for(let i=0;i<6;i++)line([[-W*.28,H*.17+i*.022,z-.04],[W*.28,H*.17+i*.022,z-.04]],'#212c30',.013);
+   if(kind==='toeibus')panel(-W*.47,H*.33,z-.045,W*.47,H*.41,z-.045,'#267ebb');
+  }
+  if(van&&!front){for(const side of [-1,1]){line([[side*.02,low+.10,z-.04],[side*.02,H-.10,z-.04]],'#25303b',.015);line([[side*W*.38,H*.35,z-.04],[side*W*.38,H*.82,z-.04]],chrome,.015);}}
+  if(kind==='truck'&&!front){panel(-W*.48,low+.05,z-.04,W*.48,H-.05,z-.04,'#c1c7c5');for(let i=0;i<14;i++)line([[-W*.46,.45+i*.19,z-.06],[W*.46,.45+i*.19,z-.06]],'#737e82',.013);line([[0,.4,z-.08],[0,H-.15,z-.08]],chrome,.032);}
+  if(kind==='keitruck'&&!front){panel(-W*.46,low+.05,z-.08,W*.46,H*.5,z-.08,'#e0e4df');for(let i=0;i<3;i++)line([[-W*.4,low+.14+i*.10,z-.09],[W*.4,low+.14+i*.10,z-.09]],'#83908d',.012);}
+  if(rally){for(const side of [-1,1]){line([[side*W*.48,.45,z+.13],[side*W*.48,.65,z-.03],[side*W*.35,.81,z-.04]],'#232d31',.08);panel(side*.13,low+.1,z-.09,side*.19,low+.23,z-.09,'#ea4731');}panel(-W*.18,fy*.75,z-.06,W*.18,fy*.90,z-.06,car.stripe||'#d8cd35');if(!front){for(const side of [-1,1]){const p=P(side*.35,.95,faceZ+.4);ctx.strokeStyle='#181e21';ctx.lineWidth=.18*scale;ctx.beginPath();ctx.ellipse(p[0],p[1],.25*scale,.30*scale,0,0,Math.PI*2);ctx.stroke();}}}
+  if(kind==='police'){
+   for(let i=0;i<8;i++)panel(-W*.43+i*W*.107,H*.30,z-.075,-W*.43+(i+1)*W*.107,H*.45,z-.075,i%2?'#17569f':'#d5e83c');
+   panel(-.5,H+.035,roofStart+.68,.5,H+.13,roofStart+.68,'#283339');
+   for(const side of [-1,1]){const p=P(side*.35,H+.115,roofStart+.65),on=(Math.floor(time*9)%2===(side<0?0:1));ctx.fillStyle=on?'#62bdff':'#123575';ctx.fillRect(p[0]-.12*scale,p[1]-.045*scale,.24*scale,.09*scale);if(on){const g=ctx.createRadialGradient(p[0],p[1],0,p[0],p[1],.45*scale);g.addColorStop(0,'#55aaff9c');g.addColorStop(1,'#55aaff00');ctx.fillStyle=g;ctx.fillRect(p[0]-.45*scale,p[1]-.45*scale,.9*scale,.9*scale);}}
+  }
+  ctx.restore();
+ },function drawLondonMap(g,{network:n,state:s,width:w,height:h,preset=2,zoom=1,centre=null,bearing:forcedBearing}){
+  const C=(x,a,b)=>Math.max(a,Math.min(b,x)),TAU=Math.PI*2,angle=x=>Math.atan2(Math.sin(x),Math.cos(x)),player=n.playerPoint(),nav=n.navigation(),points=n.plannedPoints(),next=nav?.turns[0];
+  const top=nav?(h<160?36:52):0,bottom=nav?(h<180?22:34):20,rail=nav?20:0,W=w-rail,H=Math.max(30,h-top-bottom),bearing=forcedBearing??((nav||preset===2)?player.psi:0),cs=Math.cos(bearing),sn=Math.sin(bearing);
+  const coords=p=>({x:p.x*cs-p.z*sn,z:p.x*sn+p.z*cs});let cx,cz,fit;
+  if(preset===1){const list=(nav&&points.length?points:n.roads.flatMap(r=>[{x:r.A.e*1000,z:r.A.n*1000},{x:r.B.e*1000,z:r.B.n*1000}])).map(coords),xs=list.map(p=>p.x),zs=list.map(p=>p.z),x=(Math.min(...xs)+Math.max(...xs))/2,z=(Math.min(...zs)+Math.max(...zs))/2;cx=x*cs+z*sn;cz=-x*sn+z*cs;fit=Math.min((W-35)/Math.max(100,Math.max(...xs)-Math.min(...xs)),(H-25)/Math.max(100,Math.max(...zs)-Math.min(...zs)));}
+  else {fit=Math.min(W,H)/(nav&&next?.distance<150?210:300);cx=player.x;cz=player.z;}
+  const scale=C(fit*zoom,.001,16),ox=W/2,oy=top+H*(preset===2?.73:.5);if(centre){cx=centre.x;cz=centre.z;}
+  const P=p=>{const dx=p.x-cx,dz=p.z-cz;return{x:ox+(dx*cs-dz*sn)*scale,y:oy-(dx*sn+dz*cs)*scale};};
+  const U=(x,y)=>{const dx=(x-ox)/scale,dz=(oy-y)/scale;return{x:cx+dx*cs+dz*sn,z:cz-dx*sn+dz*cs};};
+  const visible=(p,r=0)=>{const q=P(p);return q.x>-r&&q.x<W+r&&q.y>top-r&&q.y<top+H+r;};
+  const path=(list,close=false)=>{g.beginPath();list.forEach((p,i)=>{const a=P(p);i?g.lineTo(a.x,a.y):g.moveTo(a.x,a.y);});if(close)g.closePath();};
+  g.clearRect(0,0,w,h);g.fillStyle='#f1eee7';g.fillRect(0,0,w,h);g.save();g.beginPath();g.rect(0,top,W,H);g.clip();
+  let buildingCount=0,parkCount=0;
+  for(const ground of n.grounds){path(ground.points,true);g.fillStyle=ground.color==='#6e8658'?'#c9dfbd':'#a6d4e6';g.fill();parkCount++;}
+  if(scale>.035)for(const b of n.buildings){if(!visible(b,(b.radius+20)*scale))continue;const B=(x,z)=>({x:b.x+b.cs*x+b.sn*z,z:b.z-b.sn*x+b.cs*z}),poly=[B(-b.w/2,-b.depth/2),B(b.w/2,-b.depth/2),B(b.w/2,b.depth/2),B(-b.w/2,b.depth/2)];g.save();g.translate(1,1.4);path(poly,true);g.fillStyle='#b9b4aa65';g.fill();g.restore();path(poly,true);g.fillStyle=b.kind==='citylondon'?'#d8dde0':b.tower?'#d1c2a8':'#ded9d0';g.fill();g.strokeStyle='#c5beb2';g.lineWidth=.65;g.stroke();buildingCount++;}
+  g.lineCap='round';g.lineJoin='round';
+  const roads=n.roads.filter(r=>{const a=P({x:r.A.e*1000,z:r.A.n*1000}),b=P({x:r.B.e*1000,z:r.B.n*1000});return Math.max(a.x,b.x)>-20&&Math.min(a.x,b.x)<W+20&&Math.max(a.y,b.y)>top-20&&Math.min(a.y,b.y)<top+H+20;});
+  for(const border of [true,false])for(const r of roads){path([{x:r.A.e*1000,z:r.A.n*1000},{x:r.B.e*1000,z:r.B.n*1000}]);g.lineWidth=Math.max(border?3:1.5,n.width(r)*scale+(border?2:0));g.strokeStyle=border?'#c5c0b5':r.w>=14?'#fff3c2':'#fffefa';g.stroke();}
+  if(nav&&points.length){path(points);g.strokeStyle='#fff';g.lineWidth=8;g.stroke();g.strokeStyle='#438fe0';g.lineWidth=5;g.stroke();g.strokeStyle='#116cd4';g.lineWidth=1.3;g.stroke();}
+  const occupied=[];
+  function label(text,p,color='#62696a',size=10,rotate=0){const a=P(p),width=Math.min(150,g.measureText(text).width+8),height=size+5;if(a.x<20||a.x>W-20||a.y<top+10||a.y>top+H-12||occupied.some(b=>Math.abs(b.x-a.x)<(b.w+width)*.48&&Math.abs(b.y-a.y)<height))return;occupied.push({x:a.x,y:a.y,w:width});g.save();g.translate(a.x,a.y);g.rotate(rotate);g.font=`500 ${size}px system-ui`;g.textAlign='center';g.textBaseline='middle';g.strokeStyle='#f8f6ef';g.lineWidth=3;g.strokeText(text,0,0,150);g.fillStyle=color;g.fillText(text,0,0,150);g.restore();}
+  if(scale>.055)for(const r of roads){const ax=r.A.e*1000,az=r.A.n*1000,dx=(r.B.e-r.A.e)*1000,dz=(r.B.n-r.A.n)*1000,u=C(((cx-ax)*dx+(cz-az)*dz)/(r.len*r.len),.12,.88),turn=angle(Math.PI/2-r.brg+bearing),rotation=Math.abs(turn)>Math.PI/2?angle(turn+Math.PI):turn;label(r.name.replace(/ \(.*\)$/,''),{x:ax+dx*u,z:az+dz*u},'#6b6f6a',w<450?9:11,rotation);}
+  const pins=[];for(const p of n.locations){const a=P(p);pins.push({id:p.id,x:a.x,y:a.y});if(!visible(p,8))continue;const selected=p.id===n.destinationPoint?.id;g.fillStyle=selected?'#da554d':/Park|Gardens|Common/.test(p.name)?'#5b8b55':'#8d7b9d';g.strokeStyle='#fff';g.lineWidth=1.5;g.beginPath();g.arc(a.x,a.y,selected?5:2.5,0,TAU);g.fill();g.stroke();if(scale>.025||selected)label(p.name.replace(' · Sherlock Holmes Museum',''),{x:p.x,z:p.z+12/scale},selected?'#a73f37':'#66645e',selected?11:10);}
+  const markers=[];for(const car of n.policePoses()){const p=P(car);if(!visible(car,10))continue;g.fillStyle='#1764ba';g.strokeStyle='#fff';g.lineWidth=1.4;g.beginPath();g.roundRect(p.x-6,p.y-6,12,12,3);g.fill();g.stroke();g.fillStyle='#fff';g.font='bold 9px system-ui';g.textAlign='center';g.fillText('P',p.x,p.y+3);markers.push({...p,name:car.name||'Police',kind:'police',worldX:car.x,worldZ:car.z});}
+  const own=P(player);g.save();g.translate(own.x,own.y);g.rotate(player.psi-bearing);g.fillStyle='#2c8ef02d';g.beginPath();g.arc(0,0,16,0,TAU);g.fill();g.beginPath();g.moveTo(0,-10);g.lineTo(7,7);g.lineTo(0,3);g.lineTo(-7,7);g.closePath();g.fillStyle='#197ce0';g.fill();g.strokeStyle='#fff';g.lineWidth=2;g.stroke();g.restore();
+  // A compass remains useful while the map follows the car's heading.
+  g.save();g.translate(W-16,top+16);g.fillStyle='#fffef8';g.beginPath();g.arc(0,0,11,0,TAU);g.fill();g.rotate(-bearing);g.fillStyle='#bc5749';g.beginPath();g.moveTo(0,-8);g.lineTo(3,4);g.lineTo(0,1);g.lineTo(-3,4);g.fill();g.restore();g.restore();
+  const metres=d=>d>=1000?(d/1000).toFixed(d<10000?1:0)+' km':Math.round(Math.max(0,d)/5)*5+' m';
+  if(nav){
+   g.fillStyle='#163d40';g.fillRect(0,0,w,top);g.fillStyle='#fff';g.textAlign='left';g.textBaseline='alphabetic';g.font='bold '+(h<160?11:13)+'px system-ui';g.fillText(nav.arrived?'Arrived at your destination':metres(next.distance)+' · '+next.action,12,top<40?15:20,w-83);g.fillStyle='#cfe2db';g.font='10px system-ui';g.fillText(nav.arrived?nav.destination:next.road,12,top<40?29:37,w-83);
+   // Junction preview uses the actual turn angle and points into the next road.
+   const x=w-42,y=top-8,turn=next?.angle||0,dx=Math.sin(turn)*19,dy=-Math.cos(turn)*19;g.lineCap='round';g.lineJoin='round';g.strokeStyle='#73958d';g.lineWidth=4;g.beginPath();g.moveTo(x-25,y-16);g.lineTo(x+25,y-16);g.moveTo(x,y);g.lineTo(x,y-32);g.stroke();g.strokeStyle='#83d4ff';g.lineWidth=4;g.beginPath();g.moveTo(x,y);g.lineTo(x,y-15);g.lineTo(x+dx,y-15+dy);g.stroke();const aa=Math.atan2(dy,dx);g.beginPath();g.moveTo(x+dx-7*Math.cos(aa-.55),y-15+dy-7*Math.sin(aa-.55));g.lineTo(x+dx,y-15+dy);g.lineTo(x+dx-7*Math.cos(aa+.55),y-15+dy-7*Math.sin(aa+.55));g.stroke();
+   g.fillStyle='#f9faf6';g.fillRect(W,top,rail,H);g.strokeStyle='#d4dedb';g.lineWidth=4;g.beginPath();g.moveTo(W+rail/2,top+12);g.lineTo(W+rail/2,top+H-12);g.stroke();g.strokeStyle='#2384d9';g.beginPath();g.moveTo(W+rail/2,top+12);g.lineTo(W+rail/2,top+12+(H-24)*nav.progress);g.stroke();g.fillStyle='#1873bf';g.beginPath();g.arc(W+rail/2,top+12+(H-24)*nav.progress,4,0,TAU);g.fill();g.fillStyle='#576968';g.font='8px system-ui';g.textAlign='center';g.fillText('●',W+rail/2,top+H-2);
+   g.fillStyle='#fffef9';g.fillRect(0,h-bottom,w,bottom);g.textAlign='left';g.font='bold 11px system-ui';g.fillStyle='#246d50';g.fillText(nav.arrived?'Destination reached':metres(nav.remaining)+' remaining · '+Math.max(1,Math.round(nav.etaSeconds/60))+' min',9,h-bottom+14,w-18);
+   if(bottom>25&&nav.turns[1]){g.font='9px system-ui';g.fillStyle='#697477';g.fillText('Then '+metres(nav.turns[1].distance)+' · '+nav.turns[1].action+' · '+nav.turns[1].road,9,h-5,w-18);}
+  }else {g.fillStyle='#fffef7e8';g.fillRect(0,h-bottom,w,bottom);g.fillStyle='#607271';g.font='10px system-ui';g.textAlign='left';g.fillText('London · free exploration',8,h-6);}
+  const scaleM=10**Math.floor(Math.log10(45/scale)),bar=scaleM*scale;g.strokeStyle='#50666d';g.lineWidth=1.5;g.beginPath();g.moveTo(8,top+H-9);g.lineTo(8+bar,top+H-9);g.stroke();g.font='8px system-ui';g.fillStyle='#3b535a';g.textAlign='left';g.fillText(scaleM>=1000?(scaleM/1000)+' km':scaleM+' m',8,top+H-13);
+  return {project:P,unproject:U,pins,fit,scale,cx,cz,w,h,bearing,ox,oy,buildingCount,parkCount,navigation:nav,markers,player:{...own,worldX:player.x,worldZ:player.z},policeCount:markers.length};
+ });
 </script>
 <!-- /* MUCS controls 2026-10 */ --></body>
 </html>

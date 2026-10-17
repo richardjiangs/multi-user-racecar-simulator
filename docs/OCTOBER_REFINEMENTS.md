@@ -182,3 +182,58 @@ Mouse-wheel, touch pinch, one-finger dragging, and tap-to-switch checks cover
 modern, historical and F1 cars. The repeated factory suite still matches the
 baseline report byte-for-byte (SHA-256 recorded above); its 59 existing target
 failures remain unchanged.
+
+## London guidance and sedan access — 17 October 2026
+
+London is now available in the Tesla Model S Plaid, Porsche Taycan Turbo GT,
+BMW M5, Mitsubishi Lancer Evolution X and Jaguar XE SV Project 8, alongside the
+existing Phantom and Spectre. Both garage track settings support it. The city
+adapter uses each car's existing powertrain and controls; leaving London restores
+its circuit environment and navigation display. The Evo gains the full city GPS
+while in London and returns to its historical-car map options elsewhere.
+
+A selected destination no longer takes precedence over manual junction input.
+The chosen road remains latched after the steering input is released. Changing a
+turn inside the junction reprojects the car onto the new curve while preserving
+its world position and yaw. The route planner recalculates from the road actually
+entered, including when an address has been passed. Clearing the destination
+leaves free city driving available. Assist and chauffeur guidance may follow the
+suggested route, with manual steering able to override the choice.
+
+The London navigation display uses filled street widths, building footprints,
+parks, water, street names and destination pins from the same authored world as
+the driving view. It follows heading during navigation, shows an upcoming junction
+preview and distance instructions, the following maneuver, remaining distance and
+an estimated travel time, and journey progress along the right edge. The ETA is a
+simple simulated urban-speed estimate; it is not live traffic data. Map and AR
+share the same planned route. Only police positions appear on London maps;
+ordinary cars remain visible in the driving world. Circuit and Dakar maps retain
+their normal vehicle markers. The grey map stays draggable and gesture-zoomable.
+
+This is a self-contained offline street map, not Google Maps or a new geographic
+survey. It retains the existing 174-road London graph and authored frontage
+positions. No external tiles, geocoding, or map service is required.
+
+Validation adds `tests/refinements/london-guidance.mjs`: the seven cars in both
+track settings, destination clearing, manual missed turns, rerouting, junction
+position/yaw continuity, route endpoints, progress, heading, police-only markers,
+AR route revisions, actual physics stepping, responsive displays and leaving
+London. Offline tests include London on the Model S and Evo. The original London
+geometry/traffic tests, all-car GPS suite, controls suite, original-file checks
+and factory performance comparison remain part of this release verification.
+
+The final junction sweep (`tests/refinements/london-late-turns.mjs`) covers 2,720
+late-input scenarios across every legal incoming road direction, including 1,740
+changed exits. It checks repeated choice stability and continuity through the
+edge transition. Reprojection searches both halves of the junction with a bounded
+closest-point calculation, avoiding overshoot on sharp bends. Turn selection uses
+the car's world heading so changing the path coordinates cannot change the chosen
+exit again. The largest measured movement was 0.000022 m, with no unstable choices.
+`london-transition.mjs` additionally verifies both U-turn directions and the
+Dakar → London → Monaco environment/map transition.
+
+Release checks passed: 14 London car/version combinations, all 128 garage GPS
+combinations, all 64 browser startup/physics checks and online race controls,
+26 offline mode/car checks, eight controls checks, and mouse/touch map gestures.
+All 64 archived simulators remain byte-identical. Factory performance output
+matches the recorded baseline hash, including the same 59 pre-existing failures.

@@ -7,7 +7,7 @@
   const eligible = key => !(key.startsWith('f1') && key !== 'f12tdf') && !historical.has(key);
   // Expose renderer geometry in the loaded copy only. Original downloads stay intact.
   function prepare(html, key) {
-    if (!eligible(key)) return html;
+    if (!eligible(key) && key !== 'evo') return html;
     // A map gesture must not steer the car while trackpad steering is active.
     html=html.replace('if (!state.trackpadSteering || e.ctrlKey) return;', 'if (e.target?.closest?.("#gpsUnit") || !state.trackpadSteering || e.ctrlKey) return;');
     html=html.replace('if (!state.trackpadSteering || event.ctrlKey || isTypingTarget(event)) return;', 'if (event.target?.closest?.("#gpsUnit") || !state.trackpadSteering || event.ctrlKey || isTypingTarget(event)) return;');
@@ -18,7 +18,7 @@
     if(html.includes('function buildVisibleCars(mirror=false)')) {
       const marker='    if(state.learnMode&&!mirror){';
       if(!html.includes(marker))throw Error('GPS depth renderer bridge missing for '+key);
-      html=html.replace(marker,`    if(app.gps?.mode==='ar'&&!mirror){
+      html=html.replace(marker,`    if(app.gps?.mode==='ar'&&!mirror&&!state.ldn){
         const t=app.trackModel(),max=t.closed===false?Math.min(95,t.L-state.distanceM):95;let count=0;
         for(let off=5;off<max;off+=7){const d=state.distanceM+off,n=state.inPitLane?0:app.clamp(app.racingOffset(d),-app.halfWidthAt(d)+1.4,app.halfWidthAt(d)-1.4);
           const P=(ahead,lat)=>state.inPitLane?app.pitSurface((state.pitQ||0)+off+ahead,lat,.06):trackPoint(d+ahead,lat,.06),C=[90,216,250];
@@ -32,7 +32,8 @@
   }
   function install(win, app, key) {
     if (app.gps) return;
-    const fullGPS=eligible(key),modes=fullGPS?["off","mirror","ar","dashboard","line"]:["off","line"],modePref=fullGPS?"mucs-gps-mode":"mucs-outline-mode";
+    const fullGPS=eligible(key),baseModes=fullGPS?["off","mirror","ar","dashboard","line"]:["off","line"],modePref=fullGPS?"mucs-gps-mode":"mucs-outline-mode";
+    let modes=baseModes,cityMode=false,previousMode=null,previousPreset=1;
     const doc=win.document, state=app.state, clamp=(v,a,b)=>Math.max(a,Math.min(b,v)), wrap=(d,L)=>(d%L+L)%L;
     const TAU=Math.PI*2, angle=a=>Math.atan2(Math.sin(a),Math.cos(a));
     const getPref=(k,f)=>{try{return win.localStorage.getItem(k)||f;}catch{return f;}};
@@ -70,8 +71,8 @@
     const select=make('select',{id:'gpsMode',title:'Navigation display'},controls);select.setAttribute('aria-label','GPS display mode');
     for(const [value,label] of [['off','Off'],['mirror','Rear-view mirror'],['ar','AR · on the road'],['dashboard','Dashboard'],['line','Track outline']])if(modes.includes(value))make('option',{value,textContent:label},select);
     let destinationSelect=null;
-    if(app.cityNetwork){destinationSelect=make('select',{id:'gpsDestination',title:'Choose a London destination'},controls);destinationSelect.setAttribute('aria-label','London destination');make('option',{value:'',textContent:'London destination…'},destinationSelect);for(const p of app.cityNetwork.locations.slice().sort((a,b)=>a.name.localeCompare(b.name)))make('option',{value:p.id,textContent:p.name},destinationSelect);destinationSelect.onchange=()=>chooseDestination(destinationSelect.value);}
-    function chooseDestination(id){if(!app.cityNetwork?.destination(id))return;destinationSelect.value=id;signature='';lastMap=-Infinity;return true;}
+    if(app.cityNetwork){destinationSelect=make('select',{id:'gpsDestination',title:'Choose a London destination'},controls);destinationSelect.setAttribute('aria-label','London destination');make('option',{value:'',textContent:'No destination · explore London'},destinationSelect);for(const p of app.cityNetwork.locations.slice().sort((a,b)=>a.name.localeCompare(b.name)))make('option',{value:p.id,textContent:p.name},destinationSelect);destinationSelect.onchange=()=>chooseDestination(destinationSelect.value);}
+    function chooseDestination(id){if(!app.cityNetwork?.destination(id))return;destinationSelect.value=id;syncCity();if(id)setPreset(2);signature='';lastMap=-Infinity;return true;}
     const unit=make('section',{id:'gpsUnit'},doc.body);unit.setAttribute('aria-label','Live GPS navigation');
     const title=make('div',{id:'gpsTitle'},unit),canvas=make('canvas',{id:'gpsViewport',tabIndex:0},unit);canvas.setAttribute('role','button');canvas.setAttribute('aria-label','Track map: tap to switch whole route and road views; scroll or pinch to zoom');
     const footer=make('div',{id:'gpsFooter'},unit),toggle=make('button',{id:'gpsPreset',type:'button'},footer),scaleLabel=make('span',{id:'gpsScale'},footer);
@@ -81,7 +82,16 @@
     const rear=make('div',{id:'gpsRear'},unit);make('span',{textContent:'LIVE REAR'},rear);
     const ar=make('canvas',{id:'gpsAR'},doc.body),g=canvas.getContext('2d'),ag=ar.getContext('2d');
     const gps=app.gps={mode,preset,renderingRear:false,setMode,setPreset,chooseDestination,zoom:zoomBy,render:renderNow,inspect:()=>snapshot};
-    function setMode(value){if(!modes.includes(value))return;mode=value;gps.mode=value;snapshot.mode=value;select.value=value;save(modePref,value);lastLayout='';lastMap=-Infinity;unit.dataset.mode=value;unit.hidden=value==='off';rear.hidden=value!=='mirror';ar.hidden=value!=='ar';if(value!=='ar')ag.clearRect(0,0,ar.width,ar.height);}
+    function setMode(value){if(!modes.includes(value))return;mode=value;gps.mode=value;snapshot.mode=value;select.value=value;save(cityMode?'mucs-london-gps-mode':modePref,value);lastLayout='';lastMap=-Infinity;unit.dataset.mode=value;unit.hidden=value==='off';rear.hidden=value!=='mirror';ar.hidden=value!=='ar';if(value!=='ar')ag.clearRect(0,0,ar.width,ar.height);}
+    function syncCity(){
+      const active=!!state.ldn;if(destinationSelect)destinationSelect.hidden=!active;
+      if(active===cityMode)return;
+      cityMode=active;modes=active?["off","mirror","ar","dashboard","line"]:baseModes;
+      select.replaceChildren();for(const [value,label] of [['off','Off'],['mirror','Rear-view mirror'],['ar','AR · on the road'],['dashboard','Dashboard'],['line','Track outline']])if(modes.includes(value))make('option',{value,textContent:label},select);
+      if(active){previousMode=mode;previousPreset=preset;setMode('dashboard');setPreset(2);}
+      else{setMode(modes.includes(previousMode)?previousMode:baseModes[1]);setPreset(previousPreset);}
+      signature='';lastLayout='';lastMap=-Infinity;
+    }
     function setPreset(value){preset=value===2?2:1;gps.preset=preset;zooms[preset]=1;save('mucs-gps-preset',String(preset));lastMap=-Infinity;}
     function zoomBy(factor){zooms[preset]=clamp(zooms[preset]*factor,1/32,4096);lastMap=-Infinity;}
     select.addEventListener('change',()=>setMode(select.value));toggle.onclick=()=>setPreset(preset===1?2:1);minus.onclick=()=>zoomBy(1/1.5);plus.onclick=()=>zoomBy(1.5);
@@ -95,7 +105,7 @@
     function pickDestination(e){
       if(mode==='line'||!state.ldn||!app.cityNetwork||!transform)return false;
       const rect=canvas.getBoundingClientRect(),x=e.clientX-rect.left,y=e.clientY-rect.top,{scale,cx,cz,w,h}=transform;
-      const targets=app.cityNetwork.locations.map(p=>({p,d:Math.hypot((p.x-cx)*scale+w/2-x,h/2-(p.z-cz)*scale-y)})).sort((a,b)=>a.d-b.d);
+      const targets=(transform.pins||[]).map(pin=>({p:app.cityNetwork.locations.find(p=>p.id===pin.id),d:Math.hypot(pin.x-x,pin.y-y)})).sort((a,b)=>a.d-b.d);
       return targets[0]?.d<11?!!chooseDestination(targets[0].p.id):false;
     }
     const finite=p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.z);
@@ -134,7 +144,7 @@
     }
     function cars(){
       const all=[];
-      if(state.ldn&&app.cityNetwork){for(const c of app.cityNetwork.traffic){const p=app.cityNetwork.trafficPose(c);all.push({...p,name:c.kind,color:'#d06d35',kind:'traffic'});}if(state.raceGrid)for(const r of state.rivals||[]){if(!r.gone&&!r.out)all.push({...app.cityNetwork.actorPose(r),name:r.name,color:r.body||'#b68c64',kind:'rival'});}return all;}
+      if(state.ldn&&app.cityNetwork)return app.cityNetwork.policePoses().map(p=>({...p,name:p.name||'Police',color:'#448cd6',kind:'police'}));
       if(state.raceGrid!==false)for(const r of state.rivals||[]){if(r.gone||r.out)continue;let p=model.t?app.contactPose?.(r):null;
         if(!finite(p))p=model.t&&r.pitState?app.pitSurface(r.pitQ||0,r.lane||0):lateral(model.at(r.distM||0),r.lane||0);
         if(finite(p))all.push({...p,name:r.name||'Rival',color:r.body||'#ef8854',kind:'rival',d:r.distM});}
@@ -144,13 +154,14 @@
     }
     function layout(){
       const w=win.innerWidth,h=win.innerHeight,bar=doc.querySelector('.topbar')?.getBoundingClientRect(),bottom=doc.querySelector('.bottombar')?.getBoundingClientRect();
-      const top=Math.max(8,bar?.bottom||8),floor=Math.min(h-6,bottom?.top||h-6),key=[w,h,mode,top,floor].join('|');if(key===lastLayout)return;lastLayout=key;
+      const top=Math.max(8,bar?.bottom||8),floor=Math.min(h-6,bottom?.top||h-6),key=[w,h,mode,cityMode,top,floor].join('|');if(key===lastLayout)return;lastLayout=key;
       let W,H,x,y;
       if(mode==='line'){W=Math.min(270,w*.30);H=Math.min(215,h*.26);x=w-W-14;y=Math.max(top+12,Math.min(h*.39,floor-H-8));}
       else if(mode==='mirror'){W=Math.min(450,w*.63);H=clamp(h*.20,130,176);x=(w-W)/2;y=top+8;}
       else if(mode==='ar'){W=Math.min(275,w*.43);H=Math.min(180,h*.25);x=w-W-12;y=top+12;}
       else{W=Math.min(322,w*.30);H=Math.min(210,Math.max(145,h*.245));x=w*.64;H=Math.min(H,185);y=Math.max(h*.61,floor-H-4);if(y+H>floor)H=Math.max(108,floor-y);}
       if(w<600){W=mode==='mirror'?Math.min(w-20,355):Math.min(w*.49,260);H=mode==='mirror'?140:160;x=mode==='mirror'?(w-W)/2:w-W-8;y=mode==='mirror'?top+5:Math.max(h*.65,floor-H-5);}
+      if(cityMode&&mode!=='line'){if(mode==='dashboard'){W=Math.min(370,w*.36);H=Math.min(290,h*.34);x=w-W-12;y=floor-H-5;}else if(mode==='ar'){W=Math.min(330,w*.36);H=Math.min(250,h*.31);}else H=Math.min(230,h*.28);if(w<600){W=mode==='mirror'?w-20:Math.min(w*.54,300);H=Math.min(235,h*.32);x=mode==='mirror'?(w-W)/2:w-W-6;y=mode==='mirror'?top+5:floor-H-5;}}
       H=Math.max(105,Math.min(H,h-top-14));y=clamp(y,top+4,h-H-6);x=clamp(x,4,w-W-4);
       if(mode==='line'&&placement){x=clamp(placement.x*(w-W),4,w-W-4);y=clamp(placement.y*(h-H),4,h-H-4);}
       Object.assign(unit.style,{width:W+'px',height:H+'px',left:x+'px',top:y+'px'});
@@ -174,6 +185,11 @@
       if(now-lastMap<60)return;lastMap=now;modelForRoute();
       const w=canvas.clientWidth,h=canvas.clientHeight,dpr=Math.min(win.devicePixelRatio||1,2);if(w<10||h<10)return;
       if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}g.setTransform(dpr,0,0,dpr,0,0);
+      if(cityMode&&mode!=='line'){
+        transform=app.renderCityMap(g,w,h,{preset,zoom:zooms[preset]});const v=transform,n=v.navigation;
+        credits.hidden=true;title.textContent=n?'To '+n.destination:'London · explore freely';toggle.textContent=(preset===1?'1 · Route overview':'2 · Follow heading')+' ⇄';scaleLabel.textContent=zooms[preset]===1?'':zooms[preset].toFixed(1)+'×';
+        snapshot={mode,preset,zoom:zooms[preset],route:'London road network',lengthM:state.ldn.road.len,track2:false,scalePixelsPerM:v.scale,bearing:v.bearing,player:v.player,markers:v.markers,carCount:1+v.policeCount,policeCount:v.policeCount,buildings:v.buildingCount,mapFeatures:v.buildingCount+v.parkCount,destination:n?.destination||null,navigation:n,roadHalfWidth:app.halfWidthAt(state.distanceM),pit:false};return;
+      }
       const player=playerPoint(),all=cars(),m=model;
       const fit=Math.min((w-42)/Math.max(50,m.maxX-m.minX),(h-36)/Math.max(50,m.maxZ-m.minZ));
       const scale=clamp((preset===1?fit:Math.min(w,h)/85)*zooms[preset],fit/3,12),follow=preset===2||zooms[preset]>1.05,cx=follow?player.x:(m.minX+m.maxX)/2,cz=follow?player.z:(m.minZ+m.maxZ)/2;
@@ -258,8 +274,18 @@
       for(const p of cars()){const q=view(p);if(q){c.fillStyle=p.color;c.fillRect(q.x-q.s,q.y-q.s*1.4,q.s*2,q.s*1.4);}}
       c.restore();
     }
+    function renderCityAR(){
+      const n=app.cityNetwork,nav=n.navigation();let count=0;const samples=[];
+      if(nav&&!nav.arrived){
+        ag.save();ag.beginPath();ag.rect(win.innerWidth*.06,win.innerHeight*.20,win.innerWidth*.88,win.innerHeight*.49);ag.clip();
+        const project=(off,lat=0)=>{const p=n.guideAt(state.distanceM+off);return n.projectWorld({...lateral(p,p.lane+lat),y:.045});};
+        for(let off=Math.min(110,nav.remaining-2);off>6;off-=7){const a=project(off,-.65),b=project(off+2),c=project(off,.65);if([a,b,c].some(p=>p.fwd<.6||!Number.isFinite(p.x+p.y)))continue;
+          ag.strokeStyle='#75e7ff';ag.lineWidth=clamp(a.scale*.1,1.8,5);ag.shadowColor='#006a99';ag.shadowBlur=3;ag.beginPath();ag.moveTo(a.x,a.y);ag.lineTo(b.x,b.y);ag.lineTo(c.x,c.y);ag.stroke();count++;samples.push(n.guideAt(state.distanceM+off));
+        }ag.restore();
+      }snapshot.arChevrons=count;snapshot.arRouteRevision=nav?.revision;snapshot.arRouteSamples=samples;
+    }
     function renderAR(){
-      ag.clearRect(0,0,win.innerWidth,win.innerHeight);if(model.t&&app.gpsBridge?.arDepth){snapshot.arChevrons=gps.arRendered||0;snapshot.arDepthTested=true;return;}const bridge=app.gpsBridge||app,project=bridge.projectAhead;if(!project)return;
+      ag.clearRect(0,0,win.innerWidth,win.innerHeight);if(cityMode){renderCityAR();return;}if(model.t&&app.gpsBridge?.arDepth){snapshot.arChevrons=gps.arRendered||0;snapshot.arDepthTested=true;return;}const bridge=app.gpsBridge||app,project=bridge.projectAhead;if(!project)return;
       const m=model,limit=m.closed||m.free?95:Math.min(95,m.L-state.distanceM),guide=d=>state.inPitLane?0:clamp((m.t?app.racingOffset?.(d):null)??app.raceLineOffAt?.(d)??0,-(app.halfWidthAt?.(d)||7)+1.4,(app.halfWidthAt?.(d)||7)-1.4);
       const projectAt=(off,n)=>m.t?app.projectTrack(state.inPitLane?app.pitSurface((state.pitQ||0)+off,n,.045):app.surfacePoint(state.distanceM+off,n,.045)):project(off,n);
       ag.save();ag.beginPath();ag.rect(win.innerWidth*.10,win.innerHeight*.20,win.innerWidth*.80,win.innerHeight*.47);ag.clip();
@@ -268,6 +294,7 @@
       ag.restore();snapshot.arChevrons=count;
     }
     function renderNow(now=win.performance.now()){
+      syncCity();
       if(mode==='off'||!doc.body.classList.contains('view-drive'))return;
       layout();renderMap(now);if(mode==='mirror')renderRear();if(mode==='ar')renderAR();
     }

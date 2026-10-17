@@ -12,7 +12,7 @@ try{
   await f.selectOption('#gpsDestination','221b-baker');
   const routing=await run(a=>{a.cityNetwork.prepare();a.gps.render(performance.now()+1000);return a.cityNetwork.inspect();});assert.ok(routing.destination.includes('221B'));assert.ok(routing.routeLinks.some(n=>n.includes('Baker Street')));
   await run((a,key)=>{a.setView(key==='phantom'?'computer':'circuit');a.drawMap();},key);assert.ok(await f.locator('#cityDestination').isVisible());await f.selectOption('#cityDestination','221b-baker');
-  const pin=await run(a=>{a.drawMap();const v=a.cityNetwork.inspect().mapView,p=a.cityNetwork.locations.find(p=>p.id==='221b-baker');return{x:v.w/2+(p.x-v.cx)*v.scale,y:v.h/2-(p.z-v.cz)*v.scale};});const mapBox=await f.locator('#mapCanvas').boundingBox();await page.mouse.move(mapBox.x+pin.x,mapBox.y+pin.y);for(let i=0;i<6;i++)await page.mouse.wheel(0,-150);await page.waitForTimeout(100);assert.ok((await run(a=>a.cityNetwork.inspect().mapView.zoom))>5);await f.selectOption('#cityDestination','trafalgar');await page.mouse.click(mapBox.x+pin.x,mapBox.y+pin.y);assert.ok((await run(a=>a.cityNetwork.inspect().destination)).includes('221B'));
+  const pin=await run(a=>{a.drawMap();const p=a.cityNetwork.locations.find(p=>p.id==='221b-baker');return a.cityNetwork.mapProject(p);});const mapBox=await f.locator('#mapCanvas').boundingBox();await page.mouse.move(mapBox.x+pin.x,mapBox.y+pin.y);for(let i=0;i<6;i++)await page.mouse.wheel(0,-150);await page.waitForTimeout(100);assert.ok((await run(a=>a.cityNetwork.inspect().mapView.zoom))>5);await f.selectOption('#cityDestination','');const pinAfter=await run(a=>{a.drawMap();return a.cityNetwork.mapProject(a.cityNetwork.locations.find(p=>p.id==='221b-baker'));});await page.mouse.click(mapBox.x+pinAfter.x,mapBox.y+pinAfter.y);assert.ok((await run(a=>a.cityNetwork.inspect().destination)).includes('221B'));
 
   await run(a=>{a.setView('drive');a.gps.setMode('dashboard');});
   const geometry=await run(a=>{
@@ -32,7 +32,7 @@ try{
   for(const heading of [Math.PI/2,Math.PI]){await run((a,h)=>{a.state.headingRel=h;(a.drawWorld||a.drawCity)();},heading);}
   await run(a=>{a.gps.setMode('mirror');(a.drawWorld||a.drawCity)();});
   const arrival=await run(a=>{const s=a.state,n=a.cityNetwork;n.destination('221b-baker');a.enterLondon('baker','Baker Street (A41)');n.prepare();const p=n.destinationPoint;s.distanceM=p.d-7;s.speedMps=.2;s.headingRel=0;s.laneOffset=-2;s.chauffeur=false;s.testDriver=false;const manual=n.arrivalSpeedLimit();s.testDriver=true;const cap=n.arrivalSpeedLimit();n.step();return{manual:manual===Infinity,cap,arrived:n.inspect().arrived,stoppedTarget:n.arrivalSpeedLimit()};});assert.ok(arrival.manual);assert.ok(arrival.cap<3);assert.ok(arrival.arrived);assert.equal(arrival.stoppedTarget,0);
-  results.push({key,version,routing,geometry,renderMs:timing,arrival});console.log('PASS',key,version,geometry);await page.evaluate(()=>__mucs.backToGarage());
+  results.push({key,version,routing:{...routing,routePoints:undefined,routePointCount:routing.routePoints.length},geometry,renderMs:timing,arrival});console.log('PASS',key,version,geometry);await page.evaluate(()=>__mucs.backToGarage());
  }
  assert.deepEqual(errors,[]);fs.writeFileSync('tests/refinements/london-results.json',JSON.stringify({results,errors},null,2));
 }finally{await browser.close();}

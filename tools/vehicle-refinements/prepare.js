@@ -2,6 +2,7 @@
  function prepare(html,key){
   if(html.includes('/* MUCS vehicle refinements v1 */'))return html;
   const appName=key==='phantom'?'PhantomApp':html.match(/window\.(\w+App)\s*=\s*\{/)[1];
+  const sedan=root.MUCSLondonSedans.eligible(key);if(sedan)html=root.MUCSLondonSedans.prepare(html,key);
   const city=key==='spectre'||key==='phantom',classic=key==='db5',rallyFiles=/Dakar/.test(html);
   const helper=root.MUCSVehicleArt.drawTrafficVehicle.toString();
   function insertBeforeFunction(name,text){const mark='function '+name+'(';if(!html.includes(mark))throw Error('Missing '+key+' '+name);html=html.replace(mark,text+'\n  '+mark);}
@@ -68,7 +69,8 @@
    }\n function drawLegacyCabinFrame(w, h, pal) {`);
   }
   const runtime=root.MUCSVehicleRuntime.install.toString();
-  let extra=city?`(${root.MUCSCityNetwork.install.toString()})(app,${helper});`:'';
+  let extra=sedan?`(${root.MUCSLondonSedans.install.toString()})(app,(${root.MUCSLondonData.create.toString()})());`:'';
+  if(city||sedan)extra+=`(${root.MUCSCityNetwork.install.toString()})(app,${helper},${root.MUCSLondonMap.draw.toString()});`;
   if(classic)extra=`
     ${root.MUCSDB5Art.drawDB5Dashboard.toString()}
     const cabin=app.el.cabinArt,old=cabin.querySelector('svg');if(old)old.style.display='none';
