@@ -1,7 +1,7 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
 const require=createRequire((process.env.CODEX_NODE_MODULES||'/Users/daisy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules')+'/package.json'),{chromium}=require('playwright');
 const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/Users/daisy/Library/Caches/ms-playwright/chromium-1228/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'}),page=await browser.newPage(),errors=[],results=[];
-page.on('pageerror',e=>errors.push(e.message));await page.goto('http://127.0.0.1:8000/');await page.waitForFunction(()=>window.__mucs);
+page.on('pageerror',e=>errors.push(e.message));await page.goto(process.env.CONTROLS_URL||'http://127.0.0.1:8000/');await page.waitForFunction(()=>window.__mucs);
 try{for(const version of ['1','2'])for(const key of ['bugatti','f1mercedes','dacia','phantom']){
  await page.selectOption('#trackVersion',version);await page.evaluate(k=>__mucs.openPractice(k),key);await page.waitForFunction(()=>{const a=__mucs.getSimApp();return a?.updatePhysics&&document.querySelector('#simFrame').contentDocument.documentElement.dataset.controls;},{timeout:60000});
  const frame=page.frames().find(f=>f!==page.mainFrame());
@@ -11,7 +11,12 @@ try{for(const version of ['1','2'])for(const key of ['bugatti','f1mercedes','dac
  }
  await page.evaluate(()=>{const a=__mucs.getSimApp();a.state.started=true;a.setView('drive');a.state.assist=false;a.state.testDriver=false;a.state.speedMps=0;});
  await frame.locator('canvas').first().click({position:{x:40,y:40},delay:750,force:true});assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),false,'Long click must not activate');
- await frame.locator('body').click({position:{x:40,y:40},force:true});await page.keyboard.down('t');await page.keyboard.down('Space');await page.waitForTimeout(400);assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),false,'Too early');await page.keyboard.up('Space');await page.keyboard.up('t');await page.waitForTimeout(700);assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),false,'Released hold');
- await page.keyboard.down('t');await page.keyboard.down('Space');await page.waitForFunction(()=>__mucs.getSimApp().state.trackpadSteering,null,{polling:50,timeout:2500});assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),true,key+' full hold');await page.keyboard.up('Space');await page.keyboard.up('t');await page.keyboard.press('Escape');await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),false,key+' exit');
+ for(const order of [['t','Space'],['Space','t']]){
+  await frame.locator('body').click({position:{x:40,y:40},force:true});await page.keyboard.down(order[0]);assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),false,'Single key');
+  await page.keyboard.down(order[1]);assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),true,key+' activates immediately');
+  await page.waitForFunction(()=>!!document.fullscreenElement,null,{timeout:1500});
+  await page.keyboard.up(order[1]);await page.keyboard.up(order[0]);await page.keyboard.press('Escape');await page.waitForTimeout(100);assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),false,key+' exit');
+ }
+ const input=frame.locator('input').first();if(await input.isVisible()){await input.focus();await page.keyboard.down('t');await page.keyboard.down('Space');assert.equal(await page.evaluate(()=>__mucs.getSimApp().state.trackpadSteering),false,'Typing must not activate');await page.keyboard.up('Space');await page.keyboard.up('t');}
  results.push({version,key,passed:true});console.log(version,key,'pass');await page.evaluate(()=>__mucs.backToGarage());
 }assert.deepEqual(errors,[]);fs.writeFileSync('tests/driving/controls-results.json',JSON.stringify({results,errors},null,2));}finally{await browser.close();}

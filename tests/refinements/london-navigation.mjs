@@ -17,10 +17,12 @@ try{
   await run(a=>{a.setView('drive');a.gps.setMode('dashboard');});
   const geometry=await run(a=>{
    const n=a.cityNetwork,s=a.state,ids=n.traffic.map(c=>c.id),hash=JSON.stringify(n.primitives);s.assist=true;s.headingRel=0;s.laneOffset=-2;
-   // Every road transition shares the same position and tangent on its two sides.
+   // Cross a road's endpoint in world coordinates and reverse the same
+   // displacement. An intended turn cannot rotate or relocate the camera.
    let maxJump=0,maxYaw=0,maxReverse=0,turns=0;
-   for(let i=0;i<25;i++){n.prepare();const L=s.ldn;s.distanceM=L.road.len-.001;n.prepare();const p=n.playerPoint();s.distanceM+=.002;n.step();const q=n.playerPoint();maxJump=Math.max(maxJump,Math.hypot(q.x-p.x,q.z-p.z));maxYaw=Math.max(maxYaw,Math.abs(Math.atan2(Math.sin(q.psi-p.psi),Math.cos(q.psi-p.psi))));if(Math.abs(L.netExit.curve.turn)>.1)turns++;
-    s.distanceM=-.001;n.step();const r=n.playerPoint();maxReverse=Math.max(maxReverse,Math.hypot(r.x-p.x,r.z-p.z));s.distanceM=L.road.len+.001;n.step();
+   for(const road of n.roads.slice(0,25)){
+    s.ldn={road,dir:1,node:road.A,next:road.B};s.distanceM=road.len-.001;s.headingRel=0;s.laneOffset=-2;n.prepare();const p=n.playerPoint();s.speedMps=1;n.integrate(.002,0);n.step();const q=n.playerPoint();maxJump=Math.max(maxJump,Math.hypot(q.x-p.x,q.z-p.z));maxYaw=Math.max(maxYaw,Math.abs(Math.atan2(Math.sin(q.psi-p.psi),Math.cos(q.psi-p.psi))));turns++;
+    s.speedMps=-1;n.integrate(.002,0);n.step();const r=n.playerPoint();maxReverse=Math.max(maxReverse,Math.hypot(r.x-p.x,r.z-p.z));
    }
    // World-space velocity must point along the drawn car heading, including oncoming traffic and turns.
    let worstDot=1,maxStep=0,worst=null;for(let i=0;i<600;i++){const poses=n.traffic.map(c=>n.trafficPose(c));s.routeTime+=1/30;n.trafficStep(1/30);n.traffic.forEach((c,j)=>{const p=poses[j],q=n.trafficPose(c),dx=q.x-p.x,dz=q.z-p.z,len=Math.hypot(dx,dz);if(len>.0001){const dot=(dx*Math.sin(q.psi)+dz*Math.cos(q.psi))/len;if(dot<worstDot){worstDot=dot;worst={id:c.id,road:c.road.name,roadLength:c.road.len,width:c.road.w,d:c.d,speed:c.speed,entry:c.entry?.turn,exit:c.exit?.curve.turn,p,q};}maxStep=Math.max(maxStep,len);}});}

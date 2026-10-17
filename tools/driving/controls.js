@@ -2,24 +2,20 @@
    Track 1.0 source downloads remain archived byte-for-byte. */
 (function(root){
   function bindTrackpadSteering() {
-    const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown'),number=document.getElementById('trackpadCountdownNum');
-    let timer=null,ownFullscreen=false;
+    const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown');
+    let ownFullscreen=false;
     const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit,#mapCanvas');
-    const cancel=()=>{clearTimeout(timer);timer=null;if(countdown)countdown.hidden=true;};
+    const cancel=()=>{if(countdown)countdown.hidden=true;};
     const disable=()=>{cancel();state.trackpadSteering=false;state.touchSteer=0;state.trackpadLastInput=-99;document.documentElement.classList.remove('trackpad-steer');document.documentElement.style.setProperty('--tw-rot','0deg');if(capture)capture.hidden=true;if(ownFullscreen&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});ownFullscreen=false;};
     window.addEventListener('keydown',e=>{
       if(e.code==='Escape'){disable();return;}
-      if(e.repeat||typing(e)||timer||state.trackpadSteering)return;
+      if(e.repeat||typing(e)||state.trackpadSteering)return;
       if(!((e.code==='KeyT'&&state.keys.Space)||(e.code==='Space'&&state.keys.KeyT)))return;
-      e.preventDefault();if(number)number.textContent='1';if(countdown)countdown.hidden=false;
-      showToast('Hold T + Space for 1 second for fullscreen trackpad steering.','Controls');
-      timer=setTimeout(()=>{
-        cancel();if(!state.keys.KeyT||!state.keys.Space)return;
+      e.preventDefault();cancel();
         state.trackpadSteering=true;state.touchActive=false;state.touchSteer=0;state.trackpadLastInput=state.time;
         document.documentElement.classList.add('trackpad-steer');if(capture)capture.hidden=false;
         if(!document.fullscreenElement&&document.documentElement.requestFullscreen){ownFullscreen=true;document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{ownFullscreen=false;showToast('Trackpad steering is on; the browser blocked fullscreen.','Controls');});}
         showToast('Trackpad steering on — horizontal two-finger swipe steers. Escape exits.','Controls');
-      },1000);
     });
     window.addEventListener('keyup',e=>{if(e.code==='Space'||e.code==='KeyT')cancel();});
     window.addEventListener('blur',()=>{cancel();state.keys.KeyT=false;state.keys.Space=false;});
@@ -56,7 +52,8 @@
   }
   function pathSteer(gain, targetOffset) {`);
     }
-    html=html.replace(/Hold Space \+ T for 3 seconds/g,'Hold T + Space for 1 second').replace(/hold (?:Space \+ T|T \+ Space) for 3 seconds/gi,'hold T + Space for 1 second');
+    html=html.replace('const keyBrake = (state.keys.Space || state.keys.KeyS || state.keys.ArrowDown)', 'const keyBrake = ((state.keys.Space && !state.keys.KeyT) || state.keys.KeyS || state.keys.ArrowDown)');
+    html=html.replace(/hold (?:Space \+ T|T \+ Space) for [13] seconds?/gi,'Press T + Space');
     return html.replace('</body>','<!-- /* MUCS controls 2026-10 */ --></body>');
   }
   root.MUCSDriving={prepare};

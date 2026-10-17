@@ -4,9 +4,27 @@
   const appName=key==='phantom'?'PhantomApp':html.match(/window\.(\w+App)\s*=\s*\{/)[1];
   const sedan=root.MUCSLondonSedans.eligible(key);if(sedan)html=root.MUCSLondonSedans.prepare(html,key);
   const city=key==='spectre'||key==='phantom',classic=key==='db5',rallyFiles=/Dakar/.test(html);
+  if(city||sedan){
+   // Keep the original powertrain, pedals and steering rate. Only London's
+   // horizontal coordinates use the fixed road network instead of a race line.
+   const ds=(html.includes('let dsdt =')?'let':'const')+' dsdt = v * Math.cos(state.headingRel) / denom;';
+   if(!html.includes(ds))throw Error(key+' city motion boundary missing');
+   html=html.replace(ds,ds.split(' ')[0]+' dsdt = state.ldn && app.cityNetwork ? app.cityNetwork.integrate(dt, yawRate) : v * Math.cos(state.headingRel) / denom;');
+   const begin=html.indexOf('    state.headingRel +=',html.indexOf('function updatePhysics(dt)'));
+   const finish=html.indexOf('state.laneOffset =',begin);
+   if(begin<0||finish<0)throw Error(key+' city steering boundary missing');
+   const stop=html.indexOf(';',finish)+1;
+   html=html.slice(0,begin)+'    if(!state.ldn){\n'+html.slice(begin,stop)+'\n    }'+html.slice(stop);
+   html=html.replace('state.distanceM += dsdt * dt;','if(!state.ldn)state.distanceM += dsdt * dt;');
+   // A junction is the union of its actual road surfaces, not the width of
+   // whichever navigation leg is currently selected. Retain existing curb
+   // handling outside that surface.
+   html=html.replace('const overrun = Math.abs(state.laneOffset) - halfW;', 'const overrun = state.ldn && app.cityNetwork?.onRoad() ? 0 : Math.abs(state.laneOffset) - halfW;');
+  }
   const helper=root.MUCSVehicleArt.drawTrafficVehicle.toString();
   function insertBeforeFunction(name,text){const mark='function '+name+'(';if(!html.includes(mark))throw Error('Missing '+key+' '+name);html=html.replace(mark,text+'\n  '+mark);}
   if(city){
+   html=html.replace('function pathSteer(gain, targetOffset) {','function pathSteer(gain, targetOffset) { if(state.ldn&&app.cityNetwork)return app.cityNetwork.driverSteer(gain);');
    insertBeforeFunction('drawCityTraffic',helper+'\n'+`function drawCityTraffic(w,h,pal){
     const list=state.traffic.filter(c=>!c.hidden).map(car=>{const lateral=car.lat??car.lane*3,p=projectAhead(car.z,lateral),road=centerlineAt(car.z),yaw=road.psi+(car.oncoming?Math.PI:0)-Math.atan2(road.X-state.laneOffset,road.Z);return{car,p,yaw};}).filter(v=>v.p.fwd>1.5).sort((a,b)=>b.p.fwd-a.p.fwd);
     for(const {car,p,yaw} of list){const v=VEHICLES[car.kind]||VEHICLES.saloon;if(p.scale<.04)continue;

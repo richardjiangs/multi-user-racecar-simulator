@@ -4159,7 +4159,16 @@
   function path(r,dir,d,entry,exit){if(entry&&d<entry.R)return curve(entry,.5+.5*C(d/entry.R,0,1));if(exit&&d>r.len-exit.R)return curve(exit,.5*C((d-r.len+exit.R)/exit.R,0,1));return roadPoint(r,dir,d);}
   let nav=null,lastPlan='',routeLinks=[],routePoints=[],routeTurns=[],routeEnd=0,revision=0,recalculations=0,travelled=0,lastDistance=null;
   const signal=(node)=>{const cycle=52+node.roads.length*8,u=((s.routeTime+node.e*31+node.n*17)%cycle+cycle)%cycle;return u<cycle*.52?'green':u<cycle*.52+3.4?'amber':'red';};
-  function shortest(start,target){const dist=new Map([[start,0]]),prev=new Map(),todo=new Set(G.nodes);while(todo.size){let node=null,best=Infinity;for(const n of todo){const d=dist.get(n)??Infinity;if(d<best){best=d;node=n;}}if(!node||node===target)break;todo.delete(node);for(const l of node.roads){if((l.out>0?l.road.fwd:l.road.back)<=0)continue;const next=end(l.road,l.out),d=best+l.road.len;if(d<(dist.get(next)??Infinity)){dist.set(next,d);prev.set(next,{node,link:l});}}}if(!dist.has(target))return null;const links=[];for(let n=target;n!==start;){const p=prev.get(n);if(!p)return null;links.unshift(p.link);n=p.node;}return{links,distance:dist.get(target)};}
+  const turnCost=(r,dir,l)=>{const angle=Math.abs(A(bearing(l.road,l.out)-bearing(r,dir)));return angle>2.6?1200:angle>.55?35+angle*12:angle*8;};
+  function shortest(start,target,incoming,dir){
+   // A node alone loses the direction of arrival. Search directed road states
+   // so a short reversal is not preferred over an ordinary forward detour.
+   const first={node:start,road:incoming,dir,cost:0,distance:0,prev:null,link:null},todo=[first],best=new Map([[incoming.networkId+':'+dir,0]]);
+   while(todo.length){todo.sort((a,b)=>b.cost-a.cost);const q=todo.pop(),id=q.road.networkId+':'+q.dir;if(q.cost!==best.get(id))continue;
+    if(q.node===target){const links=[];for(let n=q;n.link;n=n.prev)links.unshift(n.link);return{links,distance:q.distance,cost:q.cost,last:q};}
+    for(const l of q.node.roads){if((l.out>0?l.road.fwd:l.road.back)<=0)continue;const id=l.road.networkId+':'+l.out,cost=q.cost+l.road.len+turnCost(q.road,q.dir,l);if(cost>=(best.get(id)??Infinity))continue;best.set(id,cost);todo.push({node:end(l.road,l.out),road:l.road,dir:l.out,cost,distance:q.distance+l.road.len,prev:q,link:l});}
+   }return null;
+  }
   const locations=G.nodes.map(n=>({id:n.id,name:n.name,node:n,...pos(n)}));
   const baker=roads.find(r=>r.name==='Baker Street (A41)');
   if(baker){const p=roadPoint(baker,1,baker.len*.66);locations.push({id:'221b-baker',name:'221B Baker Street · Sherlock Holmes Museum',node:baker.B,road:baker,d:baker.len*.66,...p});}
@@ -4171,12 +4180,12 @@
    if(addressD!==null&&addressD>=s.distanceM-12){routeLinks=[];}
    else {
     const candidates=[];
-    if(nav.road){for(const node of [nav.road.A,nav.road.B]){const q=shortest(L.next,node);if(q)candidates.push({...q,node,tail:node===nav.road.A?nav.d:nav.road.len-nav.d});}}
-    else {const q=shortest(L.next,nav.node);if(q)candidates.push({...q,node:nav.node,tail:0});}
-    const best=candidates.sort((a,b)=>(a.distance+a.tail)-(b.distance+b.tail))[0];routeLinks=best?.links.slice()||[];
+    if(nav.road){for(const node of [nav.road.A,nav.road.B]){const out=node===nav.road.A?1:-1;if((out>0?nav.road.fwd:nav.road.back)<=0)continue;const q=shortest(L.next,node,L.road,L.dir);if(q)candidates.push({...q,cost:q.cost+turnCost(q.last.road,q.last.dir,{road:nav.road,out}),node,tail:out>0?nav.d:nav.road.len-nav.d});}}
+    else {const q=shortest(L.next,nav.node,L.road,L.dir);if(q)candidates.push({...q,node:nav.node,tail:0});}
+    const best=candidates.sort((a,b)=>(a.cost+a.tail)-(b.cost+b.tail))[0];routeLinks=best?.links.slice()||[];
     if(nav.road&&best&&best.tail>1)routeLinks.push({road:nav.road,out:best.node===nav.road.A?1:-1});
    }
-   const legs=[{road:L.road,out:L.dir},...routeLinks];routePoints=[];routeTurns=[];let q0=0,entry=L.netEntry;
+   const legs=[{road:L.road,out:L.dir},...routeLinks];routePoints=[];routeTurns=[];let q0=0,entry=null;
    for(let i=0;i<legs.length;i++){
     const leg=legs[i],r=leg.road,next=legs[i+1],exit=next?bend(r,leg.out,next):null;
     const finish=i===legs.length-1&&nav.road===r?(leg.out>0?nav.d:r.len-nav.d):r.len;
@@ -4193,7 +4202,7 @@
    const a=routePoints[lo],b=routePoints[hi],u=(q-a.q)/Math.max(.001,b.q-a.q);return {...a,x:a.x+(b.x-a.x)*u,z:a.z+(b.z-a.z)*u,psi:a.psi+A(b.psi-a.psi)*u,q,lane:a.lane+(b.lane-a.lane)*u};
   }
   function navigation(){
-   if(!s.ldn||!nav)return null;plan();const remaining=Math.max(0,routeEnd-s.distanceM),turns=routeTurns.filter(t=>t.q>=s.distanceM-2).map(t=>({...t,distance:Math.max(0,t.q-s.distanceM)}));
+   if(!s.ldn||!nav)return null;plan();const remaining=Math.max(0,routeEnd-s.distanceM),turns=routeTurns.filter(t=>t.q>=Math.min(s.distanceM,s.ldn.road.len)-2).map(t=>({...t,distance:Math.max(0,t.q-s.distanceM)}));
    turns.push({action:'Arrive',kind:'arrive',road:nav.name,distance:remaining});
    return {destination:nav.name,arrived:nav.arrived,remaining,etaSeconds:Math.round(remaining/8.5),progress:nav.arrived?1:travelled/Math.max(1,travelled+remaining),turns:turns.slice(0,3),revision,recalculations};
   }
@@ -4217,35 +4226,45 @@
    if(nav&&auto&&planned){const match=L.next.roads.find(l=>l.road===planned.road&&l.out===planned.out);if(match)return match;}
    return straightChoice(L.road,L.dir);
   }
-  function rebase(L,p){
-   // A late steering override can select a different exit. Preserve the car's
-   // world position and heading when changing the underlying junction curve.
-   const lower=Math.max(0,s.distanceM-80),upper=L.road.len+L.netExit.curve.R+40;
-   const error=q=>{const c=at(q);return(c.x-p.x)**2+(c.z-p.z)**2;};
-   // Include the outgoing half of the junction: a late override may already
-   // lie beyond its midpoint. A bounded minimizer cannot overshoot on tight
-   // bends or oscillate between the two sides of a hairpin.
-   const step=(upper-lower)/120;let best=Infinity,d=s.distanceM;
-   for(let i=0;i<=120;i++){const q=lower+step*i,e=error(q);if(e<best){best=e;d=q;}}
-   let lo=Math.max(lower,d-step),hi=Math.min(upper,d+step);const ratio=(Math.sqrt(5)-1)/2;
-   let x=hi-ratio*(hi-lo),y=lo+ratio*(hi-lo),ex=error(x),ey=error(y);
-   for(let i=0;i<42;i++){if(ex<ey){hi=y;y=x;ey=ex;x=hi-ratio*(hi-lo);ex=error(x);}else{lo=x;x=y;ex=ey;y=lo+ratio*(hi-lo);ey=error(y);}}
-   d=(lo+hi)/2;const c=at(d);s.distanceM=d;s.laneOffset=(p.x-c.x)*Math.cos(c.psi)-(p.z-c.z)*Math.sin(c.psi);s.headingRel=A(p.psi-c.psi);lastDistance=d;
-  }
   function prepare(){
-   const L=s.ldn;if(!L)return;const remaining=L.road.len-s.distanceM,manual=Math.abs(driverIntent())>.12;
-   if(!L.netExit||remaining>26||manual){const link=choose(L);if(link&&(L.netExit?.link.road!==link.road||L.netExit?.link.out!==link.out)){const before=L.netExit&&remaining<L.netExit.curve.R?playerPoint():null;L.netExit={link,curve:bend(L.road,L.dir,link)};if(before)rebase(L,before);}}
+   const L=s.ldn;if(!L)return;const link=choose(L);
+   if(link&&(L.netExit?.link.road!==link.road||L.netExit?.link.out!==link.out))L.netExit={link,curve:bend(L.road,L.dir,link)};
    s.ldnTurn=L.netExit?{link:L.netExit.link,turn:L.netExit.curve.turn}:null;
+  }
+  function coordinates(p,r,dir){const start=pos(dir>0?r.A:r.B),psi=bearing(r,dir),dx=p.x-start.x,dz=p.z-start.z;return{d:dx*Math.sin(psi)+dz*Math.cos(psi),n:dx*Math.cos(psi)-dz*Math.sin(psi),psi};}
+  function integrate(dt,yawRate){
+   const L=s.ldn,p=playerPoint(),speed=s.speedMps,yaw=yawRate*dt,mid=p.psi+yaw/2;
+   // Exact constant-curvature displacement, including straight and reverse
+   // motion. The car never inherits a bend merely because GPS selected it.
+   const travel=speed*dt*(Math.abs(yaw)<1e-8?1:Math.sin(yaw/2)/(yaw/2));
+   const next={x:p.x+Math.sin(mid)*travel,z:p.z+Math.cos(mid)*travel,psi:A(p.psi+yaw)};
+   let chosen={road:L.road,dir:L.dir},best=Infinity;
+   const nearEnds=[L.road.A,L.road.B].filter(n=>Math.hypot(next.x-n.e*1000,next.z-n.n*1000)<Math.max(65,width(L.road)*2));
+   const candidates=new Set([L.road,...nearEnds.flatMap(n=>n.roads.map(l=>l.road))]);
+   for(const r of candidates){const dir=r===L.road&&Math.cos(next.psi-bearing(r,L.dir))>-.35?L.dir:Math.cos(next.psi-r.brg)>=0?1:-1,c=coordinates(next,r,dir),angle=Math.abs(A(next.psi-c.psi));
+    // Stay on the incoming street until the car is physically inside the
+    // outgoing street. Lane changes and S-shaped approaches do not pick exits.
+    if(r!==L.road&&(c.d<Math.min(5,width(r)*.22)||c.d>r.len+2||Math.abs(c.n)>width(r)/2+1.2||angle>1.12))continue;
+    const score=Math.abs(c.n)/Math.max(1,width(r)/2)+Math.max(0,-c.d,c.d-r.len)*2+angle*20+(r===L.road?0:.3)-(angle<.05&&routeLinks[0]?.road===r&&routeLinks[0]?.out===dir ? .4 : 0);
+    if(score<best){best=score;chosen={road:r,dir};}
+   }
+   if(chosen.road!==L.road||chosen.dir!==L.dir){
+    if(nav&&(!routeLinks[0]||routeLinks[0].road!==chosen.road||routeLinks[0].out!==chosen.dir))recalculations++;
+    const node=chosen.dir>0?chosen.road.A:chosen.road.B;
+    s.ldn={road:chosen.road,dir:chosen.dir,node,next:end(chosen.road,chosen.dir),origin:0};lastPlan='';
+   }
+   const q=coordinates(next,chosen.road,chosen.dir);
+   s.distanceM=q.d;s.laneOffset=q.n;s.headingRel=A(next.psi-q.psi);s.offTrack=0;
+   travelled+=Math.abs(speed*dt);lastDistance=s.distanceM;prepare();
+   return speed*Math.cos(s.headingRel);
   }
   function at(d){let L=s.ldn;for(let i=0;i<20;i++){if(d<0&&L.previous){L=L.previous;d+=L.road.len;continue;}if(d>L.road.len){const exit=L.netExit||(()=>{const link=straightChoice(L.road,L.dir);return link?{link,curve:bend(L.road,L.dir,link)}:null;})();if(exit){d-=L.road.len;L={road:exit.link.road,dir:exit.link.out,netEntry:exit.curve};continue;}}return path(L.road,L.dir,d,L.netEntry,L.netExit?.curve);}return roadPoint(L.road,L.dir,d);}
   function actorPose(r){const p=right(at(r.distM),r.lane||0);return{...p,psi:p.psi+(r.contactHeading||0)};}
   function curvature(d){return s.ldn?A(at(d+.05).psi-at(d-.05).psi)/.1:null;}
-  function playerPoint(){if(!s.ldn)return null;const p=right(at(s.distanceM),s.laneOffset||0);return{...p,psi:p.psi+(s.headingRel||0)};}
-  function step(){let L=s.ldn;if(!L)return;if(lastDistance!==null)travelled+=Math.max(0,Math.min(10,s.distanceM-lastDistance));lastDistance=s.distanceM;prepare();
-   if(s.distanceM>=L.road.len&&L.netExit){const excess=s.distanceM-L.road.len,link=L.netExit.link;if(nav&&routeLinks[0]&&(routeLinks[0].road!==link.road||routeLinks[0].out!==link.out))recalculations++;for(const r of s.rivals||[])r.distM-=L.road.len;s.ldn={road:link.road,dir:link.out,node:L.next,next:end(link.road,link.out),origin:(L.origin||0)+L.road.len,netEntry:L.netExit.curve,inTurn:L.netExit.curve.turn,previous:L};s.distanceM=excess;lastDistance=excess;L=s.ldn;lastPlan='';prepare();}
-   if(s.distanceM<0){if(L.previous){const old=L.previous;s.distanceM+=old.road.len;for(const r of s.rivals||[])r.distM+=old.road.len;s.ldn=old;L=old;lastDistance=s.distanceM;lastPlan='';}else s.distanceM=0;}
-
-   s.edgeD=s.distanceM;s.route.totalM=L.road.len;s.route.remainingM=L.road.len-s.distanceM;s.route.label=L.road.name;s.route.arrived=false;
+  function playerPoint(){if(!s.ldn)return null;const p=right(roadPoint(s.ldn.road,s.ldn.dir,s.distanceM),s.laneOffset||0);return{...p,psi:p.psi+(s.headingRel||0)};}
+  function onRoad(){const p=playerPoint();return !!p&&roads.some(r=>distanceRoad(p,r)<=width(r)/2+.7);}
+  function step(){const L=s.ldn;if(!L)return;prepare();
+   s.edgeD=s.distanceM;s.route.totalM=L.road.len;s.route.remainingM=Math.max(0,L.road.len-s.distanceM);s.route.label=L.road.name;s.route.arrived=false;
    if(nav){const p=playerPoint(),near=Math.hypot(p.x-nav.x,p.z-nav.z);if(near>35&&nav.arrived){nav.arrived=false;lastPlan='';}if(near<22&&Math.abs(s.speedMps)<1.5&&!nav.arrived){nav={...nav,arrived:true};app.showToast?.('Arrived at '+nav.name,'Navigation');}}
   }
   function addRoad(r){const half=width(r)/2,N=Math.ceil(r.len/20);for(let i=0;i<N;i++){const d0=i*r.len/N,d1=(i+1)*r.len/N;for(const[H,y,col]of[[half+3,-.03,'#a9a59b'],[half,0,'#3a3f43']]){const a=roadPoint(r,1,d0),b=roadPoint(r,1,d1);primitives.push({points:[right(a,-H),right(a,H),right(b,H),right(b,-H)].map(p=>({...p,y})),color:col,road:r.networkId});}if(i%2===0){const a=roadPoint(r,1,d0+2),b=roadPoint(r,1,Math.min(d1,d0+6));primitives.push({points:[right(a,-.065),right(a,.065),right(b,.065),right(b,-.065)].map(p=>({...p,y:.012})),color:'#d9d8cd',road:r.networkId});}}
@@ -4343,7 +4362,13 @@
   }
   function projectWorld(p,w=app.canvas.ownerDocument.defaultView.innerWidth,h=app.canvas.ownerDocument.defaultView.innerHeight){const eye=playerPoint(),dx=p.x-eye.x,dz=p.z-eye.z,cs=Math.cos(eye.psi),sn=Math.sin(eye.psi),z=dx*sn+dz*cs,x=dx*cs-dz*sn,focal=app.WIDTH_SCALE?380:360,scale=focal/(z||.00001);return{x:w/2+x*scale,y:h*.46+((app.WIDTH_SCALE?1.6:1.55)-(p.y||0))*scale,scale,fwd:z};}
   function projectRelative(d,n=0){return projectWorld(right(at(s.distanceM+d),n));}
-  function driverSteer(gain=1){const look=C(Math.abs(s.speedMps)*.8,10,30),k=curvature(s.distanceM+look),err=laneOffset(s.ldn.road)-s.laneOffset,phi=C(err*.05,-.5,.5),yaw=k*s.speedMps+(phi-s.headingRel)*2.4*gain,st=app.STEERING;return C(Math.atan(yaw*st.wheelbase/Math.max(2.2,Math.abs(s.speedMps)))/(st.maxAngle*C(1.15-Math.abs(s.speedMps)*.013,.44,1)),-1,1);}
+  function driverSteer(gain=1){
+   const p=playerPoint(),look=C(Math.abs(s.speedMps)*.65,8,24),L=s.ldn;
+   const guide=nav?guideAt(s.distanceM+look):null,target=guide?right(guide,guide.lane):right(at(s.distanceM+look),laneOffset(L.road));
+   const dx=target.x-p.x,dz=target.z-p.z,angle=A(Math.atan2(dx,dz)-p.psi),st=app.STEERING;
+   const yaw=2*Math.sin(angle)/Math.max(4,Math.hypot(dx,dz));
+   return C(Math.atan(yaw*st.wheelbase*gain)/(st.maxAngle*C(1.15-Math.abs(s.speedMps)*.013,.44,1)),-1,1);
+  }
   function driverTarget(){let target=13.41;const L=s.ldn,k=Math.max(Math.abs(curvature(s.distanceM+12)),Math.abs(curvature(s.distanceM+30)));if(k>.001)target=Math.min(target,Math.sqrt(2/k));if(L.next.roads.length>=3&&signal(L.next)!=='green')target=Math.min(target,Math.sqrt(4*Math.max(0,L.road.len-s.distanceM-6)));for(const c of traffic){if(c.road!==L.road||c.dir!==L.dir)continue;const gap=c.d-s.distanceM;if(gap>0&&gap<Math.max(25,s.speedMps*2))target=Math.min(target,Math.max(0,c.speed+(gap-12)*.4));}return Math.min(target,arrivalSpeedLimit());}
   function drawRear(x,y,w,h,pal,mirror={}){if(w<1||h<1)return;const ctx=app.ctx,eye=right(playerPoint(),mirror.eye||0);ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.translate(x+w,y);ctx.scale(-1,1);ctx.fillStyle='#adc7d3';ctx.fillRect(0,0,w,h);draw(w,h,pal,{eye:{...eye,psi:eye.psi+Math.PI+(mirror.yaw||0)},focal:w*.85});ctx.restore();}
   const mapCanvas=app.el.mapCanvas,originalMap=app.drawMap;let mapHits=[],mapZoom=1,mapCentre=null,mapTransform=null,mapDrag=null;
@@ -4354,7 +4379,7 @@
    mapCanvas.addEventListener('pointermove',e=>{if(!mapDrag||!mapCanvas.hasPointerCapture(e.pointerId))return;const dx=e.clientX-mapDrag.x,dy=e.clientY-mapDrag.y;if(Math.hypot(dx,dy)>4)mapDrag.moved=true;if(mapDrag.moved){const cs=Math.cos(mapTransform.bearing),sn=Math.sin(mapTransform.bearing);mapCentre={x:mapDrag.cx-(dx*cs-dy*sn)/mapTransform.scale,z:mapDrag.cz+(dx*sn+dy*cs)/mapTransform.scale};app.drawMap();}});
    app.drawMap=function(){if(!s.ldn)return originalMap?.();const w=mapCanvas.clientWidth||300,h=mapCanvas.clientHeight||380,dpr=Math.min(2,devicePixelRatio);if(mapCanvas.width!==w*dpr||mapCanvas.height!==h*dpr){mapCanvas.width=w*dpr;mapCanvas.height=h*dpr;}const g=mapCanvas.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);mapTransform=app.renderCityMap(g,w,h,{preset:1,zoom:mapZoom,centre:mapCentre});mapHits=mapTransform.pins.map(p=>({...p,sx:p.x,sy:p.y}));};
   }
-  app.cityNetwork={prepare,step,at,curvature,playerPoint,guideAt,navigation,plannedPoints,width,grounds,trees,landmarks,policePoses,projectWorld,projectRelative,driverSteer,driverTarget,signalState:signal,drawRear,trafficStep,draw,locations,destination,trafficPose,actorPose,arrivalSpeedLimit,traffic,roads,buildings,primitives,inspect:()=>({mapView:mapTransform?Object.fromEntries(['w','h','fit','scale','cx','cz','bearing','ox','oy'].map(k=>[k,mapTransform[k]]).concat([['zoom',mapZoom]])):null,destination:nav?.name,arrived:!!nav?.arrived,routePoints,routeLinks:routeLinks.map(l=>l.road.name),roads:roads.length,buildings:buildings.length,traffic:traffic.length}),mapProject:p=>mapTransform?.project(p),get destinationPoint(){return nav;},get routePoints(){return plannedPoints();}};
+  app.cityNetwork={prepare,step,integrate,onRoad,at,curvature,playerPoint,guideAt,navigation,plannedPoints,width,grounds,trees,landmarks,policePoses,projectWorld,projectRelative,driverSteer,driverTarget,signalState:signal,drawRear,trafficStep,draw,locations,destination,trafficPose,actorPose,arrivalSpeedLimit,traffic,roads,buildings,primitives,inspect:()=>({mapView:mapTransform?Object.fromEntries(['w','h','fit','scale','cx','cz','bearing','ox','oy'].map(k=>[k,mapTransform[k]]).concat([['zoom',mapZoom]])):null,destination:nav?.name,arrived:!!nav?.arrived,routePoints,routeLinks:routeLinks.map(l=>l.road.name),roads:roads.length,buildings:buildings.length,traffic:traffic.length}),mapProject:p=>mapTransform?.project(p),get destinationPoint(){return nav;},get routePoints(){return plannedPoints();}};
   app.renderCityMap=(g,width,height,options={})=>drawLondonMap(g,{network:app.cityNetwork,state:s,width,height,...options});
   const physics=app.updatePhysics;app.updatePhysics=function(dt){if(s.ldn)prepare();return physics.call(app,dt);};
  }
@@ -4817,9 +4842,27 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
   const appName=key==='phantom'?'PhantomApp':html.match(/window\.(\w+App)\s*=\s*\{/)[1];
   const sedan=root.MUCSLondonSedans.eligible(key);if(sedan)html=root.MUCSLondonSedans.prepare(html,key);
   const city=key==='spectre'||key==='phantom',classic=key==='db5',rallyFiles=/Dakar/.test(html);
+  if(city||sedan){
+   // Keep the original powertrain, pedals and steering rate. Only London's
+   // horizontal coordinates use the fixed road network instead of a race line.
+   const ds=(html.includes('let dsdt =')?'let':'const')+' dsdt = v * Math.cos(state.headingRel) / denom;';
+   if(!html.includes(ds))throw Error(key+' city motion boundary missing');
+   html=html.replace(ds,ds.split(' ')[0]+' dsdt = state.ldn && app.cityNetwork ? app.cityNetwork.integrate(dt, yawRate) : v * Math.cos(state.headingRel) / denom;');
+   const begin=html.indexOf('    state.headingRel +=',html.indexOf('function updatePhysics(dt)'));
+   const finish=html.indexOf('state.laneOffset =',begin);
+   if(begin<0||finish<0)throw Error(key+' city steering boundary missing');
+   const stop=html.indexOf(';',finish)+1;
+   html=html.slice(0,begin)+'    if(!state.ldn){\n'+html.slice(begin,stop)+'\n    }'+html.slice(stop);
+   html=html.replace('state.distanceM += dsdt * dt;','if(!state.ldn)state.distanceM += dsdt * dt;');
+   // A junction is the union of its actual road surfaces, not the width of
+   // whichever navigation leg is currently selected. Retain existing curb
+   // handling outside that surface.
+   html=html.replace('const overrun = Math.abs(state.laneOffset) - halfW;', 'const overrun = state.ldn && app.cityNetwork?.onRoad() ? 0 : Math.abs(state.laneOffset) - halfW;');
+  }
   const helper=root.MUCSVehicleArt.drawTrafficVehicle.toString();
   function insertBeforeFunction(name,text){const mark='function '+name+'(';if(!html.includes(mark))throw Error('Missing '+key+' '+name);html=html.replace(mark,text+'\n  '+mark);}
   if(city){
+   html=html.replace('function pathSteer(gain, targetOffset) {','function pathSteer(gain, targetOffset) { if(state.ldn&&app.cityNetwork)return app.cityNetwork.driverSteer(gain);');
    insertBeforeFunction('drawCityTraffic',helper+'\n'+`function drawCityTraffic(w,h,pal){
     const list=state.traffic.filter(c=>!c.hidden).map(car=>{const lateral=car.lat??car.lane*3,p=projectAhead(car.z,lateral),road=centerlineAt(car.z),yaw=road.psi+(car.oncoming?Math.PI:0)-Math.atan2(road.X-state.laneOffset,road.Z);return{car,p,yaw};}).filter(v=>v.p.fwd>1.5).sort((a,b)=>b.p.fwd-a.p.fwd);
     for(const {car,p,yaw} of list){const v=VEHICLES[car.kind]||VEHICLES.saloon;if(p.scale<.04)continue;
@@ -4899,24 +4942,20 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
    Track 1.0 source downloads remain archived byte-for-byte. */
 (function(root){
   function bindTrackpadSteering() {
-    const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown'),number=document.getElementById('trackpadCountdownNum');
-    let timer=null,ownFullscreen=false;
+    const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown');
+    let ownFullscreen=false;
     const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit,#mapCanvas');
-    const cancel=()=>{clearTimeout(timer);timer=null;if(countdown)countdown.hidden=true;};
+    const cancel=()=>{if(countdown)countdown.hidden=true;};
     const disable=()=>{cancel();state.trackpadSteering=false;state.touchSteer=0;state.trackpadLastInput=-99;document.documentElement.classList.remove('trackpad-steer');document.documentElement.style.setProperty('--tw-rot','0deg');if(capture)capture.hidden=true;if(ownFullscreen&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});ownFullscreen=false;};
     window.addEventListener('keydown',e=>{
       if(e.code==='Escape'){disable();return;}
-      if(e.repeat||typing(e)||timer||state.trackpadSteering)return;
+      if(e.repeat||typing(e)||state.trackpadSteering)return;
       if(!((e.code==='KeyT'&&state.keys.Space)||(e.code==='Space'&&state.keys.KeyT)))return;
-      e.preventDefault();if(number)number.textContent='1';if(countdown)countdown.hidden=false;
-      showToast('Hold T + Space for 1 second for fullscreen trackpad steering.','Controls');
-      timer=setTimeout(()=>{
-        cancel();if(!state.keys.KeyT||!state.keys.Space)return;
+      e.preventDefault();cancel();
         state.trackpadSteering=true;state.touchActive=false;state.touchSteer=0;state.trackpadLastInput=state.time;
         document.documentElement.classList.add('trackpad-steer');if(capture)capture.hidden=false;
         if(!document.fullscreenElement&&document.documentElement.requestFullscreen){ownFullscreen=true;document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{ownFullscreen=false;showToast('Trackpad steering is on; the browser blocked fullscreen.','Controls');});}
         showToast('Trackpad steering on — horizontal two-finger swipe steers. Escape exits.','Controls');
-      },1000);
     });
     window.addEventListener('keyup',e=>{if(e.code==='Space'||e.code==='KeyT')cancel();});
     window.addEventListener('blur',()=>{cancel();state.keys.KeyT=false;state.keys.Space=false;});
@@ -4953,7 +4992,8 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
   }
   function pathSteer(gain, targetOffset) {`);
     }
-    html=html.replace(/Hold Space \+ T for 3 seconds/g,'Hold T + Space for 1 second').replace(/hold (?:Space \+ T|T \+ Space) for 3 seconds/gi,'hold T + Space for 1 second');
+    html=html.replace('const keyBrake = (state.keys.Space || state.keys.KeyS || state.keys.ArrowDown)', 'const keyBrake = ((state.keys.Space && !state.keys.KeyT) || state.keys.KeyS || state.keys.ArrowDown)');
+    html=html.replace(/hold (?:Space \+ T|T \+ Space) for [13] seconds?/gi,'Press T + Space');
     return html.replace('</body>','<!-- /* MUCS controls 2026-10 */ --></body>');
   }
   root.MUCSDriving={prepare};
@@ -5239,12 +5279,27 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
     }
     function renderCityAR(){
       const n=app.cityNetwork,nav=n.navigation();let count=0;const samples=[];
+      snapshot.arManeuver=null;
       if(nav&&!nav.arrived){
         ag.save();ag.beginPath();ag.rect(win.innerWidth*.06,win.innerHeight*.20,win.innerWidth*.88,win.innerHeight*.49);ag.clip();
         const project=(off,lat=0)=>{const p=n.guideAt(state.distanceM+off);return n.projectWorld({...lateral(p,p.lane+lat),y:.045});};
         for(let off=Math.min(110,nav.remaining-2);off>6;off-=7){const a=project(off,-.65),b=project(off+2),c=project(off,.65);if([a,b,c].some(p=>p.fwd<.6||!Number.isFinite(p.x+p.y)))continue;
           ag.strokeStyle='#75e7ff';ag.lineWidth=clamp(a.scale*.1,1.8,5);ag.shadowColor='#006a99';ag.shadowBlur=3;ag.beginPath();ag.moveTo(a.x,a.y);ag.lineTo(b.x,b.y);ag.lineTo(c.x,c.y);ag.stroke();count++;samples.push(n.guideAt(state.distanceM+off));
         }ag.restore();
+        const turn=nav.turns[0],warning=Math.max(110,Math.abs(state.speedMps)*9);
+        if(turn&&turn.distance<=warning){
+          const x=win.innerWidth*.5,y=win.innerHeight*.33,k=Math.min(1,win.innerWidth/650,win.innerHeight/550);
+          ag.save();ag.translate(x,y);ag.scale(k,k);ag.fillStyle='#09202bdc';ag.beginPath();ag.roundRect(-142,-58,284,116,18);ag.fill();
+          ag.strokeStyle='#91edff';ag.lineWidth=7;ag.lineCap='round';ag.lineJoin='round';ag.beginPath();
+          let ex=0,ey=-35,dx=0,dy=-1;
+          if(turn.kind==='left'||turn.kind==='right'){const side=turn.kind==='right'?1:-1;ag.moveTo(-side*15,8);ag.lineTo(-side*15,-13);ag.quadraticCurveTo(-side*15,-30,side*7,-30);ex=side*38;ey=-30;dx=side;dy=0;ag.lineTo(ex,ey);}
+          else if(turn.kind==='uturn'){ag.moveTo(-20,8);ag.lineTo(-20,-22);ag.bezierCurveTo(-20,-53,20,-53,20,-22);ex=20;ey=8;dx=0;dy=1;ag.lineTo(ex,ey);}
+          else {ag.moveTo(0,8);ag.lineTo(ex,ey);}
+          ag.moveTo(ex-dx*12-dy*10,ey-dy*12+dx*10);ag.lineTo(ex,ey);ag.lineTo(ex-dx*12+dy*10,ey-dy*12-dx*10);ag.stroke();
+          ag.fillStyle='#fff';ag.textAlign='center';ag.font='700 15px system-ui';const label=turn.action+(turn.kind==='arrive'?'':turn.distance<18?' now':' in '+Math.round(turn.distance/10)*10+' m');ag.fillText(label,0,31);
+          ag.font='12px system-ui';ag.fillStyle='#c7e3ec';ag.fillText(turn.road,0,49,260);ag.restore();
+          snapshot.arManeuver={kind:turn.kind,action:turn.action,distance:turn.distance,road:turn.road,x,y};
+        }
       }snapshot.arChevrons=count;snapshot.arRouteRevision=nav?.revision;snapshot.arRouteSamples=samples;
     }
     function renderAR(){
@@ -5270,7 +5325,7 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
 })();
 
 /*__GPS_END__*/
-      /*__EMBED_START__*/const SIM_FILES = {"pagani":"Pagani Huayra BC Simulator.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator.html","mclaren":"McLaren Speedtail simulator.html","ferrari":"Ferrari F80 simulator.html","koenigsegg":"Koenigsegg Jesko simulator.html","tesla":"Tesla Model S Plaid simulator.html","amg":"Mercedes-AMG GT Black Series simulator.html","aston":"Aston Martin Valkyrie simulator.html","gto":"Ferrari 250 GTO simulator.html","revuelto":"Lamborghini Revuelto simulator.html","porsche918":"Porsche 918 Spyder simulator.html","taycan":"Porsche Taycan Turbo GT simulator.html","supra":"Toyota Supra MK4 simulator.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator.html","gtr":"Nissan GT-R Nismo simulator.html","m5":"BMW M5 simulator.html","r8":"Audi R8 V10 Performance simulator.html","mcf1":"McLaren F1 1993 simulator.html","t33":"Gordon Murray T.33 simulator.html","f12tdf":"Ferrari F12tdf simulator.html","agera":"Koenigsegg Agera RS simulator.html","u9":"Yangwang U9 simulator.html","db5":"Aston Martin DB5 simulator.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator.html","czinger":"Czinger 21C simulator.html","alfa33":"Alfa Romeo 33 Stradale simulator.html","tuatara":"SSC Tuatara simulator.html","t50s":"Gordon Murray T50s Niki Lauda simulator.html","project8":"Jaguar XE SV Project 8 simulator.html","s2000":"Honda S2000 simulator.html","mustanggtd":"Ford Mustang GTD simulator.html","rx7":"Mazda RX-7 simulator.html","phantom":"Rolls-Royce Phantom simulator.html","spectre":"Rolls-Royce Spectre Black Badge simulator.html","venom":"Hennessey Venom F5 simulator.html","evija":"Lotus Evija simulator.html","amgone":"Mercedes-AMG One simulator.html","nevera":"Rimac Nevera simulator.html","zr1":"Chevrolet Corvette ZR1 simulator.html","p1":"McLaren P1 simulator.html","f40":"Ferrari F40 simulator.html","p917":"Porsche 917 simulator.html","viperacr":"Dodge Viper ACR Extreme Aero simulator.html","aurora":"Zenvo Aurora Agil simulator.html","mcxtrema":"Maserati MCXtrema simulator.html","peugeot9x8":"Peugeot 9X8 simulator.html","porsche919":"Porsche 919 Hybrid simulator.html","ferrari499p":"Ferrari 499P simulator.html","solusgt":"McLaren Solus GT simulator.html","f1mercedes":"Mercedes F1 2026 simulator.html","f1redbull":"Red Bull F1 2026 simulator.html","f1ferrari":"Ferrari F1 2026 simulator.html","f1mclaren":"McLaren F1 2026 simulator.html","f1aston":"Aston Martin F1 2026 simulator.html","f1alpine":"Alpine F1 2026 simulator.html","f1williams":"Williams F1 2026 simulator.html","f1racingbulls":"Racing Bulls F1 2026 simulator.html","f1haas":"Haas F1 2026 simulator.html","f1audi":"Audi F1 2026 simulator.html","f1cadillac":"Cadillac F1 2026 simulator.html","dacia":"Dacia Sandrider Dakar simulator.html","fordraptor":"Ford Raptor T1+ Dakar simulator.html","grhilux":"Toyota GR DKR Hilux simulator.html","hunter":"Prodrive Hunter Dakar simulator.html"};const SIM_FILES_2 = {"pagani":"Pagani Huayra BC Simulator 2.0.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator 2.0.html","mclaren":"McLaren Speedtail simulator 2.0.html","ferrari":"Ferrari F80 simulator 2.0.html","koenigsegg":"Koenigsegg Jesko simulator 2.0.html","tesla":"Tesla Model S Plaid simulator 2.0.html","amg":"Mercedes-AMG GT Black Series simulator 2.0.html","aston":"Aston Martin Valkyrie simulator 2.0.html","gto":"Ferrari 250 GTO simulator 2.0.html","revuelto":"Lamborghini Revuelto simulator 2.0.html","porsche918":"Porsche 918 Spyder simulator 2.0.html","taycan":"Porsche Taycan Turbo GT simulator 2.0.html","supra":"Toyota Supra MK4 simulator 2.0.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator 2.0.html","gtr":"Nissan GT-R Nismo simulator 2.0.html","m5":"BMW M5 simulator 2.0.html","r8":"Audi R8 V10 Performance simulator 2.0.html","mcf1":"McLaren F1 1993 simulator 2.0.html","t33":"Gordon Murray T.33 simulator 2.0.html","f12tdf":"Ferrari F12tdf simulator 2.0.html","agera":"Koenigsegg Agera RS simulator 2.0.html","u9":"Yangwang U9 simulator 2.0.html","db5":"Aston Martin DB5 simulator 2.0.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator 2.0.html","czinger":"Czinger 21C simulator 2.0.html","alfa33":"Alfa Romeo 33 Stradale simulator 2.0.html","tuatara":"SSC Tuatara simulator 2.0.html","t50s":"Gordon Murray T50s Niki Lauda simulator 2.0.html","project8":"Jaguar XE SV Project 8 simulator 2.0.html","s2000":"Honda S2000 simulator 2.0.html","mustanggtd":"Ford Mustang GTD simulator 2.0.html","rx7":"Mazda RX-7 simulator 2.0.html","spectre":"Rolls-Royce Spectre Black Badge simulator 2.0.html","venom":"Hennessey Venom F5 simulator 2.0.html","evija":"Lotus Evija simulator 2.0.html","amgone":"Mercedes-AMG One simulator 2.0.html","nevera":"Rimac Nevera simulator 2.0.html","zr1":"Chevrolet Corvette ZR1 simulator 2.0.html","p1":"McLaren P1 simulator 2.0.html","f40":"Ferrari F40 simulator 2.0.html","p917":"Porsche 917 simulator 2.0.html","viperacr":"Dodge Viper ACR Extreme Aero simulator 2.0.html","aurora":"Zenvo Aurora Agil simulator 2.0.html","mcxtrema":"Maserati MCXtrema simulator 2.0.html","peugeot9x8":"Peugeot 9X8 simulator 2.0.html","porsche919":"Porsche 919 Hybrid simulator 2.0.html","ferrari499p":"Ferrari 499P simulator 2.0.html","solusgt":"McLaren Solus GT simulator 2.0.html","f1mercedes":"Mercedes F1 2026 simulator 2.0.html","f1redbull":"Red Bull F1 2026 simulator 2.0.html","f1ferrari":"Ferrari F1 2026 simulator 2.0.html","f1mclaren":"McLaren F1 2026 simulator 2.0.html","f1aston":"Aston Martin F1 2026 simulator 2.0.html","f1alpine":"Alpine F1 2026 simulator 2.0.html","f1williams":"Williams F1 2026 simulator 2.0.html","f1racingbulls":"Racing Bulls F1 2026 simulator 2.0.html","f1haas":"Haas F1 2026 simulator 2.0.html","f1audi":"Audi F1 2026 simulator 2.0.html","f1cadillac":"Cadillac F1 2026 simulator 2.0.html","dacia":"Dacia Sandrider Dakar simulator 2.0.html","fordraptor":"Ford Raptor T1+ Dakar simulator 2.0.html","grhilux":"Toyota GR DKR Hilux simulator 2.0.html","hunter":"Prodrive Hunter Dakar simulator 2.0.html"};const SIM_BUILD = "ec831dc10a";/*__EMBED_END__*/
+      /*__EMBED_START__*/const SIM_FILES = {"pagani":"Pagani Huayra BC Simulator.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator.html","mclaren":"McLaren Speedtail simulator.html","ferrari":"Ferrari F80 simulator.html","koenigsegg":"Koenigsegg Jesko simulator.html","tesla":"Tesla Model S Plaid simulator.html","amg":"Mercedes-AMG GT Black Series simulator.html","aston":"Aston Martin Valkyrie simulator.html","gto":"Ferrari 250 GTO simulator.html","revuelto":"Lamborghini Revuelto simulator.html","porsche918":"Porsche 918 Spyder simulator.html","taycan":"Porsche Taycan Turbo GT simulator.html","supra":"Toyota Supra MK4 simulator.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator.html","gtr":"Nissan GT-R Nismo simulator.html","m5":"BMW M5 simulator.html","r8":"Audi R8 V10 Performance simulator.html","mcf1":"McLaren F1 1993 simulator.html","t33":"Gordon Murray T.33 simulator.html","f12tdf":"Ferrari F12tdf simulator.html","agera":"Koenigsegg Agera RS simulator.html","u9":"Yangwang U9 simulator.html","db5":"Aston Martin DB5 simulator.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator.html","czinger":"Czinger 21C simulator.html","alfa33":"Alfa Romeo 33 Stradale simulator.html","tuatara":"SSC Tuatara simulator.html","t50s":"Gordon Murray T50s Niki Lauda simulator.html","project8":"Jaguar XE SV Project 8 simulator.html","s2000":"Honda S2000 simulator.html","mustanggtd":"Ford Mustang GTD simulator.html","rx7":"Mazda RX-7 simulator.html","phantom":"Rolls-Royce Phantom simulator.html","spectre":"Rolls-Royce Spectre Black Badge simulator.html","venom":"Hennessey Venom F5 simulator.html","evija":"Lotus Evija simulator.html","amgone":"Mercedes-AMG One simulator.html","nevera":"Rimac Nevera simulator.html","zr1":"Chevrolet Corvette ZR1 simulator.html","p1":"McLaren P1 simulator.html","f40":"Ferrari F40 simulator.html","p917":"Porsche 917 simulator.html","viperacr":"Dodge Viper ACR Extreme Aero simulator.html","aurora":"Zenvo Aurora Agil simulator.html","mcxtrema":"Maserati MCXtrema simulator.html","peugeot9x8":"Peugeot 9X8 simulator.html","porsche919":"Porsche 919 Hybrid simulator.html","ferrari499p":"Ferrari 499P simulator.html","solusgt":"McLaren Solus GT simulator.html","f1mercedes":"Mercedes F1 2026 simulator.html","f1redbull":"Red Bull F1 2026 simulator.html","f1ferrari":"Ferrari F1 2026 simulator.html","f1mclaren":"McLaren F1 2026 simulator.html","f1aston":"Aston Martin F1 2026 simulator.html","f1alpine":"Alpine F1 2026 simulator.html","f1williams":"Williams F1 2026 simulator.html","f1racingbulls":"Racing Bulls F1 2026 simulator.html","f1haas":"Haas F1 2026 simulator.html","f1audi":"Audi F1 2026 simulator.html","f1cadillac":"Cadillac F1 2026 simulator.html","dacia":"Dacia Sandrider Dakar simulator.html","fordraptor":"Ford Raptor T1+ Dakar simulator.html","grhilux":"Toyota GR DKR Hilux simulator.html","hunter":"Prodrive Hunter Dakar simulator.html"};const SIM_FILES_2 = {"pagani":"Pagani Huayra BC Simulator 2.0.html","bugatti":"Bugatti Chiron Super Sport 300+ simulator 2.0.html","mclaren":"McLaren Speedtail simulator 2.0.html","ferrari":"Ferrari F80 simulator 2.0.html","koenigsegg":"Koenigsegg Jesko simulator 2.0.html","tesla":"Tesla Model S Plaid simulator 2.0.html","amg":"Mercedes-AMG GT Black Series simulator 2.0.html","aston":"Aston Martin Valkyrie simulator 2.0.html","gto":"Ferrari 250 GTO simulator 2.0.html","revuelto":"Lamborghini Revuelto simulator 2.0.html","porsche918":"Porsche 918 Spyder simulator 2.0.html","taycan":"Porsche Taycan Turbo GT simulator 2.0.html","supra":"Toyota Supra MK4 simulator 2.0.html","evo":"Mitsubishi Lancer Evo X FQ-440 simulator 2.0.html","gtr":"Nissan GT-R Nismo simulator 2.0.html","m5":"BMW M5 simulator 2.0.html","r8":"Audi R8 V10 Performance simulator 2.0.html","mcf1":"McLaren F1 1993 simulator 2.0.html","t33":"Gordon Murray T.33 simulator 2.0.html","f12tdf":"Ferrari F12tdf simulator 2.0.html","agera":"Koenigsegg Agera RS simulator 2.0.html","u9":"Yangwang U9 simulator 2.0.html","db5":"Aston Martin DB5 simulator 2.0.html","slr300":"Mercedes-Benz 300 SLR Uhlenhaut simulator 2.0.html","czinger":"Czinger 21C simulator 2.0.html","alfa33":"Alfa Romeo 33 Stradale simulator 2.0.html","tuatara":"SSC Tuatara simulator 2.0.html","t50s":"Gordon Murray T50s Niki Lauda simulator 2.0.html","project8":"Jaguar XE SV Project 8 simulator 2.0.html","s2000":"Honda S2000 simulator 2.0.html","mustanggtd":"Ford Mustang GTD simulator 2.0.html","rx7":"Mazda RX-7 simulator 2.0.html","spectre":"Rolls-Royce Spectre Black Badge simulator 2.0.html","venom":"Hennessey Venom F5 simulator 2.0.html","evija":"Lotus Evija simulator 2.0.html","amgone":"Mercedes-AMG One simulator 2.0.html","nevera":"Rimac Nevera simulator 2.0.html","zr1":"Chevrolet Corvette ZR1 simulator 2.0.html","p1":"McLaren P1 simulator 2.0.html","f40":"Ferrari F40 simulator 2.0.html","p917":"Porsche 917 simulator 2.0.html","viperacr":"Dodge Viper ACR Extreme Aero simulator 2.0.html","aurora":"Zenvo Aurora Agil simulator 2.0.html","mcxtrema":"Maserati MCXtrema simulator 2.0.html","peugeot9x8":"Peugeot 9X8 simulator 2.0.html","porsche919":"Porsche 919 Hybrid simulator 2.0.html","ferrari499p":"Ferrari 499P simulator 2.0.html","solusgt":"McLaren Solus GT simulator 2.0.html","f1mercedes":"Mercedes F1 2026 simulator 2.0.html","f1redbull":"Red Bull F1 2026 simulator 2.0.html","f1ferrari":"Ferrari F1 2026 simulator 2.0.html","f1mclaren":"McLaren F1 2026 simulator 2.0.html","f1aston":"Aston Martin F1 2026 simulator 2.0.html","f1alpine":"Alpine F1 2026 simulator 2.0.html","f1williams":"Williams F1 2026 simulator 2.0.html","f1racingbulls":"Racing Bulls F1 2026 simulator 2.0.html","f1haas":"Haas F1 2026 simulator 2.0.html","f1audi":"Audi F1 2026 simulator 2.0.html","f1cadillac":"Cadillac F1 2026 simulator 2.0.html","dacia":"Dacia Sandrider Dakar simulator 2.0.html","fordraptor":"Ford Raptor T1+ Dakar simulator 2.0.html","grhilux":"Toyota GR DKR Hilux simulator 2.0.html","hunter":"Prodrive Hunter Dakar simulator 2.0.html"};const SIM_BUILD = "bbb10566de";/*__EMBED_END__*/
 
       const cars = {
         pagani: { key: "pagani", label: "Pagani Huayra BC", short: "Huayra BC", mark: "BC",

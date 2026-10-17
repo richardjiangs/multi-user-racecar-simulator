@@ -1779,16 +1779,18 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     const yawRate = (v / STEERING.wheelbase) * Math.tan(steerAngle);
     const k0 = state.curvature;
     const denom = clamp(1 - state.laneOffset * k0, 0.4, 1.6);
-    let dsdt = v * Math.cos(state.headingRel) / denom;
+    let dsdt = state.ldn && app.cityNetwork ? app.cityNetwork.integrate(dt, yawRate) : v * Math.cos(state.headingRel) / denom;
     const dndt = v * Math.sin(state.headingRel);
+    if(!state.ldn){
     state.headingRel += (yawRate - k0 * dsdt) * dt;
     if (state.headingRel > Math.PI) state.headingRel -= 2 * Math.PI; else if (state.headingRel < -Math.PI) state.headingRel += 2 * Math.PI;
     state.laneOffset = app.trackModel?.()?state.laneOffset+dndt*dt:clamp(state.laneOffset+dndt*dt,-60,60);
+    }
 
     // off-track: grass/run-off no longer scrubs speed; only street-circuit barriers
     // slow the car. Assist/test-driver modes can yaw-correct back toward the line.
     const halfW = halfWidthAt(state.distanceM);
-    const overrun = Math.abs(state.laneOffset) - halfW;
+    const overrun = state.ldn && app.cityNetwork?.onRoad() ? 0 : Math.abs(state.laneOffset) - halfW;
     if (!app.trackModel?.() && overrun > 0.3) {
       const street = state.route.env === "street";
       const edge = (halfW + (street ? 0.7 : 3.4)) * Math.sign(state.laneOffset);   // wall hard, grass has a margin
@@ -1798,7 +1800,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       state.offTrack = 1;
     } else state.offTrack = Math.max(0, state.offTrack - dt * 3);
 
-    if(app.trackModel?.())dsdt=app.pitMotion(dt,dsdt);state.distanceM += dsdt * dt;
+    if(app.trackModel?.())dsdt=app.pitMotion(dt,dsdt);if(!state.ldn)state.distanceM += dsdt * dt;
     state.lateralG = (v * yawRate) / 9.81;
     state.bodyRoll = approach(state.bodyRoll, clamp(state.lateralG * (state.driveMode === "race" ? 4 : 8), -8, 8), 0.002, dt);
     if (!Number.isFinite(state.bodyRoll)) state.bodyRoll = 0;   // a non-finite lateralG must not poison the cabin render
@@ -4397,24 +4399,20 @@ function drawDetailedRoadCar(mesh,info={}){
     wheel.addEventListener("pointercancel", release);
   }
   function bindTrackpadSteering() {
-    const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown'),number=document.getElementById('trackpadCountdownNum');
-    let timer=null,ownFullscreen=false;
+    const capture=document.getElementById('trackpadCapture'),countdown=document.getElementById('trackpadCountdown');
+    let ownFullscreen=false;
     const typing=e=>e.target?.closest?.('input,textarea,select,[contenteditable="true"],#gpsUnit,#mapCanvas');
-    const cancel=()=>{clearTimeout(timer);timer=null;if(countdown)countdown.hidden=true;};
+    const cancel=()=>{if(countdown)countdown.hidden=true;};
     const disable=()=>{cancel();state.trackpadSteering=false;state.touchSteer=0;state.trackpadLastInput=-99;document.documentElement.classList.remove('trackpad-steer');document.documentElement.style.setProperty('--tw-rot','0deg');if(capture)capture.hidden=true;if(ownFullscreen&&document.fullscreenElement)document.exitFullscreen?.().catch(()=>{});ownFullscreen=false;};
     window.addEventListener('keydown',e=>{
       if(e.code==='Escape'){disable();return;}
-      if(e.repeat||typing(e)||timer||state.trackpadSteering)return;
+      if(e.repeat||typing(e)||state.trackpadSteering)return;
       if(!((e.code==='KeyT'&&state.keys.Space)||(e.code==='Space'&&state.keys.KeyT)))return;
-      e.preventDefault();if(number)number.textContent='1';if(countdown)countdown.hidden=false;
-      showToast('Hold T + Space for 1 second for fullscreen trackpad steering.','Controls');
-      timer=setTimeout(()=>{
-        cancel();if(!state.keys.KeyT||!state.keys.Space)return;
+      e.preventDefault();cancel();
         state.trackpadSteering=true;state.touchActive=false;state.touchSteer=0;state.trackpadLastInput=state.time;
         document.documentElement.classList.add('trackpad-steer');if(capture)capture.hidden=false;
         if(!document.fullscreenElement&&document.documentElement.requestFullscreen){ownFullscreen=true;document.documentElement.requestFullscreen({navigationUI:'hide'}).catch(()=>{ownFullscreen=false;showToast('Trackpad steering is on; the browser blocked fullscreen.','Controls');});}
         showToast('Trackpad steering on — horizontal two-finger swipe steers. Escape exits.','Controls');
-      },1000);
     });
     window.addEventListener('keyup',e=>{if(e.code==='Space'||e.code==='KeyT')cancel();});
     window.addEventListener('blur',()=>{cancel();state.keys.KeyT=false;state.keys.Space=false;});
@@ -4919,7 +4917,16 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
   function path(r,dir,d,entry,exit){if(entry&&d<entry.R)return curve(entry,.5+.5*C(d/entry.R,0,1));if(exit&&d>r.len-exit.R)return curve(exit,.5*C((d-r.len+exit.R)/exit.R,0,1));return roadPoint(r,dir,d);}
   let nav=null,lastPlan='',routeLinks=[],routePoints=[],routeTurns=[],routeEnd=0,revision=0,recalculations=0,travelled=0,lastDistance=null;
   const signal=(node)=>{const cycle=52+node.roads.length*8,u=((s.routeTime+node.e*31+node.n*17)%cycle+cycle)%cycle;return u<cycle*.52?'green':u<cycle*.52+3.4?'amber':'red';};
-  function shortest(start,target){const dist=new Map([[start,0]]),prev=new Map(),todo=new Set(G.nodes);while(todo.size){let node=null,best=Infinity;for(const n of todo){const d=dist.get(n)??Infinity;if(d<best){best=d;node=n;}}if(!node||node===target)break;todo.delete(node);for(const l of node.roads){if((l.out>0?l.road.fwd:l.road.back)<=0)continue;const next=end(l.road,l.out),d=best+l.road.len;if(d<(dist.get(next)??Infinity)){dist.set(next,d);prev.set(next,{node,link:l});}}}if(!dist.has(target))return null;const links=[];for(let n=target;n!==start;){const p=prev.get(n);if(!p)return null;links.unshift(p.link);n=p.node;}return{links,distance:dist.get(target)};}
+  const turnCost=(r,dir,l)=>{const angle=Math.abs(A(bearing(l.road,l.out)-bearing(r,dir)));return angle>2.6?1200:angle>.55?35+angle*12:angle*8;};
+  function shortest(start,target,incoming,dir){
+   // A node alone loses the direction of arrival. Search directed road states
+   // so a short reversal is not preferred over an ordinary forward detour.
+   const first={node:start,road:incoming,dir,cost:0,distance:0,prev:null,link:null},todo=[first],best=new Map([[incoming.networkId+':'+dir,0]]);
+   while(todo.length){todo.sort((a,b)=>b.cost-a.cost);const q=todo.pop(),id=q.road.networkId+':'+q.dir;if(q.cost!==best.get(id))continue;
+    if(q.node===target){const links=[];for(let n=q;n.link;n=n.prev)links.unshift(n.link);return{links,distance:q.distance,cost:q.cost,last:q};}
+    for(const l of q.node.roads){if((l.out>0?l.road.fwd:l.road.back)<=0)continue;const id=l.road.networkId+':'+l.out,cost=q.cost+l.road.len+turnCost(q.road,q.dir,l);if(cost>=(best.get(id)??Infinity))continue;best.set(id,cost);todo.push({node:end(l.road,l.out),road:l.road,dir:l.out,cost,distance:q.distance+l.road.len,prev:q,link:l});}
+   }return null;
+  }
   const locations=G.nodes.map(n=>({id:n.id,name:n.name,node:n,...pos(n)}));
   const baker=roads.find(r=>r.name==='Baker Street (A41)');
   if(baker){const p=roadPoint(baker,1,baker.len*.66);locations.push({id:'221b-baker',name:'221B Baker Street · Sherlock Holmes Museum',node:baker.B,road:baker,d:baker.len*.66,...p});}
@@ -4931,12 +4938,12 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
    if(addressD!==null&&addressD>=s.distanceM-12){routeLinks=[];}
    else {
     const candidates=[];
-    if(nav.road){for(const node of [nav.road.A,nav.road.B]){const q=shortest(L.next,node);if(q)candidates.push({...q,node,tail:node===nav.road.A?nav.d:nav.road.len-nav.d});}}
-    else {const q=shortest(L.next,nav.node);if(q)candidates.push({...q,node:nav.node,tail:0});}
-    const best=candidates.sort((a,b)=>(a.distance+a.tail)-(b.distance+b.tail))[0];routeLinks=best?.links.slice()||[];
+    if(nav.road){for(const node of [nav.road.A,nav.road.B]){const out=node===nav.road.A?1:-1;if((out>0?nav.road.fwd:nav.road.back)<=0)continue;const q=shortest(L.next,node,L.road,L.dir);if(q)candidates.push({...q,cost:q.cost+turnCost(q.last.road,q.last.dir,{road:nav.road,out}),node,tail:out>0?nav.d:nav.road.len-nav.d});}}
+    else {const q=shortest(L.next,nav.node,L.road,L.dir);if(q)candidates.push({...q,node:nav.node,tail:0});}
+    const best=candidates.sort((a,b)=>(a.cost+a.tail)-(b.cost+b.tail))[0];routeLinks=best?.links.slice()||[];
     if(nav.road&&best&&best.tail>1)routeLinks.push({road:nav.road,out:best.node===nav.road.A?1:-1});
    }
-   const legs=[{road:L.road,out:L.dir},...routeLinks];routePoints=[];routeTurns=[];let q0=0,entry=L.netEntry;
+   const legs=[{road:L.road,out:L.dir},...routeLinks];routePoints=[];routeTurns=[];let q0=0,entry=null;
    for(let i=0;i<legs.length;i++){
     const leg=legs[i],r=leg.road,next=legs[i+1],exit=next?bend(r,leg.out,next):null;
     const finish=i===legs.length-1&&nav.road===r?(leg.out>0?nav.d:r.len-nav.d):r.len;
@@ -4953,7 +4960,7 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
    const a=routePoints[lo],b=routePoints[hi],u=(q-a.q)/Math.max(.001,b.q-a.q);return {...a,x:a.x+(b.x-a.x)*u,z:a.z+(b.z-a.z)*u,psi:a.psi+A(b.psi-a.psi)*u,q,lane:a.lane+(b.lane-a.lane)*u};
   }
   function navigation(){
-   if(!s.ldn||!nav)return null;plan();const remaining=Math.max(0,routeEnd-s.distanceM),turns=routeTurns.filter(t=>t.q>=s.distanceM-2).map(t=>({...t,distance:Math.max(0,t.q-s.distanceM)}));
+   if(!s.ldn||!nav)return null;plan();const remaining=Math.max(0,routeEnd-s.distanceM),turns=routeTurns.filter(t=>t.q>=Math.min(s.distanceM,s.ldn.road.len)-2).map(t=>({...t,distance:Math.max(0,t.q-s.distanceM)}));
    turns.push({action:'Arrive',kind:'arrive',road:nav.name,distance:remaining});
    return {destination:nav.name,arrived:nav.arrived,remaining,etaSeconds:Math.round(remaining/8.5),progress:nav.arrived?1:travelled/Math.max(1,travelled+remaining),turns:turns.slice(0,3),revision,recalculations};
   }
@@ -4977,35 +4984,45 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
    if(nav&&auto&&planned){const match=L.next.roads.find(l=>l.road===planned.road&&l.out===planned.out);if(match)return match;}
    return straightChoice(L.road,L.dir);
   }
-  function rebase(L,p){
-   // A late steering override can select a different exit. Preserve the car's
-   // world position and heading when changing the underlying junction curve.
-   const lower=Math.max(0,s.distanceM-80),upper=L.road.len+L.netExit.curve.R+40;
-   const error=q=>{const c=at(q);return(c.x-p.x)**2+(c.z-p.z)**2;};
-   // Include the outgoing half of the junction: a late override may already
-   // lie beyond its midpoint. A bounded minimizer cannot overshoot on tight
-   // bends or oscillate between the two sides of a hairpin.
-   const step=(upper-lower)/120;let best=Infinity,d=s.distanceM;
-   for(let i=0;i<=120;i++){const q=lower+step*i,e=error(q);if(e<best){best=e;d=q;}}
-   let lo=Math.max(lower,d-step),hi=Math.min(upper,d+step);const ratio=(Math.sqrt(5)-1)/2;
-   let x=hi-ratio*(hi-lo),y=lo+ratio*(hi-lo),ex=error(x),ey=error(y);
-   for(let i=0;i<42;i++){if(ex<ey){hi=y;y=x;ey=ex;x=hi-ratio*(hi-lo);ex=error(x);}else{lo=x;x=y;ex=ey;y=lo+ratio*(hi-lo);ey=error(y);}}
-   d=(lo+hi)/2;const c=at(d);s.distanceM=d;s.laneOffset=(p.x-c.x)*Math.cos(c.psi)-(p.z-c.z)*Math.sin(c.psi);s.headingRel=A(p.psi-c.psi);lastDistance=d;
-  }
   function prepare(){
-   const L=s.ldn;if(!L)return;const remaining=L.road.len-s.distanceM,manual=Math.abs(driverIntent())>.12;
-   if(!L.netExit||remaining>26||manual){const link=choose(L);if(link&&(L.netExit?.link.road!==link.road||L.netExit?.link.out!==link.out)){const before=L.netExit&&remaining<L.netExit.curve.R?playerPoint():null;L.netExit={link,curve:bend(L.road,L.dir,link)};if(before)rebase(L,before);}}
+   const L=s.ldn;if(!L)return;const link=choose(L);
+   if(link&&(L.netExit?.link.road!==link.road||L.netExit?.link.out!==link.out))L.netExit={link,curve:bend(L.road,L.dir,link)};
    s.ldnTurn=L.netExit?{link:L.netExit.link,turn:L.netExit.curve.turn}:null;
+  }
+  function coordinates(p,r,dir){const start=pos(dir>0?r.A:r.B),psi=bearing(r,dir),dx=p.x-start.x,dz=p.z-start.z;return{d:dx*Math.sin(psi)+dz*Math.cos(psi),n:dx*Math.cos(psi)-dz*Math.sin(psi),psi};}
+  function integrate(dt,yawRate){
+   const L=s.ldn,p=playerPoint(),speed=s.speedMps,yaw=yawRate*dt,mid=p.psi+yaw/2;
+   // Exact constant-curvature displacement, including straight and reverse
+   // motion. The car never inherits a bend merely because GPS selected it.
+   const travel=speed*dt*(Math.abs(yaw)<1e-8?1:Math.sin(yaw/2)/(yaw/2));
+   const next={x:p.x+Math.sin(mid)*travel,z:p.z+Math.cos(mid)*travel,psi:A(p.psi+yaw)};
+   let chosen={road:L.road,dir:L.dir},best=Infinity;
+   const nearEnds=[L.road.A,L.road.B].filter(n=>Math.hypot(next.x-n.e*1000,next.z-n.n*1000)<Math.max(65,width(L.road)*2));
+   const candidates=new Set([L.road,...nearEnds.flatMap(n=>n.roads.map(l=>l.road))]);
+   for(const r of candidates){const dir=r===L.road&&Math.cos(next.psi-bearing(r,L.dir))>-.35?L.dir:Math.cos(next.psi-r.brg)>=0?1:-1,c=coordinates(next,r,dir),angle=Math.abs(A(next.psi-c.psi));
+    // Stay on the incoming street until the car is physically inside the
+    // outgoing street. Lane changes and S-shaped approaches do not pick exits.
+    if(r!==L.road&&(c.d<Math.min(5,width(r)*.22)||c.d>r.len+2||Math.abs(c.n)>width(r)/2+1.2||angle>1.12))continue;
+    const score=Math.abs(c.n)/Math.max(1,width(r)/2)+Math.max(0,-c.d,c.d-r.len)*2+angle*20+(r===L.road?0:.3)-(angle<.05&&routeLinks[0]?.road===r&&routeLinks[0]?.out===dir ? .4 : 0);
+    if(score<best){best=score;chosen={road:r,dir};}
+   }
+   if(chosen.road!==L.road||chosen.dir!==L.dir){
+    if(nav&&(!routeLinks[0]||routeLinks[0].road!==chosen.road||routeLinks[0].out!==chosen.dir))recalculations++;
+    const node=chosen.dir>0?chosen.road.A:chosen.road.B;
+    s.ldn={road:chosen.road,dir:chosen.dir,node,next:end(chosen.road,chosen.dir),origin:0};lastPlan='';
+   }
+   const q=coordinates(next,chosen.road,chosen.dir);
+   s.distanceM=q.d;s.laneOffset=q.n;s.headingRel=A(next.psi-q.psi);s.offTrack=0;
+   travelled+=Math.abs(speed*dt);lastDistance=s.distanceM;prepare();
+   return speed*Math.cos(s.headingRel);
   }
   function at(d){let L=s.ldn;for(let i=0;i<20;i++){if(d<0&&L.previous){L=L.previous;d+=L.road.len;continue;}if(d>L.road.len){const exit=L.netExit||(()=>{const link=straightChoice(L.road,L.dir);return link?{link,curve:bend(L.road,L.dir,link)}:null;})();if(exit){d-=L.road.len;L={road:exit.link.road,dir:exit.link.out,netEntry:exit.curve};continue;}}return path(L.road,L.dir,d,L.netEntry,L.netExit?.curve);}return roadPoint(L.road,L.dir,d);}
   function actorPose(r){const p=right(at(r.distM),r.lane||0);return{...p,psi:p.psi+(r.contactHeading||0)};}
   function curvature(d){return s.ldn?A(at(d+.05).psi-at(d-.05).psi)/.1:null;}
-  function playerPoint(){if(!s.ldn)return null;const p=right(at(s.distanceM),s.laneOffset||0);return{...p,psi:p.psi+(s.headingRel||0)};}
-  function step(){let L=s.ldn;if(!L)return;if(lastDistance!==null)travelled+=Math.max(0,Math.min(10,s.distanceM-lastDistance));lastDistance=s.distanceM;prepare();
-   if(s.distanceM>=L.road.len&&L.netExit){const excess=s.distanceM-L.road.len,link=L.netExit.link;if(nav&&routeLinks[0]&&(routeLinks[0].road!==link.road||routeLinks[0].out!==link.out))recalculations++;for(const r of s.rivals||[])r.distM-=L.road.len;s.ldn={road:link.road,dir:link.out,node:L.next,next:end(link.road,link.out),origin:(L.origin||0)+L.road.len,netEntry:L.netExit.curve,inTurn:L.netExit.curve.turn,previous:L};s.distanceM=excess;lastDistance=excess;L=s.ldn;lastPlan='';prepare();}
-   if(s.distanceM<0){if(L.previous){const old=L.previous;s.distanceM+=old.road.len;for(const r of s.rivals||[])r.distM+=old.road.len;s.ldn=old;L=old;lastDistance=s.distanceM;lastPlan='';}else s.distanceM=0;}
-
-   s.edgeD=s.distanceM;s.route.totalM=L.road.len;s.route.remainingM=L.road.len-s.distanceM;s.route.label=L.road.name;s.route.arrived=false;
+  function playerPoint(){if(!s.ldn)return null;const p=right(roadPoint(s.ldn.road,s.ldn.dir,s.distanceM),s.laneOffset||0);return{...p,psi:p.psi+(s.headingRel||0)};}
+  function onRoad(){const p=playerPoint();return !!p&&roads.some(r=>distanceRoad(p,r)<=width(r)/2+.7);}
+  function step(){const L=s.ldn;if(!L)return;prepare();
+   s.edgeD=s.distanceM;s.route.totalM=L.road.len;s.route.remainingM=Math.max(0,L.road.len-s.distanceM);s.route.label=L.road.name;s.route.arrived=false;
    if(nav){const p=playerPoint(),near=Math.hypot(p.x-nav.x,p.z-nav.z);if(near>35&&nav.arrived){nav.arrived=false;lastPlan='';}if(near<22&&Math.abs(s.speedMps)<1.5&&!nav.arrived){nav={...nav,arrived:true};app.showToast?.('Arrived at '+nav.name,'Navigation');}}
   }
   function addRoad(r){const half=width(r)/2,N=Math.ceil(r.len/20);for(let i=0;i<N;i++){const d0=i*r.len/N,d1=(i+1)*r.len/N;for(const[H,y,col]of[[half+3,-.03,'#a9a59b'],[half,0,'#3a3f43']]){const a=roadPoint(r,1,d0),b=roadPoint(r,1,d1);primitives.push({points:[right(a,-H),right(a,H),right(b,H),right(b,-H)].map(p=>({...p,y})),color:col,road:r.networkId});}if(i%2===0){const a=roadPoint(r,1,d0+2),b=roadPoint(r,1,Math.min(d1,d0+6));primitives.push({points:[right(a,-.065),right(a,.065),right(b,.065),right(b,-.065)].map(p=>({...p,y:.012})),color:'#d9d8cd',road:r.networkId});}}
@@ -5103,7 +5120,13 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
   }
   function projectWorld(p,w=app.canvas.ownerDocument.defaultView.innerWidth,h=app.canvas.ownerDocument.defaultView.innerHeight){const eye=playerPoint(),dx=p.x-eye.x,dz=p.z-eye.z,cs=Math.cos(eye.psi),sn=Math.sin(eye.psi),z=dx*sn+dz*cs,x=dx*cs-dz*sn,focal=app.WIDTH_SCALE?380:360,scale=focal/(z||.00001);return{x:w/2+x*scale,y:h*.46+((app.WIDTH_SCALE?1.6:1.55)-(p.y||0))*scale,scale,fwd:z};}
   function projectRelative(d,n=0){return projectWorld(right(at(s.distanceM+d),n));}
-  function driverSteer(gain=1){const look=C(Math.abs(s.speedMps)*.8,10,30),k=curvature(s.distanceM+look),err=laneOffset(s.ldn.road)-s.laneOffset,phi=C(err*.05,-.5,.5),yaw=k*s.speedMps+(phi-s.headingRel)*2.4*gain,st=app.STEERING;return C(Math.atan(yaw*st.wheelbase/Math.max(2.2,Math.abs(s.speedMps)))/(st.maxAngle*C(1.15-Math.abs(s.speedMps)*.013,.44,1)),-1,1);}
+  function driverSteer(gain=1){
+   const p=playerPoint(),look=C(Math.abs(s.speedMps)*.65,8,24),L=s.ldn;
+   const guide=nav?guideAt(s.distanceM+look):null,target=guide?right(guide,guide.lane):right(at(s.distanceM+look),laneOffset(L.road));
+   const dx=target.x-p.x,dz=target.z-p.z,angle=A(Math.atan2(dx,dz)-p.psi),st=app.STEERING;
+   const yaw=2*Math.sin(angle)/Math.max(4,Math.hypot(dx,dz));
+   return C(Math.atan(yaw*st.wheelbase*gain)/(st.maxAngle*C(1.15-Math.abs(s.speedMps)*.013,.44,1)),-1,1);
+  }
   function driverTarget(){let target=13.41;const L=s.ldn,k=Math.max(Math.abs(curvature(s.distanceM+12)),Math.abs(curvature(s.distanceM+30)));if(k>.001)target=Math.min(target,Math.sqrt(2/k));if(L.next.roads.length>=3&&signal(L.next)!=='green')target=Math.min(target,Math.sqrt(4*Math.max(0,L.road.len-s.distanceM-6)));for(const c of traffic){if(c.road!==L.road||c.dir!==L.dir)continue;const gap=c.d-s.distanceM;if(gap>0&&gap<Math.max(25,s.speedMps*2))target=Math.min(target,Math.max(0,c.speed+(gap-12)*.4));}return Math.min(target,arrivalSpeedLimit());}
   function drawRear(x,y,w,h,pal,mirror={}){if(w<1||h<1)return;const ctx=app.ctx,eye=right(playerPoint(),mirror.eye||0);ctx.save();ctx.beginPath();ctx.rect(x,y,w,h);ctx.clip();ctx.translate(x+w,y);ctx.scale(-1,1);ctx.fillStyle='#adc7d3';ctx.fillRect(0,0,w,h);draw(w,h,pal,{eye:{...eye,psi:eye.psi+Math.PI+(mirror.yaw||0)},focal:w*.85});ctx.restore();}
   const mapCanvas=app.el.mapCanvas,originalMap=app.drawMap;let mapHits=[],mapZoom=1,mapCentre=null,mapTransform=null,mapDrag=null;
@@ -5114,7 +5137,7 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
    mapCanvas.addEventListener('pointermove',e=>{if(!mapDrag||!mapCanvas.hasPointerCapture(e.pointerId))return;const dx=e.clientX-mapDrag.x,dy=e.clientY-mapDrag.y;if(Math.hypot(dx,dy)>4)mapDrag.moved=true;if(mapDrag.moved){const cs=Math.cos(mapTransform.bearing),sn=Math.sin(mapTransform.bearing);mapCentre={x:mapDrag.cx-(dx*cs-dy*sn)/mapTransform.scale,z:mapDrag.cz+(dx*sn+dy*cs)/mapTransform.scale};app.drawMap();}});
    app.drawMap=function(){if(!s.ldn)return originalMap?.();const w=mapCanvas.clientWidth||300,h=mapCanvas.clientHeight||380,dpr=Math.min(2,devicePixelRatio);if(mapCanvas.width!==w*dpr||mapCanvas.height!==h*dpr){mapCanvas.width=w*dpr;mapCanvas.height=h*dpr;}const g=mapCanvas.getContext('2d');g.setTransform(dpr,0,0,dpr,0,0);mapTransform=app.renderCityMap(g,w,h,{preset:1,zoom:mapZoom,centre:mapCentre});mapHits=mapTransform.pins.map(p=>({...p,sx:p.x,sy:p.y}));};
   }
-  app.cityNetwork={prepare,step,at,curvature,playerPoint,guideAt,navigation,plannedPoints,width,grounds,trees,landmarks,policePoses,projectWorld,projectRelative,driverSteer,driverTarget,signalState:signal,drawRear,trafficStep,draw,locations,destination,trafficPose,actorPose,arrivalSpeedLimit,traffic,roads,buildings,primitives,inspect:()=>({mapView:mapTransform?Object.fromEntries(['w','h','fit','scale','cx','cz','bearing','ox','oy'].map(k=>[k,mapTransform[k]]).concat([['zoom',mapZoom]])):null,destination:nav?.name,arrived:!!nav?.arrived,routePoints,routeLinks:routeLinks.map(l=>l.road.name),roads:roads.length,buildings:buildings.length,traffic:traffic.length}),mapProject:p=>mapTransform?.project(p),get destinationPoint(){return nav;},get routePoints(){return plannedPoints();}};
+  app.cityNetwork={prepare,step,integrate,onRoad,at,curvature,playerPoint,guideAt,navigation,plannedPoints,width,grounds,trees,landmarks,policePoses,projectWorld,projectRelative,driverSteer,driverTarget,signalState:signal,drawRear,trafficStep,draw,locations,destination,trafficPose,actorPose,arrivalSpeedLimit,traffic,roads,buildings,primitives,inspect:()=>({mapView:mapTransform?Object.fromEntries(['w','h','fit','scale','cx','cz','bearing','ox','oy'].map(k=>[k,mapTransform[k]]).concat([['zoom',mapZoom]])):null,destination:nav?.name,arrived:!!nav?.arrived,routePoints,routeLinks:routeLinks.map(l=>l.road.name),roads:roads.length,buildings:buildings.length,traffic:traffic.length}),mapProject:p=>mapTransform?.project(p),get destinationPoint(){return nav;},get routePoints(){return plannedPoints();}};
   app.renderCityMap=(g,width,height,options={})=>drawLondonMap(g,{network:app.cityNetwork,state:s,width,height,...options});
   const physics=app.updatePhysics;app.updatePhysics=function(dt){if(s.ldn)prepare();return physics.call(app,dt);};
  })(app,function drawTrafficVehicle(ctx,x,y,scale,car,front,night,time,view=.22){

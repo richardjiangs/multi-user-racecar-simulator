@@ -237,3 +237,49 @@ combinations, all 64 browser startup/physics checks and online race controls,
 26 offline mode/car checks, eight controls checks, and mouse/touch map gestures.
 All 64 archived simulators remain byte-identical. Factory performance output
 matches the recorded baseline hash, including the same 59 pre-existing failures.
+
+## London junction motion and immediate fullscreen — 17 October 2026
+
+London previously represented the player relative to a selected junction curve.
+That could classify a valid crossing as a departure from the selected street,
+apply its curb clamp, or select the next street before the driver completed a
+late turn. This release replaces the junction reprojection described above:
+London horizontal movement uses the car's actual position, yaw and existing
+bicycle steering rate. Road selection follows that movement and never moves the
+car. Junction pavement is the union of the existing road surfaces; the original
+curb handling remains outside the network surface. Other environments, powertrain
+calibration, road coordinates and widths are unchanged.
+
+Routing now searches directed road states with turn costs, including a substantial
+U-turn cost. Ordinary forward detours are preferred when practical; necessary
+reversals remain available. The plan updates after the actual outgoing street is
+entered, and turn guidance stays visible during a late approach. London AR adds a
+large turn arrow above the road, street name and distance, with a warning distance
+of at least 110 m or nine seconds of travel at the current speed. Existing road
+chevrons remain. The road network still contains some overlapping authored road
+segments; this release does not redraw their geometry.
+
+T + Space enters fullscreen trackpad steering immediately in either key order.
+A single key, typing into a field, or long-clicking does not activate it; Escape
+exits. The archived Track 1.0 downloads retain their original bindings, while
+current garage copies, Track 2.0 files and the offline garage receive the fix.
+
+Regression coverage includes `london-motion.mjs`: 2,211 connected-road approaches
+per London car/version, exact displacement and yaw checks, straight/S-shaped/late
+steering at city speeds and 354 km/h, and actual powertrain updates across valid
+junction pavement. Coincident road segments are accepted only when the physical
+heading and lateral position are identical. Existing destination, rerouting,
+traffic continuity, environment-transition, map gesture and fullscreen tests also
+run. No automated test establishes that every real London street is represented
+accurately; these checks verify the authored simulator network and its behavior.
+
+Release validation: 30,954 junction approaches across 14 London car/version
+combinations; all seven cars also complete full-physics crossing tests on actual
+pavement without stopping or teleporting. The 2,720 late-input stability checks,
+14 destination/map scenarios, native Rolls-Royce traffic continuity tests,
+Dakar/London/circuit switching, forward-detour/dead-end routing cases, eight
+fullscreen/assist checks, 64 browser startup/physics cases, online race controls,
+GPS interactions, three gesture cases and 26 offline cases pass. Archived file,
+audio/art and road-geometry preservation checks pass. Factory performance output
+is byte-identical to the previous baseline (`d38e1f0a…ee1`), retaining its 59 known
+calibration failures rather than claiming those pre-existing failures are fixed.

@@ -276,12 +276,27 @@
     }
     function renderCityAR(){
       const n=app.cityNetwork,nav=n.navigation();let count=0;const samples=[];
+      snapshot.arManeuver=null;
       if(nav&&!nav.arrived){
         ag.save();ag.beginPath();ag.rect(win.innerWidth*.06,win.innerHeight*.20,win.innerWidth*.88,win.innerHeight*.49);ag.clip();
         const project=(off,lat=0)=>{const p=n.guideAt(state.distanceM+off);return n.projectWorld({...lateral(p,p.lane+lat),y:.045});};
         for(let off=Math.min(110,nav.remaining-2);off>6;off-=7){const a=project(off,-.65),b=project(off+2),c=project(off,.65);if([a,b,c].some(p=>p.fwd<.6||!Number.isFinite(p.x+p.y)))continue;
           ag.strokeStyle='#75e7ff';ag.lineWidth=clamp(a.scale*.1,1.8,5);ag.shadowColor='#006a99';ag.shadowBlur=3;ag.beginPath();ag.moveTo(a.x,a.y);ag.lineTo(b.x,b.y);ag.lineTo(c.x,c.y);ag.stroke();count++;samples.push(n.guideAt(state.distanceM+off));
         }ag.restore();
+        const turn=nav.turns[0],warning=Math.max(110,Math.abs(state.speedMps)*9);
+        if(turn&&turn.distance<=warning){
+          const x=win.innerWidth*.5,y=win.innerHeight*.33,k=Math.min(1,win.innerWidth/650,win.innerHeight/550);
+          ag.save();ag.translate(x,y);ag.scale(k,k);ag.fillStyle='#09202bdc';ag.beginPath();ag.roundRect(-142,-58,284,116,18);ag.fill();
+          ag.strokeStyle='#91edff';ag.lineWidth=7;ag.lineCap='round';ag.lineJoin='round';ag.beginPath();
+          let ex=0,ey=-35,dx=0,dy=-1;
+          if(turn.kind==='left'||turn.kind==='right'){const side=turn.kind==='right'?1:-1;ag.moveTo(-side*15,8);ag.lineTo(-side*15,-13);ag.quadraticCurveTo(-side*15,-30,side*7,-30);ex=side*38;ey=-30;dx=side;dy=0;ag.lineTo(ex,ey);}
+          else if(turn.kind==='uturn'){ag.moveTo(-20,8);ag.lineTo(-20,-22);ag.bezierCurveTo(-20,-53,20,-53,20,-22);ex=20;ey=8;dx=0;dy=1;ag.lineTo(ex,ey);}
+          else {ag.moveTo(0,8);ag.lineTo(ex,ey);}
+          ag.moveTo(ex-dx*12-dy*10,ey-dy*12+dx*10);ag.lineTo(ex,ey);ag.lineTo(ex-dx*12+dy*10,ey-dy*12-dx*10);ag.stroke();
+          ag.fillStyle='#fff';ag.textAlign='center';ag.font='700 15px system-ui';const label=turn.action+(turn.kind==='arrive'?'':turn.distance<18?' now':' in '+Math.round(turn.distance/10)*10+' m');ag.fillText(label,0,31);
+          ag.font='12px system-ui';ag.fillStyle='#c7e3ec';ag.fillText(turn.road,0,49,260);ag.restore();
+          snapshot.arManeuver={kind:turn.kind,action:turn.action,distance:turn.distance,road:turn.road,x,y};
+        }
       }snapshot.arChevrons=count;snapshot.arRouteRevision=nav?.revision;snapshot.arRouteSamples=samples;
     }
     function renderAR(){
