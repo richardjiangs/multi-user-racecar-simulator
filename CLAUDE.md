@@ -1185,3 +1185,16 @@ commented-out harmonic connection and generates distinct voices. Run
 `tests/touring-art-test.mjs`, `tests/classics-audio-test.mjs`, the sightline test,
 embed, performance and browser suites. Keep all powertrain and steering input
 sections unchanged. Classic screen surrounds must not become modern carbon trim.
+
+October Tesla/Supra/offline revision: see `docs/TESLA_SUPRA_ART.md`. Side elevations
+are authored in `tools/vehicle-refinements/profile-art.js`, with Supra's low 1.0
+live dashboard/cabin/2JZ engine in `road-art.js`. Tesla changes are exterior-only;
+Supra now offers all five GPS modes. Porsche 919 hybrid energy/lap consumption is
+Real Mode-only; accessible Boost remains continuous while respecting brake/pit/sail
+limits. Apply through `prepare.js` to garage copies and generated Track 2.0, keeping
+originals intact. Offline cards use captured exterior SVGs; refresh snapshots with
+`tools/offline/snapshot-exteriors.mjs`. `tools/offline/build.mjs` losslessly packages
+track data and produces full and ten-car `index-offline LITE.html` editions. Keep
+both large offline HTML files, `sims-embedded.js`, and compression caches out of Git.
+Run `tests/refinements/tesla-supra.mjs`, `porsche919-boost.mjs` and
+`offline-editions.mjs` (the latter two in the same tests/refinements directory).

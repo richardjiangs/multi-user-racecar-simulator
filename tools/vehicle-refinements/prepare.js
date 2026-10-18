@@ -22,6 +22,25 @@
    html=html.replace('const overrun = Math.abs(state.laneOffset) - halfW;', 'const overrun = state.ldn && app.cityNetwork?.onRoad() ? 0 : Math.abs(state.laneOffset) - halfW;');
   }
   const helper=root.MUCSVehicleArt.drawTrafficVehicle.toString();
+  if(key==='porsche919'){
+   const boundary='    state.mguPowerKw = deployKw;';
+   if(!html.includes(boundary))throw Error('919 hybrid deployment boundary missing');
+   html=html.replace(boundary,`    // Accessible driving keeps the requested MGU output available. Real Mode
+    // alone consumes the physical store and the distance-scaled lap allowance.
+    if(!state.realMode){
+      state.mguPowerKw=targetKw;state.regenPowerKw=harvestKw;
+      state.hybridEnergy=100;state.hybridLapUsedMJ=0;state.hybridLapBudgetMJ=lapBudget;
+      return targetKw;
+    }
+${boundary}`);
+   html=html.replace('HYBRID BOOST · energy ${Math.round(state.hybridEnergy)}%', 'HYBRID BOOST · ${state.realMode ? "energy "+Math.round(state.hybridEnergy)+"%" : "continuous — Real Mode off"}');
+  }
+  if(key==='supra'){
+   html=html.replace('function drawCabinFrame(w, h, pal) {',`${root.MUCSRoadArt.drawSupraDashboard.toString()}\nfunction drawCabinFrame(w,h,pal){
+    ctx.save();ctx.fillStyle='#1c252d';for(const side of [-1,1]){ctx.beginPath();ctx.moveTo(side<0?0:w,0);ctx.lineTo(side<0?w*.055:w*.945,0);ctx.lineTo(side<0?w*.016:w*.984,h*.77);ctx.lineTo(side<0?0:w,h*.79);ctx.closePath();ctx.fill();}ctx.fillRect(0,0,w,h*.016);ctx.restore();
+    drawSupraDashboard(ctx,w,h,state,app);
+   }\nfunction drawLegacyCabinFrame(w, h, pal) {`);
+  }
   function insertBeforeFunction(name,text){const mark='function '+name+'(';if(!html.includes(mark))throw Error('Missing '+key+' '+name);html=html.replace(mark,text+'\n  '+mark);}
   if(city){
    html=html.replace('function pathSteer(gain, targetOffset) {','function pathSteer(gain, targetOffset) { if(state.ldn&&app.cityNetwork)return app.cityNetwork.driverSteer(gain);');
@@ -94,6 +113,7 @@
     const cabin=app.el.cabinArt,old=cabin.querySelector('svg');if(old)old.style.display='none';
     const canvas=document.createElement('canvas');canvas.id='db5PeriodCabin';canvas.setAttribute('aria-label','Live DB5 Black Pearl dashboard, Smiths instruments and David Brown wood-rim steering wheel');canvas.style.cssText='display:block;width:100%;aspect-ratio:1400/420';cabin.appendChild(canvas);
     const ui=app.updateUi;app.updateUi=function(...args){ui.apply(app,args);if(!document.body.classList.contains('view-cockpit'))return;const w=canvas.clientWidth||1000,h=w*420/1400,dpr=Math.min(2,devicePixelRatio);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);drawDB5Dashboard(ctx,w,h,app.state,app,true);};`;
+  if(key==='tesla'||key==='supra')extra+=`\n(${root.MUCSRoadArt.install.toString()})(app,${JSON.stringify(key)},${JSON.stringify(root.MUCSRoadArt.exterior(key))},${JSON.stringify(key==='supra'?root.MUCSRoadArt.engine():'')},${key==='supra'?root.MUCSRoadArt.drawSupraDashboard.toString():'null'});`;
   html=html.replace('</body>',`<script type="module">\n/* MUCS vehicle refinements v1 */\nif(window.TRACK2_READY)await window.TRACK2_READY;\nconst app=window.${appName};\n(${runtime})(app,${JSON.stringify(key)});\n${extra}\n<\/script>\n</body>`);
   return html;
  }

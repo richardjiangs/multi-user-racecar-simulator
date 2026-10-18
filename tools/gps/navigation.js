@@ -3,7 +3,7 @@
    Maps use the simulated road, not an unrelated decorative circuit SVG. */
 (function () {
   'use strict';
-  const historical = new Set(['gto','f40','p917','db5','slr300','mcf1','supra','evo','s2000','rx7']);
+  const historical = new Set(['gto','f40','p917','db5','slr300','mcf1','evo','s2000','rx7']);
   const eligible = key => !(key.startsWith('f1') && key !== 'f12tdf') && !historical.has(key);
   // Expose renderer geometry in the loaded copy only. Original downloads stay intact.
   function prepare(html, key) {

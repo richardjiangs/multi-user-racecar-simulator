@@ -1152,6 +1152,13 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       ? Math.min(180, state.brake * 180 * (.72 + state.brakeMigration / 100))
         + (state.throttle > .4 ? 80 * state.throttle * clamp(state.rpm / SPEC.redlineRpm, 0, 1) : state.energyMode === 2 ? Math.min(90, v * 2) : 0) : 0;
     state.coastRecupKw = state.energyMode === 2 && state.brake < .1 && state.throttle <= .4 && state.ignition && v > 3 ? Math.min(90, v * 2) : 0;
+    // Accessible driving keeps the requested MGU output available. Real Mode
+    // alone consumes the physical store and the distance-scaled lap allowance.
+    if(!state.realMode){
+      state.mguPowerKw=targetKw;state.regenPowerKw=harvestKw;
+      state.hybridEnergy=100;state.hybridLapUsedMJ=0;state.hybridLapBudgetMJ=lapBudget;
+      return targetKw;
+    }
     state.mguPowerKw = deployKw;
     state.regenPowerKw = Math.min(harvestKw, (1 - soc) * HYBRID.capacityMJ * 1000 / dt + deployKw);
     state.hybridEnergy = clamp((soc * HYBRID.capacityMJ + (state.regenPowerKw - deployKw) * dt / 1000) / HYBRID.capacityMJ * 100, 0, 100);
@@ -3575,7 +3582,7 @@ function drawDetailedRoadCar(mesh,info={}){
     const warn = [];
     if (app.anyDoorOpen()) warn.push("doors open");
     if (!state.ignition) warn.push("ignition off");
-    if (state.energyMode === 1) warn.push(`HYBRID BOOST · energy ${Math.round(state.hybridEnergy)}%`);
+    if (state.energyMode === 1) warn.push(`HYBRID BOOST · ${state.realMode ? "energy "+Math.round(state.hybridEnergy)+"%" : "continuous — Real Mode off"}`);
     if (state.energyMode === 2) warn.push(`HYBRID RECUP · brake migration ${state.brakeMigration}%`);
     if (state.launchArmed) warn.push("launch armed");
     if (state.gearMode === "N") warn.push("neutral");

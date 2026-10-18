@@ -15,6 +15,8 @@ import { createHash } from "node:crypto";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
+import {embedded,offlinePage,LITE_KEYS,prepareCompression} from "./offline/build.mjs";
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const FILES = {
   pagani: "Pagani Huayra BC Simulator.html",
@@ -100,16 +102,18 @@ for (const [key, file] of Object.entries({...FILES,...Object.fromEntries(Object.
 // a sim actually changes, so it does not defeat caching, it just ends staleness.
 const gpsContext = readFileSync(resolve(ROOT,"assets/gps/context.json"),"utf8").replace(/</g,"\\u003c");
 const gpsContextJs = "window.MUCS_GPS_CONTEXT="+gpsContext+";\n";
-const drivingSource = ["tools/vehicle-refinements/runtime.js","tools/vehicle-refinements/traffic-art.js","tools/vehicle-refinements/db5-art.js","tools/vehicle-refinements/city-network.js","tools/vehicle-refinements/london-data.js","tools/vehicle-refinements/london-map.js","tools/vehicle-refinements/london-sedans.js","tools/vehicle-refinements/prepare.js","tools/driving/controls.js"].map(f=>readFileSync(resolve(ROOT,f),"utf8")).join("\n");
+const drivingSource = ["tools/vehicle-refinements/runtime.js","tools/vehicle-refinements/traffic-art.js","tools/vehicle-refinements/db5-art.js","tools/vehicle-refinements/profile-art.js","tools/vehicle-refinements/road-art.js","tools/vehicle-refinements/city-network.js","tools/vehicle-refinements/london-data.js","tools/vehicle-refinements/london-map.js","tools/vehicle-refinements/london-sedans.js","tools/vehicle-refinements/prepare.js","tools/driving/controls.js"].map(f=>readFileSync(resolve(ROOT,f),"utf8")).join("\n");
 const gpsSource = readFileSync(resolve(ROOT,"tools/gps/navigation.js"),"utf8");
 const SIM_BUILD = createHash("sha1")
+  .update(readFileSync(resolve(ROOT,"tools/offline/build.mjs"))).update(readFileSync(resolve(ROOT,"tools/offline/exteriors.json")))
   .update(drivingSource).update(gpsSource).update(gpsContext)
   .update(packJs).update(Object.keys(enc).sort().map((k) => k + ":" + enc[k]).join("|"))
   .digest("hex").slice(0, 10);
 
 // 1) base64 copies -> a separate file, loaded by index.html ONLY over file://.
 const embedPath = resolve(ROOT, "sims-embedded.js");
-const embedJs = gpsContextJs+packJs+`window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};\n`;
+await prepareCompression();
+const embedJs = embedded(enc);
 writeFileSync(embedPath, embedJs);
 
 // 2) index.html carries only the small key -> filename map for the lazy http(s) path.
@@ -134,17 +138,10 @@ writeFileSync(resolve(ROOT, "build.txt"), SIM_BUILD + "\n");
 //    with every sim embedded inline, always uses the embedded copy (no simulator
 //    downloads), works the same from disk or a server. Derived from index.html
 //    so it never drifts.
-const offline = newIndex
-  // inline the base64 next to the filename map (no external sims-embedded.js)
-  .replace(line, `${START}const SIM_FILES = ${JSON.stringify(FILES)};const SIM_FILES_2 = ${JSON.stringify(FILES_2)};const SIM_BUILD = ${JSON.stringify(SIM_BUILD)};${gpsContextJs}${packJs}window.EMBEDDED_SIM_GZIP_BASE64 = ${JSON.stringify(enc)};${END}`)
-  // the file:// guard that pulls in the external embed is unnecessary here
-  .replace(`if (location.protocol === "file:") document.write('<script src="sims-embedded.js"><\\/script>');`,
-           `/* index-offline.html: every sim is embedded inline above — no external file */`)
-  // always take the embedded path so it needs zero network on any protocol
-  .replace(`if (location.protocol === "file:") {`, `if (true) {  /* self-contained build: always use the embedded copy */`)
-  // no background prefetch — the sims are already inline
-  .replace(`      if (document.readyState === "complete") setTimeout(prefetchSims, 600);\n      else window.addEventListener("load", () => setTimeout(prefetchSims, 600));`,
-           `      /* index-offline.html: sims embedded inline, no prefetch needed */`);
+const offline = offlinePage(newIndex,line,FILES,FILES_2,enc,SIM_BUILD,null,embedJs);
+const lite = offlinePage(newIndex,line,FILES,FILES_2,enc,SIM_BUILD,LITE_KEYS);
+writeFileSync(resolve(ROOT,"index-offline LITE.html"),lite);
+console.log(`index-offline LITE.html written (${(Buffer.byteLength(lite)/1048576).toFixed(2)} MB, ${LITE_KEYS.length} cars).`);
 const offlinePath = resolve(ROOT, "index-offline.html");
 if (offline === newIndex) { console.error("index-offline transform matched nothing — aborting"); process.exit(1); }
 writeFileSync(offlinePath, offline);
