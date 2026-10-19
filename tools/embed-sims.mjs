@@ -105,14 +105,14 @@ const gpsContextJs = "window.MUCS_GPS_CONTEXT="+gpsContext+";\n";
 const drivingSource = ["tools/vehicle-refinements/runtime.js","tools/vehicle-refinements/traffic-art.js","tools/vehicle-refinements/db5-art.js","tools/vehicle-refinements/profile-art.js","tools/vehicle-refinements/road-art.js","tools/vehicle-refinements/city-network.js","tools/vehicle-refinements/london-data.js","tools/vehicle-refinements/london-map.js","tools/vehicle-refinements/london-sedans.js","tools/vehicle-refinements/prepare.js","tools/driving/controls.js"].map(f=>readFileSync(resolve(ROOT,f),"utf8")).join("\n");
 const gpsSource = readFileSync(resolve(ROOT,"tools/gps/navigation.js"),"utf8");
 const SIM_BUILD = createHash("sha1")
-  .update(readFileSync(resolve(ROOT,"tools/offline/build.mjs"))).update(readFileSync(resolve(ROOT,"tools/offline/exteriors.json")))
+  .update(readFileSync(resolve(ROOT,"tools/offline/build.mjs"))).update(readFileSync(resolve(ROOT,"tools/offline/recipes.mjs"))).update(readFileSync(resolve(ROOT,"tools/offline/recipe-runtime.js"))).update(readFileSync(resolve(ROOT,"tools/offline/recipe-proof.json"))).update(readFileSync(resolve(ROOT,"tools/offline/recipe-corrections.json"))).update(readFileSync(resolve(ROOT,"tools/offline/exteriors.json")))
   .update(drivingSource).update(gpsSource).update(gpsContext)
   .update(packJs).update(Object.keys(enc).sort().map((k) => k + ":" + enc[k]).join("|"))
   .digest("hex").slice(0, 10);
 
 // 1) base64 copies -> a separate file, loaded by index.html ONLY over file://.
 const embedPath = resolve(ROOT, "sims-embedded.js");
-await prepareCompression();
+await prepareCompression(enc);
 const embedJs = embedded(enc);
 writeFileSync(embedPath, embedJs);
 

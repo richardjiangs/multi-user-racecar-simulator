@@ -1,6 +1,6 @@
 import fs from 'node:fs';import assert from 'node:assert/strict';import {createRequire} from 'node:module';
 const require=createRequire((process.env.CODEX_NODE_MODULES||'/Users/daisy/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules')+'/package.json'),{chromium}=require('playwright');
-const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||'/Users/daisy/Library/Caches/ms-playwright/chromium-1228/chrome-mac-arm64/Google Chrome for Testing.app/Contents/MacOS/Google Chrome for Testing'}),page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[],checks=[];
+const browser=await chromium.launch({executablePath:process.env.CHROMIUM_PATH||chromium.executablePath()}),page=await browser.newPage({viewport:{width:1440,height:900}}),errors=[],checks=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
  await page.goto(process.env.BASE_URL||'http://127.0.0.1:8000/');await page.waitForFunction(()=>window.__mucs);

@@ -1,51 +1,50 @@
-import fs from 'node:fs';import vm from 'node:vm';import {gzipSync,gunzipSync,brotliCompress,brotliDecompressSync,constants} from 'node:zlib';import {createHash} from 'node:crypto';import {promisify} from 'node:util';
-import {decodeMesh,unshuffle} from '../tracks2/mesh-codec.mjs';
+import fs from 'node:fs';import vm from 'node:vm';import {gunzipSync,brotliCompress,brotliDecompressSync,constants} from 'node:zlib';import {createHash} from 'node:crypto';import {promisify} from 'node:util';
+import {recipeSource,recipeFingerprint} from './recipes.mjs';
 export const LITE_KEYS=['bugatti','tesla','mcf1','f1mercedes','db5','spectre','viperacr','supra','porsche919','dacia'];
-const compact=value=>gzipSync(JSON.stringify(value),{level:9}).toString('base64');
 const allCatalog=JSON.parse(fs.readFileSync('assets/tracks-2/pack.js','utf8').match(/^window.TRACK2_CATALOG=(.*);$/m)[1]);
-const context=JSON.parse(fs.readFileSync('assets/gps/context.json','utf8')),compressed=new Map();
-const brotli=promisify(brotliCompress);
-export async function prepareCompression(){
- const entries=[...new Map(Object.values(allCatalog.catalog).map(e=>[e.id,e])).values()];let next=0,done=0;fs.mkdirSync('tools/offline/.cache',{recursive:true});
- await Promise.all(Array.from({length:3},async()=>{while(next<entries.length){const {id,file}=entries[next++],src=fs.readFileSync('assets/tracks-2/'+file,'utf8'),value=JSON.parse(src.slice(src.indexOf(']=')+2).trim().replace(/;$/,'')),raw=gunzipSync(Buffer.from(value.gzip,'base64')),cache='tools/offline/.cache/'+id+'-q11.br';
-  const packed=fs.existsSync(cache)?fs.readFileSync(cache):await brotli(raw,{params:{[constants.BROTLI_PARAM_QUALITY]:11}});
-  if(!brotliDecompressSync(packed).equals(raw))throw Error('Brotli vertex round-trip: '+file);
-  fs.writeFileSync(cache,packed);const originalSize=Buffer.from(value.gzip,'base64').length;
-  if(packed.length<originalSize){value.brotli=packed.toString('base64');delete value.gzip;}
-  const encoded=compact(value);if(gunzipSync(Buffer.from(encoded,'base64')).toString()!==JSON.stringify(value))throw Error('Metadata round-trip: '+file);compressed.set(id,encoded);
-  console.log('Lossless track package',++done+'/'+entries.length,id,Math.round(Math.min(originalSize,packed.length)/originalSize*100)+'% of gzip');
- }}));
-}
+const context=JSON.parse(fs.readFileSync('assets/gps/context.json','utf8')),packages=new Map(),brotli=promisify(brotliCompress);
 function filter(obj,keys){return Object.fromEntries(Object.entries(obj).filter(([k])=>keys.has(k)));}
-export function embedded(enc,keys=null){
- const snapshots=JSON.parse(fs.readFileSync('tools/offline/exteriors.json','utf8'));
- const routes=keys?new Set(keys.flatMap(key=>snapshots[key].routes)):new Set(Object.keys(allCatalog.catalog));
- const catalog=filter(allCatalog.catalog,routes),data=filter(allCatalog.data,routes),meshes={};
- for(const {id,file} of Object.values(catalog)){
-  if(!compressed.has(id)){
-   const src=fs.readFileSync('assets/tracks-2/'+file,'utf8'),value=JSON.parse(src.slice(src.indexOf(']=')+2).trim().replace(/;$/,''));
-   const packed=compact(value);
-   // Compression is a storage change only: all metadata and already-encoded
-   // vertex bytes must survive byte-for-byte. Nothing is resampled or rounded.
-   if(gunzipSync(Buffer.from(packed,'base64')).toString()!==JSON.stringify(value))throw Error('Track compression round-trip: '+file);
-   compressed.set(id,packed);
-  }
-  meshes[id]=compressed.get(id);
+function simulatorDictionary(enc){
+ const lines=[],lookup=new Map(),files={};
+ for(const [key,value]of Object.entries(enc)){
+  const original=gunzipSync(Buffer.from(value,'base64')).toString();
+  files[key]=original.split('\n').map(line=>{if(!lookup.has(line)){lookup.set(line,lines.length);lines.push(line);}return lookup.get(line);});
+  if(files[key].map(id=>lines[id]).join('\n')!==original)throw Error('Simulator text round-trip: '+key);
  }
- const gps=keys?{...context,routes:filter(context.routes,routes)}:context;
- let runtime=fs.readFileSync('tools/tracks2/asset-runtime.js','utf8').replace('(function(){','(function(){\n'+unshuffle.toString()+'\n'+decodeMesh.toString()+'\n');
- runtime=runtime.replace("if(!window.TRACK2_ASSETS[entry.id])await new Promise", "if(!window.TRACK2_ASSETS[entry.id]&&window.MUCS_LOAD_TRACK_ASSET)await window.MUCS_LOAD_TRACK_ASSET(entry.id);\n   if(!window.TRACK2_ASSETS[entry.id])await new Promise");
- runtime=runtime.replace('atob(packed.gzip)','atob(packed.brotli||packed.gzip)').replace("const unpacked=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();","const unpacked=packed.brotli?(await window.MUCS_BROTLI)(bytes):await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer();");
+ return{lines,files};
+}
+export async function prepareCompression(enc){
+ const proof=JSON.parse(fs.readFileSync('tools/offline/recipe-proof.json','utf8')),corrections=JSON.parse(fs.readFileSync('tools/offline/recipe-corrections.json','utf8'));
+ if(corrections.fingerprint!==proof.fingerprint||Object.keys(corrections.routes).length!==Object.keys(allCatalog.data).length)throw Error('Refresh browser arithmetic corrections with tools/offline/verify-browser-recipes.mjs');
+ if(proof.fingerprint!==recipeFingerprint(allCatalog)||Object.keys(proof.routes).length!==Object.keys(allCatalog.data).length)throw Error('World recipes changed: run node tools/offline/verify-recipes.mjs first.');
+ const snapshots=JSON.parse(fs.readFileSync('tools/offline/exteriors.json','utf8'));
+ fs.mkdirSync('tools/offline/.cache',{recursive:true});
+ for(const keys of [null,LITE_KEYS]){
+  const routes=keys?new Set(keys.flatMap(key=>snapshots[key].routes)):new Set(Object.keys(allCatalog.catalog)),allowed=keys?new Set(keys):null;
+  const selected=allowed?Object.fromEntries(Object.entries(enc).filter(([k])=>allowed.has(k.split('@')[0]))):enc;
+  const bundle={catalog:filter(allCatalog.catalog,routes),data:filter(allCatalog.data,routes),proof:Object.fromEntries(Object.entries(filter(proof.routes,routes)).map(([name,p])=>[name,{...p,...corrections.routes[name]}])),recipe:recipeSource(),museum:JSON.parse(fs.readFileSync('tools/tracks2/museum-cars.json')),gps:keys?{...context,routes:filter(context.routes,routes)}:context,sims:simulatorDictionary(selected),exteriors:Object.fromEntries(Object.entries(snapshots).filter(([key])=>!allowed||allowed.has(key)).map(([key,value])=>[key,value.svg]))};
+  const raw=Buffer.from(JSON.stringify(bundle)),hash=createHash('sha256').update(raw).digest('hex'),cache='tools/offline/.cache/bundle-'+hash+'.br';
+  const packed=fs.existsSync(cache)?fs.readFileSync(cache):await brotli(raw,{params:{[constants.BROTLI_PARAM_QUALITY]:11,[constants.BROTLI_PARAM_LGWIN]:24}});
+  if(!brotliDecompressSync(packed).equals(raw))throw Error('Offline archive round-trip');fs.writeFileSync(cache,packed);packages.set(keys?'lite':'full',packed.toString('base64'));
+  console.log(keys?'LITE':'Full','lossless archive:',(packed.length/1048576).toFixed(2),'MiB compressed;',Object.keys(bundle.data).length,'unchanged worlds');
+ }
+}
+export function embedded(enc,keys=null){
+ const packed=packages.get(keys?'lite':'full');if(!packed)throw Error('Call prepareCompression first');
  const wasmModule=fs.readFileSync('vendor/brotli-dec-wasm/pkg/brotli_dec_wasm.js').toString('base64'),wasm=fs.readFileSync('vendor/brotli-dec-wasm/pkg/brotli_dec_wasm_bg.wasm').toString('base64');
- return `window.EMBEDDED_SIM_GZIP_BASE64=${JSON.stringify(enc)};
+ const runtime=fs.readFileSync('tools/offline/recipe-runtime.js','utf8');
+ return `window.EMBEDDED_SIM_GZIP_BASE64=${JSON.stringify(Object.fromEntries(Object.keys(enc).map(k=>[k,true])))};
  (function(){
- const stored=${JSON.stringify(meshes)},pending=new Map();
- window.MUCS_BROTLI=import("data:text/javascript;base64,${wasmModule}").then(async m=>{await m.default({module_or_path:Uint8Array.from(atob("${wasm}"),c=>c.charCodeAt(0))});return m.decompress;});
- async function inflate(base64){const bytes=Uint8Array.from(atob(base64),c=>c.charCodeAt(0));return JSON.parse(await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))).text());}
- window.TRACK2_ASSETS||={};
- window.MUCS_LOAD_TRACK_ASSET=async function(id){if(window.TRACK2_ASSETS[id])return; if(pending.has(id))return pending.get(id);if(!stored[id])throw Error('This offline edition does not include that route.');const job=inflate(stored[id]).then(value=>{window.TRACK2_ASSETS[id]=value;delete stored[id];});pending.set(id,job);try{await job;}finally{pending.delete(id);}};
- window.MUCS_GPS_LOADING=inflate(${JSON.stringify(compact(gps))}).then(value=>window.MUCS_GPS_CONTEXT=value);
- window.TRACK2_READY=(async()=>{window.TRACK2_CATALOG=await inflate(${JSON.stringify(compact({data,catalog}))});${runtime}\nreturn window.TRACK2_UNPACK;})();
+ ${runtime}
+ const ready=import("data:text/javascript;base64,${wasmModule}").then(async m=>{
+  await m.default({module_or_path:Uint8Array.from(atob("${wasm}"),c=>c.charCodeAt(0))});
+  const bundle=JSON.parse(new TextDecoder().decode(m.decompress(Uint8Array.from(atob("${packed}"),c=>c.charCodeAt(0)))));
+  for(const image of document.querySelectorAll('[data-offline-art]')){const svg=bundle.exteriors[image.dataset.offlineArt];if(svg)image.src=URL.createObjectURL(new Blob([svg],{type:'image/svg+xml'}));}
+  window.MUCS_GPS_CONTEXT=bundle.gps;window.TRACK2_CATALOG={data:bundle.data,catalog:bundle.catalog};return bundle;
+ });
+ window.MUCS_OFFLINE_SIM_TEXT=async key=>{const {sims}=await ready;if(!sims.files[key])throw Error('This offline edition does not include that car.');return sims.files[key].map(i=>sims.lines[i]).join('\\n');};
+ window.MUCS_GPS_LOADING=ready.then(b=>b.gps);
+ window.TRACK2_UNPACK=window.TRACK2_READY=ready.then(installOfflineRecipes);
  })();\n`;
 }
 export function offlinePage(index,registry,FILES,FILES_2,enc,build,keys=null,fullEmbed=null){
@@ -63,8 +62,7 @@ export function offlinePage(index,registry,FILES,FILES_2,enc,build,keys=null,ful
   const snapshot=snapshots[key];if(!snapshot)throw Error('Missing exterior snapshot for '+key);
   if(snapshot.sourceHash!==createHash('sha256').update(fs.readFileSync(FILES[key])).digest('hex'))throw Error('Refresh exterior snapshot for '+key);
   if(['tesla','supra'].includes(key)&&snapshot.artHash!==createHash('sha256').update(fs.readFileSync('tools/vehicle-refinements/profile-art.js')).digest('hex'))throw Error('Refresh side-profile snapshot for '+key);
-  const image='data:image/svg+xml;base64,'+Buffer.from(snapshot.svg).toString('base64');
-  const photo=`<div class="photo"><img class="offline-exterior" alt="${key} — simulator exterior artwork" src="${image}" loading="lazy"></div>\n          <div class="car-info">`;
+  const photo=`<div class="photo"><img class="offline-exterior" alt="${key} — simulator exterior artwork" data-offline-art="${key}" loading="lazy"></div>\n          <div class="car-info">`;
   const replaced=card.replace(/<div class="photo">[\s\S]*?<div class="car-info">/,()=>photo);if(card===replaced)throw Error('No garage artwork slot for '+key);return replaced;
  });
  html=html.replace('</head>','<style>.photo .offline-exterior{width:100%;height:100%;object-fit:contain;display:block}.photo{background:radial-gradient(ellipse at 50% 25%,#344552,#111c25 80%)}</style></head>');

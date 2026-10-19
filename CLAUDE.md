@@ -1157,8 +1157,8 @@ every garage car, including historical cars and F1.
 GitHub Pages uses `.github/workflows/pages.yml` on pushes to `main`.
 The workflow runs `tools/embed-sims.mjs`, then `tools/build-pages.mjs`, and deploys
 at `https://richardjiangs.github.io/multi-user-racecar-simulator/`.
-`index-offline.html` and `sims-embedded.js` are generated locally and in Actions;
-do not commit them (each exceeds GitHub's 100 MB file limit). Keep all 64 original
+`index-offline.html`, `index-offline LITE.html`, and `sims-embedded.js` are generated
+locally and in Actions; do not commit generated bundles. Keep all 64 original
 simulator HTML files. Track 2.0 uses 63 separate HTML variants and the complete
 `assets/tracks-2/` directory. See `docs/TRACK2_SOURCES.md` for route provenance,
 model limitations, build steps and the verification suite.
@@ -1193,8 +1193,11 @@ Supra now offers all five GPS modes. Porsche 919 hybrid energy/lap consumption i
 Real Mode-only; accessible Boost remains continuous while respecting brake/pit/sail
 limits. Apply through `prepare.js` to garage copies and generated Track 2.0, keeping
 originals intact. Offline cards use captured exterior SVGs; refresh snapshots with
-`tools/offline/snapshot-exteriors.mjs`. `tools/offline/build.mjs` losslessly packages
-track data and produces full and ten-car `index-offline LITE.html` editions. Keep
+`tools/offline/snapshot-exteriors.mjs`. `tools/offline/build.mjs` deduplicates source lines and stores exact track
+construction recipes, verified against every original vertex/batch by
+`tools/offline/verify-recipes.mjs`. Complete worlds are prepared in a worker and
+integrity-checked before driving; the <20 MB target never reduces scenery/detail.
+It produces full and ten-car `index-offline LITE.html` editions. Keep
 both large offline HTML files, `sims-embedded.js`, and compression caches out of Git.
 Run `tests/refinements/tesla-supra.mjs`, `porsche919-boost.mjs` and
 `offline-editions.mjs` (the latter two in the same tests/refinements directory).

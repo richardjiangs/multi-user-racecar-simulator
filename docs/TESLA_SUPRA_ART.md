@@ -62,19 +62,49 @@ garage keeps its existing photos. It builds the ten requested LITE car entries,
 both track versions, and all the Track 2.0 routes those cars can select. The
 McLaren F1 entry is the 1993 road car; the Formula 1 entry is Mercedes.
 
-Mesh coordinate/color bytes, spatial batches, route data and GPS context retain
-full precision. Mesh storage uses Brotli quality 11 when smaller than the original
-gzip; every build verifies exact decompression equality. Metadata uses gzip.
-An embedded, pinned `brotli-dec-wasm` 2.3.2 decoder opens the complete selected
-route locally, without network access. Its MIT/Apache licenses accompany the
-vendored source. Per-route results are cached locally in an ignored build directory.
-No geometry, textures or scenery are simplified. PeerJS and the existing Trystero
-module are embedded as well; online racing still naturally requires a connection.
+The full edition is approximately **13.0 MB**, and the ten-car LITE edition is
+approximately **8.0 MB** (decimal file sizes), both below the 20 MB target.
+
+The small offline format uses two lossless dictionaries:
+
+1. All simulator source lines are stored once and referenced by line number. Each
+   of the 127 source files must reconstruct byte-for-byte; LITE contains its 20.
+2. Existing track construction code plus its exact inputs replaces millions of
+   expanded vertex records. `verify-recipes.mjs` compares EVERY route against the
+   published mesh: vertex count, all position/color/material bytes, draw order and
+   spatial batches. The source/input fingerprint binds `recipe-proof.json` to that
+   verification, and a changed recipe cannot silently build without a fresh audit.
+
+A dedicated browser worker expands the complete selected route BEFORE driving.
+It verifies SHA-256 hashes of the complete mesh and batches before exposing them
+at all. No road or scenery is created in response to the car's position. Physics,
+route dimensions, scenery, map context and all authored detail remain unchanged.
+The archive includes original spatial bounds and a sparse set of exact coordinate
+word corrections for arithmetic differences between JavaScript engines. They are a
+no-op when a browser already produces the original bits; final SHA-256 checks
+still require an exact match. `verify-browser-recipes.mjs` checks all routes in
+Chrome, Safari's WebKit and Firefox and binds the correction table to the same source fingerprint.
+
+Preparation can take several seconds for a long Dakar stage; the interface stays
+responsive and shows progress. Two completed route buffers are cached, matching
+previous memory behaviour. Private recipe inputs remain separate from live
+physics/map caches.
+
+Homepage SVG markup is also stored in the compressed archive, then displayed
+through local Blob URLs at its original vector quality.
+
+The combined dictionary is compressed with Brotli quality 11 and a 16 MiB window.
+Every build verifies decompression equality. The pinned, embedded `brotli-dec-wasm`
+2.3.2 decoder needs no network access; its MIT/Apache licenses accompany the source.
+PeerJS and Trystero are also embedded; online racing still needs a connection.
 
 Build:
 
 ```
 python3 tools/build-track2.py
+# After any world geometry source/input change:
+node --max-old-space-size=8192 tools/offline/verify-recipes.mjs
+node --max-old-space-size=8192 tools/offline/verify-browser-recipes.mjs
 node --max-old-space-size=8192 tools/embed-sims.mjs
 node tools/build-pages.mjs
 ```
@@ -84,5 +114,7 @@ the final embed. Both generated offline HTML files remain outside Git; CI publis
 them alongside the normal website. LITE is named exactly `index-offline LITE.html`.
 
 Verification: `tests/refinements/tesla-supra.mjs`,
-`tests/refinements/offline-editions.mjs`, `tests/gps/offline.mjs`,
+`tests/refinements/offline-editions.mjs` (including <20 MB size, all source hashes,
+complete mesh integrity, main-thread responsiveness and no network),
+`tests/refinements/offline-portability.mjs` (Chrome, WebKit and Firefox loading from disk), `tests/gps/offline.mjs`,
 `tests/track2/preservation.py`, and the existing performance/browser suites.
