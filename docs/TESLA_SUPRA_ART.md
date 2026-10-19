@@ -110,8 +110,10 @@ node tools/build-pages.mjs
 ```
 
 After an exterior change, refresh `exteriors.json` against the local garage before
-the final embed. Both generated offline HTML files remain outside Git; CI publishes
-them alongside the normal website. LITE is named exactly `index-offline LITE.html`.
+the final embed. The full `index-offline.html` is tracked in Git at the user's
+request so it appears in the repository's file list; regenerate and commit it
+with release changes. CI publishes both editions alongside the normal website.
+LITE remains outside Git and is named exactly `index-offline LITE.html`.
 
 Verification: `tests/refinements/tesla-supra.mjs`,
 `tests/refinements/offline-editions.mjs` (including <20 MB size, all source hashes,
