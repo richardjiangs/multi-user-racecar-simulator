@@ -68,7 +68,7 @@ export function offlinePage(index,registry,FILES,FILES_2,enc,build,keys=null,ful
  html=html.replace('</head>','<style>.photo .offline-exterior{width:100%;height:100%;object-fit:contain;display:block}.photo{background:radial-gradient(ellipse at 50% 25%,#344552,#111c25 80%)}</style></head>');
  if(keys){
   html=html.replace(/const cars = (\{[\s\S]*?\n      \});/,(_,literal)=>'const cars = '+JSON.stringify(filter(vm.runInNewContext('('+literal+')'),allowed))+';');
-  html=html.replace('64 carefully researched simulators','10 carefully researched simulators').replace('<title>','<title>LITE · ').replace('aria-label="Car choices"','aria-label="LITE — ten car choices"');
+  html=html.replace(/\d+ carefully researched simulators/,'10 carefully researched simulators').replace('<title>','<title>LITE · ').replace('aria-label="Car choices"','aria-label="LITE — ten car choices"');
   html=html.replace('<section class="cars"','<p class="settings-note">LITE edition · 10 cars · full-quality Track 1.0 and Track 2.0, including their shared circuits and individual routes.</p><section class="cars"');
  }
  return html;

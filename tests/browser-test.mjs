@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /* ============================================================================
-   BROWSER SMOKE TEST — index.html shell + all 64 embedded simulators.
+   BROWSER SMOKE TEST — index.html shell + all 65 embedded simulators.
    Serves the repo over localhost, then verifies:
-     1. the garage renders all 64 car cards
+     1. the garage renders all 65 car cards
      2. PRIVATE PRACTICE keeps the AI rival grid alive (the old shell cleared
         it every 750 ms — the "no AI cars" bug this suite pins down)
      3. each embedded sim boots inside the shell and its physics advance
@@ -611,7 +611,7 @@ const check = (label, ok, detail) => {
   }
   // and they must not all look alike: the housings differ per car the way the dashboards do
   check(side + " with wing pods, " + centre + " with an interior mirror, " + frames.size + " housing styles",
-    bad.length === 0 && side === 14 && centre === 49 && frames.size >= 6, bad.slice(0, 4).join(" | "));
+    bad.length === 0 && side === 14 && centre === 50 && frames.size >= 6, bad.slice(0, 4).join(" | "));
 }
 
 /* ---------- the DB5 mission stages are stages, not circuits ----------
@@ -1013,7 +1013,7 @@ await page.addInitScript(()=>localStorage.setItem('mucs-track-version','1'));
 await page.goto(BASE, { waitUntil: "domcontentloaded" });
 
 console.log("▶ garage");
-check("sixty-four car cards render", await page.locator(".car-card").count() === 64);
+check("sixty-five car cards render", await page.locator(".car-card").count() === 65);
 check("host board present", await page.locator("#activeHostList").count() === 1);
 
 /* ---------- every card must be WIRED, not just rendered ----------
@@ -1023,7 +1023,7 @@ check("host board present", await page.locator("#activeHostList").count() === 1)
    `if (!car) return;` and every button on them was inert — and this file never tried
    them, because they were not in the list. Derive, never enumerate. */
 const CAR_KEYS = await page.$$eval("[data-car-card]", (els) => els.map((e) => e.dataset.carCard));
-check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 64);
+check(`every card key discovered from the page (${CAR_KEYS.length})`, CAR_KEYS.length === 65);
 
 const wiring = await page.evaluate((keys) => keys.map((k) => ({
   key: k,

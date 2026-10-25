@@ -86,6 +86,10 @@ for key,file in files.items():
  rep('Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect });','Object.assign(app, { resizeCanvas, drawWorld, drawMap, injectArt, roundRect,trackFrame,trackPoint,projectTrack });')
  modules='window.__Track2App=window.'+appname+';\n'+'\n'.join((S/name).read_text()for name in ['compat.js','track-runtime.js','rally-runtime.js','rally-weather.js','contact-runtime.js','driver-runtime.js','route-assets.js'])
  rep('/* ===== render: the driving world ===== */',modules+'\n/* ===== render: the driving world ===== */')
+ if key=='roadster2':
+  rep('function projectAhead(distAhead, lateralM) {','function projectAhead(distAhead, lateralM) { if(app.roadsterScene?.())return app.roadsterProjection(distAhead,lateralM);')
+  rep('function drawRearView(mx, my, mw, mh, p, pal) {','function drawRearView(mx, my, mw, mh, p, pal) { if(app.roadsterScene?.())return app.drawRoadsterRear(mx,my,mw,mh);')
+  rep('function trackFrame(){','function trackFrame(){const flight=app.roadsterFlightPose?.();if(flight){trackCamera={...flight,psi:flight.yaw};trackPitch=flight.pitch;return;}')
  if f1 and key!='f1mercedes':s=f1_art.integrate(s)
  # Record byte-identical audio and keyboard source before/after.
  preserved={}

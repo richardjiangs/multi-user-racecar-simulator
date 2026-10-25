@@ -417,6 +417,12 @@ const CARS = {
     topSpeed: {kmh: 322, minT: 80}, // Normal benchmark; official claim >200 mph
     brake100: {target: 26, tol: .05}, // model braking target; no manufacturer distance
   },
+  roadster2: {
+    file: "Tesla Roadster 2 simulator.html", app: "RoadsterApp", label: "Roadster 2 — simulation estimates",
+    marks: {100: {target: 1.8, tol: .4}},
+    topSpeed: {kmh: 400, minT: 90},
+    brake100: {target: 30, tol: 4},
+  },
 };
 
 /* 2026 Formula 1 grid — eleven teams built from one shared chassis SPEC (identical

@@ -1,7 +1,7 @@
 # Multi-User Racecar Simulator — Agent Guide (CLAUDE.md)
 
-A garage of sixty-four simulators — each a **single self-contained HTML file** —
-forty-nine road/classic/track cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
+A garage of sixty-five simulators — each a **single self-contained HTML file** —
+fifty road/classic/track cars & hypercars, the full **2026 Formula 1 grid** (eleven teams),
 and four **2026 Dakar Rally** raid cars (Dacia Sandrider · Ford Raptor T1+ · Toyota GR DKR
 Hilux · Prodrive Hunter). The road block runs from the Bugatti Chiron through the Toyota
 Supra MK4 (A80), the six later hypercars (Hennessey Venom F5 · Lotus Evija · Mercedes-AMG
@@ -1203,3 +1203,7 @@ It produces full and ten-car `index-offline LITE.html` editions. Commit the full
 `index-offline.html`; keep LITE, `sims-embedded.js`, and compression caches out of Git.
 Run `tests/refinements/tesla-supra.mjs`, `porsche919-boost.mjs` and
 `offline-editions.mjs` (the latter two in the same tests/refinements directory).
+
+## Roadster 2 and tracked offline editions (October 2026)
+
+The new `roadster2` / `RoadsterApp` sits immediately before the eleven F1 cars. Its unique vector artwork, flight controller and complete JFK/Golden Gate/test-ground worlds are authored in `tools/roadster2/`. Read [the Roadster implementation notes](tools/roadster2/README.md) before changing them. Its unpublished performance and gas parameters are explicitly estimated game values. Z selects Thrust, Y selects Rocket / SpaceX, Tab/Shift accelerate/brake in flight, W/S climb/descend, A/D bank, touchpad or touch wheel steers heading, I/K control pitch, F holds, G lands, V boosts. Preserve all original 64 simulators. Both `index-offline.html` and `index-offline LITE.html` are now tracked in Git by user request; both must remain below 20 MB with exact simulator source and world geometry. LITE retains the same ten keys. Rebuild, refresh the Roadster exterior snapshot after any source edit, then embed.
