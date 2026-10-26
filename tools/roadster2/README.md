@@ -15,8 +15,10 @@ Precise production mass, drivetrain output and gas endurance are not fully publi
 
 - Z: toggle Thrust augment; V: hold rear cold-gas boost.
 - Y: toggle Rocket / SpaceX. Disarming in flight requests a landing first.
-- Rocket flight only: Tab accelerates; Shift brakes; W/S climb/descend; A/D bank the yoke; horizontal touchpad swipe or touch wheel steers heading. Ground mode retains the standard controls.
-- I/K: pitch; F: stabilize and hold altitude; G: land.
+- Rocket mode only: Tab increases the throttle lever by 5 percentage points per press; Shift decreases it. Holding a key does not repeat the adjustment. Release keeps the selected throttle. Up/down arrows are temporary accelerator/brake pedals; braking overrides but does not reset the lever.
+- A/D move the bank yoke; it keeps its deflection after release. Left/right arrows, horizontal touchpad swipes (including fullscreen capture) and the touch wheel steer heading and trajectory independently.
+- P/L command vertical hover up/down. W/S pitch the nose up/down without an angular stop: forward thrust follows the nose, allowing climbs, dives and full loops. W can lift a moving car; it cannot act as the ground accelerator in Rocket mode. I/K remain pitch aliases.
+- F explicitly levels the nose, centers the yoke and holds altitude; G resets throttle/yoke and lands. Disarming restores normal W/S and A/D road controls. The shared-track input boundary and capturing key listeners both enforce this separation.
 - Cockpit D READY: shut doors, buckle, power on, select drive. Individual belt, power, neutral, reverse, lights and door controls also work.
 - REFILL services a stopped car on the ground. Real Mode consumes gas and preserves damage; accessible mode replenishes gas and has no persistent impact damage.
 - Touch controls are in the Roadster controls drawer. The existing steering wheel, D-pad and immediate T+Space trackpad controls remain available.
@@ -29,6 +31,7 @@ Flight works in the four complete Roadster worlds in both editions and over shar
 2. `python3 tools/build-track2.py`
 3. Serve repo on localhost:8000; `node tools/roadster2/snapshot.mjs`
 4. `node --max-old-space-size=8192 tools/embed-sims.mjs`
-5. `node tests/roadster2/flight.mjs`
+5. `node tests/roadster2/controls.mjs` and `node tests/roadster2/controls.mjs --garage` (real keyboard, slider, touch wheel and fullscreen steering, both physics paths)
+6. `node tests/roadster2/flight.mjs` and `node tests/roadster2/arenas.mjs` (worlds, gas, landings, ramps and touch controls)
 
 The builder clones the existing EV template for compatibility, then installs unique art, controls, audio and worlds. Unused donor dashboard and body drawings are removed during generation. Each world mesh is constructed completely before driving and uploaded once per selection; the render loop does not generate chunks in front of the car. All new assets are procedural or vector source, with no remote runtime dependency. The LITE edition retains its specified ten cars.
