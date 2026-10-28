@@ -4,7 +4,7 @@
 function installRoadsterRuntime(app){
  const s=app.state,C=app.clamp,doc=document,keys=Object.create(null),G=9.80665,M=app.SPEC.massKg,IMPULSE=300000;
  const angle=a=>Math.atan2(Math.sin(a),Math.cos(a));
- const fresh=()=>({x:0,y:0,z:0,yaw:0,pitch:0,roll:0,vx:0,vy:0,vz:0,alt:0,gas:1,airborne:false,hold:true,holdY:0,positionHold:false,holdX:0,holdZ:0,spinInput:0,landing:false,thrust:0,boost:0,impact:0,rampQ:null,disableOnLand:false,throttleLever:0,yoke:0,yawCommand:0,yawInput:0});
+ const fresh=()=>({x:0,y:0,z:0,yaw:0,pitch:0,roll:0,rollRate:0,levelingRoll:false,vx:0,vy:0,vz:0,alt:0,gas:1,airborne:false,hold:true,holdY:0,positionHold:false,holdX:0,holdZ:0,spinInput:0,landing:false,thrust:0,boost:0,impact:0,rampQ:null,disableOnLand:false,throttleLever:0,yoke:0,yawCommand:0,yawInput:0});
  s.roadster=fresh();s.rocket=false;s.assist=false;
  installRoadsterArt(app);installRoadsterWorld(app);
  const old={};for(const k of['updatePhysics','selectCircuit','resetCar','updateUi','prepareTrack','trackMeshReady','toggleTestDriver','drawMap','setView','toggleDoor'])old[k]=app[k];
@@ -12,7 +12,7 @@ function installRoadsterRuntime(app){
  const flightControls=()=>s.rocket||s.roadster.airborne;
  const ready=()=>s.ignition&&s.harness&&!app.anyDoorOpen()&&(!s.realMode||!s.retired);
  function spawn(){const f=s.roadster=fresh(),t=app.roadsterScene();s.rocket=false;s.trackPack=false;s.distanceM=0;s.speedMps=0;s.laneOffset=0;s.headingRel=0;s.dayPhase=.3;s.testDriver=false;s.padThrottle=0;s.padBrake=0;s.keys=Object.create(null);for(const k in keys)delete keys[k];if(t){Object.assign(f,t.start);f.yaw=t.start.yaw||0;s.distanceM=t.start.z;app.prepareRoadsterWorld();s.rivals=[];s.traffic=[];}else syncGround();app.roadsterRefreshArt();}
- function syncGround(){const f=s.roadster,p=app.worldPose?.()||app.trackAt?.(s.distanceM);if(p){f.x=p.x;f.y=p.y||0;f.z=p.z;f.yaw=(p.psi||0)+s.headingRel;}else{f.x=s.laneOffset;f.z=s.distanceM;f.y=0;f.yaw=s.headingRel;}f.vx=Math.sin(f.yaw)*s.speedMps;f.vz=Math.cos(f.yaw)*s.speedMps;f.vy=0;f.alt=0;f.pitch=0;f.roll=0;}
+ function syncGround(){const f=s.roadster,p=app.worldPose?.()||app.trackAt?.(s.distanceM);if(p){f.x=p.x;f.y=p.y||0;f.z=p.z;f.yaw=(p.psi||0)+s.headingRel;}else{f.x=s.laneOffset;f.z=s.distanceM;f.y=0;f.yaw=s.headingRel;}f.vx=Math.sin(f.yaw)*s.speedMps;f.vz=Math.cos(f.yaw)*s.speedMps;f.vy=0;f.alt=0;f.pitch=0;f.roll=0;f.rollRate=0;f.levelingRoll=false;}
  app.prepareTrack=name=>app.roadsterScene()?(app.prepareRoadsterWorld(),Promise.resolve()):old.prepareTrack?.(name);
  app.trackMeshReady=()=>app.roadsterScene()?true:(old.trackMeshReady?.()??true);
  app.selectCircuit=name=>{old.selectCircuit(name);spawn();};
@@ -26,7 +26,7 @@ function installRoadsterRuntime(app){
  const WHEELBASE=2.75,MAX_STEER=35*Math.PI/180;
  app.roadsterSteerAngle=(input,speed)=>C(input,-1,1)*Math.min(MAX_STEER,Math.atan(1.9*G*WHEELBASE/Math.max(1,speed*speed)));
  app.roadsterTurning={wheelbaseM:WHEELBASE,maxAngleDeg:35,estimated:true};
- function holdPosition(){const f=s.roadster;f.positionHold=true;f.hold=true;f.holdX=f.x;f.holdY=f.y;f.holdZ=f.z;f.pitch=angle(f.pitch);f.leveling=true;f.yoke=0;f.throttleLever=0;f.yawCommand=0;f.yawInput=0;f.landing=false;s.padThrottle=0;}
+ function holdPosition(level=true){const f=s.roadster;f.positionHold=true;f.hold=true;f.holdX=f.x;f.holdY=f.y;f.holdZ=f.z;if(level){f.pitch=angle(f.pitch);f.roll=angle(f.roll);f.leveling=true;f.levelingRoll=true;f.yoke=0;}f.throttleLever=0;f.yawCommand=0;f.yawInput=0;f.landing=false;s.padThrottle=0;}
  function land(){const f=s.roadster;holdPosition();f.landing=true;f.throttleLever=0;f.yoke=0;s.padThrottle=0;app.showToast('Controlled descent — steer toward a clear landing surface.');}
  app.toggleRocket=()=>{const f=s.roadster;if(s.rocket&&f.airborne){land();f.disableOnLand=true;return;}s.rocket=!s.rocket;f.positionHold=false;f.landing=false;f.disableOnLand=false;f.throttleLever=0;f.yoke=0;f.yawCommand=0;s.throttle=0;s.brake=0;s.padThrottle=0;s.padBrake=0;s.testDriver=false;s.adaptiveCruise=false;s.launchArmed=false;s.launchActive=false;
   // A held road key must not survive the change of control scheme.
@@ -63,8 +63,10 @@ function installRoadsterRuntime(app){
    f.yawInput=arrows||(s.touchActive?s.touchSteer:f.yawCommand);
    if(s.trackpadSteering&&!s.touchActive){s.touchSteer=f.yawCommand;doc.documentElement.style.setProperty('--tw-rot',(s.touchSteer*120)+'deg');}
   }else f.yawInput=0;
-  let st=flight?(f.airborne?f.yoke:f.yawInput):manualTouch?s.touchSteer:target+arrows;
-  if(!flight&&app.roadsterScene()&&(s.testDriver||(s.assist&&!target&&!manualTouch))){const look=Math.max(14,Math.abs(s.speedMps)*.9),p=app.trackAt(s.distanceM+look),err=angle(Math.atan2(p.x-f.x,p.z-f.z)-f.yaw);st=C(Math.atan(5.5*Math.sin(err)/look)/app.roadsterSteerAngle(1,s.speedMps),-1,1);}
+  const manualSteer=C(target+arrows,-1,1);
+  // Explicit road keys override a quiet fullscreen touchpad and the assisted line.
+  let st=flight?(f.airborne?f.yoke:f.yawInput):manualSteer||(manualTouch?s.touchSteer:0);
+  if(!flight&&app.roadsterScene()&&!manualSteer&&!manualTouch&&(s.testDriver||s.assist)){const look=Math.max(14,Math.abs(s.speedMps)*.9),p=app.trackAt(s.distanceM+look),err=angle(Math.atan2(p.x-f.x,p.z-f.z)-f.yaw);st=C(Math.atan(5.5*Math.sin(err)/look)/app.roadsterSteerAngle(1,s.speedMps),-1,1);}
   s.steer+=(st-s.steer)*(1-Math.exp(-7*dt));
   const throttle=flight?Math.max(f.throttleLever,held('ArrowUp')?1:0):(held('KeyW')||held('ArrowUp')?1:0),brake=held('ArrowDown')||held('Space')&&!held('KeyT')||!flight&&held('KeyS');
   s.brake=C(Math.max(brake?1:0,s.padBrake||0),0,1);s.throttle=ready()?C(Math.max(throttle,s.padThrottle||0),0,1):0;
@@ -81,12 +83,15 @@ function installRoadsterRuntime(app){
  function fly(dt){
  const f=s.roadster;inputs(dt);
  const hover=(held('KeyP')?1:0)-(held('KeyL')?1:0),pitchIn=(held('KeyW')?1:0)-(held('KeyS')?1:0),spin=(held('KeyO')?1:0)-(held('KeyI')?1:0);
- if(spin&&!f.positionHold)holdPosition();f.spinInput=spin;
- if(!spin&&(pitchIn||held('ArrowUp')||held('KeyA')||held('KeyD')||Math.abs(f.yawInput)>.02))f.positionHold=false;
+ if(spin&&!f.positionHold)holdPosition(false);f.spinInput=spin;
+ if(!spin&&(pitchIn||held('ArrowUp')||Math.abs(f.yawInput)>.02))f.positionHold=false;
  if(pitchIn){f.pitch+=pitchIn*.75*dt;f.hold=false;f.leveling=false;f.landing=false;} // Continuous attitude: no clamp at vertical or inverted.
  if(hover){f.hold=true;f.holdY=f.y;f.landing=false;}
  if(f.leveling||f.landing){f.pitch-=angle(f.pitch)*(1-Math.exp(-2.8*dt));if(Math.abs(angle(f.pitch))<.002){f.pitch=0;f.leveling=false;}}
- f.roll+=(-f.yoke*1.22-f.roll)*(1-Math.exp(-3*dt));
+ // A/D commands roll rate through the held yoke, not a capped bank angle.
+ // Perimeter jets balance the roll couple: rolling alone never steers or translates.
+ if(held('KeyA')||held('KeyD'))f.levelingRoll=false;
+ const rollTarget=f.levelingRoll?C(-angle(f.roll)*2.8,-1.8,1.8):-f.yoke*1.22;
  const ground=app.roadsterSurface(f.x,f.z);f.alt=Math.max(0,f.y-ground);
  const cp=Math.cos(f.pitch),sp=Math.sin(f.pitch),sy=Math.sin(f.yaw),cy=Math.cos(f.yaw),boost=held('KeyV')?1:0,forward=f.positionHold?0:s.throttle*(7+boost*11);
  const speed=Math.hypot(f.vx,f.vz),yawRate=f.positionHold?0:f.yawInput*Math.min(2,speed/WHEELBASE*Math.tan(MAX_STEER),36/Math.max(1,speed));
@@ -100,18 +105,20 @@ function installRoadsterRuntime(app){
  const targetVy=f.landing?-C(f.alt*.7,.45,3):hover*6;
  const verticalControl=f.hold||f.landing||hover;
  const vertical=verticalControl?C(G+(targetVy-f.vy)*2.4+(!hover&&!f.landing?C((f.holdY-f.y)*1.3,-4,4):0)-sp*forward,-2.5*G,2.5*G):G;
- const bank=f.positionHold?0:-Math.sin(f.roll)*4.5,brakeAccel=Math.min(16,speed*(s.brake*1.6+(f.landing?.6:0)));
- const force=M*(Math.abs(vertical)+forward+Math.abs(bank)+speed*Math.abs(yawRate)+brakeAccel+Math.hypot(holdAX,holdAZ)+Math.abs(spinRate)*3),available=ready()&&s.rocket?tank(force,dt):0;
+ const brakeAccel=Math.min(16,speed*(s.brake*1.6+(f.landing?.6:0)));
+ const force=M*(Math.abs(vertical)+forward+Math.abs(rollTarget)*3+speed*Math.abs(yawRate)+brakeAccel+Math.hypot(holdAX,holdAZ)+Math.abs(spinRate)*3),available=ready()&&s.rocket?tank(force,dt):0;
  f.thrust=available*C(force/(M*G*3),0,1);f.boost=boost*available;
+ f.rollRate+=(rollTarget-f.rollRate)*(1-Math.exp(-4*dt))*available;f.roll+=f.rollRate*dt;
+ if(f.levelingRoll&&Math.abs(angle(f.roll))<.002&&Math.abs(f.rollRate)<.01){f.roll=0;f.rollRate=0;f.levelingRoll=false;}
  // Exact rotation preserves horizontal speed; heading and velocity both respond.
  const turn=yawRate*available*dt,ct=Math.cos(turn),st=Math.sin(turn),vx=f.vx;
  f.vx=vx*ct+f.vz*st;f.vz=f.vz*ct-vx*st;f.yaw=angle(f.yaw+turn+spinRate*available*dt);
  const drag=Math.hypot(f.vx,f.vy,f.vz)*.00055,brakeRate=speed>0?brakeAccel/speed:0;
- f.vx+=(available*(sy*cp*forward+cy*bank+holdAX-f.vx*brakeRate)-f.vx*drag)*dt;
- f.vz+=(available*(cy*cp*forward-sy*bank+holdAZ-f.vz*brakeRate)-f.vz*drag)*dt;
+ f.vx+=(available*(sy*cp*forward+holdAX-f.vx*brakeRate)-f.vx*drag)*dt;
+ f.vz+=(available*(cy*cp*forward+holdAZ-f.vz*brakeRate)-f.vz*drag)*dt;
  f.vy+=(available*(vertical+sp*forward)-G-f.vy*(drag+.04))*dt;
  const previous={...f};f.x+=f.vx*dt;f.y+=f.vy*dt;f.z+=f.vz*dt;constrainSolids(previous);
- const surface=app.roadsterSurface(f.x,f.z);if(f.y<=surface&&f.vy<0){hit(-f.vy);f.y=surface;f.vy=0;f.airborne=false;f.positionHold=false;f.spinInput=0;f.pitch=0;f.roll=0;f.yoke=0;f.throttleLever=0;f.landing=false;s.padThrottle=0;if(f.disableOnLand){s.rocket=false;f.disableOnLand=false;}if(!app.roadsterScene()){const n=app.roadsterNearest(f);if(Number.isFinite(n?.d)){s.distanceM=n.d;s.laneOffset=n.n;const p=app.trackAt(n.d);s.headingRel=angle(f.yaw-p.psi);}}}
+ const surface=app.roadsterSurface(f.x,f.z);if(f.y<=surface&&f.vy<0){hit(-f.vy);f.y=surface;f.vy=0;f.airborne=false;f.positionHold=false;f.spinInput=0;f.pitch=0;f.roll=0;f.rollRate=0;f.levelingRoll=false;f.yoke=0;f.throttleLever=0;f.landing=false;s.padThrottle=0;if(f.disableOnLand){s.rocket=false;f.disableOnLand=false;}if(!app.roadsterScene()){const n=app.roadsterNearest(f);if(Number.isFinite(n?.d)){s.distanceM=n.d;s.laneOffset=n.n;const p=app.trackAt(n.d);s.headingRel=angle(f.yaw-p.psi);}}}
  if(f.y< -1&&app.roadsterScene()?.kind==='bridge'){hit(Math.abs(f.vy)+10);const damage=s.damage,sys={...s.sys};spawn();if(s.realMode){s.damage=damage;s.sys=sys;}app.showToast('Water landing — recovered to the bridge approach.');return;}
  s.speedMps=Math.hypot(f.vx,f.vz);f.alt=Math.max(0,f.y-surface);s.airborne=f.airborne;}
  function groundStep(dt){const f=s.roadster,t=app.roadsterScene();inputs(dt);const previous={...f},v=s.speedMps,dir=s.gearMode==='R'?-1:s.gearMode==='G'?1:0,boost=(s.trackPack||s.rocket)&&held('KeyV')&&ready()?tank(M*16,dt):0;f.boost=boost;f.thrust=boost*.7;

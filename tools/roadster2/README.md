@@ -22,15 +22,17 @@ Precise production mass, drivetrain output and gas endurance are not fully publi
 - Z: toggle Thrust augment; V: hold rear cold-gas boost.
 - Y: toggle Rocket / SpaceX. Disarming in flight requests a landing first.
 - Rocket mode only: Tab increases the throttle lever by 5 percentage points per press; Shift decreases it. Holding a key does not repeat the adjustment. Release keeps the selected throttle. Up/down arrows are temporary accelerator/brake pedals; braking overrides but does not reset the lever.
-- A/D move the bank yoke; it keeps its deflection after release. Left/right arrows, horizontal touchpad swipes (including fullscreen capture) and the touch wheel steer heading and trajectory independently.
+- A/D move the roll-rate yoke; it keeps its deflection after release. It can roll continuously through full 360° rotations. A balanced thruster couple rotates the body without a sideways force or a heading change. Left/right arrows, horizontal touchpad swipes (including fullscreen capture) and the touch wheel steer heading and trajectory independently.
 - P/L command vertical hover up/down. W/S pitch the nose up/down without an angular stop: forward thrust follows the nose, allowing climbs, dives and full loops. W can lift a moving car; it cannot act as the ground accelerator in Rocket mode.
-- I/O rotate left/right in place through unlimited yaw, using a balanced thruster couple. The position controller brakes back to the captured point; spinning does not rotate the horizontal velocity.
-- F levels the nose, centers the bank yoke, zeros forward throttle and holds a fixed horizontal position and altitude. Increasing throttle or applying normal steering, pitch or bank releases position hold. P/L can adjust its height. G brakes to a fixed position and descends for landing. Disarming restores normal W/S and A/D road controls. The shared-track input boundary and capturing key listeners both enforce this separation.
+- I/O turn the nose left/right in place through unlimited yaw, independently of roll, using a balanced thruster couple. The position controller brakes back to the captured point; spinning does not rotate the horizontal velocity.
+- F levels the nose, centers the bank yoke, zeros forward throttle and holds a fixed horizontal position and altitude. Increasing throttle or applying normal steering or pitch releases position hold. A/D roll and I/O turn-in-place can be used while holding position. P/L can adjust its height. G brakes to a fixed position and descends for landing. Disarming restores normal W/S and A/D road controls. The shared-track input boundary and capturing key listeners both enforce this separation.
 - Cockpit D READY: shut doors, buckle, power on, select drive. Individual belt, power, neutral, reverse, lights and door controls also work.
 - REFILL services a stopped car on the ground. Real Mode consumes gas and preserves damage; accessible mode replenishes gas and has no persistent impact damage.
 - Touch controls are in the Roadster controls drawer. The existing steering wheel, D-pad and immediate T+Space trackpad controls remain available.
 
 Flight works in the four complete Roadster worlds in both editions and over shared Track 2.0 worlds. Legacy pseudo-3D Track 1.0 circuits keep ground driving; their launch prompt directs the driver to a flight arena or Track 2.0.
+
+Rocket-off arrow steering has priority over a quiet fullscreen trackpad, assisted line or test driver in the Roadster arenas, matching the shared-circuit input priority.
 
 ## Build and validation
 
@@ -39,7 +41,8 @@ Flight works in the four complete Roadster worlds in both editions and over shar
 3. Serve repo on localhost:8000; `node tools/roadster2/snapshot.mjs`
 4. `node --max-old-space-size=8192 tools/embed-sims.mjs`
 5. `node tests/roadster2/controls.mjs` and `node tests/roadster2/controls.mjs --garage` (real keyboard, slider, touch wheel and fullscreen steering, both physics paths)
-6. `node tests/roadster2/hover-yaw.mjs` (fixed hover, unlimited yaw, moving/ground U-turns and aircraft motion)
-7. `node tests/roadster2/flight.mjs` and `node tests/roadster2/arenas.mjs` (worlds, gas, landings, ramps and touch controls)
+6. `node tests/roadster2/ground-arrows.mjs` and `node tests/roadster2/roll.mjs` (keyboard priority and continuous independent roll)
+7. `node tests/roadster2/hover-yaw.mjs` (fixed hover, unlimited yaw, moving/ground U-turns and aircraft motion)
+8. `node tests/roadster2/flight.mjs` and `node tests/roadster2/arenas.mjs` (worlds, gas, landings, ramps and touch controls)
 
 The builder clones the existing EV template for compatibility, then installs unique art, controls, audio and worlds. Unused donor dashboard and body drawings are removed during generation. Each world mesh is constructed completely before driving and uploaded once per selection; the render loop does not generate chunks in front of the car. All new assets are procedural or vector source, with no remote runtime dependency. The LITE edition retains its specified ten cars.
