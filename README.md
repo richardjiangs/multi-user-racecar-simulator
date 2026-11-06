@@ -86,4 +86,8 @@ Please double-check the address before sending. Bitcoin transactions cannot be r
 
 ### Publishing the large offline edition
 
-GitHub Actions builds and publishes `index-offline.html` from the committed source. `sims-embedded.js` remains the generated local-folder fallback; the hosted site omits this duplicate of the entire offline data to stay within the Pages size limit. These generated files exceed GitHub’s individual Git-file limit, so they are not tracked. Run `node tools/build-pages.mjs` after embedding to check the complete deployment size. Publishing still requires pushing the intended release to `main`; `.github/workflows/pages.yml` deploys through GitHub Pages.
+The full `index-offline.html` and ten-car `index-offline LITE.html` are committed and published; both remain below 20 MB with lossless compression. `sims-embedded.js` is the untracked local-folder fallback and is omitted from the hosted site to avoid duplicating the full archive.
+
+[Individual offline downloads](offline-cars/) contain all 65 cars: 65 Track 1.0 files and 64 Track 2.0 files (the Phantom keeps its existing single edition). Each HTML runs independently with its maps and route scenery, without a server or supporting assets. The root simulator files retain their existing loading behavior.
+
+After changing simulators, run `node tools/embed-sims.mjs`, `node tools/offline/individual.mjs`, `node tools/offline/check-individual.mjs`, and `node tools/build-pages.mjs`. Commit the generated offline downloads with their manifest. The checks compare source and archive hashes and select the smallest complete lossless encoding without reducing drawing or geometry quality. Pushing to `main` deploys through `.github/workflows/pages.yml`.

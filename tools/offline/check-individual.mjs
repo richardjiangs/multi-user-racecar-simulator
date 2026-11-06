@@ -1,0 +1,5 @@
+import fs from 'node:fs';import assert from 'node:assert/strict';import {createHash} from 'node:crypto';
+const sha=b=>createHash('sha256').update(b).digest('hex'),records=JSON.parse(fs.readFileSync('offline-cars/manifest.json')),maps={'1':JSON.parse(fs.readFileSync('tools/tracks2/sim-files.json')),'2':JSON.parse(fs.readFileSync('tools/tracks2/manifest.json'))};
+assert.equal(records.length,Object.values(maps).reduce((n,m)=>n+Object.keys(m).length,0));const seen=new Set();
+for(const r of records){assert.equal(r.source,maps[r.version][r.key]);const id=r.key+'@'+r.version;assert.ok(!seen.has(id));seen.add(id);assert.equal(sha(fs.readFileSync(r.source)),r.sourceSha256,'Stale source '+id);const file=fs.readFileSync(r.file);assert.equal(file.length,r.bytes);assert.equal(sha(file),r.fileSha256,'Changed archive '+id);assert.equal(r.bytes,Math.min(...r.alternatives.map(x=>x.bytes)),'Smaller lossless format was available '+id);assert.ok(r.bytes<20_000_000);}
+console.log('PASS',records.length,'individual downloads: current source, complete file checksums, smallest lossless candidate, each below 20 MB.');

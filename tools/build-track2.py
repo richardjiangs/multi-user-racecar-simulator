@@ -90,6 +90,9 @@ for key,file in files.items():
   rep('function projectAhead(distAhead, lateralM) {','function projectAhead(distAhead, lateralM) { if(app.roadsterScene?.())return app.roadsterProjection(distAhead,lateralM);')
   rep('function drawRearView(mx, my, mw, mh, p, pal) {','function drawRearView(mx, my, mw, mh, p, pal) { if(app.roadsterScene?.())return app.drawRoadsterRear(mx,my,mw,mh);')
   rep('function trackFrame(){','function trackFrame(){const flight=app.roadsterFlightPose?.();if(flight){trackCamera={...flight,psi:flight.yaw};trackPitch=flight.pitch;return;}')
+  rep('const c=trackCamera,dx=p.x-c.x,dz=p.z-c.z,f=dx*Math.sin(c.psi)+dz*Math.cos(c.psi),u=p.y-c.y-EYE_HEIGHT,','const c=trackCamera,eye=c.airborne?app.roadsterEyePose(c,EYE_HEIGHT):{x:c.x,y:c.y+EYE_HEIGHT,z:c.z},dx=p.x-eye.x,dz=p.z-eye.z,f=dx*Math.sin(c.psi)+dz*Math.cos(c.psi),u=p.y-eye.y,')
+  rep('gl.uniform3f(uniforms.Eye,c.x,c.y+EYE_HEIGHT,c.z);','const eye=c.airborne?app.roadsterEyePose({...c,yaw:c.psi,pitch},EYE_HEIGHT):{x:c.x,y:c.y+EYE_HEIGHT,z:c.z};gl.uniform3f(uniforms.Eye,eye.x,eye.y,eye.z);')
+  rep('forward=dx*sp+dz*cp;if(Math.hypot(dx,dz)-rad>14000||forward+rad<-.5)','forward=c.airborne?(dx*sp*ct+((b.min[1]+b.max[1])/2-eye.y)*st+dz*cp*ct):dx*sp+dz*cp;if(Math.hypot(dx,dz)-rad>14000||forward+rad<-.5)')
  if f1 and key!='f1mercedes':s=f1_art.integrate(s)
  # Record byte-identical audio and keyboard source before/after.
  preserved={}

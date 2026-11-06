@@ -24,6 +24,8 @@ jobs:
       - uses: actions/configure-pages@v5
       - name: Build the complete offline garage
         run: node --max-old-space-size=8192 tools/embed-sims.mjs
+      - name: Verify individual offline downloads
+        run: node tools/offline/check-individual.mjs
       - name: Assemble website and check size
         run: node tools/build-pages.mjs
       - uses: actions/upload-pages-artifact@v4

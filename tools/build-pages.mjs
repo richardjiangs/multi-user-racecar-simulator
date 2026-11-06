@@ -4,7 +4,7 @@ import fs from 'node:fs';import path from 'node:path';
 const root=path.resolve(import.meta.dirname,'..'),out=path.join(root,'_site');fs.rmSync(out,{recursive:true,force:true});fs.mkdirSync(out,{recursive:true});
 for(const entry of fs.readdirSync(root,{withFileTypes:true})){
  const name=entry.name;if(name==='sims-embedded.js')continue; // file:// folder fallback; hosted offline use is index-offline.html
- if(entry.isDirectory()){if(['assets','vendor','docs'].includes(name))fs.cpSync(path.join(root,name),path.join(out,name),{recursive:true});continue;}
+ if(entry.isDirectory()){if(['assets','vendor','docs','offline-cars'].includes(name))fs.cpSync(path.join(root,name),path.join(out,name),{recursive:true});continue;}
  if(/\.(html|js|b64|txt)$/.test(name)||['.nojekyll','LICENSE'].includes(name))fs.copyFileSync(path.join(root,name),path.join(out,name));
 }
 let bytes=0;function size(dir){for(const entry of fs.readdirSync(dir,{withFileTypes:true})){const p=path.join(dir,entry.name);if(entry.isDirectory())size(p);else bytes+=fs.statSync(p).size;}}size(out);

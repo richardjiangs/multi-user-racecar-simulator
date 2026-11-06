@@ -11,8 +11,24 @@ function installRoadsterWorld(app){
  for(const[n,t]of Object.entries(scenes)){t.cumulative=[0];for(let i=1;i<t.points.length;i++)t.cumulative.push(t.cumulative[i-1]+Math.hypot(t.points[i][0]-t.points[i-1][0],t.points[i][1]-t.points[i-1][1]));if(t.kind==='tesla')t.L=t.cumulative.at(-1);t.name=n;t.labels=t.kind==='bridge'?[[360,'South tower'],[1640,'North tower'],[2150,'Stunt ramp']]:t.kind==='jfk'?[[200,'13R threshold'],[1050,'Terminal apron'],[4250,'31L threshold']]:[[300,'Launch zone']];app.CIRCUITS[n]={dist:t.L,env:'track',rough:.01,track:[],bumps:[],loop:t.closed,widthM:t.half*2,blurb:n};}
  const orig={};for(const k of ['trackModel','trackAt','halfWidthAt','worldPose','contactPose','pitModel','surfacePoint','projectTrack','racingOffset','trackWidthAt','trackSurface'])orig[k]=app[k];
  const scene=()=>scenes[s.route.name]||null;
- const at=(d)=>{const t=scene();if(t.kind!=='tesla')return {x:0,z:C(d,0,t.L),y:t.base,psi:0,grade:0,k:0,d};const q=(d%t.L+t.L)%t.L;let i=0;while(i<t.cumulative.length-2&&t.cumulative[i+1]<q)i++;const u=(q-t.cumulative[i])/(t.cumulative[i+1]-t.cumulative[i]),a=t.points[i],b=t.points[i+1];return{x:a[0]+(b[0]-a[0])*u,z:a[1]+(b[1]-a[1])*u,y:0,psi:Math.atan2(b[0]-a[0],b[1]-a[1]),grade:0,k:.0015,d};};
+ const at=(d)=>{const t=scene();if(t.kind==='ramp'&&d>=rampGeometry.z){const p=app.roadsterRampAt(d-rampGeometry.z);return{...p,psi:Math.atan2(p.forward[0],p.forward[2]),grade:p.forward[1]/Math.max(.0001,Math.abs(p.forward[2])),k:0,d};}if(t.kind!=='tesla')return {x:0,z:C(d,0,t.L),y:t.base,psi:0,grade:0,k:0,d};const q=(d%t.L+t.L)%t.L;let i=0;while(i<t.cumulative.length-2&&t.cumulative[i+1]<q)i++;const u=(q-t.cumulative[i])/(t.cumulative[i+1]-t.cumulative[i]),a=t.points[i],b=t.points[i+1];return{x:a[0]+(b[0]-a[0])*u,z:a[1]+(b[1]-a[1])*u,y:0,psi:Math.atan2(b[0]-a[0],b[1]-a[1]),grade:0,k:.0015,d};};
  app.roadsterScene=scene;app.roadsterScenes=scenes;
+ // User layout: uphill approach, U-bend, 2 km inverted road, open exit.
+ // Entry angle/radius/height are authored simulator geometry, not surveyed data.
+ const rampGeometry={radius:22,z:300,entryLength:160,entryBlend:40,entryAngle:Math.PI/12,straight:2000,half:7};
+ const segments=[];let end={q:0,y:0,z:rampGeometry.z,angle:0};
+ function addRampSegment(length,radius=0){const p={...end,length,radius};segments.push(p);const a=p.angle+(radius?length/radius:0);end={q:p.q+length,angle:a,y:p.y+(radius?radius*(Math.cos(p.angle)-Math.cos(a)):length*Math.sin(a)),z:p.z+(radius?radius*(Math.sin(a)-Math.sin(p.angle)):length*Math.cos(a))};}
+ addRampSegment(rampGeometry.entryBlend,rampGeometry.entryBlend/rampGeometry.entryAngle);
+ addRampSegment(rampGeometry.entryLength-rampGeometry.entryBlend);
+ addRampSegment((Math.PI-rampGeometry.entryAngle)*rampGeometry.radius,rampGeometry.radius);
+ rampGeometry.invertedStart=end.q;rampGeometry.height=end.y;rampGeometry.topZ=end.z;
+ addRampSegment(rampGeometry.straight);rampGeometry.length=end.q;app.roadsterRampGeometry=rampGeometry;
+ app.roadsterRampAt=(q,x=0)=>{q=C(q,0,rampGeometry.length);const p=segments.find(p=>q<p.q+p.length)||segments.at(-1),u=q-p.q,a=p.angle+(p.radius?u/p.radius:0);return{x,y:p.y+(p.radius?p.radius*(Math.cos(p.angle)-Math.cos(a)):u*Math.sin(a)),z:p.z+(p.radius?p.radius*(Math.sin(a)-Math.sin(p.angle)):u*Math.cos(a)),up:[0,Math.cos(a),-Math.sin(a)],forward:[0,Math.sin(a),Math.cos(a)],curvature:p.radius?1/p.radius:0};};
+ app.roadsterRampNearest=p=>{const candidates=[];for(const seg of segments){candidates.push(seg.q,seg.q+seg.length);let u;if(seg.radius){let a=Math.atan2(p.z-seg.z+seg.radius*Math.sin(seg.angle),seg.y+seg.radius*Math.cos(seg.angle)-p.y);if(a<0)a+=2*Math.PI;u=(a-seg.angle)*seg.radius;}else u=(p.y-seg.y)*Math.sin(seg.angle)+(p.z-seg.z)*Math.cos(seg.angle);candidates.push(seg.q+C(u,0,seg.length));}return candidates.map(q=>{const point=app.roadsterRampAt(q,p.x);return{q,point,distance:Math.hypot(p.y-point.y,p.z-point.z)};}).sort((a,b)=>a.distance-b.distance)[0];};
+ const rampScene=scenes['SpaceX McGregor — Demo Ramp'];rampScene.L=rampGeometry.z+rampGeometry.length;
+ rampScene.points=[[0,0]];rampScene.cumulative=[0];for(let i=0,N=Math.ceil(rampGeometry.length/4);i<=N;i++){const q=i/N*rampGeometry.length,p=app.roadsterRampAt(q);rampScene.points.push([p.x,p.z]);rampScene.cumulative.push(rampGeometry.z+q);}
+ rampScene.labels=[[rampGeometry.z,'Uphill ramp'],[rampGeometry.z+rampGeometry.invertedStart,'2 km inverted road'],[rampScene.L,'Open exit']];app.CIRCUITS[rampScene.name].dist=rampScene.L;
+
  app.trackModel=()=>scene()||orig.trackModel?.();app.trackAt=d=>scene()?at(d):orig.trackAt?.(d);
  app.halfWidthAt=d=>scene()?.half??orig.halfWidthAt?.(d)??8;
  app.worldPose=()=>scene()||s.roadster?.airborne?{...s.roadster,psi:s.roadster.yaw-s.headingRel,grade:0}:orig.worldPose?.();
@@ -22,12 +38,36 @@ function installRoadsterWorld(app){
  // Airborne queries use horizontal distance, with a full-route fallback outside road bins.
  let nearestCache=null;
  app.roadsterNearest=p=>{const t=app.trackModel();if(!t||scene())return null;if(nearestCache?.t===t&&Math.hypot(p.x-nearestCache.x,p.z-nearestCache.z)<.15)return nearestCache.n;let best=app.roadNearest?.({...p,y:0},Infinity);if(!Number.isFinite(best?.d)){const pts=t.points,N=pts.length,step=8;let index=0,score=Infinity;for(let i=0;i<N;i+=step){const q=pts[i],dist=(p.x-q[0])**2+(p.z-q[1])**2;if(dist<score){score=dist;index=i;}}best={distance:Infinity};for(let j=index-step;j<=index+step;j++){if(t.closed===false&&(j<0||j>=N-1))continue;const i=(j%N+N)%N,a=pts[i],b=pts[(i+1)%N],dx=b[0]-a[0],dz=b[1]-a[1],u=C(((p.x-a[0])*dx+(p.z-a[1])*dz)/Math.max(.001,dx*dx+dz*dz),0,1),distance=Math.hypot(p.x-a[0]-u*dx,p.z-a[1]-u*dz);if(distance<best.distance){const d=(i+u)*t.L/(t.closed===false?N-1:N),q=app.trackAt(d),n=(p.x-q.x)*Math.cos(q.psi)-(p.z-q.z)*Math.sin(q.psi);best={d,n,p:q,distance};}}}nearestCache={t,x:p.x,z:p.z,n:best};return best;};
- app.roadsterSurface=(x,z)=>{const t=scene();if(!t){const near=app.roadsterNearest({x,z});return near&&Number.isFinite(near.d)?app.surfacePoint(near.d,near.n).y:0;}if(t.kind==='bridge'){if(Math.abs(x)<=t.half&&z>=-400&&z<=t.L+400)return 67;return -2;}return 0;};
+ const WATER=-4;
+ const marinHeight=(x,z)=>{const shore=2850+180*Math.sin(x*.0014);if(z<shore)return -3;const u=z-shore;return Math.min(1,u/130)*(30+210*Math.exp(-(((x+600)/1700)**2))*Math.sin(Math.min(1,u/2300)*Math.PI*.78)**2+38*Math.sin(x*.003+z*.002)**2+18*Math.cos(x*.009-z*.004));};
+ // Query the very same triangles that are drawn, including their slope. A
+ // separate smooth height function would let tyres float above/below the mesh.
+ app.roadsterTerrainAt=(x,z)=>{
+  if(x>=-5500&&x<=5500&&z>=2650&&z<=7250){
+   const x0=Math.min(5400,-5500+Math.floor((x+5500)/100)*100),z0=Math.min(7150,2650+Math.floor((z-2650)/100)*100),u=(x-x0)/100,v=(z-z0)/100;
+   const a=marinHeight(x0,z0),b=marinHeight(x0+100,z0),c=marinHeight(x0+100,z0+100),d=marinHeight(x0,z0+100);
+   const dx=(u>=v?b-a:c-d)/100,dz=(u>=v?c-b:d-a)/100,y=u>=v?a+(b-a)*u+(c-b)*v:a+(c-d)*u+(d-a)*v,n=Math.hypot(dx,1,dz);
+   return{y,kind:'land',normal:[-dx/n,1/n,-dz/n],dx,dz};
+  }
+  if(x>=-4900&&x<=300&&z>=-2450&&z<=-150)return{y:-1,kind:'land',normal:[0,1,0],dx:0,dz:0};
+  return{y:WATER,kind:'water',normal:[0,1,0],dx:0,dz:0};
+ };
+ app.roadsterSurfaceInfo=(x,z,referenceY=Infinity)=>{
+  const t=scene();if(!t){const near=app.roadsterNearest({x,z});return{y:near&&Number.isFinite(near.d)?app.surfacePoint(near.d,near.n).y:0,kind:'road',normal:[0,1,0],dx:0,dz:0};}
+  if(t.kind==='bridge'){
+   const terrain=app.roadsterTerrainAt(x,z);
+   if(Math.abs(x)<=t.half&&z>=-400&&z<=t.L+400&&referenceY>=66.8&&terrain.y<67)return{y:67,kind:'road',normal:[0,1,0],dx:0,dz:0};
+   return terrain;
+  }
+  return{y:0,kind:'road',normal:[0,1,0],dx:0,dz:0};
+ };
+ app.roadsterWaterLevel=WATER;
+ app.roadsterSurface=(x,z,referenceY=Infinity)=>app.roadsterSurfaceInfo(x,z,referenceY).y;
  const cloudCanvas=document.createElement('canvas');cloudCanvas.width=256;cloudCanvas.height=128;const cg=cloudCanvas.getContext('2d');for(let j=0;j<35;j++){const x=45+(j*47%171),y=48+(j*31%35),r=18+(j*7%22),g=cg.createRadialGradient(x,y,0,x,y,r);g.addColorStop(0,'rgba(255,253,243,.38)');g.addColorStop(.6,'rgba(243,248,250,.18)');g.addColorStop(1,'rgba(220,237,246,0)');cg.fillStyle=g;cg.fillRect(x-r,y-r,r*2,r*2);}
  // Project the sky with the same unrestricted attitude basis as the world mesh.
  // A clamped tan(pitch) horizon cannot pass through vertical during a somersault.
  const skyCanvas=document.createElement('canvas');skyCanvas.width=96;skyCanvas.height=64;const skyCtx=skyCanvas.getContext('2d'),skyPixels=skyCtx.createImageData(96,64);
- app.roadsterSky=(w,h,pose)=>{const ctx=app.ctx,f=pose||s.roadster||{},pitch=f.airborne||scene()?f.pitch||0:0,roll=f.airborne||scene()?f.roll||0:0,psi=f.yaw||s.headingRel||0;
+ app.roadsterSky=(w,h,pose)=>{if(w<1||h<1)return;const ctx=app.ctx,f=pose||s.roadster||{},pitch=f.airborne||scene()?f.pitch||0:0,roll=f.airborne||scene()?f.roll||0:0,psi=f.yaw||s.headingRel||0;
   const sy=Math.sin(psi),cy=Math.cos(psi),sp=Math.sin(pitch),cp=Math.cos(pitch),sr=Math.sin(roll),cr=Math.cos(roll),right=[cy*cr-sy*sp*sr,cp*sr,-sy*cr-cy*sp*sr],up=[-sy*sp*cr-cy*sr,cp*cr,-cy*sp*cr+sy*sr],forward=[sy*cp,sp,cy*cp],focal=Math.min(w*.57,h*.78),pix=skyPixels.data;
   for(let y=0;y<64;y++)for(let x=0;x<96;x++){const dx=((x+.5)*w/96-w/2)/focal,dy=(h*.43-(y+.5)*h/64)/focal,alt=(dx*right[1]+dy*up[1]+forward[1])/Math.hypot(dx,dy,1),t=Math.pow(C(alt,0,1),.55),i=(y*96+x)*4;pix[i]=210-184*t;pix[i+1]=226-127*t;pix[i+2]=225-73*t;pix[i+3]=255;}
   skyCtx.putImageData(skyPixels,0,0);ctx.save();ctx.drawImage(skyCanvas,0,0,w,h);
@@ -43,7 +83,7 @@ function installRoadsterWorld(app){
  const glyphs={'1':['01','11','11','11','11','11','11'],'3':['111','001','001','111','001','001','111'],'R':['110','101','101','110','110','101','101'],'L':['100','100','100','100','100','100','111'],'J':['001','001','001','001','101','101','111'],'F':['111','100','100','110','100','100','100'],'K':['101','101','110','100','110','101','101']};
  function groundText(text,x,z,size,y){let dx=0;for(const ch of text){const rows=glyphs[ch];if(rows)rows.forEach((row,j)=>[...row].forEach((v,i)=>{if(v==='1')ground(x+dx+i*size,z-j*size,size*.85,size*.85,y,white);}));dx+=size*4;}}
  function light(x,y,z){box(x,y,z,.13,.09,.14,[.95,.93,.71]);}
- function ramp(x,z,y,curved=false){if(curved){for(let i=0;i<100;i++){const a=i/100*1.99,b=(i+1)/100*1.99,R=22;quad([x-7,y+R*(1-Math.cos(a)),z+R*Math.sin(a)],[x+7,y+R*(1-Math.cos(a)),z+R*Math.sin(a)],[x+7,y+R*(1-Math.cos(b)),z+R*Math.sin(b)],[x-7,y+R*(1-Math.cos(b)),z+R*Math.sin(b)],road);if(i%8===0){line([x-7,y+R*(1-Math.cos(a)),z+R*Math.sin(a)],[x+7,y+R*(1-Math.cos(a)),z+R*Math.sin(a)],.055,white);for(const side of[-1,1])line([x+side*7,y,z+R*Math.sin(a)],[x+side*7,y+R*(1-Math.cos(a)),z+R*Math.sin(a)],.2,metal);}}}else{for(let i=0;i<60;i++){const a=i/60,b=(i+1)/60,shape=u=>9*u*u;quad([x-5,y+shape(a),z+a*50],[x+5,y+shape(a),z+a*50],[x+5,y+shape(b),z+b*50],[x-5,y+shape(b),z+b*50],road);if(i%5===0)line([x-4.8,y+shape(a)+.02,z+a*50],[x+4.8,y+shape(a)+.02,z+a*50],.1,yellow);}for(let q=0;q<=50;q+=5)for(const side of[-1,1])box(x+side*4.7,y,z+q,.15,9*(q/50)**2,.15,metal);}}
+ function ramp(x,z,y,curved=false){if(curved){const R=rampGeometry,N=Math.ceil(R.length/.7),point=(q,n,lift=0)=>{const p=app.roadsterRampAt(q,x+n);return[p.x,p.y+p.up[1]*lift,p.z+p.up[2]*lift];};for(let i=0;i<N;i++){const a=i/N*R.length,b=(i+1)/N*R.length;quad(point(a,-7),point(a,7),point(b,7),point(b,-7),road);quad(point(a,7,-.35),point(a,-7,-.35),point(b,-7,-.35),point(b,7,-.35),metal);for(const side of[-1,1]){quad(point(a,side*7),point(a,side*7,-.35),point(b,side*7,-.35),point(b,side*7),metal);line(point(a,side*6.6,.025),point(b,side*6.6,.025),.07,yellow);line(point(a,side*7,.65),point(b,side*7,.65),.06,metal);if(i%8===0)line(point(a,side*7),point(a,side*7,.65),.06,metal);}if(i%12<5)line(point(a,0,.025),point(b,0,.025),.045,white);}for(let z=R.topZ-R.straight;z<=R.topZ;z+=40)for(const side of[-1,1]){box(side*8,0,z,.5,R.height+.5,.5,metal);line([side*8,R.height-5,z],[side*8,R.height,Math.min(R.topZ,z+40)],.14,metal);line([side*8,R.height,z],[side*8,R.height,Math.min(R.topZ,z+40)],.22,metal);}for(let q=20;q<R.invertedStart;q+=16){const p=app.roadsterRampAt(q);for(const side of[-1,1]){box(side*8,0,p.z,.4,p.y,.4,metal);line([side*8,Math.max(0,p.y-6),p.z-4],[side*8,p.y,p.z],.12,metal);}}}else{for(let i=0;i<60;i++){const a=i/60,b=(i+1)/60,shape=u=>9*u*u;quad([x-5,y+shape(a),z+a*50],[x+5,y+shape(a),z+a*50],[x+5,y+shape(b),z+b*50],[x-5,y+shape(b),z+b*50],road);if(i%5===0)line([x-4.8,y+shape(a)+.02,z+a*50],[x+4.8,y+shape(a)+.02,z+a*50],.1,yellow);}for(let q=0;q<=50;q+=5)for(const side of[-1,1])box(x+side*4.7,y,z+q,.15,9*(q/50)**2,.15,metal);}}
  if(t.kind==='bridge'){
   ground(0,1300,24000,24000,-4,[.12,.32,.39]);for(let i=0;i<1100;i++){const x=(i*457%18000)-9000,z=(i*331%18000)-7000;ground(x,z,3+i%8,1,-3.97,[.23,.43,.49]);}
   ground(0,1368.5,27.4,3537,67,road);box(0,62,1368,27,4,2737,red);for(let z=-300;z<3100;z+=9){for(let x=-9;x<=9;x+=3.6)ground(x,z,.1,3,67.025,x===-1.8?yellow:white);}
@@ -51,7 +91,7 @@ function installRoadsterWorld(app){
   for(const z of[360,1640])for(const side of[-1,1]){box(side*15,0,z,9,227,12,red,true);box(side*15,-4,z,24,19,26,[.48,.48,.43]);for(const yy of[90,124,158,190,218]){box(0,yy,z,31,5,7,red);line([-13,yy,z],[13,yy+28,z],.7,red);line([13,yy,z],[-13,yy+28,z],.7,red);}for(let yy=26;yy<225;yy+=8)for(const dx of[-3,3])box(side*15+dx,yy,z-6.05,.35,5,.13,[.43,.12,.08]);}
   for(const side of[-1,1]){for(let z=0;z<1966;z+=5){const cable=q=>q<360?67+(227-67)*(q/360)**.65:q>1640?227-(227-67)*((q-1640)/326)**.65:87+140*((q-1000)/640)**2;line([side*15,cable(z),z],[side*15,cable(z+5),z+5],.48,red);if(z%20===0)line([side*15,69,z],[side*15,cable(z),z],.065,red);}}
   // Continuous Marin headlands, with an irregular shoreline and layered ridges.
-  const hill=(x,z)=>{const shore=2850+180*Math.sin(x*.0014);if(z<shore)return -3;const u=z-shore;return Math.min(1,u/130)*(30+210*Math.exp(-(((x+600)/1700)**2))*Math.sin(Math.min(1,u/2300)*Math.PI*.78)**2+38*Math.sin(x*.003+z*.002)**2+18*Math.cos(x*.009-z*.004));};
+  const hill=marinHeight;
   for(let x=-5500;x<5500;x+=100)for(let z=2650;z<7200;z+=100){const a=[x,hill(x,z),z],b=[x+100,hill(x+100,z),z],c=[x+100,hill(x+100,z+100),z+100],d=[x,hill(x,z+100),z+100],shade=.02*Math.sin(x*.017+z*.013);quad(a,b,c,d,[.37+shade,.40+shade,.28+shade]);}
   ground(-2300,-1300,5200,2300,-1,[.37,.41,.32]);
   for(let z=0;z<2737;z+=20){line([-12,67.008,z],[12,67.008,z],.018,[.31,.33,.34]);}
@@ -70,7 +110,7 @@ function installRoadsterWorld(app){
   }else if(t.kind==='tesla'){
    for(let i=0;i<360;i++){const a=i/360*Math.PI*2,b=(i+1)/360*Math.PI*2;quad([450-458*Math.cos(a),0,908*Math.sin(a)],[450-442*Math.cos(a),0,892*Math.sin(a)],[450-442*Math.cos(b),0,892*Math.sin(b)],[450-458*Math.cos(b),0,908*Math.sin(b)],road);if(i%4===0)line([450-450*Math.cos(a),.03,900*Math.sin(a)],[450-450*Math.cos(b),.03,900*Math.sin(b)],.1,white);}
    box(400,0,0,220,18,170,[.73,.75,.72],true);for(let i=0;i<25;i++){box(284,3,-76+i*6,1,9,4,[.27,.41,.47]);box(400,19,-77+i*6,225,.6,1.4,[.25,.31,.36]);}ground(140,30,140,300,.01,[.38,.40,.39]);
-  }else{ground(0,550,80,1600,0,road);for(let z=-100;z<1200;z+=15)ground(0,z,.12,5,.02,white);ramp(0,300,0,true);t.ramp={x:0,z:300,y:0,length:44,curved:true};for(let j=0;j<12;j++)box(-110,0,j*15+200,12,8,12,[.47,.50,.51]);for(const x of[-55,55])for(let z=180;z<390;z+=15){box(x,0,z,.12,3,.12,metal);line([x,2.2,z],[x,2.2,z+15],.03,metal);}box(120,0,550,70,30,90,[.53,.57,.58],true);}
+  }else{ground(0,-400,80,3600,0,road);for(let z=-2200;z<1400;z+=15)ground(0,z,.12,5,.02,white);ramp(0,300,0,true);t.ramp={x:0,z:300,y:0,length:rampGeometry.length,curved:true};for(let j=0;j<12;j++)box(-110,0,j*15+200,12,8,12,[.47,.50,.51]);for(const x of[-55,55])for(let z=180;z<390;z+=15){box(x,0,z,.12,3,.12,metal);line([x,2.2,z],[x,2.2,z+15],.03,metal);}box(120,0,550,70,30,90,[.53,.57,.58],true);}
  }
  return {vertices:new Float32Array(data),solid};}
  let glState=null;
@@ -91,14 +131,14 @@ function installRoadsterWorld(app){
   for(const name of ['body',...(f.gear?['gear']:[]),...(f.flying&&s.time%1.3<.12?['beacons']:[])]){const part=r.aircraft[name];bindMesh(r,part);gl.drawArrays(gl.TRIANGLES,0,part.count);}
  }}
  app.prepareRoadsterWorld=()=>{const t=scene();if(!t)return;const r=renderer();if(r.name===t.name)return;const m=build(t);r.gl.bindBuffer(r.gl.ARRAY_BUFFER,r.buffer);r.gl.bufferData(r.gl.ARRAY_BUFFER,m.vertices,r.gl.STATIC_DRAW);r.name=t.name;r.count=m.vertices.length/6;t.solid=m.solid;};
- app.drawRoadsterWorld=(options={})=>{const t=scene();if(!t)return;app.prepareRoadsterWorld();const r=renderer(),{cv,gl,p,U,count}=r,w=innerWidth,h=innerHeight,f=options.camera||s.roadster,dpr=Math.min(devicePixelRatio,1.5);app.roadsterSky(w,h,f);if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}gl.viewport(0,0,cv.width,cv.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(p);const sy=Math.sin(f.yaw),cy=Math.cos(f.yaw),sp=Math.sin(f.pitch),cp=Math.cos(f.pitch),sr=Math.sin(f.roll),cr=Math.cos(f.roll);gl.uniform3f(U.eye,f.x,f.y+1.05,f.z);gl.uniform3f(U.right,cy*cr-sy*sp*sr,cp*sr,-sy*cr-cy*sp*sr);gl.uniform3f(U.up,-sy*sp*cr-cy*sr,cp*cr,-cy*sp*cr+sy*sr);gl.uniform3f(U.forward,sy*cp,sp,cy*cp);const focal=Math.min(w*.57,h*.78);gl.uniform2f(U.projection,2*focal/w,2*focal/h);gl.uniform3f(U.modelOrigin,0,0,0);gl.uniformMatrix3fv(U.modelBasis,false,new Float32Array([1,0,0,0,1,0,0,0,1]));bindMesh(r,r);gl.drawArrays(gl.TRIANGLES,0,count);drawAircraft(r,t.kind);app.ctx.drawImage(cv,0,0,w,h);if(options.cabin!==false)app.roadsterDrawCabin(w,h);};
- app.projectRoadsterPoint=p=>{const f=s.roadster,dx=p.x-f.x,dy=p.y-f.y-1.05,dz=p.z-f.z,sy=Math.sin(f.yaw),cy=Math.cos(f.yaw),sp=Math.sin(f.pitch),cp=Math.cos(f.pitch),sr=Math.sin(f.roll),cr=Math.cos(f.roll),z=dx*sy*cp+dy*sp+dz*cy*cp,right=dx*(cy*cr-sy*sp*sr)+dy*cp*sr+dz*(-sy*cr-cy*sp*sr),up=dx*(-sy*sp*cr-cy*sr)+dy*cp*cr+dz*(-cy*sp*cr+sy*sr),focal=Math.min(innerWidth*.57,innerHeight*.78),scale=focal/Math.max(.01,z);return{x:innerWidth/2+right*scale,y:innerHeight*.43-up*scale,scale,fwd:z};};
+ app.drawRoadsterWorld=(options={})=>{const t=scene();if(!t||innerWidth<1||innerHeight<1)return;app.prepareRoadsterWorld();const r=renderer(),{cv,gl,p,U,count}=r,w=innerWidth,h=innerHeight,f=options.camera||s.roadster,dpr=Math.min(devicePixelRatio,1.5);app.roadsterSky(w,h,f);if(cv.width!==Math.round(w*dpr)||cv.height!==Math.round(h*dpr)){cv.width=Math.round(w*dpr);cv.height=Math.round(h*dpr);}gl.viewport(0,0,cv.width,cv.height);gl.clearColor(0,0,0,0);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(p);const sy=Math.sin(f.yaw),cy=Math.cos(f.yaw),sp=Math.sin(f.pitch),cp=Math.cos(f.pitch),sr=Math.sin(f.roll),cr=Math.cos(f.roll);const eye=app.roadsterEyePose(f);gl.uniform3f(U.eye,eye.x,eye.y,eye.z);gl.uniform3f(U.right,cy*cr-sy*sp*sr,cp*sr,-sy*cr-cy*sp*sr);gl.uniform3f(U.up,-sy*sp*cr-cy*sr,cp*cr,-cy*sp*cr+sy*sr);gl.uniform3f(U.forward,sy*cp,sp,cy*cp);const focal=Math.min(w*.57,h*.78);gl.uniform2f(U.projection,2*focal/w,2*focal/h);gl.uniform3f(U.modelOrigin,0,0,0);gl.uniformMatrix3fv(U.modelBasis,false,new Float32Array([1,0,0,0,1,0,0,0,1]));bindMesh(r,r);gl.drawArrays(gl.TRIANGLES,0,count);drawAircraft(r,t.kind);app.ctx.drawImage(cv,0,0,w,h);if(options.cabin!==false)app.roadsterDrawCabin(w,h);};
+ app.projectRoadsterPoint=p=>{const f=s.roadster,eye=app.roadsterEyePose(f),dx=p.x-eye.x,dy=p.y-eye.y,dz=p.z-eye.z,sy=Math.sin(f.yaw),cy=Math.cos(f.yaw),sp=Math.sin(f.pitch),cp=Math.cos(f.pitch),sr=Math.sin(f.roll),cr=Math.cos(f.roll),z=dx*sy*cp+dy*sp+dz*cy*cp,right=dx*(cy*cr-sy*sp*sr)+dy*cp*sr+dz*(-sy*cr-cy*sp*sr),up=dx*(-sy*sp*cr-cy*sr)+dy*cp*cr+dz*(-cy*sp*cr+sy*sr),focal=Math.min(innerWidth*.57,innerHeight*.78),scale=focal/Math.max(.01,z);return{x:innerWidth/2+right*scale,y:innerHeight*.43-up*scale,scale,fwd:z};};
  app.roadsterProjection=(distance,lateral=0)=>app.projectRoadsterPoint(app.surfacePoint(s.distanceM+distance,lateral,.05));
  app.projectTrack=p=>scene()?app.projectRoadsterPoint(p):orig.projectTrack?.(p);
  app.racingOffset=d=>scene()?0:orig.racingOffset?.(d)??0;
  app.trackWidthAt=d=>scene()?.half??orig.trackWidthAt?.(d)??8;
  app.trackSurface=(d,n)=>scene()?.01:orig.trackSurface?.(d,n)??.01;
- app.drawRoadsterRear=(x,y,w,h)=>{const c=app.ctx;c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.translate(x,y);c.scale(w/innerWidth,h/innerHeight);app.drawRoadsterWorld({camera:{...s.roadster,yaw:s.roadster.yaw+Math.PI,pitch:0,roll:0},cabin:false});c.restore();};
+ app.drawRoadsterRear=(x,y,w,h)=>{if(w<1||h<1||innerWidth<1||innerHeight<1)return;const c=app.ctx;c.save();c.beginPath();c.rect(x,y,w,h);c.clip();c.translate(x,y);c.scale(w/innerWidth,h/innerHeight);app.drawRoadsterWorld({camera:{...s.roadster,yaw:s.roadster.yaw+Math.PI,pitch:-s.roadster.pitch,roll:-s.roadster.roll},cabin:false});c.restore();};
  app.roadsterAircraft=()=>({poses:roadsterAircraftPoses(scene()?.kind||'tesla',s.time),vertices:glState?.aircraft.body.count||0,gearVertices:glState?.aircraft.gear.count||0});
  app.roadsterWorldInfo=()=>({name:glState?.name,vertices:glState?.count||0,complete:true,staticUploads:glState?.name?1:0,webglError:glState?.gl.getError()});
 }
