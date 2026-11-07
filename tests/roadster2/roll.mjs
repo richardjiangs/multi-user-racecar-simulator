@@ -20,8 +20,8 @@ try{for(const edition of['',' 2.0']){
    assert.ok(Math.hypot(full.x-start.x,full.z-start.z)<.05,'Roll must not translate a held car');assert.ok(Math.abs(full.yaw-start.yaw)<.001,'Roll must not turn its nose');
    await step(2);const held=await read();assert.equal(held.yoke,full.yoke);assert.ok(Math.abs(held.roll-full.roll)<1e-8,'Released A/D holds the exact body angle');
    // Both controls work together: I/O turn in place without overwriting A/D roll.
-   await page.keyboard.down('i');await step(.8);await page.keyboard.up('i');const combined=await read();assert.ok(Math.abs(combined.roll-held.roll)<1e-8,'I/O preserves the set bank');const yawDelta=Math.atan2(Math.sin(combined.yaw-held.yaw),Math.cos(combined.yaw-held.yaw));assert.ok(yawDelta<-.8);assert.ok(Math.hypot(combined.x-start.x,combined.z-start.z)<.05);
-   await page.keyboard.press('f');await step(12);const level=await read();assert.ok(Math.abs(level.roll)<.002&&Math.abs(level.rollRate)<.01&&level.yoke===0,'F levels and arrests roll');assert.equal(level.positionHold,true);
+   await page.keyboard.down('i');await step(.8);await page.keyboard.up('i');const combined=await read();assert.equal(combined.yoke,held.yoke,'I/O preserves the degree yoke');for(let i=0;i<3;i++)assert.ok(Math.abs(combined.bodyAxes.up[i]-held.bodyAxes.up[i])<1e-8,'I/O preserves the body-up axis');const dot=(a,b)=>a.reduce((n,v,i)=>n+v*b[i],0),turn=Math.atan2(dot(combined.bodyAxes.forward,held.bodyAxes.right),dot(combined.bodyAxes.forward,held.bodyAxes.forward));assert.ok(turn<-.8,'I turns toward the current car-left, including upside down');assert.ok(Math.hypot(combined.x-start.x,combined.z-start.z)<.05);
+   await page.keyboard.press('f');await step(12);const level=await read();assert.ok(level.bodyAxes.up[1]>.999999&&Math.abs(level.rollRate)<.01&&level.yoke===0,'F levels and arrests roll');assert.equal(level.positionHold,true);
    reports.push({circuit,key,degrees:(full.roll-start.roll)*180/Math.PI,drift:Math.hypot(full.x-start.x,full.z-start.z)});
   }
   await frame.evaluate(()=>{RoadsterApp.drawWorld();RoadsterApp.updateUi();});

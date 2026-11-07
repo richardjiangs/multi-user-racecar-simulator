@@ -14,7 +14,14 @@ function installRoadsterRuntime(app){
  function flightAxes(f){let b=f.bodyAxes;if(!b||b.euler[0]!==f.yaw||b.euler[1]!==f.pitch||b.euler[2]!==f.roll){b=axesFromEuler(f);b.euler=[f.yaw,f.pitch,f.roll];f.bodyAxes=b;}return b;}
  function rotateRoll(b,a){const c=Math.cos(a),t=Math.sin(a),r=b.right,u=b.up;b.right=mixAxes(r,u,c,t);b.up=mixAxes(u,r,c,-t);}
  function rotatePitch(b,a){const c=Math.cos(a),t=Math.sin(a),u=b.up,v=b.forward;b.forward=mixAxes(v,u,c,t);b.up=mixAxes(u,v,c,-t);}
- function rotateHeading(b,a){const c=Math.cos(a),t=Math.sin(a);for(const k of['right','up','forward']){const v=b[k];b[k]=[v[0]*c+v[2]*t,v[1],v[2]*c-v[0]*t];}}
+ function rotateVector(v,n,a){const c=Math.cos(a),t=Math.sin(a),d=dot3(n,v),cross=cross3(n,v);return v.map((x,i)=>x*c+cross[i]*t+n[i]*d*(1-c));}
+ function rotateSteering(b,a){const c=Math.cos(a),t=Math.sin(a),r=b.right,v=b.forward;b.forward=mixAxes(v,r,c,t);b.right=mixAxes(r,v,c,-t);}
+ function levelingRotation(f,b){
+  const target=f.landing?[0,1,0]:f.neutralUp,axis=cross3(b.up,target),sn=Math.hypot(...axis),cos=C(dot3(b.up,target),-1,1);
+  // Opposite up vectors have no unique shortest axis. Roll about the nose in
+  // that one case; never unwind ambiguous Euler pitch/roll after a backflip.
+  return{axis:sn>1e-10?axis.map(v=>v/sn):b.forward,angle:Math.atan2(sn,cos)};
+ }
  // Pitch changes the flight path as well as the nose. Apply its shortest
  // rotation to momentum; pure roll leaves the nose and trajectory unchanged.
  function turnFlightVelocity(v,from,to){
@@ -33,7 +40,7 @@ function installRoadsterRuntime(app){
   f.yaw=angle(y);f.pitch=p;f.roll=r;b.euler=[f.yaw,f.pitch,f.roll];f.bodyAxes=b;
  }
  function commandedAxes(f,b,rollDelta,pitchDelta,dt,scale){
-  if(f.leveling||f.levelingRoll||f.landing){const k=Math.exp(-2.8*dt*scale),p=(f.leveling||f.landing)?angle(f.pitch)*k:f.pitch,r=(f.levelingRoll||f.landing)?angle(f.roll)*k:f.roll;const out=axesFromEuler({yaw:f.yaw,pitch:p,roll:r,yoke:-r*180/Math.PI});return out;}
+  if(f.leveling||f.levelingRoll||f.landing){const correction=levelingRotation(f,b),k=Math.exp(-2.8*dt*scale),a=correction.angle*(1-k),out={appliedYoke:b.appliedYoke*k};for(const key of['right','up','forward'])out[key]=rotateVector(b[key],correction.axis,a);return out;}
   const out={right:[...b.right],up:[...b.up],forward:[...b.forward],appliedYoke:b.appliedYoke+(-rollDelta*180/Math.PI)*scale};
   rotateRoll(out,rollDelta*scale);rotatePitch(out,pitchDelta*scale);return out;
  }
@@ -41,7 +48,7 @@ function installRoadsterRuntime(app){
  app.roadsterEyePose=(f,height=1.05)=>{if(!f.airborne&&!f.rampContact)return{x:f.x,y:f.y+height,z:f.z};const u=axesFromEuler(f).up,arm=height-.55;return{x:f.x+u[0]*arm,y:f.y+.55+u[1]*arm,z:f.z+u[2]*arm};};
  app.roadsterAttitudeInfo=()=>{const f=s.roadster,b=flightAxes(f);return{right:[...b.right],up:[...b.up],forward:[...b.forward],yoke:f.yoke,appliedYoke:b.appliedYoke,eye:app.roadsterEyePose(f)};};
 
- const fresh=()=>({x:0,y:0,z:0,yaw:0,pitch:0,roll:0,rollRate:0,levelingRoll:false,vx:0,vy:0,vz:0,alt:0,gas:1,airborne:false,hold:true,holdY:0,positionHold:false,holdX:0,holdZ:0,spinInput:0,rearJet:false,roadSwipeIdle:1,waterContact:false,landing:false,thrust:0,boost:0,impact:0,rampContact:null,gripForce:0,normalForce:0,disableOnLand:false,throttleLever:0,yoke:0,yawCommand:0,yawInput:0});
+ const fresh=()=>({x:0,y:0,z:0,yaw:0,pitch:0,roll:0,rollRate:0,levelingRoll:false,neutralUp:[0,1,0],vx:0,vy:0,vz:0,alt:0,gas:1,airborne:false,hold:true,holdY:0,positionHold:false,holdX:0,holdZ:0,spinInput:0,rearJet:false,roadSwipeIdle:1,waterContact:false,landing:false,thrust:0,boost:0,impact:0,rampContact:null,gripForce:0,normalForce:0,disableOnLand:false,throttleLever:0,yoke:0,yawCommand:0,yawInput:0});
  s.roadster=fresh();s.rocket=false;s.assist=false;
  installRoadsterArt(app);installRoadsterWorld(app);
  const old={};for(const k of['updatePhysics','selectCircuit','resetCar','updateUi','prepareTrack','trackMeshReady','toggleTestDriver','drawMap','setView','toggleDoor'])old[k]=app[k];
@@ -49,7 +56,7 @@ function installRoadsterRuntime(app){
  const flightControls=()=>s.rocket;
  const ready=()=>s.ignition&&s.harness&&!app.anyDoorOpen()&&(!s.realMode||!s.retired);
  function spawn(){const f=s.roadster=fresh(),t=app.roadsterScene();s.rocket=false;s.trackPack=false;s.distanceM=0;s.speedMps=0;s.laneOffset=0;s.headingRel=0;s.dayPhase=.3;s.testDriver=false;s.padThrottle=0;s.padBrake=0;s.keys=Object.create(null);for(const k in keys)delete keys[k];if(t){Object.assign(f,t.start);f.yaw=t.start.yaw||0;s.distanceM=t.start.z;app.prepareRoadsterWorld();s.rivals=[];s.traffic=[];}else syncGround();app.roadsterRefreshArt();}
- function syncGround(){const f=s.roadster,p=app.worldPose?.()||app.trackAt?.(s.distanceM);if(p){f.x=p.x;f.y=p.y||0;f.z=p.z;f.yaw=(p.psi||0)+s.headingRel;}else{f.x=s.laneOffset;f.z=s.distanceM;f.y=0;f.yaw=s.headingRel;}f.vx=Math.sin(f.yaw)*s.speedMps;f.vz=Math.cos(f.yaw)*s.speedMps;f.vy=0;f.alt=0;f.pitch=0;f.roll=0;f.rollRate=0;f.levelingRoll=false;f.bodyAxes=null;}
+ function syncGround(){const f=s.roadster,p=app.worldPose?.()||app.trackAt?.(s.distanceM);if(p){f.x=p.x;f.y=p.y||0;f.z=p.z;f.yaw=(p.psi||0)+s.headingRel;}else{f.x=s.laneOffset;f.z=s.distanceM;f.y=0;f.yaw=s.headingRel;}f.vx=Math.sin(f.yaw)*s.speedMps;f.vz=Math.cos(f.yaw)*s.speedMps;f.vy=0;f.alt=0;f.pitch=0;f.roll=0;f.rollRate=0;f.levelingRoll=false;f.neutralUp=[0,1,0];f.bodyAxes=null;}
  app.prepareTrack=name=>app.roadsterScene()?(app.prepareRoadsterWorld(),Promise.resolve()):old.prepareTrack?.(name);
  app.trackMeshReady=()=>app.roadsterScene()?true:(old.trackMeshReady?.()??true);
  app.selectCircuit=name=>{old.selectCircuit(name);spawn();};
@@ -65,8 +72,8 @@ function installRoadsterRuntime(app){
  const WHEELBASE=2.75,MAX_STEER=35*Math.PI/180;
  app.roadsterSteerAngle=(input,speed)=>C(input,-1,1)*Math.min(MAX_STEER,Math.atan((app.roadsterDownforce()?3.9:1.9)*G*WHEELBASE/Math.max(1,speed*speed)));
  app.roadsterTurning={wheelbaseM:WHEELBASE,maxAngleDeg:35,estimated:true};
- function holdPosition(level=true){if(s.trackPack)return;const f=s.roadster;if(f.rampContact){if(s.trackPack)return;app.roadsterRampContact.release();}f.positionHold=true;f.hold=true;f.holdX=f.x;f.holdY=f.y;f.holdZ=f.z;if(level){f.pitch=angle(f.pitch);f.roll=angle(f.roll);f.leveling=true;f.levelingRoll=true;f.yoke=0;}f.throttleLever=0;f.yawCommand=0;f.yawInput=0;f.landing=false;s.padThrottle=0;}
- function recenterYoke(){const f=s.roadster,b=flightAxes(f);f.yoke=0;b.appliedYoke=0;f.rollRate=0;app.roadsterRefreshArt();app.showToast('Yoke centered — car orientation and direction unchanged.');}
+ function holdPosition(level=true){if(s.trackPack)return;const f=s.roadster;if(f.rampContact){if(s.trackPack)return;app.roadsterRampContact.release();}f.positionHold=true;f.hold=true;f.holdX=f.x;f.holdY=f.y;f.holdZ=f.z;if(level){f.leveling=true;f.levelingRoll=true;f.yoke=0;}f.throttleLever=0;f.yawCommand=0;f.yawInput=0;f.landing=false;s.padThrottle=0;}
+ function recenterYoke(){const f=s.roadster,b=flightAxes(f);f.yoke=0;b.appliedYoke=0;f.neutralUp=[...b.up];f.leveling=false;f.levelingRoll=false;f.landing=false;f.rollRate=0;app.roadsterRefreshArt();app.showToast('Yoke centered — this attitude is the new hover neutral. Car orientation and motion unchanged.');}
  function land(){const f=s.roadster;if(s.trackPack){f.hold=false;f.positionHold=false;app.showToast('Downforce is seeking the tyre-side surface. Switch Z off for flight landing control.');return;}holdPosition();f.landing=true;f.throttleLever=0;f.yoke=0;s.padThrottle=0;app.showToast('Controlled descent — steer toward a clear landing surface.');}
  app.toggleRocket=()=>{const f=s.roadster;s.rocket=!s.rocket;if(s.rocket)s.trackPack=false;f.hold=false;f.leveling=false;f.levelingRoll=false;f.positionHold=false;f.landing=false;f.disableOnLand=false;f.throttleLever=0;f.yoke=0;if(f.bodyAxes)f.bodyAxes.appliedYoke=0;f.yawCommand=0;s.throttle=0;s.brake=0;s.padThrottle=0;s.padBrake=0;s.steer=0;s.touchSteer=0;s.testDriver=false;s.adaptiveCruise=false;s.launchArmed=false;s.launchActive=false;
   // A held road key must not survive the change of control scheme.
@@ -74,7 +81,7 @@ function installRoadsterRuntime(app){
   for(const id of ['throttleSlider','brakeSlider']){const el=doc.getElementById(id);if(el)el.value=0;}
   app.showToast(s.rocket?'Rocket armed. P/L hover; W/S pitch; Tab/Shift adjust the held throttle; arrows steer; I/O rotate in place; F holds position.':'Rocket off — normal driving controls restored.');app.roadsterRefreshArt();};
  function adjustThrottle(delta){if(!flightControls())return;const f=s.roadster;f.throttleLever=C(Math.round((f.throttleLever+delta)*100)/100,0,1);if(delta>0){f.landing=false;f.positionHold=false;}app.roadsterRefreshArt();}
- function action(id){app.audio.init();if(id==='thrust')app.toggleTrackPack();if(id==='rearJet')toggleRearJet();if(id==='rocket')app.toggleRocket();if(id==='hover'){holdPosition();app.showToast(s.trackPack?'Release Z downforce before selecting hover.':'Position hold — braking to this spot, leveling and centering the yoke. I/O rotate in place.');}if(id==='land')land();if(id==='recenter')recenterYoke();if(id==='throttleUp')adjustThrottle(.05);if(id==='throttleDown')adjustThrottle(-.05);if(id==='refill'){if(s.roadster.airborne||Math.abs(s.speedMps)>.5){app.showToast('Stop on the ground to refill and service.');return;}s.roadster.gas=1;for(const k in s.sys)s.sys[k]=0;s.damage=0;s.retired=false;app.showToast('Cold gas refilled; ground service complete.');}if(id==='maps'){const gps=doc.querySelector('#gpsMode, [data-gps-mode]');if(app.gps){const modes=['off','mirror','ar','dashboard','line'];app.gps.setMode?.(modes[(modes.indexOf(app.gps.mode)+1)%modes.length]);}else if(gps)gps.click();else doc.querySelector('[data-view="circuit"]')?.click();}if(id==='lights')app.toggleLights();if(id==='horn'){s.horn=true;setTimeout(()=>s.horn=false,250);}if(id==='more')doc.querySelector('.bottombar')?.scrollIntoView({block:'nearest'});if(id==='belt')app.latchHarness(!s.harness);if(id==='ignition')app.setIgnition(!s.ignition);if(id==='drive'){app.closeAllDoors(true);app.latchHarness(true);app.setIgnition(true);app.setGear('G',1);}if(id==='reverse')app.setGear('R');if(id==='neutral')app.setGear('N');if(id==='door')app.toggleDoor('driver');app.roadsterRefreshArt();}
+ function action(id){app.audio.init();if(id==='thrust')app.toggleTrackPack();if(id==='rearJet')toggleRearJet();if(id==='rocket')app.toggleRocket();if(id==='hover'){holdPosition();app.showToast(s.trackPack?'Release Z downforce before selecting hover.':'Position hold — braking to this spot and returning to the saved neutral. I/O rotate in place.');}if(id==='land')land();if(id==='recenter')recenterYoke();if(id==='throttleUp')adjustThrottle(.05);if(id==='throttleDown')adjustThrottle(-.05);if(id==='refill'){if(s.roadster.airborne||Math.abs(s.speedMps)>.5){app.showToast('Stop on the ground to refill and service.');return;}s.roadster.gas=1;for(const k in s.sys)s.sys[k]=0;s.damage=0;s.retired=false;app.showToast('Cold gas refilled; ground service complete.');}if(id==='maps'){const gps=doc.querySelector('#gpsMode, [data-gps-mode]');if(app.gps){const modes=['off','mirror','ar','dashboard','line'];app.gps.setMode?.(modes[(modes.indexOf(app.gps.mode)+1)%modes.length]);}else if(gps)gps.click();else doc.querySelector('[data-view="circuit"]')?.click();}if(id==='lights')app.toggleLights();if(id==='horn'){s.horn=true;setTimeout(()=>s.horn=false,250);}if(id==='more')doc.querySelector('.bottombar')?.scrollIntoView({block:'nearest'});if(id==='belt')app.latchHarness(!s.harness);if(id==='ignition')app.setIgnition(!s.ignition);if(id==='drive'){app.closeAllDoors(true);app.latchHarness(true);app.setIgnition(true);app.setGear('G',1);}if(id==='reverse')app.setGear('R');if(id==='neutral')app.setGear('N');if(id==='door')app.toggleDoor('driver');app.roadsterRefreshArt();}
  app.roadsterAction=action;
  // The existing touch throttle slider is the same lever, not a second throttle
  // that could override Tab/Shift. The ordinary road slider is untouched.
@@ -138,21 +145,21 @@ function installRoadsterRuntime(app){
  // The degree yoke rolls about the current nose, then pitch rotates about the
  // resulting body-right axis. At 180 degrees bank, W points toward the ground;
  // at 90 degrees bank it changes direction sideways, not world altitude.
- const speed=Math.hypot(f.vx,f.vy,f.vz),horizontalSpeed=Math.hypot(f.vx,f.vz);
+ const speed=Math.hypot(f.vx,f.vy,f.vz);
  // The vectored jets provide up to 36 m/s² for a pitching flight path, the
  // same estimated acceleration ceiling as ordinary flight steering. At high
  // speed a loop has a larger radius, rather than leaving momentum behind.
  const pitchRate=pitchIn*Math.min(.75,36/Math.max(1,speed));
  const rollDelta=-(f.yoke-body.appliedYoke)*Math.PI/180,pitchDelta=pitchRate*dt;
- const requestedRollRate=(f.leveling||f.levelingRoll||f.landing?-angle(f.roll)*(1-Math.exp(-2.8*dt)):rollDelta)/Math.max(dt,.000001);
+ const requestedRollRate=(f.leveling||f.levelingRoll||f.landing?levelingRotation(f,body).angle*(1-Math.exp(-2.8*dt)):rollDelta)/Math.max(dt,.000001);
  let nextBody=commandedAxes(f,body,rollDelta,pitchDelta,dt,1);
  const ground=app.roadsterSurface(f.x,f.z,f.y);f.alt=Math.max(0,f.y-ground);
  const downforce=app.roadsterDownforce();
  let sp=nextBody.forward[1];const boost=f.rearJet?1:0,forward=f.positionHold||downforce?0:s.throttle*(7+boost*11);
- const yawRate=f.positionHold?0:f.yawInput*Math.min(2,horizontalSpeed/WHEELBASE*Math.tan(MAX_STEER),36/Math.max(1,horizontalSpeed));
- // Heading changes from road steering rotate the velocity too. I/O instead use
- // a balanced thruster couple: yaw rotates freely without translating the car.
- const spinRate=spin*Math.min(3,72/Math.max(1,horizontalSpeed));
+ const yawRate=f.positionHold?0:f.yawInput*Math.min(2,speed/WHEELBASE*Math.tan(MAX_STEER),36/Math.max(1,speed));
+ // All flight steering turns toward the car's own right/left about body-up,
+ // including at inverted or vertical attitudes. I/O can also rotate at rest.
+ const spinRate=spin*Math.min(3,72/Math.max(1,speed));
  let holdAX=0,holdAZ=0;if(f.positionHold){holdAX=(f.holdX-f.x)*2.56-f.vx*3.2;holdAZ=(f.holdZ-f.z)*2.56-f.vz*3.2;const k=Math.min(1,12/Math.max(.001,Math.hypot(holdAX,holdAZ)));holdAX*=k;holdAZ*=k;}
 
  // Perimeter jets vector hover vertically; rear jets follow the nose. Pitching
@@ -164,16 +171,17 @@ function installRoadsterRuntime(app){
  const pathAccel=Math.hypot(...pitchedVelocity.map((v,i)=>v-velocity[i]))/dt;
  let vertical=verticalControl?C(G+(targetVy-f.vy)*2.4+(!hover&&!f.landing?C((f.holdY-f.y)*1.3,-4,4):0)-sp*forward,-2.5*G,2.5*G):downforce?0:G;
  const brakeAccel=Math.min(16,speed*(s.brake*1.6+(f.landing?.6:0)));
- const force=M*(Math.abs(vertical)+forward+(Math.abs(requestedRollRate)+Math.abs(pitchRate))*3+pathAccel+horizontalSpeed*Math.abs(yawRate+(!f.positionHold?spinRate:0))+brakeAccel+Math.hypot(holdAX,holdAZ)+Math.abs(spinRate)*3),available=ready()&&s.rocket?tank(force,dt):0;
+ const force=M*(Math.abs(vertical)+forward+(Math.abs(requestedRollRate)+Math.abs(pitchRate))*3+pathAccel+speed*Math.abs(yawRate+(!f.positionHold?spinRate:0))+brakeAccel+Math.hypot(holdAX,holdAZ)+Math.abs(spinRate)*3),available=ready()&&s.rocket?tank(force,dt):0;
  f.thrust=available*C(force/(M*G*3),0,1);f.boost=forward>0?boost*s.throttle*available:0;
  if(available!==1)nextBody=commandedAxes(f,body,rollDelta,pitchDelta,dt,available);
  if(followPitch){const v=available===1?pitchedVelocity:turnFlightVelocity(velocity,body.forward,nextBody.forward);[f.vx,f.vy,f.vz]=v;}
  f.rollRate=requestedRollRate*available;saveAxes(f,nextBody);
- if(f.leveling||f.levelingRoll||f.landing){f.yoke=nextBody.appliedYoke;if(Math.abs(angle(f.pitch))<.002&&Math.abs(angle(f.roll))<.002){f.pitch=0;f.roll=0;f.yoke=0;f.rollRate=0;f.leveling=false;f.levelingRoll=false;nextBody=axesFromEuler(f);saveAxes(f,nextBody);}}
+ if(f.leveling||f.levelingRoll||f.landing){f.yoke=nextBody.appliedYoke;const correction=levelingRotation(f,nextBody);if(correction.angle<1e-8&&Math.abs(f.yoke)<1e-6){f.yoke=0;nextBody.appliedYoke=0;f.rollRate=0;f.leveling=false;f.levelingRoll=false;}}
+ // Exact 3D rotation preserves speed. Fixed hover rotates only the body;
+ // moving turns rotate momentum about the very same body-up axis as the nose.
+ const turn=(yawRate+(!f.positionHold?spinRate:0))*available*dt;
+ [f.vx,f.vy,f.vz]=rotateVector([f.vx,f.vy,f.vz],nextBody.up,turn);rotateSteering(nextBody,turn+(f.positionHold?spinRate*available*dt:0));saveAxes(f,nextBody);
  sp=nextBody.forward[1];vertical=verticalControl?C(G+(targetVy-f.vy)*2.4+(!hover&&!f.landing?C((f.holdY-f.y)*1.3,-4,4):0)-sp*forward,-2.5*G,2.5*G):downforce?0:G;
- // Exact rotation preserves horizontal speed; heading and velocity both respond.
- const turn=(yawRate+(!f.positionHold?spinRate:0))*available*dt,ct=Math.cos(turn),st=Math.sin(turn),vx=f.vx;
- f.vx=vx*ct+f.vz*st;f.vz=f.vz*ct-vx*st;rotateHeading(nextBody,turn+(f.positionHold?spinRate*available*dt:0));saveAxes(f,nextBody);
  const thrustDirection=[...nextBody.forward];
  const drag=Math.hypot(f.vx,f.vy,f.vz)*.00055,brakeRate=speed>0?brakeAccel/speed:0;
  f.vx+=(available*(thrustDirection[0]*forward+holdAX-f.vx*brakeRate)-f.vx*drag)*dt;
@@ -189,7 +197,7 @@ function installRoadsterRuntime(app){
  f.waterContact=water&&f.y+.55-extY<=app.roadsterWaterLevel;
  if(f.waterContact){if(hover<=0){f.hold=false;f.positionHold=false;f.landing=false;}if(f.vy<=.05)f.vy=Math.max(-.5,-.42+(Math.min(0,f.vy)+.42)*Math.exp(-8*dt));f.vx*=Math.exp(-1.8*dt);f.vz*=Math.exp(-1.8*dt);}
  const previous={...f};f.x+=f.vx*dt;f.y+=f.vy*dt;f.z+=f.vz*dt;constrainSolids(previous);app.roadsterRampContact.collide(previous);
- const support=app.roadsterSurfaceInfo(f.x,f.z,previous.y),surface=support.y;if(!f.rampContact&&support.kind!=='water'&&f.y<=surface&&f.vy-f.vx*support.dx-f.vz*support.dz<0){hit(Math.max(0,(-f.vy+f.vx*support.dx+f.vz*support.dz)*support.normal[1]));f.y=surface;f.vy=0;f.airborne=false;f.bodyAxes=null;f.positionHold=false;f.spinInput=0;f.pitch=0;f.roll=0;f.rollRate=0;f.levelingRoll=false;f.yoke=0;f.throttleLever=0;f.landing=false;s.padThrottle=0;if(f.disableOnLand){s.rocket=false;f.disableOnLand=false;}if(!app.roadsterScene()){const n=app.roadsterNearest(f);if(Number.isFinite(n?.d)){s.distanceM=n.d;s.laneOffset=n.n;const p=app.trackAt(n.d);s.headingRel=angle(f.yaw-p.psi);}}}
+ const support=app.roadsterSurfaceInfo(f.x,f.z,previous.y),surface=support.y;if(!f.rampContact&&support.kind!=='water'&&f.y<=surface&&f.vy-f.vx*support.dx-f.vz*support.dz<0){hit(Math.max(0,(-f.vy+f.vx*support.dx+f.vz*support.dz)*support.normal[1]));f.y=surface;f.vy=0;f.airborne=false;f.bodyAxes=null;f.neutralUp=[0,1,0];f.leveling=false;f.positionHold=false;f.spinInput=0;f.pitch=0;f.roll=0;f.rollRate=0;f.levelingRoll=false;f.yoke=0;f.throttleLever=0;f.landing=false;s.padThrottle=0;if(f.disableOnLand){s.rocket=false;f.disableOnLand=false;}if(!app.roadsterScene()){const n=app.roadsterNearest(f);if(Number.isFinite(n?.d)){s.distanceM=n.d;s.laneOffset=n.n;const p=app.trackAt(n.d);s.headingRel=angle(f.yaw-p.psi);}}}
  if(f.waterContact&&f.y+.55+extY<app.roadsterWaterLevel){const damage=s.damage,sys={...s.sys};spawn();if(s.realMode){s.damage=damage;s.sys=sys;}app.showToast('Fully submerged — recovered to the bridge approach.');return;}
  s.speedMps=f.airborne||f.rampContact?Math.hypot(f.vx,f.vy,f.vz):Math.hypot(f.vx,f.vz);f.alt=Math.max(0,f.y-surface);s.airborne=f.airborne;}
  function groundStep(dt){const f=s.roadster,t=app.roadsterScene();inputs(dt);f.gripForce=app.roadsterDownforce()?2*G:0;f.normalForce=M*(G+f.gripForce);const previous={...f},v=s.speedMps,dir=s.gearMode==='R'?-1:s.gearMode==='G'?1:0,boost=f.rearJet&&!s.brake&&ready()?tank(M*16,dt):0;f.boost=boost;f.thrust=boost*.7;
