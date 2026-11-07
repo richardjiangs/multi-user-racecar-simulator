@@ -58,6 +58,32 @@ try{
    await hold('d',1);await hover();await step(.1);await p.keyboard.press('g');const mid=await state();await step(2);q=await state();vector(q.axes.up,mid.axes.up,'G replaces active hover reference');
   }
 
+  // G+2 is roll recovery, not a heading reset. Exercise both chord orders,
+  // repeated keydown, reverse-facing backflips, pitch and a vertical nose.
+  for(const real of[false,true])for(const pitch of[Math.PI,.6,Math.PI/2])for(const order of[['g','2'],['2','g']]){
+   await setup('JFK Airport — Runway 13R/31L',real,pitch);await hold('d',.7);
+   await frame.evaluate(()=>{const a=RoadsterApp,f=a.state.roadster,b=a.roadsterAttitudeInfo();[f.vx,f.vy,f.vz]=b.forward.map(v=>v*30);f.throttleLever=.65;a.state.speedMps=30;});
+   const before=await state();await p.keyboard.down(order[0]);await p.keyboard.down(order[1]);await p.keyboard.down(order[1]);await p.keyboard.up(order[1]);await p.keyboard.up(order[0]);const q=await state();
+   vector(q.axes.forward,before.axes.forward,'G+2 preserves nose, including reverse facing');
+   for(const k of['x','y','z','vx','vy','vz','throttleLever','hold','positionHold'])assert.equal(q.f[k],before.f[k],'G+2 preserves '+k);
+   close(q.speed,before.speed,'G+2 preserves speed');close(q.f.yoke,0,'G+2 centers yoke');
+   if(pitch===Math.PI/2)vector(q.axes.up,before.axes.up,'Vertical nose has no unique road roll zero');
+   else{close(q.axes.right[1],0,'G+2 horizontal right axis on flat track');assert.ok(q.axes.up[1]>0,'G+2 upright');}
+   await hover();await step(10);const held=await state();for(const k of['right','up','forward'])vector(held.axes[k],q.axes[k],'F keeps the G+2 reference');
+   if(!real&&pitch===Math.PI){
+    await frame.evaluate(()=>{const f=RoadsterApp.state.roadster;Object.assign(f,{x:0,z:1000,y:5,alt:5,vx:0,vy:0,vz:0});RoadsterApp.roadsterAction('land');});await step(20);const landed=await state();assert.equal(landed.f.airborne,false);assert.ok(landed.axes.forward[2]<-.999,'Landing cannot turn the reverse-facing car around');
+   }
+  }
+  // Matching touch action and uncombined 2 must not interfere with plain G.
+  await setup('JFK Airport — Runway 13R/31L');await hold('d',2);const inverted=await state();await p.keyboard.press('2');vector((await state()).axes.up,inverted.axes.up,'2 alone does not reset roll');
+  await frame.locator('#rsHelp summary').click();await frame.locator('[data-rs-action="recenterTrack"]').click();assert.ok((await state()).axes.up[1]>.999);await frame.locator('#rsHelp summary').click();
+  if(version!=='1'){
+   await setup('Nardò Ring');await frame.evaluate(()=>{const a=RoadsterApp,p=a.surfacePoint(100,0);Object.assign(a.state.roadster,{x:p.x,y:p.y+100,z:p.z,yaw:p.psi,pitch:Math.atan(p.grade),roll:.8,bodyAxes:null});});
+   const before=await state();await p.keyboard.down('g');await p.keyboard.press('2');await p.keyboard.up('g');const banked=await state();
+   vector(banked.axes.forward,before.axes.forward,'Track alignment keeps nose');close(banked.f.roll,Math.atan(-.125),'G+2 uses Nardò centerline crossfall',.003);
+  }
+  await setup('SpaceX McGregor — Demo Ramp');await frame.evaluate(()=>{const a=RoadsterApp;a.toggleTrackPack();a.state.roadster.rampContact={q:a.roadsterRampGeometry.invertedStart+100,heading:0};a.state.roadster.airborne=false;a.state.speedMps=0;});await step(1/120);
+  const shelf=await state();await p.keyboard.down('g');await p.keyboard.press('2');await p.keyboard.up('g');const shelfReset=await state();vector(shelfReset.axes.up,shelf.axes.up,'Inverted road contact uses its own surface normal');assert.ok(shelfReset.f.rampContact&&shelfReset.axes.up[1]<-.999);
   // Every steering source uses body-right, including inverted/vertical flight.
   for(const bank of[0,90,180,270,720])for(const pitch of[0,Math.PI/2])for(const control of['ArrowRight','ArrowLeft','o','i','swipe','touch']){
    await setup('JFK Airport — Runway 13R/31L',false,pitch);
@@ -77,6 +103,6 @@ try{
    close(q.f.yoke,0,'Steering cannot rotate degree yoke');
   }
   assert.deepEqual(errors,[]);await p.close();
-  console.log('PASS neutral frame '+version+': flip/G/F, tilted reset, active hold reset, relative pitch and all steering sources at 0/90/180/270/720° and vertical flight.');
+  console.log('PASS neutral frame '+version+': flip/G/F, G+2 both key orders/touch, reverse heading retained through landing, tilted reset, relative pitch and all steering sources at 0/90/180/270/720° and vertical flight.');
  }
 }finally{await browser.close();}
