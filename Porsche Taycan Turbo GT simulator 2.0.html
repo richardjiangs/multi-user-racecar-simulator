@@ -1015,7 +1015,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     doors: { driver: false, passenger: false },
     harness: false,
     driveMode: "race",             // wet | sport | race
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     trackPack: false,              // Porsche Attack Mode: 10 s of maximum overboost to 815 kW
     trackPackVis: 0,               // stance dip when Attack Mode / launch stages
     testDriver: false,
@@ -5286,5 +5286,22 @@ const nodes=LDN_NODES,byId=Object.fromEntries(nodes.map(n=>{n.roads=[];return[n.
   return {project:P,unproject:U,pins,fit,scale,cx,cz,w,h,bearing,ox,oy,buildingCount,parkCount,navigation:nav,markers,player:{...own,worldX:player.x,worldZ:player.z},policeCount:markers.length};
  });
 </script>
-<!-- /* MUCS controls 2026-10 */ --></body>
+<!-- /* MUCS controls 2026-10 */ --><!-- MUCS starting defaults --><script type="module">
+if(window.TRACK2_READY)await window.TRACK2_READY;
+const started=performance.now();
+function startingDefaults(){
+ const app=window.TaycanApp;
+ if(!app?.updatePhysics||!app?.state||!(app.selectCircuit||app.enterLondon)){
+  if(performance.now()-started<120000)setTimeout(startingDefaults,20);return;
+ }
+ if(app.startingDefaultsApplied)return;
+ const s=app.state;s.assist=false;s.testDriver=false;s.adaptiveCruise=false;if('chauffeur' in s)s.chauffeur=false;
+ app.selectCircuit("Silverstone Circuit");
+ s.assist=false;s.testDriver=false;s.adaptiveCruise=false;
+ app.setActive?.('assistBtn',false);app.setActive?.('testDriverBtn',false);
+ app.startingDefaultsApplied={key:"taycan",route:"Silverstone Circuit"};
+}
+startingDefaults();
+</script><!-- END MUCS starting defaults -->
+</body>
 </html>

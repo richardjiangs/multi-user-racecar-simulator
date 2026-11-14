@@ -932,7 +932,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     doors: { driver: false, passenger: false },
     harness: false,
     driveMode: "race",             // wet | sport | race
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     e85: false,                    // running E85 biofuel: 1,280 hp becomes 1,600 hp, torque 1,500 Nm
     e85Vis: 0,                     // fuel-map swap glow on the cluster
     testDriver: false,
@@ -3507,5 +3507,22 @@ drawCluster(w, h, dashY, sway);
   requestAnimationFrame(gameLoop);
 }
   </script>
+<!-- MUCS starting defaults --><script type="module">
+if(window.TRACK2_READY)await window.TRACK2_READY;
+const started=performance.now();
+function startingDefaults(){
+ const app=window.MustangApp;
+ if(!app?.updatePhysics||!app?.state||!(app.selectCircuit||app.enterLondon)){
+  if(performance.now()-started<120000)setTimeout(startingDefaults,20);return;
+ }
+ if(app.startingDefaultsApplied)return;
+ const s=app.state;s.assist=false;s.testDriver=false;s.adaptiveCruise=false;if('chauffeur' in s)s.chauffeur=false;
+ app.selectCircuit("Silverstone Circuit");
+ s.assist=false;s.testDriver=false;s.adaptiveCruise=false;
+ app.setActive?.('assistBtn',false);app.setActive?.('testDriverBtn',false);
+ app.startingDefaultsApplied={key:"mustanggtd",route:"Silverstone Circuit"};
+}
+startingDefaults();
+</script><!-- END MUCS starting defaults -->
 </body>
 </html>

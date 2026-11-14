@@ -4070,5 +4070,22 @@ const app=window.ViperApp;
  })(app,"viperacr");
 
 </script>
-<!-- /* MUCS controls 2026-10 */ --></body>
+<!-- /* MUCS controls 2026-10 */ --><!-- MUCS starting defaults --><script type="module">
+if(window.TRACK2_READY)await window.TRACK2_READY;
+const started=performance.now();
+function startingDefaults(){
+ const app=window.ViperApp;
+ if(!app?.updatePhysics||!app?.state||!(app.selectCircuit||app.enterLondon)){
+  if(performance.now()-started<120000)setTimeout(startingDefaults,20);return;
+ }
+ if(app.startingDefaultsApplied)return;
+ const s=app.state;s.assist=false;s.testDriver=false;s.adaptiveCruise=false;if('chauffeur' in s)s.chauffeur=false;
+ app.selectCircuit("Silverstone Circuit");
+ s.assist=false;s.testDriver=false;s.adaptiveCruise=false;
+ app.setActive?.('assistBtn',false);app.setActive?.('testDriverBtn',false);
+ app.startingDefaultsApplied={key:"viperacr",route:"Silverstone Circuit"};
+}
+startingDefaults();
+</script><!-- END MUCS starting defaults -->
+</body>
 </html>

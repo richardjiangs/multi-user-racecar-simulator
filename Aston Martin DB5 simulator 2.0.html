@@ -1608,7 +1608,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
       handed: false, brief: 0, briefT: 0,
     },
     stage: null, stageT: 0,
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     mission: null,               // set by startMission() on a mission route
 
     corsa: false,                  // period competition trim (sharper throttle, open exhaust)
@@ -8851,5 +8851,22 @@ const app=window.Db5App;
     const canvas=document.createElement('canvas');canvas.id='db5PeriodCabin';canvas.setAttribute('aria-label','Live DB5 Black Pearl dashboard, Smiths instruments and David Brown wood-rim steering wheel');canvas.style.cssText='display:block;width:100%;aspect-ratio:1400/420';cabin.appendChild(canvas);
     const ui=app.updateUi;app.updateUi=function(...args){ui.apply(app,args);if(!document.body.classList.contains('view-cockpit'))return;const w=canvas.clientWidth||1000,h=w*420/1400,dpr=Math.min(2,devicePixelRatio);if(canvas.width!==Math.round(w*dpr)||canvas.height!==Math.round(h*dpr)){canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);}const ctx=canvas.getContext('2d');ctx.setTransform(dpr,0,0,dpr,0,0);drawDB5Dashboard(ctx,w,h,app.state,app,true);};
 </script>
-<!-- /* MUCS controls 2026-10 */ --></body>
+<!-- /* MUCS controls 2026-10 */ --><!-- MUCS starting defaults --><script type="module">
+if(window.TRACK2_READY)await window.TRACK2_READY;
+const started=performance.now();
+function startingDefaults(){
+ const app=window.Db5App;
+ if(!app?.updatePhysics||!app?.state||!(app.selectCircuit||app.enterLondon)){
+  if(performance.now()-started<120000)setTimeout(startingDefaults,20);return;
+ }
+ if(app.startingDefaultsApplied)return;
+ const s=app.state;s.assist=false;s.testDriver=false;s.adaptiveCruise=false;if('chauffeur' in s)s.chauffeur=false;
+ app.selectCircuit("Silverstone Circuit");
+ s.assist=false;s.testDriver=false;s.adaptiveCruise=false;
+ app.setActive?.('assistBtn',false);app.setActive?.('testDriverBtn',false);
+ app.startingDefaultsApplied={key:"db5",route:"Silverstone Circuit"};
+}
+startingDefaults();
+</script><!-- END MUCS starting defaults -->
+</body>
 </html>

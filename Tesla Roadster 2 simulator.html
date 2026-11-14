@@ -951,7 +951,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     doors: { driver: false, passenger: false },
     harness: false,
     driveMode: "race",             // wet | sport | race
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     trackPack: false,              // Tesla Downforceage: CCB kit + Zero-G wheels, limiter 262 -> 400 km/h model benchmark
     trackPackVis: 0,               // cheetah-stance dip when Drag Strip mode stages
     testDriver: false,
@@ -3965,5 +3965,22 @@ installRoadsterRuntime(window.RoadsterApp);
   requestAnimationFrame(gameLoop);
 }
   </script>
+<!-- MUCS starting defaults --><script type="module">
+if(window.TRACK2_READY)await window.TRACK2_READY;
+const started=performance.now();
+function startingDefaults(){
+ const app=window.RoadsterApp;
+ if(!app?.updatePhysics||!app?.state||!(app.selectCircuit||app.enterLondon)){
+  if(performance.now()-started<120000)setTimeout(startingDefaults,20);return;
+ }
+ if(app.startingDefaultsApplied)return;
+ const s=app.state;s.assist=false;s.testDriver=false;s.adaptiveCruise=false;if('chauffeur' in s)s.chauffeur=false;
+ app.selectCircuit("SpaceX McGregor — Demo Ramp");
+ s.assist=false;s.testDriver=false;s.adaptiveCruise=false;
+ app.setActive?.('assistBtn',false);app.setActive?.('testDriverBtn',false);
+ app.startingDefaultsApplied={key:"roadster2",route:"SpaceX McGregor — Demo Ramp"};
+}
+startingDefaults();
+</script><!-- END MUCS starting defaults -->
 </body>
 </html>

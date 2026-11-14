@@ -69,6 +69,7 @@ const FILES = {
   ferrari499p: "Ferrari 499P simulator.html",
   solusgt: "McLaren Solus GT simulator.html",
   roadster2: "Tesla Roadster 2 simulator.html",
+  thrustssc: "Thrust SSC simulator.html",
   f1mercedes: "Mercedes F1 2026 simulator.html",
   f1redbull: "Red Bull F1 2026 simulator.html",
   f1ferrari: "Ferrari F1 2026 simulator.html",

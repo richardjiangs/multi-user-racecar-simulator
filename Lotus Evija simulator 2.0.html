@@ -1007,7 +1007,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     doors: { driver: false, passenger: false },
     harness: false,
     driveMode: "race",             // wet | sport | race
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     trackPack: false,              // Lotus Track Mode: firm dampers, more downforce, sharper torque-vectoring
     trackPackVis: 0,               // cheetah-stance dip when Launch mode stages
     testDriver: false,
@@ -4437,5 +4437,22 @@ const app=window.EvijaApp;
  })(app,"evija");
 
 </script>
-<!-- /* MUCS controls 2026-10 */ --></body>
+<!-- /* MUCS controls 2026-10 */ --><!-- MUCS starting defaults --><script type="module">
+if(window.TRACK2_READY)await window.TRACK2_READY;
+const started=performance.now();
+function startingDefaults(){
+ const app=window.EvijaApp;
+ if(!app?.updatePhysics||!app?.state||!(app.selectCircuit||app.enterLondon)){
+  if(performance.now()-started<120000)setTimeout(startingDefaults,20);return;
+ }
+ if(app.startingDefaultsApplied)return;
+ const s=app.state;s.assist=false;s.testDriver=false;s.adaptiveCruise=false;if('chauffeur' in s)s.chauffeur=false;
+ app.selectCircuit("Silverstone Circuit");
+ s.assist=false;s.testDriver=false;s.adaptiveCruise=false;
+ app.setActive?.('assistBtn',false);app.setActive?.('testDriverBtn',false);
+ app.startingDefaultsApplied={key:"evija",route:"Silverstone Circuit"};
+}
+startingDefaults();
+</script><!-- END MUCS starting defaults -->
+</body>
 </html>

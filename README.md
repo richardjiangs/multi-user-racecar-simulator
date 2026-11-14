@@ -1,6 +1,6 @@
 # Multi User Racecar Simulator
 
-A browser-based garage of 64 car simulators with private practice, AI rival grids, and online rooms for real racers.
+A browser-based garage of 66 car simulators with private practice, AI rival grids, and online rooms for real racers.
 
 Live site: https://richardjiangs.github.io/multi-user-racecar-simulator/
 
@@ -44,11 +44,11 @@ The guide covers racing line, braking references, apex choice, overtaking, defen
 
 - `index.html` - the hosted garage, loading the selected simulator on demand.
 - `index-offline.html` - both simulator versions and the complete Track 2.0 world data embedded in one file.
-- `* simulator.html` - the 64 original Track 1.0 files, preserved unchanged.
-- `* simulator 2.0.html` - 63 separate upgraded versions; keep the complete `assets/tracks-2/` directory alongside them when copying the folder.
+- `* simulator.html` - the 66 Track 1.0 editions.
+- `* simulator 2.0.html` - 65 separate upgraded versions; keep the complete `assets/tracks-2/` directory alongside them when copying the folder.
 - `assets/tracks-2/pack.js` - the route catalog and loader. Hashed mesh files contain 83 complete routes; the selected route is unpacked before driving, never generated section by section.
 
-Track 2.0 now includes shared and brand circuits, the DB5 missions, the F12tdf museum and all four Dakar cars. Spectre uses upgraded shared circuits while its city journeys remain original; Phantom stays original. All 64 Track 1.0 HTML files are retained. The host sets the online room’s track version.
+Track 2.0 now includes shared and brand circuits, the DB5 missions, the F12tdf museum and all four Dakar cars. Spectre uses upgraded shared circuits while its city journeys remain original; Phantom stays original. All Track 1.0 HTML files are retained, with the common starting defaults applied. The host sets the online room’s track version.
 
 The other ten F1 cars have separate hand-authored wheel, cockpit, exterior and power-unit illustrations, with working controls and live displays. Their existing performance, sounds and keyboard controls are preserved.
 
@@ -88,6 +88,12 @@ Please double-check the address before sending. Bitcoin transactions cannot be r
 
 The full `index-offline.html` and ten-car `index-offline LITE.html` are committed and published; both remain below 20 MB with lossless compression. `sims-embedded.js` is the untracked local-folder fallback and is omitted from the hosted site to avoid duplicating the full archive.
 
-[Individual offline downloads](offline-cars/) contain all 65 cars: 65 Track 1.0 files and 64 Track 2.0 files (the Phantom keeps its existing single edition). Each HTML runs independently with its maps and route scenery, without a server or supporting assets. The root simulator files retain their existing loading behavior.
+[Individual offline downloads](offline-cars/) contain all 66 cars: 66 Track 1.0 files and 65 Track 2.0 files (the Phantom keeps its existing single edition). Each HTML runs independently with its maps and route scenery, without a server or supporting assets. The root simulator files retain their existing loading behavior.
 
 After changing simulators, run `node tools/embed-sims.mjs`, `node tools/offline/individual.mjs`, `node tools/offline/check-individual.mjs`, and `node tools/build-pages.mjs`. Commit the generated offline downloads with their manifest. The checks compare source and archive hashes and select the smallest complete lossless encoding without reducing drawing or geometry quality. Pushing to `main` deploys through `.github/workflows/pages.yml`.
+
+### Starting routes and Thrust SSC
+
+Every car loads with steering assist off. The starting circuit is Silverstone except for the two Rolls-Royces (London, no destination), Roadster 2 (SpaceX McGregor demo ramp), the four Dakar cars (Prologue — Yanbu), and Thrust SSC (Black Rock Desert). Track choices and assist remain adjustable after loading. These defaults are included in the hosted, full/LITE offline and individual offline editions.
+
+Thrust SSC includes its Circuit picker entry, marked straight-course map, original cockpit artwork, live jet controls and recording-informed spectral sound. Its homepage photo was supplied by the user. See [Thrust SSC sources and sound method](tools/thrustssc/README.md).

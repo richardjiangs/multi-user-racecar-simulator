@@ -10,6 +10,7 @@ weather_source=re.sub(r'(?<=/\*__WEATHER_STATIONS__\*/).*?(?=;\n function region
 outputs={};audit={}
 for key,file in files.items():
  if key in excluded:continue
+ if key=='thrustssc':continue # Its jet-car builder uses the completed Supra framework below.
  original=(R/file).read_text();s=original;f1=key.startswith('f1') and key!='f12tdf';race_pits=f1 or key in {'dacia','fordraptor','grhilux','hunter'};appname=re.search(r'window\.(\w+App)\s*=\s*\{',s)[1]
  def rep(a,b,required=True):
   global s
@@ -119,3 +120,5 @@ for key,file in files.items():
 
 import subprocess
 subprocess.run(["node","tools/driving/update.mjs"],cwd=R,check=True)
+if 'thrustssc' in files:
+ subprocess.run(["node","tools/thrustssc/build.mjs"],cwd=R,check=True)

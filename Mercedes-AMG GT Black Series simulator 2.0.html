@@ -925,7 +925,7 @@ const AERO0 = { aeroClA: SPEC.aeroClA, dragCd: SPEC.dragCd, massKg: SPEC.massKg 
     scMode: false, scPhase: "", scT: 0, scRemT: 0, scLapMark: 0,
     harness: false,
     driveMode: "race",             // wet | sport | race
-    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: true, offTrack: 0,
+    esc: true, tractionControl: true, launchArmed: false, launchActive: false, pitLimiter: false, assist: false, offTrack: 0,
     raceAero: false,               // manually adjustable aero set to Race (maximum downforce)
     raceAeroVis: 0,                // aero-setting indicator
     testDriver: false,
@@ -4540,5 +4540,22 @@ const app=window.AmgApp;
  })(app,"amg");
 
 </script>
-<!-- /* MUCS controls 2026-10 */ --></body>
+<!-- /* MUCS controls 2026-10 */ --><!-- MUCS starting defaults --><script type="module">
+if(window.TRACK2_READY)await window.TRACK2_READY;
+const started=performance.now();
+function startingDefaults(){
+ const app=window.AmgApp;
+ if(!app?.updatePhysics||!app?.state||!(app.selectCircuit||app.enterLondon)){
+  if(performance.now()-started<120000)setTimeout(startingDefaults,20);return;
+ }
+ if(app.startingDefaultsApplied)return;
+ const s=app.state;s.assist=false;s.testDriver=false;s.adaptiveCruise=false;if('chauffeur' in s)s.chauffeur=false;
+ app.selectCircuit("Silverstone Circuit");
+ s.assist=false;s.testDriver=false;s.adaptiveCruise=false;
+ app.setActive?.('assistBtn',false);app.setActive?.('testDriverBtn',false);
+ app.startingDefaultsApplied={key:"amg",route:"Silverstone Circuit"};
+}
+startingDefaults();
+</script><!-- END MUCS starting defaults -->
+</body>
 </html>

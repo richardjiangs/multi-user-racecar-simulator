@@ -7,7 +7,7 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Koenigsegg Agera RS simulator](Track%201.0/Koenigsegg%20Agera%20RS%20simulator.html) — 0.26 MB
 - [Koenigsegg Agera RS simulator 2.0](Track%202.0/Koenigsegg%20Agera%20RS%20simulator%202.0.html) — 0.57 MB
 - [Alfa Romeo 33 Stradale simulator](Track%201.0/Alfa%20Romeo%2033%20Stradale%20simulator.html) — 0.28 MB
-- [Alfa Romeo 33 Stradale simulator 2.0](Track%202.0/Alfa%20Romeo%2033%20Stradale%20simulator%202.0.html) — 3.22 MB
+- [Alfa Romeo 33 Stradale simulator 2.0](Track%202.0/Alfa%20Romeo%2033%20Stradale%20simulator%202.0.html) — 3.23 MB
 - [Mercedes-AMG GT Black Series simulator](Track%201.0/Mercedes-AMG%20GT%20Black%20Series%20simulator.html) — 0.28 MB
 - [Mercedes-AMG GT Black Series simulator 2.0](Track%202.0/Mercedes-AMG%20GT%20Black%20Series%20simulator%202.0.html) — 0.59 MB
 - [Mercedes-AMG One simulator](Track%201.0/Mercedes-AMG%20One%20simulator.html) — 0.30 MB
@@ -15,9 +15,9 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Aston Martin Valkyrie simulator](Track%201.0/Aston%20Martin%20Valkyrie%20simulator.html) — 0.29 MB
 - [Aston Martin Valkyrie simulator 2.0](Track%202.0/Aston%20Martin%20Valkyrie%20simulator%202.0.html) — 0.59 MB
 - [Zenvo Aurora Agil simulator](Track%201.0/Zenvo%20Aurora%20Agil%20simulator.html) — 0.26 MB
-- [Zenvo Aurora Agil simulator 2.0](Track%202.0/Zenvo%20Aurora%20Agil%20simulator%202.0.html) — 0.55 MB
+- [Zenvo Aurora Agil simulator 2.0](Track%202.0/Zenvo%20Aurora%20Agil%20simulator%202.0.html) — 0.56 MB
 - [Bugatti Chiron Super Sport 300+ simulator](Track%201.0/Bugatti%20Chiron%20Super%20Sport%20300+%20simulator.html) — 0.30 MB
-- [Bugatti Chiron Super Sport 300+ simulator 2.0](Track%202.0/Bugatti%20Chiron%20Super%20Sport%20300+%20simulator%202.0.html) — 3.28 MB
+- [Bugatti Chiron Super Sport 300+ simulator 2.0](Track%202.0/Bugatti%20Chiron%20Super%20Sport%20300+%20simulator%202.0.html) — 3.27 MB
 - [Czinger 21C simulator](Track%201.0/Czinger%2021C%20simulator.html) — 0.25 MB
 - [Czinger 21C simulator 2.0](Track%202.0/Czinger%2021C%20simulator%202.0.html) — 0.55 MB
 - [Dacia Sandrider Dakar simulator](Track%201.0/Dacia%20Sandrider%20Dakar%20simulator.html) — 0.15 MB
@@ -29,7 +29,7 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Mitsubishi Lancer Evo X FQ-440 simulator](Track%201.0/Mitsubishi%20Lancer%20Evo%20X%20FQ-440%20simulator.html) — 0.30 MB
 - [Mitsubishi Lancer Evo X FQ-440 simulator 2.0](Track%202.0/Mitsubishi%20Lancer%20Evo%20X%20FQ-440%20simulator%202.0.html) — 3.24 MB
 - [Ferrari F12tdf simulator](Track%201.0/Ferrari%20F12tdf%20simulator.html) — 0.28 MB
-- [Ferrari F12tdf simulator 2.0](Track%202.0/Ferrari%20F12tdf%20simulator%202.0.html) — 3.22 MB
+- [Ferrari F12tdf simulator 2.0](Track%202.0/Ferrari%20F12tdf%20simulator%202.0.html) — 3.21 MB
 - [Alpine F1 2026 simulator](Track%201.0/Alpine%20F1%202026%20simulator.html) — 0.29 MB
 - [Alpine F1 2026 simulator 2.0](Track%202.0/Alpine%20F1%202026%20simulator%202.0.html) — 0.63 MB
 - [Aston Martin F1 2026 simulator](Track%201.0/Aston%20Martin%20F1%202026%20simulator.html) — 0.28 MB
@@ -48,7 +48,7 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Mercedes F1 2026 simulator 2.0](Track%202.0/Mercedes%20F1%202026%20simulator%202.0.html) — 0.59 MB
 - [Racing Bulls F1 2026 simulator](Track%201.0/Racing%20Bulls%20F1%202026%20simulator.html) — 0.38 MB
 - [Racing Bulls F1 2026 simulator 2.0](Track%202.0/Racing%20Bulls%20F1%202026%20simulator%202.0.html) — 0.79 MB
-- [Red Bull F1 2026 simulator](Track%201.0/Red%20Bull%20F1%202026%20simulator.html) — 0.27 MB
+- [Red Bull F1 2026 simulator](Track%201.0/Red%20Bull%20F1%202026%20simulator.html) — 0.28 MB
 - [Red Bull F1 2026 simulator 2.0](Track%202.0/Red%20Bull%20F1%202026%20simulator%202.0.html) — 0.59 MB
 - [Williams F1 2026 simulator](Track%201.0/Williams%20F1%202026%20simulator.html) — 0.30 MB
 - [Williams F1 2026 simulator 2.0](Track%202.0/Williams%20F1%202026%20simulator%202.0.html) — 0.67 MB
@@ -59,9 +59,9 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Ferrari 499P simulator](Track%201.0/Ferrari%20499P%20simulator.html) — 0.28 MB
 - [Ferrari 499P simulator 2.0](Track%202.0/Ferrari%20499P%20simulator%202.0.html) — 0.60 MB
 - [Ford Raptor T1+ Dakar simulator](Track%201.0/Ford%20Raptor%20T1+%20Dakar%20simulator.html) — 0.15 MB
-- [Ford Raptor T1+ Dakar simulator 2.0](Track%202.0/Ford%20Raptor%20T1+%20Dakar%20simulator%202.0.html) — 3.35 MB
+- [Ford Raptor T1+ Dakar simulator 2.0](Track%202.0/Ford%20Raptor%20T1+%20Dakar%20simulator%202.0.html) — 3.34 MB
 - [Toyota GR DKR Hilux simulator](Track%201.0/Toyota%20GR%20DKR%20Hilux%20simulator.html) — 0.15 MB
-- [Toyota GR DKR Hilux simulator 2.0](Track%202.0/Toyota%20GR%20DKR%20Hilux%20simulator%202.0.html) — 3.38 MB
+- [Toyota GR DKR Hilux simulator 2.0](Track%202.0/Toyota%20GR%20DKR%20Hilux%20simulator%202.0.html) — 3.39 MB
 - [Ferrari 250 GTO simulator](Track%201.0/Ferrari%20250%20GTO%20simulator.html) — 0.42 MB
 - [Ferrari 250 GTO simulator 2.0](Track%202.0/Ferrari%20250%20GTO%20simulator%202.0.html) — 0.82 MB
 - [Nissan GT-R Nismo simulator](Track%201.0/Nissan%20GT-R%20Nismo%20simulator.html) — 0.26 MB
@@ -71,7 +71,7 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Koenigsegg Jesko simulator](Track%201.0/Koenigsegg%20Jesko%20simulator.html) — 0.27 MB
 - [Koenigsegg Jesko simulator 2.0](Track%202.0/Koenigsegg%20Jesko%20simulator%202.0.html) — 0.56 MB
 - [BMW M5 simulator](Track%201.0/BMW%20M5%20simulator.html) — 0.29 MB
-- [BMW M5 simulator 2.0](Track%202.0/BMW%20M5%20simulator%202.0.html) — 3.22 MB
+- [BMW M5 simulator 2.0](Track%202.0/BMW%20M5%20simulator%202.0.html) — 3.24 MB
 - [McLaren F1 1993 simulator](Track%201.0/McLaren%20F1%201993%20simulator.html) — 0.31 MB
 - [McLaren F1 1993 simulator 2.0](Track%202.0/McLaren%20F1%201993%20simulator%202.0.html) — 3.26 MB
 - [McLaren Speedtail simulator](Track%201.0/McLaren%20Speedtail%20simulator.html) — 0.28 MB
@@ -80,8 +80,8 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Maserati MCXtrema simulator 2.0](Track%202.0/Maserati%20MCXtrema%20simulator%202.0.html) — 0.55 MB
 - [Ford Mustang GTD simulator](Track%201.0/Ford%20Mustang%20GTD%20simulator.html) — 0.26 MB
 - [Ford Mustang GTD simulator 2.0](Track%202.0/Ford%20Mustang%20GTD%20simulator%202.0.html) — 0.57 MB
-- [Rimac Nevera simulator](Track%201.0/Rimac%20Nevera%20simulator.html) — 0.25 MB
-- [Rimac Nevera simulator 2.0](Track%202.0/Rimac%20Nevera%20simulator%202.0.html) — 3.20 MB
+- [Rimac Nevera simulator](Track%201.0/Rimac%20Nevera%20simulator.html) — 0.26 MB
+- [Rimac Nevera simulator 2.0](Track%202.0/Rimac%20Nevera%20simulator%202.0.html) — 3.21 MB
 - [McLaren P1 simulator](Track%201.0/McLaren%20P1%20simulator.html) — 0.29 MB
 - [McLaren P1 simulator 2.0](Track%202.0/McLaren%20P1%20simulator%202.0.html) — 0.59 MB
 - [Porsche 917 simulator](Track%201.0/Porsche%20917%20simulator.html) — 0.29 MB
@@ -92,15 +92,15 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Peugeot 9X8 simulator 2.0](Track%202.0/Peugeot%209X8%20simulator%202.0.html) — 0.58 MB
 - [Rolls-Royce Phantom simulator](Track%201.0/Rolls-Royce%20Phantom%20simulator.html) — 0.21 MB
 - [Porsche 918 Spyder simulator](Track%201.0/Porsche%20918%20Spyder%20simulator.html) — 0.26 MB
-- [Porsche 918 Spyder simulator 2.0](Track%202.0/Porsche%20918%20Spyder%20simulator%202.0.html) — 3.20 MB
+- [Porsche 918 Spyder simulator 2.0](Track%202.0/Porsche%20918%20Spyder%20simulator%202.0.html) — 3.21 MB
 - [Porsche 919 Hybrid simulator](Track%201.0/Porsche%20919%20Hybrid%20simulator.html) — 0.40 MB
 - [Porsche 919 Hybrid simulator 2.0](Track%202.0/Porsche%20919%20Hybrid%20simulator%202.0.html) — 0.81 MB
 - [Jaguar XE SV Project 8 simulator](Track%201.0/Jaguar%20XE%20SV%20Project%208%20simulator.html) — 0.33 MB
-- [Jaguar XE SV Project 8 simulator 2.0](Track%202.0/Jaguar%20XE%20SV%20Project%208%20simulator%202.0.html) — 3.27 MB
+- [Jaguar XE SV Project 8 simulator 2.0](Track%202.0/Jaguar%20XE%20SV%20Project%208%20simulator%202.0.html) — 3.28 MB
 - [Audi R8 V10 Performance simulator](Track%201.0/Audi%20R8%20V10%20Performance%20simulator.html) — 0.29 MB
 - [Audi R8 V10 Performance simulator 2.0](Track%202.0/Audi%20R8%20V10%20Performance%20simulator%202.0.html) — 3.26 MB
 - [Lamborghini Revuelto simulator](Track%201.0/Lamborghini%20Revuelto%20simulator.html) — 0.29 MB
-- [Lamborghini Revuelto simulator 2.0](Track%202.0/Lamborghini%20Revuelto%20simulator%202.0.html) — 3.26 MB
+- [Lamborghini Revuelto simulator 2.0](Track%202.0/Lamborghini%20Revuelto%20simulator%202.0.html) — 3.25 MB
 - [Tesla Roadster 2 simulator](Track%201.0/Tesla%20Roadster%202%20simulator.html) — 0.31 MB
 - [Tesla Roadster 2 simulator 2.0](Track%202.0/Tesla%20Roadster%202%20simulator%202.0.html) — 3.26 MB
 - [Mazda RX-7 simulator](Track%201.0/Mazda%20RX-7%20simulator.html) — 0.26 MB
@@ -114,24 +114,26 @@ All simulator source, controls, maps, artwork, audio synthesis and route geometr
 - [Rolls-Royce Spectre Black Badge simulator](Track%201.0/Rolls-Royce%20Spectre%20Black%20Badge%20simulator.html) — 0.38 MB
 - [Rolls-Royce Spectre Black Badge simulator 2.0](Track%202.0/Rolls-Royce%20Spectre%20Black%20Badge%20simulator%202.0.html) — 0.66 MB
 - [Toyota Supra MK4 simulator](Track%201.0/Toyota%20Supra%20MK4%20simulator.html) — 0.29 MB
-- [Toyota Supra MK4 simulator 2.0](Track%202.0/Toyota%20Supra%20MK4%20simulator%202.0.html) — 3.33 MB
+- [Toyota Supra MK4 simulator 2.0](Track%202.0/Toyota%20Supra%20MK4%20simulator%202.0.html) — 3.26 MB
 - [Gordon Murray T.33 simulator](Track%201.0/Gordon%20Murray%20T.33%20simulator.html) — 0.27 MB
 - [Gordon Murray T.33 simulator 2.0](Track%202.0/Gordon%20Murray%20T.33%20simulator%202.0.html) — 3.22 MB
 - [Gordon Murray T50s Niki Lauda simulator](Track%201.0/Gordon%20Murray%20T50s%20Niki%20Lauda%20simulator.html) — 0.26 MB
-- [Gordon Murray T50s Niki Lauda simulator 2.0](Track%202.0/Gordon%20Murray%20T50s%20Niki%20Lauda%20simulator%202.0.html) — 3.21 MB
+- [Gordon Murray T50s Niki Lauda simulator 2.0](Track%202.0/Gordon%20Murray%20T50s%20Niki%20Lauda%20simulator%202.0.html) — 3.20 MB
 - [Porsche Taycan Turbo GT simulator](Track%201.0/Porsche%20Taycan%20Turbo%20GT%20simulator.html) — 0.31 MB
 - [Porsche Taycan Turbo GT simulator 2.0](Track%202.0/Porsche%20Taycan%20Turbo%20GT%20simulator%202.0.html) — 3.28 MB
 - [Tesla Model S Plaid simulator](Track%201.0/Tesla%20Model%20S%20Plaid%20simulator.html) — 0.31 MB
-- [Tesla Model S Plaid simulator 2.0](Track%202.0/Tesla%20Model%20S%20Plaid%20simulator%202.0.html) — 3.26 MB
+- [Tesla Model S Plaid simulator 2.0](Track%202.0/Tesla%20Model%20S%20Plaid%20simulator%202.0.html) — 3.28 MB
+- [Thrust SSC simulator](Track%201.0/Thrust%20SSC%20simulator.html) — 0.37 MB
+- [Thrust SSC simulator 2.0](Track%202.0/Thrust%20SSC%20simulator%202.0.html) — 3.30 MB
 - [SSC Tuatara simulator](Track%201.0/SSC%20Tuatara%20simulator.html) — 0.31 MB
 - [SSC Tuatara simulator 2.0](Track%202.0/SSC%20Tuatara%20simulator%202.0.html) — 0.59 MB
 - [Yangwang U9 simulator](Track%201.0/Yangwang%20U9%20simulator.html) — 0.27 MB
-- [Yangwang U9 simulator 2.0](Track%202.0/Yangwang%20U9%20simulator%202.0.html) — 3.23 MB
+- [Yangwang U9 simulator 2.0](Track%202.0/Yangwang%20U9%20simulator%202.0.html) — 3.22 MB
 - [Hennessey Venom F5 simulator](Track%201.0/Hennessey%20Venom%20F5%20simulator.html) — 0.28 MB
 - [Hennessey Venom F5 simulator 2.0](Track%202.0/Hennessey%20Venom%20F5%20simulator%202.0.html) — 0.59 MB
 - [Dodge Viper ACR Extreme Aero simulator](Track%201.0/Dodge%20Viper%20ACR%20Extreme%20Aero%20simulator.html) — 0.26 MB
 - [Dodge Viper ACR Extreme Aero simulator 2.0](Track%202.0/Dodge%20Viper%20ACR%20Extreme%20Aero%20simulator%202.0.html) — 0.56 MB
 - [Chevrolet Corvette ZR1 simulator](Track%201.0/Chevrolet%20Corvette%20ZR1%20simulator.html) — 0.27 MB
-- [Chevrolet Corvette ZR1 simulator 2.0](Track%202.0/Chevrolet%20Corvette%20ZR1%20simulator%202.0.html) — 0.57 MB
+- [Chevrolet Corvette ZR1 simulator 2.0](Track%202.0/Chevrolet%20Corvette%20ZR1%20simulator%202.0.html) — 0.58 MB
 
 Built with `node tools/offline/individual.mjs`. Brotli decoding uses the repository’s vendored MIT-licensed brotli-dec-wasm.
